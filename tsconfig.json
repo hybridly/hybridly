@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "target": "es2017",
+    "module": "esnext",
+    "lib": ["esnext"],
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "strict": true,
+    "strictNullChecks": true,
+    "resolveJsonModule": true,
+    "skipDefaultLibCheck": true,
+    "paths": {
+      "sleightful": ["./packages/sleightful/src/index.ts"],
+      "sleightful/vite": ["./packages/sleightful/src/vite.ts"],
+      "@sleightful/core": ["./packages/core/src/index.ts"],
+      "@sleightful/vite": ["./packages/vite/src/index.ts"],
+    }
+  },
+  "exclude": [
+    "**/dist/**",
+    "**/node_modules/**"
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "private": true,
+  "scripts": {
+    "build": "pnpm -r build",
+    "dev": "pnpm stub",
+    "lint": "eslint \"**/*.{ts,vue,mjs}\"",
+    "lint:fix": "pnpm lint -- --fix",
+    "release": "bumpp package.json packages/*/package.json --commit --push --tag",
+    "stub": "pnpm -r --parallel run stub",
+    "test": "vitest test",
+    "test:update": "vitest -u"
+  },
+  "devDependencies": {
+    "@innocenzi/eslint-config": "^0.7.1",
+    "@sleightful/core": "workspace:*",
+    "@sleightful/vite": "workspace:*",
+    "bumpp": "^7.1.1",
+    "eslint": "^8.9.0",
+    "sleightful": "workspace:*",
+    "typescript": "^4.5.5",
+    "unbuild": "^0.6.9",
+    "vite": "^2.8.4",
+    "vitest": "^0.5.3"
+  }
+}

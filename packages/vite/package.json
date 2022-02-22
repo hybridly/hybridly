@@ -1,0 +1,49 @@
+{
+  "name": "@sleightful/vite",
+  "version": "0.1.0",
+  "description": "Server-driven, client-rendered view layer.",
+  "keywords": [
+    "sleightful",
+    "inertiajs",
+		"vite",
+		"vite-plugin"
+  ],
+  "homepage": "https://github.com/sleightful/sleightful/tree/main/packages/vite#readme",
+  "bugs": {
+    "url": "https://github.com/sleightful/sleightful/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sleightful/sleightful.git",
+		"directory": "packages/vite"
+  },
+  "funding": "https://github.com/sponsors/innocenzi",
+  "license": "MIT",
+  "author": "Enzo Innocenzi <enzo@innocenzi.dev>",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "require": "./dist/index.cjs",
+      "import": "./dist/index.mjs",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "main": "dist/index.cjs",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "*.d.ts"
+  ],
+  "scripts": {
+    "build": "unbuild",
+    "stub": "unbuild --stub"
+  },
+  "dependencies": {
+    "@sleightful/core": "workspace:*",
+    "@sleightful/vite": "workspace:*"
+  },
+  "devDependencies": {
+    "vite": "^2.8.4"
+  }
+}
