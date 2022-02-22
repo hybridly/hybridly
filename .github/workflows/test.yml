@@ -1,0 +1,51 @@
+name: Test
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '**'
+      - '!readme.md'
+      - '!docs/**'
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    if: ${{ !startsWith(github.event.head_commit.message, 'release:') }}
+    runs-on: ${{ matrix.os }}
+
+    env:
+      DEBUG: 'sleightful:*'
+
+    strategy:
+      matrix:
+        node-version: [16.x]
+        os: [windows-latest, ubuntu-latest]
+      fail-fast: false
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2.0.1
+        with:
+          version: 6.32.0
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+          registry-url: https://registry.npmjs.org/
+          cache: 'pnpm'
+
+      - run: pnpm install
+
+      - name: Lint
+        run: pnpm run lint
+
+      - name: Build
+        run: pnpm run build
+
+      - name: Test
+        run: pnpm run test
