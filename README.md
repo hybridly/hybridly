@@ -19,7 +19,7 @@
 
 <div align="center">
   <br />
-  A mechanism to develop a server-driven, client-rendered applications.
+  A mechanism to develop server-driven, client-rendered applications.
   <br />
   Sleightful is an <a href="https://inertiajs.com">Inertia.js</a> fork which sole purpose is to try to push the developer experience to the maximum.
   <br />
