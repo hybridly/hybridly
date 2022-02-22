@@ -1,7 +1,7 @@
 {
   "name": "@sleightful/core",
   "version": "0.1.0",
-  "description": "Server-driven, client-rendered view layer.",
+  "description": "A mechanism to develop server-driven, client-rendered applications",
   "keywords": [
     "sleightful",
     "inertiajs"
