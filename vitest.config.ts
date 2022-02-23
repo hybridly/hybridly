@@ -16,5 +16,6 @@ export default defineConfig({
 	},
 	test: {
 		isolate: false,
+		restoreMocks: true,
 	},
 })
