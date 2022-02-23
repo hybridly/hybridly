@@ -1,3 +1,18 @@
 {
-	"extends": "@innocenzi/eslint-config"
+	"extends": "@innocenzi/eslint-config",
+	"rules": {
+		"padding-line-between-statements": [
+			"error",
+			{
+				"blankLine": "always",
+				"prev": ["block", "block-like", "class"],
+				"next": "return"
+			},
+			{
+				"blankLine": "never",
+				"prev": "block",
+				"next": "block"
+			}
+		]
+	}
 }
