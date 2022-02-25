@@ -34,5 +34,10 @@
   "scripts": {
     "build": "unbuild",
     "stub": "unbuild --stub"
+  },
+  "dependencies": {
+    "axios": "^0.26.0",
+    "defu": "^5.0.1",
+    "hookable": "^5.1.1"
   }
 }

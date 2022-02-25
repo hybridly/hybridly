@@ -1,1 +1,1 @@
-export { initialize } from './router'
+export * from './router/router'

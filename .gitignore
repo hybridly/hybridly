@@ -3,3 +3,4 @@
 *.log
 dist
 node_modules
+packages/core/src/old/
