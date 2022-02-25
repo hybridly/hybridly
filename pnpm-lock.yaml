@@ -4,10 +4,10 @@ importers:
 
   .:
     specifiers:
-      '@innocenzi/eslint-config': ^0.7.1
+      '@innocenzi/eslint-config': ^0.9.0
       '@sleightful/core': workspace:*
       '@sleightful/vite': workspace:*
-      '@vitest/ui': ^0.5.3
+      '@vitest/ui': ^0.5.5
       bumpp: ^7.1.1
       eslint: ^8.9.0
       happy-dom: ^2.41.0
@@ -16,12 +16,12 @@ importers:
       typescript: ^4.5.5
       unbuild: ^0.6.9
       vite: ^2.8.4
-      vitest: ^0.5.3
+      vitest: ^0.5.5
     devDependencies:
-      '@innocenzi/eslint-config': 0.7.1_eslint@8.9.0+typescript@4.5.5
+      '@innocenzi/eslint-config': 0.9.0_eslint@8.9.0+typescript@4.5.5
       '@sleightful/core': link:packages/core
       '@sleightful/vite': link:packages/vite
-      '@vitest/ui': 0.5.3
+      '@vitest/ui': 0.5.5
       bumpp: 7.1.1
       eslint: 8.9.0
       happy-dom: 2.41.0
@@ -30,10 +30,17 @@ importers:
       typescript: 4.5.5
       unbuild: 0.6.9
       vite: 2.8.4
-      vitest: 0.5.3_ecc297d949d908ca97c65ebb1626a965
+      vitest: 0.5.5_6bfd78d88a108d0effffe41672fd8b87
 
   packages/core:
-    specifiers: {}
+    specifiers:
+      axios: ^0.26.0
+      defu: ^5.0.1
+      hookable: ^5.1.1
+    dependencies:
+      axios: 0.26.0
+      defu: 5.0.1
+      hookable: 5.1.1
 
   packages/sleightful:
     specifiers:
@@ -110,8 +117,8 @@ packages:
     resolution: {integrity: sha512-ZnQMnLV4e7hDlUvw8H+U8ASL02SS2Gn6+9Ac3wGGLIe7+je2AeAOxPY+izIPJDfFDb7eDjev0Us8MO1iFRN8hA==}
     dev: true
 
-  /@innocenzi/eslint-config/0.7.1_eslint@8.9.0+typescript@4.5.5:
-    resolution: {integrity: sha512-oqFlM1vjtXdE/8GYXGGVhhjx55sG1Xoio08JxRn2UMWC1cX3ZI4cSlgUxjkA6uf/tIuRctS2n6/VZBsOAVn/9g==}
+  /@innocenzi/eslint-config/0.9.0_eslint@8.9.0+typescript@4.5.5:
+    resolution: {integrity: sha512-5pjtva93COA62RADZfNJWwOvoBllg3ZiXtQ+CvoN634dPFaV9b/cBC6S4ly0lmQNqzYtJaNPZP50q2B5xEdUTw==}
     peerDependencies:
       eslint: '>=7.4.0'
       typescript: ^4.0.0
@@ -443,8 +450,8 @@ packages:
       eslint-visitor-keys: 3.3.0
     dev: true
 
-  /@vitest/ui/0.5.3:
-    resolution: {integrity: sha512-8iicYgYLEPj31XpHkU8/X0w6kSLcf+b4EjJj02iF4VF3aWmomxG5DWnCxrx6B7ipb90XWgoaAwkU8Gy5YSdkOQ==}
+  /@vitest/ui/0.5.5:
+    resolution: {integrity: sha512-zPM+a9EHPR+nSXYJ8KaG8LGe5wwpq1cGZ3LcALFD5Q043rgK7xoTyqXnjgnw7rRbg2IixMyExpQ2X6WkBYxi0A==}
     dependencies:
       sirv: 2.0.2
     dev: true
@@ -536,6 +543,14 @@ packages:
   /asynckit/0.4.0:
     resolution: {integrity: sha1-x57Zf380y48robyXkLzDZkdLS3k=}
     dev: true
+
+  /axios/0.26.0:
+    resolution: {integrity: sha512-lKoGLMYtHvFrPVt3r+RBMp9nh34N0M8zEfCWqdWZx6phynIEhQqAdydpyBAAG211zlhX9Rgu08cOamy6XjE5Og==}
+    dependencies:
+      follow-redirects: 1.14.9
+    transitivePeerDependencies:
+      - debug
+    dev: false
 
   /balanced-match/1.0.2:
     resolution: {integrity: sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw==}
@@ -773,7 +788,6 @@ packages:
 
   /defu/5.0.1:
     resolution: {integrity: sha512-EPS1carKg+dkEVy3qNTqIdp2qV7mUP08nIsupfwQpz++slCVRw7qbQyWvSTig+kFPwz2XXp5/kIIkH+CwrJKkQ==}
-    dev: true
 
   /delayed-stream/1.0.0:
     resolution: {integrity: sha1-3zrhmayt+31ECqrgsp4icrJOxhk=}
@@ -1680,6 +1694,16 @@ packages:
     resolution: {integrity: sha512-WIWGi2L3DyTUvUrwRKgGi9TwxQMUEqPOPQBVi71R96jZXJdFskXEmf54BoZaS1kknGODoIGASGEzBUYdyMCBJg==}
     dev: true
 
+  /follow-redirects/1.14.9:
+    resolution: {integrity: sha512-MQDfihBQYMcyy5dhRDJUHcw7lb2Pv/TuE6xP1vyraLukNDHKbDxDNaOE3NbCAdKQApno+GPRyo1YAp89yCjK4w==}
+    engines: {node: '>=4.0'}
+    peerDependencies:
+      debug: '*'
+    peerDependenciesMeta:
+      debug:
+        optional: true
+    dev: false
+
   /form-data/2.5.1:
     resolution: {integrity: sha512-m21N3WOmEEURgk6B9GLOE4RuWOFf28Lhh9qGYeNlGq4VDXUlJy2th2slBNU8Gp8EzloYZOibZJ7t5ecIrFSjVA==}
     engines: {node: '>= 0.12'}
@@ -1845,7 +1869,6 @@ packages:
 
   /hookable/5.1.1:
     resolution: {integrity: sha512-7qam9XBFb+DijNBthaL1k/7lHU2TEMZkWSyuqmU3sCQze1wFm5w9AlEx30PD7a+QVAjOy6Ec2goFwe1YVyk2uA==}
-    dev: true
 
   /hosted-git-info/2.8.9:
     resolution: {integrity: sha512-mxIDAb9Lsm6DoOJ7xH+5+X4y1LU/4Hi50L9C5sIswK3JzULS4bwk1FvjdBgvYR4bzT4tuUQiC15FE2f5HbLvYw==}
@@ -3038,8 +3061,8 @@ packages:
       fsevents: 2.3.2
     dev: true
 
-  /vitest/0.5.3_ecc297d949d908ca97c65ebb1626a965:
-    resolution: {integrity: sha512-tAV96lEUvycgiqsQKoQRjzXwDg+ae/R2jBLtt6MnFywOXbC9wYl+nRT9qT+d/+Mlw2B4dvVa9zuekY3emdcXJA==}
+  /vitest/0.5.5_6bfd78d88a108d0effffe41672fd8b87:
+    resolution: {integrity: sha512-oBKIXpFOGN7jDdK0MO4uWcB+UOPRyEJveB8XDx74XsFNbjGF7vHmHqwAomNE8MGtDW8hBKvSSbr58hibFiQc5Q==}
     engines: {node: '>=14.14.0'}
     hasBin: true
     peerDependencies:
@@ -3059,7 +3082,7 @@ packages:
     dependencies:
       '@types/chai': 4.3.0
       '@types/chai-subset': 1.3.3
-      '@vitest/ui': 0.5.3
+      '@vitest/ui': 0.5.5
       chai: 4.3.6
       happy-dom: 2.41.0
       local-pkg: 0.4.1
