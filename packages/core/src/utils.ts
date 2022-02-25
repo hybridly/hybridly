@@ -19,3 +19,27 @@ export function match<TValue extends string | number = string, TReturnValue = un
 
 	throw error
 }
+
+export function debounce<F extends(...params: any[]) => ReturnType<F>>(fn: F, delay: number): F {
+	let timeoutID: NodeJS.Timeout
+	return function(...args: unknown[]) {
+		clearTimeout(timeoutID)
+		timeoutID = setTimeout(() => fn(args), delay)
+	} as F
+}
+
+export function value<T>(value: T | (() => T)): T {
+	if (typeof value === 'function') {
+		return (value as any)?.() as T
+	}
+
+	return value
+}
+
+export function when<T, D>(condition: any, data: T, _default?: D): T | D | undefined {
+	if (!condition) {
+		return _default
+	}
+
+	return data
+}

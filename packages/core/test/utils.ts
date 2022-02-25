@@ -1,31 +1,28 @@
+import defu from 'defu'
 import type { PartialDeep } from 'type-fest'
-import { RouterOptions, Visit } from '../src/types'
+import { createContext, RouterContext, RouterContextOptions } from '../src/router/context'
 
+export const noop = () => ({} as any)
 export const returnsArgs = (...args: any) => args
-export function fakeVisit(visit: PartialDeep<Visit> = {}): Visit {
-	return {
-		view: {
-			name: 'my.component',
-			properties: visit.view?.properties ?? {},
-			url: 'http://localhost',
-			...visit.view,
+
+export function makeRouterContextOptions(options: PartialDeep<RouterContextOptions> = {}): RouterContextOptions {
+	return defu({
+		request: {
+			url: 'https://localhost',
+			version: 'abc123',
+			view: {
+				name: 'default.view',
+				properties: {},
+			},
 		},
-		type: 'page',
-		context: '',
-		version: '',
-		...visit as any,
-	}
+		adapter: {
+			resolveComponent: noop,
+			swapDialog: noop,
+			swapView: noop,
+		},
+	}, options)
 }
 
-export function fakeRouterOptions(options: PartialDeep<RouterOptions> = {}): RouterOptions {
-	return {
-		resolve: async() => {},
-		...options,
-		visit: fakeVisit(options.visit),
-		swap: {
-			dialog: async() => {},
-			view: async() => {},
-			...options.swap,
-		},
-	}
+export function fakeRouterContext(options: PartialDeep<RouterContextOptions> = {}): RouterContext {
+	return createContext(makeRouterContextOptions(options))
 }

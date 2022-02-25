@@ -1,0 +1,90 @@
+// Vitest Snapshot v1
+
+exports[`creates a valid router context > context 1`] = `
+{
+  "adapter": {
+    "resolveComponent": [Function],
+    "swapDialog": [Function],
+    "swapView": [Function],
+  },
+  "url": "https://localhost/",
+  "version": "abc123",
+  "view": {
+    "name": "default.view",
+    "properties": {
+      "foo": "bar",
+    },
+  },
+}
+`;
+
+exports[`updates the context > base context 1`] = `
+{
+  "adapter": {
+    "resolveComponent": [Function],
+    "swapDialog": [Function],
+    "swapView": [Function],
+  },
+  "url": "https://localhost/",
+  "version": "abc123",
+  "view": {
+    "name": "default.view",
+    "properties": {},
+  },
+}
+`;
+
+exports[`updates the context > updated context 1`] = `
+{
+  "adapter": {
+    "resolveComponent": [Function],
+    "swapDialog": [Function],
+    "swapView": [Function],
+  },
+  "url": "https://localhost/foo/bar",
+  "version": "new-version-string",
+  "view": {
+    "name": "default.view",
+    "properties": {},
+  },
+}
+`;
+
+exports[`updates the context > updated context with dialog 1`] = `
+{
+  "adapter": {
+    "resolveComponent": [Function],
+    "swapDialog": [Function],
+    "swapView": [Function],
+  },
+  "dialog": {
+    "name": "some.dialog",
+    "properties": {
+      "foo": "bar",
+    },
+  },
+  "url": "https://localhost/foo/bar/dialog",
+  "version": "new-version-string",
+  "view": {
+    "name": "default.view",
+    "properties": {},
+  },
+}
+`;
+
+exports[`updates the context > updated context with no dialog 1`] = `
+{
+  "adapter": {
+    "resolveComponent": [Function],
+    "swapDialog": [Function],
+    "swapView": [Function],
+  },
+  "dialog": undefined,
+  "url": "https://localhost/foo",
+  "version": "new-version-string",
+  "view": {
+    "name": "default.view",
+    "properties": {},
+  },
+}
+`;

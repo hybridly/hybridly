@@ -1,0 +1,51 @@
+// Vitest Snapshot v1
+
+exports[`setHistoryState > pushes the given context into the history > context 1`] = `
+[
+  {
+    "type": "return",
+    "value": [
+      {
+        "adapter": {
+          "resolveComponent": [Function],
+          "swapDialog": [Function],
+          "swapView": [Function],
+        },
+        "url": "https://localhost/",
+        "version": "abc123",
+        "view": {
+          "name": "default.view",
+          "properties": {},
+        },
+      },
+      "",
+      "https://localhost/",
+    ],
+  },
+]
+`;
+
+exports[`setHistoryState > replaces the given context in the current history state > context 1`] = `
+[
+  {
+    "type": "return",
+    "value": [
+      {
+        "adapter": {
+          "resolveComponent": [Function],
+          "swapDialog": [Function],
+          "swapView": [Function],
+        },
+        "url": "https://localhost/",
+        "version": "abc123",
+        "view": {
+          "name": "default.view",
+          "properties": {},
+        },
+      },
+      "",
+      "https://localhost/",
+    ],
+  },
+]
+`;
