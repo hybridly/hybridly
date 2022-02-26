@@ -2,7 +2,7 @@ import axios, { AxiosResponse } from 'axios'
 import defu from 'defu'
 import { EXTERNAL_VISIT_HEADER, SLEIGHTFUL_HEADER } from '../constants'
 import { NotASleightfulResponseError } from '../errors'
-import type { Properties, Property, VisitPayload, RequestPayload } from '../types'
+import type { VisitPayload, RequestPayload } from '../types'
 import { debug, match, when } from '../utils'
 import { createContext, payloadFromContext, RouterContext, RouterContextOptions, setContext } from './context'
 import { handleExternalVisit, isExternalResponse, isExternalVisit, performExternalVisit } from './external'
@@ -267,9 +267,9 @@ export interface VisitOptions extends Omit<NavigationOptions, 'request'> {
 	/** Body of the request. */
 	data?: RequestPayload
 	/** Which properties to update for this visit. Other properties will be ignored. */
-	only?: Property[] | Properties
+	only?: string | string[]
 	/** Which properties not to update for this visit. Other properties will be updated. */
-	except?: Property[] | Properties
+	except?: string | string[]
 	/** Specific headers to add to the request. */
 	headers?: Record<string, string>
 	/** The bag in which to put potential errors. */
