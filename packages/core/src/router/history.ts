@@ -1,3 +1,4 @@
+import { navigate } from '..'
 import { RouterContext } from './context'
 
 /** Puts the given context into the history state. */
@@ -26,6 +27,27 @@ export function getHistoryState<T extends keyof HistoryState | undefined>(
 	return key
 		? undefined as any
 		: { state: {} }
+}
+
+/** Checks if the current visit was made by going back or forward. */
+export function isBackForwardVisit(): boolean {
+	if (!window.history.state) {
+		return false
+	}
+
+	return (window.performance?.getEntriesByType('navigation').at(0) as PerformanceNavigationTiming)?.type === 'back_forward'
+}
+
+/** Handles a visit which was going back or forward. */
+export async function handleBackForwardVisit(context: RouterContext): Promise<void> {
+	window.history.state.version = context.version
+
+	await navigate(context, {
+		preserveScroll: true,
+		preserveState: true,
+	})
+
+	// restoreScrollPositions()
 }
 
 export interface HistoryOptions {

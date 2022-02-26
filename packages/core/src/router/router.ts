@@ -4,12 +4,78 @@ import { EXTERNAL_VISIT_HEADER, SLEIGHTFUL_HEADER } from '../constants'
 import { NotASleightfulResponseError } from '../errors'
 import type { Properties, Property, RouterRequest, RequestData } from '../types'
 import { match, when } from '../utils'
-import { RouterContext, RouterContextOptions, setContext } from './context'
-import { isExternalVisitResponse as isExternalResponse, performExternalVisit } from './external'
-import { setHistoryState } from './history'
-import { fillHash, makeUrl, sameOrigin } from './url'
+import { createContext, requestFromContext, RouterContext, RouterContextOptions, setContext } from './context'
+import { handleExternalVisit, isExternalResponse, isExternalVisit, performExternalVisit } from './external'
+import { setHistoryState, isBackForwardVisit, handleBackForwardVisit } from './history'
+import { fillHash, makeUrl, sameOrigin, UrlResolvable } from './url'
 
-export async function createRouter(options: RouterContextOptions) {}
+/** Creates the sleightful router. */
+export async function createRouter(options: RouterContextOptions) {
+	const context = await initializeRouter(createContext(options))
+
+	// TODO events
+	// TODO remembering state
+
+	return {
+		context,
+
+		/** Makes a visit with the given options. */
+		visit: async(options: VisitOptions) => {
+			return await visit(context, options)
+		},
+
+		/** Reloads the current page. */
+		reload: async(options: VisitOptions) => {
+			return await visit(context, { preserveScroll: true, preserveState: true, ...options })
+		},
+
+		/** Makes a GET request to the given URL. */
+		get: async(url: UrlResolvable, data: VisitOptions['data'] = {}, options: Exclude<VisitOptions, 'method' | 'data'>) => {
+			return await visit(context, { ...options, url, data, method: 'GET' })
+		},
+
+		/** Makes a POST request to the given URL. */
+		post: async(url: UrlResolvable, data: VisitOptions['data'] = {}, options: Exclude<VisitOptions, 'method' | 'data'>) => {
+			return await visit(context, { preserveState: true, ...options, url, data, method: 'POST' })
+		},
+
+		/** Makes a PUT request to the given URL. */
+		put: async(url: UrlResolvable, data: VisitOptions['data'] = {}, options: Exclude<VisitOptions, 'method' | 'data'>) => {
+			return await visit(context, { preserveState: true, ...options, url, data, method: 'PUT' })
+		},
+
+		/** Makes a PATCH request to the given URL. */
+		patch: async(url: UrlResolvable, data: VisitOptions['data'] = {}, options: Exclude<VisitOptions, 'method' | 'data'>) => {
+			return await visit(context, { preserveState: true, ...options, url, data, method: 'PATCH' })
+		},
+
+		/** Makes a DELETE request to the given URL. */
+		delete: async(url: UrlResolvable, data: VisitOptions['data'] = {}, options: Exclude<VisitOptions, 'method' | 'data'>) => {
+			return await visit(context, { preserveState: true, ...options, url, data, method: 'DELETE' })
+		},
+	}
+}
+
+/** Initializes the router by reading the context and registering events if necessary. */
+async function initializeRouter(context: RouterContext): Promise<RouterContext> {
+	if (isBackForwardVisit()) {
+		handleBackForwardVisit(context)
+	} else if (isExternalVisit()) {
+		handleExternalVisit(context)
+	} else {
+		// If we navigated to somewhere with a hash, we need to update the context
+		// to add said hash because it was initialized without it.
+		setContext(context, {
+			url: makeUrl(context.url, { hash: window.location.hash }).toString(),
+		})
+
+		await navigate(context, { preserveState: true })
+	}
+
+	// TODO setup event handlers
+
+	return context
+}
 
 export async function visit(context: RouterContext, options: VisitOptions) {
 	// TODO handle cancellation
@@ -19,7 +85,7 @@ export async function visit(context: RouterContext, options: VisitOptions) {
 	// TODO preserveState from history
 
 	try {
-		const requestUrl = makeUrl(options.url)
+		const requestUrl = makeUrl(options.url ?? context.url)
 		const response = await axios.request({
 			url: requestUrl.toString(),
 			method: options.method ?? 'GET',
@@ -125,6 +191,9 @@ export function isSleightfulResponse(response: AxiosResponse): boolean {
 export async function navigate(context: RouterContext, options: NavigationOptions) {
 	const shouldReplace = options.replace || sameOrigin(context.url, window.location.href)
 
+	// If no request was given, we use the current context instead.
+	options.request ??= requestFromContext(context)
+
 	// First, we swap the view.
 	const viewComponent = await context.adapter.resolveComponent(options.request.view.name)
 	await context.adapter.swapView({
@@ -160,7 +229,7 @@ export async function navigate(context: RouterContext, options: NavigationOption
 
 export interface NavigationOptions {
 	/** View to navigate to. */
-	request: RouterRequest
+	request?: RouterRequest
 	/**
 	 * Whether to replace the current history state instead of adding
 	 * one. This affects the browser's "back" and "forward" features.
@@ -179,7 +248,7 @@ export interface NavigationOptions {
 
 export interface VisitOptions extends Omit<NavigationOptions, 'request'> {
 	/** The URL to visit. */
-	url: string
+	url?: UrlResolvable
 	/** HTTP verb to use for the request. */
 	method?: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE'
 	/** Body of the request. */
