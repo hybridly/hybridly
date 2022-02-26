@@ -100,14 +100,14 @@ export async function visit(context: RouterContext, options: VisitOptions) {
 				...options.headers,
 				...when(options.only?.length || options.except?.length, {
 					'X-Sleightful-Partial-Component': context.view.name,
-					...when(options.only, { 'X-Sleightful-Only-Data': JSON.stringify(options.only) }, {}),
-					...when(options.except, { 'X-Sleightful-Except-Data': JSON.stringify(options.except) }, {}),
+					...when(options.only, { ONLY_DATA_HEADER: JSON.stringify(options.only) }, {}),
+					...when(options.except, { EXCEPT_DATA_HEADER: JSON.stringify(options.except) }, {}),
 				}, {}),
 				...when(options.errorBag, { 'X-Sleightful-Error-Bag': options.errorBag }, {}),
 				...when(context.version, { 'X-Sleightful-Version': context.version }, {}),
 				// 'X-Sleightful-Context': this.currentState.visit.context,
 				'X-Requested-With': 'XMLHttpRequest',
-				'X-Sleightful': true,
+				'SLEIGHTFUL_HEADER': true,
 				'Accept': 'text/html, application/xhtml+xml',
 			},
 			onUploadProgress: (progress) => {
