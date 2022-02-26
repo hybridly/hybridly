@@ -9,7 +9,7 @@ importers:
       '@sleightful/vite': workspace:*
       '@sleightful/vue': workspace:*
       '@types/debug': ^4.1.7
-      '@vitest/ui': ^0.5.5
+      '@vitest/ui': ^0.5.7
       bumpp: ^7.1.1
       eslint: ^8.10.0
       happy-dom: ^2.41.0
@@ -18,14 +18,14 @@ importers:
       typescript: ^4.5.5
       unbuild: ^0.6.9
       vite: ^2.8.4
-      vitest: ^0.5.5
+      vitest: ^0.5.7
     devDependencies:
       '@innocenzi/eslint-config': 0.9.0_eslint@8.10.0+typescript@4.5.5
       '@sleightful/core': link:packages/core
       '@sleightful/vite': link:packages/vite
       '@sleightful/vue': link:packages/vue
       '@types/debug': 4.1.7
-      '@vitest/ui': 0.5.5
+      '@vitest/ui': 0.5.7
       bumpp: 7.1.1
       eslint: 8.10.0
       happy-dom: 2.41.0
@@ -34,7 +34,7 @@ importers:
       typescript: 4.5.5
       unbuild: 0.6.9
       vite: 2.8.4
-      vitest: 0.5.5_6bfd78d88a108d0effffe41672fd8b87
+      vitest: 0.5.7_11aa09fb4218ed3807e3095fc68ee3a9
 
   packages/core:
     specifiers:
@@ -71,14 +71,11 @@ importers:
     specifiers:
       '@sleightful/core': workspace:*
       sleightful: workspace:*
-      type-fest: ^2.12.0
       vue: ^3.2.31
     dependencies:
       '@sleightful/core': link:../core
       sleightful: link:../sleightful
       vue: 3.2.31
-    devDependencies:
-      type-fest: 2.12.0
 
 packages:
 
@@ -485,8 +482,8 @@ packages:
       eslint-visitor-keys: 3.3.0
     dev: true
 
-  /@vitest/ui/0.5.5:
-    resolution: {integrity: sha512-zPM+a9EHPR+nSXYJ8KaG8LGe5wwpq1cGZ3LcALFD5Q043rgK7xoTyqXnjgnw7rRbg2IixMyExpQ2X6WkBYxi0A==}
+  /@vitest/ui/0.5.7:
+    resolution: {integrity: sha512-QHGUNHbfcARZdz8bI+8f3VxMLWr9PUzZYAeH4ZXREt7qK7PmnftzJkifUMiPod28TDbwguZx1dC5FbCac89VUA==}
     dependencies:
       sirv: 2.0.2
     dev: true
@@ -3181,8 +3178,8 @@ packages:
       fsevents: 2.3.2
     dev: true
 
-  /vitest/0.5.5_6bfd78d88a108d0effffe41672fd8b87:
-    resolution: {integrity: sha512-oBKIXpFOGN7jDdK0MO4uWcB+UOPRyEJveB8XDx74XsFNbjGF7vHmHqwAomNE8MGtDW8hBKvSSbr58hibFiQc5Q==}
+  /vitest/0.5.7_11aa09fb4218ed3807e3095fc68ee3a9:
+    resolution: {integrity: sha512-keLLxLGi+dkXFUuKxCXnBw5MkSZ03cynlG6+LVLaKoyUuW8Xu6NzX1oC6dVNm6Ig7mw6gX9OHV+Lpmcc3tu/mQ==}
     engines: {node: '>=14.14.0'}
     hasBin: true
     peerDependencies:
@@ -3202,7 +3199,7 @@ packages:
     dependencies:
       '@types/chai': 4.3.0
       '@types/chai-subset': 1.3.3
-      '@vitest/ui': 0.5.5
+      '@vitest/ui': 0.5.7
       chai: 4.3.6
       happy-dom: 2.41.0
       local-pkg: 0.4.1
