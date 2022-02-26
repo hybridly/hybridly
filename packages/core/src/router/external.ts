@@ -1,8 +1,9 @@
 import { AxiosResponse } from 'axios'
 import { EXTERNAL_VISIT_HEADER, STORAGE_EXTERNAL_KEY } from '../constants'
+import { debug } from '../utils'
 import { RouterContext, setContext } from './context'
 import { navigate } from './router'
-import { makeUrl, sameOrigin } from './url'
+import { makeUrl, sameUrls } from './url'
 
 /**
  * Performs an external visit by saving options to the storage and
@@ -10,12 +11,14 @@ import { makeUrl, sameOrigin } from './url'
  * and a sleightul navigation will be performed.
  */
 export async function performExternalVisit(options: ExternalVisitOptions): Promise<void> {
+	debug.external('Making a hard navigation for an external visit:', options)
 	window.sessionStorage.setItem(STORAGE_EXTERNAL_KEY, JSON.stringify(options))
 	window.location.href = options.url
 
 	// If the external visit is to the same page, we need to manually perform
 	// a full page reload
-	if (sameOrigin(window.location, options.url)) {
+	if (sameUrls(window.location, options.url)) {
+		debug.external('Manually reloading due to the external URL being the same.')
 		window.location.reload()
 	}
 }
@@ -31,8 +34,11 @@ export function isExternalResponse(response: AxiosResponse): boolean {
  * This method is meant to be called on router creation.
  */
 export async function handleExternalVisit(context: RouterContext): Promise<void> {
+	debug.external('Handling an external visist.')
 	const options = JSON.parse(window.sessionStorage.getItem(STORAGE_EXTERNAL_KEY) || '{}') as ExternalVisitOptions
 	window.sessionStorage.removeItem(STORAGE_EXTERNAL_KEY)
+
+	debug.external('Options from the session storage:', options)
 
 	// If we navigated to somewhere with a hash, we need to update the context
 	// to add said hash because it was initialized without it.
