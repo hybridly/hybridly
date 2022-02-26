@@ -1,7 +1,7 @@
 {
   "name": "sleightful",
   "version": "0.1.0",
-  "description": "A mechanism to develop server-driven, client-rendered applications",
+  "description": "A solution to develop server-driven, client-rendered applications",
   "keywords": [
     "sleightful",
     "inertiajs"
