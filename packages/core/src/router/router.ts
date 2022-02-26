@@ -3,7 +3,7 @@ import defu from 'defu'
 import { EXTERNAL_VISIT_HEADER, SLEIGHTFUL_HEADER } from '../constants'
 import { NotASleightfulResponseError } from '../errors'
 import type { Properties, Property, RouterRequest, RequestData } from '../types'
-import { match, when } from '../utils'
+import { debug, match, when } from '../utils'
 import { createContext, requestFromContext, RouterContext, RouterContextOptions, setContext } from './context'
 import { handleExternalVisit, isExternalResponse, isExternalVisit, performExternalVisit } from './external'
 import { setHistoryState, isBackForwardVisit, handleBackForwardVisit } from './history'
@@ -190,6 +190,8 @@ export function isSleightfulResponse(response: AxiosResponse): boolean {
  */
 export async function navigate(context: RouterContext, options: NavigationOptions) {
 	const shouldReplace = options.replace || sameOrigin(context.url, window.location.href)
+
+	debug.router('Making an internal navigation:', { context, options, shouldReplace })
 
 	// If no request was given, we use the current context instead.
 	options.request ??= requestFromContext(context)

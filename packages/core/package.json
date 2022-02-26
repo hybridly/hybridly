@@ -37,6 +37,7 @@
   },
   "dependencies": {
     "axios": "^0.26.0",
+    "debug": "^4.3.3",
     "defu": "^5.0.1",
     "hookable": "^5.1.1"
   }

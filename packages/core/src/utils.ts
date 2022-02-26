@@ -1,3 +1,13 @@
+import makeDebugger from 'debug'
+
+export const debug = {
+	router: makeDebugger('sleightful:router'),
+	history: makeDebugger('sleightful:history'),
+	url: makeDebugger('sleightful:url'),
+	context: makeDebugger('sleightful:context'),
+	external: makeDebugger('sleightful:external'),
+}
+
 export function match<TValue extends string | number = string, TReturnValue = unknown>(
 	value: TValue,
 	lookup: Record<TValue | 'default', TReturnValue | ((...args: any[]) => TReturnValue)>,

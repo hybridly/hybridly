@@ -1,4 +1,5 @@
 import { navigate } from '..'
+import { debug } from '../utils'
 import { RouterContext } from './context'
 
 /** Puts the given context into the history state. */
@@ -12,6 +13,8 @@ export function setHistoryState(context: RouterContext, options: HistoryOptions 
 		: 'pushState'
 
 	window.history[method](context, '', context.url)
+
+	debug.history('Set history state:', { method, context })
 }
 
 /** Gets the current history state if it exists. */
