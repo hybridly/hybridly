@@ -10,7 +10,10 @@ export function normalizeUrl(href: UrlResolvable): string {
  */
 export function makeUrl(href: UrlResolvable, props: Partial<Record<keyof URL, any>> = {}): URL {
 	try {
-		const url = new URL(String(href))
+		// Workaround for testing. For some reason happy-dom fills this
+		// to double slashes, which breaks URL instanciation.
+		const base = document?.location?.href === '//' ? undefined : document.location.href
+		const url = new URL(String(href), base)
 		Object.entries(props ?? {}).forEach(([key, value]) => Reflect.set(url, key, value))
 
 		return url
