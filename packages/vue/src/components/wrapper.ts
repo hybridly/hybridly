@@ -1,17 +1,16 @@
-import { ComponentOptions, defineComponent, h } from 'vue'
+import { ComponentOptions, defineComponent, h, PropType } from 'vue'
 import { Router, state } from '../stores/state'
 
-export interface WrapperOptions {
-	router: Router
-	component: ComponentOptions
-}
-
-export const wrapper = defineComponent<WrapperOptions>({
-	name: 'Inertia',
-	async setup({ router, component }) {
+export const wrapper = defineComponent({
+	name: 'Sleightful',
+	setup({ router, component }) {
 		if (typeof window !== 'undefined') {
 			state.setRouter(router)
 			state.setComponent(component)
+
+			if (!router || !component) {
+				throw new Error('Sleightful was not properly initialized. The router or initial component is missing.')
+			}
 		}
 
 		return () => {
@@ -41,5 +40,15 @@ export const wrapper = defineComponent<WrapperOptions>({
 				return child
 			}
 		}
+	},
+	props: {
+		router: {
+			type: Object as PropType<Router>,
+			required: true,
+		},
+		component: {
+			type: Object as PropType<ComponentOptions>,
+			required: true,
+		},
 	},
 })
