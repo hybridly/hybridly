@@ -1,5 +1,6 @@
 import { navigate } from '..'
-import { debug } from '../utils'
+import { SCROLL_REGION_ATTRIBUTE } from '../constants'
+import { debounce, debug } from '../utils'
 import { RouterContext } from './context'
 
 type SerializedContext = Omit<RouterContext, 'adapter'>
@@ -32,6 +33,47 @@ export function getHistoryState<T extends keyof HistoryState | undefined>(
 	return key
 		? undefined as any
 		: { state: {} }
+}
+
+/** Register history-related event listeneners. */
+export async function registerEventListeners(context: RouterContext) {
+	debug.history('Registering [popstate] and [scroll] event listeners.')
+
+	// Popstate is for catching back and forward navigations. We want
+	// to imitate native browser behavior while keeping the SPA feeling.
+	window?.addEventListener('popstate', async(event) => {
+		debug.history('Navigation detected (popstate event). State:', { state: event.state })
+
+		// If there is no state in this history entry, we want to use the current
+		// context and reset the scroll positions.
+		if (!event.state) {
+			debug.history('There is no state. Restoring scroll positions.')
+
+			// url: makeUrl(context.url, { hash: window.location.hash }).toString(), // TODO check if necessary
+			return await navigate(context, {
+				preserveScroll: true,
+				preserveState: true,
+				replace: true,
+			})
+		}
+
+		// If the history entry has been sleightfully tempered with, we want
+		// to use it. We swap the components accordingly.
+		await navigate(context, {
+			request: event.state,
+			preserveScroll: true,
+			preserveState: false,
+			updateHistoryState: false,
+		})
+	})
+
+	// On scroll, we want to save the positions of all scrollbars.
+	// This is needed in order to restore them upon navigation.
+	window?.addEventListener('scroll', (event) => debounce(() => {
+		if ((event?.target as Element)?.hasAttribute?.(SCROLL_REGION_ATTRIBUTE)) {
+			// this.saveScrollPositions()
+		}
+	}, 100), true)
 }
 
 /** Checks if the current visit was made by going back or forward. */
