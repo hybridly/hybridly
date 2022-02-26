@@ -20,15 +20,8 @@ export async function performExternalVisit(options: ExternalVisitOptions): Promi
 	}
 }
 
-interface ExternalVisitOptions {
-	/** Target URL. */
-	url: string
-	/** Whether to preserve the scroll if the external visit leads to a sleightful view. */
-	preserveScroll: boolean
-}
-
 /** Checks if the response wants to redirect to an external URL. */
-export function isExternalVisitResponse(response: AxiosResponse): boolean {
+export function isExternalResponse(response: AxiosResponse): boolean {
 	return response?.status === 409 && !!response?.headers[EXTERNAL_VISIT_HEADER]
 }
 
@@ -50,8 +43,23 @@ export async function handleExternalVisit(context: RouterContext): Promise<void>
 	// TODO: add history state to context?
 
 	await navigate(context, {
-		request: context,
 		preserveScroll: options.preserveScroll,
 		preserveState: true,
 	})
+}
+
+/** Checks if the visit being initialized points to an external location. */
+export function isExternalVisit(): boolean {
+	try {
+		return window.sessionStorage.getItem(STORAGE_EXTERNAL_KEY) !== null
+	} catch {}
+
+	return false
+}
+
+interface ExternalVisitOptions {
+	/** Target URL. */
+	url: string
+	/** Whether to preserve the scroll if the external visit leads to a sleightful view. */
+	preserveScroll: boolean
 }

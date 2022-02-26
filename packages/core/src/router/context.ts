@@ -17,6 +17,16 @@ export function setContext(context: RouterContext, merge: Partial<RouterContext>
 	})
 }
 
+/** Gets a request from the current context. */
+export function requestFromContext(context: RouterContext): RouterRequest {
+	return {
+		url: context.url,
+		version: context.version,
+		view: context.view,
+		dialog: context.dialog,
+	}
+}
+
 /** Options for creating a router context. */
 export interface RouterContextOptions {
 	/** The initial request served by the browser. */
