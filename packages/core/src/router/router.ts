@@ -204,9 +204,14 @@ export async function navigate(context: RouterContext, options: NavigationOption
 	// If no request was given, we use the current context instead.
 	options.request ??= requestFromContext(context)
 
+	// We merge the new request into the current context. That will replace the
+	// view, dialog, url and version, so the context is in sync with the
+	// navigation that took place.
+	setContext(context, options.request)
+
 	// First, we swap the view.
 	const viewComponent = await context.adapter.resolveComponent(options.request.view.name)
-	debug.router(`Component ${options.request.view.name} resolved to`, viewComponent)
+	debug.router(`Component [${options.request.view.name}] resolved to:`, viewComponent)
 	await context.adapter.swapView({
 		component: viewComponent,
 		preserveState: options.preserveState,
@@ -215,17 +220,12 @@ export async function navigate(context: RouterContext, options: NavigationOption
 	// We then replace the dialog if a new one is given.
 	if (options.request.dialog) {
 		const dialogComponent = await context.adapter.resolveComponent(options.request.dialog.name)
-		debug.router(`Dialog ${options.request.view.name} resolved to`, dialogComponent)
+		debug.router(`Dialog [${options.request.view.name}] resolved to:`, dialogComponent)
 		await context.adapter.swapDialog({
 			component: dialogComponent,
 			preserveState: options.preserveState,
 		})
 	}
-
-	// We merge the new request into the current context. That will replace the
-	// view, dialog, url and version, so the context is in sync with the
-	// navigation that took place.
-	setContext(context, options.request)
 
 	// History state must be updated to preserve the expected, native browser behavior.
 	// However, in some cases, we just want to swap the views without making an
