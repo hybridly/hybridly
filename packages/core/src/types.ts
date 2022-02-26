@@ -40,8 +40,8 @@ export type SwapDialog = (options: SwapOptions<DialogComponent>) => Promise<void
 |--------------------------------------------------------------------------
 */
 
-/** A request for the router to handle. */
-export interface RouterRequest {
+/** The payload of a visit request from the server. */
+export interface VisitPayload {
 	/** The view to use in this request. */
 	view: View
 	/** An optional dialog. */
@@ -52,7 +52,7 @@ export interface RouterRequest {
 	version: string
 }
 
-export type RequestData = FormDataValue | FormData
+export type RequestPayload = FormDataValue | FormData
 export interface FormData {
 	[Symbol.iterator](): IterableIterator<[string, FormDataValue]>
 	entries(): IterableIterator<[string, FormDataValue]>

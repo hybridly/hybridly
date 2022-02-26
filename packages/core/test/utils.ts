@@ -7,7 +7,7 @@ export const returnsArgs = (...args: any) => args
 
 export function makeRouterContextOptions(options: PartialDeep<RouterContextOptions> = {}): RouterContextOptions {
 	return defu({
-		request: {
+		payload: {
 			url: 'https://localhost',
 			version: 'abc123',
 			view: {
