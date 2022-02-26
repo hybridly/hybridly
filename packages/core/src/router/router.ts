@@ -7,7 +7,7 @@ import { debug, match, when } from '../utils'
 import { createContext, requestFromContext, RouterContext, RouterContextOptions, setContext } from './context'
 import { handleExternalVisit, isExternalResponse, isExternalVisit, performExternalVisit } from './external'
 import { setHistoryState, isBackForwardVisit, handleBackForwardVisit } from './history'
-import { fillHash, makeUrl, sameOrigin, UrlResolvable } from './url'
+import { fillHash, makeUrl, UrlResolvable } from './url'
 
 /** Creates the sleightful router. */
 export async function createRouter(options: RouterContextOptions) {
@@ -69,7 +69,9 @@ async function initializeRouter(context: RouterContext): Promise<RouterContext> 
 			url: makeUrl(context.url, { hash: window.location.hash }).toString(),
 		})
 
-		await navigate(context, { preserveState: true })
+		await navigate(context, {
+			preserveState: true,
+		})
 	}
 
 	// TODO setup event handlers
@@ -78,6 +80,8 @@ async function initializeRouter(context: RouterContext): Promise<RouterContext> 
 }
 
 export async function visit(context: RouterContext, options: VisitOptions) {
+	debug.router('Making a visit:', { context, options })
+
 	// TODO handle cancellation
 	// TODO handle interruptions
 	// TODO events
@@ -113,10 +117,13 @@ export async function visit(context: RouterContext, options: VisitOptions) {
 			},
 		})
 
+		debug.router('Response:', { response })
+
 		// An invalid response is a response that do not declare itself via
 		// the protocole header.
 		// In such cases, we want to throw to handler it later.
 		if (!isSleightfulResponse(response)) {
+			debug.router('The response is not sleightful.')
 			throw new NotASleightfulResponseError(response)
 		}
 
@@ -124,6 +131,7 @@ export async function visit(context: RouterContext, options: VisitOptions) {
 		// load to a requested URL. It may be the same URL, in which case a
 		// full page refresh will be performed.
 		if (isExternalResponse(response)) {
+			debug.router('The response is explicitely external.')
 			await performExternalVisit({
 				url: fillHash(requestUrl, response.headers[EXTERNAL_VISIT_HEADER]),
 				preserveScroll: options.preserveScroll === true,
@@ -131,6 +139,7 @@ export async function visit(context: RouterContext, options: VisitOptions) {
 		}
 
 		// At this point, we know the response is sleightful.
+		debug.router('The response is sleightful.')
 		const routerRequest = response.data as RouterRequest
 
 		// If the visit was asking for certain properties only, we ensure that the
@@ -155,7 +164,7 @@ export async function visit(context: RouterContext, options: VisitOptions) {
 			},
 			preserveScroll: options.preserveScroll === true,
 			preserveState: options.preserveState,
-			replace: options.replace,
+			replace: options.replace === true,
 		})
 
 		// If the new view's properties has errors, userland expects an event
@@ -189,15 +198,15 @@ export function isSleightfulResponse(response: AxiosResponse): boolean {
  * @internal This function is meant to be used internally.
  */
 export async function navigate(context: RouterContext, options: NavigationOptions) {
-	const shouldReplace = options.replace || sameOrigin(context.url, window.location.href)
-
-	debug.router('Making an internal navigation:', { context, options, shouldReplace })
+	debug.router('Making an internal navigation:', { context, options })
+	// const shouldReplace = options.replace || sameOrigin(context.url, window.location.href)
 
 	// If no request was given, we use the current context instead.
 	options.request ??= requestFromContext(context)
 
 	// First, we swap the view.
 	const viewComponent = await context.adapter.resolveComponent(options.request.view.name)
+	debug.router(`Component ${options.request.view.name} resolved to`, viewComponent)
 	await context.adapter.swapView({
 		component: viewComponent,
 		preserveState: options.preserveState,
@@ -206,6 +215,7 @@ export async function navigate(context: RouterContext, options: NavigationOption
 	// We then replace the dialog if a new one is given.
 	if (options.request.dialog) {
 		const dialogComponent = await context.adapter.resolveComponent(options.request.dialog.name)
+		debug.router(`Dialog ${options.request.view.name} resolved to`, dialogComponent)
 		await context.adapter.swapDialog({
 			component: dialogComponent,
 			preserveState: options.preserveState,
@@ -220,8 +230,8 @@ export async function navigate(context: RouterContext, options: NavigationOption
 	// History state must be updated to preserve the expected, native browser behavior.
 	// However, in some cases, we just want to swap the views without making an
 	// actual navigation.
-	if (options.updateHistoryState) {
-		setHistoryState(context, { replace: shouldReplace })
+	if (options.updateHistoryState !== false) {
+		setHistoryState(context, { replace: options.replace })
 	}
 
 	if (options.preserveScroll) {
