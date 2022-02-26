@@ -1,4 +1,5 @@
 import { ResolveComponent, RouterRequest, SwapDialog, SwapView, View } from '../types'
+import { debug } from '../utils'
 import { makeUrl } from './url'
 
 /** Creates a new context for the router. */
@@ -15,6 +16,8 @@ export function setContext(context: RouterContext, merge: Partial<RouterContext>
 	Object.keys(merge).forEach((key) => {
 		Reflect.set(context, key, merge[key as keyof RouterContext])
 	})
+
+	debug.context('Updated context:', { context, added: merge })
 }
 
 /** Gets a request from the current context. */
