@@ -6,7 +6,7 @@ import type { Properties, Property, RouterRequest, RequestData } from '../types'
 import { debug, match, when } from '../utils'
 import { createContext, requestFromContext, RouterContext, RouterContextOptions, setContext } from './context'
 import { handleExternalVisit, isExternalResponse, isExternalVisit, performExternalVisit } from './external'
-import { setHistoryState, isBackForwardVisit, handleBackForwardVisit } from './history'
+import { setHistoryState, isBackForwardVisit, handleBackForwardVisit, registerEventListeners } from './history'
 import { fillHash, makeUrl, UrlResolvable } from './url'
 
 /** Creates the sleightful router. */
@@ -75,6 +75,7 @@ async function initializeRouter(context: RouterContext): Promise<RouterContext> 
 	}
 
 	// TODO setup event handlers
+	registerEventListeners(context)
 
 	return context
 }
