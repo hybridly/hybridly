@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { fillHash, makeUrl, sameOrigin } from '../../src/router/url'
+import { fillHash, makeUrl, sameUrls } from '../../src/router/url'
 
 describe('makeUrl', () => {
 	it('resolves a string to an url', () => {
@@ -29,7 +29,7 @@ describe('sameOrigin', () => {
 		]
 
 		map.forEach(({ urls, result }) => {
-			expect(sameOrigin(...urls)).toBe(result)
+			expect(sameUrls(...urls)).toBe(result)
 		})
 	})
 })

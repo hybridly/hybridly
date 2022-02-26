@@ -23,9 +23,9 @@ export function makeUrl(href: UrlResolvable, props: Partial<Record<keyof URL, an
 }
 
 /**
- * Checks if the given URLs have the same origin.
+ * Checks if the given URLs have the same origin and path.
  */
-export function sameOrigin(...hrefs: UrlResolvable[]): boolean {
+export function sameUrls(...hrefs: UrlResolvable[]): boolean {
 	if (hrefs.length < 2) {
 		return true
 	}
@@ -49,7 +49,7 @@ export function fillHash(currentUrl: UrlResolvable, targetUrl: UrlResolvable): s
 	currentUrl = makeUrl(currentUrl)
 	targetUrl = makeUrl(targetUrl)
 
-	if (currentUrl.hash && !targetUrl.hash && sameOrigin(targetUrl, currentUrl)) {
+	if (currentUrl.hash && !targetUrl.hash && sameUrls(targetUrl, currentUrl)) {
 		targetUrl.hash = currentUrl.hash
 	}
 
