@@ -13,6 +13,7 @@ export default defineBuildConfig({
 		'rollup',
 		'postcss',
 		'source-map-js',
+		'type-fest',
 	],
 	rollup: {
 		emitCJS: true,

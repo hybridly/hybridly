@@ -1,7 +1,8 @@
-import { DefineComponent } from 'vue'
+import { ComponentOptions, DefineComponent, h } from 'vue'
 import { RouterRequest, ResolveComponent, createRouter } from '@sleightful/core'
-import { wrapper, WrapperOptions } from './components/wrapper'
-import { state } from './stores/state'
+import { Promisable } from 'type-fest'
+import { wrapper } from './components/wrapper'
+import { Router, state } from './stores/state'
 // import { plugin } from './plugin'
 
 export async function initializeSleightful(options: SleightfulOptions) {
@@ -17,18 +18,18 @@ export async function initializeSleightful(options: SleightfulOptions) {
 			swapDialog: async() => {},
 			swapView: async(options) => {
 				state.setComponent(options.component)
+				// state.preserveState(options.preserveState)
 			},
 		},
 		request,
 	})
 
-	options.setup({
+	const component = await resolve(request.view.name)
+	await options.setup({
 		element,
 		wrapper,
-		options: {
-			router,
-			component: await resolve(request.view.name),
-		},
+		props: { router, component },
+		render: () => h(wrapper as any, { router, component }),
 		// plugin,
 	})
 }
@@ -83,7 +84,7 @@ interface SleightfulOptions {
 	/** ID of the app element. */
 	id?: string
 	/** Initial view data. */
-	view: RouterRequest
+	view?: RouterRequest
 	/** A collection of pages. */
 	pages?: Record<string, any>
 	/** An optional default persistent layout. */
@@ -91,13 +92,19 @@ interface SleightfulOptions {
 	/** A custom component resolution option. */
 	resolve?: ResolveComponent
 	/** Sets up the sleightful router. */
-	setup: (options: SetupOptions) => Promise<void>
+	setup: (options: SetupOptions) => Promisable<void>
 }
 
 interface SetupOptions {
-	wrapper: any
-	// plugin: any
-	/** ID of the app element. */
+	/** DOM element to mount Vue on. */
 	element: Element
-	options: WrapperOptions
+	/** Sleightful wrapper component. */
+	wrapper: any
+	/** Sleightful wrapper component properties. */
+	props: {
+		router: Router
+		component: ComponentOptions
+	}
+	/** Renders the wrapper. */
+	render: () => ReturnType<typeof h>
 }
