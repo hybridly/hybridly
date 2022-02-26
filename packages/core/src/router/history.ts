@@ -2,6 +2,7 @@ import { navigate } from '..'
 import { SCROLL_REGION_ATTRIBUTE } from '../constants'
 import { debounce, debug } from '../utils'
 import { RouterContext } from './context'
+import { makeUrl } from './url'
 
 type SerializedContext = Omit<RouterContext, 'adapter'>
 
@@ -44,13 +45,17 @@ export async function registerEventListeners(context: RouterContext) {
 	window?.addEventListener('popstate', async(event) => {
 		debug.history('Navigation detected (popstate event). State:', { state: event.state })
 
-		// If there is no state in this history entry, we want to use the current
-		// context and reset the scroll positions.
+		// If there is no state in this history entry, we come from the user
+		// replacing the URL manually. In this case, we want to restore everything
+		// like it was. We need to copy the hash if any and restore the scroll positions.
 		if (!event.state) {
-			debug.history('There is no state. Restoring scroll positions.')
+			debug.history('There is no state. Adding hash if any and restoring scroll positions.')
 
-			// url: makeUrl(context.url, { hash: window.location.hash }).toString(), // TODO check if necessary
 			return await navigate(context, {
+				request: {
+					...context,
+					url: makeUrl(context.url, { hash: window.location.hash }).toString(),
+				},
 				preserveScroll: true,
 				preserveState: true,
 				replace: true,
@@ -87,6 +92,7 @@ export function isBackForwardVisit(): boolean {
 
 /** Handles a visit which was going back or forward. */
 export async function handleBackForwardVisit(context: RouterContext): Promise<void> {
+	debug.router('Handling a back/forward visit.')
 	window.history.state.version = context.version
 
 	await navigate(context, {
