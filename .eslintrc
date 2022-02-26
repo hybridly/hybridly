@@ -1,3 +1,6 @@
 {
-	"extends": "@innocenzi/eslint-config"
+	"extends": "@innocenzi/eslint-config",
+	"rules": {
+		"import/named": "off"
+	}
 }

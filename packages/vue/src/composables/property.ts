@@ -1,0 +1,37 @@
+import { computed, ComputedRef } from 'vue'
+import { state } from '../stores/state'
+
+/** Accesses a property with a dot notation. */
+export function useProperty<T, P extends Path<T> = Path<T>>(
+	path: [P] extends [never] ? string : P,
+): ComputedRef<[PathValue<T, P>] extends [never] ? any : PathValue<T, P>> {
+	return computed(() => (path as string)
+		.split('.')
+		.reduce((o: any, i: string) => o[i], state.router.value?.context.view.properties) as any,
+	)
+}
+
+// Credit to @diegohaz for the dot-notation access implementation
+// https://twitter.com/diegohaz/status/1309489079378219009
+
+type PathImpl<T, K extends keyof T> =
+	K extends string
+		? T[K] extends Record<string, any>
+			? T[K] extends ArrayLike<any>
+				? K | `${K}.${PathImpl<T[K], Exclude<keyof T[K], keyof any[]>>}`
+				: K | `${K}.${PathImpl<T[K], keyof T[K]>}`
+			: K
+		: never
+
+type Path<T> = PathImpl<T, keyof T> | keyof T
+
+type PathValue<T, P extends Path<T>> =
+	P extends `${infer K}.${infer Rest}`
+		? K extends keyof T
+			? Rest extends Path<T[K]>
+				? PathValue<T[K], Rest>
+				: never
+			: never
+		: P extends keyof T
+			? T[P]
+			: never

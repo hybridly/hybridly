@@ -30,27 +30,27 @@ export async function createRouter(options: RouterContextOptions) {
 		},
 
 		/** Makes a GET request to the given URL. */
-		get: async(url: UrlResolvable, data: VisitOptions['data'] = {}, options: Exclude<VisitOptions, 'method' | 'data'>) => {
+		get: async(url: UrlResolvable, data: VisitOptions['data'] = {}, options: Omit<VisitOptions, 'method' | 'data' | 'url'> = {}) => {
 			return await visit(context, { ...options, url, data, method: 'GET' })
 		},
 
 		/** Makes a POST request to the given URL. */
-		post: async(url: UrlResolvable, data: VisitOptions['data'] = {}, options: Exclude<VisitOptions, 'method' | 'data'>) => {
+		post: async(url: UrlResolvable, data: VisitOptions['data'] = {}, options: Omit<VisitOptions, 'method' | 'data' | 'url'> = {}) => {
 			return await visit(context, { preserveState: true, ...options, url, data, method: 'POST' })
 		},
 
 		/** Makes a PUT request to the given URL. */
-		put: async(url: UrlResolvable, data: VisitOptions['data'] = {}, options: Exclude<VisitOptions, 'method' | 'data'>) => {
+		put: async(url: UrlResolvable, data: VisitOptions['data'] = {}, options: Omit<VisitOptions, 'method' | 'data' | 'url'> = {}) => {
 			return await visit(context, { preserveState: true, ...options, url, data, method: 'PUT' })
 		},
 
 		/** Makes a PATCH request to the given URL. */
-		patch: async(url: UrlResolvable, data: VisitOptions['data'] = {}, options: Exclude<VisitOptions, 'method' | 'data'>) => {
+		patch: async(url: UrlResolvable, data: VisitOptions['data'] = {}, options: Omit<VisitOptions, 'method' | 'data' | 'url'> = {}) => {
 			return await visit(context, { preserveState: true, ...options, url, data, method: 'PATCH' })
 		},
 
 		/** Makes a DELETE request to the given URL. */
-		delete: async(url: UrlResolvable, data: VisitOptions['data'] = {}, options: Exclude<VisitOptions, 'method' | 'data'>) => {
+		delete: async(url: UrlResolvable, data: VisitOptions['data'] = {}, options: Omit<VisitOptions, 'method' | 'data' | 'url'> = {}) => {
 			return await visit(context, { preserveState: true, ...options, url, data, method: 'DELETE' })
 		},
 	}
