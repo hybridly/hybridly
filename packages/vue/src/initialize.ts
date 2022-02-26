@@ -1,12 +1,12 @@
 import { ComponentOptions, DefineComponent, h } from 'vue'
-import { RouterRequest, ResolveComponent, createRouter } from '@sleightful/core'
+import { VisitPayload, ResolveComponent, createRouter } from '@sleightful/core'
 import { Promisable } from 'type-fest'
 import { wrapper } from './components/wrapper'
 import { Router, state } from './stores/state'
 // import { plugin } from './plugin'
 
 export async function initializeSleightful(options: SleightfulOptions) {
-	const { element, request, resolve } = prepare(options)
+	const { element, payload, resolve } = prepare(options)
 
 	if (!element) {
 		throw new Error('Could not find an HTML element to initialize Vue on.')
@@ -21,10 +21,10 @@ export async function initializeSleightful(options: SleightfulOptions) {
 				// state.preserveState(options.preserveState)
 			},
 		},
-		request,
+		payload,
 	})
 
-	const component = await resolve(request.view.name)
+	const component = await resolve(payload.view.name)
 	await options.setup({
 		element,
 		wrapper,
@@ -37,7 +37,7 @@ export async function initializeSleightful(options: SleightfulOptions) {
 function prepare(options: SleightfulOptions) {
 	const isServer = typeof window === 'undefined'
 	const element = document?.getElementById(options.id ?? 'app') ?? undefined
-	const request = options.view ?? JSON.parse(element?.dataset.page || '{}')
+	const payload = options.payload || JSON.parse(element?.dataset.payload || '') || undefined
 	const resolve = async(name: string): Promise<DefineComponent> => {
 		if (options.resolve) {
 			const component = await options.resolve?.(name)
@@ -54,7 +54,7 @@ function prepare(options: SleightfulOptions) {
 	return {
 		isServer,
 		element,
-		request,
+		payload,
 		resolve,
 	}
 }
@@ -84,7 +84,7 @@ interface SleightfulOptions {
 	/** ID of the app element. */
 	id?: string
 	/** Initial view data. */
-	view?: RouterRequest
+	payload?: VisitPayload
 	/** A collection of pages. */
 	pages?: Record<string, any>
 	/** An optional default persistent layout. */

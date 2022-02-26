@@ -1,12 +1,12 @@
-import { ResolveComponent, RouterRequest, SwapDialog, SwapView, View } from '../types'
+import { ResolveComponent, VisitPayload, SwapDialog, SwapView, View } from '../types'
 import { debug } from '../utils'
 import { makeUrl } from './url'
 
 /** Creates a new context for the router. */
 export function createContext(options: RouterContextOptions): RouterContext {
 	return {
-		...options.request,
-		url: makeUrl(options.request.url).toString(),
+		...options.payload,
+		url: makeUrl(options.payload.url).toString(),
 		adapter: options.adapter,
 	}
 }
@@ -20,8 +20,8 @@ export function setContext(context: RouterContext, merge: Partial<RouterContext>
 	debug.context('Updated context:', { context, added: merge })
 }
 
-/** Gets a request from the current context. */
-export function requestFromContext(context: RouterContext): RouterRequest {
+/** Gets a visit payload from the current context. */
+export function payloadFromContext(context: RouterContext): VisitPayload {
 	return {
 		url: context.url,
 		version: context.version,
@@ -32,8 +32,8 @@ export function requestFromContext(context: RouterContext): RouterRequest {
 
 /** Options for creating a router context. */
 export interface RouterContextOptions {
-	/** The initial request served by the browser. */
-	request: RouterRequest
+	/** The initial payload served by the browser. */
+	payload: VisitPayload
 	/** Adapter-specific functions. */
 	adapter: Adapter
 }

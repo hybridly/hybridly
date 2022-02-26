@@ -2,9 +2,9 @@ import axios, { AxiosResponse } from 'axios'
 import defu from 'defu'
 import { EXTERNAL_VISIT_HEADER, SLEIGHTFUL_HEADER } from '../constants'
 import { NotASleightfulResponseError } from '../errors'
-import type { Properties, Property, RouterRequest, RequestData } from '../types'
+import type { Properties, Property, VisitPayload, RequestPayload } from '../types'
 import { debug, match, when } from '../utils'
-import { createContext, requestFromContext, RouterContext, RouterContextOptions, setContext } from './context'
+import { createContext, payloadFromContext, RouterContext, RouterContextOptions, setContext } from './context'
 import { handleExternalVisit, isExternalResponse, isExternalVisit, performExternalVisit } from './external'
 import { setHistoryState, isBackForwardVisit, handleBackForwardVisit, registerEventListeners } from './history'
 import { fillHash, makeUrl, UrlResolvable } from './url'
@@ -141,13 +141,13 @@ export async function visit(context: RouterContext, options: VisitOptions) {
 
 		// At this point, we know the response is sleightful.
 		debug.router('The response is sleightful.')
-		const routerRequest = response.data as RouterRequest
+		const payload = response.data as VisitPayload
 
 		// If the visit was asking for certain properties only, we ensure that the
 		// new request object contains the properties of the current view context,
 		// because the back-end sent back only the required properties.
-		if (options.only && routerRequest.view.name === context.view.name) {
-			routerRequest.view.properties = defu(routerRequest.view.properties, context.view.properties)
+		if (options.only && payload.view.name === context.view.name) {
+			payload.view.properties = defu(payload.view.properties, context.view.properties)
 		}
 
 		// If the visit was asking to preserve the current state, we also need to
@@ -159,9 +159,9 @@ export async function visit(context: RouterContext, options: VisitOptions) {
 		// If everything was according to the plan, we can make our navigation and
 		// update the context. Underlying adapters get the updated data.
 		await navigate(context, {
-			request: {
-				...routerRequest,
-				url: fillHash(requestUrl, routerRequest.url),
+			payload: {
+				...payload,
+				url: fillHash(requestUrl, payload.url),
 			},
 			preserveScroll: options.preserveScroll === true,
 			preserveState: options.preserveState,
@@ -203,25 +203,25 @@ export async function navigate(context: RouterContext, options: NavigationOption
 	// const shouldReplace = options.replace || sameOrigin(context.url, window.location.href)
 
 	// If no request was given, we use the current context instead.
-	options.request ??= requestFromContext(context)
+	options.payload ??= payloadFromContext(context)
 
 	// We merge the new request into the current context. That will replace the
 	// view, dialog, url and version, so the context is in sync with the
 	// navigation that took place.
-	setContext(context, options.request)
+	setContext(context, options.payload)
 
 	// First, we swap the view.
-	const viewComponent = await context.adapter.resolveComponent(options.request.view.name)
-	debug.router(`Component [${options.request.view.name}] resolved to:`, viewComponent)
+	const viewComponent = await context.adapter.resolveComponent(options.payload.view.name)
+	debug.router(`Component [${options.payload.view.name}] resolved to:`, viewComponent)
 	await context.adapter.swapView({
 		component: viewComponent,
 		preserveState: options.preserveState,
 	})
 
 	// We then replace the dialog if a new one is given.
-	if (options.request.dialog) {
-		const dialogComponent = await context.adapter.resolveComponent(options.request.dialog.name)
-		debug.router(`Dialog [${options.request.view.name}] resolved to:`, dialogComponent)
+	if (options.payload.dialog) {
+		const dialogComponent = await context.adapter.resolveComponent(options.payload.dialog.name)
+		debug.router(`Dialog [${options.payload.view.name}] resolved to:`, dialogComponent)
 		await context.adapter.swapDialog({
 			component: dialogComponent,
 			preserveState: options.preserveState,
@@ -242,7 +242,7 @@ export async function navigate(context: RouterContext, options: NavigationOption
 
 export interface NavigationOptions {
 	/** View to navigate to. */
-	request?: RouterRequest
+	payload?: VisitPayload
 	/**
 	 * Whether to replace the current history state instead of adding
 	 * one. This affects the browser's "back" and "forward" features.
@@ -265,7 +265,7 @@ export interface VisitOptions extends Omit<NavigationOptions, 'request'> {
 	/** HTTP verb to use for the request. */
 	method?: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE'
 	/** Body of the request. */
-	data?: RequestData
+	data?: RequestPayload
 	/** Which properties to update for this visit. Other properties will be ignored. */
 	only?: Property[] | Properties
 	/** Which properties not to update for this visit. Other properties will be updated. */

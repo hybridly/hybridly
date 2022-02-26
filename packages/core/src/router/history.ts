@@ -52,7 +52,7 @@ export async function registerEventListeners(context: RouterContext) {
 			debug.history('There is no state. Adding hash if any and restoring scroll positions.')
 
 			return await navigate(context, {
-				request: {
+				payload: {
 					...context,
 					url: makeUrl(context.url, { hash: window.location.hash }).toString(),
 				},
@@ -65,7 +65,7 @@ export async function registerEventListeners(context: RouterContext) {
 		// If the history entry has been sleightfully tempered with, we want
 		// to use it. We swap the components accordingly.
 		await navigate(context, {
-			request: event.state,
+			payload: event.state,
 			preserveScroll: true,
 			preserveState: false,
 			updateHistoryState: false,

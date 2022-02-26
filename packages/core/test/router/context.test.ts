@@ -4,7 +4,7 @@ import { fakeRouterContext, makeRouterContextOptions } from '../utils'
 
 it('creates a valid router context', () => {
 	const context = createContext(makeRouterContextOptions({
-		request: {
+		payload: {
 			url: 'https://localhost',
 			version: '123',
 			view: {
@@ -21,7 +21,7 @@ it('creates a valid router context', () => {
 
 it('updates the context', () => {
 	const context = fakeRouterContext({
-		request: {
+		payload: {
 			url: 'https://localhost',
 		},
 	})
