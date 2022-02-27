@@ -1,5 +1,6 @@
 import { ResolveComponent, VisitPayload, SwapDialog, SwapView, View } from '../types'
 import { debug } from '../utils'
+import { VisitOptions } from './router'
 import { makeUrl } from './url'
 
 /** Creates a new context for the router. */
@@ -53,6 +54,8 @@ export interface RouterContext {
 	adapter: Adapter
 	/** Scroll positions of the current page's DOM elements. */
 	scrollRegions: ScrollRegion[]
+	/** Currently pending visit. */
+	activeVisit?: PendingVisit
 }
 
 /** Adapter-specific functions. */
@@ -63,6 +66,16 @@ export interface Adapter {
 	swapView: SwapView
 	/** Swaps to the given dialog. */
 	swapDialog: SwapDialog
+}
+
+/** An axios visit being made. */
+export interface PendingVisit {
+	/** The URL to which the request is being made. */
+	url: URL
+	/** Abort controller associated to this request. */
+	controller: AbortController
+	/** Options for the associated visit. */
+	options: VisitOptions
 }
 
 export interface ScrollRegion {
