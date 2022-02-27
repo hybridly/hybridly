@@ -2,6 +2,7 @@ import { navigate } from '..'
 import { SCROLL_REGION_ATTRIBUTE } from '../constants'
 import { debounce, debug } from '../utils'
 import { RouterContext } from './context'
+import { saveScrollPositions } from './scroll'
 import { makeUrl } from './url'
 
 type SerializedContext = Omit<RouterContext, 'adapter'>
@@ -76,7 +77,7 @@ export async function registerEventListeners(context: RouterContext) {
 	// This is needed in order to restore them upon navigation.
 	window?.addEventListener('scroll', (event) => debounce(() => {
 		if ((event?.target as Element)?.hasAttribute?.(SCROLL_REGION_ATTRIBUTE)) {
-			// this.saveScrollPositions()
+			saveScrollPositions(context)
 		}
 	}, 100), true)
 }
@@ -99,8 +100,6 @@ export async function handleBackForwardVisit(context: RouterContext): Promise<vo
 		preserveScroll: true,
 		preserveState: true,
 	})
-
-	// restoreScrollPositions()
 }
 
 /** Serializes the context so it can be written to the history state. */
@@ -110,6 +109,7 @@ export function serializeContext(context: RouterContext): SerializedContext {
 		version: context.version,
 		view: context.view,
 		dialog: context.dialog,
+		scrollRegions: context.scrollRegions,
 	}
 }
 

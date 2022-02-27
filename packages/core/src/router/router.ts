@@ -7,6 +7,7 @@ import { debug, match, when } from '../utils'
 import { createContext, payloadFromContext, RouterContext, RouterContextOptions, setContext } from './context'
 import { handleExternalVisit, isExternalResponse, isExternalVisit, performExternalVisit } from './external'
 import { setHistoryState, isBackForwardVisit, handleBackForwardVisit, registerEventListeners } from './history'
+import { resetScrollPositions, restoreScrollPositions, saveScrollPositions } from './scroll'
 import { fillHash, makeUrl, UrlResolvable } from './url'
 
 /** Creates the sleightful router. */
@@ -88,6 +89,10 @@ export async function visit(context: RouterContext, options: VisitOptions) {
 	// TODO events
 	// TODO form transformations
 	// TODO preserveState from history
+
+	// Before making the visit, we need to make sure the scroll positions are
+	// saved, so we can restore them later.
+	saveScrollPositions(context)
 
 	try {
 		const requestUrl = makeUrl(options.url ?? context.url)
@@ -235,8 +240,10 @@ export async function navigate(context: RouterContext, options: NavigationOption
 		setHistoryState(context, { replace: options.replace })
 	}
 
-	if (options.preserveScroll) {
-		// TODO
+	if (!options.preserveScroll) {
+		resetScrollPositions(context)
+	} else {
+		restoreScrollPositions(context)
 	}
 }
 

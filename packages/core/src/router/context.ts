@@ -8,6 +8,7 @@ export function createContext(options: RouterContextOptions): RouterContext {
 		...options.payload,
 		url: makeUrl(options.payload.url).toString(),
 		adapter: options.adapter,
+		scrollRegions: [],
 	}
 }
 
@@ -50,6 +51,8 @@ export interface RouterContext {
 	version: string
 	/** The current adapter's functions. */
 	adapter: Adapter
+	/** Scroll positions of the current page's DOM elements. */
+	scrollRegions: ScrollRegion[]
 }
 
 /** Adapter-specific functions. */
@@ -60,4 +63,9 @@ export interface Adapter {
 	swapView: SwapView
 	/** Swaps to the given dialog. */
 	swapDialog: SwapDialog
+}
+
+export interface ScrollRegion {
+	top: number
+	left: number
 }

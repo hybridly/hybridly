@@ -6,6 +6,7 @@ export const debug = {
 	url: makeDebugger('sleightful:url'),
 	context: makeDebugger('sleightful:context'),
 	external: makeDebugger('sleightful:external'),
+	scroll: makeDebugger('sleightful:scroll'),
 }
 
 export function match<TValue extends string | number = string, TReturnValue = unknown>(
