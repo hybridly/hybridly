@@ -20,6 +20,11 @@ export async function createRouter(options: RouterContextOptions) {
 	return {
 		context,
 
+		/** Aborts the currently pending visit, if any. */
+		abort: async() => {
+			return context.activeVisit?.controller.abort()
+		},
+
 		/** Makes a visit with the given options. */
 		visit: async(options: VisitOptions) => {
 			return await visit(context, options)
@@ -81,7 +86,7 @@ async function initializeRouter(context: RouterContext): Promise<RouterContext> 
 	return context
 }
 
-export async function visit(context: RouterContext, options: VisitOptions) {
+export async function visit(context: RouterContext, options: VisitOptions): Promise<VisitResponse> {
 	debug.router('Making a visit:', { context, options })
 
 	// TODO handle cancellation
@@ -94,13 +99,24 @@ export async function visit(context: RouterContext, options: VisitOptions) {
 	// saved, so we can restore them later.
 	saveScrollPositions(context)
 
+	// A visit is being made, we need to add it to the context so it
+	// can be reused later on.
+	setContext(context, {
+		activeVisit: {
+			url: makeUrl(options.url ?? context.url),
+			controller: new AbortController(),
+			options,
+		},
+	})
+
 	try {
-		const requestUrl = makeUrl(options.url ?? context.url)
+		debug.router('Making request with axios.')
 		const response = await axios.request({
-			url: requestUrl.toString(),
+			url: context.activeVisit!.url.toString(),
 			method: options.method ?? 'GET',
 			data: options.method === 'GET' ? {} : options.data,
 			params: options.method === 'GET' ? options.data : {},
+			signal: context.activeVisit!.controller.signal,
 			headers: {
 				...options.headers,
 				...when(options.only?.length || options.except?.length, {
@@ -122,7 +138,6 @@ export async function visit(context: RouterContext, options: VisitOptions) {
 				}
 			},
 		})
-
 		debug.router('Response:', { response })
 
 		// An invalid response is a response that do not declare itself via
@@ -139,7 +154,7 @@ export async function visit(context: RouterContext, options: VisitOptions) {
 		if (isExternalResponse(response)) {
 			debug.router('The response is explicitely external.')
 			await performExternalVisit({
-				url: fillHash(requestUrl, response.headers[EXTERNAL_VISIT_HEADER]),
+				url: fillHash(context.activeVisit!.url, response.headers[EXTERNAL_VISIT_HEADER]),
 				preserveScroll: options.preserveScroll === true,
 			})
 		}
@@ -166,7 +181,7 @@ export async function visit(context: RouterContext, options: VisitOptions) {
 		await navigate(context, {
 			payload: {
 				...payload,
-				url: fillHash(requestUrl, payload.url),
+				url: fillHash(context.activeVisit!.url, payload.url),
 			},
 			preserveScroll: options.preserveScroll === true,
 			preserveState: options.preserveState,
@@ -181,16 +196,25 @@ export async function visit(context: RouterContext, options: VisitOptions) {
 			// TODO: emit error event, with scoped (options.errorBag) errors
 		}
 
+		return { response }
 	//
 	} catch (error: any) {
 		match(error.constructor.name, {
+			AbortError: () => {
+				debug.router('The request was cancelled.', error)
+			},
 			NotASleightfulResponseError: () => {
-				console.error('Not a sleightful response', error)
+				debug.router('The request was not sleightful.', error)
 			},
 			default: () => {
-				console.error('Unknown error', error)
+				debug.router('An unknown error occured.', error)
 			},
 		})
+
+		return { error }
+	} finally {
+		debug.router('Ending visit.')
+		setContext(context, { activeVisit: undefined })
 	}
 }
 
@@ -281,4 +305,9 @@ export interface VisitOptions extends Omit<NavigationOptions, 'request'> {
 	headers?: Record<string, string>
 	/** The bag in which to put potential errors. */
 	errorBag?: string
+}
+
+export interface VisitResponse {
+	response?: AxiosResponse
+	error?: Error
 }
