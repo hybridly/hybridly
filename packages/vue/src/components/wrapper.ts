@@ -1,15 +1,16 @@
+import { RouterContext } from '@sleightful/core'
 import { ComponentOptions, defineComponent, h, PropType } from 'vue'
-import { Router, state } from '../stores/state'
+import { state } from '../stores/state'
 
 export const wrapper = defineComponent({
 	name: 'Sleightful',
-	setup({ router, component }) {
+	setup({ context, component }) {
 		if (typeof window !== 'undefined') {
-			state.setRouter(router)
+			state.setContext(context)
 			state.setComponent(component)
 
-			if (!router || !component) {
-				throw new Error('Sleightful was not properly initialized. The router or initial component is missing.')
+			if (!context || !component) {
+				throw new Error('Sleightful was not properly initialized. The context or initial component is missing.')
 			}
 		}
 
@@ -18,7 +19,7 @@ export const wrapper = defineComponent({
 				state.component.value.inheritAttrs = !!state.component.value.inheritAttrs
 
 				const child = h(state.component.value, {
-					...state.router.value?.context.view?.properties,
+					...state.context.value?.view?.properties,
 					key: state.key.value,
 				})
 
@@ -33,7 +34,7 @@ export const wrapper = defineComponent({
 						.reduce((child: any, layout: any) => {
 							layout.inheritAttrs = !!layout.inheritAttrs
 
-							return h(layout, { ...state.router.value?.context.view?.properties }, () => child)
+							return h(layout, { ...state.context.value?.view?.properties }, () => child)
 						})
 				}
 
@@ -42,8 +43,8 @@ export const wrapper = defineComponent({
 		}
 	},
 	props: {
-		router: {
-			type: Object as PropType<Router>,
+		context: {
+			type: Object as PropType<RouterContext>,
 			required: true,
 		},
 		component: {

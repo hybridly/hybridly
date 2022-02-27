@@ -40,7 +40,6 @@
   },
   "dependencies": {
     "@sleightful/core": "workspace:*",
-    "sleightful": "workspace:*",
     "vue": "^3.2.31"
   }
 }

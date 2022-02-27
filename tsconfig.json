@@ -14,6 +14,7 @@
       "sleightful/vite": ["./packages/sleightful/src/vite.ts"],
       "@sleightful/core": ["./packages/core/src/index.ts"],
       "@sleightful/vite": ["./packages/vite/src/index.ts"],
+      "@sleightful/vue": ["./packages/vue/src/index.ts"],
     }
   },
   "exclude": [

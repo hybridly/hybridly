@@ -11,81 +11,29 @@ import { resetScrollPositions, restoreScrollPositions, saveScrollPositions } fro
 import { fillHash, makeUrl, UrlResolvable } from './url'
 
 /** Creates the sleightful router. */
-export async function createRouter(options: RouterContextOptions) {
-	const context = await initializeRouter(createContext(options))
+export async function createRouter(options: RouterContextOptions): Promise<RouterContext> {
+	return await initializeRouter(createContext(options))
+}
 
-	// TODO events
-	// TODO remembering state
-
+/**
+ * Gets a router that use the context returned by the resolve function.
+ * This makes the router reactive to context changes.
+ */
+export function resolveRouter(resolve: ResolveContext): Router {
 	return {
-		context,
-
-		/** Aborts the currently pending visit, if any. */
-		abort: async() => {
-			return context.activeVisit?.controller.abort()
-		},
-
-		/** Makes a visit with the given options. */
-		visit: async(options: VisitOptions) => {
-			return await visit(context, options)
-		},
-
-		/** Reloads the current page. */
-		reload: async(options: VisitOptions) => {
-			return await visit(context, { preserveScroll: true, preserveState: true, ...options })
-		},
-
-		/** Makes a GET request to the given URL. */
-		get: async(url: UrlResolvable, data: VisitOptions['data'] = {}, options: Omit<VisitOptions, 'method' | 'data' | 'url'> = {}) => {
-			return await visit(context, { ...options, url, data, method: 'GET' })
-		},
-
-		/** Makes a POST request to the given URL. */
-		post: async(url: UrlResolvable, data: VisitOptions['data'] = {}, options: Omit<VisitOptions, 'method' | 'data' | 'url'> = {}) => {
-			return await visit(context, { preserveState: true, ...options, url, data, method: 'POST' })
-		},
-
-		/** Makes a PUT request to the given URL. */
-		put: async(url: UrlResolvable, data: VisitOptions['data'] = {}, options: Omit<VisitOptions, 'method' | 'data' | 'url'> = {}) => {
-			return await visit(context, { preserveState: true, ...options, url, data, method: 'PUT' })
-		},
-
-		/** Makes a PATCH request to the given URL. */
-		patch: async(url: UrlResolvable, data: VisitOptions['data'] = {}, options: Omit<VisitOptions, 'method' | 'data' | 'url'> = {}) => {
-			return await visit(context, { preserveState: true, ...options, url, data, method: 'PATCH' })
-		},
-
-		/** Makes a DELETE request to the given URL. */
-		delete: async(url: UrlResolvable, data: VisitOptions['data'] = {}, options: Omit<VisitOptions, 'method' | 'data' | 'url'> = {}) => {
-			return await visit(context, { preserveState: true, ...options, url, data, method: 'DELETE' })
-		},
+		context: resolve,
+		abort: async() => resolve().activeVisit?.controller.abort(),
+		visit: async(options) => await visit(resolve(), options),
+		reload: async(options) => await visit(resolve(), { preserveScroll: true, preserveState: true, ...options }),
+		get: async(url, data = {}, options = {}) => await visit(resolve(), { ...options, url, data, method: 'GET' }),
+		post: async(url, data, options = {}) => await visit(resolve(), { preserveState: true, ...options, url, data, method: 'POST' }),
+		put: async(url, data, options = {}) => await visit(resolve(), { preserveState: true, ...options, url, data, method: 'PUT' }),
+		patch: async(url, data, options = {}) => await visit(resolve(), { preserveState: true, ...options, url, data, method: 'PATCH' }),
+		delete: async(url, data, options = {}) => await visit(resolve(), { preserveState: true, ...options, url, data, method: 'DELETE' }),
 	}
 }
 
-/** Initializes the router by reading the context and registering events if necessary. */
-async function initializeRouter(context: RouterContext): Promise<RouterContext> {
-	if (isBackForwardVisit()) {
-		handleBackForwardVisit(context)
-	} else if (isExternalVisit()) {
-		handleExternalVisit(context)
-	} else {
-		// If we navigated to somewhere with a hash, we need to update the context
-		// to add said hash because it was initialized without it.
-		setContext(context, {
-			url: makeUrl(context.url, { hash: window.location.hash }).toString(),
-		})
-
-		await navigate(context, {
-			preserveState: true,
-		})
-	}
-
-	// TODO setup event handlers
-	registerEventListeners(context)
-
-	return context
-}
-
+/** Performs every action necessary to make a sleightful visit. */
 export async function visit(context: RouterContext, options: VisitOptions): Promise<VisitResponse> {
 	debug.router('Making a visit:', { context, options })
 
@@ -271,6 +219,29 @@ export async function navigate(context: RouterContext, options: NavigationOption
 	}
 }
 
+/** Initializes the router by reading the context and registering events if necessary. */
+async function initializeRouter(context: RouterContext): Promise<RouterContext> {
+	if (isBackForwardVisit()) {
+		handleBackForwardVisit(context)
+	} else if (isExternalVisit()) {
+		handleExternalVisit(context)
+	} else {
+		// If we navigated to somewhere with a hash, we need to update the context
+		// to add said hash because it was initialized without it.
+		setContext(context, {
+			url: makeUrl(context.url, { hash: window.location.hash }).toString(),
+		})
+
+		await navigate(context, {
+			preserveState: true,
+		})
+	}
+
+	registerEventListeners(context)
+
+	return context
+}
+
 export interface NavigationOptions {
 	/** View to navigate to. */
 	payload?: VisitPayload
@@ -310,4 +281,27 @@ export interface VisitOptions extends Omit<NavigationOptions, 'request'> {
 export interface VisitResponse {
 	response?: AxiosResponse
 	error?: Error
+}
+
+export type ResolveContext = () => RouterContext
+
+export interface Router {
+	/** Gets the context. */
+	context: ResolveContext
+	/** Aborts the currently pending visit, if any. */
+	abort: () => Promise<void>
+	/** Makes a visit with the given options. */
+	visit: (options: VisitOptions) => Promise<VisitResponse>
+	/** Reloads the current page. */
+	reload: (options: VisitOptions) => Promise<VisitResponse>
+	/** Makes a GET request to the given URL. */
+	get: (url: UrlResolvable, data: VisitOptions['data'], options: Omit<VisitOptions, 'method' | 'data' | 'url'>) => Promise<VisitResponse>
+	/** Makes a POST request to the given URL. */
+	post: (url: UrlResolvable, data: VisitOptions['data'], options: Omit<VisitOptions, 'method' | 'data' | 'url'>) => Promise<VisitResponse>
+	/** Makes a PUT request to the given URL. */
+	put: (url: UrlResolvable, data: VisitOptions['data'], options: Omit<VisitOptions, 'method' | 'data' | 'url'>) => Promise<VisitResponse>
+	/** Makes a PATCH request to the given URL. */
+	patch: (url: UrlResolvable, data: VisitOptions['data'], options: Omit<VisitOptions, 'method' | 'data' | 'url'>) => Promise<VisitResponse>
+	/** Makes a DELETE request to the given URL. */
+	delete: (url: UrlResolvable, data: VisitOptions['data'], options: Omit<VisitOptions, 'method' | 'data' | 'url'>) => Promise<VisitResponse>
 }

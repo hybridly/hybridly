@@ -40,8 +40,7 @@
     "stub": "unbuild --stub"
   },
   "dependencies": {
-    "@sleightful/core": "workspace:*",
-    "@sleightful/vite": "workspace:*"
+    "@sleightful/core": "workspace:*"
   },
   "devDependencies": {
     "vite": "^2.8.4"

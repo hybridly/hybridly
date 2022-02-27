@@ -54,29 +54,27 @@ importers:
     specifiers:
       '@sleightful/core': workspace:*
       '@sleightful/vite': workspace:*
+      '@sleightful/vue': workspace:*
     dependencies:
       '@sleightful/core': link:../core
       '@sleightful/vite': link:../vite
+      '@sleightful/vue': link:../vue
 
   packages/vite:
     specifiers:
       '@sleightful/core': workspace:*
-      '@sleightful/vite': workspace:*
       vite: ^2.8.4
     dependencies:
       '@sleightful/core': link:../core
-      '@sleightful/vite': 'link:'
     devDependencies:
       vite: 2.8.4
 
   packages/vue:
     specifiers:
       '@sleightful/core': workspace:*
-      sleightful: workspace:*
       vue: ^3.2.31
     dependencies:
       '@sleightful/core': link:../core
-      sleightful: link:../sleightful
       vue: 3.2.31
 
 packages:

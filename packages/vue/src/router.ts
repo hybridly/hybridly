@@ -1,15 +1,13 @@
-import type { Router } from './stores/state'
+import { resolveRouter } from '@sleightful/core'
 import { state } from './stores/state'
 
-// TODO: transform to proxy
-
-export const router: Omit<Router, 'context'> = {
-	abort: async() => await state.router.value!.abort(),
-	visit: async(...args) => await state.router.value!.visit(...args),
-	get: async(...args) => await state.router.value!.get(...args),
-	post: async(...args) => await state.router.value!.post(...args),
-	put: async(...args) => await state.router.value!.put(...args),
-	patch: async(...args) => await state.router.value!.patch(...args),
-	reload: async(...args) => await state.router.value!.reload(...args),
-	delete: async(...args) => await state.router.value!.delete(...args),
-}
+/**
+ * The sleightful router.
+ * This is the core sleightful function that you can use to navigate
+ * in your application. Make sure the routes you call return a
+ * sleightful response, otherwise you need to call `external`.
+ *
+ * @example
+ * router.get('/posts/edit', { post })
+ */
+export const router = resolveRouter(() => state.context.value!)
