@@ -1,6 +1,6 @@
-import { navigate } from '..'
 import { SCROLL_REGION_ATTRIBUTE } from '../constants'
 import { debounce, debug } from '../utils'
+import { navigate } from './router'
 import { RouterContext } from './context'
 import { saveScrollPositions } from './scroll'
 import { makeUrl } from './url'

@@ -1,12 +1,10 @@
-import { createRouter } from 'sleightful'
+import { RouterContext } from '@sleightful/core'
 import { ComponentOptions, markRaw, Ref, ref, unref } from 'vue'
-import type { AsyncReturnType } from 'type-fest'
 
 type MaybeRef<T> = Ref<T> | T
-export type Router = Omit<AsyncReturnType<typeof createRouter>, 'adapter'>
 
 export const state = {
-	router: ref<Router>(),
+	context: ref<RouterContext>(),
 	component: ref<ComponentOptions>(),
 	key: ref<number>(),
 
@@ -14,8 +12,8 @@ export const state = {
 		this.component.value = markRaw(unref(component))
 	},
 
-	setRouter(router: MaybeRef<Router>) {
-		this.router.value = unref(router)
+	setContext(context: MaybeRef<RouterContext>) {
+		this.context.value = unref(context)
 	},
 
 	setKey(key: MaybeRef<number>) {

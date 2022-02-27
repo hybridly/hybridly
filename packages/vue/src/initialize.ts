@@ -1,8 +1,8 @@
 import { ComponentOptions, DefineComponent, h } from 'vue'
-import { VisitPayload, ResolveComponent, createRouter } from '@sleightful/core'
+import { createRouter, VisitPayload, ResolveComponent, RouterContext } from '@sleightful/core'
 import { Promisable } from 'type-fest'
 import { wrapper } from './components/wrapper'
-import { Router, state } from './stores/state'
+import { state } from './stores/state'
 // import { plugin } from './plugin'
 
 export async function initializeSleightful(options: SleightfulOptions) {
@@ -12,7 +12,7 @@ export async function initializeSleightful(options: SleightfulOptions) {
 		throw new Error('Could not find an HTML element to initialize Vue on.')
 	}
 
-	const router = await createRouter({
+	const context = await createRouter({
 		adapter: {
 			resolveComponent: resolve,
 			swapDialog: async() => {},
@@ -28,9 +28,8 @@ export async function initializeSleightful(options: SleightfulOptions) {
 	await options.setup({
 		element,
 		wrapper,
-		props: { router, component },
-		render: () => h(wrapper as any, { router, component }),
-		// plugin,
+		props: { context, component },
+		render: () => h(wrapper as any, { context, component }),
 	})
 }
 
@@ -102,7 +101,7 @@ interface SetupOptions {
 	wrapper: any
 	/** Sleightful wrapper component properties. */
 	props: {
-		router: Router
+		context: RouterContext
 		component: ComponentOptions
 	}
 	/** Renders the wrapper. */

@@ -43,6 +43,7 @@
   },
   "dependencies": {
     "@sleightful/core": "workspace:*",
-    "@sleightful/vite": "workspace:*"
+    "@sleightful/vite": "workspace:*",
+    "@sleightful/vue": "workspace:*"
   }
 }

@@ -1,6 +1,6 @@
 import { rest } from 'msw'
-import { visit } from 'sleightful'
 import { expect, it } from 'vitest'
+import { visit } from '../../src/router/router'
 import { server } from '../server'
 import { fakeRouterContext, makeVisitPayload } from '../utils'
 

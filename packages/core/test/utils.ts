@@ -1,7 +1,7 @@
 import defu from 'defu'
-import { VisitPayload } from 'sleightful'
 import type { PartialDeep } from 'type-fest'
 import { createContext, RouterContext, RouterContextOptions } from '../src/router/context'
+import { VisitPayload } from '../src/types'
 
 export const noop = () => ({} as any)
 export const returnsArgs = (...args: any) => args

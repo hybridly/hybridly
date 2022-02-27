@@ -53,6 +53,7 @@ export interface VisitPayload {
 }
 
 export type RequestPayload = FormDataValue | FormData
+
 export interface FormData {
 	[Symbol.iterator](): IterableIterator<[string, FormDataValue]>
 	entries(): IterableIterator<[string, FormDataValue]>
