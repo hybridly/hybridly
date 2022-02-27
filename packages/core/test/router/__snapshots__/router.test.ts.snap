@@ -1,0 +1,42 @@
+// Vitest Snapshot v1
+
+exports[`performs sleightful visits > context after visit 1`] = `
+{
+  "activeVisit": undefined,
+  "adapter": {
+    "resolveComponent": [Function],
+    "swapDialog": [Function],
+    "swapView": [Function],
+  },
+  "scrollRegions": [],
+  "url": "https://localhost/target",
+  "version": "abc123",
+  "view": {
+    "name": "target.view",
+    "properties": {
+      "foo": "bar",
+    },
+  },
+}
+`;
+
+exports[`performs sleightful visits > visit response 1`] = `
+{
+  "response": {
+    "data": {
+      "url": "https://localhost/target",
+      "version": "abc123",
+      "view": {
+        "name": "target.view",
+        "properties": {
+          "foo": "bar",
+        },
+      },
+    },
+    "headers": {
+      "x-sleightful": "true",
+    },
+    "status": 200,
+  },
+}
+`;

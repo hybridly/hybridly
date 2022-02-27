@@ -18,5 +18,9 @@ export default defineConfig({
 		isolate: false,
 		restoreMocks: true,
 		environment: 'happy-dom',
+		threads: false,
+		setupFiles: [
+			alias('./packages/core/test/setup.ts'),
+		],
 	},
 })

@@ -9,9 +9,9 @@ exports[`creates a valid router context > context 1`] = `
   },
   "scrollRegions": [],
   "url": "https://localhost/",
-  "version": "abc123",
+  "version": "123",
   "view": {
-    "name": "default.view",
+    "name": "my-owo-view",
     "properties": {
       "foo": "bar",
     },
