@@ -21,6 +21,7 @@
     "bumpp": "^7.1.1",
     "eslint": "^8.10.0",
     "happy-dom": "^2.41.0",
+    "msw": "^0.38.1",
     "sleightful": "workspace:*",
     "type-fest": "^2.12.0",
     "typescript": "^4.5.5",
