@@ -34,11 +34,14 @@
 #   Features
 
 It's basically [Inertia.js](https://inertiajs.com), but:
-
 - it's specifically tailored for Vite, Vue 3 and Laravel
 - it's written with TypeScript, so it's fully typed
 - it has a different API, the core concepts stay the same
 - it's distributed with a [Vite](https://vitejs.dev) plugin
+
+Non-goals: 
+- Match the Inertia API and protocol
+- Trade developer experience for lightweightness
 
 # Installation
 
