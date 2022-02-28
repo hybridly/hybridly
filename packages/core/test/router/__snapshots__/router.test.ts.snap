@@ -9,7 +9,7 @@ exports[`performs sleightful visits > context after visit 1`] = `
     "swapView": [Function],
   },
   "scrollRegions": [],
-  "url": "https://localhost/target",
+  "url": "https://localhost.test/visit",
   "version": "abc123",
   "view": {
     "name": "target.view",
@@ -22,21 +22,13 @@ exports[`performs sleightful visits > context after visit 1`] = `
 
 exports[`performs sleightful visits > visit response 1`] = `
 {
-  "response": {
-    "data": {
-      "url": "https://localhost/target",
-      "version": "abc123",
-      "view": {
-        "name": "target.view",
-        "properties": {
-          "foo": "bar",
-        },
-      },
+  "url": "https://localhost.test/visit",
+  "version": "abc123",
+  "view": {
+    "name": "target.view",
+    "properties": {
+      "foo": "bar",
     },
-    "headers": {
-      "x-sleightful": "true",
-    },
-    "status": 200,
   },
 }
 `;
