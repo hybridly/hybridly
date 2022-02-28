@@ -1,5 +1,6 @@
 import axios, { AxiosResponse } from 'axios'
 import defu from 'defu'
+import qs from 'qs'
 import { EXTERNAL_VISIT_HEADER, SLEIGHTFUL_HEADER } from '../constants'
 import { NotASleightfulResponseError } from '../errors'
 import type { VisitPayload, RequestPayload } from '../types'
@@ -26,10 +27,16 @@ export function resolveRouter(resolve: ResolveContext): Router {
 		visit: async(options) => await visit(resolve(), options),
 		reload: async(options) => await visit(resolve(), { preserveScroll: true, preserveState: true, ...options }),
 		get: async(url, data = {}, options = {}) => await visit(resolve(), { ...options, url, data, method: 'GET' }),
-		post: async(url, data, options = {}) => await visit(resolve(), { preserveState: true, ...options, url, data, method: 'POST' }),
-		put: async(url, data, options = {}) => await visit(resolve(), { preserveState: true, ...options, url, data, method: 'PUT' }),
-		patch: async(url, data, options = {}) => await visit(resolve(), { preserveState: true, ...options, url, data, method: 'PATCH' }),
-		delete: async(url, data, options = {}) => await visit(resolve(), { preserveState: true, ...options, url, data, method: 'DELETE' }),
+		post: async(url, data = {}, options = {}) => await visit(resolve(), { preserveState: true, ...options, url, data, method: 'POST' }),
+		put: async(url, data = {}, options = {}) => await visit(resolve(), { preserveState: true, ...options, url, data, method: 'PUT' }),
+		patch: async(url, data = {}, options = {}) => await visit(resolve(), { preserveState: true, ...options, url, data, method: 'PATCH' }),
+		delete: async(url, data = {}, options = {}) => await visit(resolve(), { preserveState: true, ...options, url, data, method: 'DELETE' }),
+		external: (url, data = {}) => document.location.href = makeUrl(url, {
+			search: qs.stringify(data, {
+				encodeValuesOnly: true,
+				arrayFormat: 'brackets',
+			}),
+		}).toString(),
 	}
 }
 
@@ -306,4 +313,6 @@ export interface Router {
 	patch: (url: UrlResolvable, data: VisitOptions['data'], options: Omit<VisitOptions, 'method' | 'data' | 'url'>) => Promise<VisitResponse>
 	/** Makes a DELETE request to the given URL. */
 	delete: (url: UrlResolvable, data: VisitOptions['data'], options: Omit<VisitOptions, 'method' | 'data' | 'url'>) => Promise<VisitResponse>
+	/** Navigates to the given external URL. Alias for `document.location.href`. */
+	external: (url: UrlResolvable, data: VisitOptions['data']) => void
 }
