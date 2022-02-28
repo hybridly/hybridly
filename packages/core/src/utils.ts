@@ -7,6 +7,7 @@ export const debug = {
 	context: makeDebugger('sleightful:context'),
 	external: makeDebugger('sleightful:external'),
 	scroll: makeDebugger('sleightful:scroll'),
+	adapter: (name: string, ...args: any[]) => makeDebugger('sleightful:adapter').extend(name)(args),
 }
 
 export function match<TValue extends string | number = string, TReturnValue = unknown>(
