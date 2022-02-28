@@ -47,11 +47,13 @@ importers:
       debug: ^4.3.3
       defu: ^5.0.1
       hookable: ^5.1.1
+      qs: ^6.10.3
     dependencies:
       axios: 0.26.0_debug@4.3.3
       debug: 4.3.3
       defu: 5.0.1
       hookable: 5.1.1
+      qs: 6.10.3
 
   packages/sleightful:
     specifiers:

@@ -1,5 +1,5 @@
 import { expect, it } from 'vitest'
-import { visit } from '../../src/router/router'
+import { resolveRouter, visit } from '../../src/router/router'
 import { fakeRouterContext, fakeVisitPayload, mockUrl } from '../utils'
 
 it('performs sleightful visits', async() => {
@@ -22,4 +22,15 @@ it('performs sleightful visits', async() => {
 
 	expect(response?.data).toMatchSnapshot('visit response')
 	expect(context).toMatchSnapshot('context after visit')
+})
+
+it('performs external visists', async() => {
+	resolveRouter(fakeRouterContext).external('http://localhost.test/visit', {
+		owo: 'uwu',
+		uwu: {
+			foo: 'bar',
+		},
+	})
+
+	expect(document.location.href).toBe('http://localhost.test/visit?owo=uwu&uwu[foo]=bar')
 })
