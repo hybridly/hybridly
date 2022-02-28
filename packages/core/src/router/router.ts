@@ -37,8 +37,6 @@ export function resolveRouter(resolve: ResolveContext): Router {
 export async function visit(context: RouterContext, options: VisitOptions): Promise<VisitResponse> {
 	debug.router('Making a visit:', { context, options })
 
-	// TODO handle cancellation
-	// TODO handle interruptions
 	// TODO events
 	// TODO form transformations
 	// TODO preserveState from history
@@ -105,6 +103,8 @@ export async function visit(context: RouterContext, options: VisitOptions): Prom
 				url: fillHash(context.activeVisit!.url, response.headers[EXTERNAL_VISIT_HEADER]),
 				preserveScroll: options.preserveScroll === true,
 			})
+
+			return { response }
 		}
 
 		// At this point, we know the response is sleightful.
