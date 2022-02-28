@@ -5,8 +5,8 @@
   "keywords": [
     "sleightful",
     "inertiajs",
-		"vite",
-		"vite-plugin"
+    "vite",
+    "vite-plugin"
   ],
   "homepage": "https://github.com/sleightful/sleightful/tree/main/packages/vite#readme",
   "bugs": {
@@ -15,7 +15,7 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/sleightful/sleightful.git",
-		"directory": "packages/vite"
+    "directory": "packages/vite"
   },
   "funding": "https://github.com/sponsors/innocenzi",
   "license": "MIT",
@@ -40,9 +40,11 @@
     "stub": "unbuild --stub"
   },
   "dependencies": {
-    "@sleightful/core": "workspace:*"
+    "@sleightful/core": "workspace:*",
+    "unplugin-vue-define-options": "^0.4.0",
+    "vite-plugin-laravel": "^0.2.0-beta.7"
   },
   "devDependencies": {
-    "vite": "^2.8.4"
+    "vite": "^2.8.5"
   }
 }

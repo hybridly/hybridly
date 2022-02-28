@@ -28,6 +28,11 @@
       "require": "./dist/vite.cjs",
       "import": "./dist/vite.mjs",
       "types": "./dist/vite.d.ts"
+    },
+    "./vue": {
+      "require": "./dist/vue.cjs",
+      "import": "./dist/vue.mjs",
+      "types": "./dist/vue.d.ts"
     }
   },
   "main": "dist/index.cjs",
