@@ -40,6 +40,8 @@
   },
   "dependencies": {
     "@sleightful/core": "workspace:*",
+    "defu": "^5.0.1",
+    "qs": "^6.10.3",
     "vue": "^3.2.31"
   }
 }
