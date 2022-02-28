@@ -41,9 +41,8 @@ export function sameUrls(...hrefs: UrlResolvable[]): boolean {
 
 /**
  * If the back-end did not specify a hash, if the visit specified one,
- * and that both URLs lead to the same endpoint, we update the target URL
+ * and both URLs lead to the same endpoint, we update the target URL
  * to use the hash of the initially-requested URL.
- * This behavior originates from Inertia.
  */
 export function fillHash(currentUrl: UrlResolvable, targetUrl: UrlResolvable): string {
 	currentUrl = makeUrl(currentUrl)
