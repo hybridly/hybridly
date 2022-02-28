@@ -261,11 +261,13 @@ export interface NavigationOptions {
 	updateHistoryState?: boolean
 }
 
+export type Method = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE'
+
 export interface VisitOptions extends Omit<NavigationOptions, 'request'> {
 	/** The URL to visit. */
 	url?: UrlResolvable
 	/** HTTP verb to use for the request. */
-	method?: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE'
+	method?: Method
 	/** Body of the request. */
 	data?: RequestPayload
 	/** Which properties to update for this visit. Other properties will be ignored. */
