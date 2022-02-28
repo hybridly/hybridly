@@ -8,6 +8,8 @@ export default defineBuildConfig({
 	declaration: true,
 	externals: [
 		'vite',
+		'debug',
+		'node:path',
 	],
 	rollup: {
 		emitCJS: true,
