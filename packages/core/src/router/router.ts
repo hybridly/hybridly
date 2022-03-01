@@ -302,17 +302,17 @@ export interface Router {
 	/** Makes a visit with the given options. */
 	visit: (options: VisitOptions) => Promise<VisitResponse>
 	/** Reloads the current page. */
-	reload: (options: VisitOptions) => Promise<VisitResponse>
+	reload: (options?: VisitOptions) => Promise<VisitResponse>
 	/** Makes a GET request to the given URL. */
-	get: (url: UrlResolvable, data: VisitOptions['data'], options: Omit<VisitOptions, 'method' | 'data' | 'url'>) => Promise<VisitResponse>
+	get: (url: UrlResolvable, data?: VisitOptions['data'], options?: Omit<VisitOptions, 'method' | 'data' | 'url'>) => Promise<VisitResponse>
 	/** Makes a POST request to the given URL. */
-	post: (url: UrlResolvable, data: VisitOptions['data'], options: Omit<VisitOptions, 'method' | 'data' | 'url'>) => Promise<VisitResponse>
+	post: (url: UrlResolvable, data?: VisitOptions['data'], options?: Omit<VisitOptions, 'method' | 'data' | 'url'>) => Promise<VisitResponse>
 	/** Makes a PUT request to the given URL. */
-	put: (url: UrlResolvable, data: VisitOptions['data'], options: Omit<VisitOptions, 'method' | 'data' | 'url'>) => Promise<VisitResponse>
+	put: (url: UrlResolvable, data?: VisitOptions['data'], options?: Omit<VisitOptions, 'method' | 'data' | 'url'>) => Promise<VisitResponse>
 	/** Makes a PATCH request to the given URL. */
-	patch: (url: UrlResolvable, data: VisitOptions['data'], options: Omit<VisitOptions, 'method' | 'data' | 'url'>) => Promise<VisitResponse>
+	patch: (url: UrlResolvable, data?: VisitOptions['data'], options?: Omit<VisitOptions, 'method' | 'data' | 'url'>) => Promise<VisitResponse>
 	/** Makes a DELETE request to the given URL. */
-	delete: (url: UrlResolvable, data: VisitOptions['data'], options: Omit<VisitOptions, 'method' | 'data' | 'url'>) => Promise<VisitResponse>
+	delete: (url: UrlResolvable, data?: VisitOptions['data'], options?: Omit<VisitOptions, 'method' | 'data' | 'url'>) => Promise<VisitResponse>
 	/** Navigates to the given external URL. Alias for `document.location.href`. */
-	external: (url: UrlResolvable, data: VisitOptions['data']) => void
+	external: (url: UrlResolvable, data?: VisitOptions['data']) => void
 }
