@@ -1,5 +1,5 @@
 import { ComponentOptions, DefineComponent, h } from 'vue'
-import { createRouter, VisitPayload, ResolveComponent, RouterContext } from '@sleightful/core'
+import { debug, createRouter, VisitPayload, ResolveComponent, RouterContext } from '@sleightful/core'
 import { Promisable } from 'type-fest'
 import { wrapper } from './components/wrapper'
 import { state } from './stores/state'
@@ -10,6 +10,10 @@ export async function initializeSleightful(options: SleightfulOptions) {
 
 	if (!element) {
 		throw new Error('Could not find an HTML element to initialize Vue on.')
+	}
+
+	if (!payload) {
+		throw new Error('No payload. Are you using `@sleightful` or the `payload` option?')
 	}
 
 	const context = await createRouter({
@@ -35,9 +39,18 @@ export async function initializeSleightful(options: SleightfulOptions) {
 
 function prepare(options: SleightfulOptions) {
 	const isServer = typeof window === 'undefined'
-	const element = document?.getElementById(options.id ?? 'app') ?? undefined
-	const payload = options.payload || JSON.parse(element?.dataset.payload || '') || undefined
+	debug.adapter('vue', 'Preparing Sleightful with options:', options)
+	const id = options.id ?? 'root'
+	const element = document?.getElementById(id) ?? undefined
+	debug.adapter('vue', `Element "${id}" is:`, element)
+	const payload = options.payload ?? element?.dataset.payload
+		? JSON.parse(element!.dataset.payload!)
+		: undefined
+	debug.adapter('vue', 'Resolved:', { isServer, element, payload })
+
 	const resolve = async(name: string): Promise<DefineComponent> => {
+		debug.adapter('vue', 'Resolving component', name)
+
 		if (options.resolve) {
 			const component = await options.resolve?.(name)
 			return component.default ?? component
@@ -47,7 +60,7 @@ function prepare(options: SleightfulOptions) {
 			return await resolvePageComponent(name, options.pages, options.layout)
 		}
 
-		throw new Error('Either `resolve` or `pages` should be defined.')
+		throw new Error('Either `initializeSleightful#resolve` or `initializeSleightful#pages` should be defined.')
 	}
 
 	return {
