@@ -5,3 +5,5 @@ export class NotASleightfulResponseError extends Error {
 		super()
 	}
 }
+
+export class VisitCancelledError extends Error {}

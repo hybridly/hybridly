@@ -7,6 +7,7 @@ export const debug = {
 	context: makeDebugger('sleightful:context'),
 	external: makeDebugger('sleightful:external'),
 	scroll: makeDebugger('sleightful:scroll'),
+	event: makeDebugger('sleightful:event'),
 	adapter: (name: string, ...args: any[]) => makeDebugger('sleightful:adapter').extend(name)(args.shift(), ...args),
 }
 
