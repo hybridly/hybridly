@@ -34,3 +34,22 @@ it('performs external visists', async() => {
 
 	expect(document.location.href).toBe('http://localhost.test/visit?owo=uwu&uwu[foo]=bar')
 })
+
+it('supports global "before" event cancellation', async() => {
+	const options = { url: 'http://localhost.test/visit' }
+	const context = fakeRouterContext()
+	context.events.on('before', () => false)
+
+	expect((await visit(context, options)).error?.type).toBe('VisitCancelledError')
+	expect((await visit(context, options)).error?.type).toBe('VisitCancelledError')
+})
+
+it('supports scoped "before" event cancellation', async() => {
+	const context = fakeRouterContext()
+	const options = {
+		url: 'http://localhost.test/visit',
+		events: { before: () => false },
+	}
+
+	expect((await visit(context, options)).error?.type).toBe('VisitCancelledError')
+})

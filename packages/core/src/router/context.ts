@@ -1,3 +1,4 @@
+import { createEmitter, Emitter, VisitEvents } from '../events'
 import { ResolveComponent, VisitPayload, SwapDialog, SwapView, View } from '../types'
 import { debug } from '../utils'
 import { VisitOptions } from './router'
@@ -7,6 +8,7 @@ import { makeUrl } from './url'
 export function createContext(options: RouterContextOptions): RouterContext {
 	return {
 		...options.payload,
+		events: createEmitter(),
 		url: makeUrl(options.payload.url).toString(),
 		adapter: options.adapter,
 		scrollRegions: [],
@@ -56,6 +58,8 @@ export interface RouterContext {
 	scrollRegions: ScrollRegion[]
 	/** Currently pending visit. */
 	activeVisit?: PendingVisit
+	/** Event emitter for this context. */
+	events: Emitter<VisitEvents>
 }
 
 /** Adapter-specific functions. */

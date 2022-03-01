@@ -5,7 +5,7 @@ import { RouterContext } from './context'
 import { saveScrollPositions } from './scroll'
 import { makeUrl } from './url'
 
-type SerializedContext = Omit<RouterContext, 'adapter'>
+type SerializedContext = Omit<RouterContext, 'adapter' | 'events'>
 
 /** Puts the given context into the history state. */
 export function setHistoryState(context: RouterContext, options: HistoryOptions = {}) {

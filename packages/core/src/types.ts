@@ -52,16 +52,27 @@ export interface VisitPayload {
 	version: string
 }
 
-export type RequestPayload = FormDataValue | FormData
+export type RequestData = FormDataValue | FormData
 
-export interface FormData {
-	[Symbol.iterator](): IterableIterator<[string, FormDataValue]>
-	entries(): IterableIterator<[string, FormDataValue]>
-	keys(): IterableIterator<string>
-	values(): IterableIterator<FormDataValue>
-}
+// export interface FormData {
+// 	[Symbol.iterator](): IterableIterator<[string, FormDataValue]>
+// 	entries(): IterableIterator<[string, FormDataValue]>
+// 	keys(): IterableIterator<string>
+// 	values(): IterableIterator<FormDataValue>
+// }
 
 type FormDataObject = { [Key in string]: FormDataValue }
 type FormDataPrimitive = Blob | Date | boolean | number | File | string | null
 type FormDataArray = FormDataValue[]
 type FormDataValue = FormDataObject | FormDataPrimitive | FormDataArray
+
+export interface Progress {
+	/** Base event. */
+	event: ProgressEvent
+	/** Computed percentage. */
+	percentage: Readonly<number>
+}
+
+export interface Errors {
+	[key: string]: string
+}

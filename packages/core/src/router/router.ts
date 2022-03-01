@@ -2,8 +2,9 @@ import axios, { AxiosResponse } from 'axios'
 import defu from 'defu'
 import qs from 'qs'
 import { EXTERNAL_VISIT_HEADER, SLEIGHTFUL_HEADER } from '../constants'
-import { NotASleightfulResponseError } from '../errors'
-import type { VisitPayload, RequestPayload } from '../types'
+import { NotASleightfulResponseError, VisitCancelledError } from '../errors'
+import { VisitEvents } from '../events'
+import type { VisitPayload, RequestData, Errors } from '../types'
 import { debug, match, when } from '../utils'
 import { createContext, payloadFromContext, RouterContext, RouterContextOptions, setContext } from './context'
 import { handleExternalVisit, isExternalResponse, isExternalVisit, performExternalVisit } from './external'
@@ -44,26 +45,38 @@ export function resolveRouter(resolve: ResolveContext): Router {
 export async function visit(context: RouterContext, options: VisitOptions): Promise<VisitResponse> {
 	debug.router('Making a visit:', { context, options })
 
-	// TODO events
-	// TODO form transformations
-	// TODO preserveState from history
-
-	// Before making the visit, we need to make sure the scroll positions are
-	// saved, so we can restore them later.
-	saveScrollPositions(context)
-
-	// A visit is being made, we need to add it to the context so it
-	// can be reused later on.
-	setContext(context, {
-		activeVisit: {
-			url: makeUrl(options.url ?? context.url),
-			controller: new AbortController(),
-			options,
-		},
-	})
-
 	try {
+		// Temporarily add the visit-specific events to the context event list
+		// so they can be called with `emit`.
+		context.events.with(options.events)
+
+		// Before anything else, we fire the "before" event to make sure
+		// there was no user-specified handler returning "false".
+		if (!context.events.emit('before', options)) {
+			debug.router('"before" event returned false, aborting the visit.')
+			throw new VisitCancelledError('The visit was cancelled by the global emitter.')
+		}
+
+		// TODO form transformations
+		// TODO preserveState from history
+
+		// Before making the visit, we need to make sure the scroll positions are
+		// saved, so we can restore them later.
+		saveScrollPositions(context)
+
+		// A visit is being made, we need to add it to the context so it
+		// can be reused later on.
+		setContext(context, {
+			activeVisit: {
+				url: makeUrl(options.url ?? context.url),
+				controller: new AbortController(),
+				options,
+			},
+		})
+
+		context.events.emit('start', context)
 		debug.router('Making request with axios.')
+
 		const response = await axios.request({
 			url: context.activeVisit!.url.toString(),
 			method: options.method ?? 'GET',
@@ -84,13 +97,15 @@ export async function visit(context: RouterContext, options: VisitOptions): Prom
 				'SLEIGHTFUL_HEADER': true,
 				'Accept': 'text/html, application/xhtml+xml',
 			},
-			onUploadProgress: (progress) => {
-				if (options.data instanceof FormData) {
-					progress.percentage = Math.round(progress.loaded / progress.total * 100)
-					// this.events.emit('progress', progress)
-				}
+			onUploadProgress: (event: ProgressEvent) => {
+				context.events.emit('progress', {
+					event,
+					percentage: Math.round(event.loaded / event.total * 100),
+				})
 			},
 		})
+
+		context.events.emit('data', response)
 		debug.router('Response:', { response })
 
 		// An invalid response is a response that do not declare itself via
@@ -117,6 +132,7 @@ export async function visit(context: RouterContext, options: VisitOptions): Prom
 		// At this point, we know the response is sleightful.
 		debug.router('The response is sleightful.')
 		const payload = response.data as VisitPayload
+		context.events.emit('success', payload)
 
 		// If the visit was asking for certain properties only, we ensure that the
 		// new request object contains the properties of the current view context,
@@ -148,7 +164,7 @@ export async function visit(context: RouterContext, options: VisitOptions): Prom
 		// an error bag, and if the given error bag is missing, the event data
 		// will be empty.
 		if (context.view.properties.errors) {
-			// TODO: emit error event, with scoped (options.errorBag) errors
+			context.events.emit('error', context.view.properties.errors as Errors)
 		}
 
 		return { response }
@@ -157,18 +173,28 @@ export async function visit(context: RouterContext, options: VisitOptions): Prom
 		match(error.constructor.name, {
 			AbortError: () => {
 				debug.router('The request was cancelled.', error)
+				context.events.emit('abort', context)
 			},
 			NotASleightfulResponseError: () => {
 				debug.router('The request was not sleightful.', error)
+				context.events.emit('invalid', error)
 			},
 			default: () => {
 				debug.router('An unknown error occured.', error)
+				context.events.emit('exception', error)
 			},
 		})
 
-		return { error }
+		return {
+			error: {
+				type: error.constructor.name,
+				actual: error,
+			},
+		}
 	} finally {
 		debug.router('Ending visit.')
+		context.events.emit('after', context)
+		context.events.cleanup()
 		setContext(context, { activeVisit: undefined })
 	}
 }
@@ -224,6 +250,8 @@ export async function navigate(context: RouterContext, options: NavigationOption
 	} else {
 		restoreScrollPositions(context)
 	}
+
+	context.events.emit('navigate', options)
 }
 
 /** Initializes the router by reading the context and registering events if necessary. */
@@ -276,7 +304,7 @@ export interface VisitOptions extends Omit<NavigationOptions, 'request'> {
 	/** HTTP verb to use for the request. */
 	method?: Method
 	/** Body of the request. */
-	data?: RequestPayload
+	data?: RequestData
 	/** Which properties to update for this visit. Other properties will be ignored. */
 	only?: string | string[]
 	/** Which properties not to update for this visit. Other properties will be updated. */
@@ -285,11 +313,16 @@ export interface VisitOptions extends Omit<NavigationOptions, 'request'> {
 	headers?: Record<string, string>
 	/** The bag in which to put potential errors. */
 	errorBag?: string
+	/** Predefined events for this visit. */
+	events?: Partial<VisitEvents>
 }
 
 export interface VisitResponse {
 	response?: AxiosResponse
-	error?: Error
+	error?: {
+		type: string
+		actual: Error
+	}
 }
 
 export type ResolveContext = () => RouterContext

@@ -8,6 +8,13 @@ exports[`performs sleightful visits > context after visit 1`] = `
     "swapDialog": [Function],
     "swapView": [Function],
   },
+  "events": {
+    "cleanup": [Function],
+    "emit": [Function],
+    "events": [Function],
+    "on": [Function],
+    "with": [Function],
+  },
   "scrollRegions": [],
   "url": "https://localhost.test/visit",
   "version": "abc123",
