@@ -10,12 +10,19 @@ interface ErrorModalContext {
 export function createModal(htmlOrJson: Record<string, unknown> | string): ErrorModalContext {
 	if (typeof htmlOrJson === 'object') {
 		htmlOrJson = `
-			<style>
-				pre {
-					color: white
-				}
-			</style>
-			<pre>${JSON.stringify(htmlOrJson)}</pre>
+			${style()}
+			<main>
+			${icon()}
+			<p>The received response do not respect the sleightful protocol.</p>
+			<pre>${JSON.stringify(htmlOrJson, null, 2)}</pre>
+		`
+	} else if (htmlOrJson.trim() === '') {
+		htmlOrJson = `
+			${style()}
+			<main>
+				${icon()}
+				<p>The received response is empty and do not respect the sleightful protocol.</p>
+			</main>
 		`
 	}
 
@@ -70,4 +77,43 @@ export function destroyModal(context: ErrorModalContext) {
 	context.overlay.remove()
 	document.body.style.overflow = 'visible'
 	document.removeEventListener('keydown', context.hideOnEscape!)
+}
+
+function style() {
+	return `
+	<style>
+		main {
+			height: 100%;
+			width: 100%;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			color: white;
+			font-family: Inter, "Inter var", -system-ui, "Segoe UI";
+			color: #374151;
+		}
+		svg {
+			heigth: 3.5rem;
+			width: 3.5rem;
+		}
+		p {
+			margin-top: 0.25rem;
+			font-weight: 600;
+			text-align: center;
+		}
+		pre {
+			margin-top: 0.25rem;
+			color: white;
+			font-size: 1rem;
+		}
+	</style>`
+}
+
+function icon() {
+	return `
+		<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+			<path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+		</svg>
+	`
 }
