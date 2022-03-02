@@ -49,7 +49,7 @@ export function createEmitter<Events extends EventsMap = DefaultEvents>(
 			}
 		},
 		emit<K extends keyof Events>(event: K, ...args: Parameters<Events[K]>): boolean {
-			debug.event(`Emitted [${event}].`)
+			debug.event(`Emitted [${event}] with`, ...args)
 
 			return !byKey(event)
 				.map((i) => i(...args))

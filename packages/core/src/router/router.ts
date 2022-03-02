@@ -1,7 +1,7 @@
 import axios, { AxiosResponse } from 'axios'
 import defu from 'defu'
 import qs from 'qs'
-import { EXTERNAL_VISIT_HEADER, SLEIGHTFUL_HEADER } from '../constants'
+import { ERROR_BAG_HEADER, EXCEPT_DATA_HEADER, EXTERNAL_VISIT_HEADER, ONLY_DATA_HEADER, PARTIAL_COMPONENT_HEADER, SLEIGHTFUL_HEADER, VERSION_HEADER } from '../constants'
 import { NotASleightfulResponseError, VisitCancelledError } from '../errors'
 import { VisitEvents } from '../events'
 import type { VisitPayload, RequestData, Errors } from '../types'
@@ -86,17 +86,18 @@ export async function visit(context: RouterContext, options: VisitOptions): Prom
 			headers: {
 				...options.headers,
 				...when(options.only?.length || options.except?.length, {
-					'X-Sleightful-Partial-Component': context.view.name,
-					...when(options.only, { ONLY_DATA_HEADER: JSON.stringify(options.only) }, {}),
-					...when(options.except, { EXCEPT_DATA_HEADER: JSON.stringify(options.except) }, {}),
+					[PARTIAL_COMPONENT_HEADER]: context.view.name,
+					...when(options.only, { [ONLY_DATA_HEADER]: JSON.stringify(options.only) }, {}),
+					...when(options.except, { [EXCEPT_DATA_HEADER]: JSON.stringify(options.except) }, {}),
 				}, {}),
-				...when(options.errorBag, { 'X-Sleightful-Error-Bag': options.errorBag }, {}),
-				...when(context.version, { 'X-Sleightful-Version': context.version }, {}),
+				...when(options.errorBag, { [ERROR_BAG_HEADER]: options.errorBag }, {}),
+				...when(context.version, { [VERSION_HEADER]: context.version }, {}),
 				// 'X-Sleightful-Context': this.currentState.visit.context,
+				[SLEIGHTFUL_HEADER]: true,
 				'X-Requested-With': 'XMLHttpRequest',
-				'SLEIGHTFUL_HEADER': true,
 				'Accept': 'text/html, application/xhtml+xml',
 			},
+			validateStatus: () => true,
 			onUploadProgress: (event: ProgressEvent) => {
 				context.events.emit('progress', {
 					event,
@@ -106,15 +107,7 @@ export async function visit(context: RouterContext, options: VisitOptions): Prom
 		})
 
 		context.events.emit('data', response)
-		debug.router('Response:', { response })
-
-		// An invalid response is a response that do not declare itself via
-		// the protocole header.
-		// In such cases, we want to throw to handler it later.
-		if (!isSleightfulResponse(response)) {
-			debug.router('The response is not sleightful.')
-			throw new NotASleightfulResponseError(response)
-		}
+		debug.router('Response:', response)
 
 		// An external response is a sleightful response that wants a full page
 		// load to a requested URL. It may be the same URL, in which case a
@@ -129,15 +122,22 @@ export async function visit(context: RouterContext, options: VisitOptions): Prom
 			return { response }
 		}
 
+		// An invalid response is a response that do not declare itself via
+		// the protocole header.
+		// In such cases, we want to throw to handler it later.
+		if (!isSleightfulResponse(response)) {
+			throw new NotASleightfulResponseError(response)
+		}
+
 		// At this point, we know the response is sleightful.
 		debug.router('The response is sleightful.')
 		const payload = response.data as VisitPayload
-		context.events.emit('success', payload)
 
 		// If the visit was asking for certain properties only, we ensure that the
 		// new request object contains the properties of the current view context,
 		// because the back-end sent back only the required properties.
 		if (options.only && payload.view.name === context.view.name) {
+			// TODO except, and ensure this works
 			payload.view.properties = defu(payload.view.properties, context.view.properties)
 		}
 
@@ -163,8 +163,10 @@ export async function visit(context: RouterContext, options: VisitOptions): Prom
 		// with said errors to be emitted. However, errors can be scoped with
 		// an error bag, and if the given error bag is missing, the event data
 		// will be empty.
-		if (context.view.properties.errors) {
+		if (Object.keys(context.view.properties.errors ?? {}).length > 0) {
 			context.events.emit('error', context.view.properties.errors as Errors)
+		} else {
+			context.events.emit('success', payload)
 		}
 
 		return { response }
