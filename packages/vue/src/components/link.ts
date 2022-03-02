@@ -83,7 +83,7 @@ export const Link = defineComponent({
 		},
 		method: {
 			type: String,
-			default: 'get',
+			default: 'GET',
 		},
 		replace: {
 			type: Boolean,
@@ -99,15 +99,12 @@ export const Link = defineComponent({
 		},
 		only: {
 			type: Array as PropType<string[]>,
-			default: () => [],
 		},
 		except: {
 			type: Array as PropType<string[]>,
-			default: () => [],
 		},
 		headers: {
 			type: Object as PropType<Record<string, any>>,
-			default: () => ({}),
 		},
 		external: {
 			type: Boolean,
