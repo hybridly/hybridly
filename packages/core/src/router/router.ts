@@ -164,7 +164,15 @@ export async function visit(context: RouterContext, options: VisitOptions): Prom
 		// an error bag, and if the given error bag is missing, the event data
 		// will be empty.
 		if (Object.keys(context.view.properties.errors ?? {}).length > 0) {
-			context.events.emit('error', context.view.properties.errors as Errors)
+			const errors = (() => {
+				if (options.errorBag && typeof context.view.properties.errors === 'object') {
+					return (context.view.properties.errors as any)[options.errorBag] ?? {}
+				}
+
+				return context.view.properties.errors
+			})() as Errors
+
+			context.events.emit('error', errors)
 		} else {
 			context.events.emit('success', payload)
 		}
