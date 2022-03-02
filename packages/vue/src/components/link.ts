@@ -116,7 +116,7 @@ export const Link = defineComponent({
 	},
 })
 
-export default function shouldIntercept(event: KeyboardEvent): boolean {
+function shouldIntercept(event: KeyboardEvent): boolean {
 	const isLink = (event.currentTarget as HTMLElement).tagName.toLowerCase() === 'a'
 
 	return !(
