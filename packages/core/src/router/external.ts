@@ -34,7 +34,7 @@ export function isExternalResponse(response: AxiosResponse): boolean {
  * This method is meant to be called on router creation.
  */
 export async function handleExternalVisit(context: RouterContext): Promise<void> {
-	debug.external('Handling an external visist.')
+	debug.external('Handling an external visit.')
 	const options = JSON.parse(window.sessionStorage.getItem(STORAGE_EXTERNAL_KEY) || '{}') as ExternalVisitOptions
 	window.sessionStorage.removeItem(STORAGE_EXTERNAL_KEY)
 

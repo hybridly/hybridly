@@ -24,7 +24,7 @@ it('performs sleightful visits', async() => {
 	expect(context).toMatchSnapshot('context after visit')
 })
 
-it('performs external visists', async() => {
+it('performs external visits', async() => {
 	resolveRouter(fakeRouterContext).external('http://localhost.test/visit', {
 		owo: 'uwu',
 		uwu: {
