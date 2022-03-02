@@ -45,6 +45,6 @@
     "vite-plugin-laravel": "^0.2.0-beta.7"
   },
   "devDependencies": {
-    "vite": "^2.8.5"
+    "vite": "^2.8.6"
   }
 }
