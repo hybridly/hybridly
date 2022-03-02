@@ -25,7 +25,7 @@ export async function performExternalVisit(options: ExternalVisitOptions): Promi
 
 /** Checks if the response wants to redirect to an external URL. */
 export function isExternalResponse(response: AxiosResponse): boolean {
-	return response?.status === 409 && !!response?.headers[EXTERNAL_VISIT_HEADER]
+	return response?.status === 409 && !!response?.headers?.[EXTERNAL_VISIT_HEADER]
 }
 
 /**
