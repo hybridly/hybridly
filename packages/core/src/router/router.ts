@@ -251,9 +251,12 @@ export async function navigate(context: RouterContext, options: NavigationOption
 
 	// History state must be updated to preserve the expected, native browser behavior.
 	// However, in some cases, we just want to swap the views without making an
-	// actual navigation.
+	// actual navigation. Additionally, we don't want to actually push a new state
+	// when navigating to the same URL.
 	if (options.updateHistoryState !== false) {
-		setHistoryState(context, { replace: options.replace })
+		setHistoryState(context, {
+			replace: options.replace || sameUrls(context.url, window.location.href),
+		})
 	}
 
 	if (!options.preserveScroll) {
