@@ -20,7 +20,7 @@ export function setContext(context: RouterContext, merge: Partial<RouterContext>
 	Object.keys(merge).forEach((key) => {
 		Reflect.set(context, key, merge[key as keyof RouterContext])
 	})
-
+	context.adapter.update?.(context)
 	debug.context('Updated context:', { context, added: merge })
 }
 
@@ -70,6 +70,8 @@ export interface Adapter {
 	swapView: SwapView
 	/** Swaps to the given dialog. */
 	swapDialog: SwapDialog
+	/** Called when the context is updated. */
+	update?: (context: RouterContext) => void
 }
 
 /** An axios visit being made. */
