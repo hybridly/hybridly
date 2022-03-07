@@ -133,11 +133,11 @@ export async function visit(context: RouterContext, options: VisitOptions): Prom
 		debug.router('The response is sleightful.')
 		const payload = response.data as VisitPayload
 
-		// If the visit was asking for certain properties only, we ensure that the
+		// If the visit was asking for specific properties, we ensure that the
 		// new request object contains the properties of the current view context,
 		// because the back-end sent back only the required properties.
-		if (options.only && payload.view.name === context.view.name) {
-			// TODO except, and ensure this works
+		if ((options.only?.length ?? options.except?.length) && payload.view.name === context.view.name) {
+			debug.router(`Merging ${options.only ? '"only"' : '"except"'} properties.`, payload.view.properties)
 			payload.view.properties = defu(payload.view.properties, context.view.properties)
 		}
 
