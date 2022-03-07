@@ -1,4 +1,5 @@
 import { resolveRouter } from '@sleightful/core'
+import { toRaw } from 'vue'
 import { state } from './stores/state'
 
 /**
@@ -10,4 +11,4 @@ import { state } from './stores/state'
  * @example
  * router.get('/posts/edit', { post })
  */
-export const router = resolveRouter(() => state.context.value!)
+export const router = resolveRouter(() => toRaw(state.context.value!))

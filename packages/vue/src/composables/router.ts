@@ -1,6 +1,7 @@
 import { resolveRouter, RouterContext } from '@sleightful/core'
+import { toRaw } from 'vue'
 import { state } from '../stores/state'
 
 export function useRouter(context?: RouterContext) {
-	return resolveRouter(() => context ?? state.context.value!)
+	return resolveRouter(() => toRaw(context ?? state.context.value!))
 }

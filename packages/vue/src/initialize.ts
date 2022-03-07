@@ -16,24 +16,31 @@ export async function initializeSleightful(options: SleightfulOptions) {
 		throw new Error('No payload. Are you using `@sleightful` or the `payload` option?')
 	}
 
-	const context = await createRouter({
+	state.setContext(await createRouter({
 		adapter: {
 			resolveComponent: resolve,
 			swapDialog: async() => {},
 			swapView: async(options) => {
-				state.setComponent(options.component)
-				// state.preserveState(options.preserveState)
+				state.setView(options.component)
+
+				if (!options.preserveState) {
+					state.setViewKey(Date.now())
+				}
+			},
+			update: (context) => {
+				debug.adapter('vue:update', 'Updating context:', { context })
+				state.setContext(context)
 			},
 		},
 		payload,
-	})
+	}))
 
 	const component = await resolve(payload.view.name)
 	await options.setup({
 		element,
 		wrapper,
-		props: { context, component },
-		render: () => h(wrapper as any, { context, component }),
+		props: { context: state.context.value!, component },
+		render: () => h(wrapper as any, { context: state.context.value, component }),
 	})
 }
 
