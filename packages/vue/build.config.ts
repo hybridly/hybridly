@@ -14,6 +14,8 @@ export default defineBuildConfig({
 		'postcss',
 		'source-map-js',
 		'type-fest',
+		'sleightful',
+		'@vue/shared',
 	],
 	rollup: {
 		emitCJS: true,
