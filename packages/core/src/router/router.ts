@@ -9,7 +9,7 @@ import type { VisitPayload, RequestData, Errors } from '../types'
 import { debug, match, when } from '../utils'
 import { createContext, payloadFromContext, RouterContext, RouterContextOptions, setContext } from './context'
 import { handleExternalVisit, isExternalResponse, isExternalVisit, performExternalVisit } from './external'
-import { setHistoryState, isBackForwardVisit, handleBackForwardVisit, registerEventListeners } from './history'
+import { setHistoryState, isBackForwardVisit, handleBackForwardVisit, registerEventListeners, getHistoryState, fetch, remember } from './history'
 import { resetScrollPositions, restoreScrollPositions, saveScrollPositions } from './scroll'
 import { fillHash, makeUrl, sameUrls, UrlResolvable } from './url'
 
@@ -39,6 +39,10 @@ export function resolveRouter(resolve: ResolveContext): Router {
 				arrayFormat: 'brackets',
 			}),
 		}).toString(),
+		history: {
+			get: (key) => fetch(key),
+			remember: (key, value) => remember(resolve(), key, value),
+		},
 	}
 }
 
@@ -141,12 +145,6 @@ export async function visit(context: RouterContext, options: VisitOptions): Prom
 			payload.view.properties = defu(payload.view.properties, context.view.properties)
 		}
 
-		// If the visit was asking to preserve the current state, we also need to
-		// update the context's state from the history state.
-		// if (options.preserveState && getHistoryState('state') && request.view.name === context.view.name) {
-		// 	request.state = getHistoryState('state')
-		// }
-
 		// If everything was according to the plan, we can make our navigation and
 		// update the context. Underlying adapters get the updated data.
 		await navigate(context, {
@@ -226,6 +224,12 @@ export async function navigate(context: RouterContext, options: NavigationOption
 	// If no request was given, we use the current context instead.
 	options.payload ??= payloadFromContext(context)
 
+	// If the visit was asking to preserve the current state, we also need to
+	// update the context's state from the history state.
+	if (options.preserveState && getHistoryState() && options.payload.view.name === context.view.name) {
+		setContext(context, { state: getHistoryState() })
+	}
+
 	// We merge the new request into the current context. That will replace the
 	// view, dialog, url and version, so the context is in sync with the
 	// navigation that took place.
@@ -254,6 +258,7 @@ export async function navigate(context: RouterContext, options: NavigationOption
 	// actual navigation. Additionally, we don't want to actually push a new state
 	// when navigating to the same URL.
 	if (options.updateHistoryState !== false) {
+		debug.router(`Target URL is ${context.url}, current window URL is ${window.location.href}.`)
 		setHistoryState(context, {
 			replace: options.replace || sameUrls(context.url, window.location.href),
 		})
@@ -365,4 +370,11 @@ export interface Router {
 	delete: (url: UrlResolvable, data?: VisitOptions['data'], options?: Omit<VisitOptions, 'method' | 'data' | 'url'>) => Promise<VisitResponse>
 	/** Navigates to the given external URL. Alias for `document.location.href`. */
 	external: (url: UrlResolvable, data?: VisitOptions['data']) => void
+	/** Access the history state. */
+	history: {
+		/** Remembers a value for the given route. */
+		remember: (key: string, value: any) => void
+		/** Gets a remembered value. */
+		get: <T = any>(key: string) => T | undefined
+	}
 }
