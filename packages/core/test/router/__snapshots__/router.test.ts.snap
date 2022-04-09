@@ -16,6 +16,7 @@ exports[`performs sleightful visits > context after visit 1`] = `
     "with": [Function],
   },
   "scrollRegions": [],
+  "state": {},
   "url": "https://localhost.test/visit",
   "version": "abc123",
   "view": {
