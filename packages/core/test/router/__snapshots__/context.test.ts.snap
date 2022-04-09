@@ -15,6 +15,7 @@ exports[`creates a valid router context > context 1`] = `
     "with": [Function],
   },
   "scrollRegions": [],
+  "state": {},
   "url": "https://localhost/",
   "version": "123",
   "view": {
@@ -41,6 +42,7 @@ exports[`updates the context > base context 1`] = `
     "with": [Function],
   },
   "scrollRegions": [],
+  "state": {},
   "url": "https://localhost/",
   "version": "abc123",
   "view": {
@@ -65,6 +67,7 @@ exports[`updates the context > updated context 1`] = `
     "with": [Function],
   },
   "scrollRegions": [],
+  "state": {},
   "url": "https://localhost/foo/bar",
   "version": "new-version-string",
   "view": {
@@ -95,6 +98,7 @@ exports[`updates the context > updated context with dialog 1`] = `
     "with": [Function],
   },
   "scrollRegions": [],
+  "state": {},
   "url": "https://localhost/foo/bar/dialog",
   "version": "new-version-string",
   "view": {
@@ -120,6 +124,7 @@ exports[`updates the context > updated context with no dialog 1`] = `
     "with": [Function],
   },
   "scrollRegions": [],
+  "state": {},
   "url": "https://localhost/foo",
   "version": "new-version-string",
   "view": {
