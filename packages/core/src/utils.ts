@@ -1,13 +1,13 @@
 import makeDebugger from 'debug'
 
 export const debug = {
-	router: makeDebugger('sleightful:router'),
-	history: makeDebugger('sleightful:history'),
-	url: makeDebugger('sleightful:url'),
-	context: makeDebugger('sleightful:context'),
-	external: makeDebugger('sleightful:external'),
-	scroll: makeDebugger('sleightful:scroll'),
-	event: makeDebugger('sleightful:event'),
+	router: makeDebugger('sleightful:core:router'),
+	history: makeDebugger('sleightful:core:history'),
+	url: makeDebugger('sleightful:core:url'),
+	context: makeDebugger('sleightful:core:context'),
+	external: makeDebugger('sleightful:core:external'),
+	scroll: makeDebugger('sleightful:core:scroll'),
+	event: makeDebugger('sleightful:core:event'),
 	adapter: (name: string, ...args: any[]) => makeDebugger('sleightful:adapter').extend(name)(args.shift(), ...args),
 }
 
