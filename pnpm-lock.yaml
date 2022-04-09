@@ -81,14 +81,25 @@ importers:
   packages/vue:
     specifiers:
       '@sleightful/core': workspace:*
+      '@types/lodash': ^4.14.181
+      '@types/lodash.clone': ^4.5.6
+      '@types/lodash.isequal': ^4.5.5
       defu: ^5.0.1
+      lodash.clone: ^4.5.0
+      lodash.isequal: ^4.5.0
       qs: ^6.10.3
       vue: ^3.2.31
     dependencies:
       '@sleightful/core': link:../core
       defu: 5.0.1
+      lodash.clone: 4.5.0
+      lodash.isequal: 4.5.0
       qs: 6.10.3
       vue: 3.2.31
+    devDependencies:
+      '@types/lodash': 4.14.181
+      '@types/lodash.clone': 4.5.6
+      '@types/lodash.isequal': 4.5.5
 
 packages:
 
@@ -375,6 +386,22 @@ packages:
 
   /@types/json5/0.0.29:
     resolution: {integrity: sha1-7ihweulOEdK4J7y+UnC86n8+ce4=}
+    dev: true
+
+  /@types/lodash.clone/4.5.6:
+    resolution: {integrity: sha512-cmwjyhyjvdWfTcuCmyjHzqxNv4yYGnlnpN24crxq8JwIKLtMI+ro0ScUcLSYo6wy8ToLczi6Sln0tqZntLganA==}
+    dependencies:
+      '@types/lodash': 4.14.181
+    dev: true
+
+  /@types/lodash.isequal/4.5.5:
+    resolution: {integrity: sha512-4IKbinG7MGP131wRfceK6W4E/Qt3qssEFLF30LnJbjYiSfHGGRU/Io8YxXrZX109ir+iDETC8hw8QsDijukUVg==}
+    dependencies:
+      '@types/lodash': 4.14.181
+    dev: true
+
+  /@types/lodash/4.14.181:
+    resolution: {integrity: sha512-n3tyKthHJbkiWhDZs3DkhkCzt2MexYHXlX0td5iMplyfwketaOeKboEVBqzceH7juqvEg3q5oUoBFxSLu7zFag==}
     dev: true
 
   /@types/ms/0.7.31:
@@ -2820,6 +2847,14 @@ packages:
   /lodash.camelcase/4.3.0:
     resolution: {integrity: sha1-soqmKIorn8ZRA1x3EfZathkDMaY=}
     dev: true
+
+  /lodash.clone/4.5.0:
+    resolution: {integrity: sha1-GVhwRQ9aExkkeN9Lw9I9LeoZB7Y=}
+    dev: false
+
+  /lodash.isequal/4.5.0:
+    resolution: {integrity: sha1-QVxEePK8wwEgwizhDtMib30+GOA=}
+    dev: false
 
   /lodash.merge/4.6.2:
     resolution: {integrity: sha512-0KpjqXRVvrYyCsX1swR/XTK0va6VQkQM6MNo7PqW77ByjAhoARA8EfrP1N4+KlKj8YS0ZUCtRT/YUuhyYDujIQ==}
