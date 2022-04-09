@@ -11,7 +11,7 @@ import { createContext, payloadFromContext, RouterContext, RouterContextOptions,
 import { handleExternalVisit, isExternalResponse, isExternalVisit, performExternalVisit } from './external'
 import { setHistoryState, isBackForwardVisit, handleBackForwardVisit, registerEventListeners } from './history'
 import { resetScrollPositions, restoreScrollPositions, saveScrollPositions } from './scroll'
-import { fillHash, makeUrl, UrlResolvable } from './url'
+import { fillHash, makeUrl, sameUrls, UrlResolvable } from './url'
 
 /** Creates the sleightful router. */
 export async function createRouter(options: RouterContextOptions): Promise<RouterContext> {
@@ -272,6 +272,8 @@ async function initializeRouter(context: RouterContext): Promise<RouterContext> 
 	} else if (isExternalVisit()) {
 		handleExternalVisit(context)
 	} else {
+		debug.router('Handling a normal visit.')
+
 		// If we navigated to somewhere with a hash, we need to update the context
 		// to add said hash because it was initialized without it.
 		setContext(context, {
@@ -280,6 +282,7 @@ async function initializeRouter(context: RouterContext): Promise<RouterContext> 
 
 		await navigate(context, {
 			preserveState: true,
+			replace: sameUrls(context.url, window.location.href),
 		})
 	}
 
