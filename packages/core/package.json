@@ -36,8 +36,8 @@
     "stub": "unbuild --stub"
   },
   "dependencies": {
-    "axios": "^0.26.0",
-    "debug": "^4.3.3",
+    "axios": "^0.26.1",
+    "debug": "^4.3.4",
     "defu": "^5.0.1",
     "hookable": "^5.1.1",
     "qs": "^6.10.3"
