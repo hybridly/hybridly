@@ -26,10 +26,12 @@ export const state = {
 	},
 
 	setViewKey(key: MaybeRef<number>) {
+		debug.adapter('vue:state:key', 'Setting view key:', key)
 		this.viewKey.value = unref(key)
 	},
 
 	setDialogKey(key: MaybeRef<number>) {
+		debug.adapter('vue:state:key', 'Setting dialog key:', key)
 		this.dialogKey.value = unref(key)
 	},
 }

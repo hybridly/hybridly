@@ -12,6 +12,7 @@ export function createContext(options: RouterContextOptions): RouterContext {
 		url: makeUrl(options.payload.url).toString(),
 		adapter: options.adapter,
 		scrollRegions: [],
+		state: {},
 	}
 }
 
@@ -56,6 +57,8 @@ export interface RouterContext {
 	adapter: Adapter
 	/** Scroll positions of the current page's DOM elements. */
 	scrollRegions: ScrollRegion[]
+	/** Arbitrary state. */
+	state: Record<string, any>
 	/** Currently pending visit. */
 	activeVisit?: PendingVisit
 	/** Event emitter for this context. */

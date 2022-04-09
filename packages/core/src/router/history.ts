@@ -1,7 +1,7 @@
 import { SCROLL_REGION_ATTRIBUTE } from '../constants'
 import { debounce, debug } from '../utils'
 import { navigate } from './router'
-import { RouterContext } from './context'
+import { RouterContext, setContext } from './context'
 import { saveScrollPositions } from './scroll'
 import { makeUrl } from './url'
 
@@ -28,18 +28,10 @@ export function setHistoryState(context: RouterContext, options: HistoryOptions 
 }
 
 /** Gets the current history state if it exists. */
-export function getHistoryState<T extends keyof HistoryState | undefined>(
-	key?: T,
-): T extends keyof HistoryState ? HistoryState[T] : HistoryState | undefined {
-	if (window?.history.state) {
-		return key
-			? window.history.state[key]
-			: window.history.state
-	}
-
+export function getHistoryState<T = any>(key?: string): T {
 	return key
-		? undefined as any
-		: { state: {} }
+		? window.history.state?.state?.[key]
+		: window.history.state?.state
 }
 
 /** Register history-related event listeneners. */
@@ -107,6 +99,25 @@ export async function handleBackForwardVisit(context: RouterContext): Promise<vo
 	})
 }
 
+/** Saves a value into the current history state. */
+export function remember<T = any>(context: RouterContext, key: string, value: T): void {
+	debug.history(`Remembering key "${key}" with value`, value)
+
+	setContext(context, {
+		state: {
+			...context.state,
+			[key]: value,
+		},
+	})
+
+	setHistoryState(context, { replace: true })
+}
+
+/** Gets a value saved into the current history state. */
+export function fetch<T = any>(key: string): T {
+	return getHistoryState<T>(key)
+}
+
 /** Serializes the context so it can be written to the history state. */
 export function serializeContext(context: RouterContext): SerializedContext {
 	return {
@@ -115,6 +126,7 @@ export function serializeContext(context: RouterContext): SerializedContext {
 		view: context.view,
 		dialog: context.dialog,
 		scrollRegions: context.scrollRegions,
+		state: context.state,
 	}
 }
 
@@ -124,8 +136,4 @@ export interface HistoryOptions {
 	 * @default false
 	 */
 	replace?: boolean
-}
-
-export interface HistoryState {
-	state: any
 }
