@@ -42,9 +42,9 @@
   "dependencies": {
     "@sleightful/core": "workspace:*",
     "unplugin-vue-define-options": "^0.4.0",
-    "vite-plugin-laravel": "^0.2.0-beta.7"
+    "vite-plugin-laravel": "^0.2.0-beta.10"
   },
   "devDependencies": {
-    "vite": "^2.8.6"
+    "vite": "^2.9.1"
   }
 }
