@@ -219,7 +219,6 @@ export function isSleightfulResponse(response: AxiosResponse): boolean {
  */
 export async function navigate(context: RouterContext, options: NavigationOptions) {
 	debug.router('Making an internal navigation:', { context, options })
-	// const shouldReplace = options.replace || sameOrigin(context.url, window.location.href)
 
 	// If no request was given, we use the current context instead.
 	options.payload ??= payloadFromContext(context)
@@ -260,7 +259,7 @@ export async function navigate(context: RouterContext, options: NavigationOption
 	if (options.updateHistoryState !== false) {
 		debug.router(`Target URL is ${context.url}, current window URL is ${window.location.href}.`)
 		setHistoryState(context, {
-			replace: options.replace || sameUrls(context.url, window.location.href),
+			replace: options.replace,
 		})
 	}
 
