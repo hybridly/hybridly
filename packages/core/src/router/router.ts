@@ -154,7 +154,7 @@ export async function visit(context: RouterContext, options: VisitOptions): Prom
 			},
 			preserveScroll: options.preserveScroll === true,
 			preserveState: options.preserveState,
-			replace: options.replace === true,
+			replace: options.replace === true || sameUrls(payload.url, window.location.href),
 		})
 
 		// If the new view's properties has errors, userland expects an event
