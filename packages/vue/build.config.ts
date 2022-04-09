@@ -16,6 +16,7 @@ export default defineBuildConfig({
 		'type-fest',
 		'sleightful',
 		'@vue/shared',
+		'axios',
 	],
 	rollup: {
 		emitCJS: true,
