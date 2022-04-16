@@ -40,11 +40,11 @@
   },
   "dependencies": {
     "@sleightful/core": "workspace:*",
-    "defu": "^5.0.1",
+    "defu": "^6.0.0",
     "lodash.clone": "^4.5.0",
     "lodash.isequal": "^4.5.0",
     "qs": "^6.10.3",
-    "vue": "^3.2.31"
+    "vue": "^3.2.33"
   },
   "devDependencies": {
     "@types/lodash": "^4.14.181",
