@@ -3,7 +3,6 @@ import { debug, createRouter, VisitPayload, ResolveComponent, RouterContext } fr
 import { Promisable } from 'type-fest'
 import { wrapper } from './components/wrapper'
 import { state } from './stores/state'
-// import { plugin } from './plugin'
 
 export async function initializeSleightful(options: SleightfulOptions) {
 	const { element, payload, resolve } = prepare(options)
@@ -111,10 +110,10 @@ interface SleightfulOptions {
 	/** A custom component resolution option. */
 	resolve?: ResolveComponent
 	/** Sets up the sleightful router. */
-	setup: (options: SetupOptions) => Promisable<void>
+	setup: (options: SetupArguments) => Promisable<void>
 }
 
-interface SetupOptions {
+interface SetupArguments {
 	/** DOM element to mount Vue on. */
 	element: Element
 	/** Sleightful wrapper component. */
