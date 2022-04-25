@@ -47,8 +47,8 @@
     "vue": "^3.2.33"
   },
   "devDependencies": {
-    "@types/lodash": "^4.14.181",
-    "@types/lodash.clone": "^4.5.6",
-    "@types/lodash.isequal": "^4.5.5"
+    "@types/lodash": "^4.14.182",
+    "@types/lodash.clone": "^4.5.7",
+    "@types/lodash.isequal": "^4.5.6"
   }
 }
