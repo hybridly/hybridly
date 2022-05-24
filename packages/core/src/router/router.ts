@@ -223,9 +223,17 @@ export async function navigate(context: RouterContext, options: NavigationOption
 	// If no request was given, we use the current context instead.
 	options.payload ??= payloadFromContext(context)
 
+	const evaluateConditionalOption = (option?: ConditionalNavigationOption) => typeof option === 'function'
+		? option(options.payload!)
+		: option
+
+	const shouldPreserveState = evaluateConditionalOption(options.preserveState)
+	const shouldPreserveScroll = evaluateConditionalOption(options.preserveScroll)
+	const shouldReplaceHistory = evaluateConditionalOption(options.replace)
+
 	// If the visit was asking to preserve the current state, we also need to
 	// update the context's state from the history state.
-	if (options.preserveState && getHistoryState() && options.payload.view.name === context.view.name) {
+	if (shouldPreserveState && getHistoryState() && options.payload.view.name === context.view.name) {
 		setContext(context, { state: getHistoryState() })
 	}
 
@@ -239,7 +247,7 @@ export async function navigate(context: RouterContext, options: NavigationOption
 	debug.router(`Component [${options.payload.view.name}] resolved to:`, viewComponent)
 	await context.adapter.swapView({
 		component: viewComponent,
-		preserveState: options.preserveState,
+		preserveState: shouldPreserveState,
 	})
 
 	// We then replace the dialog if a new one is given.
@@ -248,7 +256,7 @@ export async function navigate(context: RouterContext, options: NavigationOption
 		debug.router(`Dialog [${options.payload.view.name}] resolved to:`, dialogComponent)
 		await context.adapter.swapDialog({
 			component: dialogComponent,
-			preserveState: options.preserveState,
+			preserveState: shouldPreserveState,
 		})
 	}
 
@@ -259,11 +267,11 @@ export async function navigate(context: RouterContext, options: NavigationOption
 	if (options.updateHistoryState !== false) {
 		debug.router(`Target URL is ${context.url}, current window URL is ${window.location.href}.`)
 		setHistoryState(context, {
-			replace: options.replace,
+			replace: shouldReplaceHistory,
 		})
 	}
 
-	if (!options.preserveScroll) {
+	if (!shouldPreserveScroll) {
 		resetScrollPositions(context)
 	} else {
 		restoreScrollPositions(context)
@@ -298,6 +306,8 @@ async function initializeRouter(context: RouterContext): Promise<RouterContext> 
 	return context
 }
 
+type ConditionalNavigationOption = boolean | ((payload: VisitPayload) => boolean)
+
 export interface NavigationOptions {
 	/** View to navigate to. */
 	payload?: VisitPayload
@@ -305,11 +315,11 @@ export interface NavigationOptions {
 	 * Whether to replace the current history state instead of adding
 	 * one. This affects the browser's "back" and "forward" features.
 	 */
-	replace?: boolean
+	replace?: ConditionalNavigationOption
 	/** Whether to preserve the current scrollbar position. */
-	preserveScroll?: boolean
+	preserveScroll?: ConditionalNavigationOption
 	/** Whether to preserve the current page component state. */
-	preserveState?: boolean
+	preserveState?: ConditionalNavigationOption
 	/**
 	 * Defines whether the history state should be updated.
 	 * @internal This is an advanced property meant to be used internally.
