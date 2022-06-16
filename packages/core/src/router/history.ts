@@ -17,10 +17,16 @@ export function setHistoryState(context: RouterContext, options: HistoryOptions 
 		? 'replaceState'
 		: 'pushState'
 
-	debug.history('Setting history state:', { method, context })
+	const serialized = serializeContext(context)
+
+	debug.history('Setting history state:', {
+		method,
+		context,
+		serialized,
+	})
 
 	try {
-		window.history[method](serializeContext(context), '', context.url)
+		window.history[method](serialized, '', context.url)
 	} catch (error) {
 		console.error('Sleightful could not save its current state in the history. This is most likely due to a property being non-serializable, such as a proxy or a reference.')
 		throw error
