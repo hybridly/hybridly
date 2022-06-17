@@ -1,5 +1,5 @@
 import { ComponentOptions, DefineComponent, h } from 'vue'
-import { debug, createRouter, VisitPayload, ResolveComponent, RouterContext, RouterContextOptions } from '@sleightful/core'
+import { debug, createRouter, showModal, VisitPayload, ResolveComponent, RouterContext, RouterContextOptions } from '@sleightful/core'
 import { Promisable } from 'type-fest'
 import { wrapper } from './components/wrapper'
 import { state } from './stores/state'
@@ -97,21 +97,25 @@ function prepare(options: SleightfulOptions) {
  * Resolves a page component.
  */
 export async function resolvePageComponent(name: string, pages: Record<string, any>, defaultLayout?: any) {
-	// eslint-disable-next-line no-restricted-syntax
-	for (const path in pages) {
-		if (path.endsWith(`${name.replaceAll('.', '/')}.vue`)) {
-			let component = typeof pages[path] === 'function'
-				? await pages[path]()
-				: pages[path]
+	const path = Object.keys(pages)
+		.sort((a, b) => a.length - b.length)
+		.find((path) => path.endsWith(`${name.replaceAll('.', '/')}.vue`))
 
-			component = component.default ?? component
-			component.layout ??= defaultLayout
+	if (!path) {
+		showModal({ pageNotFound: name })
+		console.warn(`Page component "${name} could not be found. Available pages:`, Object.keys(pages))
 
-			return component
-		}
+		return
 	}
 
-	throw new Error(`Page not found: ${name}`)
+	let component = typeof pages[path] === 'function'
+		? await pages[path]()
+		: pages[path]
+
+	component = component.default ?? component
+	component.layout ??= defaultLayout
+
+	return component
 }
 
 interface SleightfulOptions {
