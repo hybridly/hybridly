@@ -6,7 +6,7 @@ import { router } from '../router'
  * The state is linked to a specific browser history entry.
  */
 export function useHistoryState<T = any>(key: string, initial: T) {
-	const value = ref<T>(router.history.get(key) as T ?? initial)
+	const value = ref<T>(router.history.get<T>(key) ?? initial)
 
 	watch(value, (value) => {
 		router.history.remember(key, toRaw(value))
