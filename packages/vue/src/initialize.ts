@@ -1,5 +1,5 @@
 import { ComponentOptions, DefineComponent, h } from 'vue'
-import { debug, createRouter, VisitPayload, ResolveComponent, RouterContext } from '@sleightful/core'
+import { debug, createRouter, VisitPayload, ResolveComponent, RouterContext, RouterContextOptions } from '@sleightful/core'
 import { Promisable } from 'type-fest'
 import { wrapper } from './components/wrapper'
 import { state } from './stores/state'
@@ -16,6 +16,7 @@ export async function initializeSleightful(options: SleightfulOptions) {
 	}
 
 	state.setContext(await createRouter({
+		serializer: options.serializer,
 		adapter: {
 			resolveComponent: resolve,
 			swapDialog: async() => {},
@@ -109,6 +110,8 @@ interface SleightfulOptions {
 	layout?: any
 	/** A custom component resolution option. */
 	resolve?: ResolveComponent
+	/** Custom history state serialization functions. */
+	serializer?: RouterContextOptions['serializer']
 	/** Sets up the sleightful router. */
 	setup: (options: SetupArguments) => Promisable<void>
 }
