@@ -78,7 +78,7 @@ class Middleware
     }
 
     /**
-     * Determines what to do when an Inertia action returned with no response.
+     * Determines what to do when an action returned with no response.
      */
     public function onEmptyResponse(Request $request, Response $response): Response
     {
