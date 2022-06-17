@@ -3,6 +3,7 @@ import { debug, createRouter, VisitPayload, ResolveComponent, RouterContext, Rou
 import { Promisable } from 'type-fest'
 import { wrapper } from './components/wrapper'
 import { state } from './stores/state'
+import { initializeProgress, ProgressOptions } from './progress'
 
 export async function initializeSleightful(options: SleightfulOptions) {
 	const { element, payload, resolve } = prepare(options)
@@ -42,6 +43,15 @@ export async function initializeSleightful(options: SleightfulOptions) {
 		props: { context: state.context.value!, component },
 		render: () => h(wrapper as any, { context: state.context.value, component }),
 	})
+
+	if (options.progress !== false) {
+		initializeProgress(
+			state.context.value!,
+			typeof options.progress === 'object'
+				? options.progress
+				: {},
+		)
+	}
 }
 
 function prepare(options: SleightfulOptions) {
@@ -119,6 +129,8 @@ interface SleightfulOptions {
 	serializer?: RouterContextOptions['serializer']
 	/** Clean up the host element's payload dataset after loading. */
 	cleanup?: boolean
+	/** Progressbar options. */
+	progress?: boolean | Partial<ProgressOptions>
 	/** Sets up the sleightful router. */
 	setup: (options: SetupArguments) => Promisable<void>
 }
