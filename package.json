@@ -7,9 +7,9 @@
     "lint:fix": "pnpm lint -- --fix",
     "release": "bumpp package.json packages/*/package.json --commit --push --tag",
     "stub": "pnpm -r --parallel run stub",
-    "test": "vitest test",
-    "test:ui": "vitest test --ui --no-open",
-    "test:update": "vitest -u"
+    "test": "pnpm run test:vitest && pnpm run test:pest",
+    "test:vitest": "vitest test --run",
+    "test:pest": "composer test"
   },
   "devDependencies": {
     "@innocenzi/eslint-config": "^0.9.2",

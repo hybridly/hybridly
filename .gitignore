@@ -3,4 +3,11 @@
 *.log
 dist
 node_modules
-packages/core/src/old/
+.php-cs-fixer.cache
+coverage
+docs
+phpstan.neon
+testbench.yaml
+vendor
+.php_cs.cache
+.phpunit.result.cache

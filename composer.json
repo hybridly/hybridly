@@ -1,0 +1,75 @@
+{
+	"name": "sleightful/laravel",
+	"description": "Server-driven, client-rendered view layer.",
+	"keywords": [
+		"laravel",
+		"sleightful",
+		"inertiajs"
+	],
+	"homepage": "https://github.com/sleightful/sleightful",
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "Enzo Innocenzi",
+			"email": "enzo@innocenzi.dev",
+			"role": "Developer"
+		}
+	],
+	"require": {
+		"php": "^8.0",
+		"spatie/laravel-package-tools": "^1.9.2",
+		"illuminate/contracts": "^9.0"
+	},
+	"require-dev": {
+		"friendsofphp/php-cs-fixer": "^3.6",
+		"guzzlehttp/promises": "^1.5",
+		"nunomaduro/collision": "^6.0",
+		"nunomaduro/larastan": "^2.0.1",
+		"orchestra/testbench": "^7.0",
+		"pestphp/pest": "^1.21",
+		"pestphp/pest-plugin-laravel": "^1.1",
+		"phpstan/extension-installer": "^1.1",
+		"phpstan/phpstan-deprecation-rules": "^1.0",
+		"phpstan/phpstan-phpunit": "^1.0",
+		"phpunit/phpunit": "^9.5",
+		"spatie/laravel-ray": "^1.29"
+	},
+	"autoload": {
+		"psr-4": {
+			"Sleightful\\": "packages/laravel/src"
+		},
+		"files": [
+			"packages/laravel/src/helpers.php"
+		]
+	},
+	"autoload-dev": {
+		"psr-4": {
+			"Sleightful\\Tests\\": "packages/laravel/tests"
+		}
+	},
+	"scripts": {
+		"analyze": "vendor/bin/phpstan analyse",
+		"style": "vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.php --allow-risky=yes",
+		"test": "vendor/bin/pest --test-directory=packages/laravel/tests",
+		"test:coverage": "vendor/bin/pest --test-directory=packages/laravel/tests --coverage"
+	},
+	"config": {
+		"sort-packages": true,
+		"allow-plugins": {
+			"phpstan/extension-installer": true,
+			"pestphp/pest-plugin": true
+		}
+	},
+	"extra": {
+		"laravel": {
+			"providers": [
+				"Sleightful\\SleightfulServiceProvider"
+			],
+			"aliases": {
+				"Sleightful": "Sleightful\\Facades\\Sleightful"
+			}
+		}
+	},
+	"minimum-stability": "dev",
+	"prefer-stable": true
+}
