@@ -45,16 +45,21 @@ export async function initializeSleightful(options: SleightfulOptions) {
 }
 
 function prepare(options: SleightfulOptions) {
-	const isServer = typeof window === 'undefined'
 	debug.adapter('vue', 'Preparing Sleightful with options:', options)
+	const isServer = typeof window === 'undefined'
 	const id = options.id ?? 'root'
 	const element = document?.getElementById(id) ?? undefined
+
 	debug.adapter('vue', `Element "${id}" is:`, element)
 	const payload = options.payload ?? element?.dataset.payload
 		? JSON.parse(element!.dataset.payload!)
 		: undefined
-	debug.adapter('vue', 'Resolved:', { isServer, element, payload })
 
+	if (options.cleanup !== false) {
+		delete element!.dataset.payload
+	}
+
+	debug.adapter('vue', 'Resolved:', { isServer, element, payload })
 	const resolve = async(name: string): Promise<DefineComponent> => {
 		debug.adapter('vue', 'Resolving component', name)
 
@@ -112,6 +117,8 @@ interface SleightfulOptions {
 	resolve?: ResolveComponent
 	/** Custom history state serialization functions. */
 	serializer?: RouterContextOptions['serializer']
+	/** Clean up the host element's payload dataset after loading. */
+	cleanup?: boolean
 	/** Sets up the sleightful router. */
 	setup: (options: SetupArguments) => Promisable<void>
 }
