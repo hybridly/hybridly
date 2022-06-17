@@ -2,7 +2,7 @@ export type UrlResolvable = string | URL | Location
 
 /** Normalizes the given input to an URL. */
 export function normalizeUrl(href: UrlResolvable): string {
-	return new URL(String(href)).toString()
+	return makeUrl(href).toString()
 }
 
 /**

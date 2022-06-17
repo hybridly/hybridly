@@ -8,7 +8,7 @@
 export interface View {
 	/** Name of the component to use. */
 	name: string
-	/** Properties to pass to the component. */
+	/** Properties to apply to the component. */
 	properties: Properties
 }
 
