@@ -242,7 +242,18 @@ export async function navigate(context: RouterContext, options: NavigationOption
 	// navigation that took place.
 	setContext(context, options.payload)
 
-	// First, we swap the view.
+	// History state must be updated to preserve the expected, native browser behavior.
+	// However, in some cases, we just want to swap the views without making an
+	// actual navigation. Additionally, we don't want to actually push a new state
+	// when navigating to the same URL.
+	if (options.updateHistoryState !== false) {
+		debug.router(`Target URL is ${context.url}, current window URL is ${window.location.href}.`, { shouldReplaceHistory })
+		setHistoryState(context, {
+			replace: shouldReplaceHistory,
+		})
+	}
+
+	// Then, we swap the view.
 	const viewComponent = await context.adapter.resolveComponent(options.payload.view.name)
 	debug.router(`Component [${options.payload.view.name}] resolved to:`, viewComponent)
 	await context.adapter.swapView({
@@ -257,17 +268,6 @@ export async function navigate(context: RouterContext, options: NavigationOption
 		await context.adapter.swapDialog({
 			component: dialogComponent,
 			preserveState: shouldPreserveState,
-		})
-	}
-
-	// History state must be updated to preserve the expected, native browser behavior.
-	// However, in some cases, we just want to swap the views without making an
-	// actual navigation. Additionally, we don't want to actually push a new state
-	// when navigating to the same URL.
-	if (options.updateHistoryState !== false) {
-		debug.router(`Target URL is ${context.url}, current window URL is ${window.location.href}.`)
-		setHistoryState(context, {
-			replace: shouldReplaceHistory,
 		})
 	}
 
