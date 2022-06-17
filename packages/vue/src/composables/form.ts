@@ -19,8 +19,8 @@ export function useForm<T extends Fields = Fields>(options: FormOptions<T>) {
 	const historyKey = options?.key as string ?? 'form:default'
 	const historyData = shouldRemember ? router.history.get(historyKey) as any : undefined
 	const timeoutIds = {
-		recentlyFailed: undefined as any,
-		recentlySuccessful: undefined as any,
+		recentlyFailed: undefined as ReturnType<typeof setTimeout> | undefined,
+		recentlySuccessful: undefined as ReturnType<typeof setTimeout> | undefined,
 	}
 
 	/** Fields that were initially set up. */
@@ -65,8 +65,8 @@ export function useForm<T extends Fields = Fields>(options: FormOptions<T>) {
 				before: (visit) => {
 					successful.value = false
 					recentlySuccessful.value = false
-					clearTimeout(timeoutIds.recentlySuccessful)
-					clearTimeout(timeoutIds.recentlyFailed)
+					clearTimeout(timeoutIds.recentlySuccessful!)
+					clearTimeout(timeoutIds.recentlyFailed!)
 					clearErrors()
 					return options.events?.before?.(visit)
 				},
