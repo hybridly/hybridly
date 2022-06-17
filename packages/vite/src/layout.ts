@@ -26,7 +26,7 @@ export default (options: Options = {}): Plugin => {
 				return
 			}
 
-			debug(`Found Inertia layout call in ${id}`)
+			debug(`Found layout call in ${id}`)
 
 			const isTypeScript = /lang=['"]ts['"]/.test(code)
 
