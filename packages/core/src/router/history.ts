@@ -1,11 +1,11 @@
 import { SCROLL_REGION_ATTRIBUTE } from '../constants'
 import { debounce, debug } from '../utils'
 import { navigate } from './router'
-import { RouterContext, setContext } from './context'
+import { RouterContext, RouterContextOptions, Serializer, setContext } from './context'
 import { saveScrollPositions } from './scroll'
 import { makeUrl } from './url'
 
-type SerializedContext = Omit<RouterContext, 'adapter' | 'events'>
+type SerializedContext = Omit<RouterContext, 'adapter' | 'events' | 'serializer'>
 
 /** Puts the given context into the history state. */
 export function setHistoryState(context: RouterContext, options: HistoryOptions = {}) {
@@ -34,10 +34,12 @@ export function setHistoryState(context: RouterContext, options: HistoryOptions 
 }
 
 /** Gets the current history state if it exists. */
-export function getHistoryState<T = any>(key?: string): T {
-	return key
+export function getHistoryState<T = any>(context: RouterContext, key?: string): T {
+	const state = key
 		? window.history.state?.state?.[key]
 		: window.history.state?.state
+
+	return context.serializer.unserialize<T>(state)
 }
 
 /** Register history-related event listeneners. */
@@ -120,8 +122,8 @@ export function remember<T = any>(context: RouterContext, key: string, value: T)
 }
 
 /** Gets a value saved into the current history state. */
-export function fetch<T = any>(key: string): T {
-	return getHistoryState<T>(key)
+export function getKeyFromHistory<T = any>(context: RouterContext, key: string): T {
+	return getHistoryState<T>(context, key)
 }
 
 /** Serializes the context so it can be written to the history state. */
@@ -129,10 +131,21 @@ export function serializeContext(context: RouterContext): SerializedContext {
 	return {
 		url: context.url,
 		version: context.version,
-		view: context.view,
+		view: context.serializer.serialize(context.view),
 		dialog: context.dialog,
 		scrollRegions: context.scrollRegions,
 		state: context.state,
+	}
+}
+
+export function createSerializer(options: RouterContextOptions): Serializer {
+	if (options.serializer) {
+		return options.serializer
+	}
+
+	return {
+		serialize: (view) => JSON.parse(JSON.stringify(view)),
+		unserialize: (state) => state,
 	}
 }
 

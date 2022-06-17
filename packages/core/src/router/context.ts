@@ -1,6 +1,7 @@
 import { createEmitter, Emitter, VisitEvents } from '../events'
 import { ResolveComponent, VisitPayload, SwapDialog, SwapView, View } from '../types'
 import { debug } from '../utils'
+import { createSerializer } from './history'
 import { VisitOptions } from './router'
 import { makeUrl } from './url'
 
@@ -9,6 +10,7 @@ export function createContext(options: RouterContextOptions): RouterContext {
 	return {
 		...options.payload,
 		events: createEmitter(),
+		serializer: createSerializer(options),
 		url: makeUrl(options.payload.url).toString(),
 		adapter: options.adapter,
 		scrollRegions: [],
@@ -41,6 +43,8 @@ export interface RouterContextOptions {
 	payload: VisitPayload
 	/** Adapter-specific functions. */
 	adapter: Adapter
+	/** History state serializer. */
+	serializer?: Serializer
 }
 
 /** Router context. */
@@ -63,6 +67,8 @@ export interface RouterContext {
 	activeVisit?: PendingVisit
 	/** Event emitter for this context. */
 	events: Emitter<VisitEvents>
+	/** History state serializer. */
+	serializer: Serializer
 }
 
 /** Adapter-specific functions. */
@@ -90,4 +96,10 @@ export interface PendingVisit {
 export interface ScrollRegion {
 	top: number
 	left: number
+}
+
+/** Provides methods to serialize the state into the history state. */
+export interface Serializer {
+	serialize: (view: View) => any
+	unserialize: <T>(state: any) => T
 }

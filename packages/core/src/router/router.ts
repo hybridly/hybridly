@@ -9,7 +9,7 @@ import type { VisitPayload, RequestData, Errors } from '../types'
 import { debug, match, when } from '../utils'
 import { createContext, payloadFromContext, RouterContext, RouterContextOptions, setContext } from './context'
 import { handleExternalVisit, isExternalResponse, isExternalVisit, performExternalVisit } from './external'
-import { setHistoryState, isBackForwardVisit, handleBackForwardVisit, registerEventListeners, getHistoryState, fetch, remember } from './history'
+import { setHistoryState, isBackForwardVisit, handleBackForwardVisit, registerEventListeners, getHistoryState, getKeyFromHistory, remember } from './history'
 import { resetScrollPositions, restoreScrollPositions, saveScrollPositions } from './scroll'
 import { fillHash, makeUrl, sameUrls, UrlResolvable } from './url'
 
@@ -40,7 +40,7 @@ export function resolveRouter(resolve: ResolveContext): Router {
 			}),
 		}).toString(),
 		history: {
-			get: (key) => fetch(key),
+			get: (key) => getKeyFromHistory(resolve(), key),
 			remember: (key, value) => remember(resolve(), key, value),
 		},
 	}
@@ -233,8 +233,8 @@ export async function navigate(context: RouterContext, options: NavigationOption
 
 	// If the visit was asking to preserve the current state, we also need to
 	// update the context's state from the history state.
-	if (shouldPreserveState && getHistoryState() && options.payload.view.name === context.view.name) {
-		setContext(context, { state: getHistoryState() })
+	if (shouldPreserveState && getHistoryState(context) && options.payload.view.name === context.view.name) {
+		setContext(context, { state: getHistoryState(context) })
 	}
 
 	// We merge the new request into the current context. That will replace the
