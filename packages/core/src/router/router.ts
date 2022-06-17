@@ -5,13 +5,13 @@ import { ERROR_BAG_HEADER, EXCEPT_DATA_HEADER, EXTERNAL_VISIT_HEADER, ONLY_DATA_
 import { createModal, displayModal } from '../error-modal'
 import { NotASleightfulResponseError, VisitCancelledError } from '../errors'
 import { VisitEvents } from '../events'
-import type { VisitPayload, RequestData, Errors } from '../types'
+import type { VisitPayload, RequestData, Errors, Properties } from '../types'
 import { debug, match, when } from '../utils'
 import { createContext, payloadFromContext, RouterContext, RouterContextOptions, setContext } from './context'
 import { handleExternalVisit, isExternalResponse, isExternalVisit, performExternalVisit } from './external'
 import { setHistoryState, isBackForwardVisit, handleBackForwardVisit, registerEventListeners, getHistoryState, getKeyFromHistory, remember } from './history'
 import { resetScrollPositions, restoreScrollPositions, saveScrollPositions } from './scroll'
-import { fillHash, makeUrl, sameUrls, UrlResolvable } from './url'
+import { fillHash, makeUrl, normalizeUrl, sameUrls, UrlResolvable } from './url'
 
 /** Creates the sleightful router. */
 export async function createRouter(options: RouterContextOptions): Promise<RouterContext> {
@@ -33,12 +33,8 @@ export function resolveRouter(resolve: ResolveContext): Router {
 		put: async(url, data = {}, options = {}) => await visit(resolve(), { preserveState: true, ...options, url, data, method: 'PUT' }),
 		patch: async(url, data = {}, options = {}) => await visit(resolve(), { preserveState: true, ...options, url, data, method: 'PATCH' }),
 		delete: async(url, data = {}, options = {}) => await visit(resolve(), { preserveState: true, ...options, url, data, method: 'DELETE' }),
-		external: (url, data = {}) => document.location.href = makeUrl(url, {
-			search: qs.stringify(data, {
-				encodeValuesOnly: true,
-				arrayFormat: 'brackets',
-			}),
-		}).toString(),
+		local: async(url, options) => await performLocalComponentVisit(resolve(), url, options),
+		external: (url, data = {}) => performLocalExternalVisit(url, data),
 		history: {
 			get: (key) => getKeyFromHistory(resolve(), key),
 			remember: (key, value) => remember(resolve(), key, value),
@@ -306,7 +302,51 @@ async function initializeRouter(context: RouterContext): Promise<RouterContext> 
 	return context
 }
 
+/** Performs a local visit to the given component without a round-trip. */
+async function performLocalComponentVisit(context: RouterContext, targetUrl: UrlResolvable, options: LocalVisitOptions) {
+	const url = normalizeUrl(targetUrl)
+
+	return await navigate(context, {
+		...options,
+		payload: {
+			version: context.version,
+			dialog: context.dialog,
+			url,
+			view: {
+				name: options.component ?? context.view.name,
+				properties: options.properties,
+			},
+		},
+	})
+}
+
+/** Performs an external visit by changing the URL directly. */
+function performLocalExternalVisit(url: UrlResolvable, data?: VisitOptions['data']) {
+	document.location.href = makeUrl(url, {
+		search: qs.stringify(data, {
+			encodeValuesOnly: true,
+			arrayFormat: 'brackets',
+		}),
+	}).toString()
+}
+
 type ConditionalNavigationOption = boolean | ((payload: VisitPayload) => boolean)
+
+export interface LocalVisitOptions {
+	/** Name of the component to use. */
+	component?: string
+	/** Properties to apply to the component. */
+	properties: Properties
+	/**
+	 * Whether to replace the current history state instead of adding
+	 * one. This affects the browser's "back" and "forward" features.
+	 */
+	replace?: ConditionalNavigationOption
+	/** Whether to preserve the current scrollbar position. */
+	preserveScroll?: ConditionalNavigationOption
+	/** Whether to preserve the current page component state. */
+	preserveState?: ConditionalNavigationOption
+}
 
 export interface NavigationOptions {
 	/** View to navigate to. */
@@ -379,6 +419,8 @@ export interface Router {
 	delete: (url: UrlResolvable, data?: VisitOptions['data'], options?: Omit<VisitOptions, 'method' | 'data' | 'url'>) => Promise<VisitResponse>
 	/** Navigates to the given external URL. Alias for `document.location.href`. */
 	external: (url: UrlResolvable, data?: VisitOptions['data']) => void
+	/** Navigates to the given URL without a server round-trip. */
+	local: (url: UrlResolvable, options: LocalVisitOptions) => Promise<void>
 	/** Access the history state. */
 	history: {
 		/** Remembers a value for the given route. */
