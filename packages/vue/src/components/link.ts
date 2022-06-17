@@ -56,8 +56,8 @@ export const Link = defineComponent({
 						replace: props.replace,
 						preserveScroll: props.preserveScroll,
 						preserveState: props.preserveState ?? (method !== 'GET'),
-						only: props.only,
-						except: props.except,
+						only: props.only as any, // TODO fix typings there
+						except: props.except as any,
 						headers: props.headers,
 					})
 				},
