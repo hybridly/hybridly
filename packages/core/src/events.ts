@@ -49,14 +49,14 @@ export function createEmitter<Events extends EventsMap = DefaultEvents>(
 			}
 		},
 		emit<K extends keyof Events>(event: K, ...args: Parameters<Events[K]>): boolean {
-			debug.event(`Emitted [${event}] with`, ...args)
+			debug.event(`Emitted [${event.toString()}] with`, ...args)
 
 			return !byKey(event)
 				.map((i) => i(...args))
 				.some((r) => r !== undefined && !r)
 		},
 		on<K extends keyof Events>(event: K, cb: Events[K]): () => void {
-			debug.event(`Added handler for [${event}].`)
+			debug.event(`Added handler for [${event.toString()}].`)
 
 			if (!events.initial[event]) {
 				events.initial[event] = []

@@ -36,10 +36,15 @@
     "stub": "unbuild --stub"
   },
   "dependencies": {
-    "axios": "^0.27.0",
     "debug": "^4.3.4",
     "defu": "^6.0.0",
     "hookable": "^5.1.1",
-    "qs": "^6.10.3"
+    "qs": "^6.10.5"
+  },
+  "peerDependencies": {
+    "axios": "^0.27"
+  },
+  "devDependencies": {
+    "axios": "^0.27.2"
   }
 }
