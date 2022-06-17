@@ -2,7 +2,7 @@ import axios, { AxiosResponse } from 'axios'
 import defu from 'defu'
 import qs from 'qs'
 import { ERROR_BAG_HEADER, EXCEPT_DATA_HEADER, EXTERNAL_VISIT_HEADER, ONLY_DATA_HEADER, PARTIAL_COMPONENT_HEADER, SLEIGHTFUL_HEADER, VERSION_HEADER } from '../constants'
-import { createModal, displayModal } from '../error-modal'
+import { showModal } from '../error-modal'
 import { NotASleightfulResponseError, VisitCancelledError } from '../errors'
 import { VisitEvents } from '../events'
 import type { VisitPayload, RequestData, Errors, Properties } from '../types'
@@ -182,7 +182,7 @@ export async function visit(context: RouterContext, options: VisitOptions): Prom
 			NotASleightfulResponseError: () => {
 				debug.router('The request was not sleightful.')
 				context.events.emit('invalid', error)
-				displayModal(createModal(error.response.data))
+				showModal(error.response.data)
 			},
 			default: () => {
 				debug.router('An unknown error occured.', error)

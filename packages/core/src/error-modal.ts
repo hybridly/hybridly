@@ -1,33 +1,21 @@
-type Response = Record<string, unknown> | string
+type ErrorModalInput = { pageNotFound: string } | object | string
 interface ErrorModalContext {
-	response: Response
+	response: ErrorModalInput
 	main: HTMLHtmlElement
 	overlay: HTMLDivElement
 	iframe: HTMLIFrameElement
 	hideOnEscape?: (event: KeyboardEvent) => void
 }
 
-export function createModal(htmlOrJson: Record<string, unknown> | string): ErrorModalContext {
-	if (typeof htmlOrJson === 'object') {
-		htmlOrJson = `
-			${style()}
-			<main>
-			${icon()}
-			<p>The received response do not respect the sleightful protocol.</p>
-			<pre>${JSON.stringify(htmlOrJson, null, 2)}</pre>
-		`
-	} else if (htmlOrJson.trim() === '') {
-		htmlOrJson = `
-			${style()}
-			<main>
-				${icon()}
-				<p>The received response is empty and do not respect the sleightful protocol.</p>
-			</main>
-		`
-	}
+/** @internal This function is meant to be used internally. */
+export function showModal(htmlOrJson: ErrorModalInput) {
+	return displayModal(createModal(htmlOrJson))
+}
 
+export function createModal(htmlOrJson: ErrorModalInput): ErrorModalContext {
+	const html = getHtml(htmlOrJson)
 	const main = document.createElement('html')
-	main.innerHTML = htmlOrJson
+	main.innerHTML = html
 	main.querySelectorAll('a').forEach((a) => a.setAttribute('target', '_top'))
 
 	const overlay = document.createElement('div')
@@ -79,6 +67,39 @@ export function destroyModal(context: ErrorModalContext) {
 	document.removeEventListener('keydown', context.hideOnEscape!)
 }
 
+function getHtml(htmlOrJson: ErrorModalInput) {
+	if (typeof htmlOrJson === 'string' && htmlOrJson.trim() === '') {
+		return `
+			${style()}
+			<main>
+				${icon()}
+				<p class="error">The received response is empty and does not respect the sleightful protocol.</p>
+			</main>
+		`
+	}
+
+	if (typeof htmlOrJson === 'object' && 'pageNotFound' in htmlOrJson) {
+		return `
+			${style()}
+			<main>
+				${icon()}
+				<p class="error">
+					The received page component could not be found: <b>${htmlOrJson.pageNotFound}</b>.
+				</p>
+			</main>
+		`
+	}
+
+	return `
+		${style()}
+		<main>
+			${icon()}
+			<p class="error">The received response do not respect the sleightful protocol.</p>
+			<pre>${JSON.stringify(htmlOrJson, null, 2)}</pre>
+		</main>
+	`
+}
+
 function style() {
 	return `
 	<style>
@@ -89,21 +110,26 @@ function style() {
 			flex-direction: column;
 			justify-content: center;
 			align-items: center;
-			color: white;
-			font-family: Inter, "Inter var", -system-ui, "Segoe UI";
-			color: #374151;
+			color: #ffffff;
+			font-size: 1.25rem;
+			font-family: Inter, "Inter var", -system-ui, "Segoe UI", Arial;
 		}
 		svg {
-			heigth: 3.5rem;
-			width: 3.5rem;
+			heigth: 4rem;
+			width: 4rem;
+			color: #2f3d59;
+			margin-bottom: 1rem;
 		}
 		p {
-			margin-top: 0.25rem;
-			font-weight: 600;
+			margin: 0;
+			font-weight: 500;
 			text-align: center;
 		}
+		.error {
+			color: #f4b1b1;
+		}
 		pre {
-			margin-top: 0.25rem;
+			margin-top: 2rem;
 			color: white;
 			font-size: 1rem;
 		}
@@ -112,7 +138,7 @@ function style() {
 
 function icon() {
 	return `
-		<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+		<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1">
 			<path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
 		</svg>
 	`
