@@ -51,7 +51,7 @@ It's basically [Inertia.js](https://inertiajs.com), but:
 A preset is provided for an easy installation. You will need to have Node v16+ installed on your machine to use it.
 
 ```sh
-npx @preset/cli apply sleightful/laravel
+npx @preset/cli apply sleightful/sleightful
 ```
 
 ## On an existing project

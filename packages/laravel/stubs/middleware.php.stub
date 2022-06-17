@@ -1,0 +1,19 @@
+<?php
+
+namespace {{ namespace }};
+
+use Illuminate\Http\Request;
+use Sleightful\Http\Middleware;
+
+class {{ class }} extends Middleware
+{
+    /**
+     * Defines the properties that are shared to all requests.
+     */
+    public function share(Request $request): array
+    {
+        return [
+            //
+        ];
+    }
+}

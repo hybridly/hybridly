@@ -1,5 +1,5 @@
-import { router } from '../router'
 import { ref, toRaw, watch } from 'vue'
+import { router } from '../router'
 
 /**
  * Returns a ref with a value saved in the history state through Sleightful.
