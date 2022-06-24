@@ -27,11 +27,11 @@ class RequestPropertiesResolver implements PropertiesResolver
         // The `only` and `except` headers contain json-encoded array data. We want to use them to
         // retrieve the properties whose paths they describe using dot-notation.
         // We only do that when the request is specifically for partial data though.
-        if ($partial && $only = array_filter(json_decode($this->request->header(Sleightful::ONLY_DATA_HEADER, ''), true))) {
+        if ($partial && $only = array_filter(json_decode($this->request->header(Sleightful::ONLY_DATA_HEADER, ''), true) ?? [])) {
             $properties = Arr::onlyDot($properties, $only);
         }
 
-        if ($partial && $except = array_filter(json_decode($this->request->header(Sleightful::EXCEPT_DATA_HEADER, ''), true))) {
+        if ($partial && $except = array_filter(json_decode($this->request->header(Sleightful::EXCEPT_DATA_HEADER, ''), true) ?? [])) {
             $properties = Arr::exceptDot($properties, $except);
         }
         
