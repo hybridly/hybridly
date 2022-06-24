@@ -67,7 +67,7 @@ export function destroyModal(context: ErrorModalContext) {
 	document.removeEventListener('keydown', context.hideOnEscape!)
 }
 
-function getHtml(htmlOrJson: ErrorModalInput) {
+function getHtml(htmlOrJson: ErrorModalInput): string {
 	if (typeof htmlOrJson === 'string' && htmlOrJson.trim() === '') {
 		return `
 			${style()}
@@ -90,14 +90,7 @@ function getHtml(htmlOrJson: ErrorModalInput) {
 		`
 	}
 
-	return `
-		${style()}
-		<main>
-			${icon()}
-			<p class="error">The received response do not respect the sleightful protocol.</p>
-			<pre>${JSON.stringify(htmlOrJson, null, 2)}</pre>
-		</main>
-	`
+	return htmlOrJson.toString()
 }
 
 function style() {
