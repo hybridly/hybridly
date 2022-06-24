@@ -28,9 +28,18 @@ export function initializeProgress(context: RouterContext, options?: Partial<Pro
 		}
 	})
 
+	context.events.on('success', () => nprogress.done())
+	context.events.on('fail', () => {
+		nprogress.set(0)
+		nprogress.remove()
+	})
+
 	context.events.on('after', () => {
-		nprogress.done()
 		clearTimeout(timeout)
+
+		if (nprogress.isStarted()) {
+			setTimeout(() => nprogress.remove(), 10)
+		}
 	})
 }
 
