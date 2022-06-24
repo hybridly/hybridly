@@ -190,6 +190,8 @@ export async function visit(context: RouterContext, options: VisitOptions): Prom
 			},
 		})
 
+		context.events.emit('fail', context)
+
 		return {
 			error: {
 				type: error.constructor.name,
@@ -365,6 +367,11 @@ export interface NavigationOptions {
 	 * @internal This is an advanced property meant to be used internally.
 	 */
 	updateHistoryState?: boolean
+	/**
+	 * Defines whether this navigation is a back/forward visit from the popstate event.
+	 * @internal This is an advanced property meant to be used internally.
+	 */
+	isBackForward?: boolean
 }
 
 export type Method = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE'

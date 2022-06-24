@@ -14,6 +14,7 @@ export interface VisitEvents {
 	'abort': (context: RouterContext) => void
 	'invalid': (response: AxiosResponse) => void
 	'exception': (error: Error) => void
+	'fail': (context: RouterContext) => void
 	'after': (context: RouterContext) => void
 	'navigate': (options: NavigationOptions) => void
 }
