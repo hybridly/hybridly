@@ -75,6 +75,7 @@ export async function registerEventListeners(context: RouterContext) {
 			preserveScroll: true,
 			preserveState: false,
 			updateHistoryState: false,
+			isBackForward: true,
 		})
 	})
 
