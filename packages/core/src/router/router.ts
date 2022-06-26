@@ -151,6 +151,7 @@ export async function visit(context: RouterContext, options: VisitOptions): Prom
 			},
 			preserveScroll: options.preserveScroll === true,
 			preserveState: options.preserveState,
+			preserveUrl: options.preserveUrl,
 			replace: options.replace === true || sameUrls(payload.url, window.location.href),
 		})
 
@@ -237,6 +238,13 @@ export async function navigate(context: RouterContext, options: NavigationOption
 		setContext(context, { state: getHistoryState(context) })
 	}
 
+	// If the visit required the URL to be preserved, we skip its update
+	// by replacing the payload URL with the current context URL.
+	if (options.preserveUrl) {
+		debug.router(`Preserving the current URL (${context.url}) instead of navigating to ${options.payload.url}`)
+		options.payload!.url = context.url
+	}
+
 	// We merge the new request into the current context. That will replace the
 	// view, dialog, url and version, so the context is in sync with the
 	// navigation that took place.
@@ -254,17 +262,17 @@ export async function navigate(context: RouterContext, options: NavigationOption
 	}
 
 	// Then, we swap the view.
-	const viewComponent = await context.adapter.resolveComponent(options.payload.view.name)
-	debug.router(`Component [${options.payload.view.name}] resolved to:`, viewComponent)
+	const viewComponent = await context.adapter.resolveComponent(context.view.name)
+	debug.router(`Component [${context.view.name}] resolved to:`, viewComponent)
 	await context.adapter.swapView({
 		component: viewComponent,
 		preserveState: shouldPreserveState,
 	})
 
 	// We then replace the dialog if a new one is given.
-	if (options.payload.dialog) {
-		const dialogComponent = await context.adapter.resolveComponent(options.payload.dialog.name)
-		debug.router(`Dialog [${options.payload.view.name}] resolved to:`, dialogComponent)
+	if (context.dialog) {
+		const dialogComponent = await context.adapter.resolveComponent(context.dialog.name)
+		debug.router(`Dialog [${context.view.name}] resolved to:`, dialogComponent)
 		await context.adapter.swapDialog({
 			component: dialogComponent,
 			preserveState: shouldPreserveState,
@@ -364,6 +372,8 @@ export interface NavigationOptions {
 	preserveScroll?: ConditionalNavigationOption
 	/** Whether to preserve the current page component state. */
 	preserveState?: ConditionalNavigationOption
+	/** Whether to preserve the current URL. */
+	preserveUrl?: ConditionalNavigationOption
 	/**
 	 * Defines whether the history state should be updated.
 	 * @internal This is an advanced property meant to be used internally.
