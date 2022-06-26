@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from 'axios'
-import defu from 'defu'
+import merge from 'deepmerge'
 import qs from 'qs'
 import { ERROR_BAG_HEADER, EXCEPT_DATA_HEADER, EXTERNAL_VISIT_HEADER, ONLY_DATA_HEADER, PARTIAL_COMPONENT_HEADER, SLEIGHTFUL_HEADER, VERSION_HEADER } from '../constants'
 import { showModal } from '../error-modal'
@@ -138,7 +138,8 @@ export async function visit(context: RouterContext, options: VisitOptions): Prom
 		// because the back-end sent back only the required properties.
 		if ((options.only?.length ?? options.except?.length) && payload.view.name === context.view.name) {
 			debug.router(`Merging ${options.only ? '"only"' : '"except"'} properties.`, payload.view.properties)
-			payload.view.properties = defu(payload.view.properties, context.view.properties)
+			payload.view.properties = merge(context.view.properties, payload.view.properties, { arrayMerge: (_, s) => s })
+			debug.router('Merged properties:', payload.view.properties)
 		}
 
 		// If everything was according to the plan, we can make our navigation and

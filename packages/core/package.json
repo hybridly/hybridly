@@ -37,7 +37,7 @@
   },
   "dependencies": {
     "debug": "^4.3.4",
-    "defu": "^6.0.0",
+    "deepmerge": "^4.2.2",
     "hookable": "^5.1.1",
     "qs": "^6.10.5"
   },
@@ -45,6 +45,7 @@
     "axios": "^0.27"
   },
   "devDependencies": {
-    "axios": "^0.27.2"
+    "axios": "^0.27.2",
+    "defu": "^6.0.0"
   }
 }
