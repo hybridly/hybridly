@@ -9,10 +9,14 @@ export function SleightfulResolver(options: AutoImportResolverOptions = {}) {
 	}
 
 	return {
-		type: 'component',
+		type: 'component' as const,
 		resolve: (name: string) => {
 			if (name === options.linkName) {
-				return { importName: name, path: '@sleightful/vue' }
+				return {
+					name: 'Link',
+					as: options.linkName,
+					from: 'sleightful/vue',
+				}
 			}
 		},
 	}
