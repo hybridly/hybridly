@@ -1,11 +1,1 @@
-export default ({
-	'sleightful/vue': [
-		'useProperty',
-		'useRouter',
-		'useBackForward',
-		'useContext',
-		'useForm',
-		'useHistoryState',
-		'router',
-	],
-})
+export { SleightfulImports as default } from '@sleightful/vue'

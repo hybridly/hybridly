@@ -1,1 +1,1 @@
-export { SleightfulResolver as default } from '@sleightful/vue'
+export { default } from './dist/resolver'

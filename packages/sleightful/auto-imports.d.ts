@@ -1,1 +1,1 @@
-export * from './dist/auto-imports'
+export { default } from './dist/auto-imports'
