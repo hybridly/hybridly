@@ -166,6 +166,7 @@ export async function visit(context: RouterContext, options: VisitOptions): Prom
 				return context.view.properties.errors
 			})() as Errors
 
+			debug.router('The request returned validation errors.', errors)
 			context.events.emit('error', errors)
 		} else {
 			context.events.emit('success', payload)
