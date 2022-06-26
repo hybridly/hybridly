@@ -1,6 +1,5 @@
 import { ComponentOptions, DefineComponent, h } from 'vue'
 import { debug, createRouter, showModal, VisitPayload, ResolveComponent, RouterContext, RouterContextOptions } from '@sleightful/core'
-import { Promisable } from 'type-fest'
 import { wrapper } from './components/wrapper'
 import { state } from './stores/state'
 import { initializeProgress, ProgressOptions } from './progress'
@@ -136,7 +135,7 @@ interface SleightfulOptions {
 	/** Progressbar options. */
 	progress?: boolean | Partial<ProgressOptions>
 	/** Sets up the sleightful router. */
-	setup: (options: SetupArguments) => Promisable<void>
+	setup: (options: SetupArguments) => any
 }
 
 interface SetupArguments {
