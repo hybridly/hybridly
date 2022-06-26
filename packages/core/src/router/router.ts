@@ -1,12 +1,11 @@
 import axios, { AxiosResponse } from 'axios'
-import merge from 'deepmerge'
 import qs from 'qs'
 import { ERROR_BAG_HEADER, EXCEPT_DATA_HEADER, EXTERNAL_VISIT_HEADER, ONLY_DATA_HEADER, PARTIAL_COMPONENT_HEADER, SLEIGHTFUL_HEADER, VERSION_HEADER } from '../constants'
 import { showModal } from '../error-modal'
 import { NotASleightfulResponseError, VisitCancelledError } from '../errors'
 import { VisitEvents } from '../events'
 import type { VisitPayload, RequestData, Errors, Properties } from '../types'
-import { debug, match, when } from '../utils'
+import { debug, match, merge, when } from '../utils'
 import { createContext, payloadFromContext, RouterContext, RouterContextOptions, setContext } from './context'
 import { handleExternalVisit, isExternalResponse, isExternalVisit, performExternalVisit } from './external'
 import { setHistoryState, isBackForwardVisit, handleBackForwardVisit, registerEventListeners, getHistoryState, getKeyFromHistory, remember } from './history'
@@ -138,7 +137,7 @@ export async function visit(context: RouterContext, options: VisitOptions): Prom
 		// because the back-end sent back only the required properties.
 		if ((options.only?.length ?? options.except?.length) && payload.view.name === context.view.name) {
 			debug.router(`Merging ${options.only ? '"only"' : '"except"'} properties.`, payload.view.properties)
-			payload.view.properties = merge(context.view.properties, payload.view.properties, { arrayMerge: (_, s) => s })
+			payload.view.properties = merge(context.view.properties, payload.view.properties)
 			debug.router('Merged properties:', payload.view.properties)
 		}
 

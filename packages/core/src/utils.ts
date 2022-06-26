@@ -1,4 +1,5 @@
 import makeDebugger from 'debug'
+import baseMerge from 'deepmerge'
 
 export const debug = {
 	router: makeDebugger('sleightful:core:router'),
@@ -96,4 +97,8 @@ export function clone<T>(val: T): T {
 	}
 
 	return val
+}
+
+export function merge<T>(x: Partial<T>, y: Partial<T>): T {
+	return baseMerge(x, y, { arrayMerge: (_, s) => s })
 }
