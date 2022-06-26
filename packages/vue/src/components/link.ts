@@ -30,7 +30,7 @@ export const Link = defineComponent({
 
 			return h(props.as, {
 				...attrs,
-				...as === 'a' ? { url } : {},
+				...as === 'a' ? { href: url } : {},
 				...props.disabled ? { disabled: props.disabled } : {},
 				onClick: (event: KeyboardEvent) => {
 					// If the target is external, we don't want sleightful to handle the

@@ -33,6 +33,16 @@
       "require": "./dist/vue.cjs",
       "import": "./dist/vue.mjs",
       "types": "./dist/vue.d.ts"
+    },
+    "./auto-imports": {
+      "require": "./dist/auto-imports.cjs",
+      "import": "./dist/auto-imports.mjs",
+      "types": "./dist/auto-imports.d.ts"
+    },
+    "./resolver": {
+      "require": "./dist/resolver.cjs",
+      "import": "./dist/resolver.mjs",
+      "types": "./dist/resolver.d.ts"
     }
   },
   "main": "dist/index.cjs",
