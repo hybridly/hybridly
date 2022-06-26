@@ -28,11 +28,11 @@ export function resolveRouter(resolve: ResolveContext): Router {
 		abort: async() => resolve().activeVisit?.controller.abort(),
 		visit: async(options) => await visit(resolve(), options),
 		reload: async(options) => await visit(resolve(), { preserveScroll: true, preserveState: true, ...options }),
-		get: async(url, data = {}, options = {}) => await visit(resolve(), { ...options, url, data, method: 'GET' }),
-		post: async(url, data = {}, options = {}) => await visit(resolve(), { preserveState: true, ...options, url, data, method: 'POST' }),
-		put: async(url, data = {}, options = {}) => await visit(resolve(), { preserveState: true, ...options, url, data, method: 'PUT' }),
-		patch: async(url, data = {}, options = {}) => await visit(resolve(), { preserveState: true, ...options, url, data, method: 'PATCH' }),
-		delete: async(url, data = {}, options = {}) => await visit(resolve(), { preserveState: true, ...options, url, data, method: 'DELETE' }),
+		get: async(url, options = {}) => await visit(resolve(), { ...options, url, method: 'GET' }),
+		post: async(url, options = {}) => await visit(resolve(), { preserveState: true, ...options, url, method: 'POST' }),
+		put: async(url, options = {}) => await visit(resolve(), { preserveState: true, ...options, url, method: 'PUT' }),
+		patch: async(url, options = {}) => await visit(resolve(), { preserveState: true, ...options, url, method: 'PATCH' }),
+		delete: async(url, options = {}) => await visit(resolve(), { preserveState: true, ...options, url, method: 'DELETE' }),
 		local: async(url, options) => await performLocalComponentVisit(resolve(), url, options),
 		external: (url, data = {}) => performLocalExternalVisit(url, data),
 		history: {
@@ -416,15 +416,15 @@ export interface Router {
 	/** Reloads the current page. */
 	reload: (options?: VisitOptions) => Promise<VisitResponse>
 	/** Makes a GET request to the given URL. */
-	get: (url: UrlResolvable, data?: VisitOptions['data'], options?: Omit<VisitOptions, 'method' | 'data' | 'url'>) => Promise<VisitResponse>
+	get: (url: UrlResolvable, options?: Omit<VisitOptions, 'method' | 'url'>) => Promise<VisitResponse>
 	/** Makes a POST request to the given URL. */
-	post: (url: UrlResolvable, data?: VisitOptions['data'], options?: Omit<VisitOptions, 'method' | 'data' | 'url'>) => Promise<VisitResponse>
+	post: (url: UrlResolvable, options?: Omit<VisitOptions, 'method' | 'url'>) => Promise<VisitResponse>
 	/** Makes a PUT request to the given URL. */
-	put: (url: UrlResolvable, data?: VisitOptions['data'], options?: Omit<VisitOptions, 'method' | 'data' | 'url'>) => Promise<VisitResponse>
+	put: (url: UrlResolvable, options?: Omit<VisitOptions, 'method' | 'url'>) => Promise<VisitResponse>
 	/** Makes a PATCH request to the given URL. */
-	patch: (url: UrlResolvable, data?: VisitOptions['data'], options?: Omit<VisitOptions, 'method' | 'data' | 'url'>) => Promise<VisitResponse>
+	patch: (url: UrlResolvable, options?: Omit<VisitOptions, 'method' | 'url'>) => Promise<VisitResponse>
 	/** Makes a DELETE request to the given URL. */
-	delete: (url: UrlResolvable, data?: VisitOptions['data'], options?: Omit<VisitOptions, 'method' | 'data' | 'url'>) => Promise<VisitResponse>
+	delete: (url: UrlResolvable, options?: Omit<VisitOptions, 'method' | 'url'>) => Promise<VisitResponse>
 	/** Navigates to the given external URL. Alias for `document.location.href`. */
 	external: (url: UrlResolvable, data?: VisitOptions['data']) => void
 	/** Navigates to the given URL without a server round-trip. */
