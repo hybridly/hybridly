@@ -18,15 +18,28 @@ export function initializeProgress(context: RouterContext, options?: Partial<Pro
 
 	let timeout: ReturnType<typeof setTimeout>
 
+	function startProgress() {
+		nprogress.start()
+	}
+
+	function finishProgress() {
+		if (nprogress.isStarted()) {
+			nprogress.done(true)
+		}
+	}
+
+	function cancelProgress() {
+		if (nprogress.isStarted()) {
+			nprogress.done(true)
+			nprogress.remove()
+		}
+	}
+
 	context.events.on('start', () => {
 		clearTimeout(timeout)
 		timeout = setTimeout(() => {
-			if (nprogress.isStarted()) {
-				nprogress.set(0)
-				nprogress.remove()
-			}
-
-			nprogress.start()
+			finishProgress()
+			startProgress()
 		}, resolved.delay)
 	})
 
@@ -36,22 +49,10 @@ export function initializeProgress(context: RouterContext, options?: Partial<Pro
 		}
 	})
 
-	context.events.on('success', () => {
-		if (nprogress.isStarted()) {
-			nprogress.done()
-		}
-	})
-
-	context.events.on('fail', () => {
-		if (nprogress.isStarted()) {
-			nprogress.set(0)
-			nprogress.remove()
-		}
-	})
-
-	context.events.on('after', () => {
-		clearTimeout(timeout)
-	})
+	context.events.on('success', () => finishProgress())
+	context.events.on('error', () => cancelProgress())
+	context.events.on('fail', () => cancelProgress())
+	context.events.on('after', () => clearTimeout(timeout))
 }
 
 function injectCSS(color: string) {
