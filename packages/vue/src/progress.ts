@@ -19,7 +19,15 @@ export function initializeProgress(context: RouterContext, options?: Partial<Pro
 	let timeout: ReturnType<typeof setTimeout>
 
 	context.events.on('start', () => {
-		timeout = setTimeout(() => nprogress.start(), resolved.delay)
+		clearTimeout(timeout)
+		timeout = setTimeout(() => {
+			if (nprogress.isStarted()) {
+				nprogress.set(0)
+				nprogress.remove()
+			}
+
+			nprogress.start()
+		}, resolved.delay)
 	})
 
 	context.events.on('progress', (progress) => {
@@ -28,18 +36,21 @@ export function initializeProgress(context: RouterContext, options?: Partial<Pro
 		}
 	})
 
-	context.events.on('success', () => nprogress.done())
+	context.events.on('success', () => {
+		if (nprogress.isStarted()) {
+			nprogress.done()
+		}
+	})
+
 	context.events.on('fail', () => {
-		nprogress.set(0)
-		nprogress.remove()
+		if (nprogress.isStarted()) {
+			nprogress.set(0)
+			nprogress.remove()
+		}
 	})
 
 	context.events.on('after', () => {
 		clearTimeout(timeout)
-
-		if (nprogress.isStarted()) {
-			setTimeout(() => nprogress.remove(), 10)
-		}
 	})
 }
 
