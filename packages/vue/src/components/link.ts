@@ -19,7 +19,7 @@ export const Link = defineComponent({
 				debug.adapter('vue', 'Moving data object to URL parameters.')
 				url.search = qs.stringify(defu(data, qs.parse(url.search, { ignoreQueryPrefix: true })), {
 					encodeValuesOnly: true,
-					arrayFormat: 'brackets',
+					arrayFormat: 'indices',
 				})
 				data = {}
 			}
