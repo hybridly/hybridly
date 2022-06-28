@@ -151,7 +151,7 @@ export async function visit(context: RouterContext, options: VisitOptions): Prom
 			preserveScroll: options.preserveScroll === true,
 			preserveState: options.preserveState,
 			preserveUrl: options.preserveUrl,
-			replace: options.replace === true || sameUrls(payload.url, window.location.href),
+			replace: options.replace === true || sameUrls(payload.url, window.location.href) || options.preserveUrl,
 		})
 
 		// If the new view's properties has errors, userland expects an event
@@ -230,6 +230,7 @@ export async function navigate(context: RouterContext, options: NavigationOption
 	const shouldPreserveState = evaluateConditionalOption(options.preserveState)
 	const shouldPreserveScroll = evaluateConditionalOption(options.preserveScroll)
 	const shouldReplaceHistory = evaluateConditionalOption(options.replace)
+	const shouldReplaceUrl = evaluateConditionalOption(options.preserveUrl)
 
 	// If the visit was asking to preserve the current state, we also need to
 	// update the context's state from the history state.
@@ -239,7 +240,7 @@ export async function navigate(context: RouterContext, options: NavigationOption
 
 	// If the visit required the URL to be preserved, we skip its update
 	// by replacing the payload URL with the current context URL.
-	if (options.preserveUrl) {
+	if (shouldReplaceUrl) {
 		debug.router(`Preserving the current URL (${context.url}) instead of navigating to ${options.payload.url}`)
 		options.payload!.url = context.url
 	}
@@ -369,7 +370,7 @@ export interface NavigationOptions {
 	replace?: ConditionalNavigationOption
 	/** Whether to preserve the current scrollbar position. */
 	preserveScroll?: ConditionalNavigationOption
-	/** Whether to preserve the current page component state. */
+	/** Whether to preserve the current page component's state. */
 	preserveState?: ConditionalNavigationOption
 	/** Whether to preserve the current URL. */
 	preserveUrl?: ConditionalNavigationOption
