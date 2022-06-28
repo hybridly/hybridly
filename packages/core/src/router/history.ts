@@ -135,7 +135,7 @@ export function serializeContext(context: RouterContext): SerializedContext {
 		view: context.serializer.serialize(context.view),
 		dialog: context.dialog,
 		scrollRegions: context.scrollRegions,
-		state: context.state,
+		state: context.serializer.serialize(context.state),
 	}
 }
 
