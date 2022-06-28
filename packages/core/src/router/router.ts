@@ -128,8 +128,8 @@ export async function visit(context: RouterContext, options: VisitOptions): Prom
 			throw new NotAMonolikitResponseError(response)
 		}
 
-		// At this point, we know the response is monolikit.
-		debug.router('The response is monolikit.')
+		// At this point, we know the response respects the monolikit protocol.
+		debug.router('The response respects the monolikit protocol.')
 		const payload = response.data as VisitPayload
 
 		// If the visit was asking for specific properties, we ensure that the
