@@ -2,7 +2,7 @@
  * Resolver for `unplugin-vue-components`.
  * @see https://github.com/antfu/unplugin-vue-components
  */
-export function SleightfulResolver(options: AutoImportResolverOptions = {}) {
+export function MonolikitResolver(options: AutoImportResolverOptions = {}) {
 	options = {
 		linkName: 'Link',
 		...options,
@@ -15,7 +15,7 @@ export function SleightfulResolver(options: AutoImportResolverOptions = {}) {
 				return {
 					name: 'Link',
 					as: options.linkName,
-					from: 'sleightful/vue',
+					from: 'monolikit/vue',
 				}
 			}
 		},

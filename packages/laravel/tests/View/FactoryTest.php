@@ -1,15 +1,15 @@
 <?php
 
 use Illuminate\Http\JsonResponse;
-use Sleightful\Sleightful;
-use Sleightful\View\Factory;
+use Monolikit\Monolikit;
+use Monolikit\View\Factory;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 
-test('external responses to non-sleightful requests', function () {
-    mockRequest(sleightful: false, bind: true);
+test('external responses to non-monolikit requests', function () {
+    mockRequest(monolikit: false, bind: true);
 
-    expect(sleightful()->external('https://google.fr/'))
+    expect(monolikit()->external('https://google.fr/'))
         ->toBeInstanceOf(RedirectResponse::class)
         ->getStatusCode()->toBe(Response::HTTP_FOUND)
         ->headers->all()->toMatchArray([
@@ -17,36 +17,36 @@ test('external responses to non-sleightful requests', function () {
         ]);
 });
 
-test('external responses to sleightful requests', function () {
-    mockRequest(sleightful: true, bind: true);
+test('external responses to monolikit requests', function () {
+    mockRequest(monolikit: true, bind: true);
 
-    expect(sleightful()->external('https://google.fr/'))
+    expect(monolikit()->external('https://google.fr/'))
         ->toBeInstanceOf(Response::class)
         ->getStatusCode()->toBe(Response::HTTP_CONFLICT)
         ->headers->all()->toMatchArray([
-            Sleightful::EXTERNAL_HEADER => ['https://google.fr/'],
+            Monolikit::EXTERNAL_HEADER => ['https://google.fr/'],
         ]);
 });
 
 test('external responses with redirect responses as input', function () {
-    mockRequest(sleightful: true, bind: true);
+    mockRequest(monolikit: true, bind: true);
     
     $redirect = new RedirectResponse('https://google.fr/');
 
-    expect(sleightful()->external($redirect))
+    expect(monolikit()->external($redirect))
         ->toBeInstanceOf(Response::class)
         ->getStatusCode()->toBe(Response::HTTP_CONFLICT)
         ->headers->all()->toMatchArray([
-            Sleightful::EXTERNAL_HEADER => ['https://google.fr/'],
+            Monolikit::EXTERNAL_HEADER => ['https://google.fr/'],
         ]);
 });
 
-test('sleightful responses to non-sleightful requests', function () {
-    sleightful()->setRootView('root');
-    sleightful()->setVersion('123');
+test('monolikit responses to non-monolikit requests', function () {
+    monolikit()->setRootView('root');
+    monolikit()->setVersion('123');
     
-    $request = mockRequest(url: '/users/makise', sleightful: false, bind: true);
-    $factory = sleightful('users.edit', ['user' => 'Makise Kurisu']);
+    $request = mockRequest(url: '/users/makise', monolikit: false, bind: true);
+    $factory = monolikit('users.edit', ['user' => 'Makise Kurisu']);
     $response = $factory->toResponse($request);
     $payload = $response->getOriginalContent()->getData()['payload'];
 
@@ -65,12 +65,12 @@ test('sleightful responses to non-sleightful requests', function () {
     ]);
 });
 
-test('sleightful responses to sleightful requests', function () {
-    sleightful()->setRootView('root');
-    sleightful()->setVersion('123');
+test('monolikit responses to monolikit requests', function () {
+    monolikit()->setRootView('root');
+    monolikit()->setVersion('123');
     
-    $request = mockRequest(url: '/users/makise', sleightful: true, bind: true);
-    $factory = sleightful('users.edit', ['user' => 'Makise Kurisu']);
+    $request = mockRequest(url: '/users/makise', monolikit: true, bind: true);
+    $factory = monolikit('users.edit', ['user' => 'Makise Kurisu']);
     $response = $factory->toResponse($request);
     $payload = $response->getOriginalContent();
 
@@ -90,11 +90,11 @@ test('sleightful responses to sleightful requests', function () {
 });
 
 test('properties can be added on-the-fly on the factory instance', function () {
-    sleightful()->setRootView('root');
-    sleightful()->setVersion('123');
+    monolikit()->setRootView('root');
+    monolikit()->setVersion('123');
     
-    $request = mockRequest(url: '/users/makise', sleightful: true, bind: true);
-    $factory = sleightful('users.edit', ['user' => 'Makise Kurisu'])
+    $request = mockRequest(url: '/users/makise', monolikit: true, bind: true);
+    $factory = monolikit('users.edit', ['user' => 'Makise Kurisu'])
         ->with('husband', 'Okabe Rintarou');
 
     $response = $factory->toResponse($request);

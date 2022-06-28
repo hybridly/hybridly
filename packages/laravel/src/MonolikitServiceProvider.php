@@ -1,25 +1,25 @@
 <?php
 
-namespace Sleightful;
+namespace Monolikit;
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Router;
 use Illuminate\View\Compilers\BladeCompiler;
-use Sleightful\Commands\SleightfulCommand;
-use Sleightful\Http\Controller;
-use Sleightful\PropertiesResolver\PropertiesResolver;
-use Sleightful\PropertiesResolver\RequestPropertiesResolver;
+use Monolikit\Commands\InstallCommand;
+use Monolikit\Http\Controller;
+use Monolikit\PropertiesResolver\PropertiesResolver;
+use Monolikit\PropertiesResolver\RequestPropertiesResolver;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 
-class SleightfulServiceProvider extends PackageServiceProvider
+class MonolikitServiceProvider extends PackageServiceProvider
 {
     public function configurePackage(Package $package): void
     {
         $package
-            ->name('sleightful')
+            ->name('monolikit')
             ->hasConfigFile()
-            ->hasCommand(SleightfulCommand::class);
+            ->hasCommand(InstallCommand::class);
     }
     
     public function registeringPackage(): void
@@ -31,9 +31,9 @@ class SleightfulServiceProvider extends PackageServiceProvider
     
     protected function registerMacros(): void
     {
-        /** Checks if the request is sleightful. */
-        Request::macro('sleightful', fn () => sleightful()->isSleightful());
-        Router::macro('sleightful', function (string $uri, string $component, array $properties = []) {
+        /** Checks if the request is monolikit. */
+        Request::macro('monolikit', fn () => monolikit()->isMonolikit());
+        Router::macro('monolikit', function (string $uri, string $component, array $properties = []) {
             /** @phpstan-ignore-next-line */
             return $this->match(['GET', 'HEAD'], $uri, Controller::class)
                 ->defaults('component', $component)
@@ -43,14 +43,14 @@ class SleightfulServiceProvider extends PackageServiceProvider
 
     protected function registerBindings(): void
     {
-        $this->app->singleton(Sleightful::class);
-        $this->app->bind(PropertiesResolver::class, config('sleightful.interfaces.properties_resolver', RequestPropertiesResolver::class));
+        $this->app->singleton(Monolikit::class);
+        $this->app->bind(PropertiesResolver::class, config('monolikit.interfaces.properties_resolver', RequestPropertiesResolver::class));
     }
 
     protected function registerDirectives(): void
     {
         $this->callAfterResolving('blade.compiler', function (BladeCompiler $blade) {
-            $blade->directive('sleightful', function ($expression = '') {
+            $blade->directive('monolikit', function ($expression = '') {
                 $options = str($expression)
                     ->matchAll('/(?:class|id): [\'"][\w -]+[\'"] *,?/')
                     ->flatMap(function ($e) {

@@ -2,7 +2,7 @@ import { expect, it } from 'vitest'
 import { resolveRouter, visit } from '../../src/router/router'
 import { fakeRouterContext, fakeVisitPayload, mockUrl } from '../utils'
 
-it('performs sleightful visits', async() => {
+it('performs monolikit visits', async() => {
 	mockUrl('http://localhost.test/visit', {
 		json: fakeVisitPayload({
 			url: 'https://localhost.test/visit',

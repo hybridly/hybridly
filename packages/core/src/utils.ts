@@ -2,14 +2,14 @@ import makeDebugger from 'debug'
 import baseMerge from 'deepmerge'
 
 export const debug = {
-	router: makeDebugger('sleightful:core:router'),
-	history: makeDebugger('sleightful:core:history'),
-	url: makeDebugger('sleightful:core:url'),
-	context: makeDebugger('sleightful:core:context'),
-	external: makeDebugger('sleightful:core:external'),
-	scroll: makeDebugger('sleightful:core:scroll'),
-	event: makeDebugger('sleightful:core:event'),
-	adapter: (name: string, ...args: any[]) => makeDebugger('sleightful:adapter').extend(name)(args.shift(), ...args),
+	router: makeDebugger('monolikit:core:router'),
+	history: makeDebugger('monolikit:core:history'),
+	url: makeDebugger('monolikit:core:url'),
+	context: makeDebugger('monolikit:core:context'),
+	external: makeDebugger('monolikit:core:external'),
+	scroll: makeDebugger('monolikit:core:scroll'),
+	event: makeDebugger('monolikit:core:event'),
+	adapter: (name: string, ...args: any[]) => makeDebugger('monolikit:adapter').extend(name)(args.shift(), ...args),
 }
 
 export function match<TValue extends string | number = string, TReturnValue = unknown>(

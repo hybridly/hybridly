@@ -3,7 +3,7 @@
 namespace {{ namespace }};
 
 use Illuminate\Http\Request;
-use Sleightful\Http\Middleware;
+use Monolikit\Http\Middleware;
 
 class {{ class }} extends Middleware
 {

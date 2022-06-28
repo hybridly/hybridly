@@ -1,4 +1,4 @@
-export { initializeSleightful } from './initialize'
+export { initializeMonolikit } from './initialize'
 export { router } from './router'
 
 export { Link } from './components/link'

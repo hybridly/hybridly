@@ -1,6 +1,6 @@
 <?php
 
-namespace Sleightful\Support;
+namespace Monolikit\Support;
 
 use Illuminate\Support\Arr as SupportArr;
 

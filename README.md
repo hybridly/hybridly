@@ -4,16 +4,16 @@
   <img src=".github/assets/logo-round.svg" style="width:125px;" />
 </p>
 
-<h1 align="center">Sleightful</h1>
+<h1 align="center">Monolikit</h1>
 
 <p align="center">
   <br />
-  <a href="https://github.com/sleightful/sleightful/actions/workflows/test.yml"><img alt="Status" src="https://github.com/sleightful/sleightful/actions/workflows/test.yml/badge.svg"></a>
+  <a href="https://github.com/monolikit/monolikit/actions/workflows/test.yml"><img alt="Status" src="https://github.com/monolikit/monolikit/actions/workflows/test.yml/badge.svg"></a>
   <span>&nbsp;</span>
-  <a href="https://github.com/sleightful/sleightful/releases"><img alt="version" src="https://img.shields.io/github/v/release/sleightful/sleightful?include_prereleases&label=version&logo=github&logoColor=white"></a>
+  <a href="https://github.com/monolikit/monolikit/releases"><img alt="version" src="https://img.shields.io/github/v/release/monolikit/monolikit?include_prereleases&label=version&logo=github&logoColor=white"></a>
   <br />
   <br />
-  <pre><div align="center">npm i -D sleightful</div></pre>
+  <pre><div align="center">npm i -D monolikit</div></pre>
 </p>
 
 
@@ -21,7 +21,7 @@
   <br />
   A solution to develop server-driven, client-rendered applications.
   <br />
-  Sleightful is an <a href="https://inertiajs.com">Inertia.js</a> fork which sole purpose is to try to push the developer experience to the maximum.
+  Monolikit is an <a href="https://inertiajs.com">Inertia.js</a> fork which sole purpose is to try to push the developer experience to the maximum.
   <br />
   <b>Use at your own risk</b>.
   <br />
@@ -51,7 +51,7 @@ It's basically [Inertia.js](https://inertiajs.com), but:
 A preset is provided for an easy installation. You will need to have Node v16+ installed on your machine to use it.
 
 ```sh
-npx @preset/cli apply sleightful/sleightful
+npx @preset/cli apply monolikit/monolikit
 ```
 
 ## On an existing project
@@ -59,8 +59,8 @@ npx @preset/cli apply sleightful/sleightful
 First, install the adapters:
 
 ```sh
-pnpm i sleightful
-composer require sleightful/laravel
+pnpm i monolikit
+composer require monolikit/laravel
 ```
 
 If using Vite, use the plugin to register `vite-plugin-laravel`, `unplugin-vue-define-options` and the layout plugin:
@@ -68,12 +68,12 @@ If using Vite, use the plugin to register `vite-plugin-laravel`, `unplugin-vue-d
 ```ts
 // vite.config.ts
 import { defineConfig } from 'vite'
-import sleightful from 'sleightful/vite'
+import monolikit from 'monolikit/vite'
 import vue from '@vitejs/plugin-vue'
 
 export default defineConfig({
   plugins: [
-    sleightful({ /* options */ }),
+    monolikit({ /* options */ }),
     vue(),
   ]
 })
@@ -90,10 +90,10 @@ export default defineConfig({
 # Q&A
 
 **What's the goal of this project?**
-> Sleightful aims to provide the best possible developer experience when using Laravel, Vue and Vite. It is supposed to stay minimalist, but without trading off the DX.
+> Monolikit aims to provide the best possible developer experience when using Laravel, Vue and Vite. It is supposed to stay minimalist, but without trading off the DX.
 <br/>
 
-**When should I use Sleightful instead of Inertia?**
+**When should I use Monolikit instead of Inertia?**
 > If you're living on the edge and looking for a solution that tries to get rid of most of the paper cuts you'd otherwise encounter. If you're building something serious, keep using Inertia: for now, it's more stable.
 
 &nbsp;
@@ -103,8 +103,8 @@ export default defineConfig({
 
 &nbsp;
 
-**Can I use Sleightful with other frameworks than Laravel or Vue?**
-> The core of Sleightful is completely framework-agnostic, just like Inertia's. But there is no plan for an official adapter other than Laravel and Vue. So you can, but you will have to build your own adapters (which should not be that hard).
+**Can I use Monolikit with other frameworks than Laravel or Vue?**
+> The core of Monolikit is completely framework-agnostic, just like Inertia's. But there is no plan for an official adapter other than Laravel and Vue. So you can, but you will have to build your own adapters (which should not be that hard).
 
 
 <p align="center">

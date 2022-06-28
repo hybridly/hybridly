@@ -1,6 +1,6 @@
 <?php
 
-namespace Sleightful\Concerns;
+namespace Monolikit\Concerns;
 
 trait HasVersion
 {

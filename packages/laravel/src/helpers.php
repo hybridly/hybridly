@@ -1,42 +1,42 @@
 <?php
 
 use Illuminate\Http\Request;
-use Sleightful\Sleightful;
-use Sleightful\View\Factory;
+use Monolikit\Monolikit;
+use Monolikit\View\Factory;
 
-if (!function_exists('is_sleightful')) {
+if (!function_exists('is_monolikit')) {
     /**
-     * Checks if the given response is sleightful.
+     * Checks if the given response is monolikit.
      */
-    function is_sleightful(Request $request): bool
+    function is_monolikit(Request $request): bool
     {
-        return !!$request->header(Sleightful::SLEIGHTFUL_HEADER);
+        return !!$request->header(Monolikit::MONOLIKIT_HEADER);
     }
 }
 
-if (!function_exists('sleightful')) {
+if (!function_exists('monolikit')) {
     /**
-     * Gets the sleightful instance or returns a view.
+     * Gets the monolikit instance or returns a view.
      */
-    function sleightful(string $component = null, array $properties = []): Sleightful|Factory
+    function monolikit(string $component = null, array $properties = []): Monolikit|Factory
     {
-        /** @var Sleightful */
-        $sleightful = resolve(Sleightful::class);
+        /** @var Monolikit */
+        $monolikit = resolve(Monolikit::class);
 
         if (!is_null($component)) {
-            return $sleightful->view($component, $properties);
+            return $monolikit->view($component, $properties);
         }
 
-        return $sleightful;
+        return $monolikit;
     }
 }
 
-if (!function_exists('sleightfully')) {
+if (!function_exists('monolikitly')) {
     /**
-     * Creates a sleightful view.
+     * Creates a monolikit view.
      */
-    function sleightfully(string $component = null, array $properties = []): Factory
+    function monolikitly(string $component = null, array $properties = []): Factory
     {
-        return sleightful()->view($component, $properties);
+        return monolikit()->view($component, $properties);
     }
 }

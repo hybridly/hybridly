@@ -1,14 +1,14 @@
 <?php
 
-namespace Sleightful\PropertiesResolver;
+namespace Monolikit\PropertiesResolver;
 
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\Json\ResourceResponse;
-use Sleightful\LazyProperty;
-use Sleightful\Sleightful;
-use Sleightful\Support\Arr;
+use Monolikit\LazyProperty;
+use Monolikit\Monolikit;
+use Monolikit\Support\Arr;
 
 class RequestPropertiesResolver implements PropertiesResolver
 {
@@ -19,7 +19,7 @@ class RequestPropertiesResolver implements PropertiesResolver
 
     public function resolve(string $component, array $properties): array
     {
-        $partial = $this->request->header(Sleightful::PARTIAL_COMPONENT_HEADER) === $component;
+        $partial = $this->request->header(Monolikit::PARTIAL_COMPONENT_HEADER) === $component;
         $properties = array_filter($properties, static function ($property) {
             return !($property instanceof LazyProperty);
         });
@@ -27,11 +27,11 @@ class RequestPropertiesResolver implements PropertiesResolver
         // The `only` and `except` headers contain json-encoded array data. We want to use them to
         // retrieve the properties whose paths they describe using dot-notation.
         // We only do that when the request is specifically for partial data though.
-        if ($partial && $only = array_filter(json_decode($this->request->header(Sleightful::ONLY_DATA_HEADER, ''), true) ?? [])) {
+        if ($partial && $only = array_filter(json_decode($this->request->header(Monolikit::ONLY_DATA_HEADER, ''), true) ?? [])) {
             $properties = Arr::onlyDot($properties, $only);
         }
 
-        if ($partial && $except = array_filter(json_decode($this->request->header(Sleightful::EXCEPT_DATA_HEADER, ''), true) ?? [])) {
+        if ($partial && $except = array_filter(json_decode($this->request->header(Monolikit::EXCEPT_DATA_HEADER, ''), true) ?? [])) {
             $properties = Arr::exceptDot($properties, $except);
         }
         

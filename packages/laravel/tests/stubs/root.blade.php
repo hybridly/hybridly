@@ -7,6 +7,6 @@
 	<title>Document</title>
 </head>
 <body>
-		@sleightful
+		@monolikit
 </body>
 </html>

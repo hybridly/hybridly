@@ -2,7 +2,7 @@ import { ref, toRaw, watch } from 'vue'
 import { router } from '../router'
 
 /**
- * Returns a ref with a value saved in the history state through Sleightful.
+ * Returns a ref with a value saved in the history state through Monolikit.
  * The state is linked to a specific browser history entry.
  */
 export function useHistoryState<T = any>(key: string, initial: T) {

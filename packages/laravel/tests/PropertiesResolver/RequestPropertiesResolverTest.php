@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Contracts\Support\Arrayable;
-use Sleightful\View\Factory;
+use Monolikit\View\Factory;
 
 it('resolves functions', function () {
     $payload = resolve(Factory::class)

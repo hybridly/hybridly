@@ -1,4 +1,4 @@
-import { RouterContext } from '@sleightful/core'
+import { RouterContext } from '@monolikit/core'
 import nprogress from 'nprogress'
 
 export function initializeProgress(context: RouterContext, options?: Partial<ProgressOptions>) {

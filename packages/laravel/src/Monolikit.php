@@ -1,36 +1,36 @@
 <?php
 
-namespace Sleightful;
+namespace Monolikit;
 
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Traits\Macroable;
-use Sleightful\Concerns\HasRootView;
-use Sleightful\Concerns\HasSharedProperties;
-use Sleightful\Concerns\HasVersion;
-use Sleightful\View\Factory;
+use Monolikit\Concerns\HasRootView;
+use Monolikit\Concerns\HasSharedProperties;
+use Monolikit\Concerns\HasVersion;
+use Monolikit\View\Factory;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 
-class Sleightful
+class Monolikit
 {
     use Macroable;
     use HasRootView;
     use HasSharedProperties;
     use HasVersion;
 
-    const SLEIGHTFUL_HEADER = 'x-sleightful';
-    const EXTERNAL_HEADER = 'x-sleightful-external';
-    const PARTIAL_COMPONENT_HEADER = 'x-sleightful-partial-component';
-    const ONLY_DATA_HEADER = 'x-sleightful-only-data';
-    const EXCEPT_DATA_HEADER = 'x-sleightful-except-data';
-    const CONTEXT_HEADER = 'x-sleightful-context';
-    const ERROR_BAG_HEADER = 'x-sleightful-error-bag';
-    const VERSION_HEADER = 'x-sleightful-version';
+    const MONOLIKIT_HEADER = 'x-monolikit';
+    const EXTERNAL_HEADER = 'x-monolikit-external';
+    const PARTIAL_COMPONENT_HEADER = 'x-monolikit-partial-component';
+    const ONLY_DATA_HEADER = 'x-monolikit-only-data';
+    const EXCEPT_DATA_HEADER = 'x-monolikit-except-data';
+    const CONTEXT_HEADER = 'x-monolikit-context';
+    const ERROR_BAG_HEADER = 'x-monolikit-error-bag';
+    const VERSION_HEADER = 'x-monolikit-version';
     const DEFAULT_ROOT_VIEW = 'root';
 
     /**
-     * Returns a sleightful view.
+     * Returns a monolikit view.
      */
     public function view(string $component, array|Arrayable $properties = []): Factory
     {
@@ -50,7 +50,7 @@ class Sleightful
             $url = $url->getTargetUrl();
         }
 
-        if ($this->isSleightful()) {
+        if ($this->isMonolikit()) {
             return new Response(
                 status: Response::HTTP_CONFLICT,
                 headers: [self::EXTERNAL_HEADER => $url],
@@ -61,12 +61,12 @@ class Sleightful
     }
 
     /**
-     * Checks if the request is sleightful.
+     * Checks if the request is monolikit.
      */
-    public function isSleightful(Request $request = null): bool
+    public function isMonolikit(Request $request = null): bool
     {
         $request ??= request();
 
-        return $request->headers->has(self::SLEIGHTFUL_HEADER);
+        return $request->headers->has(self::MONOLIKIT_HEADER);
     }
 }

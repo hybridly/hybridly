@@ -1,25 +1,25 @@
 <?php
 
 use Illuminate\Support\Facades\Blade;
-use Sleightful\View\Payload;
-use Sleightful\View\View;
+use Monolikit\View\Payload;
+use Monolikit\View\View;
 
 beforeEach(function () {
     test()->directives = Blade::getCustomDirectives();
 });
 
-it('adds a sleightful directive', function () {
-    expect(test()->directives['sleightful']())
+it('adds a monolikit directive', function () {
+    expect(test()->directives['monolikit']())
         ->toBe('<div id="root" class="" data-payload="{{ json_encode($payload) }}"></div>');
 });
 
 it('supports changing the wrapper element id', function () {
-    expect(test()->directives['sleightful']('id: "app"'))
+    expect(test()->directives['monolikit']('id: "app"'))
         ->toBe('<div id="app" class="" data-payload="{{ json_encode($payload) }}"></div>');
 });
 
 it('supports changing the wrapper element class', function () {
-    expect(test()->directives['sleightful']('class: "h-full"'))
+    expect(test()->directives['monolikit']('class: "h-full"'))
         ->toBe('<div id="root" class="h-full" data-payload="{{ json_encode($payload) }}"></div>');
 });
 
@@ -31,7 +31,7 @@ it('renders encoded payload in the data-payload attribute', function () {
         dialog: null,
     );
     
-    $php = test()->directives['sleightful']();
+    $php = test()->directives['monolikit']();
     $html = Blade::render($php, ['payload' => $payload], true);
     
     expect($html)->toBe(trim(<<<HTML

@@ -37,7 +37,7 @@ export function fakeRouterContext(options: PartialDeep<RouterContextOptions> = {
 export function mockUrl(url: string, options: Partial<MockOptions> = {}) {
 	const resolved: MockOptions = defu(options, {
 		status: 200,
-		headers: { 'x-sleightful': 'true' },
+		headers: { 'x-monolikit': 'true' },
 		json: fakeVisitPayload(),
 	})
 

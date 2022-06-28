@@ -1,17 +1,17 @@
 <?php
 
-namespace Sleightful\Tests;
+namespace Monolikit\Tests;
 
 use Illuminate\Support\Facades\View;
 use Orchestra\Testbench\TestCase as Orchestra;
-use Sleightful\SleightfulServiceProvider;
+use Monolikit\MonolikitServiceProvider;
 
 class TestCase extends Orchestra
 {
     protected function getPackageProviders($app)
     {
         return [
-            SleightfulServiceProvider::class,
+            MonolikitServiceProvider::class,
         ];
     }
     

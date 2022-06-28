@@ -1,6 +1,6 @@
 <?php
 
-namespace Sleightful;
+namespace Monolikit;
 
 class LazyProperty
 {

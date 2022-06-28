@@ -1,4 +1,4 @@
-import { RouterContext, VisitOptions } from 'sleightful'
+import { RouterContext, VisitOptions } from 'monolikit'
 import { router } from '../router'
 import { state } from '../stores/state'
 

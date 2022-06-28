@@ -1,6 +1,6 @@
 import { AxiosResponse } from 'axios'
 
-export class NotASleightfulResponseError extends Error {
+export class NotAMonolikitResponseError extends Error {
 	constructor(public response: AxiosResponse) {
 		super()
 	}

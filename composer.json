@@ -1,12 +1,12 @@
 {
-	"name": "sleightful/laravel",
+	"name": "monolikit/laravel",
 	"description": "Server-driven, client-rendered view layer.",
 	"keywords": [
 		"laravel",
-		"sleightful",
+		"monolikit",
 		"inertiajs"
 	],
-	"homepage": "https://github.com/sleightful/sleightful",
+	"homepage": "https://github.com/monolikit/monolikit",
 	"license": "MIT",
 	"authors": [
 		{
@@ -36,7 +36,7 @@
 	},
 	"autoload": {
 		"psr-4": {
-			"Sleightful\\": "packages/laravel/src"
+			"Monolikit\\": "packages/laravel/src"
 		},
 		"files": [
 			"packages/laravel/src/helpers.php"
@@ -44,7 +44,7 @@
 	},
 	"autoload-dev": {
 		"psr-4": {
-			"Sleightful\\Tests\\": "packages/laravel/tests"
+			"Monolikit\\Tests\\": "packages/laravel/tests"
 		}
 	},
 	"scripts": {
@@ -63,10 +63,10 @@
 	"extra": {
 		"laravel": {
 			"providers": [
-				"Sleightful\\SleightfulServiceProvider"
+				"Monolikit\\MonolikitServiceProvider"
 			],
 			"aliases": {
-				"Sleightful": "Sleightful\\Facades\\Sleightful"
+				"Monolikit": "Monolikit\\Facades\\Monolikit"
 			}
 		}
 	},

@@ -5,8 +5,8 @@ use Illuminate\Support\Facades\Route;
 use function Pest\Laravel\get;
 
 test('the middleware applies session errors', function () {
-    Route::middleware(StartSession::class, \Sleightful\Http\Middleware::class)
-        ->get('/', fn () => sleightfully('users.edit', ['user' => 'Makise Kurisu']));
+    Route::middleware(StartSession::class, \Monolikit\Http\Middleware::class)
+        ->get('/', fn () => monolikitly('users.edit', ['user' => 'Makise Kurisu']));
 
     $response = get('/');
     $response->assertOk();

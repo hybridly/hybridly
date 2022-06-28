@@ -1,6 +1,6 @@
 <?php
 
-namespace Sleightful\View;
+namespace Monolikit\View;
 
 use Illuminate\Contracts\Support\Arrayable;
 

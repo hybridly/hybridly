@@ -1,14 +1,14 @@
 <?php
 
-namespace Sleightful\Commands;
+namespace Monolikit\Commands;
 
 use Illuminate\Console\GeneratorCommand;
 use Symfony\Component\Console\Input\InputOption;
 
-class SleightfulCommand extends GeneratorCommand
+class InstallCommand extends GeneratorCommand
 {
-    protected $name = 'sleightful:install';
-    protected $description = 'Installs Sleightful.';
+    protected $name = 'monolikit:install';
+    protected $description = 'Installs Monolikit.';
     protected $hidden = true;
     protected $type = 'Middleware';
 
@@ -57,7 +57,7 @@ class SleightfulCommand extends GeneratorCommand
     protected function getArguments(): array
     {
         return [
-            ['name', InputOption::VALUE_REQUIRED, 'Name of the Middleware that should be created', 'HandleSleightfulRequests'],
+            ['name', InputOption::VALUE_REQUIRED, 'Name of the Middleware that should be created', 'HandleMonolikitRequests'],
         ];
     }
 

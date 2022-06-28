@@ -73,7 +73,7 @@ function getHtml(htmlOrJson: ErrorModalInput): string {
 			${style()}
 			<main>
 				${icon()}
-				<p class="error">The received response is empty and does not respect the sleightful protocol.</p>
+				<p class="error">The received response is empty and does not respect the monolikit protocol.</p>
 			</main>
 		`
 	}

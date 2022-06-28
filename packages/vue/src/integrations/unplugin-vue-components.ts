@@ -2,8 +2,8 @@
  * Preset for `unplugin-auto-imports`.
  * @see https://github.com/antfu/unplugin-auto-imports
  */
-export const SleightfulImports = {
-	'sleightful/vue': [
+export const MonolikitImports = {
+	'monolikit/vue': [
 		'useProperty',
 		'useProperties',
 		'useRouter',

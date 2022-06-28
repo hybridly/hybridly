@@ -1,12 +1,12 @@
-import { resolveRouter } from '@sleightful/core'
+import { resolveRouter } from '@monolikit/core'
 import { toRaw } from 'vue'
 import { state } from './stores/state'
 
 /**
- * The sleightful router.
- * This is the core sleightful function that you can use to navigate
+ * The monolikit router.
+ * This is the core monolikit function that you can use to navigate
  * in your application. Make sure the routes you call return a
- * sleightful response, otherwise you need to call `external`.
+ * monolikit response, otherwise you need to call `external`.
  *
  * @example
  * router.get('/posts/edit', { post })

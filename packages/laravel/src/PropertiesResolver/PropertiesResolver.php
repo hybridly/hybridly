@@ -1,6 +1,6 @@
 <?php
 
-namespace Sleightful\PropertiesResolver;
+namespace Monolikit\PropertiesResolver;
 
 interface PropertiesResolver
 {

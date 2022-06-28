@@ -3,7 +3,7 @@ import makeDebugger from 'debug'
 import { Plugin, normalizePath } from 'vite'
 import { Options } from './types'
 
-const PLUGIN_NAME = 'vite:sleightful:layout'
+const PLUGIN_NAME = 'vite:monolikit:layout'
 const TEMPLATE_LAYOUT_REGEX = /<template +layout(?: *= *['"](?:(?:(\w+):)?(\w+))['"] *)?>/
 const debug = makeDebugger(PLUGIN_NAME)
 

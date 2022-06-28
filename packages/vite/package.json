@@ -1,20 +1,20 @@
 {
-  "name": "@sleightful/vite",
+  "name": "@monolikit/vite",
   "version": "0.1.0",
   "description": "A solution to develop server-driven, client-rendered applications",
   "keywords": [
-    "sleightful",
+    "monolikit",
     "inertiajs",
     "vite",
     "vite-plugin"
   ],
-  "homepage": "https://github.com/sleightful/sleightful/tree/main/packages/vite#readme",
+  "homepage": "https://github.com/monolikit/monolikit/tree/main/packages/vite#readme",
   "bugs": {
-    "url": "https://github.com/sleightful/sleightful/issues"
+    "url": "https://github.com/monolikit/monolikit/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/sleightful/sleightful.git",
+    "url": "git+https://github.com/monolikit/monolikit.git",
     "directory": "packages/vite"
   },
   "funding": "https://github.com/sponsors/innocenzi",
@@ -40,15 +40,15 @@
     "stub": "unbuild --stub"
   },
   "dependencies": {
-    "@sleightful/core": "workspace:*",
+    "@monolikit/core": "workspace:*",
     "unplugin-vue-define-options": "^0.6.1",
-    "vite-plugin-laravel": "^0.2.0-beta.21"
+    "vite-plugin-laravel": "^0.2.0-beta.24"
   },
   "peerDependencies": {
     "vue": "^3.2.33"
   },
   "devDependencies": {
-    "vite": "^2.9.12",
+    "vite": "^2.9.13",
     "vue": "^3.2.37"
   }
 }

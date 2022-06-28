@@ -1,9 +1,9 @@
 <?php
 
-namespace Sleightful\Concerns;
+namespace Monolikit\Concerns;
 
 use Illuminate\Contracts\Support\Arrayable;
-use Sleightful\Support\Arr;
+use Monolikit\Support\Arr;
 
 trait HasSharedProperties
 {

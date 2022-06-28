@@ -1,12 +1,12 @@
 <?php
 
-namespace Sleightful\Concerns;
+namespace Monolikit\Concerns;
 
-use Sleightful\Sleightful;
+use Monolikit\Monolikit;
 
 trait HasRootView
 {
-    protected \Closure|string $rootView = Sleightful::DEFAULT_ROOT_VIEW;
+    protected \Closure|string $rootView = Monolikit::DEFAULT_ROOT_VIEW;
 
     /**
      * Sets the root view for the next response.

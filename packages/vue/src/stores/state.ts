@@ -1,4 +1,4 @@
-import { debug, RouterContext } from '@sleightful/core'
+import { debug, RouterContext } from '@monolikit/core'
 import { ComponentOptions, markRaw, Ref, ref, unref } from 'vue'
 
 type MaybeRef<T> = Ref<T> | T
