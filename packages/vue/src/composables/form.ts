@@ -35,10 +35,12 @@ export function useForm<T extends Fields = Fields>(options: FormOptions<T>) {
 	const isDirty = ref(false)
 	/** Whether the submission was recently successful. */
 	const recentlySuccessful = ref(false)
-	/** Whether the submission was recently failed. */
-	const recentlyFailed = ref(false)
 	/** Whether the submission is successful. */
 	const successful = ref(false)
+	/** Whether the submission was recently failed. */
+	const recentlyFailed = ref(false)
+	/** Whether the submission is failed. */
+	const failed = ref(false)
 	/** Whether the submission is being processed. */
 	const processing = ref(false)
 
@@ -63,6 +65,7 @@ export function useForm<T extends Fields = Fields>(options: FormOptions<T>) {
 			preserveState: optionsOverrides?.preserveState === undefined && options.method !== 'GET' ? true : optionsOverrides?.preserveState,
 			events: {
 				before: (visit) => {
+					failed.value = false
 					successful.value = false
 					recentlySuccessful.value = false
 					clearTimeout(timeoutIds.recentlySuccessful!)
@@ -76,6 +79,7 @@ export function useForm<T extends Fields = Fields>(options: FormOptions<T>) {
 				},
 				error: (incoming) => {
 					setErrors(incoming)
+					failed.value = true
 					recentlyFailed.value = true
 					timeoutIds.recentlyFailed = setTimeout(() => recentlyFailed.value = false, options?.timeout ?? 5000)
 					return options.events?.error?.(incoming)
@@ -127,7 +131,7 @@ export function useForm<T extends Fields = Fields>(options: FormOptions<T>) {
 		}
 	}, { deep: true, immediate: true })
 
-	return {
+	return reactive({
 		reset,
 		initial,
 		fields,
@@ -141,7 +145,8 @@ export function useForm<T extends Fields = Fields>(options: FormOptions<T>) {
 		errors: readonly(errors),
 		processing: readonly(processing),
 		successful: readonly(successful),
+		failed: readonly(failed),
 		recentlySuccessful: readonly(recentlySuccessful),
 		recentlyFailed: readonly(recentlyFailed),
-	}
+	})
 }
