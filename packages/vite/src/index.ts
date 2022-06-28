@@ -8,8 +8,8 @@ import type { Options } from './types'
 function plugin(options: Options = {}): PluginOption[] {
 	return [
 		laravel(options),
-		layout(options),
 		defineOptions(),
+		options.layout !== false && layout(options.layout),
 	]
 }
 

@@ -1,7 +1,7 @@
 import path from 'node:path'
 import makeDebugger from 'debug'
 import { Plugin, normalizePath } from 'vite'
-import { Options } from './types'
+import { LayoutOptions } from './types'
 
 const PLUGIN_NAME = 'vite:monolikit:layout'
 const TEMPLATE_LAYOUT_REGEX = /<template +layout(?: *= *['"](?:(?:(\w+):)?(\w+))['"] *)?>/
@@ -11,9 +11,9 @@ const debug = makeDebugger(PLUGIN_NAME)
  * A basic Vite plugin that adds a <template layout="name"> syntax to Vite SFCs.
  * It must be used before the Vue plugin.
  */
-export default (options: Options = {}): Plugin => {
-	const base = options?.layout?.directory
-		? options?.layout?.directory
+export default (options: LayoutOptions = {}): Plugin => {
+	const base = options?.directory
+		? options?.directory
 		: path.resolve(process.cwd(), 'resources', 'views', 'layouts')
 	const layoutPath = (layoutName: string) => normalizePath(path.resolve(base, `${layoutName ?? 'default'}.vue`)).replaceAll('\\', '/')
 
