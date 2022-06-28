@@ -128,8 +128,8 @@ export async function visit(context: RouterContext, options: VisitOptions): Prom
 			throw new NotAHybridlyResponseError(response)
 		}
 
-		// At this point, we know the response is hybridly.
-		debug.router('The response is hybridly.')
+		// At this point, we know the response respects the hybridly protocol.
+		debug.router('The response respects the hybridly protocol.')
 		const payload = response.data as VisitPayload
 
 		// If the visit was asking for specific properties, we ensure that the
