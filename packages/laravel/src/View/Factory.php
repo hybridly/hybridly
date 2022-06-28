@@ -1,13 +1,13 @@
 <?php
 
-namespace Sleightful\View;
+namespace Hybridly\View;
 
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Contracts\Support\Responsable;
 use Illuminate\Http\JsonResponse;
-use Sleightful\PropertiesResolver\PropertiesResolver;
-use Sleightful\Sleightful;
+use Hybridly\PropertiesResolver\PropertiesResolver;
+use Hybridly\Hybridly;
 
 class Factory implements Responsable, Renderable
 {
@@ -15,15 +15,15 @@ class Factory implements Responsable, Renderable
     protected Payload $payload;
 
     public function __construct(
-        protected Sleightful $sleightful,
+        protected Hybridly $hybridly,
         protected PropertiesResolver $resolver,
         protected ResponseFactory $responseFactory,
     ) {
     }
 
     /**
-     * Sets the sleightful view data.
-     * @internal This is the same as calling the "sleightful" helper.
+     * Sets the hybridly view data.
+     * @internal This is the same as calling the "hybridly" helper.
      */
     public function view(string $component, array $properties): static
     {
@@ -66,27 +66,27 @@ class Factory implements Responsable, Renderable
         // the view, which will be serialized in the payload.
         $this->view->properties = $this->resolver->resolve(
             $this->view->component,
-            array_merge($this->sleightful->shared(), $this->view->properties),
+            array_merge($this->hybridly->shared(), $this->view->properties),
         );
 
         $payload = new Payload(
             view: $this->view,
             url: $request->fullUrl(),
-            version: $this->sleightful->getVersion(),
+            version: $this->hybridly->getVersion(),
             dialog: null, // TODO
         );
 
-        if (sleightful()->isSleightful($request)) {
+        if (hybridly()->isHybridly($request)) {
             return new JsonResponse(
                 data: $payload->toArray(),
                 headers: [
-                    Sleightful::SLEIGHTFUL_HEADER => 'true',
+                    Hybridly::HYBRIDLY_HEADER => 'true',
                 ],
             );
         }
 
         return $this->responseFactory->view(
-            view: $this->sleightful->getRootView(),
+            view: $this->hybridly->getRootView(),
             data: ['payload' => $payload->toArray()],
         );
     }

@@ -1,20 +1,20 @@
 {
-  "name": "@sleightful/vue",
+  "name": "@hybridly/vue",
   "version": "0.1.0",
   "description": "A solution to develop server-driven, client-rendered applications",
   "keywords": [
-    "sleightful",
+    "hybridly",
     "inertiajs",
     "vue",
     "vue-plugin"
   ],
-  "homepage": "https://github.com/sleightful/sleightful/tree/main/packages/vue#readme",
+  "homepage": "https://github.com/hybridly/hybridly/tree/main/packages/vue#readme",
   "bugs": {
-    "url": "https://github.com/sleightful/sleightful/issues"
+    "url": "https://github.com/hybridly/hybridly/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/sleightful/sleightful.git",
+    "url": "git+https://github.com/hybridly/hybridly.git",
     "directory": "packages/vue"
   },
   "funding": "https://github.com/sponsors/innocenzi",
@@ -39,18 +39,18 @@
     "stub": "unbuild --stub"
   },
   "dependencies": {
-    "@sleightful/core": "workspace:*",
+    "@hybridly/core": "workspace:*",
     "defu": "^6.0.0",
     "lodash.clone": "^4.5.0",
     "lodash.isequal": "^4.5.0",
     "nprogress": "^0.2.0",
-    "qs": "^6.10.5",
+    "qs": "^6.11.0",
     "vue": "^3.2.37"
   },
   "devDependencies": {
-    "@types/nprogress": "^0.2.0",
     "@types/lodash": "^4.14.182",
     "@types/lodash.clone": "^4.5.7",
-    "@types/lodash.isequal": "^4.5.6"
+    "@types/lodash.isequal": "^4.5.6",
+    "@types/nprogress": "^0.2.0"
   }
 }

@@ -10,11 +10,11 @@
     "resolveJsonModule": true,
     "skipDefaultLibCheck": true,
     "paths": {
-      "sleightful": ["./packages/sleightful/src/index.ts"],
-      "sleightful/vite": ["./packages/sleightful/src/vite.ts"],
-      "@sleightful/core": ["./packages/core/src/index.ts"],
-      "@sleightful/vite": ["./packages/vite/src/index.ts"],
-      "@sleightful/vue": ["./packages/vue/src/index.ts"],
+      "hybridly": ["./packages/hybridly/src/index.ts"],
+      "hybridly/vite": ["./packages/hybridly/src/vite.ts"],
+      "@hybridly/core": ["./packages/core/src/index.ts"],
+      "@hybridly/vite": ["./packages/vite/src/index.ts"],
+      "@hybridly/vue": ["./packages/vue/src/index.ts"],
     }
   },
   "exclude": [

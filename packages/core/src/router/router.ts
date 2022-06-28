@@ -1,8 +1,8 @@
 import axios, { AxiosResponse } from 'axios'
 import qs from 'qs'
-import { ERROR_BAG_HEADER, EXCEPT_DATA_HEADER, EXTERNAL_VISIT_HEADER, ONLY_DATA_HEADER, PARTIAL_COMPONENT_HEADER, SLEIGHTFUL_HEADER, VERSION_HEADER } from '../constants'
+import { ERROR_BAG_HEADER, EXCEPT_DATA_HEADER, EXTERNAL_VISIT_HEADER, ONLY_DATA_HEADER, PARTIAL_COMPONENT_HEADER, HYBRIDLY_HEADER, VERSION_HEADER } from '../constants'
 import { showModal } from '../error-modal'
-import { NotASleightfulResponseError, VisitCancelledError } from '../errors'
+import { NotAHybridlyResponseError, VisitCancelledError } from '../errors'
 import { VisitEvents } from '../events'
 import type { VisitPayload, RequestData, Errors, Properties } from '../types'
 import { debug, match, merge, when } from '../utils'
@@ -12,7 +12,7 @@ import { setHistoryState, isBackForwardVisit, handleBackForwardVisit, registerEv
 import { resetScrollPositions, restoreScrollPositions, saveScrollPositions } from './scroll'
 import { fillHash, makeUrl, normalizeUrl, sameUrls, UrlResolvable } from './url'
 
-/** Creates the sleightful router. */
+/** Creates the hybridly router. */
 export async function createRouter(options: RouterContextOptions): Promise<RouterContext> {
 	return await initializeRouter(createContext(options))
 }
@@ -41,7 +41,7 @@ export function resolveRouter(resolve: ResolveContext): Router {
 	}
 }
 
-/** Performs every action necessary to make a sleightful visit. */
+/** Performs every action necessary to make a hybridly visit. */
 export async function visit(context: RouterContext, options: VisitOptions): Promise<VisitResponse> {
 	debug.router('Making a visit:', { context, options })
 
@@ -92,8 +92,8 @@ export async function visit(context: RouterContext, options: VisitOptions): Prom
 				}, {}),
 				...when(options.errorBag, { [ERROR_BAG_HEADER]: options.errorBag }, {}),
 				...when(context.version, { [VERSION_HEADER]: context.version }, {}),
-				// 'X-Sleightful-Context': this.currentState.visit.context,
-				[SLEIGHTFUL_HEADER]: true,
+				// 'X-Hybridly-Context': this.currentState.visit.context,
+				[HYBRIDLY_HEADER]: true,
 				'X-Requested-With': 'XMLHttpRequest',
 				'Accept': 'text/html, application/xhtml+xml',
 			},
@@ -108,7 +108,7 @@ export async function visit(context: RouterContext, options: VisitOptions): Prom
 
 		context.events.emit('data', response)
 
-		// An external response is a sleightful response that wants a full page
+		// An external response is a hybridly response that wants a full page
 		// load to a requested URL. It may be the same URL, in which case a
 		// full page refresh will be performed.
 		if (isExternalResponse(response)) {
@@ -124,12 +124,12 @@ export async function visit(context: RouterContext, options: VisitOptions): Prom
 		// An invalid response is a response that do not declare itself via
 		// the protocole header.
 		// In such cases, we want to throw to handler it later.
-		if (!isSleightfulResponse(response)) {
-			throw new NotASleightfulResponseError(response)
+		if (!isHybridlyResponse(response)) {
+			throw new NotAHybridlyResponseError(response)
 		}
 
-		// At this point, we know the response is sleightful.
-		debug.router('The response is sleightful.')
+		// At this point, we know the response is hybridly.
+		debug.router('The response is hybridly.')
 		const payload = response.data as VisitPayload
 
 		// If the visit was asking for specific properties, we ensure that the
@@ -181,8 +181,8 @@ export async function visit(context: RouterContext, options: VisitOptions): Prom
 				debug.router('The request was cancelled.', error)
 				context.events.emit('abort', context)
 			},
-			NotASleightfulResponseError: () => {
-				debug.router('The request was not sleightful.')
+			NotAHybridlyResponseError: () => {
+				debug.router('The request was not hybridly.')
 				context.events.emit('invalid', error)
 				showModal(error.response.data)
 			},
@@ -208,9 +208,9 @@ export async function visit(context: RouterContext, options: VisitOptions): Prom
 	}
 }
 
-/** Checks if the response contains a sleightful header. */
-export function isSleightfulResponse(response: AxiosResponse): boolean {
-	return !!response?.headers[SLEIGHTFUL_HEADER]
+/** Checks if the response contains a hybridly header. */
+export function isHybridlyResponse(response: AxiosResponse): boolean {
+	return !!response?.headers[HYBRIDLY_HEADER]
 }
 
 /**

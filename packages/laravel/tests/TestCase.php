@@ -1,17 +1,17 @@
 <?php
 
-namespace Sleightful\Tests;
+namespace Hybridly\Tests;
 
 use Illuminate\Support\Facades\View;
 use Orchestra\Testbench\TestCase as Orchestra;
-use Sleightful\SleightfulServiceProvider;
+use Hybridly\HybridlyServiceProvider;
 
 class TestCase extends Orchestra
 {
     protected function getPackageProviders($app)
     {
         return [
-            SleightfulServiceProvider::class,
+            HybridlyServiceProvider::class,
         ];
     }
     

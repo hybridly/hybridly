@@ -1,16 +1,18 @@
-import { debug, RouterContext } from '@sleightful/core'
+import { debug, RouterContext } from '@hybridly/core'
 import { ComponentOptions, defineComponent, h, PropType } from 'vue'
 import { state } from '../stores/state'
 
 export const wrapper = defineComponent({
-	name: 'Sleightful',
+	name: 'Hybridly',
 	setup({ context, component }) {
 		if (typeof window !== 'undefined') {
 			state.setContext(context)
 			state.setView(component)
 
 			if (!context || !component) {
-				throw new Error('Sleightful was not properly initialized. The context or initial component is missing.')
+				throw new Error(
+					'Hybridly was not properly initialized. The context or initial component is missing.',
+				)
 			}
 		}
 
@@ -22,8 +24,8 @@ export const wrapper = defineComponent({
 			}
 
 			if (Array.isArray(state.view.value!.layout)) {
-				return state.view.value!.layout
-					.concat(child)
+				return state.view
+					.value!.layout.concat(child)
 					.reverse()
 					.reduce((child, layout) => {
 						layout.inheritAttrs = !!layout.inheritAttrs

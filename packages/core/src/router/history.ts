@@ -10,7 +10,7 @@ type SerializedContext = Omit<RouterContext, 'adapter' | 'events' | 'serializer'
 /** Puts the given context into the history state. */
 export function setHistoryState(context: RouterContext, options: HistoryOptions = {}) {
 	if (!window?.history) {
-		throw new Error('The history API is not available, so Sleightful cannot operate.')
+		throw new Error('The history API is not available, so Hybridly cannot operate.')
 	}
 
 	const method = options.replace
@@ -28,7 +28,7 @@ export function setHistoryState(context: RouterContext, options: HistoryOptions 
 	try {
 		window.history[method](serialized, '', context.url)
 	} catch (error) {
-		console.error('Sleightful could not save its current state in the history. This is most likely due to a property being non-serializable, such as a proxy or a reference.')
+		console.error('Hybridly could not save its current state in the history. This is most likely due to a property being non-serializable, such as a proxy or a reference.')
 		throw error
 	}
 }
@@ -68,7 +68,7 @@ export async function registerEventListeners(context: RouterContext) {
 			})
 		}
 
-		// If the history entry has been sleightfully tempered with, we want
+		// If the history entry has been hybridlyly tempered with, we want
 		// to use it. We swap the components accordingly.
 		await navigate(context, {
 			payload: event.state,

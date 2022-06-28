@@ -14,7 +14,7 @@ export default defineBuildConfig({
 		'postcss',
 		'source-map-js',
 		'type-fest',
-		'sleightful',
+		'hybridly',
 		'@vue/shared',
 		'axios',
 	],

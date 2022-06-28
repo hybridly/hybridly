@@ -1,6 +1,6 @@
 // Vitest Snapshot v1
 
-exports[`performs sleightful visits > context after visit 1`] = `
+exports[`performs hybridly visits > context after visit 1`] = `
 {
   "activeVisit": undefined,
   "adapter": {
@@ -32,7 +32,7 @@ exports[`performs sleightful visits > context after visit 1`] = `
 }
 `;
 
-exports[`performs sleightful visits > visit response 1`] = `
+exports[`performs hybridly visits > visit response 1`] = `
 {
   "url": "https://localhost.test/visit",
   "version": "abc123",

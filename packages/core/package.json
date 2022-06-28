@@ -1,18 +1,18 @@
 {
-  "name": "@sleightful/core",
+  "name": "@hybridly/core",
   "version": "0.1.0",
   "description": "A solution to develop server-driven, client-rendered applications",
   "keywords": [
-    "sleightful",
+    "hybridly",
     "inertiajs"
   ],
-  "homepage": "https://github.com/sleightful/sleightful#readme",
+  "homepage": "https://github.com/hybridly/hybridly#readme",
   "bugs": {
-    "url": "https://github.com/sleightful/sleightful/issues"
+    "url": "https://github.com/hybridly/hybridly/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/sleightful/sleightful.git"
+    "url": "git+https://github.com/hybridly/hybridly.git"
   },
   "funding": "https://github.com/sponsors/innocenzi",
   "license": "MIT",
@@ -39,7 +39,7 @@
     "debug": "^4.3.4",
     "deepmerge": "^4.2.2",
     "hookable": "^5.1.1",
-    "qs": "^6.10.5"
+    "qs": "^6.11.0"
   },
   "peerDependencies": {
     "axios": "^0.27"

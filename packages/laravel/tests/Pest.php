@@ -1,16 +1,16 @@
 <?php
 
 use Illuminate\Http\Request;
-use Sleightful\Tests\TestCase;
+use Hybridly\Tests\TestCase;
 
 uses(TestCase::class)->in(__DIR__);
 
-function mockRequest(string $url = '/', string $method = 'GET', bool $bind = false, bool $sleightful = true)
+function mockRequest(string $url = '/', string $method = 'GET', bool $bind = false, bool $hybridly = true)
 {
     $request = Request::create($url, $method);
 
-    if ($sleightful) {
-        $request->headers->add(['X-Sleightful' => 'true']);
+    if ($hybridly) {
+        $request->headers->add(['X-Hybridly' => 'true']);
     }
     
     if ($bind) {

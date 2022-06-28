@@ -1,9 +1,9 @@
 <?php
 
-namespace Sleightful\Concerns;
+namespace Hybridly\Concerns;
 
 use Illuminate\Contracts\Support\Arrayable;
-use Sleightful\Support\Arr;
+use Hybridly\Support\Arr;
 
 trait HasSharedProperties
 {

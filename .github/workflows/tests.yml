@@ -16,7 +16,7 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     env:
-      DEBUG: 'sleightful:*'
+      DEBUG: 'hybridly:*'
 
     strategy:
       fail-fast: false

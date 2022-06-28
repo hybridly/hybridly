@@ -1,12 +1,12 @@
 <?php
 
-namespace Sleightful\Concerns;
+namespace Hybridly\Concerns;
 
-use Sleightful\Sleightful;
+use Hybridly\Hybridly;
 
 trait HasRootView
 {
-    protected \Closure|string $rootView = Sleightful::DEFAULT_ROOT_VIEW;
+    protected \Closure|string $rootView = Hybridly::DEFAULT_ROOT_VIEW;
 
     /**
      * Sets the root view for the next response.

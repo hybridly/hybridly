@@ -1,42 +1,42 @@
 <?php
 
 use Illuminate\Http\Request;
-use Sleightful\Sleightful;
-use Sleightful\View\Factory;
+use Hybridly\Hybridly;
+use Hybridly\View\Factory;
 
-if (!function_exists('is_sleightful')) {
+if (!function_exists('is_hybridly')) {
     /**
-     * Checks if the given response is sleightful.
+     * Checks if the given response is hybridly.
      */
-    function is_sleightful(Request $request): bool
+    function is_hybridly(Request $request): bool
     {
-        return !!$request->header(Sleightful::SLEIGHTFUL_HEADER);
+        return !!$request->header(Hybridly::HYBRIDLY_HEADER);
     }
 }
 
-if (!function_exists('sleightful')) {
+if (!function_exists('hybridly')) {
     /**
-     * Gets the sleightful instance or returns a view.
+     * Gets the hybridly instance or returns a view.
      */
-    function sleightful(string $component = null, array $properties = []): Sleightful|Factory
+    function hybridly(string $component = null, array $properties = []): Hybridly|Factory
     {
-        /** @var Sleightful */
-        $sleightful = resolve(Sleightful::class);
+        /** @var Hybridly */
+        $hybridly = resolve(Hybridly::class);
 
         if (!is_null($component)) {
-            return $sleightful->view($component, $properties);
+            return $hybridly->view($component, $properties);
         }
 
-        return $sleightful;
+        return $hybridly;
     }
 }
 
-if (!function_exists('sleightfully')) {
+if (!function_exists('hybridlyly')) {
     /**
-     * Creates a sleightful view.
+     * Creates a hybridly view.
      */
-    function sleightfully(string $component = null, array $properties = []): Factory
+    function hybridlyly(string $component = null, array $properties = []): Factory
     {
-        return sleightful()->view($component, $properties);
+        return hybridly()->view($component, $properties);
     }
 }

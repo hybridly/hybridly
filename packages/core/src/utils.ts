@@ -2,14 +2,14 @@ import makeDebugger from 'debug'
 import baseMerge from 'deepmerge'
 
 export const debug = {
-	router: makeDebugger('sleightful:core:router'),
-	history: makeDebugger('sleightful:core:history'),
-	url: makeDebugger('sleightful:core:url'),
-	context: makeDebugger('sleightful:core:context'),
-	external: makeDebugger('sleightful:core:external'),
-	scroll: makeDebugger('sleightful:core:scroll'),
-	event: makeDebugger('sleightful:core:event'),
-	adapter: (name: string, ...args: any[]) => makeDebugger('sleightful:adapter').extend(name)(args.shift(), ...args),
+	router: makeDebugger('hybridly:core:router'),
+	history: makeDebugger('hybridly:core:history'),
+	url: makeDebugger('hybridly:core:url'),
+	context: makeDebugger('hybridly:core:context'),
+	external: makeDebugger('hybridly:core:external'),
+	scroll: makeDebugger('hybridly:core:scroll'),
+	event: makeDebugger('hybridly:core:event'),
+	adapter: (name: string, ...args: any[]) => makeDebugger('hybridly:adapter').extend(name)(args.shift(), ...args),
 }
 
 export function match<TValue extends string | number = string, TReturnValue = unknown>(

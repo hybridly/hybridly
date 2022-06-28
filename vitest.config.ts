@@ -9,9 +9,9 @@ export default defineConfig({
 	},
 	resolve: {
 		alias: {
-			'sleightful': alias('./packages/sleightful/src/'),
-			'@sleightful/core': alias('./packages/core/src/'),
-			'@sleightful/vite': alias('./packages/vite/src/'),
+			'hybridly': alias('./packages/hybridly/src/'),
+			'@hybridly/core': alias('./packages/core/src/'),
+			'@hybridly/vite': alias('./packages/vite/src/'),
 		},
 	},
 	test: {

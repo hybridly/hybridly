@@ -1,6 +1,6 @@
 <?php
 
-namespace Sleightful\Support;
+namespace Hybridly\Support;
 
 use Illuminate\Support\Arr as SupportArr;
 

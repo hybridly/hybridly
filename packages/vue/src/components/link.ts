@@ -1,7 +1,7 @@
 import qs from 'qs'
 import defu from 'defu'
 import { h, defineComponent, PropType } from 'vue'
-import { debug, makeUrl, Method } from '@sleightful/core'
+import { debug, makeUrl, Method } from '@hybridly/core'
 import { router } from '../router'
 
 export const Link = defineComponent({
@@ -33,7 +33,7 @@ export const Link = defineComponent({
 				...as === 'a' ? { href: url } : {},
 				...props.disabled ? { disabled: props.disabled } : {},
 				onClick: (event: KeyboardEvent) => {
-					// If the target is external, we don't want sleightful to handle the
+					// If the target is external, we don't want hybridly to handle the
 					// navigation, so we return early to avoid preventing the event.
 					if (props.external) {
 						return

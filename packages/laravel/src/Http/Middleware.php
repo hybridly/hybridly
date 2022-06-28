@@ -1,11 +1,11 @@
 <?php
 
-namespace Sleightful\Http;
+namespace Hybridly\Http;
 
 use Closure;
 use Illuminate\Http\Request;
-use Sleightful\Concerns;
-use Sleightful\Sleightful;
+use Hybridly\Concerns;
+use Hybridly\Hybridly;
 use Symfony\Component\HttpFoundation\Response;
 
 class Middleware
@@ -21,33 +21,33 @@ class Middleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        sleightful()->setRootView(fn () => $this->rootView($request));
-        sleightful()->setVersion(fn () => $this->version($request));
-        sleightful()->share($this->share($request));
+        hybridly()->setRootView(fn () => $this->rootView($request));
+        hybridly()->setVersion(fn () => $this->version($request));
+        hybridly()->share($this->share($request));
 
         if ($this->shareValidationErrors) {
-            sleightful()->share($this->shareValidationErrors($request));
+            hybridly()->share($this->shareValidationErrors($request));
         }
 
         if ($this->shareFlashNotifications) {
-            sleightful()->share($this->shareFlashNotifications($request));
+            hybridly()->share($this->shareFlashNotifications($request));
         }
 
         $response = $next($request);
 
         // Browsers need the Vary header in order to properly cache the response
         // based on its content type. This is specifically important for the
-        // sleightful protocol because an endpoint can send JSON and HTML.
-        $response->headers->set('Vary', Sleightful::SLEIGHTFUL_HEADER);
+        // hybridly protocol because an endpoint can send JSON and HTML.
+        $response->headers->set('Vary', Hybridly::HYBRIDLY_HEADER);
         
-        if (!$request->header(Sleightful::SLEIGHTFUL_HEADER)) {
+        if (!$request->header(Hybridly::HYBRIDLY_HEADER)) {
             return $next($request);
         }
 
         // When handling GET requests, we need to check the version header received
         // from the client to determine if they match. If not, we trigger the version change
         // event.
-        if ($request->method() === 'GET' && $request->header(Sleightful::VERSION_HEADER) !== sleightful()->getVersion()) {
+        if ($request->method() === 'GET' && $request->header(Hybridly::VERSION_HEADER) !== hybridly()->getVersion()) {
             $response = $this->onVersionChange($request, $response);
         }
 
@@ -74,7 +74,7 @@ class Middleware
             $request->session()->reflash();
         }
 
-        return sleightful()->external($request->fullUrl());
+        return hybridly()->external($request->fullUrl());
     }
 
     /**
@@ -138,8 +138,8 @@ class Middleware
                     ->toArray();
             })
             ->pipe(function ($bags) use ($request) {
-                if ($bags->has('default') && $request->header(Sleightful::ERROR_BAG_HEADER)) {
-                    return [$request->header(Sleightful::ERROR_BAG_HEADER) => $bags->get('default')];
+                if ($bags->has('default') && $request->header(Hybridly::ERROR_BAG_HEADER)) {
+                    return [$request->header(Hybridly::ERROR_BAG_HEADER) => $bags->get('default')];
                 }
 
                 if ($bags->has('default')) {

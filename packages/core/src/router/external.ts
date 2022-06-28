@@ -8,7 +8,7 @@ import { makeUrl, sameUrls } from './url'
 /**
  * Performs an external visit by saving options to the storage and
  * making a full page reload. Upon loading, the visit options will be pulled
- * and a sleightul navigation will be performed.
+ * and a hybridly navigation will be performed.
  */
 export async function performExternalVisit(options: ExternalVisitOptions): Promise<void> {
 	debug.external('Making a hard navigation for an external visit:', options)
@@ -29,7 +29,7 @@ export function isExternalResponse(response: AxiosResponse): boolean {
 }
 
 /**
- * Performs the internal navigation when an external visit to a sleightful page
+ * Performs the internal navigation when an external visit to a hybridly page
  * has been made.
  * This method is meant to be called on router creation.
  */
@@ -66,6 +66,6 @@ export function isExternalVisit(): boolean {
 interface ExternalVisitOptions {
 	/** Target URL. */
 	url: string
-	/** Whether to preserve the scroll if the external visit leads to a sleightful view. */
+	/** Whether to preserve the scroll if the external visit leads to a hybridly view. */
 	preserveScroll: boolean
 }

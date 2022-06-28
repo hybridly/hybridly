@@ -1,6 +1,6 @@
 <?php
 
-use Sleightful\Support\Arr;
+use Hybridly\Support\Arr;
 
 it('gets only subsets of an array using dot notation', function ($array, $only, $expected) {
     expect(Arr::onlyDot($array, $only))->toBe($expected);

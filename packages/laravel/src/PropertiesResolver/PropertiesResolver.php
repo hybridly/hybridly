@@ -1,6 +1,6 @@
 <?php
 
-namespace Sleightful\PropertiesResolver;
+namespace Hybridly\PropertiesResolver;
 
 interface PropertiesResolver
 {

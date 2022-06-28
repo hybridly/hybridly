@@ -1,6 +1,6 @@
 <?php
 
-namespace Sleightful\Concerns;
+namespace Hybridly\Concerns;
 
 use Illuminate\Http\Request;
 

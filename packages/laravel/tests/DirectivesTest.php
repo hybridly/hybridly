@@ -1,25 +1,25 @@
 <?php
 
 use Illuminate\Support\Facades\Blade;
-use Sleightful\View\Payload;
-use Sleightful\View\View;
+use Hybridly\View\Payload;
+use Hybridly\View\View;
 
 beforeEach(function () {
     test()->directives = Blade::getCustomDirectives();
 });
 
-it('adds a sleightful directive', function () {
-    expect(test()->directives['sleightful']())
+it('adds a hybridly directive', function () {
+    expect(test()->directives['hybridly']())
         ->toBe('<div id="root" class="" data-payload="{{ json_encode($payload) }}"></div>');
 });
 
 it('supports changing the wrapper element id', function () {
-    expect(test()->directives['sleightful']('id: "app"'))
+    expect(test()->directives['hybridly']('id: "app"'))
         ->toBe('<div id="app" class="" data-payload="{{ json_encode($payload) }}"></div>');
 });
 
 it('supports changing the wrapper element class', function () {
-    expect(test()->directives['sleightful']('class: "h-full"'))
+    expect(test()->directives['hybridly']('class: "h-full"'))
         ->toBe('<div id="root" class="h-full" data-payload="{{ json_encode($payload) }}"></div>');
 });
 
@@ -31,7 +31,7 @@ it('renders encoded payload in the data-payload attribute', function () {
         dialog: null,
     );
     
-    $php = test()->directives['sleightful']();
+    $php = test()->directives['hybridly']();
     $html = Blade::render($php, ['payload' => $payload], true);
     
     expect($html)->toBe(trim(<<<HTML

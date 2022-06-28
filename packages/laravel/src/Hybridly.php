@@ -1,36 +1,36 @@
 <?php
 
-namespace Sleightful;
+namespace Hybridly;
 
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Traits\Macroable;
-use Sleightful\Concerns\HasRootView;
-use Sleightful\Concerns\HasSharedProperties;
-use Sleightful\Concerns\HasVersion;
-use Sleightful\View\Factory;
+use Hybridly\Concerns\HasRootView;
+use Hybridly\Concerns\HasSharedProperties;
+use Hybridly\Concerns\HasVersion;
+use Hybridly\View\Factory;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 
-class Sleightful
+class Hybridly
 {
     use Macroable;
     use HasRootView;
     use HasSharedProperties;
     use HasVersion;
 
-    const SLEIGHTFUL_HEADER = 'x-sleightful';
-    const EXTERNAL_HEADER = 'x-sleightful-external';
-    const PARTIAL_COMPONENT_HEADER = 'x-sleightful-partial-component';
-    const ONLY_DATA_HEADER = 'x-sleightful-only-data';
-    const EXCEPT_DATA_HEADER = 'x-sleightful-except-data';
-    const CONTEXT_HEADER = 'x-sleightful-context';
-    const ERROR_BAG_HEADER = 'x-sleightful-error-bag';
-    const VERSION_HEADER = 'x-sleightful-version';
+    const HYBRIDLY_HEADER = 'x-hybridly';
+    const EXTERNAL_HEADER = 'x-hybridly-external';
+    const PARTIAL_COMPONENT_HEADER = 'x-hybridly-partial-component';
+    const ONLY_DATA_HEADER = 'x-hybridly-only-data';
+    const EXCEPT_DATA_HEADER = 'x-hybridly-except-data';
+    const CONTEXT_HEADER = 'x-hybridly-context';
+    const ERROR_BAG_HEADER = 'x-hybridly-error-bag';
+    const VERSION_HEADER = 'x-hybridly-version';
     const DEFAULT_ROOT_VIEW = 'root';
 
     /**
-     * Returns a sleightful view.
+     * Returns a hybridly view.
      */
     public function view(string $component, array|Arrayable $properties = []): Factory
     {
@@ -50,7 +50,7 @@ class Sleightful
             $url = $url->getTargetUrl();
         }
 
-        if ($this->isSleightful()) {
+        if ($this->isHybridly()) {
             return new Response(
                 status: Response::HTTP_CONFLICT,
                 headers: [self::EXTERNAL_HEADER => $url],
@@ -61,12 +61,12 @@ class Sleightful
     }
 
     /**
-     * Checks if the request is sleightful.
+     * Checks if the request is hybridly.
      */
-    public function isSleightful(Request $request = null): bool
+    public function isHybridly(Request $request = null): bool
     {
         $request ??= request();
 
-        return $request->headers->has(self::SLEIGHTFUL_HEADER);
+        return $request->headers->has(self::HYBRIDLY_HEADER);
     }
 }

@@ -1,10 +1,10 @@
 import { ComponentOptions, DefineComponent, h } from 'vue'
-import { debug, createRouter, showModal, VisitPayload, ResolveComponent, RouterContext, RouterContextOptions } from '@sleightful/core'
+import { debug, createRouter, showModal, VisitPayload, ResolveComponent, RouterContext, RouterContextOptions } from '@hybridly/core'
 import { wrapper } from './components/wrapper'
 import { state } from './stores/state'
 import { initializeProgress, ProgressOptions } from './progress'
 
-export async function initializeSleightful(options: SleightfulOptions) {
+export async function initializeHybridly(options: HybridlyOptions) {
 	const { element, payload, resolve } = prepare(options)
 
 	if (!element) {
@@ -12,7 +12,7 @@ export async function initializeSleightful(options: SleightfulOptions) {
 	}
 
 	if (!payload) {
-		throw new Error('No payload. Are you using `@sleightful` or the `payload` option?')
+		throw new Error('No payload. Are you using `@hybridly` or the `payload` option?')
 	}
 
 	state.setContext(await createRouter({
@@ -53,8 +53,8 @@ export async function initializeSleightful(options: SleightfulOptions) {
 	}
 }
 
-function prepare(options: SleightfulOptions) {
-	debug.adapter('vue', 'Preparing Sleightful with options:', options)
+function prepare(options: HybridlyOptions) {
+	debug.adapter('vue', 'Preparing Hybridly with options:', options)
 	const isServer = typeof window === 'undefined'
 	const id = options.id ?? 'root'
 	const element = document?.getElementById(id) ?? undefined
@@ -81,7 +81,7 @@ function prepare(options: SleightfulOptions) {
 			return await resolvePageComponent(name, options.pages, options.layout)
 		}
 
-		throw new Error('Either `initializeSleightful#resolve` or `initializeSleightful#pages` should be defined.')
+		throw new Error('Either `initializeHybridly#resolve` or `initializeHybridly#pages` should be defined.')
 	}
 
 	return {
@@ -117,7 +117,7 @@ export async function resolvePageComponent(name: string, pages: Record<string, a
 	return component
 }
 
-interface SleightfulOptions {
+interface HybridlyOptions {
 	/** ID of the app element. */
 	id?: string
 	/** Initial view data. */
@@ -134,16 +134,16 @@ interface SleightfulOptions {
 	cleanup?: boolean
 	/** Progressbar options. */
 	progress?: boolean | Partial<ProgressOptions>
-	/** Sets up the sleightful router. */
+	/** Sets up the hybridly router. */
 	setup: (options: SetupArguments) => any
 }
 
 interface SetupArguments {
 	/** DOM element to mount Vue on. */
 	element: Element
-	/** Sleightful wrapper component. */
+	/** Hybridly wrapper component. */
 	wrapper: any
-	/** Sleightful wrapper component properties. */
+	/** Hybridly wrapper component properties. */
 	props: {
 		context: RouterContext
 		component: ComponentOptions

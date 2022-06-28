@@ -1,6 +1,6 @@
 <?php
 
-namespace Sleightful\View;
+namespace Hybridly\View;
 
 use Illuminate\Contracts\Support\Arrayable;
 

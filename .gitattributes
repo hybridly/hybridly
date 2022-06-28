@@ -22,6 +22,6 @@
 /phpstan-baseline.neon  export-ignore
 /node_modules    	      export-ignore
 /packages/core   	      export-ignore
-/packages/sleightful    export-ignore
+/packages/hybridly    export-ignore
 /packages/vite          export-ignore
 /packages/vue           export-ignore

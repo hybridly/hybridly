@@ -7,6 +7,6 @@
 	<title>Document</title>
 </head>
 <body>
-		@sleightful
+		@hybridly
 </body>
 </html>

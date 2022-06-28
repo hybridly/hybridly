@@ -1,6 +1,6 @@
 <?php
 
-namespace Sleightful;
+namespace Hybridly;
 
 class LazyProperty
 {

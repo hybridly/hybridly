@@ -1,12 +1,12 @@
 {
-	"name": "sleightful/laravel",
+	"name": "hybridly/laravel",
 	"description": "Server-driven, client-rendered view layer.",
 	"keywords": [
 		"laravel",
-		"sleightful",
+		"hybridly",
 		"inertiajs"
 	],
-	"homepage": "https://github.com/sleightful/sleightful",
+	"homepage": "https://github.com/hybridly/hybridly",
 	"license": "MIT",
 	"authors": [
 		{
@@ -36,7 +36,7 @@
 	},
 	"autoload": {
 		"psr-4": {
-			"Sleightful\\": "packages/laravel/src"
+			"Hybridly\\": "packages/laravel/src"
 		},
 		"files": [
 			"packages/laravel/src/helpers.php"
@@ -44,7 +44,7 @@
 	},
 	"autoload-dev": {
 		"psr-4": {
-			"Sleightful\\Tests\\": "packages/laravel/tests"
+			"Hybridly\\Tests\\": "packages/laravel/tests"
 		}
 	},
 	"scripts": {
@@ -63,10 +63,10 @@
 	"extra": {
 		"laravel": {
 			"providers": [
-				"Sleightful\\SleightfulServiceProvider"
+				"Hybridly\\HybridlyServiceProvider"
 			],
 			"aliases": {
-				"Sleightful": "Sleightful\\Facades\\Sleightful"
+				"Hybridly": "Hybridly\\Facades\\Hybridly"
 			}
 		}
 	},

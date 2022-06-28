@@ -1,4 +1,4 @@
-import { resolveRouter, RouterContext } from '@sleightful/core'
+import { resolveRouter, RouterContext } from '@hybridly/core'
 import { toRaw } from 'vue'
 import { state } from '../stores/state'
 

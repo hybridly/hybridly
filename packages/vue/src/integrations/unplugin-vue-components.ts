@@ -2,8 +2,8 @@
  * Preset for `unplugin-auto-imports`.
  * @see https://github.com/antfu/unplugin-auto-imports
  */
-export const SleightfulImports = {
-	'sleightful/vue': [
+export const HybridlyImports = {
+	'hybridly/vue': [
 		'useProperty',
 		'useProperties',
 		'useRouter',
