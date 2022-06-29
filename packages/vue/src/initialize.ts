@@ -1,5 +1,6 @@
 import { ComponentOptions, DefineComponent, h } from 'vue'
-import { debug, createRouter, showModal, VisitPayload, ResolveComponent, RouterContext, RouterContextOptions } from '@monolikit/core'
+import { debug, createRouter, VisitPayload, ResolveComponent, RouterContext, RouterContextOptions } from '@monolikit/core'
+import { showPageComponentErrorModal } from '@monolikit/utils'
 import { wrapper } from './components/wrapper'
 import { state } from './stores/state'
 import { initializeProgress, ProgressOptions } from './progress'
@@ -101,7 +102,7 @@ export async function resolvePageComponent(name: string, pages: Record<string, a
 		.find((path) => path.endsWith(`${name.replaceAll('.', '/')}.vue`))
 
 	if (!path) {
-		showModal({ pageNotFound: name })
+		showPageComponentErrorModal(name)
 		console.warn(`Page component "${name} could not be found. Available pages:`, Object.keys(pages))
 
 		return

@@ -1,21 +1,18 @@
 {
-  "name": "@monolikit/vue",
+  "name": "@monolikit/utils",
   "version": "0.1.0",
   "description": "A solution to develop server-driven, client-rendered applications",
   "keywords": [
     "monolikit",
-    "inertiajs",
-    "vue",
-    "vue-plugin"
+    "inertiajs"
   ],
-  "homepage": "https://github.com/monolikit/monolikit/tree/main/packages/vue#readme",
+  "homepage": "https://github.com/monolikit/monolikit#readme",
   "bugs": {
     "url": "https://github.com/monolikit/monolikit/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/monolikit/monolikit.git",
-    "directory": "packages/vue"
+    "url": "git+https://github.com/monolikit/monolikit.git"
   },
   "funding": "https://github.com/sponsors/innocenzi",
   "license": "MIT",
@@ -32,26 +29,13 @@
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
   "files": [
-    "dist"
+    "dist",
+		"*.d.ts"
   ],
   "scripts": {
     "build": "unbuild",
     "stub": "unbuild --stub"
   },
   "dependencies": {
-    "@monolikit/core": "workspace:*",
-    "@monolikit/utils": "workspace:*",
-    "defu": "^6.0.0",
-    "lodash.clone": "^4.5.0",
-    "lodash.isequal": "^4.5.0",
-    "nprogress": "^0.2.0",
-    "qs": "^6.11.0",
-    "vue": "^3.2.37"
-  },
-  "devDependencies": {
-    "@types/lodash": "^4.14.182",
-    "@types/lodash.clone": "^4.5.7",
-    "@types/lodash.isequal": "^4.5.6",
-    "@types/nprogress": "^0.2.0"
   }
 }
