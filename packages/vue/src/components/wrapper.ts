@@ -1,18 +1,15 @@
 import { debug, RouterContext } from '@monolikit/core'
-import { ComponentOptions, defineComponent, h, PropType } from 'vue'
+import { defineComponent, h, PropType } from 'vue'
 import { state } from '../stores/state'
 
 export const wrapper = defineComponent({
 	name: 'Monolikit',
-	setup({ context, component }) {
+	setup({ context }) {
 		if (typeof window !== 'undefined') {
 			state.setContext(context)
-			state.setView(component)
 
-			if (!context || !component) {
-				throw new Error(
-					'Monolikit was not properly initialized. The context or initial component is missing.',
-				)
+			if (!context) {
+				throw new Error('Monolikit was not properly initialized. The context is missing.')
 			}
 		}
 
@@ -76,10 +73,6 @@ export const wrapper = defineComponent({
 	props: {
 		context: {
 			type: Object as PropType<RouterContext>,
-			required: true,
-		},
-		component: {
-			type: Object as PropType<ComponentOptions>,
 			required: true,
 		},
 	},

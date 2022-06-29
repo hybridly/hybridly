@@ -1,4 +1,4 @@
-import { ComponentOptions, DefineComponent, h } from 'vue'
+import { DefineComponent, h } from 'vue'
 import { debug, createRouter, VisitPayload, ResolveComponent, RouterContext, RouterContextOptions } from '@monolikit/core'
 import { showPageComponentErrorModal } from '@monolikit/utils'
 import { wrapper } from './components/wrapper'
@@ -16,6 +16,7 @@ export async function initializeMonolikit(options: MonolikitOptions) {
 		throw new Error('No payload. Are you using `@monolikit` or the `payload` option?')
 	}
 
+	state.setView(await resolve(payload.view.name))
 	state.setContext(await createRouter({
 		serializer: options.serializer,
 		adapter: {
@@ -36,12 +37,11 @@ export async function initializeMonolikit(options: MonolikitOptions) {
 		payload,
 	}))
 
-	const component = await resolve(payload.view.name)
 	await options.setup({
 		element,
 		wrapper,
-		props: { context: state.context.value!, component },
-		render: () => h(wrapper as any, { context: state.context.value, component }),
+		props: { context: state.context.value! },
+		render: () => h(wrapper as any, { context: state.context.value }),
 	})
 
 	if (options.progress !== false) {
@@ -147,7 +147,6 @@ interface SetupArguments {
 	/** Monolikit wrapper component properties. */
 	props: {
 		context: RouterContext
-		component: ComponentOptions
 	}
 	/** Renders the wrapper. */
 	render: () => ReturnType<typeof h>
