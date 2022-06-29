@@ -3,6 +3,7 @@
 namespace Hybridly\View;
 
 use Illuminate\Contracts\Routing\ResponseFactory;
+use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Contracts\Support\Responsable;
 use Illuminate\Http\JsonResponse;
@@ -23,10 +24,13 @@ class Factory implements Responsable, Renderable
 
     /**
      * Sets the hybridly view data.
-     * @internal This is the same as calling the "hybridly" helper.
      */
-    public function view(string $component, array $properties): static
+    public function view(string $component, array|Arrayable $properties): static
     {
+        if ($properties instanceof Arrayable) {
+            $properties = $properties->toArray();
+        }
+        
         $this->view = new View(
             $component,
             $properties,

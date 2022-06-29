@@ -9,9 +9,11 @@ trait HasVersion
     /**
      * Sets the asset version for the next response.
      */
-    public function setVersion(\Closure|string|false|null $version = null): void
+    public function setVersion(\Closure|string|false|null $version = null): static
     {
         $this->version = $version;
+
+        return $this;
     }
 
     /**
