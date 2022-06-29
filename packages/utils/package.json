@@ -37,5 +37,7 @@
     "stub": "unbuild --stub"
   },
   "dependencies": {
+    "deepmerge": "^4.2.2",
+    "debug": "^4.3.4"
   }
 }

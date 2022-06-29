@@ -47,14 +47,12 @@ importers:
       '@monolikit/utils': workspace:*
       axios: ^0.27.2
       debug: ^4.3.4
-      deepmerge: ^4.2.2
       defu: ^6.0.0
       hookable: ^5.1.1
       qs: ^6.11.0
     dependencies:
       '@monolikit/utils': link:../utils
       debug: 4.3.4
-      deepmerge: 4.2.2
       hookable: 5.1.1
       qs: 6.11.0
     devDependencies:
@@ -72,7 +70,10 @@ importers:
       '@monolikit/vue': link:../vue
 
   packages/utils:
-    specifiers: {}
+    specifiers:
+      deepmerge: ^4.2.2
+    dependencies:
+      deepmerge: 4.2.2
 
   packages/vite:
     specifiers:

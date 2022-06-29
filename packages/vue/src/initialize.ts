@@ -1,6 +1,6 @@
 import { DefineComponent, h } from 'vue'
-import { debug, createRouter, VisitPayload, ResolveComponent, RouterContext, RouterContextOptions } from '@monolikit/core'
-import { showPageComponentErrorModal } from '@monolikit/utils'
+import { createRouter, VisitPayload, ResolveComponent, RouterContext, RouterContextOptions } from '@monolikit/core'
+import { showPageComponentErrorModal, debug } from '@monolikit/utils'
 import { wrapper } from './components/wrapper'
 import { state } from './stores/state'
 import { initializeProgress, ProgressOptions } from './progress'

@@ -38,8 +38,6 @@
   },
   "dependencies": {
 		"@monolikit/utils": "workspace:*",
-    "debug": "^4.3.4",
-    "deepmerge": "^4.2.2",
     "hookable": "^5.1.1",
     "qs": "^6.11.0"
   },

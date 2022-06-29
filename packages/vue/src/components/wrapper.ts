@@ -1,4 +1,5 @@
-import { debug, RouterContext } from '@monolikit/core'
+import type { RouterContext } from '@monolikit/core'
+import { debug } from '@monolikit/utils'
 import { defineComponent, h, PropType } from 'vue'
 import { state } from '../stores/state'
 

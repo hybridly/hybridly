@@ -1,4 +1,5 @@
-import { debug, RouterContext } from '@monolikit/core'
+import type { RouterContext } from '@monolikit/core'
+import { debug } from '@monolikit/utils'
 import { ComponentOptions, Ref, ref, shallowRef, triggerRef, unref } from 'vue'
 
 type MaybeRef<T> = Ref<T> | T
