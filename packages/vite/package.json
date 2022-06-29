@@ -41,8 +41,7 @@
   },
   "dependencies": {
     "@monolikit/core": "workspace:*",
-    "unplugin-vue-define-options": "^0.6.1",
-    "vite-plugin-laravel": "^0.2.0-beta.24"
+    "unplugin-vue-define-options": "^0.6.1"
   },
   "peerDependencies": {
     "vue": "^3.2.33"
