@@ -44,6 +44,7 @@ importers:
 
   packages/core:
     specifiers:
+      '@hybridly/utils': workspace:*
       axios: ^0.27.2
       debug: ^4.3.4
       deepmerge: ^4.2.2
@@ -51,6 +52,7 @@ importers:
       hookable: ^5.1.1
       qs: ^6.11.0
     dependencies:
+      '@hybridly/utils': link:../utils
       debug: 4.3.4
       deepmerge: 4.2.2
       hookable: 5.1.1
@@ -69,6 +71,9 @@ importers:
       '@hybridly/vite': link:../vite
       '@hybridly/vue': link:../vue
 
+  packages/utils:
+    specifiers: {}
+
   packages/vite:
     specifiers:
       '@hybridly/core': workspace:*
@@ -85,6 +90,7 @@ importers:
   packages/vue:
     specifiers:
       '@hybridly/core': workspace:*
+      '@hybridly/utils': workspace:*
       '@types/lodash': ^4.14.182
       '@types/lodash.clone': ^4.5.7
       '@types/lodash.isequal': ^4.5.6
@@ -97,6 +103,7 @@ importers:
       vue: ^3.2.37
     dependencies:
       '@hybridly/core': link:../core
+      '@hybridly/utils': link:../utils
       defu: 6.0.0
       lodash.clone: 4.5.0
       lodash.isequal: 4.5.0

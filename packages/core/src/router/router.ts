@@ -1,7 +1,7 @@
 import axios, { AxiosResponse } from 'axios'
 import qs from 'qs'
+import { showResponseErrorModal } from '@hybridly/utils'
 import { ERROR_BAG_HEADER, EXCEPT_DATA_HEADER, EXTERNAL_VISIT_HEADER, ONLY_DATA_HEADER, PARTIAL_COMPONENT_HEADER, HYBRIDLY_HEADER, VERSION_HEADER } from '../constants'
-import { showModal } from '../error-modal'
 import { NotAHybridlyResponseError, VisitCancelledError } from '../errors'
 import { VisitEvents } from '../events'
 import type { VisitPayload, RequestData, Errors, Properties } from '../types'
@@ -184,7 +184,7 @@ export async function visit(context: RouterContext, options: VisitOptions): Prom
 			NotAHybridlyResponseError: () => {
 				debug.router('The request was not hybridly.')
 				context.events.emit('invalid', error)
-				showModal(error.response.data)
+				showResponseErrorModal(error.response.data)
 			},
 			default: () => {
 				debug.router('An unknown error occured.', error)
