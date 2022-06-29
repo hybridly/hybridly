@@ -81,6 +81,15 @@ class Factory implements Responsable, Renderable
             dialog: null, // TODO
         );
 
+        event('hybridly.response', [
+            [
+                'payload' => $payload->toArray(),
+                'request' => $request,
+                'version' => $this->hybridly->getVersion(),
+                'root_view' => $this->hybridly->getRootView(),
+            ],
+        ]);
+
         if (hybridly()->isHybridly($request)) {
             return new JsonResponse(
                 data: $payload->toArray(),
