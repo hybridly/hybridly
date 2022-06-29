@@ -81,6 +81,15 @@ class Factory implements Responsable, Renderable
             dialog: null, // TODO
         );
 
+        event('monolikit.response', [
+            [
+                'payload' => $payload->toArray(),
+                'request' => $request,
+                'version' => $this->monolikit->getVersion(),
+                'root_view' => $this->monolikit->getRootView(),
+            ],
+        ]);
+
         if (monolikit()->isMonolikit($request)) {
             return new JsonResponse(
                 data: $payload->toArray(),
