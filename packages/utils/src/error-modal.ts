@@ -5,12 +5,12 @@ class Modal {
 	private hideOnEscape?: (event: KeyboardEvent) => void
 
 	constructor(private html: string) {
-		this.initializeDOM()
-		this.show()
+		if (this.initializeDOM() !== false) {
+			this.show()
+		}
 	}
 
 	static fromException(response: string) {
-		console.log(response)
 		if (typeof response === 'string' && response.trim() !== '') {
 			return new Modal(response.toString())
 		}
@@ -42,7 +42,11 @@ class Modal {
 
 	initializeDOM() {
 		if (!this.html) {
-			return
+			return false
+		}
+
+		if (document.querySelector('iframe[data-hybridly="true"]')) {
+			return false
 		}
 
 		const main = document.createElement('html')
@@ -59,6 +63,7 @@ class Modal {
 		overlay.style.zIndex = '99999'
 
 		const iframe = document.createElement('iframe')
+		iframe.dataset.hybridly = 'true'
 		iframe.style.backgroundColor = '#111827'
 		iframe.style.borderRadius = '5px'
 		iframe.style.width = '100%'
