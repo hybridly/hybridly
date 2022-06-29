@@ -3,8 +3,8 @@
 namespace Monolikit\Tests;
 
 use Illuminate\Support\Facades\View;
-use Orchestra\Testbench\TestCase as Orchestra;
 use Monolikit\MonolikitServiceProvider;
+use Orchestra\Testbench\TestCase as Orchestra;
 
 class TestCase extends Orchestra
 {
@@ -14,11 +14,11 @@ class TestCase extends Orchestra
             MonolikitServiceProvider::class,
         ];
     }
-    
+
     protected function setUp(): void
     {
         parent::setUp();
-        
+
         View::addLocation(__DIR__ . '/stubs');
     }
 }

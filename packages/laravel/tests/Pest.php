@@ -12,7 +12,7 @@ function mockRequest(string $url = '/', string $method = 'GET', bool $bind = fal
     if ($monolikit) {
         $request->headers->add(['X-Monolikit' => 'true']);
     }
-    
+
     if ($bind) {
         app()->bind('request', fn () => $request);
     }

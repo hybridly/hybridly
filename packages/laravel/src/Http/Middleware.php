@@ -39,7 +39,7 @@ class Middleware
         // based on its content type. This is specifically important for the
         // monolikit protocol because an endpoint can send JSON and HTML.
         $response->headers->set('Vary', Monolikit::MONOLIKIT_HEADER);
-        
+
         if (!$request->header(Monolikit::MONOLIKIT_HEADER)) {
             return $next($request);
         }

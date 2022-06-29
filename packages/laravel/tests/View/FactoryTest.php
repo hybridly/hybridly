@@ -30,7 +30,7 @@ test('external responses to monolikit requests', function () {
 
 test('external responses with redirect responses as input', function () {
     mockRequest(monolikit: true, bind: true);
-    
+
     $redirect = new RedirectResponse('https://google.fr/');
 
     expect(monolikit()->external($redirect))
@@ -44,7 +44,7 @@ test('external responses with redirect responses as input', function () {
 test('monolikit responses to non-monolikit requests', function () {
     monolikit()->setRootView('root');
     monolikit()->setVersion('123');
-    
+
     $request = mockRequest(url: '/users/makise', monolikit: false, bind: true);
     $factory = monolikit('users.edit', ['user' => 'Makise Kurisu']);
     $response = $factory->toResponse($request);
@@ -68,7 +68,7 @@ test('monolikit responses to non-monolikit requests', function () {
 test('monolikit responses to monolikit requests', function () {
     monolikit()->setRootView('root');
     monolikit()->setVersion('123');
-    
+
     $request = mockRequest(url: '/users/makise', monolikit: true, bind: true);
     $factory = monolikit('users.edit', ['user' => 'Makise Kurisu']);
     $response = $factory->toResponse($request);
@@ -92,7 +92,7 @@ test('monolikit responses to monolikit requests', function () {
 test('properties can be added on-the-fly on the factory instance', function () {
     monolikit()->setRootView('root');
     monolikit()->setVersion('123');
-    
+
     $request = mockRequest(url: '/users/makise', monolikit: true, bind: true);
     $factory = monolikit('users.edit', ['user' => 'Makise Kurisu'])
         ->with('husband', 'Okabe Rintarou');

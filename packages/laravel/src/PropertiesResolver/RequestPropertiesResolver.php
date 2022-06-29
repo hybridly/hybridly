@@ -34,10 +34,10 @@ class RequestPropertiesResolver implements PropertiesResolver
         if ($partial && $except = array_filter(json_decode($this->request->header(Monolikit::EXCEPT_DATA_HEADER, ''), true) ?? [])) {
             $properties = Arr::exceptDot($properties, $except);
         }
-        
+
         return $this->resolvePropertyInstances($properties, $this->request);
     }
-    
+
     /**
      * Resolve all necessary class instances in the given props.
      */

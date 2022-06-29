@@ -17,15 +17,15 @@ class Monolikit
     use Concerns\HasPersistentProperties;
     use Concerns\HasVersion;
 
-    const MONOLIKIT_HEADER = 'x-monolikit';
-    const EXTERNAL_HEADER = 'x-monolikit-external';
-    const PARTIAL_COMPONENT_HEADER = 'x-monolikit-partial-component';
-    const ONLY_DATA_HEADER = 'x-monolikit-only-data';
-    const EXCEPT_DATA_HEADER = 'x-monolikit-except-data';
-    const CONTEXT_HEADER = 'x-monolikit-context';
-    const ERROR_BAG_HEADER = 'x-monolikit-error-bag';
-    const VERSION_HEADER = 'x-monolikit-version';
-    const DEFAULT_ROOT_VIEW = 'root';
+    public const MONOLIKIT_HEADER = 'x-monolikit';
+    public const EXTERNAL_HEADER = 'x-monolikit-external';
+    public const PARTIAL_COMPONENT_HEADER = 'x-monolikit-partial-component';
+    public const ONLY_DATA_HEADER = 'x-monolikit-only-data';
+    public const EXCEPT_DATA_HEADER = 'x-monolikit-except-data';
+    public const CONTEXT_HEADER = 'x-monolikit-context';
+    public const ERROR_BAG_HEADER = 'x-monolikit-error-bag';
+    public const VERSION_HEADER = 'x-monolikit-version';
+    public const DEFAULT_ROOT_VIEW = 'root';
 
     /**
      * Returns a monolikit view.
