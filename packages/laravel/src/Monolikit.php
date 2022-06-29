@@ -32,10 +32,6 @@ class Monolikit
      */
     public function view(string $component, array|Arrayable $properties = []): Factory
     {
-        if ($properties instanceof Arrayable) {
-            $properties = $properties->toArray();
-        }
-
         return resolve(Factory::class)->view($component, $properties);
     }
 

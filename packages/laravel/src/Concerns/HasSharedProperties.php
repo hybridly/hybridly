@@ -12,7 +12,7 @@ trait HasSharedProperties
     /**
      * Shares data to every response.
      */
-    public function share(string|array|Arrayable $key, mixed $value = null): void
+    public function share(string|array|Arrayable $key, mixed $value = null): static
     {
         if (\is_array($key)) {
             $this->sharedProperties = array_merge($this->sharedProperties, $key);
@@ -21,6 +21,8 @@ trait HasSharedProperties
         } else {
             Arr::set($this->sharedProperties, $key, value($value));
         }
+
+        return $this;
     }
 
     /**
