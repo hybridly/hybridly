@@ -1,5 +1,5 @@
+import { debug } from '@hybridly/utils'
 import { SCROLL_REGION_ATTRIBUTE } from '../constants'
-import { debug } from '../utils'
 import { RouterContext, setContext } from './context'
 import { setHistoryState } from './history'
 

@@ -1,6 +1,6 @@
 import { AxiosResponse } from 'axios'
+import { debug } from '@hybridly/utils'
 import { EXTERNAL_VISIT_HEADER, STORAGE_EXTERNAL_KEY } from '../constants'
-import { debug } from '../utils'
 import { RouterContext, setContext } from './context'
 import { navigate } from './router'
 import { makeUrl, sameUrls } from './url'

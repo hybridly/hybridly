@@ -1,6 +1,6 @@
 import { DefineComponent, h } from 'vue'
-import { debug, createRouter, VisitPayload, ResolveComponent, RouterContext, RouterContextOptions } from '@hybridly/core'
-import { showPageComponentErrorModal } from '@hybridly/utils'
+import { createRouter, VisitPayload, ResolveComponent, RouterContext, RouterContextOptions } from '@hybridly/core'
+import { showPageComponentErrorModal, debug } from '@hybridly/utils'
 import { wrapper } from './components/wrapper'
 import { state } from './stores/state'
 import { initializeProgress, ProgressOptions } from './progress'

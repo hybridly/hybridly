@@ -1,6 +1,6 @@
+import { debug } from '@hybridly/utils'
 import { createEmitter, Emitter, VisitEvents } from '../events'
 import { ResolveComponent, VisitPayload, SwapDialog, SwapView, View } from '../types'
-import { debug } from '../utils'
 import { createSerializer } from './history'
 import { VisitOptions } from './router'
 import { makeUrl } from './url'

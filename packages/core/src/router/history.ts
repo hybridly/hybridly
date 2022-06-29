@@ -1,5 +1,5 @@
+import { debounce, debug } from '@hybridly/utils'
 import { SCROLL_REGION_ATTRIBUTE } from '../constants'
-import { debounce, debug } from '../utils'
 import { navigate } from './router'
 import { RouterContext, RouterContextOptions, Serializer, setContext } from './context'
 import { saveScrollPositions } from './scroll'

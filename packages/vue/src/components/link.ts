@@ -1,7 +1,7 @@
 import qs from 'qs'
-import defu from 'defu'
 import { h, defineComponent, PropType } from 'vue'
-import { debug, makeUrl, Method } from '@hybridly/core'
+import { Method, makeUrl } from '@hybridly/core'
+import { debug, merge } from '@hybridly/utils'
 import { router } from '../router'
 
 export const Link = defineComponent({
@@ -17,7 +17,7 @@ export const Link = defineComponent({
 			// query string.
 			if (method === 'GET') {
 				debug.adapter('vue', 'Moving data object to URL parameters.')
-				url.search = qs.stringify(defu(data, qs.parse(url.search, { ignoreQueryPrefix: true })), {
+				url.search = qs.stringify(merge(data, qs.parse(url.search, { ignoreQueryPrefix: true })), {
 					encodeValuesOnly: true,
 					arrayFormat: 'indices',
 				})

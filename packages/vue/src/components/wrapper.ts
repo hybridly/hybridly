@@ -1,4 +1,5 @@
-import { debug, RouterContext } from '@hybridly/core'
+import type { RouterContext } from '@hybridly/core'
+import { debug } from '@hybridly/utils'
 import { defineComponent, h, PropType } from 'vue'
 import { state } from '../stores/state'
 

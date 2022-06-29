@@ -1,4 +1,5 @@
-import { debug, RouterContext } from '@hybridly/core'
+import type { RouterContext } from '@hybridly/core'
+import { debug } from '@hybridly/utils'
 import { ComponentOptions, Ref, ref, shallowRef, triggerRef, unref } from 'vue'
 
 type MaybeRef<T> = Ref<T> | T

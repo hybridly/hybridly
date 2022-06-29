@@ -1,8 +1,8 @@
 import { AxiosResponse } from 'axios'
+import { debug } from '@hybridly/utils'
 import { RouterContext } from './router/context'
 import { NavigationOptions, VisitOptions } from './router/router'
 import { Errors, Progress, VisitPayload } from './types'
-import { debug } from './utils'
 
 export interface VisitEvents {
 	'before': (options: VisitOptions) => undefined | boolean
