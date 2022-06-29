@@ -3,12 +3,12 @@ import { state } from '../stores/state'
 import { toReactive } from '../utils'
 
 /** Accesses all current properties. */
-export function useProperties<T extends object>() {
-	return readonly(toReactive(computed(() => state.context.value?.view.properties as T)))
+export function useProperties<T extends object, Global extends GlobalHybridlyProperties>() {
+	return readonly(toReactive(computed(() => state.context.value?.view.properties as T & Global)))
 }
 
 /** Accesses a property with a dot notation. */
-export function useProperty<T, P extends Path<T> = Path<T>>(
+export function useProperty<T = GlobalHybridlyProperties, P extends Path<T> = Path<T>>(
 	path: [P] extends [never] ? string : P,
 ): ComputedRef<[PathValue<T, P>] extends [never] ? any : PathValue<T, P>> {
 	return computed(() => (path as string)
