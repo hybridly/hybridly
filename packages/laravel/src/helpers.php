@@ -8,9 +8,9 @@ if (!function_exists('is_monolikit')) {
     /**
      * Checks if the given response is monolikit.
      */
-    function is_monolikit(Request $request): bool
+    function is_monolikit(Request $request = null): bool
     {
-        return !!$request->header(Monolikit::MONOLIKIT_HEADER);
+        return monolikit()->isMonolikit($request);
     }
 }
 
