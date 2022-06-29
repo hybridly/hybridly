@@ -5,9 +5,6 @@ namespace Monolikit;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Traits\Macroable;
-use Monolikit\Concerns\HasRootView;
-use Monolikit\Concerns\HasSharedProperties;
-use Monolikit\Concerns\HasVersion;
 use Monolikit\View\Factory;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,9 +12,10 @@ use Symfony\Component\HttpFoundation\Response;
 class Monolikit
 {
     use Macroable;
-    use HasRootView;
-    use HasSharedProperties;
-    use HasVersion;
+    use Concerns\HasRootView;
+    use Concerns\HasSharedProperties;
+    use Concerns\HasPersistentProperties;
+    use Concerns\HasVersion;
 
     const MONOLIKIT_HEADER = 'x-monolikit';
     const EXTERNAL_HEADER = 'x-monolikit-external';

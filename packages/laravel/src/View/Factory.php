@@ -6,8 +6,8 @@ use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Contracts\Support\Responsable;
 use Illuminate\Http\JsonResponse;
-use Monolikit\PropertiesResolver\PropertiesResolver;
 use Monolikit\Monolikit;
+use Monolikit\PropertiesResolver\PropertiesResolver;
 
 class Factory implements Responsable, Renderable
 {
@@ -67,6 +67,7 @@ class Factory implements Responsable, Renderable
         $this->view->properties = $this->resolver->resolve(
             $this->view->component,
             array_merge($this->monolikit->shared(), $this->view->properties),
+            $this->monolikit->persisted(),
         );
 
         $payload = new Payload(
