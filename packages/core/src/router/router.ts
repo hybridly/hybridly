@@ -295,7 +295,7 @@ async function initializeRouter(context: RouterContext): Promise<RouterContext> 
 	} else if (isExternalVisit()) {
 		handleExternalVisit(context)
 	} else {
-		debug.router('Handling a normal visit.')
+		debug.router('Handling the initial page visit.')
 
 		// If we navigated to somewhere with a hash, we need to update the context
 		// to add said hash because it was initialized without it.
