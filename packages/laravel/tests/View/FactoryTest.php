@@ -30,7 +30,7 @@ test('external responses to hybridly requests', function () {
 
 test('external responses with redirect responses as input', function () {
     mockRequest(hybridly: true, bind: true);
-    
+
     $redirect = new RedirectResponse('https://google.fr/');
 
     expect(hybridly()->external($redirect))
@@ -44,7 +44,7 @@ test('external responses with redirect responses as input', function () {
 test('hybridly responses to non-hybridly requests', function () {
     hybridly()->setRootView('root');
     hybridly()->setVersion('123');
-    
+
     $request = mockRequest(url: '/users/makise', hybridly: false, bind: true);
     $factory = hybridly('users.edit', ['user' => 'Makise Kurisu']);
     $response = $factory->toResponse($request);
@@ -68,7 +68,7 @@ test('hybridly responses to non-hybridly requests', function () {
 test('hybridly responses to hybridly requests', function () {
     hybridly()->setRootView('root');
     hybridly()->setVersion('123');
-    
+
     $request = mockRequest(url: '/users/makise', hybridly: true, bind: true);
     $factory = hybridly('users.edit', ['user' => 'Makise Kurisu']);
     $response = $factory->toResponse($request);
@@ -92,7 +92,7 @@ test('hybridly responses to hybridly requests', function () {
 test('properties can be added on-the-fly on the factory instance', function () {
     hybridly()->setRootView('root');
     hybridly()->setVersion('123');
-    
+
     $request = mockRequest(url: '/users/makise', hybridly: true, bind: true);
     $factory = hybridly('users.edit', ['user' => 'Makise Kurisu'])
         ->with('husband', 'Okabe Rintarou');

@@ -17,7 +17,7 @@ trait HasRootView
 
         return $this;
     }
-    
+
     /**
      * Gets the root view for the next response.
      */

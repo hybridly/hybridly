@@ -39,7 +39,7 @@ class Middleware
         // based on its content type. This is specifically important for the
         // hybridly protocol because an endpoint can send JSON and HTML.
         $response->headers->set('Vary', Hybridly::HYBRIDLY_HEADER);
-        
+
         if (!$request->header(Hybridly::HYBRIDLY_HEADER)) {
             return $next($request);
         }

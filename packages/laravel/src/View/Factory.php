@@ -30,7 +30,7 @@ class Factory implements Responsable, Renderable
         if ($properties instanceof Arrayable) {
             $properties = $properties->toArray();
         }
-        
+
         $this->view = new View(
             $component,
             $properties,

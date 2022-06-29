@@ -17,15 +17,15 @@ class Hybridly
     use Concerns\HasPersistentProperties;
     use Concerns\HasVersion;
 
-    const HYBRIDLY_HEADER = 'x-hybridly';
-    const EXTERNAL_HEADER = 'x-hybridly-external';
-    const PARTIAL_COMPONENT_HEADER = 'x-hybridly-partial-component';
-    const ONLY_DATA_HEADER = 'x-hybridly-only-data';
-    const EXCEPT_DATA_HEADER = 'x-hybridly-except-data';
-    const CONTEXT_HEADER = 'x-hybridly-context';
-    const ERROR_BAG_HEADER = 'x-hybridly-error-bag';
-    const VERSION_HEADER = 'x-hybridly-version';
-    const DEFAULT_ROOT_VIEW = 'root';
+    public const HYBRIDLY_HEADER = 'x-hybridly';
+    public const EXTERNAL_HEADER = 'x-hybridly-external';
+    public const PARTIAL_COMPONENT_HEADER = 'x-hybridly-partial-component';
+    public const ONLY_DATA_HEADER = 'x-hybridly-only-data';
+    public const EXCEPT_DATA_HEADER = 'x-hybridly-except-data';
+    public const CONTEXT_HEADER = 'x-hybridly-context';
+    public const ERROR_BAG_HEADER = 'x-hybridly-error-bag';
+    public const VERSION_HEADER = 'x-hybridly-version';
+    public const DEFAULT_ROOT_VIEW = 'root';
 
     /**
      * Returns a hybridly view.

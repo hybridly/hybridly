@@ -13,7 +13,7 @@ $finder = Symfony\Component\Finder\Finder::create()
 
     return (new PhpCsFixer\Config())
         ->setRules([
-            '@PSR2' => true,
+            '@PSR12' => true,
             'ternary_operator_spaces' => true,
             'array_syntax' => ['syntax' => 'short'],
             'ordered_imports' => ['sort_algorithm' => 'alpha'],
