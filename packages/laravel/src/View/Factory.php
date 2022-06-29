@@ -6,8 +6,8 @@ use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Contracts\Support\Responsable;
 use Illuminate\Http\JsonResponse;
-use Hybridly\PropertiesResolver\PropertiesResolver;
 use Hybridly\Hybridly;
+use Hybridly\PropertiesResolver\PropertiesResolver;
 
 class Factory implements Responsable, Renderable
 {
@@ -67,6 +67,7 @@ class Factory implements Responsable, Renderable
         $this->view->properties = $this->resolver->resolve(
             $this->view->component,
             array_merge($this->hybridly->shared(), $this->view->properties),
+            $this->hybridly->persisted(),
         );
 
         $payload = new Payload(

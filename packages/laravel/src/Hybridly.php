@@ -5,9 +5,6 @@ namespace Hybridly;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Traits\Macroable;
-use Hybridly\Concerns\HasRootView;
-use Hybridly\Concerns\HasSharedProperties;
-use Hybridly\Concerns\HasVersion;
 use Hybridly\View\Factory;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,9 +12,10 @@ use Symfony\Component\HttpFoundation\Response;
 class Hybridly
 {
     use Macroable;
-    use HasRootView;
-    use HasSharedProperties;
-    use HasVersion;
+    use Concerns\HasRootView;
+    use Concerns\HasSharedProperties;
+    use Concerns\HasPersistentProperties;
+    use Concerns\HasVersion;
 
     const HYBRIDLY_HEADER = 'x-hybridly';
     const EXTERNAL_HEADER = 'x-hybridly-external';

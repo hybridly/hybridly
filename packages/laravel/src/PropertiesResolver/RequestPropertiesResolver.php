@@ -17,7 +17,7 @@ class RequestPropertiesResolver implements PropertiesResolver
     ) {
     }
 
-    public function resolve(string $component, array $properties): array
+    public function resolve(string $component, array $properties, array $persisted): array
     {
         $partial = $this->request->header(Hybridly::PARTIAL_COMPONENT_HEADER) === $component;
         $properties = array_filter($properties, static function ($property) {
@@ -28,7 +28,7 @@ class RequestPropertiesResolver implements PropertiesResolver
         // retrieve the properties whose paths they describe using dot-notation.
         // We only do that when the request is specifically for partial data though.
         if ($partial && $only = array_filter(json_decode($this->request->header(Hybridly::ONLY_DATA_HEADER, ''), true) ?? [])) {
-            $properties = Arr::onlyDot($properties, $only);
+            $properties = Arr::onlyDot($properties, array_merge($only, $persisted));
         }
 
         if ($partial && $except = array_filter(json_decode($this->request->header(Hybridly::EXCEPT_DATA_HEADER, ''), true) ?? [])) {
