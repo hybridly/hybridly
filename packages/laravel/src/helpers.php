@@ -8,9 +8,9 @@ if (!function_exists('is_hybridly')) {
     /**
      * Checks if the given response is hybridly.
      */
-    function is_hybridly(Request $request): bool
+    function is_hybridly(Request $request = null): bool
     {
-        return !!$request->header(Hybridly::HYBRIDLY_HEADER);
+        return hybridly()->isHybridly($request);
     }
 }
 
