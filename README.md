@@ -63,16 +63,18 @@ pnpm i hybridly
 composer require hybridly/laravel
 ```
 
-If using Vite, use the plugin to register `vite-plugin-laravel`, `unplugin-vue-define-options` and the layout plugin:
+If using Vite, use the plugin to register `unplugin-vue-define-options` and the layout plugin:
 
 ```ts
 // vite.config.ts
 import { defineConfig } from 'vite'
 import hybridly from 'hybridly/vite'
+import laravel from 'vite-plugin-laravel'
 import vue from '@vitejs/plugin-vue'
 
 export default defineConfig({
   plugins: [
+    laravel(),
     hybridly({ /* options */ }),
     vue(),
   ]

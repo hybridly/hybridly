@@ -1,6 +1,4 @@
-import { Options as LaravelOptions } from 'vite-plugin-laravel'
-
-export interface Options extends LaravelOptions {
+export interface Options {
 	/** Options for the layout plugin. */
 	layout?: false | LayoutOptions
 }
