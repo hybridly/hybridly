@@ -32,7 +32,7 @@ class MonolikitServiceProvider extends PackageServiceProvider
     protected function registerMacros(): void
     {
         /** Checks if the request is monolikit. */
-        Request::macro('monolikit', fn () => monolikit()->isMonolikit());
+        Request::macro('isMonolikit', fn () => monolikit()->isMonolikit());
         Router::macro('monolikit', function (string $uri, string $component, array $properties = []) {
             /** @phpstan-ignore-next-line */
             return $this->match(['GET', 'HEAD'], $uri, Controller::class)
