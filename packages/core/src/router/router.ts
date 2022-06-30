@@ -9,7 +9,7 @@ import { createContext, payloadFromContext, RouterContext, RouterContextOptions,
 import { handleExternalVisit, isExternalResponse, isExternalVisit, performExternalVisit } from './external'
 import { setHistoryState, isBackForwardVisit, handleBackForwardVisit, registerEventListeners, getHistoryState, getKeyFromHistory, remember } from './history'
 import { resetScrollPositions, restoreScrollPositions, saveScrollPositions } from './scroll'
-import { fillHash, makeUrl, normalizeUrl, sameUrls, UrlResolvable } from './url'
+import { fillHash, makeUrl, normalizeUrl, sameUrls, UrlTransformable, UrlResolvable } from './url'
 
 /** Creates the monolikit router. */
 export async function createRouter(options: RouterContextOptions): Promise<RouterContext> {
@@ -62,6 +62,11 @@ export async function visit(context: RouterContext, options: VisitOptions): Prom
 		// Before making the visit, we need to make sure the scroll positions are
 		// saved, so we can restore them later.
 		saveScrollPositions(context)
+
+		// If the URL has transformation options, apply them before using the URL.
+		if (options.url && options.transformUrl) {
+			options.url = makeUrl(options.url, options.transformUrl)
+		}
 
 		// A visit is being made, we need to add it to the context so it
 		// can be reused later on.
@@ -373,6 +378,16 @@ export interface NavigationOptions {
 	preserveState?: ConditionalNavigationOption
 	/** Whether to preserve the current URL. */
 	preserveUrl?: ConditionalNavigationOption
+	/**
+	 * Properties of the given URL to override.
+	 * @example
+	 * ```ts
+	 * router.get('/login?redirect=/', {
+	 * 	transformUrl: { search: '' }
+	 * }
+	 * ```
+	 */
+	transformUrl?: UrlTransformable
 	/**
 	 * Defines whether the history state should be updated.
 	 * @internal This is an advanced property meant to be used internally.
