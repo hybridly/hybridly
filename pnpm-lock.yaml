@@ -46,17 +46,15 @@ importers:
     specifiers:
       '@hybridly/utils': workspace:*
       axios: ^0.27.2
-      debug: ^4.3.4
       defu: ^6.0.0
       hookable: ^5.1.1
       qs: ^6.11.0
     dependencies:
       '@hybridly/utils': link:../utils
-      debug: 4.3.4
       hookable: 5.1.1
       qs: 6.11.0
     devDependencies:
-      axios: 0.27.2_debug@4.3.4
+      axios: 0.27.2
       defu: 6.0.0
 
   packages/hybridly:
@@ -71,8 +69,10 @@ importers:
 
   packages/utils:
     specifiers:
+      debug: ^4.3.4
       deepmerge: ^4.2.2
     dependencies:
+      debug: 4.3.4
       deepmerge: 4.2.2
 
   packages/vite:
@@ -840,10 +840,10 @@ packages:
     resolution: {integrity: sha512-Oei9OH4tRh0YqU3GxhX79dM/mwVgvbZJaSNaRk+bshkj0S5cfHcgYakreBjrHwatXKbz+IoIdYLxrKim2MjW0Q==}
     dev: true
 
-  /axios/0.27.2_debug@4.3.4:
+  /axios/0.27.2:
     resolution: {integrity: sha512-t+yRIyySRTp/wua5xEr+z1q60QmLq8ABsS5O9Me1AsE5dfKqgnCFzwiCZZ/cGNd1lq4/7akDWMxdhVlucjmnOQ==}
     dependencies:
-      follow-redirects: 1.15.1_debug@4.3.4
+      follow-redirects: 1.15.1
       form-data: 4.0.0
     transitivePeerDependencies:
       - debug
@@ -1998,7 +1998,7 @@ packages:
     resolution: {integrity: sha512-0sQoMh9s0BYsm+12Huy/rkKxVu4R1+r96YX5cG44rHV0pQ6iC3Q+mkoMFaGWObMFYQxCVT+ssG1ksneA2MI9KQ==}
     dev: true
 
-  /follow-redirects/1.15.1_debug@4.3.4:
+  /follow-redirects/1.15.1:
     resolution: {integrity: sha512-yLAMQs+k0b2m7cVxpS1VKJVvoz7SS9Td1zss3XRwXj+ZDH00RJgnuLx7E44wx02kQLrdM3aOOy+FpzS7+8OizA==}
     engines: {node: '>=4.0'}
     peerDependencies:
@@ -2006,8 +2006,6 @@ packages:
     peerDependenciesMeta:
       debug:
         optional: true
-    dependencies:
-      debug: 4.3.4
     dev: true
 
   /form-data/2.5.1:
