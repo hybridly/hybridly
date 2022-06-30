@@ -1,4 +1,5 @@
 export type UrlResolvable = string | URL | Location
+export type UrlTransformable = Partial<Omit<URL, 'searchParams' | 'toJSON' | 'toString'>>
 
 /** Normalizes the given input to an URL. */
 export function normalizeUrl(href: UrlResolvable): string {
@@ -8,13 +9,13 @@ export function normalizeUrl(href: UrlResolvable): string {
 /**
  * Converts an input to an URL, optionally changing its properties after initialization.
  */
-export function makeUrl(href: UrlResolvable, props: Partial<Record<keyof URL, any>> = {}): URL {
+export function makeUrl(href: UrlResolvable, transformations: UrlTransformable = {}): URL {
 	try {
 		// Workaround for testing. For some reason happy-dom fills this
 		// to double slashes, which breaks URL instanciation.
 		const base = document?.location?.href === '//' ? undefined : document.location.href
 		const url = new URL(String(href), base)
-		Object.entries(props ?? {}).forEach(([key, value]) => Reflect.set(url, key, value))
+		Object.entries(transformations ?? {}).forEach(([key, value]) => Reflect.set(url, key, value))
 
 		return url
 	} catch (error) {
