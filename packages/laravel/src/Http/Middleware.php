@@ -21,6 +21,10 @@ class Middleware
      */
     public function handle(Request $request, Closure $next): Response
     {
+        if (method_exists($this, 'beforeHandle')) {
+            app()->call([$this, 'beforeHandle']);
+        }
+
         monolikit()->setRootView(fn () => $this->rootView($request));
         monolikit()->setVersion(fn () => $this->version($request));
         monolikit()->share($this->share($request));
