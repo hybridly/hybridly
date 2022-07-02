@@ -30,7 +30,6 @@ export async function initializeMonolikit(options: MonolikitOptions) {
 				}
 			},
 			update: (context) => {
-				debug.adapter('vue:update', 'Updating context:', { context })
 				state.setContext(context)
 			},
 		},

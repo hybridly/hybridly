@@ -43,7 +43,6 @@ export const wrapper = defineComponent({
 
 			return h(state.view.value!, {
 				...state.context.value!.view.properties,
-				dialog: false,
 				key: state.viewKey.value,
 			})
 		}
