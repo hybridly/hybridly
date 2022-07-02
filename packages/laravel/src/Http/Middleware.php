@@ -21,6 +21,10 @@ class Middleware
      */
     public function handle(Request $request, Closure $next): Response
     {
+        if (method_exists($this, 'beforeHandle')) {
+            app()->call([$this, 'beforeHandle']);
+        }
+
         hybridly()->setRootView(fn () => $this->rootView($request));
         hybridly()->setVersion(fn () => $this->version($request));
         hybridly()->share($this->share($request));
