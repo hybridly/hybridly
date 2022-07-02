@@ -3,6 +3,7 @@
 namespace Monolikit\Commands;
 
 use Illuminate\Console\GeneratorCommand;
+use Illuminate\Support\Facades\Artisan;
 use Symfony\Component\Console\Input\InputOption;
 
 class InstallCommand extends GeneratorCommand
@@ -20,6 +21,8 @@ class InstallCommand extends GeneratorCommand
             'SubstituteBindings::class',
             sprintf('\\%s\\%s::class', $this->getDefaultNamespace(trim($this->rootNamespace(), '\\')), $this->argument('name')),
         );
+
+        Artisan::call('vendor:publish --tag=monolikit-config');
     }
 
     protected function getStub()
