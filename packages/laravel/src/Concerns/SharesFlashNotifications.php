@@ -16,6 +16,8 @@ trait SharesFlashNotifications
      */
     public function shareFlashNotifications(Request $request): array
     {
+        hybridly()->persist('flash');
+
         return [
             'flash' => function () use ($request) {
                 return [

@@ -16,6 +16,8 @@ trait SharesValidationErrors
      */
     protected function shareValidationErrors(Request $request): array
     {
+        hybridly()->persist('errors');
+
         return [
             'errors' => function () use ($request) {
                 return $this->resolveValidationErrors($request);

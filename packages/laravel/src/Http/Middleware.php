@@ -10,9 +10,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 class Middleware
 {
-    use Concerns\HasRootView;
-    use Concerns\HasVersion;
-    use Concerns\HasSharedProperties;
     use Concerns\SharesValidationErrors;
     use Concerns\SharesFlashNotifications;
 
@@ -126,7 +123,7 @@ class Middleware
      */
     public function rootView(Request $request): \Closure|string
     {
-        return $this->rootView;
+        return config('hybridly.root_view');
     }
 
     /**
