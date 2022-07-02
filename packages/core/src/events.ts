@@ -5,7 +5,7 @@ import { NavigationOptions, VisitOptions } from './router/router'
 import { Errors, Progress, VisitPayload } from './types'
 
 export interface VisitEvents {
-	'before': (options: VisitOptions) => undefined | boolean
+	'before': (options: VisitOptions) => undefined | boolean | void
 	'start': (context: RouterContext) => void
 	'data': (response: AxiosResponse) => void
 	'progress': (progress: Progress) => void

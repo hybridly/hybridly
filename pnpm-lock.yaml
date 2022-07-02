@@ -96,6 +96,7 @@ importers:
       '@types/lodash.clone': ^4.5.7
       '@types/lodash.isequal': ^4.5.6
       '@types/nprogress': ^0.2.0
+      '@vue/devtools-api': ^6.2.0
       defu: ^6.0.0
       lodash.clone: ^4.5.0
       lodash.isequal: ^4.5.0
@@ -105,17 +106,18 @@ importers:
     dependencies:
       '@hybridly/core': link:../core
       '@hybridly/utils': link:../utils
+      '@vue/devtools-api': 6.2.0
       defu: 6.0.0
       lodash.clone: 4.5.0
       lodash.isequal: 4.5.0
       nprogress: 0.2.0
       qs: 6.11.0
-      vue: 3.2.37
     devDependencies:
       '@types/lodash': 4.14.182
       '@types/lodash.clone': 4.5.7
       '@types/lodash.isequal': 4.5.6
       '@types/nprogress': 0.2.0
+      vue: 3.2.37
 
 packages:
 
@@ -683,6 +685,10 @@ packages:
     dependencies:
       '@vue/compiler-dom': 3.2.37
       '@vue/shared': 3.2.37
+
+  /@vue/devtools-api/6.2.0:
+    resolution: {integrity: sha512-pF1G4wky+hkifDiZSWn8xfuLOJI1ZXtuambpBEYaf7Xaf6zC/pM29rvAGpd3qaGXnr4BAXU1Pxz/VfvBGwexGA==}
+    dev: false
 
   /@vue/reactivity-transform/3.2.33:
     resolution: {integrity: sha512-4UL5KOIvSQb254aqenW4q34qMXbfZcmEsV/yVidLUgvwYQQ/D21bGX3DlgPUGI3c4C+iOnNmDCkIxkILoX/Pyw==}

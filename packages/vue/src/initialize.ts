@@ -1,9 +1,10 @@
-import { DefineComponent, h } from 'vue'
+import { DefineComponent, h, Plugin } from 'vue'
 import { createRouter, VisitPayload, ResolveComponent, RouterContext, RouterContextOptions } from '@hybridly/core'
 import { showPageComponentErrorModal, debug } from '@hybridly/utils'
 import { wrapper } from './components/wrapper'
 import { state } from './stores/state'
 import { initializeProgress, ProgressOptions } from './progress'
+import { plugin } from './devtools'
 
 export async function initializeHybridly(options: HybridlyOptions) {
 	const { element, payload, resolve } = prepare(options)
@@ -39,6 +40,7 @@ export async function initializeHybridly(options: HybridlyOptions) {
 	await options.setup({
 		element,
 		wrapper,
+		hybridly: plugin,
 		props: { context: state.context.value! },
 		render: () => h(wrapper as any, { context: state.context.value }),
 	})
@@ -147,6 +149,8 @@ interface SetupArguments {
 	props: {
 		context: RouterContext
 	}
+	/** Vue plugin that registers the devtools. */
+	hybridly: Plugin
 	/** Renders the wrapper. */
 	render: () => ReturnType<typeof h>
 }
