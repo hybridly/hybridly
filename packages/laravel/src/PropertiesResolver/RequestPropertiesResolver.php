@@ -9,11 +9,13 @@ use Illuminate\Http\Resources\Json\ResourceResponse;
 use Hybridly\LazyProperty;
 use Hybridly\Hybridly;
 use Hybridly\Support\Arr;
+use Hybridly\Support\CaseConverter;
 
 class RequestPropertiesResolver implements PropertiesResolver
 {
     public function __construct(
         protected Request $request,
+        protected CaseConverter $caseConverter,
     ) {
     }
 
@@ -28,20 +30,24 @@ class RequestPropertiesResolver implements PropertiesResolver
         // retrieve the properties whose paths they describe using dot-notation.
         // We only do that when the request is specifically for partial data though.
         if ($partial && $only = array_filter(json_decode($this->request->header(Hybridly::ONLY_DATA_HEADER, ''), true) ?? [])) {
+            $only = $this->convertPartialPropertiesCase($only);
             $properties = Arr::onlyDot($properties, array_merge($only, $persisted));
         }
 
         if ($partial && $except = array_filter(json_decode($this->request->header(Hybridly::EXCEPT_DATA_HEADER, ''), true) ?? [])) {
+            $except = $this->convertPartialPropertiesCase($except);
             $properties = Arr::exceptDot($properties, $except);
         }
 
-        return $this->resolvePropertyInstances($properties, $this->request);
+        return $this->convertOutputCase(
+            array: $this->resolvePropertyInstances($properties, $this->request),
+        );
     }
 
     /**
      * Resolve all necessary class instances in the given props.
      */
-    public function resolvePropertyInstances(array $props, Request $request, bool $unpackDotProps = true): array
+    protected function resolvePropertyInstances(array $props, Request $request, bool $unpackDotProps = true): array
     {
         foreach ($props as $key => $value) {
             if (\is_object($value) && \is_callable($value)) {
@@ -77,5 +83,23 @@ class RequestPropertiesResolver implements PropertiesResolver
         }
 
         return $props;
+    }
+
+    protected function convertPartialPropertiesCase(array $array): array
+    {
+        return match (config('hybridly.force_case.input')) {
+            'camel' => collect($array)->map(fn ($property) => (string) str()->camel($property))->toArray(),
+            'snake' => collect($array)->map(fn ($property) => (string) str()->snake($property))->toArray(),
+            default => $array,
+        };
+    }
+
+    protected function convertOutputCase(array $array): array
+    {
+        return match (config('hybridly.force_case.output')) {
+            'snake' => $this->caseConverter->convert($array, 'snake'),
+            'camel' => $this->caseConverter->convert($array, 'camel'),
+            default => $array
+        };
     }
 }
