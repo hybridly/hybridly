@@ -1,9 +1,10 @@
-import { DefineComponent, h } from 'vue'
+import { DefineComponent, h, Plugin } from 'vue'
 import { createRouter, VisitPayload, ResolveComponent, RouterContext, RouterContextOptions } from '@monolikit/core'
 import { showPageComponentErrorModal, debug } from '@monolikit/utils'
 import { wrapper } from './components/wrapper'
 import { state } from './stores/state'
 import { initializeProgress, ProgressOptions } from './progress'
+import { plugin } from './devtools'
 
 export async function initializeMonolikit(options: MonolikitOptions) {
 	const { element, payload, resolve } = prepare(options)
@@ -39,6 +40,7 @@ export async function initializeMonolikit(options: MonolikitOptions) {
 	await options.setup({
 		element,
 		wrapper,
+		monolikit: plugin,
 		props: { context: state.context.value! },
 		render: () => h(wrapper as any, { context: state.context.value }),
 	})
@@ -147,6 +149,8 @@ interface SetupArguments {
 	props: {
 		context: RouterContext
 	}
+	/** Vue plugin that registers the devtools. */
+	monolikit: Plugin
 	/** Renders the wrapper. */
 	render: () => ReturnType<typeof h>
 }
