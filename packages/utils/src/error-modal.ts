@@ -2,9 +2,10 @@ class Modal {
 	private main!: HTMLHtmlElement
 	private overlay!: HTMLDivElement
 	private iframe!: HTMLIFrameElement
+	private style!: HTMLStyleElement
 	private hideOnEscape?: (event: KeyboardEvent) => void
 
-	constructor(private html: string) {
+	constructor(private html: string, private animationDurationInMs: number = 200) {
 		if (this.initializeDOM() !== false) {
 			this.show()
 		}
@@ -45,7 +46,7 @@ class Modal {
 			return false
 		}
 
-		if (document.querySelector('iframe[data-hybridly="true"]')) {
+		if (document.querySelector('[data-hybridly-overlay="true"]')) {
 			return false
 		}
 
@@ -54,26 +55,56 @@ class Modal {
 		main.querySelectorAll('a').forEach((a) => a.setAttribute('target', '_top'))
 
 		const overlay = document.createElement('div')
+		overlay.dataset.hybridly = ''
 		overlay.style.position = 'fixed'
 		overlay.style.width = '100vw'
 		overlay.style.height = '100vh'
 		overlay.style.padding = '50px'
 		overlay.style.boxSizing = 'border-box'
-		overlay.style.backgroundColor = 'rgba(0, 0, 0, .6)'
-		overlay.style.zIndex = '99999'
+		overlay.style.backgroundColor = 'rgba(0, 0, 0, .35)'
+		overlay.style.color = 'white'
+		overlay.style.zIndex = '2147483638'
+		overlay.style.overflow = 'hidden'
 
 		const iframe = document.createElement('iframe')
-		iframe.dataset.hybridly = 'true'
 		iframe.style.backgroundColor = '#111827'
-		iframe.style.borderRadius = '5px'
+		iframe.style.color = 'white'
 		iframe.style.width = '100%'
 		iframe.style.height = '100%'
+		iframe.style.borderRadius = '10px'
 
 		overlay.appendChild(iframe)
+
+		const style = document.createElement('style')
+		style.innerHTML = `
+			[data-hybridly] {
+				opacity: 0;
+				overflow: hidden;
+				transition: opacity ${this.animationDurationInMs}ms ease-out;
+			}
+
+			[data-hybridly="visible"] {
+				opacity: 1;
+			}
+
+			[data-hybridly] iframe {
+				box-shadow: 0px 10px 35px 5px rgba(0,0,0,0.2);
+				opacity: 0;
+				overflow: hidden;
+				transform: scale(.85);
+				transition: all 100ms ease-out;
+			}
+			
+			[data-hybridly="visible"] iframe {
+				transform: scale(1);
+				opacity: 1;
+			}
+		`
 
 		this.main = main
 		this.overlay = overlay
 		this.iframe = iframe
+		this.style = style
 	}
 
 	show() {
@@ -85,19 +116,25 @@ class Modal {
 		}
 
 		document.addEventListener('keydown', this.hideOnEscape)
-		document.body.prepend(this.overlay)
 		document.body.style.overflow = 'hidden'
+		document.body.prepend(this.style)
+		document.body.prepend(this.overlay)
 
 		this.iframe.contentWindow?.document.open()
 		this.iframe.contentWindow?.document.write(this.main.outerHTML)
 		this.iframe.contentWindow?.document.close()
+		this.overlay.dataset.hybridly = 'visible'
 	}
 
 	destroy() {
-		this.overlay.outerHTML = ''
-		this.overlay.remove()
-		document.body.style.overflow = 'visible'
-		document.removeEventListener('keydown', this.hideOnEscape!)
+		this.overlay.dataset.hybridly = ''
+		setTimeout(() => {
+			this.overlay.outerHTML = ''
+			this.overlay.remove()
+			this.style.remove()
+			document.body.style.overflow = 'visible'
+			document.removeEventListener('keydown', this.hideOnEscape!)
+		}, this.animationDurationInMs)
 	}
 }
 
@@ -115,6 +152,13 @@ function style() {
 			background-color: #050505;
 			color: white;
 			font-family: ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,Noto Sans,sans-serif,"Apple Color Emoji","Segoe UI Emoji",Segoe UI Symbol,"Noto Color Emoji";
+			display: flex;
+			flex-direction: column;
+			height: 100%;
+		}
+		body {
+			padding: 5rem 2rem;
+			flex-grow: 1;
 		}
 		.m-1 {
 			margin: 0.25rem;
@@ -179,5 +223,6 @@ function style() {
 		}
 		.opacity-80 {
 			opacity: 0.8;
-		}`
+		}
+	`
 }
