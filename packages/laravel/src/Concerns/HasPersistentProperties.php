@@ -6,7 +6,7 @@ use Illuminate\Contracts\Support\Arrayable;
 
 trait HasPersistentProperties
 {
-    protected array $persistentProperties = [];
+    protected array $persistent = [];
 
     /**
      * Marks the given properties as persisted, which means they will
@@ -15,11 +15,11 @@ trait HasPersistentProperties
     public function persist(string|array|Arrayable $properties): static
     {
         if (\is_array($properties)) {
-            $this->persistentProperties = array_merge($this->persistentProperties, $properties);
+            $this->persistent = array_merge($this->persistent, $properties);
         } elseif ($properties instanceof Arrayable) {
-            $this->persistentProperties = array_merge($this->persistentProperties, $properties->toArray());
+            $this->persistent = array_merge($this->persistent, $properties->toArray());
         } else {
-            array_push($this->persistentProperties, $properties);
+            array_push($this->persistent, $properties);
         }
 
         return $this;
@@ -30,6 +30,6 @@ trait HasPersistentProperties
      */
     public function persisted(): array
     {
-        return $this->persistentProperties;
+        return $this->persistent;
     }
 }
