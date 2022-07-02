@@ -30,7 +30,6 @@ export async function initializeHybridly(options: HybridlyOptions) {
 				}
 			},
 			update: (context) => {
-				debug.adapter('vue:update', 'Updating context:', { context })
 				state.setContext(context)
 			},
 		},

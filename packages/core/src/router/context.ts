@@ -19,11 +19,15 @@ export function createContext(options: RouterContextOptions): RouterContext {
 }
 
 /** Mutates the given context. */
-export function setContext(context: RouterContext, merge: Partial<RouterContext> = {}): void {
+export function setContext(context: RouterContext, merge: Partial<RouterContext> = {}, options: SetContextOptions = {}): void {
 	Object.keys(merge).forEach((key) => {
 		Reflect.set(context, key, merge[key as keyof RouterContext])
 	})
-	context.adapter.update?.(context)
+
+	if (options.propagate !== false) {
+		context.adapter.update?.(context)
+	}
+
 	debug.context('Updated context:', { context, added: merge })
 }
 
@@ -102,4 +106,9 @@ export interface ScrollRegion {
 export interface Serializer {
 	serialize: <T>(view: T) => any
 	unserialize: <T>(state: any) => T
+}
+
+export interface SetContextOptions {
+	/** Whether to propagate the context to adapters. */
+	propagate?: boolean
 }
