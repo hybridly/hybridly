@@ -249,11 +249,16 @@ export async function navigate(context: RouterContext, options: NavigationOption
 		options.payload!.url = context.url
 	}
 
-	// We merge the new request into the current context. That will replace the
+	// We merge the new request into the current context. That will replace
 	// view, dialog, url and version, so the context is in sync with the
 	// navigation that took place. We do not propagate the context
 	// changes so adapters don't update props before the view.
-	setContext(context, options.payload, { propagate: false })
+	// We also reset the state so the state from one page
+	// is not merged with the state from another one.
+	setContext(context, {
+		...options.payload,
+		state: {},
+	}, { propagate: false })
 
 	// History state must be updated to preserve the expected, native browser behavior.
 	// However, in some cases, we just want to swap the views without making an
