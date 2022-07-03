@@ -71,4 +71,18 @@ class Monolikit
 
         return $request->headers->has(self::MONOLIKIT_HEADER);
     }
+
+    /**
+     * Flashes data to the session.
+     */
+    public function flash(array|string $key, mixed $value = null): static
+    {
+        $key = \is_array($key) ? $key : [$key => $value];
+
+        foreach ($key as $k => $v) {
+            session()->flash($k, $v);
+        }
+
+        return $this;
+    }
 }
