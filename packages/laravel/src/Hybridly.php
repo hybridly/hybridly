@@ -55,6 +55,14 @@ class Hybridly
     }
 
     /**
+     * Returns a lazy property that will get evaluated only when specifically required.
+     */
+    public function lazy(\Closure $callback): Lazy
+    {
+        return new Lazy($callback);
+    }
+
+    /**
      * Checks if the request is hybridly.
      */
     public function isHybridly(Request $request = null): bool

@@ -6,7 +6,7 @@ use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\Json\ResourceResponse;
-use Hybridly\LazyProperty;
+use Hybridly\Lazy;
 use Hybridly\Hybridly;
 use Hybridly\Support\Arr;
 use Hybridly\Support\CaseConverter;
@@ -22,9 +22,10 @@ class RequestPropertiesResolver implements PropertiesResolver
     public function resolve(string $component, array $properties, array $persisted): array
     {
         $partial = $this->request->header(Hybridly::PARTIAL_COMPONENT_HEADER) === $component;
-        $properties = array_filter($properties, static function ($property) {
-            return !($property instanceof LazyProperty);
-        });
+
+        if (!$partial) {
+            $properties = array_filter($properties, static fn ($property) => !($property instanceof Lazy));
+        }
 
         // The `only` and `except` headers contain json-encoded array data. We want to use them to
         // retrieve the properties whose paths they describe using dot-notation.
@@ -54,7 +55,7 @@ class RequestPropertiesResolver implements PropertiesResolver
                 $value = app()->call($value);
             }
 
-            if ($value instanceof LazyProperty) {
+            if ($value instanceof Lazy) {
                 $value = app()->call($value);
             }
 
