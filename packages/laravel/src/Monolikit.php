@@ -55,6 +55,14 @@ class Monolikit
     }
 
     /**
+     * Returns a lazy property that will get evaluated only when specifically required.
+     */
+    public function lazy(\Closure $callback): Lazy
+    {
+        return new Lazy($callback);
+    }
+
+    /**
      * Checks if the request is monolikit.
      */
     public function isMonolikit(Request $request = null): bool
