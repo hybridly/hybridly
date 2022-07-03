@@ -1,6 +1,6 @@
 import qs from 'qs'
 import { h, defineComponent, PropType } from 'vue'
-import { Method, makeUrl } from '@monolikit/core'
+import { Method, makeUrl, Properties, VisitOptions } from '@monolikit/core'
 import { debug, merge } from '@monolikit/utils'
 import { router } from '../router'
 
@@ -8,16 +8,18 @@ export const Link = defineComponent({
 	name: 'Link',
 	setup(_, { slots, attrs }) {
 		return (props: typeof _) => {
-			let data = props.data
+			let data = props.data ?? {}
 			const url = makeUrl(props.href ?? '')
-			const as = props.as.toLowerCase()
-			const method = props.method.toUpperCase() as Method
+			const method: Method = props.method ?? 'GET'
+			const as = typeof props.as === 'object'
+				? props.as
+				: props.as?.toLowerCase() ?? 'a'
 
 			// When performing a GET request, we want to move all the data into the URL
 			// query string.
 			if (method === 'GET') {
 				debug.adapter('vue', 'Moving data object to URL parameters.')
-				url.search = qs.stringify(merge(data, qs.parse(url.search, { ignoreQueryPrefix: true })), {
+				url.search = qs.stringify(merge(data as any, qs.parse(url.search, { ignoreQueryPrefix: true })), {
 					encodeValuesOnly: true,
 					arrayFormat: 'indices',
 				})
@@ -28,7 +30,7 @@ export const Link = defineComponent({
 				debug.adapter('vue', `Creating POST/PUT/PATCH/DELETE <a> links is discouraged as it causes "Open Link in New Tab/Window" accessibility issues.\n\nPlease specify a more appropriate element using the "as" attribute. For example:\n\n<Link href="${url}" method="${method}" as="button">...</Link>`)
 			}
 
-			return h(props.as, {
+			return h(props.as as any, {
 				...attrs,
 				...as === 'a' ? { href: url } : {},
 				...props.disabled ? { disabled: props.disabled } : {},
@@ -53,62 +55,41 @@ export const Link = defineComponent({
 						url,
 						data,
 						method,
-						replace: props.replace,
-						preserveScroll: props.preserveScroll,
-						preserveState: props.preserveState ?? (method !== 'GET'),
-						only: props.only as any, // TODO fix typings there
-						except: props.except as any,
-						headers: props.headers,
+						preserveState: (method !== 'GET'),
+						...props.options,
 					})
 				},
 			}, slots)
 		}
 	},
 	props: {
-		as: {
+		href: {
 			type: String,
+			required: true,
+		},
+		as: {
+			type: [String, Object],
 			default: 'a',
 		},
+		method: {
+			type: String as PropType<Method>,
+			default: 'GET',
+		},
 		data: {
-			type: Object as PropType<Record<string, any>>,
+			type: Object as PropType<Properties>,
 			default: () => ({}),
+		},
+		external: {
+			type: Boolean,
+			default: false,
 		},
 		disabled: {
 			type: Boolean,
 			default: false,
 		},
-		href: {
-			type: String,
-			default: undefined,
-		},
-		method: {
-			type: String,
-			default: 'GET',
-		},
-		replace: {
-			type: Boolean,
-			default: false,
-		},
-		preserveScroll: {
-			type: Boolean,
-			default: false,
-		},
-		preserveState: {
-			type: Boolean,
-			default: null,
-		},
-		only: {
-			type: Array as PropType<string[]>,
-		},
-		except: {
-			type: Array as PropType<string[]>,
-		},
-		headers: {
-			type: Object as PropType<Record<string, any>>,
-		},
-		external: {
-			type: Boolean,
-			default: false,
+		options: {
+			type: Object as PropType<Omit<VisitOptions, 'url' | 'data' | 'method'>>,
+			default: () => ({}),
 		},
 	},
 })
