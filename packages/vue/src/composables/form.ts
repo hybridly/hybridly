@@ -3,6 +3,7 @@ import clone from 'lodash.clone'
 import type { UrlResolvable, VisitOptions } from '@hybridly/core'
 import { computed, reactive, readonly, ref, toRaw, watch } from 'vue'
 import { router } from '../router'
+import { state } from '../stores/state'
 
 type Fields = Record<string, any>
 
@@ -59,10 +60,10 @@ export function useForm<T extends Fields = Fields>(options: FormOptions<T>) {
 	function submit(optionsOverrides?: Omit<VisitOptions, 'data'>) {
 		const url = typeof options.url === 'function'
 			? options.url()
-			: options.url!
+			: options.url
 
 		return router.visit({
-			url: url as any, // TS bugged?
+			url: url as any ?? state.context.value?.url, // TS bugged?
 			method: options.method ?? 'POST',
 			...options,
 			...optionsOverrides,
