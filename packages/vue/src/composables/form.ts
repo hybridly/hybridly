@@ -1,13 +1,13 @@
 import isEqual from 'lodash.isequal'
 import clone from 'lodash.clone'
-import type { VisitOptions } from '@monolikit/core'
+import type { UrlResolvable, VisitOptions } from '@monolikit/core'
 import { computed, reactive, readonly, ref, toRaw, watch } from 'vue'
 import { router } from '../router'
 
 type Fields = Record<string, any>
 
-interface FormOptions<T extends Fields> extends Omit<VisitOptions, 'data'> {
-	url: string
+interface FormOptions<T extends Fields> extends Omit<VisitOptions, 'data' | 'url'> {
+	url?: UrlResolvable | (() => UrlResolvable)
 	fields: T
 	key?: string | false
 	timeout?: number
@@ -57,7 +57,12 @@ export function useForm<T extends Fields = Fields>(options: FormOptions<T>) {
 	 * Submits the form.
 	 */
 	function submit(optionsOverrides?: Omit<VisitOptions, 'data'>) {
+		const url = typeof options.url === 'function'
+			? options.url()
+			: options.url!
+
 		return router.visit({
+			url: url as any, // TS bugged?
 			method: options.method ?? 'POST',
 			...options,
 			...optionsOverrides,
