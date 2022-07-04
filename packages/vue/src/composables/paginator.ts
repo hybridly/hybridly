@@ -2,6 +2,17 @@
 // See: https://github.com/lepikhinb/momentum-paginator/blob/master/src/index.ts
 // Twitter: https://twitter.com/lepikhinb
 
+declare global {
+	/**
+	 * Paginated data with metadata in a `meta` wrap.
+	 */
+	interface Paginator<T = any> {
+		data: T[]
+		meta?: PaginatorMeta
+		links?: Link[]
+	}
+}
+
 interface Link {
 	url: string | undefined
 	label: string
@@ -31,12 +42,6 @@ interface PaginatorMeta {
 	lastPageUrl: string
 	nextPageUrl: string | undefined
 	prevPageUrl: string | undefined
-	links?: Link[]
-}
-
-export interface Paginator<T = any> {
-	data: T[]
-	meta?: PaginatorMeta
 	links?: Link[]
 }
 
