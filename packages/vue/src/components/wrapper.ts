@@ -17,11 +17,11 @@ export const wrapper = defineComponent({
 		function renderLayout(child: any) {
 			debug.adapter('vue:render:layout', 'Rendering layout.')
 
-			if (typeof state.view.value!.layout === 'function') {
-				return state.view.value!.layout(h, child)
+			if (typeof state.view.value?.layout === 'function') {
+				return state.view.value.layout(h, child)
 			}
 
-			if (Array.isArray(state.view.value!.layout)) {
+			if (Array.isArray(state.view.value?.layout)) {
 				return state.view
 					.value!.layout.concat(child)
 					.reverse()
@@ -32,7 +32,7 @@ export const wrapper = defineComponent({
 			}
 
 			return [
-				h(state.view.value!.value.layout, { ...state.context.value!.view.properties }, () => child),
+				h(state.view.value?.layout, { ...state.context.value!.view.properties }, () => child),
 				renderDialog(),
 			]
 		}
