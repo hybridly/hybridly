@@ -35,13 +35,13 @@ interface PaginatorMeta {
 	from: number
 	to: number
 	total: number
-	perPage: number
-	currentPage: number
-	lastPage: number
-	firstPageUrl: string
-	lastPageUrl: string
-	nextPageUrl: string | undefined
-	prevPageUrl: string | undefined
+	per_page: number
+	current_page: number
+	last_page: number
+	first_page_url: string
+	last_page_url: string
+	next_page_url: string | undefined
+	prev_page_url: string | undefined
 	links?: Link[]
 }
 
