@@ -1,5 +1,16 @@
 import baseMerge from 'deepmerge'
 
+export function random(length: number = 10): string {
+	const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+
+	let str = ''
+	for (let i = 0; i < length; i++) {
+		str += chars.charAt(Math.floor(Math.random() * chars.length))
+	}
+
+	return str
+}
+
 export function match<TValue extends string | number = string, TReturnValue = unknown>(
 	value: TValue,
 	lookup: Record<TValue | 'default', TReturnValue | ((...args: any[]) => TReturnValue)>,

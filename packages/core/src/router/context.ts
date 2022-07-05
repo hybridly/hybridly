@@ -95,6 +95,8 @@ export interface PendingVisit {
 	controller: AbortController
 	/** Options for the associated visit. */
 	options: VisitOptions
+	/** Visit identifier. */
+	id: string
 }
 
 export interface ScrollRegion {

@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from 'axios'
 import qs from 'qs'
-import { showResponseErrorModal, match, merge, when, debug } from '@hybridly/utils'
+import { showResponseErrorModal, match, merge, when, debug, random } from '@hybridly/utils'
 import { ERROR_BAG_HEADER, EXCEPT_DATA_HEADER, EXTERNAL_VISIT_HEADER, ONLY_DATA_HEADER, PARTIAL_COMPONENT_HEADER, HYBRIDLY_HEADER, VERSION_HEADER } from '../constants'
 import { NotAHybridlyResponseError, VisitCancelledError } from '../errors'
 import { VisitEvents } from '../events'
@@ -42,9 +42,16 @@ export function resolveRouter(resolve: ResolveContext): Router {
 
 /** Performs every action necessary to make a hybridly visit. */
 export async function visit(context: RouterContext, options: VisitOptions): Promise<VisitResponse> {
-	debug.router('Making a visit:', { context, options })
+	const visitId = random()
+	debug.router('Making a visit:', { context, options, visitId })
 
 	try {
+		// Abort any active visit.
+		if (context.activeVisit) {
+			debug.router('Aborting current visit.', context.activeVisit)
+			context.activeVisit?.controller.abort()
+		}
+
 		// Temporarily add the visit-specific events to the context event list
 		// so they can be called with `emit`.
 		context.events.with(options.events)
@@ -55,9 +62,6 @@ export async function visit(context: RouterContext, options: VisitOptions): Prom
 			debug.router('"before" event returned false, aborting the visit.')
 			throw new VisitCancelledError('The visit was cancelled by the global emitter.')
 		}
-
-		// TODO form transformations
-		// TODO preserveState from history
 
 		// Before making the visit, we need to make sure the scroll positions are
 		// saved, so we can restore them later.
@@ -72,6 +76,7 @@ export async function visit(context: RouterContext, options: VisitOptions): Prom
 		// can be reused later on.
 		setContext(context, {
 			activeVisit: {
+				id: visitId,
 				url: makeUrl(options.url ?? context.url),
 				controller: new AbortController(),
 				options,
@@ -173,8 +178,20 @@ export async function visit(context: RouterContext, options: VisitOptions): Prom
 
 			debug.router('The request returned validation errors.', errors)
 			context.events.emit('error', errors)
+			setContext(context, {
+				activeVisit: {
+					...context.activeVisit as any,
+					status: 'error',
+				},
+			})
 		} else {
 			context.events.emit('success', payload)
+			setContext(context, {
+				activeVisit: {
+					...context.activeVisit as any,
+					status: 'success',
+				},
+			})
 		}
 
 		return { response }
@@ -196,6 +213,7 @@ export async function visit(context: RouterContext, options: VisitOptions): Prom
 			},
 		})
 
+		console.error(error)
 		context.events.emit('fail', context)
 
 		return {
@@ -208,7 +226,12 @@ export async function visit(context: RouterContext, options: VisitOptions): Prom
 		debug.router('Ending visit.')
 		context.events.emit('after', context)
 		context.events.cleanup()
-		setContext(context, { activeVisit: undefined })
+
+		// If the visit is pending, it means another one has started,
+		// and if we clean it up, it could lead to issues after the request is done.
+		if (context.activeVisit?.id === visitId) {
+			setContext(context, { activeVisit: undefined })
+		}
 	}
 }
 
