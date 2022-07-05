@@ -14,9 +14,9 @@ final class CaseConverter
         $result = [];
 
         foreach ($payload as $key => $value) {
-            if (\is_array($value)) {
-                $value = $this->toCase($value, $case);
-            }
+            // if (\is_array($value)) {
+            //     $value = $this->toCase($value, $case);
+            // }
 
             $key = (string) match ($case) {
                 'snake' => str()->snake($key),
