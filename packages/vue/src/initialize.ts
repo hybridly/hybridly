@@ -104,7 +104,7 @@ export async function resolvePageComponent(name: string, pages: Record<string, a
 
 	if (!path) {
 		showPageComponentErrorModal(name)
-		console.warn(`Page component "${name} could not be found. Available pages:`, Object.keys(pages))
+		console.warn(`Page component "${name}" could not be found. Available pages:`, Object.keys(pages))
 
 		return
 	}
