@@ -8,10 +8,11 @@ import { state } from '../stores/state'
 type Fields = Record<string, any>
 
 interface FormOptions<T extends Fields> extends Omit<VisitOptions, 'data' | 'url'> {
-	url?: UrlResolvable | (() => UrlResolvable)
 	fields: T
+	url?: UrlResolvable | (() => UrlResolvable)
 	key?: string | false
 	timeout?: number
+	reset?: boolean
 	transform?: (fields: T) => Fields
 }
 
@@ -91,7 +92,9 @@ export function useForm<T extends Fields = Fields>(options: FormOptions<T>) {
 					return options.events?.error?.(incoming)
 				},
 				success: (payload) => {
-					reset()
+					if (options?.reset !== false) {
+						reset()
+					}
 					successful.value = true
 					recentlySuccessful.value = true
 					timeoutIds.recentlySuccessful = setTimeout(() => recentlySuccessful.value = false, options?.timeout ?? 5000)
