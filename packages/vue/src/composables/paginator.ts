@@ -9,25 +9,22 @@ declare global {
 	interface Paginator<T = any> {
 		data: T[]
 		meta?: PaginatorMeta
-		links?: Link[]
+		links?: PaginatorLink[]
+	}
+
+	/**
+	 * Paginated data without metadata wrapping.
+	 */
+	interface UnwrappedPaginator<T = any> extends PaginatorMeta {
+		data: T[]
+		links: PaginatorLink[]
 	}
 }
 
-interface Link {
-	url: string | undefined
+interface PaginatorLink {
+	url?: string
 	label: string
 	active: boolean
-}
-
-interface Item {
-	url: string | undefined
-	label: string
-	isPage: boolean
-	isActive: boolean
-	isPrevious: boolean
-	isNext: boolean
-	isCurrent: boolean
-	isSeparator: boolean
 }
 
 interface PaginatorMeta {
@@ -42,10 +39,21 @@ interface PaginatorMeta {
 	last_page_url: string
 	next_page_url: string | undefined
 	prev_page_url: string | undefined
-	links?: Link[]
+	links?: PaginatorLink[]
 }
 
-export function usePaginator<T = any>(paginator: Paginator<T> | PaginatorMeta) {
+interface Item {
+	url: string | undefined
+	label: string
+	isPage: boolean
+	isActive: boolean
+	isPrevious: boolean
+	isNext: boolean
+	isCurrent: boolean
+	isSeparator: boolean
+}
+
+export function usePaginator<T = any>(paginator: UnwrappedPaginator<T> | Paginator<T> | PaginatorMeta) {
 	const meta = (paginator as Paginator<T>).meta ?? (paginator as PaginatorMeta)
 	const links = meta.links ?? paginator.links!
 
