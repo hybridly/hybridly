@@ -24,6 +24,7 @@ export function resolveRouter(resolve: ResolveContext): Router {
 	return {
 		context: resolve,
 		abort: async() => resolve().activeVisit?.controller.abort(),
+		active: () => !!resolve().activeVisit,
 		visit: async(options) => await visit(resolve(), options),
 		reload: async(options) => await visit(resolve(), { preserveScroll: true, preserveState: true, ...options }),
 		get: async(url, options = {}) => await visit(resolve(), { ...options, url, method: 'GET' }),
@@ -467,6 +468,8 @@ export interface Router {
 	context: ResolveContext
 	/** Aborts the currently pending visit, if any. */
 	abort: () => Promise<void>
+	/** Checks if there is an active request. */
+	active: () => boolean
 	/** Makes a visit with the given options. */
 	visit: (options: VisitOptions) => Promise<VisitResponse>
 	/** Reloads the current page. */
