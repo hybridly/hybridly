@@ -1,12 +1,14 @@
 import type { RouterContext } from '@hybridly/core'
 import { debug } from '@hybridly/utils'
 import { ComponentOptions, Ref, ref, shallowRef, triggerRef, unref } from 'vue'
+import { Layout } from '../composables/layout'
 
 type MaybeRef<T> = Ref<T> | T
 
 export const state = {
 	context: ref<RouterContext>(),
 	view: shallowRef<ComponentOptions>(),
+	viewLayout: shallowRef<Layout>(),
 	viewKey: ref<number>(),
 	dialog: shallowRef<ComponentOptions>(),
 	dialogKey: ref<number>(),
@@ -14,6 +16,11 @@ export const state = {
 	setView(view: MaybeRef<ComponentOptions>) {
 		debug.adapter('vue:state:view', 'Setting view:', view)
 		state.view.value = view
+	},
+
+	setViewLayout(layout: Layout) {
+		debug.adapter('vue:state:view', 'Setting layout:', layout)
+		state.viewLayout.value = layout
 	},
 
 	setDialog(dialog: MaybeRef<ComponentOptions>) {
