@@ -12,6 +12,7 @@ export const MonolikitImports = {
 		'useForm',
 		'useHistoryState',
 		'usePaginator',
+		'useLayout',
 		'router',
 	],
 }

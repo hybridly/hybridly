@@ -62,6 +62,11 @@ export const wrapper = defineComponent({
 			if (state.view.value) {
 				const view = renderView()
 
+				if (state.viewLayout.value) {
+					state.view.value.layout = state.viewLayout.value
+					state.viewLayout.value = undefined
+				}
+
 				if (state.view.value.layout) {
 					return renderLayout(view)
 				}
