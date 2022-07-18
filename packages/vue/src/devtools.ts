@@ -1,4 +1,5 @@
 import { setupDevtoolsPlugin } from '@vue/devtools-api'
+import { events } from '@monolikit/core'
 import { App, Plugin, triggerRef } from 'vue'
 import { state } from './stores/state'
 
@@ -69,7 +70,7 @@ export function setupDevtools(app: App) {
 			label: 'Monolikit',
 		})
 
-		const events = [
+		const listen = [
 			'start',
 			'data',
 			'navigate',
@@ -83,7 +84,7 @@ export function setupDevtools(app: App) {
 			'after',
 		] as const
 
-		state.context.value?.events.on('before', (options) => {
+		events.before.on((options) => {
 			const groupId = (Math.random() + 1).toString(36).substring(7)
 
 			api.addTimelineEvent({
@@ -96,28 +97,24 @@ export function setupDevtools(app: App) {
 				},
 			})
 
-			events.forEach((event) => {
-				const unregister = state.context.value?.events.on(event, (data: any) => {
-					api.addTimelineEvent({
-						layerId: monolikitEventsTimelineLayerId,
-						event: {
-							groupId,
-							title: event,
-							time: api.now(),
-							data,
-						},
-					})
-
-					if (event === 'after') {
-						setTimeout(() => {
-							triggerRef(state.context)
-							api.notifyComponentUpdate()
-						}, 100)
-					}
-
-					unregister?.()
+			listen.forEach((event) => events[event].once((data: any) => {
+				api.addTimelineEvent({
+					layerId: monolikitEventsTimelineLayerId,
+					event: {
+						groupId,
+						title: event,
+						time: api.now(),
+						data,
+					},
 				})
-			})
+
+				if (event === 'after') {
+					setTimeout(() => {
+						triggerRef(state.context)
+						api.notifyComponentUpdate()
+					}, 100)
+				}
+			}))
 		})
 	})
 }

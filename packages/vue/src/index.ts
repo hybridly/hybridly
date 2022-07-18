@@ -1,7 +1,7 @@
 export { initializeMonolikit } from './initialize'
-export { router } from './router'
-
 export { Link } from './components/link'
+
+export { router } from '@monolikit/core'
 
 export * from './integrations'
 export * from './composables'

@@ -1,16 +1,16 @@
 import { debug } from '@monolikit/utils'
-import { SCROLL_REGION_ATTRIBUTE } from '../constants'
-import { RouterContext, setContext } from './context'
-import { setHistoryState } from './history'
+import { SCROLL_REGION_ATTRIBUTE } from './constants'
+import { getRouterContext, setContext } from './context'
+import { setHistoryState } from './router/history'
 
 /** Saves the current page's scrollbar positions into the history state. */
-export function saveScrollPositions(context: RouterContext): void {
+export function saveScrollPositions(): void {
 	const regions = getScrollRegions()
 	debug.scroll('Saving scroll positions of:', regions)
 
 	// The context stores the scroll positions. Upon saving, we need to
 	// update it first.
-	setContext(context, {
+	setContext({
 		scrollRegions: regions.map(({ scrollTop, scrollLeft }) => ({
 			top: scrollTop,
 			left: scrollLeft,
@@ -19,7 +19,7 @@ export function saveScrollPositions(context: RouterContext): void {
 
 	// After context is updated, we can save it to the history state,
 	// which is used upon scroll position restoration.
-	setHistoryState(context, { replace: true })
+	setHistoryState({ replace: true })
 }
 
 /** Gets DOM elements which scroll positions should be saved. */
@@ -31,7 +31,7 @@ export function getScrollRegions(): Element[] {
  * Resets the current page's scrollbars positions to the top, and save them
  * in the history state.
  */
-export function resetScrollPositions(context: RouterContext): void {
+export function resetScrollPositions(): void {
 	debug.scroll('Resetting scroll positions.')
 	getScrollRegions()
 		.concat(document.documentElement, document.body)
@@ -40,7 +40,7 @@ export function resetScrollPositions(context: RouterContext): void {
 			element.scrollLeft = 0
 		})
 
-	saveScrollPositions(context)
+	saveScrollPositions()
 
 	// If there is a hash and an element with that hash, we want to
 	// scroll to that element in order to imitate native browser behavior.
@@ -51,8 +51,9 @@ export function resetScrollPositions(context: RouterContext): void {
 }
 
 /** Restores the scroll positions stored in the context. */
-export async function restoreScrollPositions(context: RouterContext): Promise<void> {
+export async function restoreScrollPositions(): Promise<void> {
 	debug.scroll('Restoring scroll positions stored in the context.')
+	const context = getRouterContext()
 	const regions = getScrollRegions()
 
 	if (!context.scrollRegions) {

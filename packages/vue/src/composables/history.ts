@@ -1,5 +1,5 @@
 import { ref, toRaw, watch } from 'vue'
-import { router } from '../router'
+import { router } from '@monolikit/core'
 
 /**
  * Returns a ref with a value saved in the history state through Monolikit.

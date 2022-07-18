@@ -1,7 +1,7 @@
 import defu from 'defu'
 import type { PartialDeep } from 'type-fest'
-import { createContext, RouterContext, RouterContextOptions } from '../src/router/context'
-import { VisitPayload } from '../src/types'
+import { initializeContext, RouterContext, RouterContextOptions } from '../src/context'
+import { VisitPayload } from '../src/router'
 import { rest, server } from './server'
 
 export const noop = () => ({} as any)
@@ -30,7 +30,7 @@ export function makeRouterContextOptions(options: PartialDeep<RouterContextOptio
 }
 
 export function fakeRouterContext(options: PartialDeep<RouterContextOptions> = {}): RouterContext {
-	return createContext(makeRouterContextOptions(options))
+	return initializeContext(makeRouterContextOptions(options))
 }
 
 /** Mocks a request using MSW. */

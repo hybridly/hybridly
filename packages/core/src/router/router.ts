@@ -3,47 +3,53 @@ import qs from 'qs'
 import { showResponseErrorModal, match, merge, when, debug, random } from '@monolikit/utils'
 import { ERROR_BAG_HEADER, EXCEPT_DATA_HEADER, EXTERNAL_VISIT_HEADER, ONLY_DATA_HEADER, PARTIAL_COMPONENT_HEADER, MONOLIKIT_HEADER, VERSION_HEADER } from '../constants'
 import { NotAMonolikitResponseError, VisitCancelledError } from '../errors'
-import { VisitEvents } from '../events'
-import type { VisitPayload, RequestData, Errors, Properties } from '../types'
-import { createContext, payloadFromContext, RouterContext, RouterContextOptions, setContext } from './context'
-import { handleExternalVisit, isExternalResponse, isExternalVisit, performExternalVisit } from './external'
+import { getRouterContext, initializeContext, payloadFromContext, InternalRouterContext, RouterContextOptions, setContext } from '../context'
+import { triggerEvent } from '../events'
+import { handleExternalVisit, isExternalResponse, isExternalVisit, performExternalVisit } from '../external'
+import { resetScrollPositions, restoreScrollPositions, saveScrollPositions } from '../scroll'
+import { fillHash, makeUrl, normalizeUrl, sameUrls, UrlResolvable } from '../url'
 import { setHistoryState, isBackForwardVisit, handleBackForwardVisit, registerEventListeners, getHistoryState, getKeyFromHistory, remember } from './history'
-import { resetScrollPositions, restoreScrollPositions, saveScrollPositions } from './scroll'
-import { fillHash, makeUrl, normalizeUrl, sameUrls, UrlTransformable, UrlResolvable } from './url'
-
-/** Creates the monolikit router. */
-export async function createRouter(options: RouterContextOptions): Promise<RouterContext> {
-	return await initializeRouter(createContext(options))
-}
+import type { ConditionalNavigationOption, Errors, LocalVisitOptions, NavigationOptions, Router, VisitOptions, VisitPayload, VisitResponse } from './types'
 
 /**
- * Gets a router that use the context returned by the resolve function.
- * This makes the router reactive to context changes.
+ * The monolikit router.
+ * This is the core function that you can use to navigate in
+ * your application. Make sure the routes you call return a
+ * monolikit response, otherwise you need to call `external`.
+ *
+ * @example
+ * router.get('/posts/edit', { post })
  */
-export function resolveRouter(resolve: ResolveContext): Router {
-	return {
-		context: resolve,
-		abort: async() => resolve().activeVisit?.controller.abort(),
-		active: () => !!resolve().activeVisit,
-		visit: async(options) => await visit(resolve(), options),
-		reload: async(options) => await visit(resolve(), { preserveScroll: true, preserveState: true, ...options }),
-		get: async(url, options = {}) => await visit(resolve(), { ...options, url, method: 'GET' }),
-		post: async(url, options = {}) => await visit(resolve(), { preserveState: true, ...options, url, method: 'POST' }),
-		put: async(url, options = {}) => await visit(resolve(), { preserveState: true, ...options, url, method: 'PUT' }),
-		patch: async(url, options = {}) => await visit(resolve(), { preserveState: true, ...options, url, method: 'PATCH' }),
-		delete: async(url, options = {}) => await visit(resolve(), { preserveState: true, ...options, url, method: 'DELETE' }),
-		local: async(url, options) => await performLocalComponentVisit(resolve(), url, options),
-		external: (url, data = {}) => performLocalExternalVisit(url, data),
-		history: {
-			get: (key) => getKeyFromHistory(resolve(), key),
-			remember: (key, value) => remember(resolve(), key, value),
-		},
-	}
+export const router: Router = {
+	abort: async() => getRouterContext().activeVisit?.controller.abort(),
+	active: () => !!getRouterContext().activeVisit,
+	// unstack: () => {},
+	visit: async(options) => await visit(options),
+	reload: async(options) => await visit({ preserveScroll: true, preserveState: true, ...options }),
+	get: async(url, options = {}) => await visit({ ...options, url, method: 'GET' }),
+	post: async(url, options = {}) => await visit({ preserveState: true, ...options, url, method: 'POST' }),
+	put: async(url, options = {}) => await visit({ preserveState: true, ...options, url, method: 'PUT' }),
+	patch: async(url, options = {}) => await visit({ preserveState: true, ...options, url, method: 'PATCH' }),
+	delete: async(url, options = {}) => await visit({ preserveState: true, ...options, url, method: 'DELETE' }),
+	local: async(url, options) => await performLocalComponentVisit(url, options),
+	external: (url, data = {}) => performLocalExternalVisit(url, data),
+	history: {
+		get: (key) => getKeyFromHistory(key),
+		remember: (key, value) => remember(key, value),
+	},
+}
+
+/** Creates the monolikit router. */
+export async function createRouter(options: RouterContextOptions): Promise<InternalRouterContext> {
+	initializeContext(options)
+
+	return await initializeRouter()
 }
 
 /** Performs every action necessary to make a monolikit visit. */
-export async function visit(context: RouterContext, options: VisitOptions): Promise<VisitResponse> {
+export async function visit(options: VisitOptions): Promise<VisitResponse> {
 	const visitId = random()
+	const context = getRouterContext()
 	debug.router('Making a visit:', { context, options, visitId })
 
 	try {
@@ -53,20 +59,16 @@ export async function visit(context: RouterContext, options: VisitOptions): Prom
 			context.activeVisit?.controller.abort()
 		}
 
-		// Temporarily add the visit-specific events to the context event list
-		// so they can be called with `emit`.
-		context.events.with(options.events)
-
 		// Before anything else, we fire the "before" event to make sure
 		// there was no user-specified handler returning "false".
-		if (!context.events.emit('before', options)) {
+		if (!triggerEvent('before', options, options.events?.before)) {
 			debug.router('"before" event returned false, aborting the visit.')
 			throw new VisitCancelledError('The visit was cancelled by the global emitter.')
 		}
 
 		// Before making the visit, we need to make sure the scroll positions are
 		// saved, so we can restore them later.
-		saveScrollPositions(context)
+		saveScrollPositions()
 
 		// If the URL has transformation options, apply them before using the URL.
 		if (options.url && options.transformUrl) {
@@ -75,7 +77,7 @@ export async function visit(context: RouterContext, options: VisitOptions): Prom
 
 		// A visit is being made, we need to add it to the context so it
 		// can be reused later on.
-		setContext(context, {
+		setContext({
 			activeVisit: {
 				id: visitId,
 				url: makeUrl(options.url ?? context.url),
@@ -84,7 +86,7 @@ export async function visit(context: RouterContext, options: VisitOptions): Prom
 			},
 		})
 
-		context.events.emit('start', context)
+		triggerEvent('start', context, options.events?.start)
 		debug.router('Making request with axios.')
 
 		const response = await axios.request({
@@ -109,14 +111,14 @@ export async function visit(context: RouterContext, options: VisitOptions): Prom
 			},
 			validateStatus: () => true,
 			onUploadProgress: (event: ProgressEvent) => {
-				context.events.emit('progress', {
+				triggerEvent('progress', {
 					event,
 					percentage: Math.round(event.loaded / event.total * 100),
-				})
+				}, options.events?.progress)
 			},
 		})
 
-		context.events.emit('data', response)
+		triggerEvent('data', response, options.events?.data)
 
 		// An external response is a monolikit response that wants a full page
 		// load to a requested URL. It may be the same URL, in which case a
@@ -153,7 +155,7 @@ export async function visit(context: RouterContext, options: VisitOptions): Prom
 
 		// If everything was according to the plan, we can make our navigation and
 		// update the context. Underlying adapters get the updated data.
-		await navigate(context, {
+		await navigate({
 			payload: {
 				...payload,
 				url: fillHash(context.activeVisit!.url, payload.url),
@@ -178,16 +180,16 @@ export async function visit(context: RouterContext, options: VisitOptions): Prom
 			})() as Errors
 
 			debug.router('The request returned validation errors.', errors)
-			context.events.emit('error', errors)
-			setContext(context, {
+			triggerEvent('error', errors, options.events?.error)
+			setContext({
 				activeVisit: {
 					...context.activeVisit as any,
 					status: 'error',
 				},
 			})
 		} else {
-			context.events.emit('success', payload)
-			setContext(context, {
+			triggerEvent('success', payload, options.events?.success)
+			setContext({
 				activeVisit: {
 					...context.activeVisit as any,
 					status: 'success',
@@ -201,21 +203,21 @@ export async function visit(context: RouterContext, options: VisitOptions): Prom
 		match(error.constructor.name, {
 			AbortError: () => {
 				debug.router('The request was cancelled.', error)
-				context.events.emit('abort', context)
+				triggerEvent('abort', context, options.events?.abort)
 			},
 			NotAMonolikitResponseError: () => {
 				debug.router('The request was not monolikit.')
-				context.events.emit('invalid', error)
+				triggerEvent('invalid', error, options.events?.invalid)
 				showResponseErrorModal(error.response.data)
 			},
 			default: () => {
 				debug.router('An unknown error occured.', error)
-				context.events.emit('exception', error)
+				triggerEvent('exception', error, options.events?.exception)
 			},
 		})
 
 		console.error(error)
-		context.events.emit('fail', context)
+		triggerEvent('fail', context, options.events?.fail)
 
 		return {
 			error: {
@@ -225,13 +227,12 @@ export async function visit(context: RouterContext, options: VisitOptions): Prom
 		}
 	} finally {
 		debug.router('Ending visit.')
-		context.events.emit('after', context)
-		context.events.cleanup()
+		triggerEvent('after', context, options.events?.after)
 
 		// If the visit is pending, it means another one has started,
 		// and if we clean it up, it could lead to issues after the request is done.
 		if (context.activeVisit?.id === visitId) {
-			setContext(context, { activeVisit: undefined })
+			setContext({ activeVisit: undefined })
 		}
 	}
 }
@@ -245,11 +246,12 @@ export function isMonolikitResponse(response: AxiosResponse): boolean {
  * Makes an internal navigation that swaps the view and updates the context.
  * @internal This function is meant to be used internally.
  */
-export async function navigate(context: RouterContext, options: NavigationOptions) {
+export async function navigate(options: NavigationOptions) {
+	const context = getRouterContext()
 	debug.router('Making an internal navigation:', { context, options })
 
 	// If no request was given, we use the current context instead.
-	options.payload ??= payloadFromContext(context)
+	options.payload ??= payloadFromContext()
 
 	const evaluateConditionalOption = (option?: ConditionalNavigationOption) => typeof option === 'function'
 		? option(options.payload!)
@@ -262,8 +264,8 @@ export async function navigate(context: RouterContext, options: NavigationOption
 
 	// If the visit was asking to preserve the current state, we also need to
 	// update the context's state from the history state.
-	if (shouldPreserveState && getHistoryState(context) && options.payload.view.name === context.view.name) {
-		setContext(context, { state: getHistoryState(context) })
+	if (shouldPreserveState && getHistoryState() && options.payload.view.name === context.view.name) {
+		setContext({ state: getHistoryState() })
 	}
 
 	// If the visit required the URL to be preserved, we skip its update
@@ -279,7 +281,7 @@ export async function navigate(context: RouterContext, options: NavigationOption
 	// changes so adapters don't update props before the view.
 	// We also reset the state so the state from one page
 	// is not merged with the state from another one.
-	setContext(context, {
+	setContext({
 		...options.payload,
 		state: {},
 	}, { propagate: false })
@@ -290,7 +292,7 @@ export async function navigate(context: RouterContext, options: NavigationOption
 	// when navigating to the same URL.
 	if (options.updateHistoryState !== false) {
 		debug.router(`Target URL is ${context.url}, current window URL is ${window.location.href}.`, { shouldReplaceHistory })
-		setHistoryState(context, { replace: shouldReplaceHistory })
+		setHistoryState({ replace: shouldReplaceHistory })
 	}
 
 	// Then, we swap the view.
@@ -313,48 +315,51 @@ export async function navigate(context: RouterContext, options: NavigationOption
 
 	// Triggers a context propagation, needed after the views were swapped,
 	// so their properties can properly be updated accordingly.
-	setContext(context)
+	setContext()
 
 	if (!shouldPreserveScroll) {
-		resetScrollPositions(context)
+		resetScrollPositions()
 	} else {
-		restoreScrollPositions(context)
+		restoreScrollPositions()
 	}
 
-	context.events.emit('navigate', options)
+	triggerEvent('navigate', options)
 }
 
 /** Initializes the router by reading the context and registering events if necessary. */
-async function initializeRouter(context: RouterContext): Promise<RouterContext> {
+async function initializeRouter(): Promise<InternalRouterContext> {
+	const context = getRouterContext()
+
 	if (isBackForwardVisit()) {
-		handleBackForwardVisit(context)
+		handleBackForwardVisit()
 	} else if (isExternalVisit()) {
-		handleExternalVisit(context)
+		handleExternalVisit()
 	} else {
 		debug.router('Handling the initial page visit.')
 
 		// If we navigated to somewhere with a hash, we need to update the context
 		// to add said hash because it was initialized without it.
-		setContext(context, {
+		setContext({
 			url: makeUrl(context.url, { hash: window.location.hash }).toString(),
 		})
 
-		await navigate(context, {
+		await navigate({
 			preserveState: true,
 			replace: sameUrls(context.url, window.location.href),
 		})
 	}
 
-	registerEventListeners(context)
+	registerEventListeners()
 
 	return context
 }
 
 /** Performs a local visit to the given component without a round-trip. */
-async function performLocalComponentVisit(context: RouterContext, targetUrl: UrlResolvable, options: LocalVisitOptions) {
+async function performLocalComponentVisit(targetUrl: UrlResolvable, options: LocalVisitOptions) {
+	const context = getRouterContext()
 	const url = normalizeUrl(targetUrl)
 
-	return await navigate(context, {
+	return await navigate({
 		...options,
 		payload: {
 			version: context.version,
@@ -376,123 +381,4 @@ function performLocalExternalVisit(url: UrlResolvable, data?: VisitOptions['data
 			arrayFormat: 'brackets',
 		}),
 	}).toString()
-}
-
-type ConditionalNavigationOption = boolean | ((payload: VisitPayload) => boolean)
-
-export interface LocalVisitOptions {
-	/** Name of the component to use. */
-	component?: string
-	/** Properties to apply to the component. */
-	properties: Properties
-	/**
-	 * Whether to replace the current history state instead of adding
-	 * one. This affects the browser's "back" and "forward" features.
-	 */
-	replace?: ConditionalNavigationOption
-	/** Whether to preserve the current scrollbar position. */
-	preserveScroll?: ConditionalNavigationOption
-	/** Whether to preserve the current page component state. */
-	preserveState?: ConditionalNavigationOption
-}
-
-export interface NavigationOptions {
-	/** View to navigate to. */
-	payload?: VisitPayload
-	/**
-	 * Whether to replace the current history state instead of adding
-	 * one. This affects the browser's "back" and "forward" features.
-	 */
-	replace?: ConditionalNavigationOption
-	/** Whether to preserve the current scrollbar position. */
-	preserveScroll?: ConditionalNavigationOption
-	/** Whether to preserve the current page component's state. */
-	preserveState?: ConditionalNavigationOption
-	/** Whether to preserve the current URL. */
-	preserveUrl?: ConditionalNavigationOption
-	/**
-	 * Properties of the given URL to override.
-	 * @example
-	 * ```ts
-	 * router.get('/login?redirect=/', {
-	 * 	transformUrl: { search: '' }
-	 * }
-	 * ```
-	 */
-	transformUrl?: UrlTransformable
-	/**
-	 * Defines whether the history state should be updated.
-	 * @internal This is an advanced property meant to be used internally.
-	 */
-	updateHistoryState?: boolean
-	/**
-	 * Defines whether this navigation is a back/forward visit from the popstate event.
-	 * @internal This is an advanced property meant to be used internally.
-	 */
-	isBackForward?: boolean
-}
-
-export type Method = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE'
-
-export interface VisitOptions extends Omit<NavigationOptions, 'request'> {
-	/** The URL to visit. */
-	url?: UrlResolvable
-	/** HTTP verb to use for the request. */
-	method?: Method
-	/** Body of the request. */
-	data?: RequestData
-	/** Which properties to update for this visit. Other properties will be ignored. */
-	only?: string | string[]
-	/** Which properties not to update for this visit. Other properties will be updated. */
-	except?: string | string[]
-	/** Specific headers to add to the request. */
-	headers?: Record<string, string>
-	/** The bag in which to put potential errors. */
-	errorBag?: string
-	/** Predefined events for this visit. */
-	events?: Partial<VisitEvents>
-}
-
-export interface VisitResponse {
-	response?: AxiosResponse
-	error?: {
-		type: string
-		actual: Error
-	}
-}
-
-export type ResolveContext = () => RouterContext
-
-export interface Router {
-	/** Gets the context. */
-	context: ResolveContext
-	/** Aborts the currently pending visit, if any. */
-	abort: () => Promise<void>
-	/** Checks if there is an active request. */
-	active: () => boolean
-	/** Makes a visit with the given options. */
-	visit: (options: VisitOptions) => Promise<VisitResponse>
-	/** Reloads the current page. */
-	reload: (options?: VisitOptions) => Promise<VisitResponse>
-	/** Makes a GET request to the given URL. */
-	get: (url: UrlResolvable, options?: Omit<VisitOptions, 'method' | 'url'>) => Promise<VisitResponse>
-	/** Makes a POST request to the given URL. */
-	post: (url: UrlResolvable, options?: Omit<VisitOptions, 'method' | 'url'>) => Promise<VisitResponse>
-	/** Makes a PUT request to the given URL. */
-	put: (url: UrlResolvable, options?: Omit<VisitOptions, 'method' | 'url'>) => Promise<VisitResponse>
-	/** Makes a PATCH request to the given URL. */
-	patch: (url: UrlResolvable, options?: Omit<VisitOptions, 'method' | 'url'>) => Promise<VisitResponse>
-	/** Makes a DELETE request to the given URL. */
-	delete: (url: UrlResolvable, options?: Omit<VisitOptions, 'method' | 'url'>) => Promise<VisitResponse>
-	/** Navigates to the given external URL. Alias for `document.location.href`. */
-	external: (url: UrlResolvable, data?: VisitOptions['data']) => void
-	/** Navigates to the given URL without a server round-trip. */
-	local: (url: UrlResolvable, options: LocalVisitOptions) => Promise<void>
-	/** Access the history state. */
-	history: {
-		/** Remembers a value for the given route. */
-		remember: (key: string, value: any) => void
-		/** Gets a remembered value. */
-		get: <T = any>(key: string) => T | undefined
-	}
 }

@@ -1,4 +1,4 @@
-import { RouterContext } from '@monolikit/core'
+import { events, RouterContext } from '@monolikit/core'
 import nprogress from 'nprogress'
 
 export function initializeProgress(context: RouterContext, options?: Partial<ProgressOptions>) {
@@ -35,7 +35,7 @@ export function initializeProgress(context: RouterContext, options?: Partial<Pro
 		}
 	}
 
-	context.events.on('start', () => {
+	events.start.on(() => {
 		clearTimeout(timeout)
 		timeout = setTimeout(() => {
 			finishProgress()
@@ -43,16 +43,16 @@ export function initializeProgress(context: RouterContext, options?: Partial<Pro
 		}, resolved.delay)
 	})
 
-	context.events.on('progress', (progress) => {
+	events.progress.on((progress) => {
 		if (nprogress.isStarted() && progress.percentage) {
 			nprogress.set(Math.max(nprogress.status!, progress.percentage / 100 * 0.9))
 		}
 	})
 
-	context.events.on('success', () => finishProgress())
-	context.events.on('error', () => cancelProgress())
-	context.events.on('fail', () => cancelProgress())
-	context.events.on('after', () => clearTimeout(timeout))
+	events.success.on(() => finishProgress())
+	events.error.on(() => cancelProgress())
+	events.fail.on(() => cancelProgress())
+	events.after.on(() => clearTimeout(timeout))
 }
 
 function injectCSS(color: string) {

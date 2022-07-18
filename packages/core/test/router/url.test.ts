@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { fillHash, makeUrl, sameUrls } from '../../src/router/url'
+import { fillHash, makeUrl, sameUrls } from '../../src/url'
 
 describe('makeUrl', () => {
 	it('resolves a string to an url', () => {

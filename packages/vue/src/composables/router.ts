@@ -1,7 +1,6 @@
-import { resolveRouter, RouterContext } from '@monolikit/core'
-import { toRaw } from 'vue'
-import { state } from '../stores/state'
+import { router } from '@monolikit/core'
 
-export function useRouter(context?: RouterContext) {
-	return resolveRouter(() => toRaw(context ?? state.context.value!))
+/** Gets the router. */
+export function useRouter() {
+	return router
 }

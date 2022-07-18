@@ -28,14 +28,14 @@ it('updates the context', () => {
 
 	expect(context).toMatchSnapshot('base context')
 
-	setContext(context, {
+	setContext({
 		url: 'https://localhost/foo/bar',
 		version: 'new-version-string',
 	})
 
 	expect(context).toMatchSnapshot('updated context')
 
-	setContext(context, {
+	setContext({
 		url: 'https://localhost/foo/bar/dialog',
 		version: 'new-version-string',
 		dialog: {
@@ -48,7 +48,7 @@ it('updates the context', () => {
 
 	expect(context).toMatchSnapshot('updated context with dialog')
 
-	setContext(context, {
+	setContext({
 		url: 'https://localhost/foo',
 		version: 'new-version-string',
 		dialog: undefined,
