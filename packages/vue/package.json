@@ -41,7 +41,7 @@
   "dependencies": {
     "@monolikit/core": "workspace:*",
     "@monolikit/utils": "workspace:*",
-    "@vue/devtools-api": "^6.2.0",
+    "@vue/devtools-api": "^6.2.1",
     "defu": "^6.0.0",
     "lodash.clone": "^4.5.0",
     "lodash.isequal": "^4.5.0",
@@ -55,7 +55,7 @@
     "@types/nprogress": "^0.2.0",
     "vue": "^3.2.37"
   },
-	"peerDependencies": {
+  "peerDependencies": {
     "vue": "^3.2.37"
-	}
+  }
 }
