@@ -2,18 +2,10 @@
 
 exports[`performs monolikit visits > context after visit 1`] = `
 {
-  "activeVisit": undefined,
   "adapter": {
     "resolveComponent": [Function],
     "swapDialog": [Function],
     "swapView": [Function],
-  },
-  "events": {
-    "cleanup": [Function],
-    "emit": [Function],
-    "events": [Function],
-    "on": [Function],
-    "with": [Function],
   },
   "scrollRegions": [],
   "serializer": {
@@ -21,26 +13,13 @@ exports[`performs monolikit visits > context after visit 1`] = `
     "unserialize": [Function],
   },
   "state": {},
-  "url": "https://localhost.test/visit",
+  "url": "https://localhost/",
   "version": "abc123",
   "view": {
-    "name": "target.view",
-    "properties": {
-      "foo": "bar",
-    },
+    "name": "default.view",
+    "properties": {},
   },
 }
 `;
 
-exports[`performs monolikit visits > visit response 1`] = `
-{
-  "url": "https://localhost.test/visit",
-  "version": "abc123",
-  "view": {
-    "name": "target.view",
-    "properties": {
-      "foo": "bar",
-    },
-  },
-}
-`;
+exports[`performs monolikit visits > visit response 1`] = `undefined`;

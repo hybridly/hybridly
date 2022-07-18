@@ -1,6 +1,6 @@
 // Vitest Snapshot v1
 
-exports[`setHistoryState > pushes the given context into the history > context 1`] = `
+exports[`setHistoryState > pushes the context into the history > context 1`] = `
 [
   {
     "type": "return",
@@ -23,7 +23,7 @@ exports[`setHistoryState > pushes the given context into the history > context 1
 ]
 `;
 
-exports[`setHistoryState > replaces the given context in the current history state > context 1`] = `
+exports[`setHistoryState > replaces the context in the current history state > context 1`] = `
 [
   {
     "type": "return",

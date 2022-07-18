@@ -7,13 +7,6 @@ exports[`creates a valid router context > context 1`] = `
     "swapDialog": [Function],
     "swapView": [Function],
   },
-  "events": {
-    "cleanup": [Function],
-    "emit": [Function],
-    "events": [Function],
-    "on": [Function],
-    "with": [Function],
-  },
   "scrollRegions": [],
   "serializer": {
     "serialize": [Function],
@@ -38,13 +31,6 @@ exports[`updates the context > base context 1`] = `
     "swapDialog": [Function],
     "swapView": [Function],
   },
-  "events": {
-    "cleanup": [Function],
-    "emit": [Function],
-    "events": [Function],
-    "on": [Function],
-    "with": [Function],
-  },
   "scrollRegions": [],
   "serializer": {
     "serialize": [Function],
@@ -66,13 +52,6 @@ exports[`updates the context > updated context 1`] = `
     "resolveComponent": [Function],
     "swapDialog": [Function],
     "swapView": [Function],
-  },
-  "events": {
-    "cleanup": [Function],
-    "emit": [Function],
-    "events": [Function],
-    "on": [Function],
-    "with": [Function],
   },
   "scrollRegions": [],
   "serializer": {
@@ -102,13 +81,6 @@ exports[`updates the context > updated context with dialog 1`] = `
       "foo": "bar",
     },
   },
-  "events": {
-    "cleanup": [Function],
-    "emit": [Function],
-    "events": [Function],
-    "on": [Function],
-    "with": [Function],
-  },
   "scrollRegions": [],
   "serializer": {
     "serialize": [Function],
@@ -132,13 +104,6 @@ exports[`updates the context > updated context with no dialog 1`] = `
     "swapView": [Function],
   },
   "dialog": undefined,
-  "events": {
-    "cleanup": [Function],
-    "emit": [Function],
-    "events": [Function],
-    "on": [Function],
-    "with": [Function],
-  },
   "scrollRegions": [],
   "serializer": {
     "serialize": [Function],
