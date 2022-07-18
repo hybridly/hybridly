@@ -41,13 +41,13 @@
   },
   "dependencies": {
     "@hybridly/core": "workspace:*",
-    "unplugin-vue-define-options": "^0.6.1"
+    "unplugin-vue-define-options": "^0.6.2"
   },
   "peerDependencies": {
     "vue": "^3.2.33"
   },
   "devDependencies": {
-    "vite": "^2.9.13",
+    "vite": "^3.0.2",
     "vue": "^3.2.37"
   }
 }
