@@ -1,9 +1,9 @@
 import { expect, it } from 'vitest'
-import { createContext, setContext } from '../../src/router/context'
+import { initializeContext, setContext } from '../../src/context'
 import { fakeRouterContext, makeRouterContextOptions } from '../utils'
 
 it('creates a valid router context', () => {
-	const context = createContext(makeRouterContextOptions({
+	const context = initializeContext(makeRouterContextOptions({
 		payload: {
 			url: 'https://localhost',
 			version: '123',

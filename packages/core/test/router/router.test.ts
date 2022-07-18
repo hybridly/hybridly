@@ -1,6 +1,11 @@
-import { expect, it } from 'vitest'
-import { getRouter, visit } from '../../src/router/router'
+import { beforeEach, expect, it } from 'vitest'
+import { visit } from '../../src/router/router'
+import { events, getRouterContext, router } from '../../src'
 import { fakeRouterContext, fakeVisitPayload, mockUrl } from '../utils'
+
+beforeEach(() => {
+	fakeRouterContext()
+})
 
 it('performs hybridly visits', async() => {
 	mockUrl('http://localhost.test/visit', {
@@ -15,17 +20,16 @@ it('performs hybridly visits', async() => {
 		}),
 	})
 
-	const context = fakeRouterContext()
-	const { response } = await visit(context, {
+	const { response } = await visit({
 		url: 'http://localhost.test/visit',
 	})
 
 	expect(response?.data).toMatchSnapshot('visit response')
-	expect(context).toMatchSnapshot('context after visit')
+	expect(getRouterContext()).toMatchSnapshot('context after visit')
 })
 
 it('performs external visits', async() => {
-	getRouter(fakeRouterContext).external('http://localhost.test/visit', {
+	router.external('http://localhost.test/visit', {
 		owo: 'uwu',
 		uwu: {
 			foo: 'bar',
@@ -37,19 +41,17 @@ it('performs external visits', async() => {
 
 it('supports global "before" event cancellation', async() => {
 	const options = { url: 'http://localhost.test/visit' }
-	const context = fakeRouterContext()
-	context.events.on('before', () => false)
+	events.before.on(() => false)
 
-	expect((await visit(context, options)).error?.type).toBe('VisitCancelledError')
-	expect((await visit(context, options)).error?.type).toBe('VisitCancelledError')
+	expect((await visit(options)).error?.type).toBe('VisitCancelledError')
+	expect((await visit(options)).error?.type).toBe('VisitCancelledError')
 })
 
 it('supports scoped "before" event cancellation', async() => {
-	const context = fakeRouterContext()
 	const options = {
 		url: 'http://localhost.test/visit',
 		events: { before: () => false },
 	}
 
-	expect((await visit(context, options)).error?.type).toBe('VisitCancelledError')
+	expect((await visit(options)).error?.type).toBe('VisitCancelledError')
 })
