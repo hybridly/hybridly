@@ -61,9 +61,9 @@ export async function visit(options: VisitOptions): Promise<VisitResponse> {
 
 		// Before anything else, we fire the "before" event to make sure
 		// there was no user-specified handler returning "false".
-		if (!triggerEvent('before', options, options.events?.before)) {
+		if (!(await triggerEvent('before', options, options.events?.before))) {
 			debug.router('"before" event returned false, aborting the visit.')
-			throw new VisitCancelledError('The visit was cancelled by the global emitter.')
+			throw new VisitCancelledError('The visit was cancelled by the "before" event.')
 		}
 
 		// Before making the visit, we need to make sure the scroll positions are
