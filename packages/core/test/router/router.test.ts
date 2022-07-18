@@ -1,5 +1,5 @@
 import { expect, it } from 'vitest'
-import { resolveRouter, visit } from '../../src/router/router'
+import { getRouter, visit } from '../../src/router/router'
 import { fakeRouterContext, fakeVisitPayload, mockUrl } from '../utils'
 
 it('performs hybridly visits', async() => {
@@ -25,7 +25,7 @@ it('performs hybridly visits', async() => {
 })
 
 it('performs external visits', async() => {
-	resolveRouter(fakeRouterContext).external('http://localhost.test/visit', {
+	getRouter(fakeRouterContext).external('http://localhost.test/visit', {
 		owo: 'uwu',
 		uwu: {
 			foo: 'bar',

@@ -2,7 +2,7 @@ import isEqual from 'lodash.isequal'
 import clone from 'lodash.clone'
 import type { UrlResolvable, VisitOptions } from '@hybridly/core'
 import { computed, reactive, readonly, ref, toRaw, watch } from 'vue'
-import { router } from '../router'
+import { router } from '@hybridly/core'
 import { state } from '../stores/state'
 
 type Fields = Record<string, any>

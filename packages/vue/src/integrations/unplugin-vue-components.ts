@@ -13,6 +13,8 @@ export const HybridlyImports = {
 		'useHistoryState',
 		'usePaginator',
 		'useLayout',
+	],
+	'@hybridly/core': [
 		'router',
 	],
 }

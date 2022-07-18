@@ -1,18 +1,19 @@
 import { debounce, debug } from '@hybridly/utils'
 import { SCROLL_REGION_ATTRIBUTE } from '../constants'
+import { getRouterContext, InternalRouterContext, RouterContextOptions, Serializer, setContext } from '../context'
+import { saveScrollPositions } from '../scroll'
+import { makeUrl } from '../url'
 import { navigate } from './router'
-import { RouterContext, RouterContextOptions, Serializer, setContext } from './context'
-import { saveScrollPositions } from './scroll'
-import { makeUrl } from './url'
 
-type SerializedContext = Omit<RouterContext, 'adapter' | 'events' | 'serializer'>
+type SerializedContext = Omit<InternalRouterContext, 'adapter' | 'events' | 'serializer'>
 
 /** Puts the given context into the history state. */
-export function setHistoryState(context: RouterContext, options: HistoryOptions = {}) {
+export function setHistoryState(options: HistoryOptions = {}) {
 	if (!window?.history) {
 		throw new Error('The history API is not available, so Hybridly cannot operate.')
 	}
 
+	const context = getRouterContext()
 	const method = options.replace
 		? 'replaceState'
 		: 'pushState'
@@ -34,16 +35,17 @@ export function setHistoryState(context: RouterContext, options: HistoryOptions 
 }
 
 /** Gets the current history state if it exists. */
-export function getHistoryState<T = any>(context: RouterContext, key?: string): T {
+export function getHistoryState<T = any>(key?: string): T {
 	const state = key
 		? window.history.state?.state?.[key]
 		: window.history.state?.state
 
-	return context.serializer.unserialize<T>(state)
+	return getRouterContext().serializer.unserialize<T>(state)
 }
 
 /** Register history-related event listeneners. */
-export async function registerEventListeners(context: RouterContext) {
+export async function registerEventListeners() {
+	const context = getRouterContext()
 	debug.history('Registering [popstate] and [scroll] event listeners.')
 
 	// Popstate is for catching back and forward navigations. We want
@@ -57,7 +59,7 @@ export async function registerEventListeners(context: RouterContext) {
 		if (!event.state) {
 			debug.history('There is no state. Adding hash if any and restoring scroll positions.')
 
-			return await navigate(context, {
+			return await navigate({
 				payload: {
 					...context,
 					url: makeUrl(context.url, { hash: window.location.hash }).toString(),
@@ -70,7 +72,7 @@ export async function registerEventListeners(context: RouterContext) {
 
 		// If the history entry has been hybridlyly tempered with, we want
 		// to use it. We swap the components accordingly.
-		await navigate(context, {
+		await navigate({
 			payload: event.state,
 			preserveScroll: true,
 			preserveState: false,
@@ -83,7 +85,7 @@ export async function registerEventListeners(context: RouterContext) {
 	// This is needed in order to restore them upon navigation.
 	window?.addEventListener('scroll', (event) => debounce(() => {
 		if ((event?.target as Element)?.hasAttribute?.(SCROLL_REGION_ATTRIBUTE)) {
-			saveScrollPositions(context)
+			saveScrollPositions()
 		}
 	}, 100), true)
 }
@@ -98,37 +100,39 @@ export function isBackForwardVisit(): boolean {
 }
 
 /** Handles a visit which was going back or forward. */
-export async function handleBackForwardVisit(context: RouterContext): Promise<void> {
+export async function handleBackForwardVisit(): Promise<void> {
 	debug.router('Handling a back/forward visit.')
-	window.history.state.version = context.version
+	window.history.state.version = getRouterContext().version
 
-	await navigate(context, {
+	await navigate({
 		preserveScroll: true,
 		preserveState: true,
 	})
 }
 
 /** Saves a value into the current history state. */
-export function remember<T = any>(context: RouterContext, key: string, value: T): void {
+export function remember<T = any>(key: string, value: T): void {
 	debug.history(`Remembering key "${key}" with value`, value)
 
-	setContext(context, {
+	// We avoid propagation in order to not trigger a recursive
+	// render by telling the adapter we updated.
+	setContext({
 		state: {
-			...context.state,
+			...getRouterContext().state,
 			[key]: value,
 		},
-	})
+	}, { propagate: false })
 
-	setHistoryState(context, { replace: true })
+	setHistoryState({ replace: true })
 }
 
 /** Gets a value saved into the current history state. */
-export function getKeyFromHistory<T = any>(context: RouterContext, key: string): T {
-	return getHistoryState<T>(context, key)
+export function getKeyFromHistory<T = any>(key: string): T {
+	return getHistoryState<T>(key)
 }
 
 /** Serializes the context so it can be written to the history state. */
-export function serializeContext(context: RouterContext): SerializedContext {
+export function serializeContext(context: InternalRouterContext): SerializedContext {
 	return {
 		url: context.url,
 		version: context.version,

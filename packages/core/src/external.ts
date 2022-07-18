@@ -1,8 +1,8 @@
 import { AxiosResponse } from 'axios'
 import { debug } from '@hybridly/utils'
-import { EXTERNAL_VISIT_HEADER, STORAGE_EXTERNAL_KEY } from '../constants'
-import { RouterContext, setContext } from './context'
-import { navigate } from './router'
+import { EXTERNAL_VISIT_HEADER, STORAGE_EXTERNAL_KEY } from './constants'
+import { getRouterContext, setContext } from './context'
+import { navigate } from './router/router'
 import { makeUrl, sameUrls } from './url'
 
 /**
@@ -33,7 +33,7 @@ export function isExternalResponse(response: AxiosResponse): boolean {
  * has been made.
  * This method is meant to be called on router creation.
  */
-export async function handleExternalVisit(context: RouterContext): Promise<void> {
+export async function handleExternalVisit(): Promise<void> {
 	debug.external('Handling an external visit.')
 	const options = JSON.parse(window.sessionStorage.getItem(STORAGE_EXTERNAL_KEY) || '{}') as ExternalVisitOptions
 	window.sessionStorage.removeItem(STORAGE_EXTERNAL_KEY)
@@ -42,13 +42,13 @@ export async function handleExternalVisit(context: RouterContext): Promise<void>
 
 	// If we navigated to somewhere with a hash, we need to update the context
 	// to add said hash because it was initialized without it.
-	setContext(context, {
-		url: makeUrl(context.url, { hash: window.location.hash }).toString(),
+	setContext({
+		url: makeUrl(getRouterContext().url, { hash: window.location.hash }).toString(),
 	})
 
 	// TODO: add history state to context?
 
-	await navigate(context, {
+	await navigate({
 		preserveScroll: options.preserveScroll,
 		preserveState: true,
 	})
