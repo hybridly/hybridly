@@ -14,9 +14,9 @@ return [
     |--------------------------------------------------------------------------
     | Force case
     |--------------------------------------------------------------------------
-    | The convention for array properties in PHP is usually `snake_case`.
-    | The convention for component properties in Vue is `camelCase`.
-    | For this reason, you can force the case used for properties.
+    | The case conventions between back-end and front-end is generally not
+    | the same. To be able to stay consistent, Monolikit offers a way to
+    | change the case of first-level properties shared to the front.
     |
     | Supported: null, 'snake', 'camel'
     */
@@ -24,4 +24,14 @@ return [
         'input' => null,
         'output' => null,
     ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | i18n
+    |--------------------------------------------------------------------------
+    | You can chose where the generated internationalization JSON file
+    | will be written to using this option. To generate that file,
+    | you may use the `i18n:generate` artisan command.
+    */
+    'i18n_path' => resource_path('scripts/i18n.json'),
 ];
