@@ -1,3 +1,4 @@
+import { debug } from '@monolikit/utils'
 import type { AxiosResponse } from 'axios'
 import type { InternalRouterContext } from '../context'
 import type { NavigationOptions, VisitOptions, Errors, Progress, VisitPayload } from '../router'
@@ -39,6 +40,7 @@ export function triggerEvent<Event extends keyof EventMap, Parameter = EventMap[
 	parameter: Parameter,
 	fn?: EventFunction<Parameter>,
 ): Promise<boolean> {
+	debug.event(`Triggering event [${event}] with parameter:`, parameter)
 	return (events[event] as InternalEventHook<Parameter>).trigger(parameter as any, fn as any)
 }
 
