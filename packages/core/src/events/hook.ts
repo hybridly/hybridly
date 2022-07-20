@@ -49,12 +49,12 @@ export function createEventHook<T>(): InternalEventHook<T> {
 	const trigger = async(param: T, additionnal?: EventFunction<T>): Promise<boolean> => {
 		let fnReturnedFalse = false
 
-		if (!(await additionnal?.(param))) {
+		if ((await additionnal?.(param)) === false) {
 			fnReturnedFalse = true
 		}
 
 		for (const fn of fns) {
-			if (!(await fn(param))) {
+			if ((await fn(param)) === false) {
 				fnReturnedFalse = true
 			}
 		}

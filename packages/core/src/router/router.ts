@@ -201,6 +201,10 @@ export async function visit(options: VisitOptions): Promise<VisitResponse> {
 	//
 	} catch (error: any) {
 		match(error.constructor.name, {
+			VisitCancelledError: () => {
+				debug.router('The request was cancelled through the "before" event.', error)
+				triggerEvent('abort', context, options.events?.abort)
+			},
 			AbortError: () => {
 				debug.router('The request was cancelled.', error)
 				triggerEvent('abort', context, options.events?.abort)
