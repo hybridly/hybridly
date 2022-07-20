@@ -50,6 +50,12 @@ export function setupDevtools(app: App) {
 				key: 'url',
 				value: state.context.value?.url,
 			})
+
+			payload.instanceData.state.push({
+				type: monolikitStateType,
+				key: 'router',
+				value: state.routes.value,
+			})
 		})
 
 		// Updates the state on edition.

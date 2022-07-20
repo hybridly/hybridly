@@ -5,6 +5,7 @@ import { wrapper } from './components/wrapper'
 import { state } from './stores/state'
 import { initializeProgress, ProgressOptions } from './progress'
 import { plugin } from './devtools'
+import { RouteCollection } from './routes'
 
 export async function initializeMonolikit(options: MonolikitOptions) {
 	const { element, payload, resolve } = prepare(options)
@@ -84,6 +85,19 @@ function prepare(options: MonolikitOptions) {
 		}
 
 		throw new Error('Either `initializeMonolikit#resolve` or `initializeMonolikit#pages` should be defined.')
+	}
+
+	// Using `window` is the only way I found to be able to get the route collection,
+	// since this initialization is ran after the Vite plugin is done executing.
+	if (typeof window !== 'undefined') {
+		const routes = window.monolikit?.routes
+
+		if (routes) {
+			state.setRoutes(window.monolikit?.routes)
+			window.addEventListener<any>('monolikit:routes', (event: CustomEvent<RouteCollection>) => {
+				state.setRoutes(event.detail)
+			})
+		}
 	}
 
 	return {

@@ -17,6 +17,7 @@ export default defineBuildConfig({
 		'monolikit',
 		'@vue/shared',
 		'axios',
+		'virtual:monolikit-router',
 	],
 	rollup: {
 		emitCJS: true,

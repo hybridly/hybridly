@@ -13,8 +13,9 @@ export const MonolikitImports = {
 		'useHistoryState',
 		'usePaginator',
 		'useLayout',
+		'route',
 	],
-	'@monolikit/core': [
+	'monolikit': [
 		'router',
 	],
 }

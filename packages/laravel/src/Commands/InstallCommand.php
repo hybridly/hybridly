@@ -10,8 +10,8 @@ class InstallCommand extends GeneratorCommand
 {
     protected $name = 'monolikit:install';
     protected $description = 'Installs Monolikit.';
+    protected $type = 'Monolikit middleware';
     protected $hidden = true;
-    protected $type = 'Middleware';
 
     public function handle()
     {

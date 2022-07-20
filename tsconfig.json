@@ -15,7 +15,8 @@
       "@monolikit/core": ["./packages/core/src/index.ts"],
       "@monolikit/vite": ["./packages/vite/src/index.ts"],
       "@monolikit/vue": ["./packages/vue/src/index.ts"],
-    }
+    },
+		"types": ["vite/client"]
   },
   "exclude": [
     "**/dist/**",

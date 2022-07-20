@@ -40,8 +40,8 @@
     "stub": "unbuild --stub"
   },
   "dependencies": {
-    "@monolikit/core": "workspace:*",
-    "unplugin-vue-define-options": "^0.6.2"
+    "throttle-debounce": "^5.0.0",
+    "@monolikit/core": "workspace:*"
   },
   "peerDependencies": {
     "vue": "^3.2.33"

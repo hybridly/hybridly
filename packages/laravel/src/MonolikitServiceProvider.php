@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Router;
 use Illuminate\View\Compilers\BladeCompiler;
 use Monolikit\Commands\InstallCommand;
+use Monolikit\Commands\RoutesCommand;
 use Monolikit\Http\Controller;
 use Monolikit\PropertiesResolver\PropertiesResolver;
 use Monolikit\PropertiesResolver\RequestPropertiesResolver;
@@ -19,7 +20,8 @@ class MonolikitServiceProvider extends PackageServiceProvider
         $package
             ->name('monolikit')
             ->hasConfigFile()
-            ->hasCommand(InstallCommand::class);
+            ->hasCommand(InstallCommand::class)
+            ->hasCommand(RoutesCommand::class);
     }
 
     public function registeringPackage(): void
