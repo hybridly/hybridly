@@ -10,8 +10,8 @@ class InstallCommand extends GeneratorCommand
 {
     protected $name = 'hybridly:install';
     protected $description = 'Installs Hybridly.';
+    protected $type = 'Hybridly middleware';
     protected $hidden = true;
-    protected $type = 'Middleware';
 
     public function handle()
     {

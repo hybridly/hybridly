@@ -17,6 +17,7 @@
     "@hybridly/vite": "workspace:*",
     "@hybridly/vue": "workspace:*",
     "@types/debug": "^4.1.7",
+    "@types/throttle-debounce": "^5.0.0",
     "@vitest/ui": "^0.18.1",
     "bumpp": "^8.2.1",
     "eslint": "^8.20.0",

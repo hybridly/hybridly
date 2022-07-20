@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Router;
 use Illuminate\View\Compilers\BladeCompiler;
 use Hybridly\Commands\InstallCommand;
+use Hybridly\Commands\RoutesCommand;
 use Hybridly\Http\Controller;
 use Hybridly\PropertiesResolver\PropertiesResolver;
 use Hybridly\PropertiesResolver\RequestPropertiesResolver;
@@ -19,7 +20,8 @@ class HybridlyServiceProvider extends PackageServiceProvider
         $package
             ->name('hybridly')
             ->hasConfigFile()
-            ->hasCommand(InstallCommand::class);
+            ->hasCommand(InstallCommand::class)
+            ->hasCommand(RoutesCommand::class);
     }
 
     public function registeringPackage(): void

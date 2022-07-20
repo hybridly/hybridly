@@ -10,6 +10,9 @@ export default defineBuildConfig({
 		'vite',
 		'debug',
 		'node:path',
+		'node:util',
+		'node:child_process',
+		'node:fs',
 	],
 	rollup: {
 		emitCJS: true,

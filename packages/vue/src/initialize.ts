@@ -5,6 +5,7 @@ import { wrapper } from './components/wrapper'
 import { state } from './stores/state'
 import { initializeProgress, ProgressOptions } from './progress'
 import { plugin } from './devtools'
+import { RouteCollection } from './routes'
 
 export async function initializeHybridly(options: HybridlyOptions) {
 	const { element, payload, resolve } = prepare(options)
@@ -84,6 +85,19 @@ function prepare(options: HybridlyOptions) {
 		}
 
 		throw new Error('Either `initializeHybridly#resolve` or `initializeHybridly#pages` should be defined.')
+	}
+
+	// Using `window` is the only way I found to be able to get the route collection,
+	// since this initialization is ran after the Vite plugin is done executing.
+	if (typeof window !== 'undefined') {
+		const routes = window.hybridly?.routes
+
+		if (routes) {
+			state.setRoutes(window.hybridly?.routes)
+			window.addEventListener<any>('hybridly:routes', (event: CustomEvent<RouteCollection>) => {
+				state.setRoutes(event.detail)
+			})
+		}
 	}
 
 	return {

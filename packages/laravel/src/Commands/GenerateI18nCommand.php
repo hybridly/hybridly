@@ -9,15 +9,16 @@ use Illuminate\Support\Str;
 /**
  * Generates a JSON file with all translations.
  */
-class GenerateI18n extends Command
+class GenerateI18nCommand extends Command
 {
-    protected $signature = 'i18n:generate';
-    protected $description = 'Generates i18n files.';
+    protected $signature = 'hybridly:i18n';
+    protected $description = 'Generates JSON translation files.';
+    protected $hidden = true;
 
     public function handle(): int
     {
         if ($success = $this->writeTranslations()) {
-            $this->info("Translations written to <comment>{$this->getTranslationFilePath()}</comment>.");
+            $this->components->info("Translations written to <comment>{$this->getTranslationFilePath()}</comment>.");
         }
 
         return $success

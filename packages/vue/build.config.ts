@@ -17,6 +17,7 @@ export default defineBuildConfig({
 		'hybridly',
 		'@vue/shared',
 		'axios',
+		'virtual:hybridly-router',
 	],
 	rollup: {
 		emitCJS: true,

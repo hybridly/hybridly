@@ -5,3 +5,4 @@ export { router } from '@hybridly/core'
 
 export * from './integrations'
 export * from './composables'
+export * from './routes'
