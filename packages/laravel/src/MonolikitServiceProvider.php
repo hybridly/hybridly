@@ -5,6 +5,7 @@ namespace Monolikit;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Router;
 use Illuminate\View\Compilers\BladeCompiler;
+use Monolikit\Commands\I18nCommand;
 use Monolikit\Commands\InstallCommand;
 use Monolikit\Commands\RoutesCommand;
 use Monolikit\Http\Controller;
@@ -21,6 +22,7 @@ class MonolikitServiceProvider extends PackageServiceProvider
             ->name('monolikit')
             ->hasConfigFile()
             ->hasCommand(InstallCommand::class)
+            ->hasCommand(I18nCommand::class)
             ->hasCommand(RoutesCommand::class);
     }
 
