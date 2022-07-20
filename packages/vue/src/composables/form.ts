@@ -63,13 +63,18 @@ export function useForm<T extends Fields = Fields>(options: FormOptions<T>) {
 			? options.url()
 			: options.url
 
+		const data = typeof options.transform === 'function'
+			? options.transform?.(fields)
+			: fields
+
 		return router.visit({
-			url: url as any ?? state.context.value?.url, // TS bugged?
+			url: url ?? state.context.value?.url,
 			method: options.method ?? 'POST',
-			...options,
 			...optionsOverrides,
-			data: options.transform?.(fields) ?? fields,
-			preserveState: optionsOverrides?.preserveState === undefined && options.method !== 'GET' ? true : optionsOverrides?.preserveState,
+			data: clone(toRaw(data)),
+			preserveState: optionsOverrides?.preserveState === undefined && options.method !== 'GET'
+				? true
+				: optionsOverrides?.preserveState,
 			events: {
 				before: (visit) => {
 					failed.value = false
