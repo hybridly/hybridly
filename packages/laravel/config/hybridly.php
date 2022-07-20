@@ -33,5 +33,8 @@ return [
     | will be written to using this option. To generate that file,
     | you may use the `i18n:generate` artisan command.
     */
-    'i18n_path' => resource_path('scripts/i18n.json'),
+    'i18n' => [
+        'lang_path' => base_path('lang'),
+        'write_path' => resource_path('scripts/i18n.json'),
+    ],
 ];

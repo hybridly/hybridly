@@ -5,6 +5,7 @@ namespace Hybridly;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Router;
 use Illuminate\View\Compilers\BladeCompiler;
+use Hybridly\Commands\I18nCommand;
 use Hybridly\Commands\InstallCommand;
 use Hybridly\Commands\RoutesCommand;
 use Hybridly\Http\Controller;
@@ -21,6 +22,7 @@ class HybridlyServiceProvider extends PackageServiceProvider
             ->name('hybridly')
             ->hasConfigFile()
             ->hasCommand(InstallCommand::class)
+            ->hasCommand(I18nCommand::class)
             ->hasCommand(RoutesCommand::class);
     }
 

@@ -9,7 +9,7 @@ use Illuminate\Support\Str;
 /**
  * Generates a JSON file with all translations.
  */
-class GenerateI18nCommand extends Command
+class I18nCommand extends Command
 {
     protected $signature = 'hybridly:i18n';
     protected $description = 'Generates JSON translation files.';
@@ -73,7 +73,7 @@ class GenerateI18nCommand extends Command
      */
     protected function getTranslations(): array
     {
-        return $this->makeFolderFilesTree(resource_path('lang'));
+        return $this->makeFolderFilesTree(config('hybridly.i18n.lang_path'));
     }
 
     /**
@@ -81,7 +81,7 @@ class GenerateI18nCommand extends Command
      */
     protected function getTranslationFilePath(): string
     {
-        return str_replace('/', \DIRECTORY_SEPARATOR, config('hybridly.i18n_path'));
+        return str_replace('/', \DIRECTORY_SEPARATOR, config('hybridly.i18n.write_path'));
     }
 
     /**
@@ -89,6 +89,8 @@ class GenerateI18nCommand extends Command
      */
     protected function writeTranslations(): bool
     {
+        File::ensureDirectoryExists(\dirname($this->getTranslationFilePath()));
+
         return (bool) File::put(
             $this->getTranslationFilePath(),
             preg_replace('/:(\w+)/', '{${1}}', json_encode($this->getTranslations())),
