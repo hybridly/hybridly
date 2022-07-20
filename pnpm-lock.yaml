@@ -18,8 +18,8 @@ importers:
       eslint: ^8.20.0
       happy-dom: ^6.0.4
       monolikit: workspace:*
-      msw: 0.44.1
-      type-fest: ^2.16.0
+      msw: 0.44.2
+      type-fest: ^2.17.0
       typescript: ^4.7.4
       unbuild: 0.6.9
       vite: ^3.0.2
@@ -36,8 +36,8 @@ importers:
       eslint: 8.20.0
       happy-dom: 6.0.4
       monolikit: link:packages/monolikit
-      msw: 0.44.1_typescript@4.7.4
-      type-fest: 2.16.0
+      msw: 0.44.2_typescript@4.7.4
+      type-fest: 2.17.0
       typescript: 4.7.4
       unbuild: 0.6.9
       vite: 3.0.2
@@ -2856,8 +2856,8 @@ packages:
     resolution: {integrity: sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA==}
     dev: true
 
-  /msw/0.44.1_typescript@4.7.4:
-    resolution: {integrity: sha512-QhTZJQCCv+y4G5l2dLz+2N4K+wWEiz+HfvW6o3ZznDDHbKhQyYmzymU7bWVXXhLbUw7xgxPRxxm1XsYVb6WR7Q==}
+  /msw/0.44.2_typescript@4.7.4:
+    resolution: {integrity: sha512-u8wjzzcMWouoZtuIShCwx4M3wFF5sBAV1f8K4a0WX8kiihFjzl89IKE1VYmTclLyMIwpOq8qQ1HTpuh2BFX/3A==}
     engines: {node: '>=14'}
     hasBin: true
     requiresBuild: true
@@ -3851,8 +3851,8 @@ packages:
     engines: {node: '>=10'}
     dev: true
 
-  /type-fest/2.16.0:
-    resolution: {integrity: sha512-qpaThT2HQkFb83gMOrdKVsfCN7LKxP26Yq+smPzY1FqoHRjqmjqHXA7n5Gkxi8efirtbeEUxzfEdePthQWCuHw==}
+  /type-fest/2.17.0:
+    resolution: {integrity: sha512-U+g3/JVXnOki1kLSc+xZGPRll3Ah9u2VIG6Sn9iH9YX6UkPERmt6O/0fIyTgsd2/whV0+gAaHAg8fz6sG1QzMA==}
     engines: {node: '>=12.20'}
     dev: true
 
