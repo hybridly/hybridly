@@ -1,4 +1,4 @@
-import { router, events, RouterContext, VisitOptions } from '@hybridly/core'
+import { router, registerHook, RouterContext, VisitOptions } from '@hybridly/core'
 import { state } from '../stores/state'
 
 type BackForwardCallback = (context: RouterContext) => void
@@ -8,7 +8,7 @@ export function useBackForward() {
 
 	// On navigation events, if the navigation is a back/forward
 	// visit, call the registered callbacks.
-	events.navigate.once((options) => {
+	registerHook('navigate', (options) => {
 		if (options.isBackForward) {
 			callbacks.forEach((fn) => fn(state.context.value!))
 			callbacks.splice(0, callbacks.length)

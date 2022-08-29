@@ -1,6 +1,6 @@
 import { beforeEach, expect, it } from 'vitest'
 import { visit } from '../../src/router/router'
-import { events, getRouterContext, router } from '../../src'
+import { getRouterContext, router, registerHook } from '../../src'
 import { fakeRouterContext, fakeVisitPayload, mockUrl } from '../utils'
 
 beforeEach(() => {
@@ -41,7 +41,7 @@ it('performs external visits', async() => {
 
 it('supports global "before" event cancellation', async() => {
 	const options = { url: 'http://localhost.test/visit' }
-	events.before.on(() => false)
+	registerHook('before', () => false)
 
 	expect((await visit(options)).error?.type).toBe('VisitCancelledError')
 	expect((await visit(options)).error?.type).toBe('VisitCancelledError')
@@ -50,7 +50,7 @@ it('supports global "before" event cancellation', async() => {
 it('supports scoped "before" event cancellation', async() => {
 	const options = {
 		url: 'http://localhost.test/visit',
-		events: { before: () => false },
+		hooks: { before: () => false },
 	}
 
 	expect((await visit(options)).error?.type).toBe('VisitCancelledError')

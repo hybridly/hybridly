@@ -24,7 +24,7 @@ export function getInternalRouterContext(): InternalRouterContext {
 }
 
 /** Initializes the context. */
-export function initializeContext(options: RouterContextOptions): InternalRouterContext {
+export async function initializeContext(options: RouterContextOptions): Promise<InternalRouterContext> {
 	state.initialized = true
 	state.context = {
 		...options.payload,
@@ -32,7 +32,14 @@ export function initializeContext(options: RouterContextOptions): InternalRouter
 		url: makeUrl(options.payload.url).toString(),
 		adapter: options.adapter,
 		scrollRegions: [],
+		plugins: options.plugins ?? [],
+		hooks: {},
 		state: {},
+	}
+
+	for (const plugin of state.context.plugins) {
+		debug.plugin(plugin.name, 'Calling "initialized" hook.')
+		await plugin.initialized?.(state.context)
 	}
 
 	return getInternalRouterContext()

@@ -7,6 +7,7 @@ export const debug = {
 	context: makeDebugger('hybridly:core:context'),
 	external: makeDebugger('hybridly:core:external'),
 	scroll: makeDebugger('hybridly:core:scroll'),
-	event: makeDebugger('hybridly:core:event'),
+	hook: makeDebugger('hybridly:core:hook'),
+	plugin: (name: string, ...args: any[]) => makeDebugger('hybridly:plugin').extend(name.replace('hybridly:', ''))(args.shift(), ...args),
 	adapter: (name: string, ...args: any[]) => makeDebugger('hybridly:adapter').extend(name)(args.shift(), ...args),
 }

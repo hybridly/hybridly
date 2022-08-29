@@ -1,3 +1,5 @@
+import { Hooks } from '../plugins/hooks'
+import { Plugin } from '../plugins/plugin'
 import type { PendingVisit, ResolveComponent, SwapDialog, SwapView, View, VisitPayload } from '../router'
 
 /** Options for creating a router context. */
@@ -8,6 +10,8 @@ export interface RouterContextOptions {
 	adapter: Adapter
 	/** History state serializer. */
 	serializer?: Serializer
+	/** List of plugins. */
+	plugins?: Plugin[]
 }
 
 /** Router context. */
@@ -30,6 +34,10 @@ export interface InternalRouterContext {
 	activeVisit?: PendingVisit
 	/** History state serializer. */
 	serializer: Serializer
+	/** List of plugins. */
+	plugins: Plugin[]
+	/** Global hooks. */
+	hooks: Partial<Record<keyof Hooks, Array<Function>>>
 }
 
 /** Router context. */
