@@ -68,6 +68,17 @@ importers:
       '@hybridly/vite': link:../vite
       '@hybridly/vue': link:../vue
 
+  packages/progress:
+    specifiers:
+      '@hybridly/core': workspace:*
+      '@types/nprogress': ^0.2.0
+      nprogress: ^0.2.0
+    dependencies:
+      '@hybridly/core': link:../core
+      nprogress: 0.2.0
+    devDependencies:
+      '@types/nprogress': 0.2.0
+
   packages/utils:
     specifiers:
       debug: ^4.3.4
@@ -92,6 +103,7 @@ importers:
   packages/vue:
     specifiers:
       '@hybridly/core': workspace:*
+      '@hybridly/progress-plugin': workspace:*
       '@hybridly/utils': workspace:*
       '@types/lodash': ^4.14.182
       '@types/lodash.clone': ^4.5.7
@@ -106,6 +118,7 @@ importers:
       vue: ^3.2.37
     dependencies:
       '@hybridly/core': link:../core
+      '@hybridly/progress-plugin': link:../progress
       '@hybridly/utils': link:../utils
       '@vue/devtools-api': 6.2.1
       defu: 6.0.0

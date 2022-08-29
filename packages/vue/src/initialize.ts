@@ -1,9 +1,9 @@
-import { DefineComponent, h, Plugin } from 'vue'
-import { createRouter, VisitPayload, ResolveComponent, RouterContext, RouterContextOptions } from '@hybridly/core'
+import { DefineComponent, h, Plugin as VuePlugin } from 'vue'
+import { createRouter, VisitPayload, ResolveComponent, RouterContext, RouterContextOptions, Plugin } from '@hybridly/core'
 import { showPageComponentErrorModal, debug } from '@hybridly/utils'
+import { progress, ProgressOptions } from '@hybridly/progress-plugin'
 import { wrapper } from './components/wrapper'
 import { state } from './stores/state'
-import { initializeProgress, ProgressOptions } from './progress'
 import { plugin } from './devtools'
 import { RouteCollection } from './routes'
 
@@ -20,6 +20,7 @@ export async function initializeHybridly(options: HybridlyOptions) {
 
 	state.setView(await resolve(payload.view.name))
 	state.setContext(await createRouter({
+		plugins: options.plugins,
 		serializer: options.serializer,
 		adapter: {
 			resolveComponent: resolve,
@@ -45,15 +46,6 @@ export async function initializeHybridly(options: HybridlyOptions) {
 		props: { context: state.context.value! },
 		render: () => h(wrapper as any, { context: state.context.value }),
 	})
-
-	if (options.progress !== false) {
-		initializeProgress(
-			state.context.value!,
-			typeof options.progress === 'object'
-				? options.progress
-				: {},
-		)
-	}
 }
 
 function prepare(options: HybridlyOptions) {
@@ -98,6 +90,15 @@ function prepare(options: HybridlyOptions) {
 				state.setRoutes(event.detail)
 			})
 		}
+	}
+
+	if (options.progress !== false) {
+		options.plugins = [
+			progress(typeof options.progress === 'object'
+				? options.progress
+				: {}),
+			...options.plugins ?? [],
+		]
 	}
 
 	return {
@@ -152,6 +153,8 @@ interface HybridlyOptions {
 	progress?: boolean | Partial<ProgressOptions>
 	/** Sets up the hybridly router. */
 	setup: (options: SetupArguments) => any
+	/** List of Hybridly plugins. */
+	plugins?: Plugin[]
 }
 
 interface SetupArguments {
@@ -164,7 +167,7 @@ interface SetupArguments {
 		context: RouterContext
 	}
 	/** Vue plugin that registers the devtools. */
-	hybridly: Plugin
+	hybridly: VuePlugin
 	/** Renders the wrapper. */
 	render: () => ReturnType<typeof h>
 }
