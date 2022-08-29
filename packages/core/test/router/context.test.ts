@@ -2,8 +2,8 @@ import { expect, it } from 'vitest'
 import { initializeContext, setContext } from '../../src/context'
 import { fakeRouterContext, makeRouterContextOptions } from '../utils'
 
-it('creates a valid router context', () => {
-	const context = initializeContext(makeRouterContextOptions({
+it('creates a valid router context', async() => {
+	const context = await initializeContext(makeRouterContextOptions({
 		payload: {
 			url: 'https://localhost',
 			version: '123',
@@ -19,8 +19,8 @@ it('creates a valid router context', () => {
 	expect(context).toMatchSnapshot('context')
 })
 
-it('updates the context', () => {
-	const context = fakeRouterContext({
+it('updates the context', async() => {
+	const context = await fakeRouterContext({
 		payload: {
 			url: 'https://localhost',
 		},

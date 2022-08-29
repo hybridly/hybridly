@@ -29,8 +29,8 @@ export function makeRouterContextOptions(options: PartialDeep<RouterContextOptio
 	})
 }
 
-export function fakeRouterContext(options: PartialDeep<RouterContextOptions> = {}): RouterContext {
-	return initializeContext(makeRouterContextOptions(options))
+export async function fakeRouterContext(options: PartialDeep<RouterContextOptions> = {}): Promise<RouterContext> {
+	return await initializeContext(makeRouterContextOptions(options))
 }
 
 /** Mocks a request using MSW. */
