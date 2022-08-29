@@ -7,16 +7,20 @@ import { ROUTER_HMR_UPDATE_ROUTE } from '../constants'
 */
 export function getClientCode(routes: RouteCollection) {
 	return `
-	 window.hybridly = {
-		 routes: ${JSON.stringify(routes)}
-	 }
+		if (typeof window === 'undefined') {
+			return
+		}
 
-	 if (import.meta.hot) {
-		 import.meta.hot.on('${ROUTER_HMR_UPDATE_ROUTE}', (routes) => {
-			 window.dispatchEvent(
-				 new CustomEvent('hybridly:routes', { detail: routes })
-			 )
-		 })
-	 }
+		window.hybridly = {
+			routes: ${JSON.stringify(routes)}
+		}
+
+		if (import.meta.hot) {
+			import.meta.hot.on('${ROUTER_HMR_UPDATE_ROUTE}', (routes) => {
+				window.dispatchEvent(
+					new CustomEvent('hybridly:routes', { detail: routes })
+				)
+			})
+		}
  `
 }
