@@ -71,7 +71,7 @@ export interface Hooks {
 export function registerHook<T extends keyof Hooks>(hook: T, fn: Hooks[T]): () => void {
 	const hooks = getRouterContext().hooks
 
-	hooks[hook] = [...(hooks[hook] ?? []), fn]
+	hooks[hook] = [...(hooks[hook] ?? []), fn] as Function[]
 
 	return () => hooks[hook]?.splice(hooks[hook]!.indexOf(fn), 1)
 }
