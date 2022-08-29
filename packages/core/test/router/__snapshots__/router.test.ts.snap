@@ -2,24 +2,40 @@
 
 exports[`performs hybridly visits > context after visit 1`] = `
 {
+  "activeVisit": undefined,
   "adapter": {
     "resolveComponent": [Function],
     "swapDialog": [Function],
     "swapView": [Function],
   },
+  "hooks": {},
+  "plugins": [],
   "scrollRegions": [],
   "serializer": {
     "serialize": [Function],
     "unserialize": [Function],
   },
   "state": {},
-  "url": "https://localhost/",
+  "url": "https://localhost.test/visit",
   "version": "abc123",
   "view": {
-    "name": "default.view",
-    "properties": {},
+    "name": "target.view",
+    "properties": {
+      "foo": "bar",
+    },
   },
 }
 `;
 
-exports[`performs hybridly visits > visit response 1`] = `undefined`;
+exports[`performs hybridly visits > visit response 1`] = `
+{
+  "url": "https://localhost.test/visit",
+  "version": "abc123",
+  "view": {
+    "name": "target.view",
+    "properties": {
+      "foo": "bar",
+    },
+  },
+}
+`;
