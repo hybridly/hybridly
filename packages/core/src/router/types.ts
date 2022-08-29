@@ -1,5 +1,5 @@
 import { AxiosResponse } from 'axios'
-import { VisitEvents } from '../events'
+import { Hooks } from '../plugins/hooks'
 import { UrlResolvable, UrlTransformable } from '../url'
 
 export type ConditionalNavigationOption = boolean | ((payload: VisitPayload) => boolean)
@@ -73,8 +73,8 @@ export interface VisitOptions extends Omit<NavigationOptions, 'request'> {
 	headers?: Record<string, string>
 	/** The bag in which to put potential errors. */
 	errorBag?: string
-	/** Predefined events for this visit. */
-	events?: Partial<VisitEvents>
+	/** Hooks for this visit. */
+	hooks?: Partial<Hooks>
 }
 
 export interface VisitResponse {

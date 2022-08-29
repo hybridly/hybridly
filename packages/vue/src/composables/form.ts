@@ -75,7 +75,7 @@ export function useForm<T extends Fields = Fields>(options: FormOptions<T>) {
 			preserveState: optionsOverrides?.preserveState === undefined && options.method !== 'GET'
 				? true
 				: optionsOverrides?.preserveState,
-			events: {
+			hooks: {
 				before: (visit) => {
 					failed.value = false
 					successful.value = false
@@ -83,18 +83,18 @@ export function useForm<T extends Fields = Fields>(options: FormOptions<T>) {
 					clearTimeout(timeoutIds.recentlySuccessful!)
 					clearTimeout(timeoutIds.recentlyFailed!)
 					clearErrors()
-					return options.events?.before?.(visit)
+					return options.hooks?.before?.(visit)
 				},
 				start: (context) => {
 					processing.value = true
-					return options.events?.start?.(context)
+					return options.hooks?.start?.(context)
 				},
 				error: (incoming) => {
 					setErrors(incoming)
 					failed.value = true
 					recentlyFailed.value = true
 					timeoutIds.recentlyFailed = setTimeout(() => recentlyFailed.value = false, options?.timeout ?? 5000)
-					return options.events?.error?.(incoming)
+					return options.hooks?.error?.(incoming)
 				},
 				success: (payload) => {
 					if (options?.reset !== false) {
@@ -103,11 +103,11 @@ export function useForm<T extends Fields = Fields>(options: FormOptions<T>) {
 					successful.value = true
 					recentlySuccessful.value = true
 					timeoutIds.recentlySuccessful = setTimeout(() => recentlySuccessful.value = false, options?.timeout ?? 5000)
-					return options.events?.success?.(payload)
+					return options.hooks?.success?.(payload)
 				},
 				after: (context) => {
 					processing.value = false
-					return options.events?.after?.(context)
+					return options.hooks?.after?.(context)
 				},
 			},
 		})

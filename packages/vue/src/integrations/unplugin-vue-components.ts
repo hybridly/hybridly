@@ -13,6 +13,8 @@ export const MonolikitImports = {
 		'useHistoryState',
 		'usePaginator',
 		'useLayout',
+		'registerHook',
+		'registerHookOnce',
 		'route',
 	],
 	'monolikit': [

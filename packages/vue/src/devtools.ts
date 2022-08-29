@@ -1,5 +1,5 @@
 import { setupDevtoolsPlugin } from '@vue/devtools-api'
-import { events } from '@monolikit/core'
+import { registerHook, registerHookOnce } from '@monolikit/core'
 import { App, Plugin, triggerRef } from 'vue'
 import { state } from './stores/state'
 
@@ -90,7 +90,7 @@ export function setupDevtools(app: App) {
 			'after',
 		] as const
 
-		events.before.on((options) => {
+		registerHook('before', (options) => {
 			const groupId = (Math.random() + 1).toString(36).substring(7)
 
 			api.addTimelineEvent({
@@ -103,7 +103,7 @@ export function setupDevtools(app: App) {
 				},
 			})
 
-			listen.forEach((event) => events[event].once((data: any) => {
+			listen.forEach((event) => registerHookOnce(event, (data: any) => {
 				api.addTimelineEvent({
 					layerId: monolikitEventsTimelineLayerId,
 					event: {

@@ -4,10 +4,10 @@ import { showResponseErrorModal, match, merge, when, debug, random } from '@mono
 import { ERROR_BAG_HEADER, EXCEPT_DATA_HEADER, EXTERNAL_VISIT_HEADER, ONLY_DATA_HEADER, PARTIAL_COMPONENT_HEADER, MONOLIKIT_HEADER, VERSION_HEADER } from '../constants'
 import { NotAMonolikitResponseError, VisitCancelledError } from '../errors'
 import { getRouterContext, initializeContext, payloadFromContext, InternalRouterContext, RouterContextOptions, setContext } from '../context'
-import { triggerEvent } from '../events'
 import { handleExternalVisit, isExternalResponse, isExternalVisit, performExternalVisit } from '../external'
 import { resetScrollPositions, restoreScrollPositions, saveScrollPositions } from '../scroll'
 import { fillHash, makeUrl, normalizeUrl, sameUrls, UrlResolvable } from '../url'
+import { runHooks } from '../plugins'
 import { setHistoryState, isBackForwardVisit, handleBackForwardVisit, registerEventListeners, getHistoryState, getKeyFromHistory, remember } from './history'
 import type { ConditionalNavigationOption, Errors, LocalVisitOptions, NavigationOptions, Router, VisitOptions, VisitPayload, VisitResponse } from './types'
 
@@ -41,7 +41,7 @@ export const router: Router = {
 
 /** Creates the monolikit router. */
 export async function createRouter(options: RouterContextOptions): Promise<InternalRouterContext> {
-	initializeContext(options)
+	await initializeContext(options)
 
 	return await initializeRouter()
 }
@@ -53,17 +53,17 @@ export async function visit(options: VisitOptions): Promise<VisitResponse> {
 	debug.router('Making a visit:', { context, options, visitId })
 
 	try {
+		// Before anything else, we fire the "before" event to make sure
+		// there was no user-specified handler returning "false".
+		if (!await runHooks('before', options.hooks, options)) {
+			debug.router('"before" event returned false, aborting the visit.')
+			throw new VisitCancelledError('The visit was cancelled by the "before" event.')
+		}
+
 		// Abort any active visit.
 		if (context.activeVisit) {
 			debug.router('Aborting current visit.', context.activeVisit)
 			context.activeVisit?.controller.abort()
-		}
-
-		// Before anything else, we fire the "before" event to make sure
-		// there was no user-specified handler returning "false".
-		if (!(await triggerEvent('before', options, options.events?.before))) {
-			debug.router('"before" event returned false, aborting the visit.')
-			throw new VisitCancelledError('The visit was cancelled by the "before" event.')
 		}
 
 		// Before making the visit, we need to make sure the scroll positions are
@@ -86,7 +86,7 @@ export async function visit(options: VisitOptions): Promise<VisitResponse> {
 			},
 		})
 
-		triggerEvent('start', context, options.events?.start)
+		await runHooks('start', options.hooks, context)
 		debug.router('Making request with axios.')
 
 		const response = await axios.request({
@@ -110,15 +110,15 @@ export async function visit(options: VisitOptions): Promise<VisitResponse> {
 				'Accept': 'text/html, application/xhtml+xml',
 			},
 			validateStatus: () => true,
-			onUploadProgress: (event: ProgressEvent) => {
-				triggerEvent('progress', {
+			onUploadProgress: async(event: ProgressEvent) => {
+				await runHooks('progress', options.hooks, {
 					event,
 					percentage: Math.round(event.loaded / event.total * 100),
-				}, options.events?.progress)
+				})
 			},
 		})
 
-		triggerEvent('data', response, options.events?.data)
+		await runHooks('data', options.hooks, response)
 
 		// An external response is a monolikit response that wants a full page
 		// load to a requested URL. It may be the same URL, in which case a
@@ -180,7 +180,7 @@ export async function visit(options: VisitOptions): Promise<VisitResponse> {
 			})() as Errors
 
 			debug.router('The request returned validation errors.', errors)
-			triggerEvent('error', errors, options.events?.error)
+			await runHooks('error', options.hooks, errors)
 			setContext({
 				activeVisit: {
 					...context.activeVisit as any,
@@ -188,7 +188,7 @@ export async function visit(options: VisitOptions): Promise<VisitResponse> {
 				},
 			})
 		} else {
-			triggerEvent('success', payload, options.events?.success)
+			await runHooks('success', options.hooks, payload)
 			setContext({
 				activeVisit: {
 					...context.activeVisit as any,
@@ -200,28 +200,31 @@ export async function visit(options: VisitOptions): Promise<VisitResponse> {
 		return { response }
 	//
 	} catch (error: any) {
-		match(error.constructor.name, {
-			VisitCancelledError: () => {
-				debug.router('The request was cancelled through the "before" event.', error)
-				triggerEvent('abort', context, options.events?.abort)
+		await match(error.constructor.name, {
+			VisitCancelledError: async() => {
+				debug.router('The request was cancelled through the "before" hook.', error)
+				console.warn(error)
+				await runHooks('abort', options.hooks, context)
 			},
-			AbortError: () => {
+			AbortError: async() => {
 				debug.router('The request was cancelled.', error)
-				triggerEvent('abort', context, options.events?.abort)
+				console.warn(error)
+				await runHooks('abort', options.hooks, context)
 			},
-			NotAMonolikitResponseError: () => {
+			NotAMonolikitResponseError: async() => {
 				debug.router('The request was not monolikit.')
-				triggerEvent('invalid', error, options.events?.invalid)
+				console.error(error)
+				await runHooks('invalid', options.hooks, error)
 				showResponseErrorModal(error.response.data)
 			},
-			default: () => {
+			default: async() => {
 				debug.router('An unknown error occured.', error)
-				triggerEvent('exception', error, options.events?.exception)
+				console.error(error)
+				await runHooks('exception', options.hooks, error)
 			},
 		})
 
-		console.error(error)
-		triggerEvent('fail', context, options.events?.fail)
+		await runHooks('fail', options.hooks, context)
 
 		return {
 			error: {
@@ -231,7 +234,7 @@ export async function visit(options: VisitOptions): Promise<VisitResponse> {
 		}
 	} finally {
 		debug.router('Ending visit.')
-		triggerEvent('after', context, options.events?.after)
+		await runHooks('after', options.hooks, context)
 
 		// If the visit is pending, it means another one has started,
 		// and if we clean it up, it could lead to issues after the request is done.
@@ -327,7 +330,7 @@ export async function navigate(options: NavigationOptions) {
 		restoreScrollPositions()
 	}
 
-	triggerEvent('navigate', options)
+	await runHooks('navigate', {}, options)
 }
 
 /** Initializes the router by reading the context and registering events if necessary. */

@@ -7,6 +7,7 @@ export const debug = {
 	context: makeDebugger('monolikit:core:context'),
 	external: makeDebugger('monolikit:core:external'),
 	scroll: makeDebugger('monolikit:core:scroll'),
-	event: makeDebugger('monolikit:core:event'),
+	hook: makeDebugger('monolikit:core:hook'),
+	plugin: (name: string, ...args: any[]) => makeDebugger('monolikit:plugin').extend(name.replace('monolikit:', ''))(args.shift(), ...args),
 	adapter: (name: string, ...args: any[]) => makeDebugger('monolikit:adapter').extend(name)(args.shift(), ...args),
 }

@@ -5,7 +5,7 @@ import { saveScrollPositions } from '../scroll'
 import { makeUrl } from '../url'
 import { navigate } from './router'
 
-type SerializedContext = Omit<InternalRouterContext, 'adapter' | 'events' | 'serializer'>
+type SerializedContext = Omit<InternalRouterContext, 'adapter' | 'serializer' | 'plugins' | 'hooks'>
 
 /** Puts the given context into the history state. */
 export function setHistoryState(options: HistoryOptions = {}) {
