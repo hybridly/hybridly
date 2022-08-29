@@ -7,20 +7,18 @@ import { ROUTER_HMR_UPDATE_ROUTE } from '../constants'
 */
 export function getClientCode(routes: RouteCollection) {
 	return `
-		if (typeof window === 'undefined') {
-			return
-		}
-
-		window.monolikit = {
-			routes: ${JSON.stringify(routes)}
-		}
-
-		if (import.meta.hot) {
-			import.meta.hot.on('${ROUTER_HMR_UPDATE_ROUTE}', (routes) => {
-				window.dispatchEvent(
-					new CustomEvent('monolikit:routes', { detail: routes })
-				)
-			})
+		if (typeof window !== 'undefined') {
+			window.monolikit = {
+				routes: ${JSON.stringify(routes)}
+			}
+	
+			if (import.meta.hot) {
+				import.meta.hot.on('${ROUTER_HMR_UPDATE_ROUTE}', (routes) => {
+					window.dispatchEvent(
+						new CustomEvent('monolikit:routes', { detail: routes })
+					)
+				})
+			}
 		}
  `
 }
