@@ -14,6 +14,12 @@ class Middleware
     use Concerns\SharesFlashNotifications;
 
     /**
+     * Marks the given properties as persisted, which means they will
+     * always be present, even in partial responses.
+     */
+    protected array $persistent = [];
+
+    /**
      * Handle the incoming request.
      */
     public function handle(Request $request, Closure $next): Response
@@ -24,6 +30,7 @@ class Middleware
 
         monolikit()->setRootView(fn () => $this->rootView($request));
         monolikit()->setVersion(fn () => $this->version($request));
+        monolikit()->persist($this->persistent);
 
         if (method_exists($this, 'share')) {
             monolikit()->share(app()->call([$this, 'share']));
