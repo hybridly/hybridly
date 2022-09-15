@@ -24,7 +24,10 @@ class Middleware
 
         monolikit()->setRootView(fn () => $this->rootView($request));
         monolikit()->setVersion(fn () => $this->version($request));
-        monolikit()->share($this->share($request));
+
+        if (method_exists($this, 'share')) {
+            monolikit()->share(app()->call([$this, 'share']));
+        }
 
         if ($this->shareValidationErrors) {
             monolikit()->share($this->shareValidationErrors($request));
@@ -84,14 +87,6 @@ class Middleware
     public function onEmptyResponse(Request $request, Response $response): Response
     {
         return $response;
-    }
-
-    /**
-     * Defines the properties that are shared to all requests.
-     */
-    public function share(Request $request): array
-    {
-        return [];
     }
 
     /**
