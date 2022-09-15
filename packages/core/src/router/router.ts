@@ -97,7 +97,7 @@ export async function visit(options: VisitOptions): Promise<VisitResponse> {
 			signal: context.activeVisit!.controller.signal,
 			headers: {
 				...options.headers,
-				...when(options.only?.length || options.except?.length, {
+				...when(options.only !== undefined || options.except !== undefined, {
 					[PARTIAL_COMPONENT_HEADER]: context.view.name,
 					...when(options.only, { [ONLY_DATA_HEADER]: JSON.stringify(options.only) }, {}),
 					...when(options.except, { [EXCEPT_DATA_HEADER]: JSON.stringify(options.except) }, {}),

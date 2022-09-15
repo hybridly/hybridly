@@ -30,12 +30,14 @@ class RequestPropertiesResolver implements PropertiesResolver
         // The `only` and `except` headers contain json-encoded array data. We want to use them to
         // retrieve the properties whose paths they describe using dot-notation.
         // We only do that when the request is specifically for partial data though.
-        if ($partial && $only = array_filter(json_decode($this->request->header(Monolikit::ONLY_DATA_HEADER, ''), true) ?? [])) {
+        if ($partial && $this->request->hasHeader(Monolikit::ONLY_DATA_HEADER)) {
+            $only = array_filter(json_decode($this->request->header(Monolikit::ONLY_DATA_HEADER, ''), true) ?? []);
             $only = $this->convertPartialPropertiesCase($only);
             $properties = Arr::onlyDot($properties, array_merge($only, $persisted));
         }
 
-        if ($partial && $except = array_filter(json_decode($this->request->header(Monolikit::EXCEPT_DATA_HEADER, ''), true) ?? [])) {
+        if ($partial && $this->request->hasHeader(Monolikit::EXCEPT_DATA_HEADER)) {
+            $except = array_filter(json_decode($this->request->header(Monolikit::EXCEPT_DATA_HEADER, ''), true) ?? []);
             $except = $this->convertPartialPropertiesCase($except);
             $properties = Arr::exceptDot($properties, $except);
         }
