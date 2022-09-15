@@ -24,7 +24,10 @@ class Middleware
 
         hybridly()->setRootView(fn () => $this->rootView($request));
         hybridly()->setVersion(fn () => $this->version($request));
-        hybridly()->share($this->share($request));
+
+        if (method_exists($this, 'share')) {
+            hybridly()->share(app()->call([$this, 'share']));
+        }
 
         if ($this->shareValidationErrors) {
             hybridly()->share($this->shareValidationErrors($request));
@@ -84,14 +87,6 @@ class Middleware
     public function onEmptyResponse(Request $request, Response $response): Response
     {
         return $response;
-    }
-
-    /**
-     * Defines the properties that are shared to all requests.
-     */
-    public function share(Request $request): array
-    {
-        return [];
     }
 
     /**
