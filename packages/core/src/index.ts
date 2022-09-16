@@ -10,5 +10,8 @@ export type { Plugin } from './plugins'
 export { makeUrl, sameUrls } from './url'
 export type { UrlResolvable } from './url'
 
+export { can } from './authorization'
+export type { Authorizable } from './authorization'
+
 export * as constants from './constants'
 export * from './types'
