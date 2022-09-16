@@ -25,8 +25,30 @@ export default (options: RouterOptions = {}): Plugin => {
 
 	return {
 		name: ROUTER_PLUGIN_NAME,
-		configureServer() {
+		configureServer(server) {
 			write(resolved)
+			server.watcher.on('change', async(path) => {
+				if (!resolved.watch.some((regex) => regex.test(path))) {
+					return
+				}
+
+				const routes = await fetchRoutesFromArtisan(resolved)
+
+				// When routes changes, we want to update the routes by triggering
+				// a custom HMR event with the new updated route collection.
+				if (JSON.stringify(routes) !== JSON.stringify(previousRoutes)) {
+					debug.router('Updating routes via HMR:', routes)
+
+					server.ws.send({
+						type: 'custom',
+						event: ROUTER_HMR_UPDATE_ROUTE,
+						data: routes,
+					})
+
+					write(resolved)
+					previousRoutes = routes
+				}
+			})
 		},
 		resolveId(id) {
 			if (id === ROUTER_VIRTUAL_MODULE_ID) {
@@ -43,27 +65,6 @@ export default (options: RouterOptions = {}): Plugin => {
 			// Prevent triggering a page reload when the definition file is rewritten
 			if (typeof resolved.dts === 'string' && ctx.file.endsWith(resolved.dts)) {
 				return []
-			}
-
-			if (!resolved.watch.some((regex) => regex.test(ctx.file))) {
-				return
-			}
-
-			const routes = await fetchRoutesFromArtisan(resolved)
-
-			// When routes changes, we want to update the routes by triggering
-			// a custom HMR event with the new updated route collection.
-			if (JSON.stringify(routes) !== JSON.stringify(previousRoutes)) {
-				debug.router('Updating routes via HMR:', routes)
-
-				ctx.server.ws.send({
-					type: 'custom',
-					event: ROUTER_HMR_UPDATE_ROUTE,
-					data: routes,
-				})
-
-				write(resolved)
-				previousRoutes = routes
 			}
 		},
 		transform() {
