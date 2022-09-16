@@ -122,6 +122,18 @@ abstract class DataResource extends Data implements DataResourceContract
         return $data;
     }
 
+    public static function withoutMagicalCreationFrom(mixed ...$payloads): static
+    {
+        /** @var DataResource */
+        $data = parent::withoutMagicalCreationFrom(...$payloads);
+
+        if (\count($payloads) === 1 && $payloads[0] instanceof Model) {
+            $data->usingModel($payloads[0]);
+        }
+
+        return $data;
+    }
+
     public function transform(bool $transformValues = true, WrapExecutionType $wrapExecutionType = WrapExecutionType::Disabled): array
     {
         $this->authorization = Lazy::create(fn () => $this->getAuthorizationArray())->defaultIncluded();
