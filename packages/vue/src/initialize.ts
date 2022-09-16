@@ -18,7 +18,9 @@ export async function initializeHybridly(options: HybridlyOptions) {
 		throw new Error('No payload. Are you using `@hybridly` or the `payload` option?')
 	}
 
-	state.setView(await resolve(payload.view.name))
+	// This causes an issue on first load, the same component renders twice.
+	// Not sure of the side effects so let's keep it commented for now.
+	// state.setView(await resolve(payload.view.name))
 	state.setContext(await createRouter({
 		plugins: options.plugins,
 		serializer: options.serializer,
