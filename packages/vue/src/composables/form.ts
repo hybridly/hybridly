@@ -32,7 +32,7 @@ export function useForm<T extends Fields = Fields>(options: FormOptions<T>) {
 	/** Current fields. */
 	const fields = reactive<T>(clone(historyData?.fields ?? options.fields))
 	/** Validation errors for each field. */
-	const errors = ref<Record<string, any>>(historyData?.errors ?? {})
+	const errors = ref<Record<keyof T, string>>(historyData?.errors ?? {})
 	/** Whether the form is dirty. */
 	const isDirty = ref(false)
 	/** Whether the submission was recently successful. */
