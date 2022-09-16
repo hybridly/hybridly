@@ -52,7 +52,7 @@ class Middleware
         $response->headers->set('Vary', Hybridly::HYBRIDLY_HEADER);
 
         if (!$request->header(Hybridly::HYBRIDLY_HEADER)) {
-            return $next($request);
+            return $response;
         }
 
         // When handling GET requests, we need to check the version header received
