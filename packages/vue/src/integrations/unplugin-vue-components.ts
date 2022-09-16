@@ -19,5 +19,6 @@ export const MonolikitImports = {
 	],
 	'monolikit': [
 		'router',
+		'can',
 	],
 }
