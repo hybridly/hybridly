@@ -8,12 +8,18 @@ export function useProperties<T extends object, Global extends GlobalHybridlyPro
 }
 
 /** Accesses a property with a dot notation. */
-export function useProperty<T = GlobalHybridlyProperties, P extends Path<T> = Path<T>>(
+export function useProperty<
+	T = GlobalHybridlyProperties,
+	P extends Path<T> = Path<T>,
+	Fallback extends PathValue<T, P> = PathValue<T, P>
+>(
 	path: [P] extends [never] ? string : P,
-): ComputedRef<[PathValue<T, P>] extends [never] ? any : PathValue<T, P>> {
+	fallback?: Fallback,
+): ComputedRef<[PathValue<T, P>] extends [never] ? Fallback : PathValue<T, P>> {
 	return computed(() => (path as string)
 		.split('.')
-		.reduce((o: any, i: string) => o[i], state.context.value?.view.properties) as any,
+		.reduce((o: any, i: string) => o[i], state.context.value?.view.properties) as any
+		?? fallback,
 	)
 }
 
