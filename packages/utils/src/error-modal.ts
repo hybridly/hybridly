@@ -116,7 +116,7 @@ class Modal {
 		}
 
 		document.addEventListener('keydown', this.hideOnEscape)
-		document.body.style.overflow = 'hidden'
+		// document.body.style.overflow = 'hidden'
 		document.body.prepend(this.style)
 		document.body.prepend(this.overlay)
 
@@ -132,7 +132,7 @@ class Modal {
 			this.overlay.outerHTML = ''
 			this.overlay.remove()
 			this.style.remove()
-			document.body.style.overflow = 'visible'
+			// document.body.style.overflow = 'visible'
 			document.removeEventListener('keydown', this.hideOnEscape!)
 		}, this.animationDurationInMs)
 	}
