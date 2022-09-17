@@ -16,6 +16,10 @@ interface FormOptions<T extends Fields> extends Omit<VisitOptions, 'data' | 'url
 	transform?: (fields: T) => Fields
 }
 
+function safeClone<T>(obj: T): T {
+	return clone(toRaw(obj))
+}
+
 export function useForm<T extends Fields = Fields>(options: FormOptions<T>) {
 	const shouldRemember = options?.key !== false
 	const historyKey = options?.key as string ?? 'form:default'
@@ -26,11 +30,11 @@ export function useForm<T extends Fields = Fields>(options: FormOptions<T>) {
 	}
 
 	/** Fields that were initially set up. */
-	const initial = readonly(clone(options.fields))
+	const initial = readonly(safeClone(options.fields))
 	/** Fields as they were when loaded. */
-	const loaded = readonly(clone(historyData?.fields ?? options.fields))
+	const loaded = readonly(safeClone(historyData?.fields ?? options.fields))
 	/** Current fields. */
-	const fields = reactive<T>(clone(historyData?.fields ?? options.fields))
+	const fields = reactive<T>(safeClone(historyData?.fields ?? options.fields))
 	/** Validation errors for each field. */
 	const errors = ref<Record<keyof T, string>>(historyData?.errors ?? {})
 	/** Whether the form is dirty. */
@@ -53,7 +57,7 @@ export function useForm<T extends Fields = Fields>(options: FormOptions<T>) {
 		if (keys.length === 0) {
 			keys = Object.keys(fields)
 		}
-		keys.forEach((key) => Reflect.set(fields, key, Reflect.get(initial, key)))
+		keys.forEach((key) => Reflect.set(fields, key, safeClone(Reflect.get(initial, key))))
 		clearErrors()
 	}
 
@@ -73,7 +77,7 @@ export function useForm<T extends Fields = Fields>(options: FormOptions<T>) {
 			url: url ?? state.context.value?.url,
 			method: options.method ?? 'POST',
 			...optionsOverrides,
-			data: clone(toRaw(data)),
+			data: safeClone(data),
 			preserveState: optionsOverrides?.preserveState === undefined && options.method !== 'GET'
 				? true
 				: optionsOverrides?.preserveState,
