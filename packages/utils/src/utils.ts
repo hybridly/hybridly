@@ -30,15 +30,11 @@ export function match<TValue extends string | number = string, TReturnValue = un
 
 	const error = new Error(`Tried to handle "${value}" but there is no handler defined. Only defined handlers are: ${handlers}.`)
 
-	if (Error.captureStackTrace) {
-		Error.captureStackTrace(error, match)
-	}
-
 	throw error
 }
 
 export function debounce<F extends(...params: any[]) => ReturnType<F>>(fn: F, delay: number): F {
-	let timeoutID: NodeJS.Timeout
+	let timeoutID: ReturnType<typeof setTimeout>
 	return function(...args: unknown[]) {
 		clearTimeout(timeoutID)
 		timeoutID = setTimeout(() => fn(args), delay)
