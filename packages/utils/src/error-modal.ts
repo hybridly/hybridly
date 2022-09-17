@@ -13,7 +13,7 @@ class Modal {
 
 	static fromException(response: string) {
 		if (typeof response === 'string' && response.trim() !== '') {
-			return new Modal(response.toString())
+			return new Modal(`<style>${htmlStyle()}</style>${response.toString()}`)
 		}
 
 		return new Modal(`
@@ -67,8 +67,7 @@ class Modal {
 		overlay.style.overflow = 'hidden'
 
 		const iframe = document.createElement('iframe')
-		iframe.style.backgroundColor = '#111827'
-		iframe.style.color = 'white'
+		iframe.style.backgroundColor = '#050505'
 		iframe.style.width = '100%'
 		iframe.style.height = '100%'
 		iframe.style.borderRadius = '10px'
@@ -146,7 +145,7 @@ export function showPageComponentErrorModal(response: string): Modal {
 	return Modal.forPageComponent(response)
 }
 
-function style() {
+function htmlStyle() {
 	return `
 		html {
 			background-color: #050505;
@@ -156,6 +155,12 @@ function style() {
 			flex-direction: column;
 			height: 100%;
 		}
+	`
+}
+
+function style() {
+	return `
+		${htmlStyle()}
 		body {
 			padding: 5rem 2rem;
 			flex-grow: 1;
