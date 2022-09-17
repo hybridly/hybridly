@@ -50,7 +50,9 @@ export function useForm<T extends Fields = Fields>(options: FormOptions<T>) {
 	 * Resets the form to its initial values.
 	 */
 	function reset(...keys: (keyof T)[]) {
-		keys ??= Object.keys(fields)
+		if (keys.length === 0) {
+			keys = Object.keys(fields)
+		}
 		keys.forEach((key) => Reflect.set(fields, key, Reflect.get(initial, key)))
 		clearErrors()
 	}
