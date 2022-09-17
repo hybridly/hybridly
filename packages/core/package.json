@@ -10,14 +10,18 @@
   "bugs": {
     "url": "https://github.com/hybridly/hybridly/issues"
   },
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/hybridly/hybridly.git"
   },
   "funding": "https://github.com/sponsors/innocenzi",
-  "license": "MIT",
   "author": "Enzo Innocenzi <enzo@innocenzi.dev>",
   "sideEffects": false,
+  "files": [
+    "dist",
+    "*.d.ts"
+  ],
   "exports": {
     ".": {
       "require": "./dist/index.cjs",
@@ -28,20 +32,16 @@
   "main": "dist/index.cjs",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
-  "files": [
-    "dist",
-    "*.d.ts"
-  ],
   "scripts": {
     "build": "unbuild",
     "stub": "unbuild --stub"
   },
+  "peerDependencies": {
+    "axios": "^0.27"
+  },
   "dependencies": {
     "@hybridly/utils": "workspace:*",
     "qs": "^6.11.0"
-  },
-  "peerDependencies": {
-    "axios": "^0.27"
   },
   "devDependencies": {
     "axios": "^0.27.2",

@@ -1,7 +1,8 @@
 import defu from 'defu'
 import type { PartialDeep } from 'type-fest'
-import { initializeContext, RouterContext, RouterContextOptions } from '../src/context'
-import { VisitPayload } from '../src/router'
+import type { RouterContext, RouterContextOptions } from '../src/context'
+import { initializeContext } from '../src/context'
+import type { VisitPayload } from '../src/router'
 import { rest, server } from './server'
 
 export const noop = () => ({} as any)

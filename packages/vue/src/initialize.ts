@@ -1,11 +1,14 @@
-import { DefineComponent, h, Plugin as VuePlugin } from 'vue'
-import { createRouter, VisitPayload, ResolveComponent, RouterContext, RouterContextOptions, Plugin } from '@hybridly/core'
+import type { DefineComponent, Plugin as VuePlugin } from 'vue'
+import { h } from 'vue'
+import type { VisitPayload, ResolveComponent, RouterContext, RouterContextOptions, Plugin } from '@hybridly/core'
+import { createRouter } from '@hybridly/core'
 import { showPageComponentErrorModal, debug } from '@hybridly/utils'
-import { progress, ProgressOptions } from '@hybridly/progress-plugin'
+import type { ProgressOptions } from '@hybridly/progress-plugin'
+import { progress } from '@hybridly/progress-plugin'
 import { wrapper } from './components/wrapper'
 import { state } from './stores/state'
 import { plugin } from './devtools'
-import { RouteCollection } from './routes'
+import type { RouteCollection } from './routes'
 
 export async function initializeHybridly(options: HybridlyOptions) {
 	const { element, payload, resolve } = prepare(options)

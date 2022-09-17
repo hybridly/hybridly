@@ -1,7 +1,10 @@
 import qs from 'qs'
-import { h, defineComponent, PropType } from 'vue'
-import { router, Method, makeUrl, VisitOptions } from '@hybridly/core'
-import { debug, merge, RequestData } from '@hybridly/utils'
+import type { PropType } from 'vue'
+import { h, defineComponent } from 'vue'
+import type { Method, VisitOptions } from '@hybridly/core'
+import { router, makeUrl } from '@hybridly/core'
+import type { RequestData } from '@hybridly/utils'
+import { debug, merge } from '@hybridly/utils'
 
 export const Link = defineComponent({
 	name: 'Link',

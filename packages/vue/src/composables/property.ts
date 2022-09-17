@@ -1,4 +1,5 @@
-import { computed, ComputedRef, readonly } from 'vue'
+import type { ComputedRef } from 'vue'
+import { computed, readonly } from 'vue'
 import { state } from '../stores/state'
 import { toReactive } from '../utils'
 

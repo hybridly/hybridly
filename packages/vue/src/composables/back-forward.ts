@@ -1,4 +1,5 @@
-import { router, registerHook, RouterContext, VisitOptions } from '@hybridly/core'
+import type { RouterContext, VisitOptions } from '@hybridly/core'
+import { router, registerHook } from '@hybridly/core'
 import { state } from '../stores/state'
 
 type BackForwardCallback = (context: RouterContext) => void

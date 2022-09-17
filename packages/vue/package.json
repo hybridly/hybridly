@@ -12,15 +12,18 @@
   "bugs": {
     "url": "https://github.com/hybridly/hybridly/issues"
   },
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/hybridly/hybridly.git",
     "directory": "packages/vue"
   },
   "funding": "https://github.com/sponsors/innocenzi",
-  "license": "MIT",
   "author": "Enzo Innocenzi <enzo@innocenzi.dev>",
   "sideEffects": false,
+  "files": [
+    "dist"
+  ],
   "exports": {
     ".": {
       "require": "./dist/index.cjs",
@@ -31,12 +34,12 @@
   "main": "dist/index.cjs",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
-  "files": [
-    "dist"
-  ],
   "scripts": {
     "build": "unbuild",
     "stub": "unbuild --stub"
+  },
+  "peerDependencies": {
+    "vue": "^3.2.37"
   },
   "dependencies": {
     "@hybridly/core": "workspace:*",
@@ -55,8 +58,5 @@
     "@types/lodash.isequal": "^4.5.6",
     "@types/nprogress": "^0.2.0",
     "vue": "^3.2.39"
-  },
-  "peerDependencies": {
-    "vue": "^3.2.37"
   }
 }

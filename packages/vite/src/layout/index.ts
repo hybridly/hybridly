@@ -1,7 +1,8 @@
 import path from 'node:path'
-import { Plugin, normalizePath } from 'vite'
+import type { Plugin } from 'vite'
+import { normalizePath } from 'vite'
 import { LAYOUT_PLUGIN_NAME } from '../constants'
-import { LayoutOptions } from '../types'
+import type { LayoutOptions } from '../types'
 import { debug } from '../utils'
 
 const TEMPLATE_LAYOUT_REGEX = /<template +layout(?: *= *['"](?:(?:(\w+):)?(\w+))['"] *)?>/

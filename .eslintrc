@@ -1,6 +1,7 @@
 {
 	"extends": "@innocenzi/eslint-config",
 	"rules": {
-		"import/named": "off"
+		"import/named": "off",
+		"@typescript-eslint/consistent-type-imports": "error"
 	}
 }

@@ -1,7 +1,7 @@
 import { stringify } from 'qs'
 import { state } from '../stores/state'
 import { Route } from './route'
-import { RouteName, RouteParameters } from './types'
+import type { RouteName, RouteParameters } from './types'
 
 /**
  * A collection of Laravel routes. This class constitutes Ziggy's main API.

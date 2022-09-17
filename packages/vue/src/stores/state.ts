@@ -1,8 +1,9 @@
 import type { RouterContext } from '@hybridly/core'
 import { debug } from '@hybridly/utils'
-import { ComponentOptions, Ref, ref, shallowRef, triggerRef, unref } from 'vue'
-import { Layout } from '../composables/layout'
-import { RouteCollection } from '../routes'
+import type { ComponentOptions, Ref } from 'vue'
+import { ref, shallowRef, triggerRef, unref } from 'vue'
+import type { Layout } from '../composables/layout'
+import type { RouteCollection } from '../routes'
 
 type MaybeRef<T> = Ref<T> | T
 
