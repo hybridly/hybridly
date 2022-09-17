@@ -1,3 +1,4 @@
+import { RequestData } from '@hybridly/utils'
 import { AxiosResponse } from 'axios'
 import { Hooks } from '../plugins/hooks'
 import { UrlResolvable, UrlTransformable } from '../url'
@@ -75,6 +76,8 @@ export interface VisitOptions extends Omit<NavigationOptions, 'request'> {
 	errorBag?: string
 	/** Hooks for this visit. */
 	hooks?: Partial<Hooks>
+	/** If `true`, force the usage of a `FormData` object. */
+	useFormData?: boolean
 }
 
 export interface VisitResponse {
@@ -182,13 +185,6 @@ export interface VisitPayload {
 	/** The current asset version. */
 	version: string
 }
-
-export type RequestData = FormDataValue | FormData
-
-type FormDataObject = { [Key in string]: FormDataValue }
-type FormDataPrimitive = Blob | Date | boolean | number | File | string | null
-type FormDataArray = FormDataValue[]
-type FormDataValue = FormDataObject | FormDataPrimitive | FormDataArray
 
 export interface Progress {
 	/** Base event. */
