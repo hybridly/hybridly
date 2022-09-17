@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from 'axios'
 import qs from 'qs'
-import { showResponseErrorModal, match, merge, when, debug, random } from '@monolikit/utils'
+import { showResponseErrorModal, match, merge, when, debug, random, hasFiles, objectToFormData } from '@monolikit/utils'
 import { ERROR_BAG_HEADER, EXCEPT_DATA_HEADER, EXTERNAL_VISIT_HEADER, ONLY_DATA_HEADER, PARTIAL_COMPONENT_HEADER, MONOLIKIT_HEADER, VERSION_HEADER } from '../constants'
 import { NotAMonolikitResponseError, VisitCancelledError } from '../errors'
 import { getRouterContext, initializeContext, payloadFromContext, InternalRouterContext, RouterContextOptions, setContext } from '../context'
@@ -53,6 +53,12 @@ export async function visit(options: VisitOptions): Promise<VisitResponse> {
 	debug.router('Making a visit:', { context, options, visitId })
 
 	try {
+		// If applicable, converts the data to a `FormData` object.
+		if ((hasFiles(options.data) || options.useFormData) && !(options.data instanceof FormData)) {
+			options.data = objectToFormData(options.data)
+			debug.router('Converted data to FormData.', options.data)
+		}
+
 		// Before anything else, we fire the "before" event to make sure
 		// there was no user-specified handler returning "false".
 		if (!await runHooks('before', options.hooks, options)) {

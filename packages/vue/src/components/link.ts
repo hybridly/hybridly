@@ -1,7 +1,7 @@
 import qs from 'qs'
 import { h, defineComponent, PropType } from 'vue'
 import { router, Method, makeUrl, VisitOptions } from '@monolikit/core'
-import { debug, merge } from '@monolikit/utils'
+import { debug, merge, RequestData } from '@monolikit/utils'
 
 export const Link = defineComponent({
 	name: 'Link',
@@ -75,7 +75,7 @@ export const Link = defineComponent({
 			default: 'GET',
 		},
 		data: {
-			type: Object as PropType<Properties>,
+			type: Object as PropType<RequestData>,
 			default: () => ({}),
 		},
 		external: {
