@@ -30,15 +30,14 @@
   "types": "dist/index.d.ts",
   "files": [
     "dist",
-		"*.d.ts"
+    "*.d.ts"
   ],
   "scripts": {
     "build": "unbuild",
     "stub": "unbuild --stub"
   },
   "dependencies": {
-		"@monolikit/utils": "workspace:*",
-    "hookable": "^5.1.1",
+    "@monolikit/utils": "workspace:*",
     "qs": "^6.11.0"
   },
   "peerDependencies": {
@@ -46,6 +45,6 @@
   },
   "devDependencies": {
     "axios": "^0.27.2",
-    "defu": "^6.0.0"
+    "defu": "^6.1.0"
   }
 }
