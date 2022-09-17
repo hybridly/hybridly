@@ -11,15 +11,18 @@
   "bugs": {
     "url": "https://github.com/monolikit/monolikit/issues"
   },
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/monolikit/monolikit.git",
     "directory": "packages/progress-plugin"
   },
   "funding": "https://github.com/sponsors/innocenzi",
-  "license": "MIT",
   "author": "Enzo Innocenzi <enzo@innocenzi.dev>",
   "sideEffects": false,
+  "files": [
+    "dist"
+  ],
   "exports": {
     ".": {
       "require": "./dist/index.cjs",
@@ -30,9 +33,6 @@
   "main": "dist/index.cjs",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
-  "files": [
-    "dist"
-  ],
   "scripts": {
     "build": "unbuild",
     "stub": "unbuild --stub"

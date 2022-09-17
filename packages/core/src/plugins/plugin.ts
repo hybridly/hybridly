@@ -1,5 +1,6 @@
 import { debug } from '@monolikit/utils'
-import { getRouterContext, InternalRouterContext } from '../context'
+import type { InternalRouterContext } from '../context'
+import { getRouterContext } from '../context'
 import type { MaybePromise } from '../types'
 import type { Hooks } from './hooks'
 

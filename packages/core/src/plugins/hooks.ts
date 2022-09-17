@@ -1,5 +1,6 @@
 import type { AxiosResponse } from 'axios'
-import { getRouterContext, InternalRouterContext } from '../context'
+import type { InternalRouterContext } from '../context'
+import { getRouterContext } from '../context'
 import type { NavigationOptions, VisitOptions, Errors, Progress, VisitPayload } from '../router'
 import type { MaybePromise } from '../types'
 

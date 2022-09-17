@@ -1,4 +1,5 @@
-import { router, registerHook, RouterContext, VisitOptions } from '@monolikit/core'
+import type { RouterContext, VisitOptions } from '@monolikit/core'
+import { router, registerHook } from '@monolikit/core'
 import { state } from '../stores/state'
 
 type BackForwardCallback = (context: RouterContext) => void

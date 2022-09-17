@@ -1,11 +1,14 @@
-import { DefineComponent, h, Plugin as VuePlugin } from 'vue'
-import { createRouter, VisitPayload, ResolveComponent, RouterContext, RouterContextOptions, Plugin } from '@monolikit/core'
+import type { DefineComponent, Plugin as VuePlugin } from 'vue'
+import { h } from 'vue'
+import type { VisitPayload, ResolveComponent, RouterContext, RouterContextOptions, Plugin } from '@monolikit/core'
+import { createRouter } from '@monolikit/core'
 import { showPageComponentErrorModal, debug } from '@monolikit/utils'
-import { progress, ProgressOptions } from '@monolikit/progress-plugin'
+import type { ProgressOptions } from '@monolikit/progress-plugin'
+import { progress } from '@monolikit/progress-plugin'
 import { wrapper } from './components/wrapper'
 import { state } from './stores/state'
 import { plugin } from './devtools'
-import { RouteCollection } from './routes'
+import type { RouteCollection } from './routes'
 
 export async function initializeMonolikit(options: MonolikitOptions) {
 	const { element, payload, resolve } = prepare(options)

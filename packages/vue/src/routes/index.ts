@@ -1,5 +1,5 @@
 import { Router } from './router'
-import { RouteName, RouteParameters } from './types'
+import type { RouteName, RouteParameters } from './types'
 
 // Credits to Ziggy
 // @see https://github.com/tighten/ziggy

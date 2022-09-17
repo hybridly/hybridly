@@ -1,7 +1,10 @@
 import qs from 'qs'
-import { h, defineComponent, PropType } from 'vue'
-import { router, Method, makeUrl, VisitOptions } from '@monolikit/core'
-import { debug, merge, RequestData } from '@monolikit/utils'
+import type { PropType } from 'vue'
+import { h, defineComponent } from 'vue'
+import type { Method, VisitOptions } from '@monolikit/core'
+import { router, makeUrl } from '@monolikit/core'
+import type { RequestData } from '@monolikit/utils'
+import { debug, merge } from '@monolikit/utils'
 
 export const Link = defineComponent({
 	name: 'Link',

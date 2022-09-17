@@ -1,6 +1,7 @@
 import { setupDevtoolsPlugin } from '@vue/devtools-api'
 import { registerHook, registerHookOnce } from '@monolikit/core'
-import { App, Plugin, triggerRef } from 'vue'
+import type { App, Plugin } from 'vue'
+import { triggerRef } from 'vue'
 import { state } from './stores/state'
 
 declare const __VUE_PROD_DEVTOOLS__: boolean

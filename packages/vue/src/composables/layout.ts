@@ -1,4 +1,4 @@
-import { ComponentOptions } from 'vue'
+import type { ComponentOptions } from 'vue'
 import { state } from '../stores/state'
 
 export type Layout = ComponentOptions | (() => ComponentOptions) | [ComponentOptions]

@@ -1,4 +1,4 @@
-import { AxiosResponse } from 'axios'
+import type { AxiosResponse } from 'axios'
 import { debug } from '@monolikit/utils'
 import { EXTERNAL_VISIT_HEADER, STORAGE_EXTERNAL_KEY } from './constants'
 import { getRouterContext, setContext } from './context'

@@ -1,4 +1,4 @@
-import { PluginOption } from 'vite'
+import type { PluginOption } from 'vite'
 import layout from './layout'
 import router from './router'
 import type { Options } from './types'

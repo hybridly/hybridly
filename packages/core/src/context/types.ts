@@ -1,5 +1,5 @@
-import { Hooks } from '../plugins/hooks'
-import { Plugin } from '../plugins/plugin'
+import type { Hooks } from '../plugins/hooks'
+import type { Plugin } from '../plugins/plugin'
 import type { PendingVisit, ResolveComponent, SwapDialog, SwapView, View, VisitPayload } from '../router'
 
 /** Options for creating a router context. */

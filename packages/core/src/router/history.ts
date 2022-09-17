@@ -1,6 +1,7 @@
 import { debounce, debug } from '@monolikit/utils'
 import { SCROLL_REGION_ATTRIBUTE } from '../constants'
-import { getRouterContext, InternalRouterContext, RouterContextOptions, Serializer, setContext } from '../context'
+import type { InternalRouterContext, RouterContextOptions, Serializer } from '../context'
+import { getRouterContext, setContext } from '../context'
 import { saveScrollPositions } from '../scroll'
 import { makeUrl } from '../url'
 import { navigate } from './router'

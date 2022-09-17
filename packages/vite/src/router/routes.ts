@@ -1,6 +1,6 @@
 import { exec } from 'node:child_process'
 import { promisify } from 'node:util'
-import { RouterOptions } from '../types'
+import type { RouterOptions } from '../types'
 import { write } from './typegen'
 const shell = promisify(exec)
 

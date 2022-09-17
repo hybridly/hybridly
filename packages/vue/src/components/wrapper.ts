@@ -1,6 +1,7 @@
 import type { RouterContext } from '@monolikit/core'
 import { debug } from '@monolikit/utils'
-import { defineComponent, h, PropType } from 'vue'
+import type { PropType } from 'vue'
+import { defineComponent, h } from 'vue'
 import { state } from '../stores/state'
 
 export const wrapper = defineComponent({

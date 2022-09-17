@@ -1,7 +1,7 @@
-import { RequestData } from '@monolikit/utils'
-import { AxiosResponse } from 'axios'
-import { Hooks } from '../plugins/hooks'
-import { UrlResolvable, UrlTransformable } from '../url'
+import type { RequestData } from '@monolikit/utils'
+import type { AxiosResponse } from 'axios'
+import type { Hooks } from '../plugins/hooks'
+import type { UrlResolvable, UrlTransformable } from '../url'
 
 export type ConditionalNavigationOption = boolean | ((payload: VisitPayload) => boolean)
 

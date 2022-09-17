@@ -1,6 +1,6 @@
 import { parse } from 'qs'
 import { state } from '../stores/state'
-import { RouteDefinition, RouteName } from './types'
+import type { RouteDefinition, RouteName } from './types'
 
 /**
  * A Laravel route. This class represents one route and its configuration and metadata.
