@@ -13,11 +13,11 @@ export const MonolikitImports = {
 		'useHistoryState',
 		'usePaginator',
 		'useLayout',
-		'registerHook',
-		'registerHookOnce',
 		'route',
 	],
 	'monolikit': [
+		'registerHook',
+		'registerHookOnce',
 		'router',
 		'can',
 	],
