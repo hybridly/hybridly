@@ -13,11 +13,11 @@ export const HybridlyImports = {
 		'useHistoryState',
 		'usePaginator',
 		'useLayout',
-		'registerHook',
-		'registerHookOnce',
 		'route',
 	],
 	'hybridly': [
+		'registerHook',
+		'registerHookOnce',
 		'router',
 		'can',
 	],
