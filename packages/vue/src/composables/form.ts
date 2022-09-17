@@ -1,5 +1,5 @@
 import isEqual from 'lodash.isequal'
-import clone from 'lodash.clone'
+import clone from 'lodash.clonedeep'
 import type { UrlResolvable, VisitOptions } from '@monolikit/core'
 import { computed, reactive, readonly, ref, toRaw, watch } from 'vue'
 import { router } from '@monolikit/core'
