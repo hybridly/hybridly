@@ -106,12 +106,12 @@ importers:
       '@hybridly/progress-plugin': workspace:*
       '@hybridly/utils': workspace:*
       '@types/lodash': ^4.14.185
-      '@types/lodash.clone': ^4.5.7
+      '@types/lodash.clonedeep': ^4.5.7
       '@types/lodash.isequal': ^4.5.6
       '@types/nprogress': ^0.2.0
       '@vue/devtools-api': ^6.2.1
       defu: ^6.1.0
-      lodash.clone: ^4.5.0
+      lodash.clonedeep: ^4.5.0
       lodash.isequal: ^4.5.0
       nprogress: ^0.2.0
       qs: ^6.11.0
@@ -122,13 +122,13 @@ importers:
       '@hybridly/utils': link:../utils
       '@vue/devtools-api': 6.2.1
       defu: 6.1.0
-      lodash.clone: 4.5.0
+      lodash.clonedeep: 4.5.0
       lodash.isequal: 4.5.0
       nprogress: 0.2.0
       qs: 6.11.0
     devDependencies:
       '@types/lodash': 4.14.185
-      '@types/lodash.clone': 4.5.7
+      '@types/lodash.clonedeep': 4.5.7
       '@types/lodash.isequal': 4.5.6
       '@types/nprogress': 0.2.0
       vue: 3.2.39
@@ -450,8 +450,8 @@ packages:
     resolution: {integrity: sha512-dRLjCWHYg4oaA77cxO64oO+7JwCwnIzkZPdrrC71jQmQtlhM556pwKo5bUzqvZndkVbeFLIIi+9TC40JNF5hNQ==}
     dev: true
 
-  /@types/lodash.clone/4.5.7:
-    resolution: {integrity: sha512-jugWYM+xBUQCpWbn7p6BSbf8bRMHtJYnEIGZYngbStaU0aN4VFgAAkGgsc+MtHuepBOmjyUGiGv+dHnQQIGLZA==}
+  /@types/lodash.clonedeep/4.5.7:
+    resolution: {integrity: sha512-ccNqkPptFIXrpVqUECi60/DFxjNKsfoQxSQsgcBJCX/fuX1wgyQieojkcWH/KpE3xzLoWN/2k+ZeGqIN3paSvw==}
     dependencies:
       '@types/lodash': 4.14.185
     dev: true
@@ -2976,8 +2976,8 @@ packages:
       p-locate: 5.0.0
     dev: true
 
-  /lodash.clone/4.5.0:
-    resolution: {integrity: sha1-GVhwRQ9aExkkeN9Lw9I9LeoZB7Y=}
+  /lodash.clonedeep/4.5.0:
+    resolution: {integrity: sha512-H5ZhCF25riFd9uB5UCkVKo61m3S/xZk1x4wA6yp/L3RFP6Z/eHH1ymQcGLo7J3GMPfm0V/7m1tryHuGVxpqEBQ==}
     dev: false
 
   /lodash.isequal/4.5.0:
