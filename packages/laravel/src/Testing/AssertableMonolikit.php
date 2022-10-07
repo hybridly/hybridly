@@ -64,6 +64,11 @@ class AssertableMonolikit extends AssertableJson
         return $this;
     }
 
+    public function hasProperty(string $key, $length = null, \Closure $callback = null): self
+    {
+        return $this->has('properties.' . $key, $length, $callback);
+    }
+
     public function url(string $value): self
     {
         PHPUnit::assertSame($value, $this->url, 'Unexpected Monolikit page url.');
