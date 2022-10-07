@@ -42,4 +42,14 @@ class TestResponseMacros
             return $this;
         };
     }
+
+    public function hasMonolikitProperties(): Closure
+    {
+        return function (array $keys): TestResponse {
+            /** @var TestResponse $this */
+            AssertableMonolikit::fromTestResponse($this)->hasProperties($keys);
+
+            return $this;
+        };
+    }
 }
