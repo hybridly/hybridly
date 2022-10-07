@@ -4,18 +4,18 @@ namespace Monolikit;
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Router;
+use Illuminate\Testing\TestResponse;
 use Illuminate\View\Compilers\BladeCompiler;
+use Illuminate\View\FileViewFinder;
 use Monolikit\Commands\I18nCommand;
 use Monolikit\Commands\InstallCommand;
 use Monolikit\Commands\RoutesCommand;
 use Monolikit\Http\Controller;
 use Monolikit\PropertiesResolver\PropertiesResolver;
 use Monolikit\PropertiesResolver\RequestPropertiesResolver;
+use Monolikit\Testing\TestResponseMacros;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use Illuminate\Testing\TestResponse;
-use Monolikit\Testing\TestResponseMacros;
-use Illuminate\View\FileViewFinder;
 
 class MonolikitServiceProvider extends PackageServiceProvider
 {
@@ -40,7 +40,7 @@ class MonolikitServiceProvider extends PackageServiceProvider
             return new FileViewFinder(
                 $app['files'],
                 $app['config']->get('monolikit.testing.page_paths'),
-                $app['config']->get('monolikit.testing.page_extensions')
+                $app['config']->get('monolikit.testing.page_extensions'),
             );
         });
     }

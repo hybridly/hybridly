@@ -51,24 +51,18 @@ return [
     */
 
     'testing' => [
-
         'ensure_pages_exist' => true,
 
         'page_paths' => [
-
             resource_path('views/pages'),
-
         ],
 
         'page_extensions' => [
-
             'js',
             'jsx', // Is this needed ?
             'ts',
             'tsx', // Is this needed ?
             'vue',
-
         ],
-
     ],
 ];

@@ -11,7 +11,7 @@ class TestResponseMacros
         return function (Closure $callback = null) {
             $assert = AssertableMonolikit::fromTestResponse($this);
 
-            if (is_null($callback)) {
+            if (\is_null($callback)) {
                 return $this;
             }
 

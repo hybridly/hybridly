@@ -24,7 +24,7 @@ class AssertableMonolikit extends AssertableJson
         try {
             $response->assertViewHas('payload');
             $payload = json_decode(json_encode($response->viewData('payload')), true);
-            
+
             PHPUnit::assertIsArray($payload);
             PHPUnit::assertArrayHasKey('view', $payload);
             // TODO: Assert view.name and view.properties
@@ -49,7 +49,7 @@ class AssertableMonolikit extends AssertableJson
     {
         PHPUnit::assertSame($value, $this->view, 'Unexpected Monolikit page view.');
 
-        if ($shouldExist || (is_null($shouldExist) && config('monolikit.testing.ensure_pages_exist', true))) {
+        if ($shouldExist || (\is_null($shouldExist) && config('monolikit.testing.ensure_pages_exist', true))) {
             try {
                 app('monolikit.testing.view-finder')->find($value);
             } catch (InvalidArgumentException $exception) {
