@@ -37,4 +37,38 @@ return [
         'lang_path' => base_path('lang'),
         'write_path' => resource_path('scripts/i18n.json'),
     ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Testing
+    |--------------------------------------------------------------------------
+    |
+    | The values described here are used to locate Monolikit views on the
+    | filesystem. For instance, when using `assertMonolikit`, the assertion
+    | attempts to locate the view as a file relative to any of the
+    | paths AND with any of the extensions specified here.
+    |
+    */
+
+    'testing' => [
+
+        'ensure_pages_exist' => true,
+
+        'page_paths' => [
+
+            resource_path('views/pages'),
+
+        ],
+
+        'page_extensions' => [
+
+            'js',
+            'jsx', // Is this needed ?
+            'ts',
+            'tsx', // Is this needed ?
+            'vue',
+
+        ],
+
+    ],
 ];

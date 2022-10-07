@@ -13,6 +13,9 @@ use Monolikit\PropertiesResolver\PropertiesResolver;
 use Monolikit\PropertiesResolver\RequestPropertiesResolver;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
+use Illuminate\Testing\TestResponse;
+use Monolikit\Testing\TestResponseMacros;
+use Illuminate\View\FileViewFinder;
 
 class MonolikitServiceProvider extends PackageServiceProvider
 {
@@ -31,6 +34,15 @@ class MonolikitServiceProvider extends PackageServiceProvider
         $this->registerBindings();
         $this->registerDirectives();
         $this->registerMacros();
+        $this->registerTestingMacros();
+
+        $this->app->bind('monolikit.testing.view-finder', function ($app) {
+            return new FileViewFinder(
+                $app['files'],
+                $app['config']->get('monolikit.testing.page_paths'),
+                $app['config']->get('monolikit.testing.page_extensions')
+            );
+        });
     }
 
     protected function registerMacros(): void
@@ -72,5 +84,14 @@ class MonolikitServiceProvider extends PackageServiceProvider
                 return implode(' ', array_map('trim', explode("\n", $template)));
             });
         });
+    }
+
+    protected function registerTestingMacros(): void
+    {
+        if (class_exists(TestResponse::class)) {
+            TestResponse::mixin(new TestResponseMacros());
+
+            return;
+        }
     }
 }
