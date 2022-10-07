@@ -42,14 +42,11 @@ return [
     |--------------------------------------------------------------------------
     | Testing
     |--------------------------------------------------------------------------
-    |
     | The values described here are used to locate Monolikit views on the
     | filesystem. For instance, when using `assertMonolikit`, the assertion
     | attempts to locate the view as a file relative to any of the
     | paths AND with any of the extensions specified here.
-    |
     */
-
     'testing' => [
         'ensure_pages_exist' => true,
 
@@ -59,9 +56,9 @@ return [
 
         'page_extensions' => [
             'js',
-            'jsx', // Is this needed ?
+            'jsx',
             'ts',
-            'tsx', // Is this needed ?
+            'tsx',
             'vue',
         ],
     ],
