@@ -27,7 +27,8 @@ class AssertableMonolikit extends AssertableJson
 
             PHPUnit::assertIsArray($payload);
             PHPUnit::assertArrayHasKey('view', $payload);
-            // TODO: Assert view.name and view.properties
+            PHPUnit::assertArrayHasKey('name', $payload['view']);
+            PHPUnit::assertArrayHasKey('properties', $payload['view']);
             PHPUnit::assertArrayHasKey('dialog', $payload);
             PHPUnit::assertArrayHasKey('url', $payload);
             PHPUnit::assertArrayHasKey('version', $payload);
