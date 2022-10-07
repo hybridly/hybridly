@@ -14,6 +14,9 @@ class AssertableMonolikit extends AssertableJson
     private $view;
 
     /** @var string */
+    private $dialog;
+
+    /** @var string */
     private $url;
 
     /** @var string|null */
@@ -75,7 +78,7 @@ class AssertableMonolikit extends AssertableJson
         return $this;
     }
 
-    public function toArray()
+    public function toArray(): array
     {
         return [
             'view' => $this->view,

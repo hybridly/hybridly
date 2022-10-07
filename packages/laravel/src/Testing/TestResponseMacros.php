@@ -3,12 +3,14 @@
 namespace Monolikit\Testing;
 
 use Closure;
+use Illuminate\Testing\TestResponse;
 
 class TestResponseMacros
 {
-    public function assertMonolikit()
+    public function assertMonolikit(): callable
     {
-        return function (Closure $callback = null) {
+        return function (Closure $callback = null): TestResponse {
+            /** @var TestResponse $this */
             $assert = AssertableMonolikit::fromTestResponse($this);
 
             if (\is_null($callback)) {
@@ -21,9 +23,10 @@ class TestResponseMacros
         };
     }
 
-    public function monolikitPage()
+    public function monolikitPage(): callable
     {
-        return function () {
+        return function (): array {
+            /** @var TestResponse $this */
             return AssertableMonolikit::fromTestResponse($this)->toArray();
         };
     }
