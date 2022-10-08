@@ -4,7 +4,7 @@
  */
 export function HybridlyResolver(options: AutoImportResolverOptions = {}) {
 	options = {
-		linkName: 'Link',
+		linkName: 'RouterLink',
 		...options,
 	}
 
@@ -13,7 +13,7 @@ export function HybridlyResolver(options: AutoImportResolverOptions = {}) {
 		resolve: (name: string) => {
 			if (name === options.linkName) {
 				return {
-					name: 'Link',
+					name: 'RouterLink',
 					as: options.linkName,
 					from: 'hybridly/vue',
 				}

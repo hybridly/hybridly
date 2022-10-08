@@ -6,8 +6,8 @@ import { router, makeUrl } from '@hybridly/core'
 import type { RequestData } from '@hybridly/utils'
 import { debug, merge } from '@hybridly/utils'
 
-export const Link = defineComponent({
-	name: 'Link',
+export const RouterLink = defineComponent({
+	name: 'RouterLink',
 	setup(_, { slots, attrs }) {
 		return (props: typeof _) => {
 			let data = props.data ?? {}
