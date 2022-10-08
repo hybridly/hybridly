@@ -6,11 +6,11 @@ import { state } from '../stores/state'
 
 export const wrapper = defineComponent({
 	name: 'Hybridly',
-	setup({ context }) {
+	setup(props) {
 		if (typeof window !== 'undefined') {
-			state.setContext(context)
+			state.setContext(props.context)
 
-			if (!context) {
+			if (!props.context) {
 				throw new Error('Hybridly was not properly initialized. The context is missing.')
 			}
 		}
