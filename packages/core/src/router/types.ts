@@ -1,5 +1,5 @@
 import type { RequestData } from '@hybridly/utils'
-import type { AxiosResponse } from 'axios'
+import type { AxiosProgressEvent, AxiosResponse } from 'axios'
 import type { Hooks } from '../plugins/hooks'
 import type { UrlResolvable, UrlTransformable } from '../url'
 
@@ -188,7 +188,7 @@ export interface VisitPayload {
 
 export interface Progress {
 	/** Base event. */
-	event: ProgressEvent
+	event: AxiosProgressEvent
 	/** Computed percentage. */
 	percentage: Readonly<number>
 }

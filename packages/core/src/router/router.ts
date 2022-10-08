@@ -1,4 +1,4 @@
-import type { AxiosResponse } from 'axios'
+import type { AxiosProgressEvent, AxiosResponse } from 'axios'
 import axios from 'axios'
 import qs from 'qs'
 import { showResponseErrorModal, match, merge, when, debug, random, hasFiles, objectToFormData } from '@hybridly/utils'
@@ -119,10 +119,10 @@ export async function visit(options: VisitOptions): Promise<VisitResponse> {
 				'Accept': 'text/html, application/xhtml+xml',
 			},
 			validateStatus: () => true,
-			onUploadProgress: async(event: ProgressEvent) => {
+			onUploadProgress: async(event: AxiosProgressEvent) => {
 				await runHooks('progress', options.hooks, {
 					event,
-					percentage: Math.round(event.loaded / event.total * 100),
+					percentage: Math.round(event.loaded / (event.total ?? 0) * 100),
 				})
 			},
 		})
@@ -135,7 +135,7 @@ export async function visit(options: VisitOptions): Promise<VisitResponse> {
 		if (isExternalResponse(response)) {
 			debug.router('The response is explicitely external.')
 			await performExternalVisit({
-				url: fillHash(context.activeVisit!.url, response.headers[EXTERNAL_VISIT_HEADER]),
+				url: fillHash(context.activeVisit!.url, response.headers[EXTERNAL_VISIT_HEADER]!),
 				preserveScroll: options.preserveScroll === true,
 			})
 
