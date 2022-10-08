@@ -5,7 +5,6 @@ dist
 node_modules
 .php-cs-fixer.cache
 coverage
-docs
 phpstan.neon
 testbench.yaml
 vendor

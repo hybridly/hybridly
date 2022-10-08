@@ -9,7 +9,10 @@
     "stub": "pnpm -r --parallel run stub",
     "test": "pnpm run test:vitest && pnpm run test:pest",
     "test:vitest": "vitest test --run",
-    "test:pest": "composer test"
+    "test:pest": "composer test",
+    "docs:dev": "vitepress dev docs",
+    "docs:build": "vitepress build docs",
+    "docs:serve": "vitepress serve docs"
   },
   "devDependencies": {
     "@innocenzi/eslint-config": "^0.12.0",
@@ -27,8 +30,11 @@
     "type-fest": "^3.0.0",
     "typescript": "^4.8.4",
     "unbuild": "0.8.11",
-    "vite": "^3.1.1",
-    "vitest": "^0.23.2"
+    "unocss": "^0.45.28",
+    "vite": "^3.1.6",
+    "vitepress": "1.0.0-alpha.19",
+    "vitest": "^0.24.0",
+    "vue": "^3.2.40"
   },
   "pnpm": {
     "overrides": {
