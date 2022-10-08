@@ -6,8 +6,8 @@ import { router, makeUrl } from '@monolikit/core'
 import type { RequestData } from '@monolikit/utils'
 import { debug, merge } from '@monolikit/utils'
 
-export const Link = defineComponent({
-	name: 'Link',
+export const RouterLink = defineComponent({
+	name: 'RouterLink',
 	setup(_, { slots, attrs }) {
 		return (props: typeof _) => {
 			let data = props.data ?? {}

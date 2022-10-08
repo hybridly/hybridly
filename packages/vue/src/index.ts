@@ -1,5 +1,5 @@
 export { initializeMonolikit } from './initialize'
-export { Link } from './components/link'
+export { RouterLink } from './components/link'
 
 export { router } from '@monolikit/core'
 
