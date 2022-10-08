@@ -1,5 +1,6 @@
 export type RequestData = Record<string, FormDataConvertible> | FormDataConvertible | FormData
 export type FormDataConvertible =
+	| { [key: string]: FormDataConvertible }
 	| Array<FormDataConvertible>
 	| Blob
 	| File
@@ -9,6 +10,7 @@ export type FormDataConvertible =
 	| number
 	| null
 	| undefined
+	| string
 
 /**
  * Checks if the given object has a file.
