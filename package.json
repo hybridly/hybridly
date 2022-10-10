@@ -6,7 +6,6 @@
     "dev": "pnpm stub",
     "lint": "eslint \"**/*.{ts,vue,mjs}\"",
     "lint:fix": "pnpm lint -- --fix",
-    "release": "bumpp package.json packages/*/package.json --commit --push --tag",
     "stub": "pnpm -r --parallel run stub",
     "test": "pnpm run test:vitest && pnpm run test:pest",
     "test:vitest": "vitest test --run",
@@ -49,5 +48,5 @@
         "@types/react"
       ]
     }
-  },
+  }
 }

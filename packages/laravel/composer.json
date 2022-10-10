@@ -1,52 +1,46 @@
 {
-	"name": "hybridly/laravel",
-	"description": "Server-driven, client-rendered application.",
-	"license": "MIT",
-	"homepage": "https://github.com/hybridly/hybridly",
-	"support": {
-			"issues": "https://github.com/hybridly/hybridly/issues",
-			"source": "https://github.com/hybridly/hybridly"
-	},
-	"keywords": [
-		"laravel",
-		"hybridly",
-		"inertiajs",
-		"vite",
-		"vuejs"
-	],
-	"authors": [
-		{
-			"name": "Enzo Innocenzi",
-			"email": "enzo@innocenzi.dev",
-			"role": "Developer"
-		}
-	],
-	"require": {
-		"php": "^8.0",
-		"spatie/laravel-package-tools": "^1.9.2",
-		"illuminate/contracts": "^9.0"
-	},
-	"autoload": {
-		"psr-4": {
-			"Hybridly\\": "src"
-		},
-		"files": [
-			"src/helpers.php"
-		]
-	},
-	"config": {
-		"sort-packages": true
-	},
-	"extra": {
-		"laravel": {
-			"providers": [
-				"Hybridly\\HybridlyServiceProvider"
-			],
-			"aliases": {
-				"Hybridly": "Hybridly\\Facades\\Hybridly"
-			}
-		}
-	},
-	"minimum-stability": "dev",
-	"prefer-stable": true
+    "name": "hybridly/laravel",
+    "description": "Server-driven, client-rendered application.",
+    "license": "MIT",
+    "homepage": "https://github.com/hybridly/hybridly",
+    "support": {
+        "issues": "https://github.com/hybridly/hybridly/issues",
+        "source": "https://github.com/hybridly/hybridly"
+    },
+    "keywords": ["laravel", "hybridly", "inertiajs", "vite", "vuejs"],
+    "authors": [
+        {
+            "name": "Enzo Innocenzi",
+            "email": "enzo@innocenzi.dev",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": "^8.0",
+        "spatie/laravel-package-tools": "^1.9.2",
+        "illuminate/contracts": "^9.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Hybridly\\": "src"
+        },
+        "files": [
+            "src/helpers.php"
+        ]
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Hybridly\\HybridlyServiceProvider"
+            ],
+            "aliases": {
+                "Hybridly": "Hybridly\\Facades\\Hybridly"
+            }
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }

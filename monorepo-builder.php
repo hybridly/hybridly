@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Build\ReleaseNpmPackagesWorker;
 use Symplify\MonorepoBuilder\Config\MBConfig;
 use Symplify\MonorepoBuilder\Release\ReleaseWorker\PushNextDevReleaseWorker;
 use Symplify\MonorepoBuilder\Release\ReleaseWorker\SetCurrentMutualDependenciesReleaseWorker;
@@ -19,6 +20,7 @@ return static function (MBConfig $configurator): void {
         SetCurrentMutualDependenciesReleaseWorker::class,
         SetNextMutualDependenciesReleaseWorker::class,
         UpdateBranchAliasReleaseWorker::class,
-        PushNextDevReleaseWorker::class,
+        // PushNextDevReleaseWorker::class,
+        ReleaseNpmPackagesWorker::class,
     ]);
 };

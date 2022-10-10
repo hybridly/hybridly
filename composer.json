@@ -42,6 +42,13 @@
             "Hybridly\\Tests\\Database\\Factories\\": "tests/database/factories"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Build\\": [
+                "build"
+            ]
+        }
+    },
     "extra": {
         "laravel": {
             "providers": [
@@ -73,7 +80,7 @@
         ]
     },
     "replace": {
-        "hybridly/laravel": "self.version"
+        "hybridly/laravel": "0.0.1-beta.1"
     },
     "minimum-stability": "dev",
     "prefer-stable": true
