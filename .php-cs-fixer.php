@@ -2,8 +2,9 @@
 
 $finder = Symfony\Component\Finder\Finder::create()
     ->in([
+        __DIR__ . '/build',
+        __DIR__ . '/tests',
         __DIR__ . '/packages/laravel/src',
-        __DIR__ . '/packages/laravel/tests',
         __DIR__ . '/packages/laravel/config',
     ])
     ->name('*.php')
