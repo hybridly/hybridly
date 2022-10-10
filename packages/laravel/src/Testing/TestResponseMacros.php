@@ -11,7 +11,7 @@ class TestResponseMacros
     {
         return function (Closure $callback = null): TestResponse {
             /** @var TestResponse $this */
-            $assert = AssertableMonolikit::fromTestResponse($this);
+            $assert = Assertable::fromTestResponse($this);
 
             if (\is_null($callback)) {
                 return $this;
@@ -27,7 +27,7 @@ class TestResponseMacros
     {
         return function (string $view): TestResponse {
             /** @var TestResponse $this */
-            AssertableMonolikit::fromTestResponse($this)->view($view);
+            Assertable::fromTestResponse($this)->view($view);
 
             return $this;
         };
@@ -37,7 +37,7 @@ class TestResponseMacros
     {
         return function (string $key, $length = null, \Closure $callback = null): TestResponse {
             /** @var TestResponse $this */
-            AssertableMonolikit::fromTestResponse($this)->hasProperty($key, $length, $callback);
+            Assertable::fromTestResponse($this)->hasProperty($key, $length, $callback);
 
             return $this;
         };
@@ -47,7 +47,7 @@ class TestResponseMacros
     {
         return function (array $keys): TestResponse {
             /** @var TestResponse $this */
-            AssertableMonolikit::fromTestResponse($this)->hasProperties($keys);
+            Assertable::fromTestResponse($this)->hasProperties($keys);
 
             return $this;
         };

@@ -8,19 +8,12 @@ use InvalidArgumentException;
 use PHPUnit\Framework\Assert as PHPUnit;
 use PHPUnit\Framework\AssertionFailedError;
 
-class AssertableMonolikit extends AssertableJson
+class Assertable extends AssertableJson
 {
-    /** @var string */
-    private $view;
-
-    /** @var string */
-    private $dialog;
-
-    /** @var string */
-    private $url;
-
-    /** @var string|null */
-    private $version;
+    protected string $view;
+    protected string $dialog;
+    protected string $url;
+    protected ?string $version;
 
     public static function fromTestResponse(TestResponse $response): self
     {
@@ -35,7 +28,7 @@ class AssertableMonolikit extends AssertableJson
             PHPUnit::assertArrayHasKey('dialog', $payload);
             PHPUnit::assertArrayHasKey('url', $payload);
             PHPUnit::assertArrayHasKey('version', $payload);
-        } catch (AssertionFailedError $e) {
+        } catch (AssertionFailedError) {
             PHPUnit::fail('Not a valid Monolikit response.');
         }
 
@@ -56,7 +49,7 @@ class AssertableMonolikit extends AssertableJson
         if ($shouldExist || (\is_null($shouldExist) && config('monolikit.testing.ensure_pages_exist', true))) {
             try {
                 app('monolikit.testing.view-finder')->find($value);
-            } catch (InvalidArgumentException $exception) {
+            } catch (InvalidArgumentException) {
                 PHPUnit::fail(sprintf('Monolikit page view file [%s] does not exist.', $value));
             }
         }
@@ -64,9 +57,12 @@ class AssertableMonolikit extends AssertableJson
         return $this;
     }
 
-    public function hasProperty(string $key, $length = null, \Closure $callback = null): self
+    /**
+     * Ensures the given property exists. Dot-notation is supported.
+     */
+    public function hasProperty(string|int $key, int|\Closure|null $length = null, \Closure|null $callback = null): self
     {
-        return $this->has('properties.' . $key, $length, $callback);
+        return $this->has('properties.' . (string) $key, $length, $callback);
     }
 
     public function hasProperties(array $keys): self
