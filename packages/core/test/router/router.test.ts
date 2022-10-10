@@ -7,7 +7,7 @@ beforeEach(() => {
 	fakeRouterContext()
 })
 
-it('performs hybridly visits', async() => {
+it.skip('performs hybridly visits', async() => {
 	mockUrl('http://localhost.test/visit', {
 		json: fakeVisitPayload({
 			url: 'https://localhost.test/visit',
