@@ -48,7 +48,7 @@ class Assertable extends AssertableJson
 
         if ($shouldExist || (\is_null($shouldExist) && config('monolikit.testing.ensure_pages_exist', true))) {
             try {
-                app('monolikit.testing.view-finder')->find($value);
+                app('monolikit.testing.view_finder')->find($value);
             } catch (InvalidArgumentException) {
                 PHPUnit::fail(sprintf('Monolikit page view file [%s] does not exist.', $value));
             }

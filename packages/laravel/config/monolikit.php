@@ -49,11 +49,10 @@ return [
     */
     'testing' => [
         'ensure_pages_exist' => true,
-
+        'view_finder' => null,
         'page_paths' => [
             resource_path('views/pages'),
         ],
-
         'page_extensions' => [
             'js',
             'jsx',
