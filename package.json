@@ -3,13 +3,6 @@
   "version": "0.0.1-dev.1",
   "scripts": {
     "build": "pnpm -r build",
-    "dev": "pnpm stub",
-    "lint": "eslint \"**/*.{ts,vue,mjs}\"",
-    "lint:fix": "pnpm lint -- --fix",
-    "stub": "pnpm -r --parallel run stub",
-    "test": "pnpm run test:vitest && pnpm run test:pest",
-    "test:vitest": "vitest test --run",
-    "test:pest": "composer test",
     "docs:dev": "vitepress dev docs",
     "docs:build": "vitepress build docs",
     "docs:serve": "vitepress serve docs"

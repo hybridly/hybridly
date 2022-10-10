@@ -67,17 +67,28 @@
         }
     },
     "scripts": {
-        "monorepo:merge": "vendor/bin/monorepo-builder merge",
-        "monorepo:validate": "vendor/bin/monorepo-builder validate",
-        "analyze": "vendor/bin/phpstan analyse",
-        "style": "vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.php --allow-risky=yes",
-        "test:pest": "pest",
-        "test:vitest": "pnpm run test:vitest",
         "test": [
             "@monorepo:validate",
             "@test:pest",
-            "@test:vitest"
-        ]
+            "@test:vitest",
+            "@style",
+            "@build"
+        ],
+        "style:fix": [
+            "vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.php --allow-risky=yes",
+            "pnpm eslint \"**/*.{ts,vue,mjs}\" --fix"
+        ],
+        "style": [
+            "vendor/bin/php-cs-fixer fix --dry-run --config=.php-cs-fixer.php --allow-risky=yes",
+            "pnpm eslint \"**/*.{ts,vue,mjs}\""
+        ],
+        "release": "vendor/bin/monorepo-builder release",
+        "build": "pnpm -r build",
+        "monorepo:merge": "vendor/bin/monorepo-builder merge",
+        "monorepo:validate": "vendor/bin/monorepo-builder validate",
+        "analyze": "vendor/bin/phpstan analyse",
+        "test:pest": "pest",
+        "test:vitest": "pnpm vitest test --run"
     },
     "replace": {
         "hybridly/laravel": "0.0.1-beta.1"
