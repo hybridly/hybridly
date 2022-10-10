@@ -4,13 +4,16 @@ namespace Hybridly;
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Router;
+use Illuminate\Testing\TestResponse;
 use Illuminate\View\Compilers\BladeCompiler;
+use Illuminate\View\FileViewFinder;
 use Hybridly\Commands\I18nCommand;
 use Hybridly\Commands\InstallCommand;
 use Hybridly\Commands\RoutesCommand;
 use Hybridly\Http\Controller;
 use Hybridly\PropertiesResolver\PropertiesResolver;
 use Hybridly\PropertiesResolver\RequestPropertiesResolver;
+use Hybridly\Testing\TestResponseMacros;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 
@@ -31,6 +34,13 @@ class HybridlyServiceProvider extends PackageServiceProvider
         $this->registerBindings();
         $this->registerDirectives();
         $this->registerMacros();
+        $this->registerTestingMacros();
+
+        $this->app->bind('hybridly.testing.view_finder', config('hybridly.testing.view_finder') ?? fn ($app) => new FileViewFinder(
+            $app['files'],
+            $app['config']->get('hybridly.testing.page_paths'),
+            $app['config']->get('hybridly.testing.page_extensions'),
+        ));
     }
 
     protected function registerMacros(): void
@@ -72,5 +82,10 @@ class HybridlyServiceProvider extends PackageServiceProvider
                 return implode(' ', array_map('trim', explode("\n", $template)));
             });
         });
+    }
+
+    protected function registerTestingMacros(): void
+    {
+        TestResponse::mixin(new TestResponseMacros());
     }
 }
