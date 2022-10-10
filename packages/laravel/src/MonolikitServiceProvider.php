@@ -36,7 +36,7 @@ class MonolikitServiceProvider extends PackageServiceProvider
         $this->registerMacros();
         $this->registerTestingMacros();
 
-        $this->app->bind('monolikit.testing.view-finder', config('monolikit.testing.view-finder') ?? fn ($app) => new FileViewFinder(
+        $this->app->bind('monolikit.testing.view_finder', config('monolikit.testing.view_finder') ?? fn ($app) => new FileViewFinder(
             $app['files'],
             $app['config']->get('monolikit.testing.page_paths'),
             $app['config']->get('monolikit.testing.page_extensions'),
@@ -86,10 +86,6 @@ class MonolikitServiceProvider extends PackageServiceProvider
 
     protected function registerTestingMacros(): void
     {
-        if (class_exists(TestResponse::class)) {
-            TestResponse::mixin(new TestResponseMacros());
-
-            return;
-        }
+        TestResponse::mixin(new TestResponseMacros());
     }
 }

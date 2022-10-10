@@ -11,7 +11,7 @@ use PHPUnit\Framework\AssertionFailedError;
 class Assertable extends AssertableJson
 {
     protected string $view;
-    protected string $dialog;
+    protected ?string $dialog;
     protected string $url;
     protected ?string $version;
 
