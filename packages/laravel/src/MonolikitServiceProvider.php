@@ -4,13 +4,16 @@ namespace Monolikit;
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Router;
+use Illuminate\Testing\TestResponse;
 use Illuminate\View\Compilers\BladeCompiler;
+use Illuminate\View\FileViewFinder;
 use Monolikit\Commands\I18nCommand;
 use Monolikit\Commands\InstallCommand;
 use Monolikit\Commands\RoutesCommand;
 use Monolikit\Http\Controller;
 use Monolikit\PropertiesResolver\PropertiesResolver;
 use Monolikit\PropertiesResolver\RequestPropertiesResolver;
+use Monolikit\Testing\TestResponseMacros;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 
@@ -31,6 +34,13 @@ class MonolikitServiceProvider extends PackageServiceProvider
         $this->registerBindings();
         $this->registerDirectives();
         $this->registerMacros();
+        $this->registerTestingMacros();
+
+        $this->app->bind('monolikit.testing.view_finder', config('monolikit.testing.view_finder') ?? fn ($app) => new FileViewFinder(
+            $app['files'],
+            $app['config']->get('monolikit.testing.page_paths'),
+            $app['config']->get('monolikit.testing.page_extensions'),
+        ));
     }
 
     protected function registerMacros(): void
@@ -72,5 +82,10 @@ class MonolikitServiceProvider extends PackageServiceProvider
                 return implode(' ', array_map('trim', explode("\n", $template)));
             });
         });
+    }
+
+    protected function registerTestingMacros(): void
+    {
+        TestResponse::mixin(new TestResponseMacros());
     }
 }
