@@ -7,6 +7,18 @@ use Illuminate\Testing\TestResponse;
 
 class TestResponseMacros
 {
+    public function mdd(): Closure
+    {
+        return function (): TestResponse {
+            /** @var TestResponse $this */
+            try {
+                dd(Assertable::fromTestResponse($this));
+            } catch (\Throwable $th) {
+                $this->dd();
+            }
+        };
+    }
+
     public function assertMonolikit(): Closure
     {
         return function (Closure $callback = null): TestResponse {
@@ -33,7 +45,7 @@ class TestResponseMacros
         };
     }
 
-    public function hasMonolikitProperty(): Closure
+    public function assertMonolikitProperty(): Closure
     {
         return function (string $key, $length = null, \Closure $callback = null): TestResponse {
             /** @var TestResponse $this */
@@ -43,7 +55,7 @@ class TestResponseMacros
         };
     }
 
-    public function hasMonolikitProperties(): Closure
+    public function assertMonolikitProperties(): Closure
     {
         return function (array $keys): TestResponse {
             /** @var TestResponse $this */
