@@ -1,5 +1,6 @@
 {
   "private": true,
+  "version": "0.0.1-dev.1",
   "scripts": {
     "build": "pnpm -r build",
     "dev": "pnpm stub",
@@ -49,5 +50,4 @@
       ]
     }
   },
-  "version": "0.0.1-dev.1"
 }

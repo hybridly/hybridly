@@ -1,77 +1,80 @@
 {
-	"name": "hybridly/laravel",
-	"description": "Server-driven, client-rendered view layer.",
-	"keywords": [
-		"laravel",
-		"hybridly",
-		"inertiajs"
-	],
-	"homepage": "https://github.com/hybridly/hybridly",
-	"license": "MIT",
-	"authors": [
-		{
-			"name": "Enzo Innocenzi",
-			"email": "enzo@innocenzi.dev",
-			"role": "Developer"
-		}
-	],
-	"require": {
-		"php": "^8.0",
-		"spatie/laravel-package-tools": "^1.9.2",
-		"illuminate/contracts": "^9.0"
-	},
-	"require-dev": {
-		"friendsofphp/php-cs-fixer": "^3.6",
-		"guzzlehttp/promises": "^1.5",
-		"nunomaduro/collision": "^6.0",
-		"nunomaduro/larastan": "^2.0.1",
-		"orchestra/testbench": "^7.0",
-		"pestphp/pest": "^1.21",
-		"pestphp/pest-plugin-laravel": "^1.1",
-		"phpstan/extension-installer": "^1.1",
-		"phpstan/phpstan-deprecation-rules": "^1.0",
-		"phpstan/phpstan-phpunit": "^1.0",
-		"phpunit/phpunit": "^9.5",
-		"spatie/laravel-data": "^2.0",
-		"spatie/laravel-ray": "^1.29",
-		"spatie/laravel-typescript-transformer": "^2.1"
-	},
-	"autoload": {
-		"psr-4": {
-			"Hybridly\\": "packages/laravel/src"
-		},
-		"files": [
-			"packages/laravel/src/helpers.php"
-		]
-	},
-	"autoload-dev": {
-		"psr-4": {
-			"Hybridly\\Tests\\": "packages/laravel/tests"
-		}
-	},
-	"scripts": {
-		"analyze": "vendor/bin/phpstan analyse",
-		"style": "vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.php --allow-risky=yes",
-		"test": "vendor/bin/pest --test-directory=packages/laravel/tests",
-		"test:coverage": "vendor/bin/pest --test-directory=packages/laravel/tests --coverage"
-	},
-	"config": {
-		"sort-packages": true,
-		"allow-plugins": {
-			"phpstan/extension-installer": true,
-			"pestphp/pest-plugin": true
-		}
-	},
-	"extra": {
-		"laravel": {
-			"providers": [
-				"Hybridly\\HybridlyServiceProvider"
-			],
-			"aliases": {
-				"Hybridly": "Hybridly\\Facades\\Hybridly"
-			}
-		}
-	},
-	"minimum-stability": "dev",
-	"prefer-stable": true
+    "name": "hybridly/hybridly",
+    "authors": [
+        {
+            "name": "Enzo Innocenzi",
+            "email": "enzo@innocenzi.dev",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": "^8.0",
+        "composer-runtime-api": "^2.1",
+        "illuminate/contracts": "^9.0",
+        "spatie/laravel-package-tools": "^1.9.2"
+    },
+    "require-dev": {
+        "friendsofphp/php-cs-fixer": "^3.6",
+        "guzzlehttp/promises": "^1.5",
+        "nunomaduro/collision": "^6.0",
+        "nunomaduro/larastan": "^2.0.1",
+        "orchestra/testbench": "^7.0",
+        "pestphp/pest": "^1.21",
+        "pestphp/pest-plugin-laravel": "^1.1",
+        "phpstan/extension-installer": "^1.1",
+        "phpstan/phpstan-deprecation-rules": "^1.0",
+        "phpstan/phpstan-phpunit": "^1.0",
+        "phpunit/phpunit": "^9.5",
+        "spatie/laravel-data": "^2.0",
+        "spatie/laravel-ray": "^1.29",
+        "spatie/laravel-typescript-transformer": "^2.1",
+        "symplify/monorepo-builder": "^11.1"
+    },
+    "autoload": {
+        "files": [
+            "packages/laravel/src/helpers.php"
+        ],
+        "psr-4": {
+            "Hybridly\\": [
+                "packages/laravel/src"
+            ],
+            "Hybridly\\Tests\\": "tests/src",
+            "Hybridly\\Tests\\Database\\Factories\\": "tests/database/factories"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Hybridly\\HybridlyServiceProvider"
+            ],
+            "aliases": {
+                "Hybridly": "Hybridly\\Facades\\Hybridly"
+            }
+        }
+    },
+    "config": {
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true,
+            "phpstan/extension-installer": true
+        }
+    },
+    "scripts": {
+        "monorepo:merge": "vendor/bin/monorepo-builder merge",
+        "monorepo:validate": "vendor/bin/monorepo-builder validate",
+        "analyze": "vendor/bin/phpstan analyse",
+        "style": "vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.php --allow-risky=yes",
+        "test:pest": "pest",
+        "test:vitest": "pnpm run test:vitest",
+        "test": [
+            "@monorepo:validate",
+            "@test:pest",
+            "@test:vitest"
+        ]
+    },
+    "replace": {
+        "hybridly/laravel": "self.version"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }

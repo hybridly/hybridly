@@ -1,0 +1,31 @@
+name: monorepo-split
+
+on:
+  push:
+    tags:
+      - "*"
+
+jobs:
+  split-monorepo:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        package:
+          - laravel
+
+    steps:
+      - uses: actions/checkout@v2
+      - id: previous-tag
+        uses: "WyriHaximus/github-action-get-previous-tag@master"
+      - name: Split of ${{ matrix.package }}
+        uses: symplify/github-action-monorepo-split@main
+        env:
+          GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+        with:
+          package_directory: "packages/${{ matrix.package }}"
+          repository_organization: "hybridly"
+          repository_name: "${{ matrix.package }}"
+          tag: ${{ steps.previous-tag.outputs.tag }}
+          user_name: "Enzo Innocenzi"
+          user_email: "enzo@innocenzi.dev"
