@@ -39,6 +39,14 @@
   "pnpm": {
     "overrides": {
       "unbuild": "0.6.9"
+    },
+    "peerDependencyRules": {
+      "ignoreMissing": [
+        "@algolia/client-search",
+        "react",
+        "react-dom",
+        "@types/react"
+      ]
     }
   }
 }
