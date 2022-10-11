@@ -67,12 +67,15 @@
         }
     },
     "scripts": {
-        "test": [
+        "ci": [
             "@monorepo:validate",
-            "@test:pest",
-            "@test:vitest",
+            "@build",
             "@style",
-            "@build"
+            "@test"
+        ],
+        "test": [
+            "@test:pest",
+            "@test:vitest"
         ],
         "style:fix": [
             "vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.php --allow-risky=yes",

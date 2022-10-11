@@ -4,9 +4,9 @@ on:
   push:
     branches: [main]
     paths:
-      - '**'
-      - '!readme.md'
-      - '!docs/**'
+      - "**"
+      - "!readme.md"
+      - "!docs/**"
   pull_request:
     branches: [main]
 
@@ -16,7 +16,7 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     env:
-      DEBUG: 'hybridly:*'
+      DEBUG: "hybridly:*"
 
     strategy:
       fail-fast: false
@@ -52,7 +52,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           registry-url: https://registry.npmjs.org/
-          cache: 'pnpm'
+          cache: "pnpm"
 
       - name: Setup problem matchers
         run: |
@@ -67,11 +67,5 @@ jobs:
       - name: Install Node dependencies
         run: pnpm install
 
-      - name: Lint
-        run: pnpm run lint
-
-      - name: Build
-        run: pnpm run build
-
-      - name: Test
-        run: pnpm run test
+      - name: Lint, build and test
+        run: composer ci
