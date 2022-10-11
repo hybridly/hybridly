@@ -81,7 +81,7 @@
         ]
     },
     "replace": {
-        "hybridly/laravel": "0.0.1-beta.1"
+        "hybridly/laravel": "0.0.1-dev.3"
     },
     "minimum-stability": "dev",
     "prefer-stable": true
