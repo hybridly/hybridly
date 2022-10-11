@@ -67,31 +67,18 @@
         }
     },
     "scripts": {
-        "ci": [
-            "@monorepo:validate",
-            "@build",
-            "@style",
-            "@test"
-        ],
-        "test": [
-            "@test:pest",
-            "@test:vitest"
-        ],
-        "style:fix": [
-            "vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.php --allow-risky=yes",
-            "pnpm eslint \"**/*.{ts,vue,mjs}\" --fix"
-        ],
-        "style": [
-            "vendor/bin/php-cs-fixer fix --dry-run --config=.php-cs-fixer.php --allow-risky=yes",
-            "pnpm eslint \"**/*.{ts,vue,mjs}\""
-        ],
-        "release": "vendor/bin/monorepo-builder release",
-        "build": "pnpm -r build",
+        "monorepo:release": "vendor/bin/monorepo-builder release",
         "monorepo:merge": "vendor/bin/monorepo-builder merge",
         "monorepo:validate": "vendor/bin/monorepo-builder validate",
+        "lint": "vendor/bin/php-cs-fixer fix --dry-run --config=.php-cs-fixer.php --allow-risky=yes",
+        "lint:fix": "vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.php --allow-risky=yes",
         "analyze": "vendor/bin/phpstan analyse",
-        "test:pest": "pest",
-        "test:vitest": "pnpm vitest test --run"
+        "test": "pest",
+        "ci": [
+            "@monorepo:validate",
+            "@lint",
+            "@test"
+        ]
     },
     "replace": {
         "hybridly/laravel": "0.0.1-beta.1"

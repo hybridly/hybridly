@@ -2,10 +2,15 @@
   "private": true,
   "version": "0.0.1-dev.1",
   "scripts": {
+		"release": "bumpp package.json packages/*/package.json",
     "build": "pnpm -r build",
+		"test": "vitest --run",
+		"lint": "eslint \"**/*.{ts,vue,mjs}\"",
+		"lint:fix": "eslint \"**/*.{ts,vue,mjs}\" --fix",
     "docs:dev": "vitepress dev docs",
     "docs:build": "vitepress build docs",
-    "docs:serve": "vitepress serve docs"
+    "docs:serve": "vitepress serve docs",
+		"ci": "pnpm run lint && pnpm run build && pnpm run test"
   },
   "devDependencies": {
     "@hybridly/core": "workspace:*",
