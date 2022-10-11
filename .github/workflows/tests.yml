@@ -1,14 +1,12 @@
 name: tests
 
 on:
+  pull_request:
   push:
-    branches: [main]
     paths:
       - "**"
       - "!readme.md"
       - "!docs/**"
-  pull_request:
-    branches: [main]
 
 jobs:
   build:
