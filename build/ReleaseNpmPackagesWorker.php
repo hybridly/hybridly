@@ -24,11 +24,8 @@ final class ReleaseNpmPackagesWorker implements ReleaseWorkerInterface
 
     protected function getBuildCommand(Version $version): string
     {
-        // Waiting for https://github.com/antfu/bumpp/pull/3
-        dd();
-
         return sprintf(
-            "pnpm bumpp package.json packages/*/package.json --yes --version %s",
+            "pnpm bumpp %s package.json packages/*/package.json --yes",
             $version->getVersionString(),
         );
     }
