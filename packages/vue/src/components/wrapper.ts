@@ -1,3 +1,4 @@
+/* eslint-disable vue/order-in-components */
 import type { RouterContext } from '@hybridly/core'
 import { debug } from '@hybridly/utils'
 import type { PropType } from 'vue'

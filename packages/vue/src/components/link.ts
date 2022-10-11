@@ -1,3 +1,4 @@
+/* eslint-disable vue/order-in-components */
 import qs from 'qs'
 import type { PropType } from 'vue'
 import { h, defineComponent } from 'vue'
