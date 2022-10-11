@@ -2,8 +2,8 @@
 
 namespace Hybridly\Tests;
 
-use Illuminate\Support\Facades\View;
 use Hybridly\HybridlyServiceProvider;
+use Illuminate\Support\Facades\View;
 use Orchestra\Testbench\TestCase as Orchestra;
 
 class TestCase extends Orchestra

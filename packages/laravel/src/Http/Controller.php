@@ -2,8 +2,8 @@
 
 namespace Hybridly\Http;
 
-use Illuminate\Http\Request;
 use Hybridly\View\Factory;
+use Illuminate\Http\Request;
 
 class Controller
 {

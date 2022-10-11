@@ -2,10 +2,10 @@
 
 namespace Hybridly;
 
+use Hybridly\View\Factory;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Traits\Macroable;
-use Hybridly\View\Factory;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 

@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Contracts\Support\Arrayable;
 use Hybridly\View\Factory;
+use Illuminate\Contracts\Support\Arrayable;
 
 it('resolves functions', function () {
     $payload = resolve(Factory::class)

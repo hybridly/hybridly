@@ -2,8 +2,8 @@
 
 namespace Hybridly\Concerns;
 
-use Illuminate\Contracts\Support\Arrayable;
 use Hybridly\Support\Arr;
+use Illuminate\Contracts\Support\Arrayable;
 
 trait HasSharedProperties
 {

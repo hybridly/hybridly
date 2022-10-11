@@ -2,6 +2,7 @@
 
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Support\Facades\Route;
+
 use function Pest\Laravel\get;
 
 test('the middleware applies session errors', function () {

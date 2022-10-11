@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Http\JsonResponse;
 use Hybridly\Hybridly;
 use Hybridly\View\Factory;
+use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 

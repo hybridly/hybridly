@@ -2,11 +2,6 @@
 
 namespace Hybridly;
 
-use Illuminate\Http\Request;
-use Illuminate\Routing\Router;
-use Illuminate\Testing\TestResponse;
-use Illuminate\View\Compilers\BladeCompiler;
-use Illuminate\View\FileViewFinder;
 use Hybridly\Commands\I18nCommand;
 use Hybridly\Commands\InstallCommand;
 use Hybridly\Commands\RoutesCommand;
@@ -14,6 +9,11 @@ use Hybridly\Http\Controller;
 use Hybridly\PropertiesResolver\PropertiesResolver;
 use Hybridly\PropertiesResolver\RequestPropertiesResolver;
 use Hybridly\Testing\TestResponseMacros;
+use Illuminate\Http\Request;
+use Illuminate\Routing\Router;
+use Illuminate\Testing\TestResponse;
+use Illuminate\View\Compilers\BladeCompiler;
+use Illuminate\View\FileViewFinder;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 

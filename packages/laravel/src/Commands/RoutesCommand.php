@@ -2,8 +2,8 @@
 
 namespace Hybridly\Commands;
 
-use Illuminate\Console\Command;
 use Hybridly\RouteExtractor\RouteExtractor;
+use Illuminate\Console\Command;
 
 class RoutesCommand extends Command
 {

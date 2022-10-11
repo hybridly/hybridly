@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Http\Request;
 use Hybridly\Tests\TestCase;
+use Illuminate\Http\Request;
 
 uses(TestCase::class)->in(__DIR__);
 

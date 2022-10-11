@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Blade;
 use Hybridly\View\Payload;
 use Hybridly\View\View;
+use Illuminate\Support\Facades\Blade;
 
 beforeEach(function () {
     test()->directives = Blade::getCustomDirectives();

@@ -2,13 +2,13 @@
 
 namespace Hybridly\View;
 
+use Hybridly\Hybridly;
+use Hybridly\PropertiesResolver\PropertiesResolver;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Contracts\Support\Responsable;
 use Illuminate\Http\JsonResponse;
-use Hybridly\Hybridly;
-use Hybridly\PropertiesResolver\PropertiesResolver;
 
 class Factory implements Responsable, Renderable
 {

@@ -2,14 +2,14 @@
 
 namespace Hybridly\PropertiesResolver;
 
+use Hybridly\Hybridly;
+use Hybridly\Lazy;
+use Hybridly\Support\Arr;
+use Hybridly\Support\CaseConverter;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\Json\ResourceResponse;
-use Hybridly\Lazy;
-use Hybridly\Hybridly;
-use Hybridly\Support\Arr;
-use Hybridly\Support\CaseConverter;
 
 class RequestPropertiesResolver implements PropertiesResolver
 {

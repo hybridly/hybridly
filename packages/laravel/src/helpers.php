@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Http\Request;
 use Hybridly\Hybridly;
 use Hybridly\View\Factory;
+use Illuminate\Http\Request;
 
 if (!function_exists('is_hybridly')) {
     /**
