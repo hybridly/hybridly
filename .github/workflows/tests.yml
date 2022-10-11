@@ -67,5 +67,7 @@ jobs:
       - name: Install Node dependencies
         run: pnpm install
 
-      - name: Lint, build and test
-        run: composer ci
+      - name: CI scripts
+        run: |
+          pnpm ci
+          composer ci
