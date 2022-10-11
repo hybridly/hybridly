@@ -27,5 +27,6 @@ jobs:
           repository_organization: "hybridly"
           repository_name: "${{ matrix.package }}"
           tag: ${{ steps.previous-tag.outputs.tag }}
+          branch: 0.x
           user_name: "Enzo Innocenzi"
           user_email: "enzo@innocenzi.dev"
