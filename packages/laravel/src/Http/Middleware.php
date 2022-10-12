@@ -6,6 +6,7 @@ use Closure;
 use Hybridly\Concerns;
 use Hybridly\Hybridly;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Vite;
 use Symfony\Component\HttpFoundation\Response;
 
 class Middleware
@@ -103,6 +104,10 @@ class Middleware
     {
         if (class_exists($vite = Innocenzi\Vite\Vite::class)) {
             return resolve($vite)->getHash();
+        }
+
+        if (class_exists(Illuminate\Foundation\Vite::class)) {
+            return Vite::manifestHash();
         }
 
         if (config('app.asset_url')) {
