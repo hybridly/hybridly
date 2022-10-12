@@ -8,9 +8,9 @@
 
 <p align="center">
   <br />
-  <a href="https://github.com/hybridly/hybridly/actions/workflows/test.yml"><img alt="Status" src="https://github.com/hybridly/hybridly/actions/workflows/test.yml/badge.svg"></a>
+  <a href="https://github.com/hybridly/hybridly/actions/workflows/tests.yml"><img alt="Status" src="https://github.com/hybridly/hybridly/actions/workflows/tests.yml/badge.svg"></a>
   <span>&nbsp;</span>
-  <a href="https://github.com/hybridly/hybridly/releases"><img alt="version" src="https://img.shields.io/github/v/release/hybridly/hybridly?include_prereleases&label=version&logo=github&logoColor=white"></a>
+  <a href="https://github.com/hybridly/hybridly/releases"><img alt="version" src="https://img.shields.io/github/v/release/hybridly/hybridly?include_prereleases&label=version"></a>
   <br />
   <br />
   <pre><div align="center">npm i -D hybridly</div></pre>
