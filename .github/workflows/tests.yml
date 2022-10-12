@@ -1,12 +1,13 @@
 name: tests
 
 on:
-  pull_request:
   push:
-    paths:
-      - "**"
-      - "!readme.md"
-      - "!docs/**"
+    paths-ignore:
+      - "README.md"
+      - ".vscode/**"
+      - ".github/**"
+      - "docs/**"
+  pull_request:
 
 jobs:
   build:
