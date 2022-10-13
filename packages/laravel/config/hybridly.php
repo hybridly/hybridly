@@ -12,6 +12,23 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Route filters
+    |--------------------------------------------------------------------------
+    | By default, the router does not pick vendor routes. You may change
+    | that by specifying a vendor name in `router.allowed_vendors`.
+    | You may also exclude routes by adding rules in `exclude`.
+    */
+    'router' => [
+        'allowed_vendors' => [
+            'laravel/fortify',
+        ],
+        'exclude' => [
+            // 'admin*'
+        ],
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | Force case
     |--------------------------------------------------------------------------
     | The case conventions between back-end and front-end is generally not

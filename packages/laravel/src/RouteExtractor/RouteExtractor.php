@@ -36,7 +36,21 @@ class RouteExtractor implements JsonSerializable, Arrayable
     public function getRoutes(): array
     {
         $routes = collect($this->router->getRoutes())
-            ->filter(fn (Route $route) => !$this->isVendorRoute($route) && !!$route->getName())
+            ->filter(function (Route $route) {
+                if (!$route->getName()) {
+                    return false;
+                }
+
+                if ($this->isVendorRoute($route)) {
+                    return false;
+                }
+
+                if (str($route->uri())->is(config('hybridly.router.exclude', []))) {
+                    return false;
+                }
+
+                return true;
+            })
             ->mapWithKeys(fn (Route $route) => [
                 $route->getName() => [
                     'domain' => $route->domain(),
@@ -95,6 +109,12 @@ class RouteExtractor implements JsonSerializable, Arrayable
             $path = (new ReflectionClass($route->getControllerClass()))->getFileName();
         } else {
             return false;
+        }
+
+        foreach (config('hybridly.router.allowed_vendors', []) as $vendor) {
+            if (str_starts_with($path, base_path('vendor/' . $vendor))) {
+                return false;
+            }
         }
 
         return str_starts_with($path, base_path('vendor'));
