@@ -1,0 +1,89 @@
+name: "Bug report"
+description: Report an issue with one of the Hybridly packages
+labels: [pending triage]
+body:
+  - type: textarea
+    id: bug-description
+    attributes:
+      label: Describe the bug
+      description: A clear and concise description of what the bug is. If you intend to submit a pull request for this issue, tell us in the description. Thanks!
+      placeholder: I am doing ... What I expect is ... What actually happening is ...
+    validations:
+      required: true
+  - type: input
+    id: reproduction
+    attributes:
+      label: Reproduction
+      description: Please provide a link to a repository that can reproduce the problem you ran into. If no reproduction is provided, the issue might be closed.
+      placeholder: Reproduction URL
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction-steps
+    attributes:
+      label: Steps to reproduce
+      description: Please provide any reproduction steps that may need to be described.
+  - type: textarea
+    id: system-info
+    attributes:
+      label: System information
+      description: Output of `npx envinfo --system --npmPackages '{hybridly,@hybridly/*}' --binaries --browsers`.
+      render: bash
+      placeholder: System, Binaries, Browsers
+    validations:
+      required: true
+  - type: dropdown
+    id: package-manager
+    attributes:
+      label: Used package manager
+      description: Select the used package manager.
+      options:
+        - npm
+        - yarn
+        - pnpm
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs
+      description: |
+        Optional if provided reproduction. Please do not insert an image but copy-paste the log text.
+
+        1. Run `DEBUG=vite:hybridly:* pnpm run dev`.
+        2. Add a browser local storage entry with the `debug` key and `hybridly:*` value.
+        2. Provide the error logs in the format below.
+
+        ````
+        <details>
+        <summary>Browser debug logs</summary>
+
+        ```shell
+        // paste the browser log text here
+        ```
+        </details>
+
+        <details>
+        <summary>Vite debug logs</summary>
+
+        ```shell
+        // paste the Vite log text here
+        ```
+        </details>
+        ````
+  - type: checkboxes
+    id: checkboxes
+    attributes:
+      label: Validations
+      description: Before submitting the issue, please make sure you did the following.
+      options:
+        - label: Read the [docs](https://hybridly.dev).
+          required: true
+        - label: Check that there isn't [already an issue](https://github.com/hybridly/hybridly/issues) that reports the same bug to avoid creating a duplicate.
+          required: true
+        - label: Make sure this is a Hybridly issue and not an issue related to something else (Vite, Vue...). For example, if it's a Vue SFC related bug, it should likely be reported to [vuejs/core](https://github.com/vuejs/core) instead.
+          required: true
+        - label: Check that this is a concrete bug. For Q&A open a [GitHub Discussion](https://github.com/hybridly/hybridly/discussions).
+          required: true
+        - label: The provided reproduction is a [minimal reproducible example](https://stackoverflow.com/help/minimal-reproducible-example) of the bug.
+          required: true
