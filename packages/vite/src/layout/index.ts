@@ -5,7 +5,7 @@ import { LAYOUT_PLUGIN_NAME } from '../constants'
 import type { LayoutOptions } from '../types'
 import { debug } from '../utils'
 
-const TEMPLATE_LAYOUT_REGEX = /<template +layout(?: *= *['"](?:(?:(\w+):)?(\w+))['"] *)?>/
+const TEMPLATE_LAYOUT_REGEX = /<template +layout(?: *= *['"]((?:[\w\/-_,](?:,\ )?)+)['"] *)?>/
 const TYPESCRIPT_REGEX = /lang=['"]ts['"]/
 
 /**
@@ -13,36 +13,45 @@ const TYPESCRIPT_REGEX = /lang=['"]ts['"]/
  * It must be used before the Vue plugin.
  */
 export default (options: LayoutOptions = {}): Plugin => {
+	const defaultLayoutName = options?.defaultLayoutName ?? 'default'
 	const base = options?.directory
 		? options?.directory
 		: path.resolve(process.cwd(), 'resources', 'views', 'layouts')
-
-	const layoutPath = options?.resolve
+	const templateRegExp = options?.templateRegExp
+		? options?.templateRegExp
+		: TEMPLATE_LAYOUT_REGEX
+	const getLayoutPath = options?.resolve
 		? options.resolve
-		: (layoutName: string) => normalizePath(path.resolve(base, `${layoutName ?? 'default'}.vue`)).replaceAll('\\', '/')
+		: (layoutName: string) => normalizePath(path.resolve(base, `${layoutName}.vue`)).replaceAll('\\', '/')
 
 	debug.layout('Registered layout path:', base)
 
 	return {
 		name: LAYOUT_PLUGIN_NAME,
 		transform: (code: string, id: string) => {
-			if (!TEMPLATE_LAYOUT_REGEX.test(code)) {
+			if (!templateRegExp.test(code)) {
 				return
 			}
 
-			return code.replace(TEMPLATE_LAYOUT_REGEX, (_, __, layoutName) => {
+			return code.replace(templateRegExp, (_, layoutName) => {
 				const isTypeScript = TYPESCRIPT_REGEX.test(code)
-				const importPath = layoutPath(layoutName)
+				const layouts: string[] = layoutName?.toString()?.replaceAll(' ', '').split(',') ?? [defaultLayoutName]
+				const importName = (i: number) => `__hybridly_layout_${i}`
+				const exports = layouts.map((_, i) => importName(i))
+				const imports = layouts.reduce((imports, layoutName, i) => `
+					${imports}
+					import ${importName(i)} from '${getLayoutPath(layoutName)}';
+				`, '').trim()
 
-				debug.layout(`Resolved layout "${layoutName}":`, {
+				debug.layout(`Resolved layouts "${layouts.join(', ')}":`, {
 					sourceFile: id,
-					importPath,
+					layouts,
 				})
 
 				return `
 					<script${isTypeScript ? ' lang="ts"' : ''}>
-					import layout from '${importPath}'
-					export default { layout }
+					${imports}
+					export default { layout: [${exports.join(', ')}] }
 					</script>
 					<template>
 				`

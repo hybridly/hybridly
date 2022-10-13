@@ -7,6 +7,10 @@ export interface Options {
 }
 
 export interface LayoutOptions {
+	/** Name of the layout used when no argument is provided to `layout`. */
+	defaultLayoutName?: string
+	/** Custom RegExp for parsing the template string. */
+	templateRegExp?: RegExp
 	/** The directory in which layouts are stored. */
 	directory?: string
 	/** Function that resolves the layout path given its name. */
