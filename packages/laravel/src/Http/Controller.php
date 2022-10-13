@@ -11,7 +11,7 @@ class Controller
     {
         return hybridlyly(
             $request->route()->defaults['component'],
-            $request->route()->defaults['props'],
+            $request->route()->defaults['properties'],
         );
     }
 }
