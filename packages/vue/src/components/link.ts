@@ -13,7 +13,7 @@ export const RouterLink = defineComponent({
 		return (props: typeof _) => {
 			let data = props.data ?? {}
 			const url = makeUrl(props.href ?? '')
-			const method: Method = props.method ?? 'GET'
+			const method: Method = props.method?.toUpperCase() as Method ?? 'GET'
 			const as = typeof props.as === 'object'
 				? props.as
 				: props.as?.toLowerCase() ?? 'a'
@@ -75,7 +75,7 @@ export const RouterLink = defineComponent({
 			default: 'a',
 		},
 		method: {
-			type: String as PropType<Method>,
+			type: String as PropType<Method | Lowercase<Method>>,
 			default: 'GET',
 		},
 		data: {
