@@ -71,7 +71,7 @@ export async function registerEventListeners() {
 			})
 		}
 
-		// If the history entry has been hybridlyly tempered with, we want
+		// If the history entry has been tempered with, we want
 		// to use it. We swap the components accordingly.
 		await navigate({
 			payload: event.state,

@@ -7,7 +7,7 @@ use function Pest\Laravel\get;
 
 test('the middleware applies session errors', function () {
     Route::middleware(StartSession::class, \Hybridly\Http\Middleware::class)
-        ->get('/', fn () => hybridlyly('users.edit', ['user' => 'Makise Kurisu']));
+        ->get('/', fn () => hybridly('users.edit', ['user' => 'Makise Kurisu']));
 
     $response = get('/');
     $response->assertOk();

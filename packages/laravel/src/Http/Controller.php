@@ -9,7 +9,7 @@ class Controller
 {
     public function __invoke(Request $request): Factory
     {
-        return hybridlyly(
+        return hybridly(
             $request->route()->defaults['component'],
             $request->route()->defaults['properties'],
         );

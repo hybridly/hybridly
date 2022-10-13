@@ -4,11 +4,11 @@ use Hybridly\Hybridly;
 use Hybridly\View\Factory;
 use Illuminate\Http\Request;
 
-if (!function_exists('is_hybridly')) {
+if (!function_exists('is_hybrid')) {
     /**
-     * Checks if the given response is hybridly.
+     * Checks if the given response uses hybridly.
      */
-    function is_hybridly(Request $request = null): bool
+    function is_hybrid(Request $request = null): bool
     {
         return hybridly()->isHybridly($request);
     }
@@ -28,15 +28,5 @@ if (!function_exists('hybridly')) {
         }
 
         return $hybridly;
-    }
-}
-
-if (!function_exists('hybridlyly')) {
-    /**
-     * Creates a hybridly view.
-     */
-    function hybridlyly(string $component = null, array $properties = []): Factory
-    {
-        return hybridly()->view($component, $properties);
     }
 }
