@@ -1,10 +1,15 @@
+import { resolve } from 'node:path'
+import { readFileSync } from 'node:fs'
 import { defineConfig } from 'vitepress'
 import Unocss from 'unocss/vite'
+
 const title = 'Hybridly'
 const description = 'Modern solution to develop server-driven, client-rendered applications.'
 const url = 'https://hybridly.dev'
 const image = 'TODO'
 const twitter = 'enzoinnocenzi'
+
+const { version } = JSON.parse(readFileSync(resolve('package.json'), { encoding: 'utf-8' }))
 
 export default defineConfig({
 	title,
@@ -27,6 +32,16 @@ export default defineConfig({
 	themeConfig: {
 		nav: [
 			{ text: 'Guide', link: '/guide/', activeMatch: '/guide/' },
+			{ text: 'API', link: '/api/', activeMatch: '/api/' },
+			{ text: 'Configuration', link: '/configuration/', activeMatch: '/configuration/' },
+			{
+				text: `v${version}`,
+				items: [
+					{ text: 'Current release', link: `https://github.com/hybridly/hybridly/releases/tag/v${version}` },
+					{ text: 'Repository', link: 'https://github.com/hybridly/hybridly' },
+					{ text: 'Issues', link: 'https://github.com/hybridly/hybridly/issues' },
+				],
+			},
 		],
 
 		editLink: {
@@ -46,7 +61,7 @@ export default defineConfig({
 					items: [
 						{ text: 'What is Hybridly', link: '/guide/' },
 						{ text: 'Installation', link: '/guide/installation' },
-						{ text: 'Moving from Inertia', link: '/guide/moving-from-inertia' },
+						{ text: 'Migrating from Inertia', link: '/guide/migrating-from-inertia' },
 						{ text: 'Demonstration', link: '/guide/demonstration' },
 					],
 				},
