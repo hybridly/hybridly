@@ -7,7 +7,12 @@ use Illuminate\Testing\TestResponse;
 
 class TestResponseMacros
 {
-    public function mdd(): Closure
+    /**
+     * Dump Hybridly's response and die.
+     *
+     * @return Closure
+     */
+    public function hdd(): Closure
     {
         return function (): TestResponse {
             /** @var TestResponse $this */
