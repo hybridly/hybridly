@@ -44,7 +44,7 @@ export default defineConfig({
 				{
 					text: 'Getting started',
 					items: [
-						{ text: 'What is Hybridly', link: '/guide/about' },
+						{ text: 'What is Hybridly', link: '/guide/' },
 						{ text: 'Installation', link: '/guide/installation' },
 						{ text: 'Moving from Inertia', link: '/guide/moving-from-inertia' },
 						{ text: 'Demonstration', link: '/guide/demonstration' },
