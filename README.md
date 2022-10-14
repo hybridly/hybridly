@@ -44,23 +44,21 @@ All features of [Inertia.js](https://inertiajs.com), plus:
 - support for infinite scrolling
 - ...among other things.
 
+&nbsp;
+
 > **Warning** <br />
-> SSR is not yet supported.
+> Note that SSR is not yet supported.
 
 &nbsp;
 
 
 # Installation
 
-## On a fresh Laravel project
+<!-- > **Note** <br />
+> Creating a new project? Scaffold it with a preset.
 
-A preset is provided for an easy installation. You will need to have Node v16+ installed on your machine to use it.
-
-```sh
-npx @preset/cli apply laravel:hybridly
-```
-
-## On an existing project
+&nbsp;
+&nbsp; -->
 
 First, install the adapters:
 
@@ -68,6 +66,10 @@ First, install the adapters:
 pnpm i hybridly
 composer require hybridly/laravel
 ```
+
+&nbsp;
+
+Add `hybridly` to your Vite configuration:
 
 ```ts
 // vite.config.ts
@@ -87,6 +89,25 @@ export default defineConfig({
 
 &nbsp;
 
+Initialize it in your `main.ts`:
+
+```ts
+import { createApp } from 'vue'
+import { initializeHybridly } from 'hybridly/vue'
+import 'virtual:hybridly/router'
+import './tailwind.css'
+
+initializeHybridly({
+	cleanup: !import.meta.env.DEV,
+	pages: import.meta.glob('@/views/pages/**/*.vue', { eager: true }),
+	setup: ({ render, element, hybridly }) => createApp({ render })
+		.use(hybridly)
+		.mount(element),
+})
+```
+
+&nbsp;
+
 # Documentation
 
 > TODO
@@ -97,20 +118,26 @@ export default defineConfig({
 
 **What's the goal of this project?**
 > Hybridly aims to provide the best possible developer experience when using Laravel, Vue and Vite. While its philosophy is not to stay as minimalist as Inertia, in order to keep up with the DX needs, it is not going to be bloated with too many features either.
-<br/>
+
+&nbsp;
+
+**Will Hybridly be properly maintained?**
+> I'm primarily building Hybridly for myself. I am actively using and improving it. That means Hybridly is an opinionated project and may not suite your tastes, but it will live as long as I am a developer and I didn't find a better way to build web applications.
+
+&nbsp;
 
 **When should I use Hybridly instead of Inertia?**
-> If you're living on the edge and looking for a solution that tries to get rid of most of the paper cuts you'd otherwise encounter. If you're building something serious, maybe keep using Inertia.
+> Inertia is sponsored by Laravel and has better support throughout the community. You should keep using it if you're afraid of not being able to get support and if you don't mind its philosophy and the few issues it has.
 
 &nbsp;
 
 **Why fork Inertia instead of contributing?**
-> The maintainers of Inertia are currently busy with other projects or burnt-out, and have a specific philosophy for the project that does not necessarily match mine.
+> That was the initial plan, but some of my pull requests were denied most of the other pull requests are not being reviewed or merged. The project is not being actively maintained.
 
 &nbsp;
 
 **Can I use Hybridly with other frameworks than Laravel or Vue?**
-> The core of Hybridly is completely framework-agnostic, just like Inertia's. But there is no plan for an official adapter other than Laravel and Vue, in order to keep the maintenance simple. So you can, but you will have to build your own adapters.
+> The core of Hybridly is framework-agnostic, just like Inertia's. But there is no plan for an official adapter other than Laravel and Vue, because that is what I am using and willing to maintain. Feel free to create your own adapter though.
 
 <p align="center">
   <br />
