@@ -1,0 +1,15 @@
+pre code {
+	tab-size: 2 !important;
+}
+
+.vp-doc h2 {
+	margin-top: 5rem !important;
+}
+
+.vp-doc h3 {
+	margin-top: 3rem !important;
+}
+
+.vp-doc .custom-block {
+	margin: 3rem 0 !important;
+}
