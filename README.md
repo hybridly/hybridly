@@ -112,12 +112,21 @@ export default defineConfig({
 **Can I use Hybridly with other frameworks than Laravel or Vue?**
 > The core of Hybridly is completely framework-agnostic, just like Inertia's. But there is no plan for an official adapter other than Laravel and Vue, in order to keep the maintenance simple. So you can, but you will have to build your own adapters.
 
-
 <p align="center">
   <br />
   <br />
-  ·
   <br />
   <br />
-  <sub>Built with ❤︎ by <a href="https://github.com/enzoinnocenzi">Enzo Innocenzi</a>. <br/> Original credits go to <a href="https://reinink.ca">Jonathan Reinink</a>, the core team and the contributors.</sub>
+  <img src='https://cdn.jsdelivr.net/gh/innocenzi/static@latest/sponsorkit/sponsors.svg'/>
+  <br />
+  <br />
+  <sub>·</sub>
+  <br />
+  <br />
+  <br />
+  <sub>
+    Built with ❤︎ by <a href="https://github.com/enzoinnocenzi">Enzo Innocenzi</a>
+    <br/>
+    Credits to <a href="https://reinink.ca">Jonathan Reinink</a>, the Inertia team and the contributors.
+  </sub>
 </p>
