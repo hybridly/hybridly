@@ -37,7 +37,7 @@ All features of [Inertia.js](https://inertiajs.com), plus:
 - tight integration to Laravel, Vue and Vite
 - written in TypeScript
 - integration with [Laravel Data](https://github.com/spatie/laravel-data)
-- integration with Vue Devtools
+- integration with Vue DevTools
 - a built-in router with typings
 - a built-in permission helper with typings
 - new concepts like nested `only`/`except` partial data and persistent data

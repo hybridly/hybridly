@@ -261,7 +261,7 @@ The last import is what makes the `route` helper typed. If you don't intend on u
 
 - The `pages` property must contain an object which keys are names of page components and values are the components themselves. `import.meta.glob` conveniently create that for us. Or maybe Hybridly adopter this format because `import.meta.glob` exists. Who knows.
 
-- The `setup` property must be a function that returns the Vue application. The `hybridly` plugin, which contains the Vue Devtools plugin, is available in the object given as the first argument to the function. The DOM element to which the Vue application will be mounted is also there. 
+- The `setup` property must be a function that returns the Vue application. The `hybridly` plugin, which contains the Vue DevTools plugin, is available in the object given as the first argument to the function. The DOM element to which the Vue application will be mounted is also there. 
 
 ### Add a `tsconfig.json`
 
