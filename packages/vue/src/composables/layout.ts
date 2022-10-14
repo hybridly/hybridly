@@ -6,6 +6,6 @@ export type Layout = ComponentOptions | (() => ComponentOptions) | [ComponentOpt
 /**
  * Sets the persistent layout for this page.
  */
-export function useLayout(layout: Layout): void {
+export function defineLayout(layout: Layout): void {
 	state.setViewLayout(layout)
 }
