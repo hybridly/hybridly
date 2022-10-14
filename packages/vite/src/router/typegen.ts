@@ -35,6 +35,7 @@ async function writeDefinitions(options: RouterOptions, collection?: RouteCollec
 		.replace('__URL__', collection?.url ?? '')
 		.replace('__ROUTES__', JSON.stringify(routes).replaceAll('"__key_placeholder__"', 'any'))
 
+	fs.mkdirSync(path.dirname(target), { recursive: true })
 	fs.writeFileSync(target, definitions, { encoding: 'utf-8' })
 }
 
