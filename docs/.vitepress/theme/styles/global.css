@@ -2,6 +2,10 @@ pre code {
 	tab-size: 2 !important;
 }
 
+hr {
+	margin: 4rem 0 !important;
+}
+
 .vp-doc h2 {
 	margin-top: 5rem !important;
 }
