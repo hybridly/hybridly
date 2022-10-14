@@ -68,7 +68,7 @@ export default defineConfig({
 				{
 					text: 'Features',
 					items: [
-						{ text: 'Sharing data', link: '/guide/sharing-data' },
+						{ text: 'Global properties', link: '/guide/global-properties' },
 						{ text: 'Routing', link: '/guide/routing' },
 						{ text: 'Pages', link: '/guide/pages' },
 						{ text: 'Title & meta', link: '/guide/title-meta' },
