@@ -14,10 +14,16 @@ class TestResponseMacros
      */
     public function hdd(): Closure
     {
-        return function (): TestResponse {
+        return function (null|string|int $path = null): TestResponse {
             /** @var TestResponse $this */
             try {
-                dd(Assertable::fromTestResponse($this));
+                $response = Assertable::fromTestResponse($this);
+
+                if (!\is_null($path)) {
+                    dd($response->getProperty($path));
+                }
+
+                dd($response);
             } catch (\Throwable $th) {
                 $this->dd();
             }

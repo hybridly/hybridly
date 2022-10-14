@@ -58,6 +58,14 @@ class Assertable extends AssertableJson
     }
 
     /**
+     * Gets the given hybrid property.
+     */
+    public function getProperty(string|int $key): mixed
+    {
+        return $this->prop('properties.' . (string) $key);
+    }
+
+    /**
      * Ensures the given property exists. Dot-notation is supported.
      */
     public function hasProperty(string|int $key, int|\Closure|null $length = null, \Closure|null $callback = null): self
