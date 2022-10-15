@@ -17,3 +17,7 @@ hr {
 .vp-doc .custom-block {
 	margin: 3rem 0 !important;
 }
+
+.vp-doc h1 + h2 {
+	margin-top: 2.5rem !important;
+}
