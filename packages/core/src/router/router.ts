@@ -3,7 +3,7 @@ import axios from 'axios'
 import qs from 'qs'
 import { showResponseErrorModal, match, merge, when, debug, random, hasFiles, objectToFormData } from '@hybridly/utils'
 import { ERROR_BAG_HEADER, EXCEPT_DATA_HEADER, EXTERNAL_VISIT_HEADER, ONLY_DATA_HEADER, PARTIAL_COMPONENT_HEADER, HYBRIDLY_HEADER, VERSION_HEADER } from '../constants'
-import { NotAHybridlyResponseError, VisitCancelledError } from '../errors'
+import { NotAHybridResponseError, VisitCancelledError } from '../errors'
 import type { InternalRouterContext, RouterContextOptions } from '../context'
 import { getRouterContext, initializeContext, payloadFromContext, setContext } from '../context'
 import { handleExternalVisit, isExternalResponse, isExternalVisit, performExternalVisit } from '../external'
@@ -18,7 +18,7 @@ import type { ConditionalNavigationOption, Errors, LocalVisitOptions, Navigation
  * The hybridly router.
  * This is the core function that you can use to navigate in
  * your application. Make sure the routes you call return a
- * hybridly response, otherwise you need to call `external`.
+ * hybrid response, otherwise you need to call `external`.
  *
  * @example
  * router.get('/posts/edit', { post })
@@ -49,7 +49,7 @@ export async function createRouter(options: RouterContextOptions): Promise<Inter
 	return await initializeRouter()
 }
 
-/** Performs every action necessary to make a hybridly visit. */
+/** Performs every action necessary to make a hybrid visit. */
 export async function visit(options: VisitOptions): Promise<VisitResponse> {
 	const visitId = random()
 	const context = getRouterContext()
@@ -113,7 +113,7 @@ export async function visit(options: VisitOptions): Promise<VisitResponse> {
 				}, {}),
 				...when(options.errorBag, { [ERROR_BAG_HEADER]: options.errorBag }, {}),
 				...when(context.version, { [VERSION_HEADER]: context.version }, {}),
-				// 'X-Hybridly-Context': this.currentState.visit.context,
+				// 'x-hybrid-Context': this.currentState.visit.context,
 				[HYBRIDLY_HEADER]: true,
 				'X-Requested-With': 'XMLHttpRequest',
 				'Accept': 'text/html, application/xhtml+xml',
@@ -129,9 +129,9 @@ export async function visit(options: VisitOptions): Promise<VisitResponse> {
 
 		await runHooks('data', options.hooks, response)
 
-		// An external response is a hybridly response that wants a full page
-		// load to a requested URL. It may be the same URL, in which case a
-		// full page refresh will be performed.
+		// An external response is a hybrid response that wants a full page
+		// load to a requested URL. It may be the same URL, in which
+		// case a full page refresh will be performed.
 		if (isExternalResponse(response)) {
 			debug.router('The response is explicitely external.')
 			await performExternalVisit({
@@ -145,12 +145,12 @@ export async function visit(options: VisitOptions): Promise<VisitResponse> {
 		// An invalid response is a response that do not declare itself via
 		// the protocole header.
 		// In such cases, we want to throw to handler it later.
-		if (!isHybridlyResponse(response)) {
-			throw new NotAHybridlyResponseError(response)
+		if (!isHybridResponse(response)) {
+			throw new NotAHybridResponseError(response)
 		}
 
 		// At this point, we know the response respects the hybridly protocol.
-		debug.router('The response respects the hybridly protocol.')
+		debug.router('The response respects the Hybridly protocol.')
 		const payload = response.data as VisitPayload
 
 		// If the visit was asking for specific properties, we ensure that the
@@ -253,8 +253,8 @@ export async function visit(options: VisitOptions): Promise<VisitResponse> {
 	}
 }
 
-/** Checks if the response contains a hybridly header. */
-export function isHybridlyResponse(response: AxiosResponse): boolean {
+/** Checks if the response contains a hybrid header. */
+export function isHybridResponse(response: AxiosResponse): boolean {
 	return !!response?.headers[HYBRIDLY_HEADER]
 }
 

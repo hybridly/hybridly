@@ -28,7 +28,7 @@ return back()->with('success', 'Lorem ipsum dolor sit amet.');
 If you don't want flash notifications or prefer a custom implementation, you may disable this feature by adding the `shareFlashNotifications` to your middleware.
 
 ```php
-class HandleHybridlyRequests extends Middleware
+class HandleHybridRequests extends Middleware
 {
     protected bool $shareFlashNotifications = false;
 

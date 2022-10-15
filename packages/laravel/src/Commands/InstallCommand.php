@@ -60,7 +60,7 @@ class InstallCommand extends GeneratorCommand
     protected function getArguments(): array
     {
         return [
-            ['name', InputOption::VALUE_REQUIRED, 'Name of the Middleware that should be created', 'HandleHybridlyRequests'],
+            ['name', InputOption::VALUE_REQUIRED, 'Name of the Middleware that should be created', 'HandleHybridRequests'],
         ];
     }
 

@@ -155,7 +155,7 @@ php artisan hybridly:install
 
 The last command extracted the middleware that is required to intercept responses and convert them to the Hybridly protocol. 
 
-That middleware is, by default, located in `app/Http/Middleware/HandleHybridlyRequests.php`. It has automatically been registered into the `web` middleware group in `app/Http/Kernel.php`.
+That middleware is, by default, located in `app/Http/Middleware/HandleHybridRequests.php`. It has automatically been registered into the `web` middleware group in `app/Http/Kernel.php`.
 
 ### Create `root.blade.php`
 

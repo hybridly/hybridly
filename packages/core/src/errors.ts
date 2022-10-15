@@ -1,6 +1,6 @@
 import type { AxiosResponse } from 'axios'
 
-export class NotAHybridlyResponseError extends Error {
+export class NotAHybridResponseError extends Error {
 	constructor(public response: AxiosResponse) {
 		super()
 	}

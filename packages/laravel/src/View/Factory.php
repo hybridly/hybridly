@@ -90,7 +90,7 @@ class Factory implements Responsable, Renderable
             ],
         ]);
 
-        if (hybridly()->isHybridly($request)) {
+        if (hybridly()->isHybrid($request)) {
             return new JsonResponse(
                 data: $payload->toArray(),
                 headers: [

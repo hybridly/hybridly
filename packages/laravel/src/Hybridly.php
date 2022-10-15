@@ -17,18 +17,18 @@ class Hybridly
     use Concerns\HasPersistentProperties;
     use Concerns\HasVersion;
 
-    public const HYBRIDLY_HEADER = 'x-hybridly';
-    public const EXTERNAL_HEADER = 'x-hybridly-external';
-    public const PARTIAL_COMPONENT_HEADER = 'x-hybridly-partial-component';
-    public const ONLY_DATA_HEADER = 'x-hybridly-only-data';
-    public const EXCEPT_DATA_HEADER = 'x-hybridly-except-data';
-    public const CONTEXT_HEADER = 'x-hybridly-context';
-    public const ERROR_BAG_HEADER = 'x-hybridly-error-bag';
-    public const VERSION_HEADER = 'x-hybridly-version';
+    public const HYBRIDLY_HEADER = 'x-hybrid';
+    public const EXTERNAL_HEADER = 'x-hybrid-external';
+    public const PARTIAL_COMPONENT_HEADER = 'x-hybrid-partial-component';
+    public const ONLY_DATA_HEADER = 'x-hybrid-only-data';
+    public const EXCEPT_DATA_HEADER = 'x-hybrid-except-data';
+    public const CONTEXT_HEADER = 'x-hybrid-context';
+    public const ERROR_BAG_HEADER = 'x-hybrid-error-bag';
+    public const VERSION_HEADER = 'x-hybrid-version';
     public const DEFAULT_ROOT_VIEW = 'root';
 
     /**
-     * Returns a hybridly view.
+     * Returns a hybrid view.
      */
     public function view(string $component, array|Arrayable $properties = []): Factory
     {
@@ -44,7 +44,7 @@ class Hybridly
             $url = $url->getTargetUrl();
         }
 
-        if ($this->isHybridly()) {
+        if ($this->isHybrid()) {
             return new Response(
                 status: Response::HTTP_CONFLICT,
                 headers: [self::EXTERNAL_HEADER => $url],
@@ -65,7 +65,7 @@ class Hybridly
     /**
      * Checks if the request is hybridly.
      */
-    public function isHybridly(Request $request = null): bool
+    public function isHybrid(Request $request = null): bool
     {
         $request ??= request();
 

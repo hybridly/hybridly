@@ -10,7 +10,7 @@ You can find the source code on [GitHub](https://github.com/hybridly/demo).
 
 ## Typed global properties
 
-The following example shows how the `useProperty` function has auto-completion support for global properties defined in `HandleHybridlyRequests`.
+The following example shows how the `useProperty` function has auto-completion support for global properties defined in `HandleHybridRequests`.
 
 <img
   src="../assets/typed-global-properties.png"

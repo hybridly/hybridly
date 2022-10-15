@@ -8,7 +8,7 @@ use Illuminate\Testing\TestResponse;
 class TestResponseMacros
 {
     /**
-     * Dump Hybridly's response and die.
+     * Dump hybrid response and die.
      *
      * @return Closure
      */
@@ -30,7 +30,7 @@ class TestResponseMacros
         };
     }
 
-    public function assertHybridly(): Closure
+    public function assertHybrid(): Closure
     {
         return function (Closure $callback = null): TestResponse {
             /** @var TestResponse $this */
@@ -46,7 +46,7 @@ class TestResponseMacros
         };
     }
 
-    public function assertHybridlyView(): Closure
+    public function assertHybridView(): Closure
     {
         return function (string $view): TestResponse {
             /** @var TestResponse $this */
@@ -56,7 +56,7 @@ class TestResponseMacros
         };
     }
 
-    public function assertHybridlyProperty(): Closure
+    public function assertHybridProperty(): Closure
     {
         return function (string $key, $length = null, \Closure $callback = null): TestResponse {
             /** @var TestResponse $this */
@@ -66,7 +66,7 @@ class TestResponseMacros
         };
     }
 
-    public function assertHybridlyProperties(): Closure
+    public function assertHybridProperties(): Closure
     {
         return function (array $keys): TestResponse {
             /** @var TestResponse $this */

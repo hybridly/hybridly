@@ -1,6 +1,7 @@
 import defu from 'defu'
 import type { PartialDeep } from 'type-fest'
 import type { RouterContext, RouterContextOptions } from '../src/context'
+import { HYBRIDLY_HEADER } from '../src/constants'
 import { initializeContext } from '../src/context'
 import type { VisitPayload } from '../src/router'
 import { rest, server } from './server'
@@ -38,7 +39,7 @@ export async function fakeRouterContext(options: PartialDeep<RouterContextOption
 export function mockUrl(url: string, options: Partial<MockOptions> = {}) {
 	const resolved: MockOptions = defu(options, {
 		status: 200,
-		headers: { 'x-hybridly': 'true' },
+		headers: { [HYBRIDLY_HEADER]: 'true' },
 		json: fakeVisitPayload(),
 	})
 

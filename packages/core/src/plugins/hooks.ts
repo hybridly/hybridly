@@ -41,7 +41,7 @@ export interface Hooks {
 	abort: (context: InternalRouterContext) => MaybePromise<any>
 
 	/**
-	 * Called when a response to a request is not a valid Hybridly response.
+	 * Called when a response to a request is not a valid hybrid response.
 	 */
 	invalid: (response: AxiosResponse) => MaybePromise<void>
 

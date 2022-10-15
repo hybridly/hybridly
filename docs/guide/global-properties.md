@@ -8,7 +8,7 @@ Shared data can then be accessed in the front-end using `useProperty` or `usePro
 
 ## From the middleware
 
-The most common way of sharing data is to defining it in the `HandleHybridlyRequests` middleware. It has a `share` method specifically for this purpose.
+The most common way of sharing data is to defining it in the `HandleHybridRequests` middleware. It has a `share` method specifically for this purpose.
 
 ```php
 public function share(): SharedData

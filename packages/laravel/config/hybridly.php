@@ -59,8 +59,8 @@ return [
     |--------------------------------------------------------------------------
     | Testing
     |--------------------------------------------------------------------------
-    | The values described here are used to locate Hybridly views on the
-    | filesystem. For instance, when using `assertHybridly`, the assertion
+    | The values described here are used to locate hybrid views on the
+    | filesystem. For instance, when using `assertHybrid`, the assertion
     | attempts to locate the view as a file relative to any of the
     | paths AND with any of the extensions specified here.
     */

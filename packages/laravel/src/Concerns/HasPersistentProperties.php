@@ -10,7 +10,7 @@ trait HasPersistentProperties
 
     /**
      * Marks the given properties as persisted, which means they will
-     * always be present, even in partial Hybridly responses.
+     * always be present, even in partial hybrid responses.
      */
     public function persist(string|array|Arrayable $properties): static
     {

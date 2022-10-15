@@ -1,5 +1,6 @@
 <?php
 
+use Hybridly\Hybridly;
 use Hybridly\Tests\TestCase;
 use Illuminate\Http\Request;
 
@@ -10,7 +11,7 @@ function mockRequest(string $url = '/', string $method = 'GET', bool $bind = fal
     $request = Request::create($url, $method);
 
     if ($hybridly) {
-        $request->headers->add(['X-Hybridly' => 'true']);
+        $request->headers->add([Hybridly::HYBRIDLY_HEADER => 'true']);
     }
 
     if ($bind) {

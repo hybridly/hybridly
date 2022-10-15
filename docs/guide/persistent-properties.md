@@ -16,10 +16,10 @@ To mark a property as persisted, the `hybridly()->persist()` method may be used.
 hybridly()->persist('current_date');
 ```
 
-However, since persistent properties are usually defined in the `HandleHybridlyRequests` middleware, a convenient `$persistent` property is available.
+However, since persistent properties are usually defined in the `HandleHybridRequests` middleware, a convenient `$persistent` property is available.
 
 ```php
-class HandleHybridlyRequests extends Middleware
+class HandleHybridRequests extends Middleware
 {
     protected array $persistent = [
       'security.user'

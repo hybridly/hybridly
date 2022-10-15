@@ -6,11 +6,11 @@ use Illuminate\Http\Request;
 
 if (!function_exists('is_hybrid')) {
     /**
-     * Checks if the given response uses hybridly.
+     * Checks if the given response uses Hybridly.
      */
     function is_hybrid(Request $request = null): bool
     {
-        return hybridly()->isHybridly($request);
+        return hybridly()->isHybrid($request);
     }
 }
 
