@@ -5,6 +5,7 @@
     "release": "bumpp package.json packages/*/package.json --all --execute \"tsx build/bump-php-packages.ts\" --commit \"release: v\"",
     "build": "pnpm -r build",
     "test": "vitest --run",
+    "test:all": "pnpm run test && composer test",
     "lint": "eslint \"**/*.{ts,vue,mjs}\"",
     "lint:fix": "eslint \"**/*.{ts,vue,mjs}\" --fix",
     "docs:dev": "vitepress dev docs",
