@@ -2,6 +2,7 @@
 page: true
 sidebar: false
 title: Hybridly - Server-driven, client-rendered applications
+titleTemplate: false
 ---
 
 <script setup>

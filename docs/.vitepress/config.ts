@@ -16,7 +16,7 @@ export default defineConfig({
 	description,
 
 	head: [
-		['link', { rel: 'icon', type: 'image/svg+xml', href: '/logo.svg' }],
+		['link', { rel: 'icon', type: 'image/svg+xml', href: '/logo-no-bg.svg' }],
 		['meta', { property: 'og:type', content: 'website' }],
 		['meta', { property: 'og:title', content: title }],
 		['meta', { property: 'og:image', content: image }],
@@ -30,6 +30,8 @@ export default defineConfig({
 	cleanUrls: 'with-subfolders',
 
 	themeConfig: {
+		logo: '/logo-no-bg.svg',
+
 		nav: [
 			{ text: 'Guide', link: '/guide/', activeMatch: '/guide/' },
 			{ text: 'API', link: '/api/', activeMatch: '/api/' },
