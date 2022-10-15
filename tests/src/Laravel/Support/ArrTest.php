@@ -6,6 +6,14 @@ it('gets only subsets of an array using dot notation', function ($array, $only, 
     expect(Arr::onlyDot($array, $only))->toBe($expected);
 })->with([
     [
+        [
+            'security' => ['user' => ['name' => 'foo']],
+            'foo' => 'bar',
+        ],
+        ['security.user'],
+        ['security' => ['user' => ['name' => 'foo']]],
+    ],
+    [
         ['key1' => 'value1'],
         ['key1'],
         ['key1' => 'value1'],
@@ -14,7 +22,7 @@ it('gets only subsets of an array using dot notation', function ($array, $only, 
         [
             'key1' => 'value1',
             'key2' => 'value2',
-            'key3' => ['nested-key1' => 'value3', 'nested-key2' => 'value4', ],
+            'key3' => ['nested-key1' => 'value3', 'nested-key2' => 'value4'],
         ],
         ['key1', 'key3.nested-key4'],
         ['key1' => 'value1'],

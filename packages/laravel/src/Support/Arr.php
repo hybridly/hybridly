@@ -13,7 +13,7 @@ class Arr extends SupportArr
     {
         return Arr::only($array, $only) +
             collect(Arr::dot($array))
-                ->only($only)
+                ->filter(fn ($_, $key) => collect($only)->some(fn ($only) => $only === $key || str_starts_with($key, $only . '.')))
                 ->undot()
                 ->toArray();
     }
