@@ -1,6 +1,6 @@
 {
   "name": "@hybridly/core",
-  "version": "0.0.1-alpha.3",
+  "version": "0.0.1-alpha.4",
   "description": "A solution to develop server-driven, client-rendered applications",
   "keywords": [
     "hybridly",
