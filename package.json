@@ -19,21 +19,21 @@
     "@innocenzi/eslint-config": "^0.12.0",
     "@types/debug": "^4.1.7",
     "@types/throttle-debounce": "^5.0.0",
-    "@vitest/ui": "^0.24.1",
+    "@vitest/ui": "^0.24.3",
     "bumpp": "^8.2.1",
     "eslint": "^8.25.0",
-    "happy-dom": "^7.5.1",
+    "happy-dom": "^7.5.12",
     "hybridly": "workspace:*",
     "msw": "0.47.4",
     "tsx": "^3.10.1",
     "type-fest": "^3.1.0",
     "typescript": "^4.8.4",
-    "unbuild": "0.8.11",
+    "unbuild": "0.9.1",
     "unocss": "^0.45.29",
-    "vite": "^3.1.7",
-    "vitepress": "1.0.0-alpha.19",
-    "vitest": "^0.24.1",
-    "vue": "^3.2.40"
+    "vite": "^3.1.8",
+    "vitepress": "1.0.0-alpha.21",
+    "vitest": "^0.24.3",
+    "vue": "^3.2.41"
   },
   "pnpm": {
     "overrides": {
