@@ -337,6 +337,37 @@ open https://hybridly-app.test
 If you found that installation process tedious, consider using the [preset](#preset) for your next project.
 :::
 
+## TypeScript support
+
+Features such as typed global properties or typed authorizations require [Data](https://github.com/spatie/laravel-data) and [TypeScript Transformer](https://github.com/spatie/laravel-typescript-transformer).
+
+```bash
+composer require spatie/laravel-data spatie/laravel-typescript-transformer
+php artisan vendor:publish --tag=typescript-transformer-config
+```
+
+Open `config/typescript-transformer.php` and update the following properties:
+
+```diff
+ 'collectors' => [
+-    Spatie\TypeScriptTransformer\Collectors\DefaultCollector::class,
++    Hybridly\Support\TypeScriptTransformer\DataResourceTypeScriptCollector::class,
++    Spatie\LaravelData\Support\TypeScriptTransformer\DataTypeScriptCollector::class,
+ ],
+
+ 'transformers' => [
+-    Spatie\LaravelTypeScriptTransformer\Transformers\SpatieStateTransformer::class,
+-    Spatie\TypeScriptTransformer\Transformers\SpatieEnumTransformer::class,
+-    Spatie\TypeScriptTransformer\Transformers\DtoTransformer::class,
++    Spatie\LaravelData\Support\TypeScriptTransformer\DataTypeScriptTransformer::class,
++    Spatie\TypeScriptTransformer\Transformers\EnumTransformer::class,
+ ],
+```
+
+The configuration above uses a collector provided by Hybridly that finds `DataResource` objects and generates typings with their authorizations. 
+
+It also configures the collector and transformer from `laravel-data` to transform data objects, as well as the `EnumTransformer` that is not, for some reason, configured by default.
+
 ## What's next?
 
 Hybridly has many features. You probably want to know how to pass data from the server to the front-end or how to navigate between pages.
