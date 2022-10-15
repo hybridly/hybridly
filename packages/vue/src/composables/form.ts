@@ -158,7 +158,7 @@ export function useForm<T extends Fields = Fields>(options: FormOptions<T>) {
 		fields,
 		loaded,
 		submitWithOptions: submit,
-		submit: () => submit,
+		submit: () => submit(),
 		abort,
 		setErrors,
 		clearErrors,
