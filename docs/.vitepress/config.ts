@@ -77,7 +77,7 @@ export default defineConfig({
 						{ text: 'Validation', link: '/guide/validation' },
 						{ text: 'Routing', link: '/guide/routing' },
 						{ text: 'Pages', link: '/guide/pages' },
-						{ text: 'Title & meta', link: '/guide/title-meta' },
+						{ text: 'Title & meta', link: '/guide/title-and-meta' },
 						{ text: 'Forms', link: '/guide/forms' },
 						{ text: 'File upload', link: '/guide/file-upload' },
 						{ text: 'Infinite scrolling', link: '/guide/infinite-scrolling' },
