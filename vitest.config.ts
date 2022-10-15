@@ -16,6 +16,7 @@ export default defineConfig({
 	},
 	test: {
 		isolate: false,
+		mockReset: true,
 		restoreMocks: true,
 		environment: 'happy-dom',
 		threads: false,
