@@ -1,10 +1,11 @@
-import { beforeEach, expect, it } from 'vitest'
+import { beforeEach, expect, it, vi } from 'vitest'
 import { visit } from '../../src/router/router'
 import { getRouterContext, router, registerHook } from '../../src'
 import { fakeRouterContext, fakeVisitPayload, mockUrl } from '../utils'
 
 beforeEach(() => {
 	fakeRouterContext()
+	vi.stubGlobal('console', { warn: vi.fn() })
 })
 
 it.skip('performs hybridly visits', async() => {
@@ -43,7 +44,6 @@ it('supports global "before" event cancellation', async() => {
 	const options = { url: 'http://localhost.test/visit' }
 	registerHook('before', () => false)
 
-	expect((await visit(options)).error?.type).toBe('VisitCancelledError')
 	expect((await visit(options)).error?.type).toBe('VisitCancelledError')
 })
 
