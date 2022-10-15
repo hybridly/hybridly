@@ -144,7 +144,9 @@ initializeHybridly({
   <br />
   <br />
   <br />
-  <img src='https://cdn.jsdelivr.net/gh/innocenzi/static@latest/sponsorkit/sponsors.svg'/>
+  <a href="https://raw.githubusercontent.com/innocenzi/static/main/sponsorkit/sponsors.svg">
+    <img src="https://raw.githubusercontent.com/innocenzi/static/main/sponsorkit/sponsors.svg"/>
+  </a>
   <br />
   <br />
   <sub>·</sub>
