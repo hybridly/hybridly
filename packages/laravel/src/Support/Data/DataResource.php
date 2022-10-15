@@ -134,10 +134,10 @@ abstract class DataResource extends Data implements DataResourceContract
         return $data;
     }
 
-    public function transform(bool $transformValues = true, WrapExecutionType $wrapExecutionType = WrapExecutionType::Disabled): array
+    public function transform(bool $transformValues = true, WrapExecutionType $wrapExecutionType = WrapExecutionType::Disabled, bool $mapPropertyNames = true): array
     {
         $this->authorization = Lazy::create(fn () => $this->getAuthorizationArray())->defaultIncluded();
 
-        return parent::transform($transformValues, $wrapExecutionType);
+        return parent::transform($transformValues, $wrapExecutionType, $mapPropertyNames);
     }
 }
