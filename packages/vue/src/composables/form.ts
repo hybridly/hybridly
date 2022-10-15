@@ -74,6 +74,7 @@ export function useForm<T extends Fields = Fields>(options: FormOptions<T>) {
 			: fields
 
 		return router.visit({
+			...options,
 			url: url ?? state.context.value?.url,
 			method: options.method ?? 'POST',
 			...optionsOverrides,
