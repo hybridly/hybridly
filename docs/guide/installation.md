@@ -233,7 +233,7 @@ export default defineConfig({
 })
 ```
 
-If you add `valetTls`, which you should, don't forget to also run `valet secure`.
+If you add `valetTls`, which you should, don't forget to also run `valet secure` and set up `APP_URL` in `.env`.
 
 ### Initialize Hybridly
 
