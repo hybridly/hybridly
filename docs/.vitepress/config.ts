@@ -6,7 +6,7 @@ import Unocss from 'unocss/vite'
 const title = 'Hybridly'
 const description = 'Modern solution to develop server-driven, client-rendered applications.'
 const url = 'https://hybridly.dev'
-const image = 'TODO'
+const image = '/og.jpg'
 const twitter = 'enzoinnocenzi'
 
 const { version } = JSON.parse(readFileSync(resolve('package.json'), { encoding: 'utf-8' }))
