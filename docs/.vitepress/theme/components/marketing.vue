@@ -48,7 +48,7 @@ const features: Feature[] = [
 				<!-- Left block -->
 				<section class="max-w-2xl grow">
 					<!-- Title -->
-					<h1 class="font-title bg-gradient-to-r from-purple-300 to-rose-400 bg-clip-text text-center text-6xl font-medium uppercase text-transparent lg:text-left lg:text-8xl">
+					<h1 class="title font-title bg-gradient-to-r from-purple-300 to-rose-400 bg-clip-text text-center text-6xl font-medium uppercase text-transparent lg:text-left lg:text-8xl">
 						Hybridly
 					</h1>
 					<!-- Subtitle -->
@@ -140,5 +140,10 @@ const features: Feature[] = [
 		background-position: 0% 50%;
 		border-radius: 75px;
 	}
+}
+
+.title::selection {
+	background-color: rgba(244, 114, 182, 0.2);
+	color: white;
 }
 </style>
