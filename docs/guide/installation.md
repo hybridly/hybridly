@@ -255,7 +255,7 @@ initializeHybridly({
 })
 ```
 
-The last import is what makes the `route` helper typed. If you don't intend on using it because you prefer hardcoding URLs directly and having to replace them in your whole codebase when Quality Assurance need you to change pluralize your URLs, feel free to omit it.
+The last import is what makes the `route` util typed. If you don't intend on using it because you prefer hardcoding URLs directly and having to replace them in your whole codebase when Quality Assurance need you to change pluralize your URLs, feel free to omit it.
 
 - The `cleanup` property defines whether the properties should be removed from the DOM after the first load. This is not necessary but if we can do it, why not?
 
