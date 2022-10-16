@@ -14,6 +14,12 @@ The main reason one would want to implement server-side rendering is to benefit 
 
 If your application is not rich in interactions, maybe [Livewire](https://laravel-livewire.com) is a better fit for you.
 
-:::info Google indexes client-side-rendered applications
-It is worthy of noting that client-side-rendered applications are also indexed by Google. It simply takes longer: up to one week, usually a few hours. If your application is not *critically* dependant on search engine optimization, you probably don't need server-side rendering.
-:::
+## How indexing works
+
+It is worthy of noting that client-side-rendered applications are still indexed by Google. 
+
+Hybridly applications without server-side rendering use the [application shell model](https://web.dev/learn/pwa/architecture/), where the HTML doesn't contain actual content and JavaScript needs to be executed.
+
+[Google does crawl such applications](https://developers.google.com/search/docs/crawling-indexing/javascript/javascript-seo-basics#how-googlebot-processes-javascript), but it puts them on a render queue. An application on Google's render queue can take a few seconds to a few days to be crawled and indexed, depending on Google's resources at the moment.
+
+If your application is not *critically* dependant on search engine optimization, you probably don't need server-side rendering.
