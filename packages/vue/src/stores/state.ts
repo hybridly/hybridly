@@ -11,6 +11,7 @@ export const state = {
 	context: ref<RouterContext>(),
 	view: shallowRef<ComponentOptions>(),
 	viewLayout: shallowRef<Layout>(),
+	viewLayoutProperties: ref<any>(),
 	viewKey: ref<number>(),
 	dialog: shallowRef<ComponentOptions>(),
 	dialogKey: ref<number>(),
@@ -28,9 +29,14 @@ export const state = {
 		state.view.value = view
 	},
 
-	setViewLayout(layout: Layout) {
-		debug.adapter('vue:state:view', 'Setting layout:', layout)
+	setViewLayout(layout: Layout | Layout[]) {
+		debug.adapter('vue:state:view', 'Setting layout', layout)
 		state.viewLayout.value = layout
+	},
+
+	setViewLayoutProperties(properties: any) {
+		debug.adapter('vue:state:view', 'Setting layout properties:', properties)
+		state.viewLayoutProperties.value = properties
 	},
 
 	setDialog(dialog: MaybeRef<ComponentOptions>) {

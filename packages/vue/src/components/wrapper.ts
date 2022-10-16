@@ -29,12 +29,19 @@ export const wrapper = defineComponent({
 					.reverse()
 					.reduce((child, layout) => {
 						layout.inheritAttrs = !!layout.inheritAttrs
-						return h(layout, { ...state.context.value!.view.properties }, () => child)
+
+						return h(layout, {
+							...(state.view.value?.layoutProperties ?? {}),
+							...state.context.value!.view.properties,
+						}, () => child)
 					})
 			}
 
 			return [
-				h(state.view.value?.layout, { ...state.context.value!.view.properties }, () => child),
+				h(state.view.value?.layout, {
+					...(state.view.value?.layoutProperties ?? {}),
+					...state.context.value!.view.properties,
+				}, () => child),
 				renderDialog(),
 			]
 		}
@@ -67,6 +74,11 @@ export const wrapper = defineComponent({
 				if (state.viewLayout.value) {
 					state.view.value.layout = state.viewLayout.value
 					state.viewLayout.value = undefined
+				}
+
+				if (state.viewLayoutProperties.value) {
+					state.view.value.layoutProperties = state.viewLayoutProperties.value
+					state.viewLayoutProperties.value = undefined
 				}
 
 				if (state.view.value.layout) {

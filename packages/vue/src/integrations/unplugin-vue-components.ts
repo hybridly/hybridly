@@ -13,6 +13,7 @@ export const HybridlyImports = {
 		'useHistoryState',
 		'usePaginator',
 		'defineLayout',
+		'defineLayoutProperties',
 		'route',
 	],
 	'hybridly': [
