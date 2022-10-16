@@ -14,17 +14,17 @@ npm i -D @vueuse/head
 
 In `main.ts`, import `createHead` and register its return value as a plugin.
 
-```ts{3,10}
+```ts
 import { createApp } from 'vue'
 import { initializeHybridly } from 'hybridly/vue'
-import { createHead } from '@vueuse/head'
+import { createHead } from '@vueuse/head' // [!vp hl]
 import 'virtual:hybridly/router'
 
 initializeHybridly({
 	cleanup: !import.meta.env.DEV,
 	pages: import.meta.glob('@/views/pages/**/*.vue', { eager: true }),
 	setup: ({ render, element, hybridly }) => createApp({ render })
-		.use(createHead())
+		.use(createHead()) // [!vp hl]
 		.use(hybridly)
 		.mount(element),
 })

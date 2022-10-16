@@ -2,6 +2,7 @@ import { resolve } from 'node:path'
 import { readFileSync } from 'node:fs'
 import { defineConfig } from 'vitepress'
 import Unocss from 'unocss/vite'
+import highlighter from './shiki-tags/highlighter'
 
 const title = 'Hybridly'
 const description = 'Modern solution to develop server-driven, client-rendered applications.'
@@ -11,7 +12,7 @@ const twitter = 'enzoinnocenzi'
 
 const { version } = JSON.parse(readFileSync(resolve('package.json'), { encoding: 'utf-8' }))
 
-export default defineConfig({
+export default async() => defineConfig({
 	title,
 	description,
 
@@ -111,6 +112,10 @@ export default defineConfig({
 		footer: {
 			message: 'Made with <span class="i-mdi:cards-heart mx-1 inline-block text-pink-300"></span> by <a class="ml-1 underline" href="https://twitter.com/enzoinnocenzi">Enzo Innocenzi</a>',
 		},
+	},
+
+	markdown: {
+		highlight: await highlighter(),
 	},
 
 	vite: {
