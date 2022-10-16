@@ -44,7 +44,7 @@ const features: Feature[] = [
 	<ClientOnly>
 		<section class="mx-auto mt-20 flex h-full w-full max-w-5xl flex-col lg:mt-40">
 			<!-- Hero -->
-			<div class="gap-x-50 flex w-full flex-col items-center justify-between px-6 lg:flex-row lg:items-start">
+			<div class="gap-x-50 flex w-full flex-col items-center justify-between px-6 lg:flex-row lg:items-start lg:px-0">
 				<!-- Left block -->
 				<section class="max-w-2xl grow">
 					<!-- Title -->
