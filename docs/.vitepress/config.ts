@@ -70,8 +70,8 @@ export default defineConfig({
 				{
 					text: 'Core concepts',
 					items: [
-						{ text: 'Pages', link: '/guide/pages' },
 						{ text: 'Routing', link: '/guide/routing' },
+						{ text: 'Pages & layouts', link: '/guide/pages-and-layouts' },
 						{ text: 'Global properties', link: '/guide/global-properties' },
 						{ text: 'Partial reloads', link: '/guide/partial-reloads' },
 						{ text: 'Persistent properties', link: '/guide/persistent-properties' },
