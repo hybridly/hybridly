@@ -7,11 +7,13 @@ importers:
 
   .:
     specifiers:
+      '@fontsource/rubik': ^4.5.11
       '@hybridly/core': workspace:*
       '@hybridly/progress-plugin': workspace:*
       '@hybridly/utils': workspace:*
       '@hybridly/vite': workspace:*
       '@hybridly/vue': workspace:*
+      '@iconify-json/mdi': ^1.1.34
       '@innocenzi/eslint-config': ^0.12.0
       '@types/debug': ^4.1.7
       '@types/throttle-debounce': ^5.0.0
@@ -31,11 +33,13 @@ importers:
       vitest: ^0.24.3
       vue: ^3.2.41
     devDependencies:
+      '@fontsource/rubik': 4.5.11
       '@hybridly/core': link:packages/core
       '@hybridly/progress-plugin': link:packages/progress
       '@hybridly/utils': link:packages/utils
       '@hybridly/vite': link:packages/vite
       '@hybridly/vue': link:packages/vue
+      '@iconify-json/mdi': 1.1.34
       '@innocenzi/eslint-config': 0.12.0_z4bbprzjrhnsfa24uvmcbu7f5q
       '@types/debug': 4.1.7
       '@types/throttle-debounce': 5.0.0
@@ -411,6 +415,10 @@ packages:
       - supports-color
     dev: true
 
+  /@fontsource/rubik/4.5.11:
+    resolution: {integrity: sha512-m0/4GKOqJjF9cB4wuLgDhRdRVt35WzqI5n7SgddRjRD+yzsO0eEq/ak0ezgfbR3+f91ydDCek1+RuOVB8dNYwg==}
+    dev: true
+
   /@humanwhocodes/config-array/0.10.7:
     resolution: {integrity: sha512-MDl6D6sBsaV452/QSdX+4CXIjZhIcI0PELsxUjk4U828yd58vk3bTIvk/6w5FY+4hIy9sLW0sfrV7K7Kc++j/w==}
     engines: {node: '>=10.10.0'}
@@ -429,6 +437,12 @@ packages:
 
   /@humanwhocodes/object-schema/1.2.1:
     resolution: {integrity: sha512-ZnQMnLV4e7hDlUvw8H+U8ASL02SS2Gn6+9Ac3wGGLIe7+je2AeAOxPY+izIPJDfFDb7eDjev0Us8MO1iFRN8hA==}
+    dev: true
+
+  /@iconify-json/mdi/1.1.34:
+    resolution: {integrity: sha512-Jle/BrVmaKMMPVitsO3lbJ8VpXUVCAhfMFAMo0VoxLDX8ZiKiQyVDHXPug9wGaXYb9mrFZE4UWVK63Cjx8L3rQ==}
+    dependencies:
+      '@iconify/types': 2.0.0
     dev: true
 
   /@iconify/types/2.0.0:

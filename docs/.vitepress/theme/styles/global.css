@@ -21,3 +21,8 @@ hr {
 .vp-doc h1 + h2 {
 	margin-top: 2.5rem !important;
 }
+
+footer p.message {
+	display: inline-flex;
+	align-items: center;
+}

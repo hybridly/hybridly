@@ -14,11 +14,13 @@
     "ci": "pnpm run lint && pnpm run build && pnpm run test"
   },
   "devDependencies": {
+    "@fontsource/rubik": "^4.5.11",
     "@hybridly/core": "workspace:*",
     "@hybridly/progress-plugin": "workspace:*",
     "@hybridly/utils": "workspace:*",
     "@hybridly/vite": "workspace:*",
     "@hybridly/vue": "workspace:*",
+    "@iconify-json/mdi": "^1.1.34",
     "@innocenzi/eslint-config": "^0.12.0",
     "@types/debug": "^4.1.7",
     "@types/throttle-debounce": "^5.0.0",

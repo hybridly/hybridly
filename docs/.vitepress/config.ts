@@ -16,7 +16,7 @@ export default defineConfig({
 	description,
 
 	head: [
-		['link', { rel: 'icon', type: 'image/svg+xml', href: '/logo-no-bg.svg' }],
+		['link', { rel: 'icon', type: 'image/svg+xml', href: '/logo.svg' }],
 		['meta', { property: 'og:type', content: 'website' }],
 		['meta', { property: 'og:title', content: title }],
 		['meta', { property: 'og:image', content: image }],
@@ -30,7 +30,7 @@ export default defineConfig({
 	cleanUrls: 'with-subfolders',
 
 	themeConfig: {
-		logo: '/logo-no-bg.svg',
+		logo: '/logo.svg',
 
 		nav: [
 			{ text: 'Guide', link: '/guide/', activeMatch: '/guide/' },
@@ -106,6 +106,10 @@ export default defineConfig({
 					],
 				},
 			],
+		},
+
+		footer: {
+			message: 'Made with <span class="i-mdi:cards-heart mx-1 inline-block text-pink-300"></span> by <a class="ml-1 underline" href="https://twitter.com/enzoinnocenzi">Enzo Innocenzi</a>',
 		},
 	},
 

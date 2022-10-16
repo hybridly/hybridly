@@ -1,6 +1,5 @@
 ---
-page: true
-sidebar: false
+layout: home
 title: Hybridly - Server-driven, client-rendered applications
 titleTemplate: false
 ---
