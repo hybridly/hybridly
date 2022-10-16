@@ -17,6 +17,8 @@
     "@hybridly/core": "workspace:*",
     "@hybridly/vite": "workspace:*",
     "@hybridly/vue": "workspace:*",
+    "@hybridly/utils": "workspace:*",
+    "@hybridly/progress-plugin": "workspace:*",
     "@innocenzi/eslint-config": "^0.12.0",
     "@types/debug": "^4.1.7",
     "@types/throttle-debounce": "^5.0.0",
