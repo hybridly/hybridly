@@ -73,6 +73,7 @@ export default async() => defineConfig({
 					text: 'Core concepts',
 					items: [
 						{ text: 'Routing', link: '/guide/routing' },
+						{ text: 'Navigation', link: '/guide/navigation' },
 						{ text: 'Pages & layouts', link: '/guide/pages-and-layouts' },
 						{ text: 'Global properties', link: '/guide/global-properties' },
 						{ text: 'Partial reloads', link: '/guide/partial-reloads' },
