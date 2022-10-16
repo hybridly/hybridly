@@ -8,6 +8,8 @@ importers:
   .:
     specifiers:
       '@hybridly/core': workspace:*
+      '@hybridly/progress-plugin': workspace:*
+      '@hybridly/utils': workspace:*
       '@hybridly/vite': workspace:*
       '@hybridly/vue': workspace:*
       '@innocenzi/eslint-config': ^0.12.0
@@ -30,6 +32,8 @@ importers:
       vue: ^3.2.41
     devDependencies:
       '@hybridly/core': link:packages/core
+      '@hybridly/progress-plugin': link:packages/progress
+      '@hybridly/utils': link:packages/utils
       '@hybridly/vite': link:packages/vite
       '@hybridly/vue': link:packages/vue
       '@innocenzi/eslint-config': 0.12.0_z4bbprzjrhnsfa24uvmcbu7f5q
@@ -54,14 +58,14 @@ importers:
   packages/core:
     specifiers:
       '@hybridly/utils': workspace:*
-      axios: ^1.1.2
+      axios: ^1.1.3
       defu: ^6.1.0
       qs: ^6.11.0
     dependencies:
       '@hybridly/utils': link:../utils
       qs: 6.11.0
     devDependencies:
-      axios: 1.1.2
+      axios: 1.1.3
       defu: 6.1.0
 
   packages/hybridly:
@@ -96,7 +100,7 @@ importers:
   packages/vite:
     specifiers:
       '@hybridly/core': workspace:*
-      rollup: ^3.1.0
+      rollup: ^3.2.1
       throttle-debounce: ^5.0.0
       vite: ^3.1.8
       vue: ^3.2.41
@@ -104,7 +108,7 @@ importers:
       '@hybridly/core': link:../core
       throttle-debounce: 5.0.0
     devDependencies:
-      rollup: 3.1.0
+      rollup: 3.2.1
       vite: 3.1.8
       vue: 3.2.41
 
@@ -1343,8 +1347,8 @@ packages:
     engines: {node: '>= 0.4'}
     dev: true
 
-  /axios/1.1.2:
-    resolution: {integrity: sha512-bznQyETwElsXl2RK7HLLwb5GPpOLlycxHCtrpDR/4RqqBzjARaOTo3jz4IgtntWUYee7Ne4S8UHd92VCuzPaWA==}
+  /axios/1.1.3:
+    resolution: {integrity: sha512-00tXVRwKx/FZr/IDVFt4C+f9FYairX517WoGCL6dpOntqLkZofjhu43F/Xl44UOpqa+9sLFDrG/XAnFsUYgkDA==}
     dependencies:
       follow-redirects: 1.15.1
       form-data: 4.0.0
@@ -4338,8 +4342,8 @@ packages:
       fsevents: 2.3.2
     dev: true
 
-  /rollup/3.1.0:
-    resolution: {integrity: sha512-GEvr+COcXicr4nuih6mpt2Eydq5lZ72z0RrKx1H4/Q2ouT34OHrIIJ9OUj2sZqUhq7QL8Hp8Q8BoWbjL/6ccRQ==}
+  /rollup/3.2.1:
+    resolution: {integrity: sha512-Y9lBWYY7pOiWhJbwMEnLicDuTu9IqjJb5jJM88L8O5rdreJrX1j9WhriMHQSOwVYPFg1xkLoXQyDfQ2U6Ejzyg==}
     engines: {node: '>=14.18.0', npm: '>=8.0.0'}
     hasBin: true
     optionalDependencies:
