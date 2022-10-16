@@ -2,7 +2,7 @@
 
 ## Overview
 
-Hybridly is born from a fork of [Inertia](https://inertiajs.com). If you already know Inertia, you just need to know that Hybridly brings the developer experience to the next level.
+Hybridly is essentially a fork of [Inertia](https://inertiajs.com). If you already know Inertia, you also know Hybridly. The difference resides in its philosophy and the resulting developer experience.
 
 If you didn't know about Inertia, Hybridly is a set of tools that implements a protocol for building monolithic, server-driven, client-rendered web application.
 
