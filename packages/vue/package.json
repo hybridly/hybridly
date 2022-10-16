@@ -1,6 +1,6 @@
 {
   "name": "@hybridly/vue",
-  "version": "0.0.1-alpha.4",
+  "version": "0.0.1-alpha.5",
   "description": "A solution to develop server-driven, client-rendered applications",
   "keywords": [
     "hybridly",
