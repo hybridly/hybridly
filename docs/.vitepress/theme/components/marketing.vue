@@ -83,8 +83,8 @@ const features: Feature[] = [
 
 				<!-- Logo block -->
 				<div class="lg:h-55 lg:w-55 h-30 w-30 relative order-first mb-20 flex shrink-0 items-center justify-center lg:order-last lg:mt-20 lg:mr-20">
-					<img class="absolute z-[1] h-full w-full drop-shadow-2xl" src="/logo.svg" />
-					<div class="image-bg absolute -inset-5 rotate-45 opacity-70" />
+					<img class="absolute z-[1] h-full w-full" src="/logo.svg" />
+					<div class="image-bg absolute -inset-5 rotate-45 opacity-40 dark:opacity-70" />
 				</div>
 			</div>
 
@@ -112,14 +112,14 @@ const features: Feature[] = [
 	--vp-home-hero-image-filter: blur(40px);
 	--vp-home-hero-image-background-image: linear-gradient(
 		-45deg,
-		var(--vp-c-brand-dark),
-		var(--vp-c-brand-darker),
-		var(--vp-c-brand-dark),
-		var(--vp-c-brand-light),
-		var(--vp-c-brand-lighter),
-		var(--vp-c-brand-light),
-		var(--vp-c-brand-dark),
-		var(--vp-c-brand-darker)
+		var(--vp-logo-shadow-1),
+		var(--vp-logo-shadow-2),
+		var(--vp-logo-shadow-3),
+		var(--vp-logo-shadow-4),
+		var(--vp-logo-shadow-2),
+		var(--vp-logo-shadow-4),
+		var(--vp-logo-shadow-3),
+		var(--vp-logo-shadow-2)
 	);
   background-image: var(--vp-home-hero-image-background-image);
   filter: var(--vp-home-hero-image-filter);
@@ -131,14 +131,17 @@ const features: Feature[] = [
 	0% {
 		background-position: 0% 50%;
 		border-radius: 75px;
+		transform: rotate(0deg);
 	}
 	50% {
 		background-position: 100% 50%;
 		border-radius: 150px;
+		transform: rotate(100deg);
 	}
 	100% {
 		background-position: 0% 50%;
 		border-radius: 75px;
+		transform: rotate(00deg);
 	}
 }
 
