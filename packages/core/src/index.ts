@@ -1,5 +1,5 @@
 export { createRouter, router } from './router'
-export type { Router, VisitOptions, VisitResponse, VisitPayload, ResolveComponent, Method } from './router'
+export type { Router, VisitOptions, VisitResponse, VisitPayload, ResolveComponent, Method, Progress } from './router'
 
 export { getRouterContext } from './context'
 export type { RouterContext, RouterContextOptions } from './context'

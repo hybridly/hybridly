@@ -1,6 +1,7 @@
 import isEqual from 'lodash.isequal'
 import clone from 'lodash.clonedeep'
-import type { UrlResolvable, VisitOptions } from '@hybridly/core'
+import type { Progress, UrlResolvable, VisitOptions } from '@hybridly/core'
+import type { DeepReadonly } from 'vue'
 import { computed, reactive, readonly, ref, toRaw, watch } from 'vue'
 import { router } from '@hybridly/core'
 import { state } from '../stores/state'
@@ -49,6 +50,8 @@ export function useForm<T extends Fields = Fields>(options: FormOptions<T>) {
 	const failed = ref(false)
 	/** Whether the submission is being processed. */
 	const processing = ref(false)
+	/** The current request's progress. */
+	const progress = ref<Progress>()
 
 	/**
 	 * Resets the form to its initial values.
@@ -96,6 +99,10 @@ export function useForm<T extends Fields = Fields>(options: FormOptions<T>) {
 					processing.value = true
 					return options.hooks?.start?.(context)
 				},
+				progress: (incoming) => {
+					progress.value = incoming
+					return options.hooks?.progress?.(incoming)
+				},
 				error: (incoming) => {
 					setErrors(incoming)
 					failed.value = true
@@ -113,6 +120,7 @@ export function useForm<T extends Fields = Fields>(options: FormOptions<T>) {
 					return options.hooks?.success?.(payload)
 				},
 				after: (context) => {
+					progress.value = undefined
 					processing.value = false
 					return options.hooks?.after?.(context)
 				},
@@ -163,6 +171,7 @@ export function useForm<T extends Fields = Fields>(options: FormOptions<T>) {
 		setErrors,
 		clearErrors,
 		hasErrors: computed(() => Object.values(errors.value).length > 0),
+		progress: progress as DeepReadonly<typeof progress>,
 		isDirty: readonly(isDirty),
 		errors: readonly(errors),
 		processing: readonly(processing),
