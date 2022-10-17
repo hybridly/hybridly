@@ -81,7 +81,11 @@ export async function visit(options: VisitOptions): Promise<VisitResponse> {
 
 		// If the URL has transformation options, apply them before using the URL.
 		if (options.url && options.transformUrl) {
-			options.url = makeUrl(options.url, options.transformUrl)
+			const transformUrl = typeof options.transformUrl === 'function'
+				? options.transformUrl(makeUrl(options.url).toString())
+				: options.transformUrl
+
+			options.url = makeUrl(options.url, transformUrl)
 		}
 
 		// A visit is being made, we need to add it to the context so it

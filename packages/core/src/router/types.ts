@@ -44,7 +44,7 @@ export interface NavigationOptions {
 	 * }
 	 * ```
 	 */
-	transformUrl?: UrlTransformable
+	transformUrl?: UrlTransformable | ((url: string) => UrlTransformable)
 	/**
 	 * Defines whether the history state should be updated.
 	 * @internal This is an advanced property meant to be used internally.
