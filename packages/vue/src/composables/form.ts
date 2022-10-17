@@ -2,7 +2,7 @@ import isEqual from 'lodash.isequal'
 import clone from 'lodash.clonedeep'
 import type { Progress, UrlResolvable, VisitOptions } from '@hybridly/core'
 import type { DeepReadonly } from 'vue'
-import { computed, reactive, readonly, ref, toRaw, watch } from 'vue'
+import { computed, reactive, ref, toRaw, watch } from 'vue'
 import { router } from '@hybridly/core'
 import { state } from '../stores/state'
 
@@ -31,9 +31,9 @@ export function useForm<T extends Fields = Fields>(options: FormOptions<T>) {
 	}
 
 	/** Fields that were initially set up. */
-	const initial = readonly(safeClone(options.fields))
+	const initial = safeClone(options.fields)
 	/** Fields as they were when loaded. */
-	const loaded = readonly(safeClone(historyData?.fields ?? options.fields))
+	const loaded = safeClone(historyData?.fields ?? options.fields)
 	/** Current fields. */
 	const fields = reactive<T>(safeClone(historyData?.fields ?? options.fields))
 	/** Validation errors for each field. */
@@ -162,22 +162,22 @@ export function useForm<T extends Fields = Fields>(options: FormOptions<T>) {
 
 	return reactive({
 		reset,
-		initial,
 		fields,
-		loaded,
-		submitWithOptions: submit,
-		submit: () => submit(),
 		abort,
 		setErrors,
 		clearErrors,
+		submitWithOptions: submit,
+		submit: () => submit(),
 		hasErrors: computed(() => Object.values(errors.value).length > 0),
+		initial: initial as DeepReadonly<typeof initial>,
+		loaded: loaded as DeepReadonly<typeof loaded>,
 		progress: progress as DeepReadonly<typeof progress>,
-		isDirty: readonly(isDirty),
-		errors: readonly(errors),
-		processing: readonly(processing),
-		successful: readonly(successful),
-		failed: readonly(failed),
-		recentlySuccessful: readonly(recentlySuccessful),
-		recentlyFailed: readonly(recentlyFailed),
+		isDirty: isDirty as DeepReadonly<typeof isDirty>,
+		errors: errors as DeepReadonly<typeof errors>,
+		processing: processing as DeepReadonly<typeof processing>,
+		successful: successful as DeepReadonly<typeof successful>,
+		failed: failed as DeepReadonly<typeof failed>,
+		recentlySuccessful: recentlySuccessful as DeepReadonly<typeof recentlySuccessful>,
+		recentlyFailed: recentlyFailed as DeepReadonly<typeof recentlyFailed>,
 	})
 }
