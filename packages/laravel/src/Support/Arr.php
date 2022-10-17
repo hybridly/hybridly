@@ -11,8 +11,8 @@ class Arr extends SupportArr
      */
     public static function onlyDot(array $array, string|array $only): array
     {
-        return Arr::only($array, $only) +
-            collect(Arr::dot($array))
+        return self::only($array, $only) +
+            collect(self::dot($array))
                 ->filter(fn ($_, $key) => collect($only)->some(fn ($only) => $only === $key || str_starts_with($key, $only . '.')))
                 ->undot()
                 ->toArray();
@@ -23,6 +23,6 @@ class Arr extends SupportArr
      */
     public static function exceptDot(array $array, string|array $except): array
     {
-        return Arr::except($array, $except);
+        return self::except($array, $except);
     }
 }

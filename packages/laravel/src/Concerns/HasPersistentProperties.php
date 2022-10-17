@@ -19,7 +19,7 @@ trait HasPersistentProperties
         } elseif ($properties instanceof Arrayable) {
             $this->persistent = array_merge($this->persistent, $properties->toArray());
         } else {
-            array_push($this->persistent, $properties);
+            $this->persistent[] = $properties;
         }
 
         return $this;

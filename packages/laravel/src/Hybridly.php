@@ -11,11 +11,11 @@ use Symfony\Component\HttpFoundation\Response;
 
 class Hybridly
 {
-    use Macroable;
+    use Concerns\HasPersistentProperties;
     use Concerns\HasRootView;
     use Concerns\HasSharedProperties;
-    use Concerns\HasPersistentProperties;
     use Concerns\HasVersion;
+    use Macroable;
 
     public const HYBRIDLY_HEADER = 'x-hybrid';
     public const EXTERNAL_HEADER = 'x-hybrid-external';

@@ -11,8 +11,8 @@ use Symfony\Component\HttpFoundation\Response;
 
 class Middleware
 {
-    use Concerns\SharesValidationErrors;
     use Concerns\SharesFlashNotifications;
+    use Concerns\SharesValidationErrors;
 
     /**
      * Marks the given properties as persisted, which means they will
@@ -69,7 +69,7 @@ class Middleware
             $response = $this->onEmptyResponse($request, $response);
         }
 
-        if ($response->getStatusCode() === Response::HTTP_FOUND && \in_array($request->method(), ['PUT', 'PATCH', 'DELETE'])) {
+        if ($response->getStatusCode() === Response::HTTP_FOUND && \in_array($request->method(), ['PUT', 'PATCH', 'DELETE'], true)) {
             $response->setStatusCode(Response::HTTP_SEE_OTHER);
         }
 
