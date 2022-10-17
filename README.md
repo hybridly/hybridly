@@ -1,7 +1,7 @@
 <br>
 
 <p align="center">
-  <img src=".github/assets/logo-round.svg" style="width:125px;" />
+  <img src=".github/assets/logo-shadow.svg" style="width:200px;" />
 </p>
 
 <h1 align="center">Hybridly</h1>
@@ -21,98 +21,13 @@
   <br />
   A solution to develop server-driven, client-rendered applications.
   <br />
-  Hybridly is an <a href="https://inertiajs.com">Inertia.js</a> fork which sole purpose is to try to push the developer experience to the maximum.
-  <br />
-  <b>Use at your own risk</b>.
+  Hybridly is still experimental — use at your own risk. Read the <a href="https://hybridly.dev">documentation</a>.
   <br />
   <br />
   <br />
 </div>
 
 <br>
-
-#   Features
-
-All features of [Inertia.js](https://inertiajs.com), plus: 
-- tight integration to Laravel, Vue and Vite
-- written in TypeScript
-- integration with [Laravel Data](https://github.com/spatie/laravel-data)
-- integration with Vue DevTools
-- a built-in router with typings
-- a built-in permission helper with typings
-- new concepts like nested `only`/`except` partial data and persistent data
-- support for infinite scrolling
-- ...among other things.
-
-&nbsp;
-
-> **Warning** <br />
-> Note that SSR is not yet supported.
-
-&nbsp;
-
-
-# Installation
-
-<!-- > **Note** <br />
-> Creating a new project? Scaffold it with a preset.
-
-&nbsp;
-&nbsp; -->
-
-First, install the adapters:
-
-```sh
-pnpm i hybridly
-composer require hybridly/laravel
-```
-
-&nbsp;
-
-Add `hybridly` to your Vite configuration:
-
-```ts
-// vite.config.ts
-import { defineConfig } from 'vite'
-import hybridly from 'hybridly/vite'
-import laravel from 'vite-plugin-laravel'
-import vue from '@vitejs/plugin-vue'
-
-export default defineConfig({
-  plugins: [
-    laravel(),
-    hybridly({ /* options */ }),
-    vue(),
-  ]
-})
-```
-
-&nbsp;
-
-Initialize it in your `main.ts`:
-
-```ts
-import { createApp } from 'vue'
-import { initializeHybridly } from 'hybridly/vue'
-import 'virtual:hybridly/router'
-import './tailwind.css'
-
-initializeHybridly({
-	cleanup: !import.meta.env.DEV,
-	pages: import.meta.glob('@/views/pages/**/*.vue', { eager: true }),
-	setup: ({ render, element, hybridly }) => createApp({ render })
-		.use(hybridly)
-		.mount(element),
-})
-```
-
-&nbsp;
-
-# Documentation
-
-> TODO
-
-&nbsp;
 
 # Q&A
 
@@ -132,7 +47,7 @@ initializeHybridly({
 &nbsp;
 
 **Why fork Inertia instead of contributing?**
-> That was the initial plan, but some of my pull requests were denied most of the other pull requests are not being reviewed or merged. The project is not being actively maintained.
+> I tried, but my philosophy doesn't always match Inertia's. Additionally, the maintenance of Inertia is lacking, pull requests and issues are not being addressed.
 
 &nbsp;
 
@@ -156,6 +71,6 @@ initializeHybridly({
   <sub>
     Built with ❤︎ by <a href="https://github.com/enzoinnocenzi">Enzo Innocenzi</a>
     <br/>
-    Credits to <a href="https://reinink.ca">Jonathan Reinink</a>, the Inertia team and the contributors.
+    Acknowledgments to <a href="https://reinink.ca">Jonathan Reinink</a>, the Inertia team and its contributors.
   </sub>
 </p>
