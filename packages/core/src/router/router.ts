@@ -220,7 +220,7 @@ export async function visit(options: VisitOptions): Promise<VisitResponse> {
 				console.warn(error)
 				await runHooks('abort', options.hooks, context)
 			},
-			NotAHybridlyResponseError: async() => {
+			NotAHybridResponseError: async() => {
 				debug.router('The request was not hybridly.')
 				console.error(error)
 				await runHooks('invalid', options.hooks, error)
