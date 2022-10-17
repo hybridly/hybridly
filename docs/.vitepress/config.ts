@@ -65,6 +65,7 @@ export default async() => defineConfig({
 						{ text: 'What is Hybridly', link: '/guide/' },
 						{ text: 'Installation', link: '/guide/installation' },
 						{ text: 'Migrating from Inertia', link: '/guide/migrating-from-inertia' },
+						{ text: 'Comparison with Inertia', link: '/guide/comparison-with-inertia' },
 						{ text: 'Demonstration', link: '/guide/demonstration' },
 						{ text: 'Roadmap', link: 'https://github.com/orgs/hybridly/projects/1/views/1' },
 					],
