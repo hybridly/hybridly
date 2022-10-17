@@ -48,7 +48,7 @@ const features: Feature[] = [
 				<!-- Left block -->
 				<section class="max-w-2xl grow">
 					<!-- Title -->
-					<h1 class="title font-title bg-gradient-to-r from-purple-300 to-rose-400 bg-clip-text text-center text-5xl font-medium uppercase text-transparent lg:text-left lg:text-8xl">
+					<h1 class="title font-title title-bg bg-clip-text text-center text-5xl font-medium uppercase text-transparent lg:text-left lg:text-8xl">
 						Hybridly
 					</h1>
 					<!-- Subtitle -->
@@ -108,9 +108,10 @@ const features: Feature[] = [
 </template>
 
 <style scoped>
-.image-bg {
-	--vp-home-hero-image-filter: blur(40px);
-	--vp-home-hero-image-background-image: linear-gradient(
+.title-bg {
+	animation: title-gradient 20s ease infinite;
+	background-size: 400% 400%;
+  background-image: linear-gradient(
 		-45deg,
 		var(--vp-logo-shadow-1),
 		var(--vp-logo-shadow-2),
@@ -121,13 +122,38 @@ const features: Feature[] = [
 		var(--vp-logo-shadow-3),
 		var(--vp-logo-shadow-2)
 	);
-  background-image: var(--vp-home-hero-image-background-image);
-  filter: var(--vp-home-hero-image-filter);
-	animation: gradient 10s ease infinite;
-	background-size: 400% 400%;
 }
 
-@keyframes gradient {
+@keyframes title-gradient {
+	0% {
+		background-position: 0% 50%;
+	}
+	50% {
+		background-position: 100% 50%;
+	}
+	100% {
+		background-position: 0% 50%;
+	}
+}
+
+.image-bg {
+  filter: blur(40px);
+	animation: image-gradient 10s ease infinite;
+	background-size: 400% 400%;
+  background-image: linear-gradient(
+		-45deg,
+		var(--vp-logo-shadow-1),
+		var(--vp-logo-shadow-2),
+		var(--vp-logo-shadow-3),
+		var(--vp-logo-shadow-4),
+		var(--vp-logo-shadow-2),
+		var(--vp-logo-shadow-4),
+		var(--vp-logo-shadow-3),
+		var(--vp-logo-shadow-2)
+	);
+}
+
+@keyframes image-gradient {
 	0% {
 		background-position: 0% 50%;
 		border-radius: 75px;
