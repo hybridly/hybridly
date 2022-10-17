@@ -51,5 +51,6 @@ The following is a non-exhaustive comparison table between Inertia and Hybridly'
 
 tbody > tr > td {
   width: 100%;
+  white-space: nowrap;
 }
 </style>
