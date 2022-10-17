@@ -64,10 +64,7 @@ export default async() => defineConfig({
 					items: [
 						{ text: 'What is Hybridly', link: '/guide/' },
 						{ text: 'Installation', link: '/guide/installation' },
-						{ text: 'Migrating from Inertia', link: '/guide/migrating-from-inertia' },
-						{ text: 'Comparison with Inertia', link: '/guide/comparison-with-inertia' },
 						{ text: 'Demonstration', link: '/guide/demonstration' },
-						{ text: 'Roadmap', link: 'https://github.com/orgs/hybridly/projects/1/views/1' },
 					],
 				},
 				{
@@ -101,12 +98,16 @@ export default async() => defineConfig({
 				{
 					text: 'Extra topics',
 					items: [
-						{ text: 'Infinite scrolling', link: '/guide/infinite-scrolling' },
+						{ text: 'Infinite scroll', link: '/guide/infinite-scroll' },
 						{ text: 'Scroll management', link: '/guide/scroll-management' },
 						{ text: 'Precognition', link: '/guide/precognition' },
 						{ text: 'Plugins', link: '/guide/plugins' },
-						{ text: 'Server-side rendering', link: '/guide/ssr' },
 						{ text: 'Asset versioning', link: '/guide/asset-versioning' },
+						{ text: 'Vue DevTools', link: '/guide/devtools' },
+						{ text: 'Server-side rendering', link: '/guide/ssr' },
+						{ text: 'Migrating from Inertia', link: '/guide/migrating-from-inertia' },
+						{ text: 'Comparison with Inertia', link: '/guide/comparison-with-inertia' },
+						{ text: 'Roadmap', link: 'https://github.com/orgs/hybridly/projects/1/views/1' },
 					],
 				},
 			],
