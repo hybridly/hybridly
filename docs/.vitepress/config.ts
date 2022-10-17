@@ -79,6 +79,7 @@ export default async() => defineConfig({
 						{ text: 'Partial reloads', link: '/guide/partial-reloads' },
 						{ text: 'Persistent properties', link: '/guide/persistent-properties' },
 						{ text: 'Forms', link: '/guide/forms' },
+						{ text: 'Hooks', link: '/guide/hooks' },
 						{ text: 'Asset versioning', link: '/guide/asset-versioning' },
 					],
 				},
