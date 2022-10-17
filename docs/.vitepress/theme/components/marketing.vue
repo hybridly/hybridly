@@ -42,9 +42,9 @@ const features: Feature[] = [
 
 <template>
 	<ClientOnly>
-		<section class="mx-auto mt-20 flex h-full w-full max-w-5xl flex-col lg:mt-40">
+		<section class="mt-25 mx-auto flex h-full w-full max-w-5xl flex-col lg:mt-40">
 			<!-- Hero -->
-			<div class="gap-x-50 flex w-full flex-col items-center justify-between px-6 lg:flex-row lg:items-start lg:px-0">
+			<div class="flex w-full flex-col items-center justify-between gap-x-40 px-6 lg:flex-row lg:items-start lg:px-0">
 				<!-- Left block -->
 				<section class="max-w-2xl grow">
 					<!-- Title -->
@@ -82,7 +82,7 @@ const features: Feature[] = [
 				</section>
 
 				<!-- Logo block -->
-				<div class="lg:h-55 lg:w-55 relative order-first mb-20 mr-10 flex h-40 w-40 shrink-0 items-center justify-center lg:order-last">
+				<div class="lg:h-55 lg:w-55 relative order-first mb-20 flex h-40 w-40 shrink-0 items-center justify-center lg:order-last lg:mt-20 lg:mr-20">
 					<img class="absolute z-20 h-full w-full drop-shadow-2xl" src="/logo.svg" />
 					<div class="image-bg absolute -inset-5 rotate-45 opacity-70" />
 				</div>
