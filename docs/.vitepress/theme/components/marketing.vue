@@ -42,13 +42,13 @@ const features: Feature[] = [
 
 <template>
 	<ClientOnly>
-		<section class="mt-25 mx-auto flex h-full w-full max-w-5xl flex-col lg:mt-40">
+		<section class="mx-auto mt-20 flex h-full w-full max-w-5xl flex-col lg:mt-40">
 			<!-- Hero -->
 			<div class="flex w-full flex-col items-center justify-between gap-x-40 px-6 lg:flex-row lg:items-start lg:px-0">
 				<!-- Left block -->
 				<section class="max-w-2xl grow">
 					<!-- Title -->
-					<h1 class="title font-title bg-gradient-to-r from-purple-300 to-rose-400 bg-clip-text text-center text-6xl font-medium uppercase text-transparent lg:text-left lg:text-8xl">
+					<h1 class="title font-title bg-gradient-to-r from-purple-300 to-rose-400 bg-clip-text text-center text-5xl font-medium uppercase text-transparent lg:text-left lg:text-8xl">
 						Hybridly
 					</h1>
 					<!-- Subtitle -->
@@ -56,7 +56,7 @@ const features: Feature[] = [
 						Server-driven, client-rendered applications.
 					</p>
 					<!-- Description -->
-					<p class="mt-4 text-center text-xl font-medium opacity-60 lg:text-left lg:text-2xl">
+					<p class="mt-4 text-center text-lg font-medium opacity-60 lg:text-left lg:text-2xl">
 						Build single-page applications the classic way. No API, no route duplication, no front-end state. Fully server-driven.
 					</p>
 					<!-- Actions -->
@@ -82,7 +82,7 @@ const features: Feature[] = [
 				</section>
 
 				<!-- Logo block -->
-				<div class="lg:h-55 lg:w-55 relative order-first mb-20 flex h-40 w-40 shrink-0 items-center justify-center lg:order-last lg:mt-20 lg:mr-20">
+				<div class="lg:h-55 lg:w-55 h-30 w-30 relative order-first mb-20 flex shrink-0 items-center justify-center lg:order-last lg:mt-20 lg:mr-20">
 					<img class="absolute z-[1] h-full w-full drop-shadow-2xl" src="/logo.svg" />
 					<div class="image-bg absolute -inset-5 rotate-45 opacity-70" />
 				</div>
