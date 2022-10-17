@@ -26,6 +26,8 @@ export default async() => defineConfig({
 		['meta', { name: 'twitter:card', content: 'summary_large_image' }],
 		['meta', { name: 'twitter:site', content: `@${twitter}` }],
 		['meta', { name: 'theme-color', content: '#646cff' }],
+		// Remove after https://github.com/vuejs/vitepress/pull/1498 is merged
+		['script', {}, 'window?.localStorage?.setItem("vitepress-theme-appearance", window?.localStorage?.getItem("vitepress-theme-appearance") ?? "dark")'],
 	],
 
 	cleanUrls: 'with-subfolders',
