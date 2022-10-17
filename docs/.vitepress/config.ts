@@ -90,7 +90,7 @@ export default async() => defineConfig({
 						{ text: 'Authentication', link: '/guide/authentication' },
 						{ text: 'Authorization', link: '/guide/authorization' },
 						{ text: 'Title & meta', link: '/guide/title-and-meta' },
-						{ text: 'File uploads', link: '/guide/file-upload' },
+						{ text: 'File uploads', link: '/guide/file-uploads' },
 						{ text: 'Flash notifications', link: '/guide/flash-notifications' },
 						{ text: 'Error handling', link: '/guide/error-handling' },
 						{ text: 'CSRF protection', link: '/guide/csrf-protection' },
