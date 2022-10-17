@@ -83,7 +83,7 @@ const features: Feature[] = [
 
 				<!-- Logo block -->
 				<div class="lg:h-55 lg:w-55 relative order-first mb-20 flex h-40 w-40 shrink-0 items-center justify-center lg:order-last lg:mt-20 lg:mr-20">
-					<img class="absolute z-20 h-full w-full drop-shadow-2xl" src="/logo.svg" />
+					<img class="absolute z-[1] h-full w-full drop-shadow-2xl" src="/logo.svg" />
 					<div class="image-bg absolute -inset-5 rotate-45 opacity-70" />
 				</div>
 			</div>
