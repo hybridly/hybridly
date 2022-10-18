@@ -92,7 +92,9 @@ function prepare(options: HybridlyOptions) {
 		if (routes) {
 			state.setRoutes(window.hybridly?.routes)
 			window.addEventListener<any>('hybridly:routes', (event: CustomEvent<RouteCollection>) => {
-				state.setRoutes(event.detail)
+				if (event.detail) {
+					state.setRoutes(event.detail)
+				}
 			})
 		}
 	}

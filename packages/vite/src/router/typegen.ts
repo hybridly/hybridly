@@ -11,7 +11,7 @@ export const write = debounce(1000, writeDefinitions, { atBegin: true })
 async function writeDefinitions(options: RouterOptions, collection?: RouteCollection) {
 	collection ??= await fetchRoutesFromArtisan(options)
 
-	if (options.dts === false) {
+	if (options.dts === false || !collection) {
 		return
 	}
 

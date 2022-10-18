@@ -36,7 +36,7 @@ export default (options: RouterOptions = {}): Plugin => {
 
 				// When routes changes, we want to update the routes by triggering
 				// a custom HMR event with the new updated route collection.
-				if (JSON.stringify(routes) !== JSON.stringify(previousRoutes)) {
+				if (routes && JSON.stringify(routes) !== JSON.stringify(previousRoutes)) {
 					debug.router('Updating routes via HMR:', routes)
 
 					server.ws.send({

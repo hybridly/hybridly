@@ -5,11 +5,13 @@ import { write } from './typegen'
 const shell = promisify(exec)
 
 export async function fetchRoutesFromArtisan(options: RouterOptions) {
-	const php = options.php ?? 'php'
-	const result = await shell(`${php} artisan hybridly:routes`)
-	const routes = JSON.parse(result.stdout)
+	try {
+		const php = options.php ?? 'php'
+		const result = await shell(`${php} artisan hybridly:routes`)
+		const routes = JSON.parse(result.stdout)
 
-	write(options, routes)
+		write(options, routes)
 
-	return routes
+		return routes
+	} catch {}
 }
