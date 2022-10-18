@@ -35,10 +35,10 @@ export function resetScrollPositions(): void {
 	debug.scroll('Resetting scroll positions.')
 	getScrollRegions()
 		.concat(document.documentElement, document.body)
-		.forEach((element) => {
-			element.scrollTop = 0
-			element.scrollLeft = 0
-		})
+		.forEach((element) => element.scrollTo({
+			top: 0,
+			left: 0,
+		}))
 
 	saveScrollPositions()
 
@@ -57,6 +57,7 @@ export async function restoreScrollPositions(): Promise<void> {
 	const regions = getScrollRegions()
 
 	if (!context.scrollRegions) {
+		debug.scroll('No region found to restore.')
 		return
 	}
 
@@ -64,7 +65,11 @@ export async function restoreScrollPositions(): Promise<void> {
 	// We can detect this by comparing the stored scroll regions with the detected ones.
 	// If the count does not match, we wait a few milliseconds before retrying.
 	let tries = 0
-	const timer = setInterval(() => {
+	const timer = setInterval(restore, 50)
+	restore()
+
+	function restore() {
+		debug.scroll(`Restoring ${regions.length}/${context.scrollRegions.length} region(s).`)
 		if (context.scrollRegions.length !== regions.length) {
 			if (++tries > 20) {
 				debug.scroll('The limit of tries has been reached. Cancelling scroll restoration.')
@@ -81,5 +86,5 @@ export async function restoreScrollPositions(): Promise<void> {
 			top: context.scrollRegions.at(i)?.top ?? el.scrollTop,
 			left: context.scrollRegions.at(i)?.top ?? el.scrollLeft,
 		}))
-	}, 50)
+	}
 }
