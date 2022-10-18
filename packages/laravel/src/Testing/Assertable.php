@@ -11,9 +11,10 @@ use PHPUnit\Framework\AssertionFailedError;
 class Assertable extends AssertableJson
 {
     protected string $view;
-    protected ?string $dialog;
     protected string $url;
+    protected array $payload;
     protected ?string $version;
+    protected ?string $dialog;
 
     public static function fromTestResponse(TestResponse $response): self
     {
@@ -32,7 +33,8 @@ class Assertable extends AssertableJson
             PHPUnit::fail('Not a valid hybrid response.');
         }
 
-        $instance = static::fromArray($payload['view']);
+        $instance = static::fromArray($payload);
+        $instance->payload = $payload;
         $instance->view = $payload['view']['name'];
         $instance->properties = $payload['view']['properties'];
         $instance->dialog = $payload['dialog'];
@@ -57,37 +59,6 @@ class Assertable extends AssertableJson
         return $this;
     }
 
-    /**
-     * Gets the given hybrid property.
-     */
-    public function getProperty(string|int $key): mixed
-    {
-        return $this->prop('properties.' . (string) $key);
-    }
-
-    /**
-     * Ensures the given property exists. Dot-notation is supported.
-     */
-    public function hasProperty(string|int $key, int|\Closure|null $length = null, \Closure|null $callback = null): self
-    {
-        return $this->has('properties.' . (string) $key, $length, $callback);
-    }
-
-    public function hasProperties(array $keys): self
-    {
-        foreach ($keys as $key => $value) {
-            if (\is_int($key) && \is_string($value)) {
-                $this->hasProperty($value);
-            }
-            if (\is_string($key) && \is_int($value)) {
-                $this->hasProperty($key, $value);
-            }
-            $this->hasProperty($key, null, $value);
-        }
-
-        return $this;
-    }
-
     public function url(string $value): self
     {
         PHPUnit::assertSame($value, $this->url, 'Unexpected Hybridly page url.');
@@ -100,6 +71,16 @@ class Assertable extends AssertableJson
         PHPUnit::assertSame($value, $this->version, 'Unexpected Hybridly asset version.');
 
         return $this;
+    }
+
+    public function getPayload(): array
+    {
+        return $this->payload;
+    }
+
+    public function getValue(string $key): mixed
+    {
+        return $this->prop($key);
     }
 
     public function toArray(): array

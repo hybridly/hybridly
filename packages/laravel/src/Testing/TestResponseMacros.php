@@ -4,6 +4,9 @@ namespace Hybridly\Testing;
 
 use Closure;
 use Illuminate\Testing\TestResponse;
+use PHPUnit\Framework\Assert;
+use PHPUnit\Framework\Assert as PHPUnit;
+use PHPUnit\Framework\AssertionFailedError;
 
 class TestResponseMacros
 {
@@ -20,13 +23,29 @@ class TestResponseMacros
                 $response = Assertable::fromTestResponse($this);
 
                 if (!\is_null($path)) {
-                    dd($response->getProperty($path));
+                    dd($response->getValue('view.properties.' . $path) ?? $response->getPayload());
                 }
 
-                dd($response);
-            } catch (\Throwable $th) {
+                dd($response->getPayload());
+            } catch (\Throwable) {
                 $this->dd();
             }
+        };
+    }
+
+    public function assertNotHybrid(): Closure
+    {
+        return function (): TestResponse {
+            /** @var TestResponse $this */
+            try {
+                Assertable::fromTestResponse($this);
+            } catch (AssertionFailedError) {
+                Assert::assertTrue(true);
+
+                return $this;
+            }
+
+            PHPUnit::pass("The response is hybrid while it's expected not to be.");
         };
     }
 
@@ -46,6 +65,61 @@ class TestResponseMacros
         };
     }
 
+    /**
+     * Asserts that the given hybrid property exists.
+     */
+    public function assertHasHybridProperty(): Closure
+    {
+        return function (string $key, $length = null, \Closure $callback = null): TestResponse {
+            /** @var TestResponse $this */
+            Assertable::fromTestResponse($this)->has('view.properties.' . $key, $length, $callback);
+
+            return $this;
+        };
+    }
+
+    /**
+     * Asserts that the given hybrid property is missing.
+     */
+    public function assertMissingHybridProperty(): Closure
+    {
+        return function (string $key, $length = null, \Closure $callback = null): TestResponse {
+            /** @var TestResponse $this */
+            Assertable::fromTestResponse($this)->missing('view.properties.' . $key, $length, $callback);
+
+            return $this;
+        };
+    }
+
+    /**
+     * Asserts that the property at the given path has the expected value.
+     */
+    public function assertHybridProperty(): Closure
+    {
+        return function (string|int $key, mixed $expected): TestResponse {
+            /** @var TestResponse $this */
+            Assertable::fromTestResponse($this)->where('view.properties.' . $key, $expected);
+
+            return $this;
+        };
+    }
+
+    /**
+     * Asserts that the payload property at the given path has the expected value.
+     */
+    public function assertHybridPayload(): Closure
+    {
+        return function (string|int $key, mixed $expected): TestResponse {
+            /** @var TestResponse $this */
+            Assertable::fromTestResponse($this)->where($key, $expected);
+
+            return $this;
+        };
+    }
+
+    /**
+     * Asserts that the hybrid response's view is the expected value.
+     */
     public function assertHybridView(): Closure
     {
         return function (string $view): TestResponse {
@@ -56,21 +130,27 @@ class TestResponseMacros
         };
     }
 
-    public function assertHybridProperty(): Closure
+    /**
+     * Asserts that the hybrid response's version is the expected value.
+     */
+    public function assertHybridVersion(): Closure
     {
-        return function (string $key, $length = null, \Closure $callback = null): TestResponse {
+        return function (string $version): TestResponse {
             /** @var TestResponse $this */
-            Assertable::fromTestResponse($this)->hasProperty($key, $length, $callback);
+            Assertable::fromTestResponse($this)->version($version);
 
             return $this;
         };
     }
 
-    public function assertHybridProperties(): Closure
+    /**
+     * Asserts that the hybrid response's url is the expected value.
+     */
+    public function assertHybridUrl(): Closure
     {
-        return function (array $keys): TestResponse {
+        return function (string $url): TestResponse {
             /** @var TestResponse $this */
-            Assertable::fromTestResponse($this)->hasProperties($keys);
+            Assertable::fromTestResponse($this)->url($url);
 
             return $this;
         };
