@@ -66,3 +66,7 @@ protected function onSessionExpired(Response $response, Request $request, \Throw
     ]);
 }
 ```
+
+:::info CSRF protection
+Though you don't have to set it up, CSRF protection is still enabled in hybrid applications. This is because Axios automatically reads the `XSRF-TOKEN` cookie emitted by Laravel and sends it back in every request.
+:::
