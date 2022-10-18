@@ -30,6 +30,8 @@ export default async() => defineConfig({
 		['script', {}, 'window?.localStorage?.setItem("vitepress-theme-appearance", window?.localStorage?.getItem("vitepress-theme-appearance") ?? "dark")'],
 	],
 
+	cleanUrls: 'with-subfolders',
+
 	themeConfig: {
 		logo: '/logo.svg',
 
