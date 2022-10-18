@@ -63,6 +63,10 @@ trait HandlesHybridExceptions
      */
     protected function shouldRenderHybridResponse(Response $response, Request $request, \Throwable $e): bool
     {
+        if (str_contains($e->getMessage(), 'Vite manifest not found')) {
+            return false;
+        }
+
         if (app()->environment(['local', 'testing'])) {
             return false;
         }
