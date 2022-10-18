@@ -14,6 +14,22 @@ Plugins can be registered through [`initializeHybridly`](../api/vue.md)'s `plugi
 
 They are useful when you need to execute custom logic for each request. You can learn more about plugins in [their documentation](./plugins.md).
 
+## Registering hooks manually
+
+Though it's highly recommended to use plugins, it's also possible to register hooks with the `registerHook` and `registerHookOnce` functions.
+
+This may be useful for requirements for which plugins could be overkill.
+
+```ts
+<script setup lang="ts">
+registerHook('navigate', ({ isBackForward }) => { // [!vp focus:5]
+  if (isBackForward) {
+    router.reload()
+  }
+})
+</script>
+```
+
 ## Visit options
 
 When [navigating](./navigation.md) or using the [form util](./forms.md), it's possible to pass a `hook` object that accepts a callback for each lifecycle event.
