@@ -101,7 +101,7 @@ export default async() => defineConfig({
 				{
 					text: 'Extra topics',
 					items: [
-						{ text: 'Infinite scroll', link: '/guide/infinite-scroll' },
+						{ text: 'Preserving URLs', link: '/guide/preserving-urls' },
 						{ text: 'Scroll management', link: '/guide/scroll-management' },
 						{ text: 'Precognition', link: '/guide/precognition' },
 						{ text: 'Plugins', link: '/guide/plugins' },
