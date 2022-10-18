@@ -40,26 +40,22 @@ export function progress(options?: Partial<ProgressOptions>) {
 				injectCSS(resolved.color)
 			}
 		},
-		hooks: {
-			start: () => {
-				clearTimeout(timeout)
-				timeout = setTimeout(() => {
-					finishProgress()
-					startProgress()
-				}, resolved.delay)
-			},
-
-			progress: (progress) => {
-				if (nprogress.isStarted() && progress.percentage) {
-					nprogress.set(Math.max(nprogress.status!, progress.percentage / 100 * 0.9))
-				}
-			},
-
-			success: () => finishProgress(),
-			error: () => cancelProgress(),
-			fail: () => cancelProgress(),
-			after: () => clearTimeout(timeout),
+		start: () => {
+			clearTimeout(timeout)
+			timeout = setTimeout(() => {
+				finishProgress()
+				startProgress()
+			}, resolved.delay)
 		},
+		progress: (progress) => {
+			if (nprogress.isStarted() && progress.percentage) {
+				nprogress.set(Math.max(nprogress.status!, progress.percentage / 100 * 0.9))
+			}
+		},
+		success: () => finishProgress(),
+		error: () => cancelProgress(),
+		fail: () => cancelProgress(),
+		after: () => clearTimeout(timeout),
 	})
 }
 

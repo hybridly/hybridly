@@ -4,26 +4,32 @@ import { getRouterContext } from '../context'
 import type { MaybePromise } from '../types'
 import type { Hooks } from './hooks'
 
-export interface Plugin {
+export interface Plugin extends Partial<Hooks> {
 	name: string
-	initialized: (context: InternalRouterContext) => MaybePromise<void>
-	hooks: Partial<Hooks>
+	initialized?: (context: InternalRouterContext) => MaybePromise<void>
 }
 
 export function definePlugin(plugin: Plugin): Plugin {
 	return plugin
 }
 
-export async function runPluginHooks<T extends keyof Hooks>(hook: T, ...args: Parameters<Hooks[T]>): Promise<boolean> {
+export async function forEachPlugin(cb: (plugin: Plugin) => MaybePromise<any>) {
 	const { plugins } = getRouterContext()
 
-	let result = true
 	for (const plugin of plugins) {
-		if (plugin.hooks[hook]) {
-			debug.plugin(plugin.name, `Calling "${hook}" hooks.`)
-			result = await plugin.hooks[hook]?.(...args as [any]) ?? result
-		}
+		await cb(plugin)
 	}
+}
+
+export async function runPluginHooks<T extends keyof Hooks>(hook: T, ...args: Parameters<Hooks[T]>): Promise<boolean> {
+	let result = true
+
+	forEachPlugin(async(plugin) => {
+		if (plugin[hook]) {
+			debug.plugin(plugin.name, `Calling "${hook}" hooks.`)
+			result = await plugin[hook]?.(...args as [any]) ?? result
+		}
+	})
 
 	return result
 }
