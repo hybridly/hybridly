@@ -1,7 +1,7 @@
 import isEqual from 'lodash.isequal'
-import clone from 'lodash.clonedeep'
 import type { Progress, UrlResolvable, VisitOptions } from '@hybridly/core'
 import type { DeepReadonly } from 'vue'
+import { clone } from '@hybridly/utils'
 import { computed, reactive, ref, toRaw, watch } from 'vue'
 import { router } from '@hybridly/core'
 import { state } from '../stores/state'

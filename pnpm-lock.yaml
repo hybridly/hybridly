@@ -99,9 +99,11 @@ importers:
     specifiers:
       debug: ^4.3.4
       deepmerge: ^4.2.2
+      lodash.clonedeep: ^4.5.0
     dependencies:
       debug: 4.3.4
       deepmerge: 4.2.2
+      lodash.clonedeep: 4.5.0
 
   packages/vite:
     specifiers:
@@ -129,7 +131,6 @@ importers:
       '@types/nprogress': ^0.2.0
       '@vue/devtools-api': ^6.4.4
       defu: ^6.1.0
-      lodash.clonedeep: ^4.5.0
       lodash.isequal: ^4.5.0
       nprogress: ^0.2.0
       qs: ^6.11.0
@@ -140,7 +141,6 @@ importers:
       '@hybridly/utils': link:../utils
       '@vue/devtools-api': 6.4.4
       defu: 6.1.0
-      lodash.clonedeep: 4.5.0
       lodash.isequal: 4.5.0
       nprogress: 0.2.0
       qs: 6.11.0
