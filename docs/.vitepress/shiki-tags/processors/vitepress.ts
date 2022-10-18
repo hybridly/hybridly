@@ -10,7 +10,7 @@ export default {
 		const vPre = vueRE.test(lang) ? '' : 'v-pre'
 		lang = lang.replace(vueRE, '').toLowerCase()
 
-		return addClass(code, 'vp-code-dark', 'pre')
+		return addClass(code, 'vp-code-block', 'pre')
 			.replace(preRE, (_, attributes) => `<pre ${vPre}${attributes}>`)
 			.replace(styleRE, (_, style) => _.replace(style, ''))
 	},
