@@ -19,7 +19,7 @@ const features: Feature[] = [
 	},
 	{
 		title: 'Routes',
-		description: 'Define your routes server-side like you\'re used to, Hybridly takes care of gererating types for them.',
+		description: 'Define your routes server-side like you\'re used to, Hybridly takes care of generating types for them.',
 		url: '/guide/routing',
 	},
 	{
