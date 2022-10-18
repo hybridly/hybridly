@@ -67,6 +67,7 @@ export default async() => defineConfig({
 						{ text: 'What is Hybridly', link: '/guide/' },
 						{ text: 'Installation', link: '/guide/installation' },
 						{ text: 'Demonstration', link: '/guide/demonstration' },
+						{ text: 'TypeScript', link: '/guide/typescript' },
 					],
 				},
 				{

@@ -10,7 +10,7 @@ const features: Feature[] = [
 	{
 		title: 'TypeScript support',
 		description: "If it's typable, it's typed. Hybridly supports typing paginators, routes, authorizations and global properties.",
-		url: '/guide/installation#typescript-support',
+		url: '/guide/typescript',
 	},
 	{
 		title: 'Forms',
