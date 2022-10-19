@@ -17,11 +17,12 @@ class ShowUserController
         return view('users.show', [ // [!vp --]
         return hybridly('users.show', [ // [!vp ++]
             'user' => UserData::from($user)
-            'user' => UserData::from($user)
         ]);
     }
 }
 ```
+
+Learn more about sending responses in the [their documentation](./responses.md).
 
 ## Generating URLs
 
