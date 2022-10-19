@@ -45,7 +45,7 @@ export default async() => defineConfig({
 				items: [
 					{ text: `v${version}`, link: `${github}/releases/tag/v${version}` },
 					{ text: 'Repository', link: `${github}` },
-					{ text: 'Issues', link: `${github}/issues` },
+					{ text: 'Demonstration', link: 'https://github.com/hybridly/demo' },
 					{ text: 'Discord', link: discord },
 				],
 			},
