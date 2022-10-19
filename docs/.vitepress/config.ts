@@ -9,6 +9,8 @@ const description = 'Modern solution to develop server-driven, client-rendered a
 const url = 'https://hybridly.dev'
 const image = '/og.jpg'
 const twitter = 'enzoinnocenzi'
+const discord = 'https://discord.gg/uZ8eC7kRFV'
+const github = 'https://github.com/hybridly/hybridly'
 
 const { version } = JSON.parse(readFileSync(resolve('package.json'), { encoding: 'utf-8' }))
 
@@ -39,23 +41,25 @@ export default async() => defineConfig({
 			{ text: 'Guide', link: '/guide/', activeMatch: '/guide/' },
 			{ text: 'API', link: '/api/', activeMatch: '/api/' },
 			{
-				text: `v${version}`,
+				text: 'Resources',
 				items: [
-					{ text: 'Current release', link: `https://github.com/hybridly/hybridly/releases/tag/v${version}` },
-					{ text: 'Repository', link: 'https://github.com/hybridly/hybridly' },
-					{ text: 'Issues', link: 'https://github.com/hybridly/hybridly/issues' },
+					{ text: `v${version}`, link: `${github}/releases/tag/v${version}` },
+					{ text: 'Repository', link: `${github}` },
+					{ text: 'Issues', link: `${github}/issues` },
+					{ text: 'Discord', link: discord },
 				],
 			},
 		],
 
 		editLink: {
-			pattern: 'https://github.com/hybridly/hybridly/edit/main/docs/:path',
+			pattern: `${github}/edit/main/docs/:path`,
 			text: 'Suggest changes to this page',
 		},
 
 		socialLinks: [
 			{ icon: 'twitter', link: `https://twitter.com/${twitter}` },
-			{ icon: 'github', link: 'https://github.com/hybridly/hybridly' },
+			{ icon: 'github', link: `${github}` },
+			{ icon: 'discord', link: discord },
 		],
 
 		sidebar: {
