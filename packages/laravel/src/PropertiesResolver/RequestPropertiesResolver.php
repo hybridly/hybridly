@@ -3,9 +3,9 @@
 namespace Hybridly\PropertiesResolver;
 
 use Hybridly\Hybridly;
-use Hybridly\Lazy;
 use Hybridly\Support\Arr;
 use Hybridly\Support\CaseConverter;
+use Hybridly\Support\Partial;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -24,7 +24,7 @@ class RequestPropertiesResolver implements PropertiesResolver
         $partial = $this->request->header(Hybridly::PARTIAL_COMPONENT_HEADER) === $component;
 
         if (!$partial) {
-            $properties = array_filter($properties, static fn ($property) => !($property instanceof Lazy));
+            $properties = array_filter($properties, static fn ($property) => !($property instanceof Partial));
         }
 
         // The `only` and `except` headers contain json-encoded array data. We want to use them to
@@ -57,7 +57,7 @@ class RequestPropertiesResolver implements PropertiesResolver
                 $value = app()->call($value);
             }
 
-            if ($value instanceof Lazy) {
+            if ($value instanceof Partial) {
                 $value = app()->call($value);
             }
 

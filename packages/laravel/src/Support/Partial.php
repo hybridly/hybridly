@@ -1,11 +1,11 @@
 <?php
 
-namespace Hybridly;
+namespace Hybridly\Support;
 
 /**
- * Represents a property that will get evaluated only when specifically required.
+ * Represents a property that will get evaluated only when specified in a partial reload.
  */
-class Lazy
+class Partial
 {
     public function __construct(
         protected \Closure $callback,

@@ -2,6 +2,7 @@
 
 namespace Hybridly;
 
+use Hybridly\Support\Partial;
 use Hybridly\View\Factory;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
@@ -55,11 +56,12 @@ class Hybridly
     }
 
     /**
-     * Returns a lazy property that will get evaluated only when specifically required.
+     * Creates a property that will get evaluated only when included in a partial reload.
+     * Partial properties are not included in first visits.
      */
-    public function lazy(\Closure $callback): Lazy
+    public function partial(\Closure $callback): Partial
     {
-        return new Lazy($callback);
+        return new Partial($callback);
     }
 
     /**
