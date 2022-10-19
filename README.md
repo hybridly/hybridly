@@ -11,6 +11,8 @@
   <a href="https://github.com/hybridly/hybridly/actions/workflows/tests.yml"><img alt="Status" src="https://github.com/hybridly/hybridly/actions/workflows/tests.yml/badge.svg"></a>
   <span>&nbsp;</span>
   <a href="https://github.com/hybridly/hybridly/releases"><img alt="version" src="https://img.shields.io/github/v/release/hybridly/hybridly?include_prereleases&label=version"></a>
+  <span>&nbsp;</span>
+  <a href="https://img.shields.io/discord/1032376983214116914"><img alt="discord" src="https://discord.gg/uZ8eC7kRFV"></a>
   <br />
   <br />
   <pre><div align="center">npm i -D hybridly</div></pre>
