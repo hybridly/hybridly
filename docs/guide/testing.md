@@ -16,7 +16,7 @@ test('users can see the index page', function () {
 });
 ```
 
-Learn about available testing methods in their [API documentation](../api/laravel.md#testing).
+Learn about available testing methods in their [API documentation](../api/laravel/index.md#testing).
 
 :::info Disable Vite in tests
 It is highly recommend to [disable Vite in tests](https://laravel.com/docs/9.x/vite#disabling-vite-in-tests), otherwise it will expect built assets or the development server to be running, which is highly inconvenient.

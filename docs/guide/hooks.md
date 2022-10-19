@@ -10,7 +10,7 @@ There are a two main ways to catch Hybridly's events: globally, through [plugins
 
 ## Plugins
 
-Plugins can be registered through [`initializeHybridly`](../api/vue.md)'s `plugins` option. They have access to all lifecycle events, plus an additionnal plugin-specific hook, `initialize`.
+Plugins can be registered through [`initializeHybridly`](../api/vue/index.md)'s `plugins` option. They have access to all lifecycle events, plus an additionnal plugin-specific hook, `initialize`.
 
 They are useful when you need to execute custom logic for each request. You can learn more about plugins in [their documentation](./plugins.md).
 
