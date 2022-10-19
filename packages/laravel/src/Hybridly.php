@@ -7,6 +7,7 @@ use Hybridly\View\Factory;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Traits\Macroable;
+use Spatie\LaravelData\Contracts\DataObject;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -31,7 +32,7 @@ class Hybridly
     /**
      * Returns a hybrid view.
      */
-    public function view(string $component, array|Arrayable $properties = []): Factory
+    public function view(string $component, array|Arrayable|DataObject $properties = []): Factory
     {
         return resolve(Factory::class)->view($component, $properties);
     }

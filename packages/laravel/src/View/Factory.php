@@ -8,6 +8,7 @@ use Hybridly\PropertiesResolver\PropertiesResolver;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\JsonResponse;
+use Spatie\LaravelData\Contracts\DataObject;
 
 class Factory implements HybridResponse
 {
@@ -24,9 +25,9 @@ class Factory implements HybridResponse
     /**
      * Sets the hybridly view data.
      */
-    public function view(string $component, array|Arrayable $properties): static
+    public function view(string $component, array|Arrayable|DataObject $properties): static
     {
-        if ($properties instanceof Arrayable) {
+        if ($properties instanceof Arrayable || $properties instanceof DataObject) {
             $properties = $properties->toArray();
         }
 
