@@ -1,19 +1,19 @@
 # Global properties
 
-## Sharing data
+## Overview
 
-Sharing data means making it available globally, throughout the application. This is usually done to expose commonly-needed information, such as the logged-in user.
+In most applications, some data needs to be available globally. This is generally the case, for instance, of the logged-in user, but it could be anything else. To answer to this need, you may use global properties. 
 
-Shared data can then be accessed in the front-end using `useProperty` or `useProperties`.
+Global properties are shared in every hybrid request — unless it's a [partial reload](./partial-reloads.md) — and can be accessed in the front-end using `useProperty` or `useProperties`.
 
 ## From the middleware
 
-The most common way of sharing data is to defining it in the `HandleHybridRequests` middleware. It has a `share` method specifically for this purpose.
+The most common way of defining global properties is to define them in the `HandleHybridRequests` middleware. It has a `share` method specifically for this purpose.
 
 ```php
-public function share(): SharedData
+public function share(): GlobalHybridlyData
 {
-    return SharedData::from([
+    return GlobalHybridlyData::from([
         'security' => [
             'user' => UserData::optional(auth()->user()),
         ],
@@ -23,11 +23,11 @@ public function share(): SharedData
 
 Though this method can return any serializable property, such as a `Collection`, an array, a `Resource`, or anything `Arrayable`, a data object class is preferred in order to benefit from automatically-generated TypeScript definition.
 
-In the example above, `SharedData` is a simple data object that accepts a `SecurityData`, which accepts a `UserData`.
+In the example above, `GlobalHybridlyData` is a simple data object that accepts a `SecurityData`, which accepts a `UserData`.
 
 ```php
-// App\Data\SharedData
-final class SharedData extends Data
+// App\Data\GlobalHybridlyData
+final class GlobalHybridlyData extends Data
 {
     public function __construct(
         public readonly SecurityData $security,
@@ -76,10 +76,11 @@ If possible, consider using the middleware instead.
 
 ## TypeScript support
 
-As previously stated, global data can be fully typed. Unfortunately, this process is not entirely automatic - you still need to create a TypeScript definition file. Fortunately, you won't have to manually update it - it's a one-time setup.
+As previously stated, global data can be fully typed. This process is not entirely automatic — you still need to create a TypeScript definition file. Fortunately, you won't have to manually update it - it's a one-time setup.
 
 ```ts
-interface GlobalHybridlyProperties extends App.Data.SharedData {
+// resources/types/hybridly.d.ts
+interface GlobalHybridlyProperties extends App.Data.GlobalHybridlyData {
 }
 ```
 
