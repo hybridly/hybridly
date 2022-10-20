@@ -13,7 +13,7 @@ You can find the source code on [GitHub](https://github.com/hybridly/demo).
 The following example shows how the `useProperty` function has auto-completion support for global properties defined in `HandleHybridRequests`.
 
 <img
-  src="../assets/typed-global-properties.png"
+  src="../assets/typed-global-properties.jpg"
   alt="Typed global properties"
   class="rounded-lg shadow-lg mt-8"
 />
@@ -23,13 +23,13 @@ The following example shows how the `useProperty` function has auto-completion s
 The following example shows how the `can` function has auto-completion support for defined authorizations.
 
 <img
-  src="../assets/typed-can-function.png"
+  src="../assets/typed-can-function.jpg"
   alt="Typed can function"
   class="rounded-lg shadow-lg mt-8 w-full"
 />
 
 <img
-  src="../assets/authorizations-in-data.png"
+  src="../assets/authorizations-in-data.jpg"
   alt="Authorizations in data objects"
   class="rounded-lg shadow-lg mt-8 w-full"
 />
