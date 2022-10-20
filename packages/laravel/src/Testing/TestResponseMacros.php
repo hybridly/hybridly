@@ -155,4 +155,15 @@ class TestResponseMacros
             return $this;
         };
     }
+
+    /**
+     * Returns the hybrid array
+     */
+    public function hybridPage(): Closure
+    {
+        return function (): array {
+            /** @var TestResponse $this */
+            return Assertable::fromTestResponse($this)->toArray();
+        };
+    }
 }

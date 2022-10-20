@@ -13,6 +13,7 @@ class Assertable extends AssertableJson
     protected string $view;
     protected string $url;
     protected array $payload;
+    protected array $properties;
     protected ?string $version;
     protected ?string $dialog;
 
@@ -87,7 +88,8 @@ class Assertable extends AssertableJson
     {
         return [
             'view' => $this->view,
-            'properties' => $this->property(),
+            'payload' => $this->payload,
+            'properties' => $this->properties,
             'dialog' => $this->dialog,
             'url' => $this->url,
             'version' => $this->version,

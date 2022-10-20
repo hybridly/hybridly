@@ -3,10 +3,13 @@
 use Hybridly\Hybridly;
 use Hybridly\Tests\TestCase;
 use Illuminate\Http\Request;
+use Illuminate\Testing\TestResponse;
+
+use function Pest\Laravel\get;
 
 uses(TestCase::class)->in(__DIR__);
 
-function mockRequest(string $url = '/', string $method = 'GET', bool $bind = false, bool $hybridly = true)
+function mockRequest(string $url = '/', string $method = 'GET', bool $bind = false, bool $hybridly = true): Request
 {
     $request = Request::create($url, $method);
 
@@ -19,4 +22,13 @@ function mockRequest(string $url = '/', string $method = 'GET', bool $bind = fal
     }
 
     return $request;
+}
+
+function makeMockRequest($view): TestResponse
+{
+    app('router')->get('/example-url', function () use ($view) {
+        return $view;
+    });
+
+    return get('/example-url');
 }
