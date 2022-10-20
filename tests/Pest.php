@@ -7,7 +7,9 @@ use Illuminate\Testing\TestResponse;
 
 use function Pest\Laravel\get;
 
-uses(TestCase::class)->in(__DIR__);
+uses(TestCase::class)->beforeEach(function () {
+    config()->set('hybridly.testing.ensure_pages_exist', false);
+})->in(__DIR__);
 
 function mockRequest(string $url = '/', string $method = 'GET', bool $bind = false, bool $hybridly = true): Request
 {

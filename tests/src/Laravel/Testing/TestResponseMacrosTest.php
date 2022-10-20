@@ -3,12 +3,6 @@
 use Hybridly\Testing\Assertable;
 use Illuminate\Testing\TestResponse;
 
-beforeEach(function () {
-    hybridly()->setRootView('welcome');
-
-    config()->set('hybridly.testing.ensure_pages_exist', false);
-});
-
 it('can assert Hybrid responses', function () {
     $response = makeMockRequest(hybridly('test'));
 
