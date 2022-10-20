@@ -39,7 +39,7 @@ The following example shows how the `can` function has auto-completion support f
 The following example shows how the `route` function has auto-completion support for named routed.
 
 <img
-  src="../assets/typed-route-function.png"
+  src="../assets/typed-route-function.jpg"
   alt="Typed route function"
   class="rounded-lg shadow-lg mt-8 w-full"
 />
