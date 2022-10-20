@@ -93,3 +93,55 @@ export default defineConfig({
 	],
 })
 ```
+
+## Auto-imports
+
+While somewhat controversial, auto-imports make source files less cluttered and provide nice developer experience by avoiding having to import anything before having auto-completion access from your IDE.
+
+Hybridly provides auto-import definitions for [`unplugin-vue-components`](https://github.com/antfu/unplugin-vue-components) and [`unplugin-auto-import`](https://github.com/antfu/unplugin-auto-import).
+
+The following is a `vite.config.ts` example that sets up auto-imports with TypeScript support:k
+
+```ts
+import { defineConfig } from 'vite'
+import laravel from 'laravel-vite-plugin'
+import hybridly from 'hybridly/vite'
+import hybridlyImports from 'hybridly/auto-imports' // [!vp focus:2]
+import hybridlyResolver from 'hybridly/resolver'
+import vue from '@vitejs/plugin-vue'
+import autoimport from 'unplugin-auto-import/vite' // [!vp focus:2]
+import components from 'unplugin-vue-components/vite'
+
+export default defineConfig({
+	plugins: [
+		autoimport({ // [!vp focus:18]
+			imports: [
+				'vue',
+				'@vueuse/core',
+				'@vueuse/head',
+				hybridlyImports,
+			],
+			vueTemplate: true,
+			dts: 'resources/types/auto-imports.d.ts',
+		}),
+		components({
+			dirs: ['./resources/views/components'],
+			resolvers: [
+				hybridlyResolver(),
+			],
+			directoryAsNamespace: true,
+			dts: 'resources/types/components.d.ts',
+		}),
+		laravel({
+			input: 'resources/application/main.ts',
+			valetTls: true,
+		}),
+		hybridly(),
+		vue(),
+	],
+})
+```
+
+:::info Real-world configuration
+For a more complete, real-world `vite.config.ts`, you can check out the [demonstration's Vite configuration](https://github.com/hybridly/demo/blob/main/vite.config.ts).
+:::
