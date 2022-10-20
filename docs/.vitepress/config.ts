@@ -37,7 +37,7 @@ export default async() => defineConfig({
 
 		nav: [
 			{ text: 'Guide', link: '/guide/', activeMatch: '/guide/' },
-			{ text: 'API', link: '/api/', activeMatch: '/api/' },
+			{ text: 'API', link: '/api/components/router-link', activeMatch: '/api/' },
 			{
 				text: 'Resources',
 				items: [
