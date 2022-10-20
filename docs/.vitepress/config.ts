@@ -116,6 +116,52 @@ export default async() => defineConfig({
 					],
 				},
 			],
+			'/api/': [
+				{
+					text: 'Components',
+					items: [
+						{ text: '<RouterLink>', link: '/api/components/router-link' },
+					],
+				},
+				{
+					text: 'Laravel',
+					items: [
+						{ text: 'Hybridly', link: '/api/laravel/hybridly' },
+						{ text: 'Global functions', link: '/api/laravel/global-functions' },
+						{ text: 'Testing', link: '/api/laravel/testing' },
+					],
+				},
+				{
+					text: 'Utils',
+					items: [
+						{ text: 'can', link: '/api/utils/can' },
+						{ text: 'route', link: '/api/utils/route' },
+						{ text: 'router', link: '/api/utils/router' },
+						{ text: 'registerHook', link: '/api/utils/register-hook' },
+						{ text: 'registerHookOnce', link: '/api/utils/register-hook-once' },
+					],
+				},
+				{
+					text: 'Composables',
+					items: [
+						{ text: 'useForm', link: '/api/composables/use-form' },
+						{ text: 'useProperty', link: '/api/composables/use-property' },
+						{ text: 'defineLayout', link: '/api/composables/define-layout' },
+						{ text: 'defineLayoutProperties', link: '/api/composables/define-layout-properties' },
+						{ text: 'useBackForward', link: '/api/composables/use-back-forward' },
+						{ text: 'useHistoryState', link: '/api/composables/use-history-state' },
+						{ text: 'useProperties', link: '/api/composables/use-properties' },
+						{ text: 'useContext', link: '/api/composables/use-context' },
+					],
+				},
+				{
+					text: 'Vite plugin',
+					items: [
+						{ text: 'layout', link: '/api/vite/layout' },
+						{ text: 'router', link: '/api/vite/router' },
+					],
+				},
+			],
 		},
 
 		footer: {
