@@ -77,7 +77,7 @@ edit.submitWithOptions({
 })
 ```
 
-Read the [form API](../api/utils/form.md) for more information.
+Read about the [form composable](../api/composables/use-form.md) for more information.
 
 ## Request lifecycle
 
