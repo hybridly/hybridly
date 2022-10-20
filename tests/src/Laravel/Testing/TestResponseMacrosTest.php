@@ -3,6 +3,12 @@
 use Hybridly\Testing\Assertable;
 use Illuminate\Testing\TestResponse;
 
+beforeEach(function () {
+    hybridly()->setRootView('welcome');
+
+    config()->set('hybridly.testing.ensure_pages_exist', false);
+});
+
 it('can assert Hybrid responses', function () {
     $response = makeMockRequest(hybridly('test'));
 
@@ -56,6 +62,26 @@ it('can assert the payload property at the given path has the expected value', f
     $response->assertHybridPayload('view.properties', ['foo' => 'bar']);
 });
 
+it('can assert the hybrid response view is the expected value', function () {
+    $response = makeMockRequest(hybridly('test'));
+
+    $response->assertHybridView('test');
+});
+
+it('can assert the hybrid response version is the expected value', function () {
+    hybridly()->setVersion('owo');
+
+    $response = makeMockRequest(hybridly('test'));
+
+    $response->assertHybridVersion('owo');
+});
+
+it('can assert the hybrid response url is the expected value', function () {
+    $response = makeMockRequest(hybridly('test'));
+
+    $response->assertHybridUrl(config('app.url') . '/example-url');
+});
+
 it('preserves the ability to continue chaining laravel test response calls', function () {
     $response = makeMockRequest(hybridly('test'));
 
@@ -77,7 +103,7 @@ it('can retrieve the hybrid page', function () {
         ]);
         expect($page['properties'])->toBe(['bar' => 'baz']);
         expect($page['dialog'])->toBeNull();
-        expect($page['url'])->toEndWith('/example-url');
+        expect($page['url'])->toBe(config('app.url') . '/example-url');
         expect($page['version'])->toBeNull();
     });
 });
