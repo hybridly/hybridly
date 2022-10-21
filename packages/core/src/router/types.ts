@@ -11,7 +11,7 @@ export interface ComponentNavigationOptions {
 	/** Name of the component to use. */
 	component?: string
 	/** Properties to apply to the component. */
-	properties: Properties
+	properties?: Properties
 	/**
 	 * Whether to replace the current history state instead of adding
 	 * one. This affects the browser's "back" and "forward" features.

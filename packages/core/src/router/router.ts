@@ -385,7 +385,7 @@ async function performLocalNavigation(targetUrl: UrlResolvable, options: Compone
 			url,
 			view: {
 				name: options.component ?? context.view.name,
-				properties: options.properties,
+				properties: options.properties ?? {},
 			},
 		},
 	})
