@@ -6,7 +6,7 @@ Hybridly's requests have their own lifecycle. It's sometimes necessary to hook i
 
 For instance, the progress bar is implemented using these hooks.
 
-There are a two main ways to catch Hybridly's events: globally, through [plugins](./plugins.md), or locally, through [visit options](../api/utils/router.md).
+There are a two main ways to catch Hybridly's events: globally, through [plugins](./plugins.md), or locally, through [visit options](../api/router/utils.md).
 
 ## Plugins
 
@@ -34,13 +34,13 @@ registerHook('navigated', ({ isBackForward }) => { // [!vp focus:5]
 
 When [navigating](./navigation.md) or using the [form util](./forms.md), it's possible to pass a `hook` object that accepts a callback for each lifecycle event.
 
-These callbacks will be executed just once for the current request. You can learn more about visit options in [their documentation](../api/utils/router.md).
+These callbacks will be executed just once for the current request. You can learn more about visit options in [their documentation](../api/router/utils.md).
 
 ## Available hooks
 
 Twelve events can be hooked into when hybrid requests are made. It's worth noting that each hook is awaitable and may return a promise that will be waited for.
 
-You can learn more about individual hooks in their [API documentation](../api/utils/router.md), or you can read their interface below:
+You can learn more about individual hooks in their [API documentation](../api/router/utils.md), or you can read their interface below:
 
 ```ts
 export interface Hooks {

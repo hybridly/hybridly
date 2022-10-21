@@ -75,13 +75,13 @@ Defines the method that will be used when making the hybrid request. May be lowe
 
 - **Type**: object
 
-Optional data to be sent with the hybrid request. This is the same as using `data` in a [programmatic navigation](../utils/router.md).
+Optional data to be sent with the hybrid request. This is the same as using `data` in a [programmatic navigation](../router/utils.md).
 
 ## `options`
 
 - **Type**: `HybridRequestOptions`
 
-Options for the hybrid request. This is the same as the `options` argument in [programmatic navigations](../utils/router.md).
+Options for the hybrid request. This is the same as the `options` argument in [programmatic navigations](../router/utils.md).
 
 ## `disabled`
 

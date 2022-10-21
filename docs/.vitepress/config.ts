@@ -132,11 +132,17 @@ export default async() => defineConfig({
 					],
 				},
 				{
+					text: 'Router',
+					items: [
+						{ text: 'Options', link: '/api/router/options' },
+						{ text: 'Utils', link: '/api/router/utils' },
+					],
+				},
+				{
 					text: 'Utils',
 					items: [
 						{ text: 'can', link: '/api/utils/can' },
 						{ text: 'route', link: '/api/utils/route' },
-						{ text: 'router', link: '/api/utils/router' },
 						{ text: 'registerHook', link: '/api/utils/register-hook' },
 					],
 				},

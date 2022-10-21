@@ -62,7 +62,7 @@ useForm({
 })
 ```
 
-Other [visit options](../api/utils/router.md) are also available. Alternatively, you can define the `url` and other options when submitting the form.
+Other [visit options](../api/router/utils.md) are also available. Alternatively, you can define the `url` and other options when submitting the form.
 
 ```ts
 const edit = useForm({
@@ -120,7 +120,7 @@ useForm({
 
 ## Transforming URLs
 
-A convenient way of transforming URLs is provided through the [visit options](../api/utils/router.md). 
+A convenient way of transforming URLs is provided through the [visit options](../api/router/utils.md). 
 
 For instance, clearing the query parameters is as simple as passing an empty string to the `search` property:
 
