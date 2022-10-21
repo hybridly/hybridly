@@ -3,99 +3,91 @@
 use Hybridly\Testing\Assertable;
 use Illuminate\Testing\TestResponse;
 
-it('can assert Hybrid responses', function () {
-    $response = makeMockRequest(hybridly('test'));
-
+test('the `assertHybrid` method runs its callback', function () {
+    $response = makeMockRequest(response: hybridly('test'));
     $success = false;
-    $response->assertHybrid(
-        function (Assertable $page) use (&$success) {
-            expect($page)->toBeInstanceOf(Assertable::class);
-            $success = true;
-        },
-    );
+
+    $response->assertHybrid(function (Assertable $page) use (&$success) {
+        expect($page)->toBeInstanceOf(Assertable::class);
+        $success = true;
+    });
 
     expect($success)->toBeTrue();
 });
 
-it('can assert non-Hybrid responses', function () {
-    $response = makeMockRequest('hello-world');
-
+test('the `assertNotHybrid` method asserts that non-hybrid responses are non-hybrid', function () {
+    makeMockRequest(response: 'hello-world')->assertNotHybrid();
     $success = false;
-    $response->assertNotHybrid(
-        function (Assertable $page) use (&$success) {
-            expect($page)->toBeInstanceOf(Assertable::class);
-            $success = true;
-        },
-    );
 
-    expect($success)->toBeFalse();
+    try {
+        makeMockRequest(response: hybridly('test'))->assertNotHybrid();
+    } catch (\PHPUnit\Framework\AssertionFailedError) {
+        $success = true;
+    }
+
+    expect($success)->toBe(true);
 });
 
-it('can assert the given hybrid property exist', function () {
-    $response = makeMockRequest(hybridly('test', ['foo' => 'bar']));
+test('the `assertHasHybridProperty` method asserts the given property exists', function () {
+    $response = makeMockRequest(response: hybridly('test', [
+        'foo' => 'bar',
+        'nested' => [
+            'foo' => 'bar',
+        ],
+    ]));
 
     $response->assertHasHybridProperty('foo');
+    $response->assertHasHybridProperty('nested.foo');
 });
 
-it('can assert the given hybrid property is missing', function () {
-    $response = makeMockRequest(hybridly('test', ['foo' => 'bar']));
-
-    $response->assertMissingHybridProperty('owo');
+test('the `assertMissingHybridProperty` method asserts the given property is missing', function () {
+    makeMockRequest(response: hybridly('test', [
+        'foo' => 'bar',
+    ]))->assertMissingHybridProperty('owo');
 });
 
-it('can assert the property at the given path has the expected value', function () {
-    $response = makeMockRequest(hybridly('test', ['foo' => 'bar']));
-
-    $response->assertHybridProperty('foo', 'bar');
+test('the `assertHybridProperty` method asserts the property at the given path has the expected value', function () {
+    makeMockRequest(response: hybridly('test', [
+        'foo' => 'bar',
+    ]))->assertHybridProperty('foo', 'bar');
 });
 
-it('can assert the payload property at the given path has the expected value', function () {
-    $response = makeMockRequest(hybridly('test', ['foo' => 'bar']));
+test('the `assertHybridPayload` method asserts the payload property at the given path has the expected value', function () {
+    $response = makeMockRequest(response: hybridly('test', ['foo' => 'bar']));
 
     $response->assertHybridPayload('view.name', 'test');
     $response->assertHybridPayload('view.properties', ['foo' => 'bar']);
 });
 
-it('can assert the hybrid response view is the expected value', function () {
-    $response = makeMockRequest(hybridly('test'));
-
-    $response->assertHybridView('test');
+test('the `assertHybridView` method asserts the hybrid response view is the expected value', function () {
+    makeMockRequest(response: hybridly('some.dotted.view'))
+        ->assertHybridView('some.dotted.view');
 });
 
-it('can assert the hybrid response version is the expected value', function () {
+test('the `assertHybridVersion` method asserts the hybrid response version is the expected value', function () {
     hybridly()->setVersion('owo');
 
-    $response = makeMockRequest(hybridly('test'));
-
-    $response->assertHybridVersion('owo');
+    makeMockRequest(response: hybridly('test'))
+        ->assertHybridVersion('owo');
 });
 
-it('can assert the hybrid response url is the expected value', function () {
-    $response = makeMockRequest(hybridly('test'));
-
-    $response->assertHybridUrl(config('app.url') . '/example-url');
+test('the `assertHybridUrl` method asserts the hybrid response url is the expected value', function () {
+    makeMockRequest(response: hybridly('test'))
+        ->assertHybridUrl(config('app.url') . '/example-url');
 });
 
-it('preserves the ability to continue chaining laravel test response calls', function () {
-    $response = makeMockRequest(hybridly('test'));
+test('the `assertHybrid` method returns a `TestResponse` instance', function () {
+    $response = makeMockRequest(response: hybridly('test'));
 
     expect($response->assertHybrid())->toBeInstanceOf(TestResponse::class);
 });
 
-it('can retrieve the hybrid page', function () {
-    $response = makeMockRequest(hybridly('test', ['bar' => 'baz']));
+test('the `getHybridPayload` method returns the payload of the hybrid response', function () {
+    $response = makeMockRequest(response: hybridly('test', ['bar' => 'baz']));
 
-    tap($response->hybridPage(), function (array $page) {
-        expect($page['view'])->toBe('test');
-        expect($page['payload'])->toHaveKeys([
-            'view',
-            'view.name',
-            'view.properties',
-            'dialog',
-            'url',
-            'version',
-        ]);
-        expect($page['properties'])->toBe(['bar' => 'baz']);
+    tap($response->getHybridPayload(), function (array $page) {
+        expect($page['view']['name'])->toBe('test');
+        expect($page['view']['properties'])->toBe(['bar' => 'baz']);
         expect($page['dialog'])->toBeNull();
         expect($page['url'])->toBe(config('app.url') . '/example-url');
         expect($page['version'])->toBeNull();
