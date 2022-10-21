@@ -7,9 +7,9 @@ use Illuminate\Testing\TestResponse;
 
 use function Pest\Laravel\get;
 
-uses(TestCase::class)->beforeEach(function () {
-    config()->set('hybridly.testing.ensure_pages_exist', false);
-})->in(__DIR__);
+uses(TestCase::class)
+    ->beforeEach(fn () => config()->set('hybridly.testing.ensure_pages_exist', false))
+    ->in(__DIR__);
 
 function mockRequest(string $url = '/', string $method = 'GET', bool $bind = false, bool $hybridly = true): Request
 {
@@ -26,11 +26,11 @@ function mockRequest(string $url = '/', string $method = 'GET', bool $bind = fal
     return $request;
 }
 
-function makeMockRequest($view): TestResponse
+function makeMockRequest(mixed $response, string $url = '/example-url'): TestResponse
 {
-    app('router')->get('/example-url', function () use ($view) {
-        return $view;
+    app('router')->get($url, function () use ($response) {
+        return $response;
     });
 
-    return get('/example-url');
+    return get($url);
 }

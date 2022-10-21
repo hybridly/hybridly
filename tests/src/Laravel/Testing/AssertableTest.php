@@ -2,33 +2,33 @@
 
 use Hybridly\Testing\Assertable;
 
-it('can assert the hybrid response view is the expected value', function () {
-    $response = makeMockRequest(hybridly('test'));
+test('the `view` method asserts that the view is the expected value', function () {
+    $response = makeMockRequest(response: hybridly('test'));
 
     $response->assertHybrid(function (Assertable $page) {
         $page->view('test');
     });
 });
 
-it('can assert the hybrid response url is the expected value', function () {
-    $response = makeMockRequest(hybridly('test'));
+test('the `url` method asserts that the url is the expected value', function () {
+    $response = makeMockRequest(response: hybridly('test'), url: '/url-to-a-hybrid-page');
 
     $response->assertHybrid(function (Assertable $page) {
-        $page->url(config('app.url') . '/example-url');
+        $page->url(config('app.url') . '/url-to-a-hybrid-page');
     });
 });
 
-it('can assert the hybrid response version is the expected value', function () {
+test('the `version` method asserts that the version is the expected value', function () {
     hybridly()->setVersion('owo');
 
-    $response = makeMockRequest(hybridly('test'));
+    $response = makeMockRequest(response: hybridly('test'));
 
     $response->assertHybrid(function (Assertable $page) {
         $page->version('owo');
     });
 });
 
-test('Assertable can return the payload', function () {
+test('the `getPayload` method returns the payload', function () {
     $response = makeMockRequest(hybridly('test'));
 
     $response->assertHybrid(function (Assertable $page) {
@@ -44,15 +44,16 @@ test('Assertable can return the payload', function () {
     });
 });
 
-test('Assertable can return prop value', function () {
-    $response = makeMockRequest(hybridly('test'));
+test('the `getValue` method returns the property value at the given path', function () {
+    $response = makeMockRequest(response: hybridly('test', ['foo' => 'bar']));
 
     $response->assertHybrid(function (Assertable $page) {
         expect($page->getValue('view.name'))->toBe('test');
+        expect($page->getValue('view.properties.foo'))->toBe('bar');
     });
 });
 
-test('Assertable has toArray function', function () {
+test('the `toArray` function converts the Assertable instance to an array', function () {
     $response = makeMockRequest(hybridly('test'));
 
     $response->assertHybrid(function (Assertable $page) {
