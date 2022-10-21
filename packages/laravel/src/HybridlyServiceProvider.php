@@ -67,17 +67,18 @@ class HybridlyServiceProvider extends PackageServiceProvider
         $this->callAfterResolving('blade.compiler', function (BladeCompiler $blade) {
             $blade->directive('hybridly', function ($expression = '') {
                 $options = str($expression)
-                    ->matchAll('/(?:class|id): [\'"][\w -]+[\'"] *,?/')
+                    ->matchAll('/(?:class|id|element): [\'"][\w -]+[\'"] *,?/')
                     ->flatMap(function ($e) {
                         preg_match('/([\w -]+): *[\'"]([\w -]+)[\'"]/', $e, $matches);
 
                         return [$matches[1] => $matches[2]];
                     });
 
+                $element = $options->get('element', 'div');
                 $id = $options->get('id', 'root');
                 $class = $options->get('class', '');
                 $template = <<<HTML
-                    <div id="${id}" class="${class}" data-payload="{{ json_encode(\$payload) }}"></div>
+                    <${element} id="${id}" class="${class}" data-payload="{{ json_encode(\$payload) }}"></${element}>
                 HTML;
 
                 return implode(' ', array_map('trim', explode("\n", $template)));

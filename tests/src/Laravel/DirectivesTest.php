@@ -13,12 +13,17 @@ it('adds a hybridly directive', function () {
         ->toBe('<div id="root" class="" data-payload="{{ json_encode($payload) }}"></div>');
 });
 
-it('supports changing the wrapper element id', function () {
+it('supports changing the wrapper element', function () {
+    expect(test()->directives['hybridly']('element: "main"'))
+        ->toBe('<main id="root" class="" data-payload="{{ json_encode($payload) }}"></main>');
+});
+
+it("supports changing the wrapper element's id", function () {
     expect(test()->directives['hybridly']('id: "app"'))
         ->toBe('<div id="app" class="" data-payload="{{ json_encode($payload) }}"></div>');
 });
 
-it('supports changing the wrapper element class', function () {
+it("supports changing the wrapper element's class", function () {
     expect(test()->directives['hybridly']('class: "h-full"'))
         ->toBe('<div id="root" class="h-full" data-payload="{{ json_encode($payload) }}"></div>');
 });
