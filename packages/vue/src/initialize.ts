@@ -1,5 +1,5 @@
-import type { DefineComponent, Plugin as VuePlugin } from 'vue'
-import { h } from 'vue'
+import type { App, DefineComponent, Plugin as VuePlugin } from 'vue'
+import { createApp, h } from 'vue'
 import type { HybridPayload, ResolveComponent, RouterContext, RouterContextOptions, Plugin } from '@hybridly/core'
 import { createRouter } from '@hybridly/core'
 import { showPageComponentErrorModal, debug } from '@hybridly/utils'
@@ -44,13 +44,23 @@ export async function initializeHybridly(options: HybridlyOptions) {
 		payload,
 	}))
 
-	await options.setup({
-		element,
-		wrapper,
-		hybridly: plugin,
-		props: { context: state.context.value! },
-		render: () => h(wrapper as any, { context: state.context.value }),
-	})
+	const render = () => h(wrapper as any, { context: state.context.value })
+
+	if (options.setup) {
+		return await options.setup({
+			element,
+			wrapper,
+			render,
+			hybridly: plugin,
+			props: { context: state.context.value! },
+		})
+	}
+
+	const app = createApp({ render })
+	app.use(plugin)
+
+	await options.enhanceVue?.(app)
+	return app.mount(element)
 }
 
 function prepare(options: HybridlyOptions) {
@@ -159,9 +169,11 @@ interface HybridlyOptions {
 	/** Progressbar options. */
 	progress?: boolean | Partial<ProgressOptions>
 	/** Sets up the hybridly router. */
-	setup: (options: SetupArguments) => any
+	setup?: (options: SetupArguments) => any
 	/** List of Hybridly plugins. */
 	plugins?: Plugin[]
+	/** Callback that gets executed before Vue is mounted. */
+	enhanceVue?: (vue: App<Element>) => any
 }
 
 interface SetupArguments {
