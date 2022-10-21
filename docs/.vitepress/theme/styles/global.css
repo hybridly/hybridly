@@ -2,6 +2,16 @@ pre code {
 	tab-size: 2 !important;
 }
 
+a:has(code) {
+	text-decoration: underline;
+	color: var(--vp-c-text-code) !important;
+}
+
+.vp-doc a > code {
+	color: inherit;
+	transition: color 0.25s;
+}
+
 hr {
 	margin: 4rem 0 !important;
 }
