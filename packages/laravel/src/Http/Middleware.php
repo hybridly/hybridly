@@ -78,7 +78,7 @@ class Middleware
 
     /**
      * Determines what to do when the asset version has changed.
-     * By default, we'll initiate a client-side external visit to force an update.
+     * By default, we'll initiate a client-side hard reload to force an update.
      */
     public function onVersionChange(Request $request, Response $response): Response
     {
@@ -126,7 +126,7 @@ class Middleware
     }
 
     /**
-     * Sets the root template that's loaded on the first page visit.
+     * Sets the root template that's loaded on the first page load.
      */
     public function rootView(Request $request): \Closure|string
     {

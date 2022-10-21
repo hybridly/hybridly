@@ -36,7 +36,7 @@ router.post(url, options)
 router.delete(url, options)
 router.external(url, options)
 router.reload(options)
-router.visit(options)
+router.navigate(options)
 ```
 
 Learn more about the methods and options available on their [API documentation](../api/utils/router).

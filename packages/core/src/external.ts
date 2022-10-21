@@ -1,21 +1,24 @@
 import type { AxiosResponse } from 'axios'
+import qs from 'qs'
 import { debug } from '@hybridly/utils'
-import { EXTERNAL_VISIT_HEADER, STORAGE_EXTERNAL_KEY } from './constants'
+import type { HybridRequestOptions } from 'hybridly'
+import { EXTERNAL_NAVIGATION_HEADER, STORAGE_EXTERNAL_KEY } from './constants'
 import { getRouterContext, setContext } from './context'
 import { navigate } from './router/router'
+import type { UrlResolvable } from './url'
 import { makeUrl, sameUrls } from './url'
 
 /**
- * Performs an external visit by saving options to the storage and
- * making a full page reload. Upon loading, the visit options
+ * Performs an external navigation by saving options to the storage and
+ * making a full page reload. Upon loading, the navigation options
  * will be pulled and a hybrid navigation will be made.
  */
-export async function performExternalVisit(options: ExternalVisitOptions): Promise<void> {
-	debug.external('Making a hard navigation for an external visit:', options)
+export async function performExternalNavigation(options: ExternalNavigationOptions): Promise<void> {
+	debug.external('Navigating to an external URL:', options)
 	window.sessionStorage.setItem(STORAGE_EXTERNAL_KEY, JSON.stringify(options))
 	window.location.href = options.url
 
-	// If the external visit is to the same page, we need to manually perform
+	// If the external navigation is to the same page, we need to manually perform
 	// a full page reload
 	if (sameUrls(window.location, options.url)) {
 		debug.external('Manually reloading due to the external URL being the same.')
@@ -23,19 +26,28 @@ export async function performExternalVisit(options: ExternalVisitOptions): Promi
 	}
 }
 
+/** Navigates to the given URL without the hybrid protocol. */
+export function navigateToExternalUrl(url: UrlResolvable, data?: HybridRequestOptions['data']) {
+	document.location.href = makeUrl(url, {
+		search: qs.stringify(data, {
+			encodeValuesOnly: true,
+			arrayFormat: 'brackets',
+		}),
+	}).toString()
+}
+
 /** Checks if the response wants to redirect to an external URL. */
 export function isExternalResponse(response: AxiosResponse): boolean {
-	return response?.status === 409 && !!response?.headers?.[EXTERNAL_VISIT_HEADER]
+	return response?.status === 409 && !!response?.headers?.[EXTERNAL_NAVIGATION_HEADER]
 }
 
 /**
- * Performs the internal navigation when an external visit to a hybrid page
- * has been made.
+ * Performs the internal navigation when an external navigation to a hybrid page has been made.
  * This method is meant to be called on router creation.
  */
-export async function handleExternalVisit(): Promise<void> {
-	debug.external('Handling an external visit.')
-	const options = JSON.parse(window.sessionStorage.getItem(STORAGE_EXTERNAL_KEY) || '{}') as ExternalVisitOptions
+export async function handleExternalNavigation(): Promise<void> {
+	debug.external('Handling an external navigation.')
+	const options = JSON.parse(window.sessionStorage.getItem(STORAGE_EXTERNAL_KEY) || '{}') as ExternalNavigationOptions
 	window.sessionStorage.removeItem(STORAGE_EXTERNAL_KEY)
 
 	debug.external('Options from the session storage:', options)
@@ -46,16 +58,14 @@ export async function handleExternalVisit(): Promise<void> {
 		url: makeUrl(getRouterContext().url, { hash: window.location.hash }).toString(),
 	})
 
-	// TODO: add history state to context?
-
 	await navigate({
 		preserveScroll: options.preserveScroll,
 		preserveState: true,
 	})
 }
 
-/** Checks if the visit being initialized points to an external location. */
-export function isExternalVisit(): boolean {
+/** Checks if the navigation being initialized points to an external location. */
+export function isExternalNavigation(): boolean {
 	try {
 		return window.sessionStorage.getItem(STORAGE_EXTERNAL_KEY) !== null
 	} catch {}
@@ -63,9 +73,9 @@ export function isExternalVisit(): boolean {
 	return false
 }
 
-interface ExternalVisitOptions {
+interface ExternalNavigationOptions {
 	/** Target URL. */
 	url: string
-	/** Whether to preserve the scroll if the external visit leads to a hybrid view. */
+	/** Whether to preserve the scroll if the external navigation leads to a hybrid view. */
 	preserveScroll: boolean
 }

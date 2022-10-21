@@ -1,6 +1,6 @@
 import type { DefineComponent, Plugin as VuePlugin } from 'vue'
 import { h } from 'vue'
-import type { VisitPayload, ResolveComponent, RouterContext, RouterContextOptions, Plugin } from '@hybridly/core'
+import type { HybridPayload, ResolveComponent, RouterContext, RouterContextOptions, Plugin } from '@hybridly/core'
 import { createRouter } from '@hybridly/core'
 import { showPageComponentErrorModal, debug } from '@hybridly/utils'
 import type { ProgressOptions } from '@hybridly/progress-plugin'
@@ -145,7 +145,7 @@ interface HybridlyOptions {
 	/** ID of the app element. */
 	id?: string
 	/** Initial view data. */
-	payload?: VisitPayload
+	payload?: HybridPayload
 	/** A collection of pages. */
 	pages?: Record<string, any>
 	/** An optional default persistent layout. */

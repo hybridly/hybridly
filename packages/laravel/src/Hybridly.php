@@ -58,7 +58,7 @@ class Hybridly
 
     /**
      * Creates a property that will get evaluated only when included in a partial reload.
-     * Partial properties are not included in first visits.
+     * Partial properties are not included during the first load.
      */
     public function partial(\Closure $callback): Partial
     {

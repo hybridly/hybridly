@@ -1,7 +1,7 @@
 import { debug } from '@hybridly/utils'
 import { createSerializer } from '../router/history'
 import { makeUrl } from '../url'
-import type { VisitPayload } from '../router'
+import type { HybridPayload } from '../router'
 import type { RouterContext, InternalRouterContext, RouterContextOptions, SetContextOptions } from './types'
 
 const state = {
@@ -60,8 +60,8 @@ export function setContext(merge: Partial<InternalRouterContext> = {}, options: 
 	debug.context('Updated context:', { context: state.context, added: merge })
 }
 
-/** Gets a visit payload from the current context. */
-export function payloadFromContext(): VisitPayload {
+/** Gets a payload from the current context. */
+export function payloadFromContext(): HybridPayload {
 	return {
 		url: getRouterContext().url,
 		version: getRouterContext().version,

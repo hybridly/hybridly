@@ -1,5 +1,5 @@
 import isEqual from 'lodash.isequal'
-import type { Progress, UrlResolvable, VisitOptions } from '@hybridly/core'
+import type { Progress, UrlResolvable, HybridRequestOptions } from '@hybridly/core'
 import type { DeepReadonly } from 'vue'
 import { clone } from '@hybridly/utils'
 import { computed, reactive, ref, toRaw, watch } from 'vue'
@@ -8,7 +8,7 @@ import { state } from '../stores/state'
 
 type Fields = Record<string, any>
 
-interface FormOptions<T extends Fields> extends Omit<VisitOptions, 'data' | 'url'> {
+interface FormOptions<T extends Fields> extends Omit<HybridRequestOptions, 'data' | 'url'> {
 	fields: T
 	url?: UrlResolvable | (() => UrlResolvable)
 	key?: string | false
@@ -67,7 +67,7 @@ export function useForm<T extends Fields = Fields>(options: FormOptions<T>) {
 	/**
 	 * Submits the form.
 	 */
-	function submit(optionsOverrides?: Omit<VisitOptions, 'data'>) {
+	function submit(optionsOverrides?: Omit<HybridRequestOptions, 'data'>) {
 		const url = typeof options.url === 'function'
 			? options.url()
 			: options.url
@@ -76,7 +76,7 @@ export function useForm<T extends Fields = Fields>(options: FormOptions<T>) {
 			? options.transform?.(fields)
 			: fields
 
-		return router.visit({
+		return router.navigate({
 			...options,
 			url: url ?? state.context.value?.url,
 			method: options.method ?? 'POST',
@@ -86,14 +86,14 @@ export function useForm<T extends Fields = Fields>(options: FormOptions<T>) {
 				? true
 				: optionsOverrides?.preserveState,
 			hooks: {
-				before: (visit) => {
+				before: (navigation) => {
 					failed.value = false
 					successful.value = false
 					recentlySuccessful.value = false
 					clearTimeout(timeoutIds.recentlySuccessful!)
 					clearTimeout(timeoutIds.recentlyFailed!)
 					clearErrors()
-					return options.hooks?.before?.(visit)
+					return options.hooks?.before?.(navigation)
 				},
 				start: (context) => {
 					processing.value = true

@@ -41,7 +41,7 @@ export function sameUrls(...hrefs: UrlResolvable[]): boolean {
 }
 
 /**
- * If the back-end did not specify a hash, if the visit specified one,
+ * If the back-end did not specify a hash, if the navigation specified one,
  * and both URLs lead to the same endpoint, we update the target URL
  * to use the hash of the initially-requested URL.
  */

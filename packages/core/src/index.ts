@@ -1,10 +1,10 @@
 export { createRouter, router } from './router'
-export type { Router, VisitOptions, VisitResponse, VisitPayload, ResolveComponent, Method, Progress } from './router'
+export type { Router, HybridRequestOptions, NavigationResponse, HybridPayload, ResolveComponent, Method, Progress } from './router'
 
 export { getRouterContext } from './context'
 export type { RouterContext, RouterContextOptions } from './context'
 
-export { definePlugin, registerHook, registerHookOnce } from './plugins'
+export { definePlugin, registerHook } from './plugins'
 export type { Plugin } from './plugins'
 
 export { makeUrl, sameUrls } from './url'

@@ -1,11 +1,11 @@
 import type { Hooks } from '../plugins/hooks'
 import type { Plugin } from '../plugins/plugin'
-import type { PendingVisit, ResolveComponent, SwapDialog, SwapView, View, VisitPayload } from '../router'
+import type { PendingNavigation, ResolveComponent, SwapDialog, SwapView, View, HybridPayload } from '../router'
 
 /** Options for creating a router context. */
 export interface RouterContextOptions {
 	/** The initial payload served by the browser. */
-	payload: VisitPayload
+	payload: HybridPayload
 	/** Adapter-specific functions. */
 	adapter: Adapter
 	/** History state serializer. */
@@ -30,8 +30,8 @@ export interface InternalRouterContext {
 	scrollRegions: ScrollRegion[]
 	/** Arbitrary state. */
 	state: Record<string, any>
-	/** Currently pending visit. */
-	activeVisit?: PendingVisit
+	/** Currently pending navigation. */
+	pendingNavigation?: PendingNavigation
 	/** History state serializer. */
 	serializer: Serializer
 	/** List of plugins. */

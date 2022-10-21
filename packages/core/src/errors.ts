@@ -6,4 +6,4 @@ export class NotAHybridResponseError extends Error {
 	}
 }
 
-export class VisitCancelledError extends Error {}
+export class NavigationCancelledError extends Error {}

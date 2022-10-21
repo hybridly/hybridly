@@ -47,7 +47,7 @@ export interface Hooks {
 	/**
 	 * Called before anything when a visit is going to happen.
 	 */
-	before: (options: VisitOptions) => MaybePromise<any | boolean>
+	before: (options: HybridRequestOptions) => MaybePromise<any | boolean>
 
 	/**
 	 * Called before the request of a visit is going to happen.
@@ -67,7 +67,7 @@ export interface Hooks {
 	/**
 	 * Called when a request is successful and there is no error.
 	 */
-	success: (payload: VisitPayload) => MaybePromise<any>
+	success: (payload: HybridPayload) => MaybePromise<any>
 
 	/**
 	 * Called when a request is successful but there were errors.

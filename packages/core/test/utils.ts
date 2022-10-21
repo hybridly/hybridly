@@ -3,14 +3,14 @@ import type { PartialDeep } from 'type-fest'
 import type { RouterContext, RouterContextOptions } from '../src/context'
 import { HYBRIDLY_HEADER } from '../src/constants'
 import { initializeContext } from '../src/context'
-import type { VisitPayload } from '../src/router'
+import type { HybridPayload } from '../src/router'
 import { rest, server } from './server'
 
 export const noop = () => ({} as any)
 export const returnsArgs = (...args: any) => args
 
-export function fakeVisitPayload(payload: PartialDeep<VisitPayload> = {}): VisitPayload {
-	return defu(payload as VisitPayload, {
+export function fakePayload(payload: PartialDeep<HybridPayload> = {}): HybridPayload {
+	return defu(payload as HybridPayload, {
 		url: 'https://localhost',
 		version: 'abc123',
 		view: {
@@ -22,7 +22,7 @@ export function fakeVisitPayload(payload: PartialDeep<VisitPayload> = {}): Visit
 
 export function makeRouterContextOptions(options: PartialDeep<RouterContextOptions> = {}): RouterContextOptions {
 	return defu(options as RouterContextOptions, {
-		payload: fakeVisitPayload(),
+		payload: fakePayload(),
 		adapter: {
 			resolveComponent: noop,
 			swapDialog: noop,
@@ -40,7 +40,7 @@ export function mockUrl(url: string, options: Partial<MockOptions> = {}) {
 	const resolved: MockOptions = defu(options, {
 		status: 200,
 		headers: { [HYBRIDLY_HEADER]: 'true' },
-		json: fakeVisitPayload(),
+		json: fakePayload(),
 	})
 
 	server.use(rest.get(url, (req, res, ctx) => {

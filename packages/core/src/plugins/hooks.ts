@@ -1,17 +1,17 @@
 import type { AxiosResponse } from 'axios'
 import type { InternalRouterContext } from '../context'
 import { getRouterContext } from '../context'
-import type { NavigationOptions, VisitOptions, Errors, Progress, VisitPayload } from '../router'
+import type { NavigationOptions, HybridRequestOptions, Errors, Progress, HybridPayload } from '../router'
 import type { MaybePromise } from '../types'
 
 export interface Hooks {
 	/**
-	 * Called before anything when a visit is going to happen.
+	 * Called before anything when a navigation is going to happen.
 	 */
-	before: (options: VisitOptions) => MaybePromise<any | boolean>
+	before: (options: HybridRequestOptions) => MaybePromise<any | boolean>
 
 	/**
-	 * Called before the request of a visit is going to happen.
+	 * Called before the request of a navigation is going to happen.
 	 */
 	start: (context: InternalRouterContext) => MaybePromise<any>
 
@@ -21,14 +21,14 @@ export interface Hooks {
 	progress: (progress: Progress) => MaybePromise<any>
 
 	/**
-	 * Called when data is received after a request for a visit.
+	 * Called when data is received after a request for a navigation.
 	 */
 	data: (response: AxiosResponse) => MaybePromise<any>
 
 	/**
 	 * Called when a request is successful and there is no error.
 	 */
-	success: (payload: VisitPayload) => MaybePromise<any>
+	success: (payload: HybridPayload) => MaybePromise<any>
 
 	/**
 	 * Called when a request is successful but there were errors.

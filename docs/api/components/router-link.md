@@ -79,9 +79,9 @@ Optional data to be sent with the hybrid request. This is the same as using `dat
 
 ## `options`
 
-- **Type**: `VisitOptions`
+- **Type**: `HybridRequestOptions`
 
-Optional options for the hybrid request. This is the same as the `options` argument in [programmatic navigations](../utils/router.md).
+Options for the hybrid request. This is the same as the `options` argument in [programmatic navigations](../utils/router.md).
 
 ## `disabled`
 

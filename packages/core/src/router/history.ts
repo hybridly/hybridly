@@ -91,8 +91,8 @@ export async function registerEventListeners() {
 	}, 100), true)
 }
 
-/** Checks if the current visit was made by going back or forward. */
-export function isBackForwardVisit(): boolean {
+/** Checks if the current navigation was made by going back or forward. */
+export function isBackForwardNavigation(): boolean {
 	if (!window.history.state) {
 		return false
 	}
@@ -100,9 +100,9 @@ export function isBackForwardVisit(): boolean {
 	return (window.performance?.getEntriesByType('navigation').at(0) as PerformanceNavigationTiming)?.type === 'back_forward'
 }
 
-/** Handles a visit which was going back or forward. */
-export async function handleBackForwardVisit(): Promise<void> {
-	debug.router('Handling a back/forward visit.')
+/** Handles a navigation which was going back or forward. */
+export async function handleBackForwardNavigation(): Promise<void> {
+	debug.router('Handling a back/forward navigation.')
 	window.history.state.version = getRouterContext().version
 
 	await navigate({

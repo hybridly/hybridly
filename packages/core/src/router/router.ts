@@ -1,18 +1,17 @@
 import type { AxiosProgressEvent, AxiosResponse } from 'axios'
 import axios from 'axios'
-import qs from 'qs'
 import { showResponseErrorModal, match, merge, when, debug, random, hasFiles, objectToFormData } from '@hybridly/utils'
-import { ERROR_BAG_HEADER, EXCEPT_DATA_HEADER, EXTERNAL_VISIT_HEADER, ONLY_DATA_HEADER, PARTIAL_COMPONENT_HEADER, HYBRIDLY_HEADER, VERSION_HEADER } from '../constants'
-import { NotAHybridResponseError, VisitCancelledError } from '../errors'
+import { ERROR_BAG_HEADER, EXCEPT_DATA_HEADER, EXTERNAL_NAVIGATION_HEADER, ONLY_DATA_HEADER, PARTIAL_COMPONENT_HEADER, HYBRIDLY_HEADER, VERSION_HEADER } from '../constants'
+import { NotAHybridResponseError, NavigationCancelledError } from '../errors'
 import type { InternalRouterContext, RouterContextOptions } from '../context'
 import { getRouterContext, initializeContext, payloadFromContext, setContext } from '../context'
-import { handleExternalVisit, isExternalResponse, isExternalVisit, performExternalVisit } from '../external'
+import { handleExternalNavigation, isExternalResponse, isExternalNavigation, performExternalNavigation, navigateToExternalUrl } from '../external'
 import { resetScrollPositions, restoreScrollPositions, saveScrollPositions } from '../scroll'
 import type { UrlResolvable } from '../url'
 import { fillHash, makeUrl, normalizeUrl, sameUrls } from '../url'
 import { runHooks } from '../plugins'
-import { setHistoryState, isBackForwardVisit, handleBackForwardVisit, registerEventListeners, getHistoryState, getKeyFromHistory, remember } from './history'
-import type { ConditionalNavigationOption, Errors, LocalVisitOptions, NavigationOptions, Router, VisitOptions, VisitPayload, VisitResponse } from './types'
+import { setHistoryState, isBackForwardNavigation, handleBackForwardNavigation, registerEventListeners, getHistoryState, getKeyFromHistory, remember } from './history'
+import type { ConditionalNavigationOption, Errors, ComponentNavigationOptions, NavigationOptions, Router, HybridRequestOptions, HybridPayload, NavigationResponse } from './types'
 
 /**
  * The hybridly router.
@@ -24,18 +23,18 @@ import type { ConditionalNavigationOption, Errors, LocalVisitOptions, Navigation
  * router.get('/posts/edit', { post })
  */
 export const router: Router = {
-	abort: async() => getRouterContext().activeVisit?.controller.abort(),
-	active: () => !!getRouterContext().activeVisit,
+	abort: async() => getRouterContext().pendingNavigation?.controller.abort(),
+	active: () => !!getRouterContext().pendingNavigation,
 	// unstack: () => {},
-	visit: async(options) => await visit(options),
-	reload: async(options) => await visit({ preserveScroll: true, preserveState: true, ...options }),
-	get: async(url, options = {}) => await visit({ ...options, url, method: 'GET' }),
-	post: async(url, options = {}) => await visit({ preserveState: true, ...options, url, method: 'POST' }),
-	put: async(url, options = {}) => await visit({ preserveState: true, ...options, url, method: 'PUT' }),
-	patch: async(url, options = {}) => await visit({ preserveState: true, ...options, url, method: 'PATCH' }),
-	delete: async(url, options = {}) => await visit({ preserveState: true, ...options, url, method: 'DELETE' }),
-	local: async(url, options) => await performLocalComponentVisit(url, options),
-	external: (url, data = {}) => performLocalExternalVisit(url, data),
+	navigate: async(options) => await performHybridNavigation(options),
+	reload: async(options) => await performHybridNavigation({ preserveScroll: true, preserveState: true, ...options }),
+	get: async(url, options = {}) => await performHybridNavigation({ ...options, url, method: 'GET' }),
+	post: async(url, options = {}) => await performHybridNavigation({ preserveState: true, ...options, url, method: 'POST' }),
+	put: async(url, options = {}) => await performHybridNavigation({ preserveState: true, ...options, url, method: 'PUT' }),
+	patch: async(url, options = {}) => await performHybridNavigation({ preserveState: true, ...options, url, method: 'PATCH' }),
+	delete: async(url, options = {}) => await performHybridNavigation({ preserveState: true, ...options, url, method: 'DELETE' }),
+	local: async(url, options) => await performLocalNavigation(url, options),
+	external: (url, data = {}) => navigateToExternalUrl(url, data),
 	history: {
 		get: (key) => getKeyFromHistory(key),
 		remember: (key, value) => remember(key, value),
@@ -49,11 +48,11 @@ export async function createRouter(options: RouterContextOptions): Promise<Inter
 	return await initializeRouter()
 }
 
-/** Performs every action necessary to make a hybrid visit. */
-export async function visit(options: VisitOptions): Promise<VisitResponse> {
-	const visitId = random()
+/** Performs every action necessary to make a hybrid navigation. */
+export async function performHybridNavigation(options: HybridRequestOptions): Promise<NavigationResponse> {
+	const navigationId = random()
 	const context = getRouterContext()
-	debug.router('Making a visit:', { context, options, visitId })
+	debug.router('Making a hybrid navigation:', { context, options, navigationId })
 
 	try {
 		// If applicable, converts the data to a `FormData` object.
@@ -65,17 +64,17 @@ export async function visit(options: VisitOptions): Promise<VisitResponse> {
 		// Before anything else, we fire the "before" event to make sure
 		// there was no user-specified handler returning "false".
 		if (!await runHooks('before', options.hooks, options)) {
-			debug.router('"before" event returned false, aborting the visit.')
-			throw new VisitCancelledError('The visit was cancelled by the "before" event.')
+			debug.router('"before" event returned false, aborting the navigation.')
+			throw new NavigationCancelledError('The navigation was cancelled by the "before" event.')
 		}
 
-		// Abort any active visit.
-		if (context.activeVisit) {
-			debug.router('Aborting current visit.', context.activeVisit)
-			context.activeVisit?.controller.abort()
+		// Abort any active navigation.
+		if (context.pendingNavigation) {
+			debug.router('Aborting current navigation.', context.pendingNavigation)
+			context.pendingNavigation?.controller.abort()
 		}
 
-		// Before making the visit, we need to make sure the scroll positions are
+		// Before making the navigation, we need to make sure the scroll positions are
 		// saved, so we can restore them later.
 		saveScrollPositions()
 
@@ -88,11 +87,11 @@ export async function visit(options: VisitOptions): Promise<VisitResponse> {
 			options.url = makeUrl(options.url, transformUrl)
 		}
 
-		// A visit is being made, we need to add it to the context so it
+		// A navigation is being made, we need to add it to the context so it
 		// can be reused later on.
 		setContext({
-			activeVisit: {
-				id: visitId,
+			pendingNavigation: {
+				id: navigationId,
 				url: makeUrl(options.url ?? context.url),
 				controller: new AbortController(),
 				options,
@@ -103,11 +102,11 @@ export async function visit(options: VisitOptions): Promise<VisitResponse> {
 		debug.router('Making request with axios.')
 
 		const response = await axios.request({
-			url: context.activeVisit!.url.toString(),
+			url: context.pendingNavigation!.url.toString(),
 			method: options.method ?? 'GET',
 			data: options.method === 'GET' ? {} : options.data,
 			params: options.method === 'GET' ? options.data : {},
-			signal: context.activeVisit!.controller.signal,
+			signal: context.pendingNavigation!.controller.signal,
 			headers: {
 				...options.headers,
 				...when(options.only !== undefined || options.except !== undefined, {
@@ -117,7 +116,6 @@ export async function visit(options: VisitOptions): Promise<VisitResponse> {
 				}, {}),
 				...when(options.errorBag, { [ERROR_BAG_HEADER]: options.errorBag }, {}),
 				...when(context.version, { [VERSION_HEADER]: context.version }, {}),
-				// 'x-hybrid-Context': this.currentState.visit.context,
 				[HYBRIDLY_HEADER]: true,
 				'X-Requested-With': 'XMLHttpRequest',
 				'Accept': 'text/html, application/xhtml+xml',
@@ -138,8 +136,8 @@ export async function visit(options: VisitOptions): Promise<VisitResponse> {
 		// case a full page refresh will be performed.
 		if (isExternalResponse(response)) {
 			debug.router('The response is explicitely external.')
-			await performExternalVisit({
-				url: fillHash(context.activeVisit!.url, response.headers[EXTERNAL_VISIT_HEADER]!),
+			await performExternalNavigation({
+				url: fillHash(context.pendingNavigation!.url, response.headers[EXTERNAL_NAVIGATION_HEADER]!),
 				preserveScroll: options.preserveScroll === true,
 			})
 
@@ -155,9 +153,9 @@ export async function visit(options: VisitOptions): Promise<VisitResponse> {
 
 		// At this point, we know the response respects the hybridly protocol.
 		debug.router('The response respects the Hybridly protocol.')
-		const payload = response.data as VisitPayload
+		const payload = response.data as HybridPayload
 
-		// If the visit was asking for specific properties, we ensure that the
+		// If the navigation was asking for specific properties, we ensure that the
 		// new request object contains the properties of the current view context,
 		// because the back-end sent back only the required properties.
 		if ((options.only?.length ?? options.except?.length) && payload.view.name === context.view.name) {
@@ -171,7 +169,7 @@ export async function visit(options: VisitOptions): Promise<VisitResponse> {
 		await navigate({
 			payload: {
 				...payload,
-				url: fillHash(context.activeVisit!.url, payload.url),
+				url: fillHash(context.pendingNavigation!.url, payload.url),
 			},
 			preserveScroll: options.preserveScroll === true,
 			preserveState: options.preserveState,
@@ -195,16 +193,16 @@ export async function visit(options: VisitOptions): Promise<VisitResponse> {
 			debug.router('The request returned validation errors.', errors)
 			await runHooks('error', options.hooks, errors)
 			setContext({
-				activeVisit: {
-					...context.activeVisit as any,
+				pendingNavigation: {
+					...context.pendingNavigation as any,
 					status: 'error',
 				},
 			})
 		} else {
 			await runHooks('success', options.hooks, payload)
 			setContext({
-				activeVisit: {
-					...context.activeVisit as any,
+				pendingNavigation: {
+					...context.pendingNavigation as any,
 					status: 'success',
 				},
 			})
@@ -214,7 +212,7 @@ export async function visit(options: VisitOptions): Promise<VisitResponse> {
 	//
 	} catch (error: any) {
 		await match(error.constructor.name, {
-			VisitCancelledError: async() => {
+			NavigationCancelledError: async() => {
 				debug.router('The request was cancelled through the "before" hook.', error)
 				console.warn(error)
 				await runHooks('abort', options.hooks, context)
@@ -246,13 +244,13 @@ export async function visit(options: VisitOptions): Promise<VisitResponse> {
 			},
 		}
 	} finally {
-		debug.router('Ending visit.')
+		debug.router('Ending navigation.')
 		await runHooks('after', options.hooks, context)
 
-		// If the visit is pending, it means another one has started,
+		// If the navigation is pending, it means another one has started,
 		// and if we clean it up, it could lead to issues after the request is done.
-		if (context.activeVisit?.id === visitId) {
-			setContext({ activeVisit: undefined })
+		if (context.pendingNavigation?.id === navigationId) {
+			setContext({ pendingNavigation: undefined })
 		}
 	}
 }
@@ -282,13 +280,13 @@ export async function navigate(options: NavigationOptions) {
 	const shouldReplaceHistory = evaluateConditionalOption(options.replace)
 	const shouldReplaceUrl = evaluateConditionalOption(options.preserveUrl)
 
-	// If the visit was asking to preserve the current state, we also need to
+	// If the navigation was asking to preserve the current state, we also need to
 	// update the context's state from the history state.
 	if (shouldPreserveState && getHistoryState() && options.payload.view.name === context.view.name) {
 		setContext({ state: getHistoryState() })
 	}
 
-	// If the visit required the URL to be preserved, we skip its update
+	// If the navigation required the URL to be preserved, we skip its update
 	// by replacing the payload URL with the current context URL.
 	if (shouldReplaceUrl) {
 		debug.router(`Preserving the current URL (${context.url}) instead of navigating to ${options.payload.url}`)
@@ -350,12 +348,12 @@ export async function navigate(options: NavigationOptions) {
 async function initializeRouter(): Promise<InternalRouterContext> {
 	const context = getRouterContext()
 
-	if (isBackForwardVisit()) {
-		handleBackForwardVisit()
-	} else if (isExternalVisit()) {
-		handleExternalVisit()
+	if (isBackForwardNavigation()) {
+		handleBackForwardNavigation()
+	} else if (isExternalNavigation()) {
+		handleExternalNavigation()
 	} else {
-		debug.router('Handling the initial page visit.')
+		debug.router('Handling the initial page navigation.')
 
 		// If we navigated to somewhere with a hash, we need to update the context
 		// to add said hash because it was initialized without it.
@@ -374,8 +372,8 @@ async function initializeRouter(): Promise<InternalRouterContext> {
 	return context
 }
 
-/** Performs a local visit to the given component without a round-trip. */
-async function performLocalComponentVisit(targetUrl: UrlResolvable, options: LocalVisitOptions) {
+/** Performs a local navigation to the given component without a round-trip. */
+async function performLocalNavigation(targetUrl: UrlResolvable, options: ComponentNavigationOptions) {
 	const context = getRouterContext()
 	const url = normalizeUrl(targetUrl)
 
@@ -391,14 +389,4 @@ async function performLocalComponentVisit(targetUrl: UrlResolvable, options: Loc
 			},
 		},
 	})
-}
-
-/** Performs an external visit by changing the URL directly. */
-function performLocalExternalVisit(url: UrlResolvable, data?: VisitOptions['data']) {
-	document.location.href = makeUrl(url, {
-		search: qs.stringify(data, {
-			encodeValuesOnly: true,
-			arrayFormat: 'brackets',
-		}),
-	}).toString()
 }

@@ -2,7 +2,7 @@
 import qs from 'qs'
 import type { PropType } from 'vue'
 import { h, defineComponent } from 'vue'
-import type { Method, VisitOptions } from '@hybridly/core'
+import type { Method, HybridRequestOptions } from '@hybridly/core'
 import { router, makeUrl } from '@hybridly/core'
 import type { RequestData } from '@hybridly/utils'
 import { debug, merge } from '@hybridly/utils'
@@ -54,7 +54,7 @@ export const RouterLink = defineComponent({
 						return
 					}
 
-					router.visit({
+					router.navigate({
 						url,
 						data,
 						method,
@@ -91,7 +91,7 @@ export const RouterLink = defineComponent({
 			default: false,
 		},
 		options: {
-			type: Object as PropType<Omit<VisitOptions, 'url' | 'data' | 'method'>>,
+			type: Object as PropType<Omit<HybridRequestOptions, 'url' | 'data' | 'method'>>,
 			default: () => ({}),
 		},
 	},
