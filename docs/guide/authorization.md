@@ -97,17 +97,17 @@ class ChirpPolicy
 When sharing a property from a data resource to the front-end, authorizations could directly be checked against the data object, but the `can` util provides a better syntax.
 
 ```ts
-import { can } from 'hybridly'
+import { can } from 'hybridly' // [!vp focus]
 
 const $props = defineProps<{
   chirp: App.Data.ChirpData
 }>()
 
-// With the `can` util (recommended)
-const canComment = can(chirp, 'comment')
+// With the `can` util (recommended) // [!vp focus:2]
+const canComment = can($props.chirp, 'comment')
 
-// As-is
-const canComment = chirp.authorization.comment
+// As-is  // [!vp focus:2]
+const canComment = $props.chirp.authorization.comment
 ```
 
 
@@ -123,7 +123,7 @@ public function show(Chirp $chirp)
     $this->authorize('view', $chirp);
 
     return hybridly('chirps.show', [
-        'chirp' => ChirpData::from($chirp)->exclude('authorization'),
+        'chirp' => ChirpData::from($chirp)->exclude('authorization'), // [!vp focus]
     ]);
 }
 ```
