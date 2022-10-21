@@ -26,11 +26,19 @@ function mockRequest(string $url = '/', string $method = 'GET', bool $bind = fal
     return $request;
 }
 
-function makeMockRequest(mixed $response, string $url = '/example-url'): TestResponse
+function makeMockRequest(mixed $response, string $url = '/mock-url'): TestResponse
 {
     app('router')->get($url, function () use ($response) {
         return $response;
     });
 
     return get($url);
+}
+
+function makeHybridMockRequest(string $component = 'test', mixed $properties = [], string $url = '/hybrid-mock-url'): TestResponse
+{
+    return makeMockRequest(
+        response: hybridly($component, $properties),
+        url: $url,
+    );
 }
