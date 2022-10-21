@@ -61,9 +61,9 @@ export interface Hooks {
 	after: (context: InternalRouterContext) => MaybePromise<void>
 
 	/**
-	 * Called when a visit has been made and a page component has been navigated to.
+	 * Called when a navigation has been made and a page component has been navigated to.
 	 */
-	navigate: (options: NavigationOptions) => MaybePromise<void>
+	navigated: (options: NavigationOptions) => MaybePromise<void>
 }
 
 /**

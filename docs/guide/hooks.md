@@ -22,7 +22,7 @@ This may be useful for requirements for which plugins could be overkill.
 
 ```ts
 <script setup lang="ts">
-registerHook('navigate', ({ isBackForward }) => { // [!vp focus:5]
+registerHook('navigated', ({ isBackForward }) => { // [!vp focus:5]
   if (isBackForward) {
     router.reload()
   }
@@ -102,6 +102,6 @@ export interface Hooks {
 	/**
 	 * Called when a visit has been made and a page component has been navigated to.
 	 */
-	navigate: (options: NavigationOptions) => MaybePromise<void>
+	navigated: (options: NavigationOptions) => MaybePromise<void>
 }
 ```

@@ -343,7 +343,7 @@ export async function navigate(options: NavigationOptions) {
 		restoreScrollPositions()
 	}
 
-	await runHooks('navigate', {}, options)
+	await runHooks('navigated', {}, options)
 }
 
 /** Initializes the router by reading the context and registering events if necessary. */

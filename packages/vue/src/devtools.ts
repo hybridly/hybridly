@@ -80,7 +80,7 @@ export function setupDevtools(app: App) {
 		const listen = [
 			'start',
 			'data',
-			'navigate',
+			'navigated',
 			'progress',
 			'error',
 			'abort',

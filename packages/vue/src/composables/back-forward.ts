@@ -9,7 +9,7 @@ export function useBackForward() {
 
 	// On navigation events, if the navigation is a back/forward
 	// visit, call the registered callbacks.
-	registerHook('navigate', (options) => {
+	registerHook('navigated', (options) => {
 		if (options.isBackForward) {
 			callbacks.forEach((fn) => fn(state.context.value!))
 			callbacks.splice(0, callbacks.length)
