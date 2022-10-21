@@ -23,10 +23,10 @@ class TestResponseMacros
                 $response = Assertable::fromTestResponse($this);
 
                 if (!\is_null($path)) {
-                    dd($response->getValue('view.properties.' . $path) ?? $response->getPayload());
+                    dd($response->getValue('view.properties.' . $path) ?? $response->toArray());
                 }
 
-                dd($response->getPayload());
+                dd($response->toArray());
             } catch (\Throwable) {
                 $this->dd();
             }
@@ -45,7 +45,7 @@ class TestResponseMacros
                 return $this;
             }
 
-            PHPUnit::pass("The response is hybrid while it's expected not to be.");
+            PHPUnit::fail("The response is hybrid while it's expected not to be.");
         };
     }
 
@@ -153,6 +153,17 @@ class TestResponseMacros
             Assertable::fromTestResponse($this)->url($url);
 
             return $this;
+        };
+    }
+
+    /**
+     * Returns the hybrid payload as an array.
+     */
+    public function getHybridPayload(): Closure
+    {
+        return function (): array {
+            /** @var TestResponse $this */
+            return Assertable::fromTestResponse($this)->toArray();
         };
     }
 }

@@ -3,10 +3,15 @@
 use Hybridly\Hybridly;
 use Hybridly\Tests\TestCase;
 use Illuminate\Http\Request;
+use Illuminate\Testing\TestResponse;
 
-uses(TestCase::class)->in(__DIR__);
+use function Pest\Laravel\get;
 
-function mockRequest(string $url = '/', string $method = 'GET', bool $bind = false, bool $hybridly = true)
+uses(TestCase::class)
+    ->beforeEach(fn () => config()->set('hybridly.testing.ensure_pages_exist', false))
+    ->in(__DIR__);
+
+function mockRequest(string $url = '/', string $method = 'GET', bool $bind = false, bool $hybridly = true): Request
 {
     $request = Request::create($url, $method);
 
@@ -19,4 +24,21 @@ function mockRequest(string $url = '/', string $method = 'GET', bool $bind = fal
     }
 
     return $request;
+}
+
+function makeMockRequest(mixed $response, string $url = '/mock-url'): TestResponse
+{
+    app('router')->get($url, function () use ($response) {
+        return $response;
+    });
+
+    return get($url);
+}
+
+function makeHybridMockRequest(string $component = 'test', mixed $properties = [], string $url = '/hybrid-mock-url'): TestResponse
+{
+    return makeMockRequest(
+        response: hybridly($component, $properties),
+        url: $url,
+    );
 }

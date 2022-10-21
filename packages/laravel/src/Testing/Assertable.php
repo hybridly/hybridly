@@ -13,6 +13,7 @@ class Assertable extends AssertableJson
     protected string $view;
     protected string $url;
     protected array $payload;
+    protected array $properties;
     protected ?string $version;
     protected ?string $dialog;
 
@@ -85,12 +86,6 @@ class Assertable extends AssertableJson
 
     public function toArray(): array
     {
-        return [
-            'view' => $this->view,
-            'properties' => $this->property(),
-            'dialog' => $this->dialog,
-            'url' => $this->url,
-            'version' => $this->version,
-        ];
+        return $this->getPayload();
     }
 }
