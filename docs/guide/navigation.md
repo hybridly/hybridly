@@ -28,7 +28,7 @@ Learn more about the options available on its [API documentation](../api/compone
 
 ## Programmatically
 
-It's often necessary to make navigations programmatically. This can be done using the [`router` API](../api/utils/router).
+It's often necessary to make navigations programmatically. This can be done using the [`router` API](../api/router/utils).
 
 ```ts
 router.get(url, options)
@@ -39,4 +39,4 @@ router.reload(options)
 router.navigate(options)
 ```
 
-Learn more about the methods and options available on their [API documentation](../api/utils/router).
+Learn more about the methods and options available on their [API documentation](../api/router/utils).
