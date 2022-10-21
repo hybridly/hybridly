@@ -142,6 +142,7 @@ export default async() => defineConfig({
 				{
 					text: 'Utils',
 					items: [
+						{ text: 'initializeHybridly', link: '/api/utils/initialize-hybridly' },
 						{ text: 'can', link: '/api/utils/can' },
 						{ text: 'route', link: '/api/utils/route' },
 						{ text: 'registerHook', link: '/api/utils/register-hook' },
