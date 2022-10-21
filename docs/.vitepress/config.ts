@@ -129,6 +129,7 @@ export default async() => defineConfig({
 						{ text: 'Hybridly', link: '/api/laravel/hybridly' },
 						{ text: 'Global functions', link: '/api/laravel/global-functions' },
 						{ text: 'Testing', link: '/api/laravel/testing' },
+						{ text: 'Directives', link: '/api/laravel/directives' },
 					],
 				},
 				{
