@@ -86,13 +86,6 @@ class Assertable extends AssertableJson
 
     public function toArray(): array
     {
-        return [
-            'view' => $this->view,
-            'payload' => $this->payload,
-            'properties' => $this->properties,
-            'dialog' => $this->dialog,
-            'url' => $this->url,
-            'version' => $this->version,
-        ];
+        return $this->getPayload();
     }
 }
