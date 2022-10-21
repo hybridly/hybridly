@@ -1,5 +1,5 @@
 import { setupDevtoolsPlugin } from '@vue/devtools-api'
-import { registerHook, registerHookOnce } from '@hybridly/core'
+import { registerHook } from '@hybridly/core'
 import type { App, Plugin } from 'vue'
 import { triggerRef } from 'vue'
 import { state } from './stores/state'
@@ -104,7 +104,7 @@ export function setupDevtools(app: App) {
 				},
 			})
 
-			listen.forEach((event) => registerHookOnce(event, (data: any) => {
+			listen.forEach((event) => registerHook(event, (data: any) => {
 				api.addTimelineEvent({
 					layerId: hybridlyEventsTimelineLayerId,
 					event: {
@@ -121,7 +121,7 @@ export function setupDevtools(app: App) {
 						api.notifyComponentUpdate()
 					}, 100)
 				}
-			}))
+			}, { once: true }))
 		})
 	})
 }

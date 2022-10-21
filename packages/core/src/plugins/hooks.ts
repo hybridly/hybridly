@@ -66,23 +66,34 @@ export interface Hooks {
 	navigated: (options: NavigationOptions) => MaybePromise<void>
 }
 
+interface HookOptions {
+	/** Executes the hook only once. */
+	once?: boolean
+}
+
 /**
  * Registers a global hook.
  */
-export function registerHook<T extends keyof Hooks>(hook: T, fn: Hooks[T]): () => void {
+export function appendCallbackToHooks<T extends keyof Hooks>(hook: T, fn: Hooks[T]): () => void {
 	const hooks = getRouterContext().hooks
 
-	hooks[hook] = [...(hooks[hook] ?? []), fn] as Function[]
+	hooks[hook] = [...(hooks[hook] ?? []), fn] as Hooks[T][]
 
 	return () => hooks[hook]?.splice(hooks[hook]!.indexOf(fn), 1)
 }
 
 /**
- * Registers a global hook that will run only once.
+ * Registers a global hook.
  */
-export function registerHookOnce<T extends keyof Hooks>(hook: T, fn: Hooks[T]): void {
-	const unregister = registerHook(hook, async(...args: [any]) => {
-		await fn(...args)
-		unregister()
-	})
+export function registerHook<T extends keyof Hooks>(hook: T, fn: Hooks[T], options?: HookOptions): () => void {
+	if (options?.once) {
+		const unregister = appendCallbackToHooks(hook, async(...args: [any]) => {
+			await fn(...args)
+			unregister()
+		})
+
+		return unregister
+	}
+
+	return appendCallbackToHooks(hook, fn)
 }

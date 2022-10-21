@@ -16,7 +16,7 @@ They are useful when you need to execute custom logic for each request. You can 
 
 ## Registering hooks manually
 
-Though it's highly recommended to use plugins, it's also possible to register hooks with the `registerHook` and `registerHookOnce` functions.
+Though it's highly recommended to use plugins, it's also possible to register hooks with the `registerHook` function.
 
 This may be useful for requirements for which plugins could be overkill.
 

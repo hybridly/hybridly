@@ -18,7 +18,6 @@ export const HybridlyImports = {
 	],
 	'hybridly': [
 		'registerHook',
-		'registerHookOnce',
 		'router',
 		'can',
 	],

@@ -138,7 +138,6 @@ export default async() => defineConfig({
 						{ text: 'route', link: '/api/utils/route' },
 						{ text: 'router', link: '/api/utils/router' },
 						{ text: 'registerHook', link: '/api/utils/register-hook' },
-						{ text: 'registerHookOnce', link: '/api/utils/register-hook-once' },
 					],
 				},
 				{
