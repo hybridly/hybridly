@@ -4,9 +4,9 @@ These functions are available globally when `hybridly/laravel` is installed.
 
 ## `hybridly`
 
-When called without a parameter, this functions returns the [`Hybridly\Hybridly`](./instance.md) singleton instance.
+When called without a parameter, this functions returns the [`Hybridly\Hybridly`](./hybridly.md) singleton instance.
 
-Otherwise, it is an alias of [`hybridly()->view()`](./instance.md#view).
+Otherwise, it is an alias of [`hybridly()->view()`](./hybridly.md#view).
 
 ## `is_hybrid`
 
