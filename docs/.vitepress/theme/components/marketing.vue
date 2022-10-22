@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import FeaturesSection from './features/features-section.vue'
+
 interface Feature {
 	title: string
 	description: string
@@ -42,9 +44,9 @@ const features: Feature[] = [
 
 <template>
 	<ClientOnly>
-		<section class="mx-auto mt-20 flex h-full w-full max-w-5xl flex-col lg:mt-40">
+		<section class="mt-20 flex h-full flex-col lg:mt-40">
 			<!-- Hero -->
-			<div class="flex w-full flex-col items-center justify-between gap-x-40 px-6 lg:flex-row lg:items-start lg:px-0">
+			<div class="mx-auto flex w-full max-w-6xl flex-col items-center justify-between gap-x-40 px-6 lg:flex-row lg:items-start lg:px-0">
 				<!-- Left block -->
 				<section class="max-w-2xl grow">
 					<!-- Title -->
@@ -88,21 +90,7 @@ const features: Feature[] = [
 				</div>
 			</div>
 
-			<!-- Features -->
-			<section class="mt-24 grid grid-cols-1 gap-8 px-8 sm:grid-cols-2 lg:grid-cols-3 lg:px-0">
-				<template v-for="feature in features" :key="feature.title">
-					<component
-						:is="feature.url ? 'a' : 'div'"
-						class="bg-[var(--vp-c-bg-soft)] flex flex-col justify-center rounded-lg p-6"
-						:class="{ 'transition cursor-pointer hover:bg-[var(--vp-c-bg-mute)]': feature.url }"
-						:href="feature.url"
-					>
-						<span class="font-semibold" v-text="feature.title" />
-						<!-- eslint-disable-next-line vue/no-v-html -->
-						<p class="text-[var(--vp-c-text-2)] mt-2 text-sm font-medium leading-relaxed" v-html="feature.description" />
-					</component>
-				</template>
-			</section>
+			<FeaturesSection />
 		</section>
 	</ClientOnly>
 </template>
