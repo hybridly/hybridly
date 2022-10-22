@@ -74,10 +74,14 @@ aside.VPSidebar::-webkit-scrollbar-thumb { /* Foreground */
 	float: right;
 	width: 2.5px;
 	height: 20px;
-	background: #f0abfc;
+	background: #7c3aed;
 	transform : scaleY(0);
 	border-radius: 100px;
 	transition: transform 150ms ease-in;
+}
+
+.dark .VPSidebar .link::after {
+	background: #f0abfc !important;
 }
 
 .VPSidebar .link.active::after {
@@ -85,7 +89,7 @@ aside.VPSidebar::-webkit-scrollbar-thumb { /* Foreground */
 }
 
 .VPSidebarGroup .items {
-	padding-left: 5px;
+	padding-left: 7px;
 	transition: all 0.5s;
 }
 
