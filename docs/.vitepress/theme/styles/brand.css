@@ -40,19 +40,31 @@
 
 aside.VPSidebar {
 	scrollbar-width: thin;
-	scrollbar-color: #252525 transparent;
+	scrollbar-color: #dbdbdb transparent;
 }
+
+.dark aside.VPSidebar {
+	scrollbar-color: #252525 transparent !important;
+}
+
 aside.VPSidebar::-webkit-scrollbar {
 	width: 10px;
 	height: 10px;
 }
+
 aside.VPSidebar::-webkit-scrollbar-track { /* Background */
 	background: transparent;
 }
+
 aside.VPSidebar::-webkit-scrollbar-thumb { /* Foreground */
-	background: #252525;
 	border-radius: 100vh;
-	border: 3px solid #252525;
+	background: #dbdbdb;
+	border: 3px solid #dbdbdb;
+}
+
+.dark aside.VPSidebar::-webkit-scrollbar-thumb { /* Foreground */
+	background: #252525 !important;
+	border: 3px solid #252525 !important;
 }
 
 /* Sidebar links */
