@@ -1,45 +1,6 @@
 <script setup lang="ts">
 import FeaturesSection from './features/features-section.vue'
-
-interface Feature {
-	title: string
-	description: string
-	url?: string
-	icon?: string
-}
-
-const features: Feature[] = [
-	{
-		title: 'TypeScript support',
-		description: "If it's typable, it's typed. Hybridly supports typing paginators, routes, authorizations and global properties.",
-		url: '/guide/typescript',
-	},
-	{
-		title: 'Forms',
-		description: 'Forms are so common, a composable for describing forms, handling responses and validation errors is provided.',
-		url: '/guide/forms',
-	},
-	{
-		title: 'Routes',
-		description: 'Define your routes server-side like you\'re used to, Hybridly takes care of generating types for them.',
-		url: '/guide/routing',
-	},
-	{
-		title: 'Authorization',
-		description: 'Hybridly extends <a href="https://github.com/spatie/laravel-data">data objects</a> to provide an interface for generating typings for authorizations.',
-		url: '/guide/authorization',
-	},
-	{
-		title: 'Built on battle-tested tech',
-		description: 'Hybridly is a fork of Inertia. Benefit from <abbr title="Except server-side rendering. For now.">all of its features</abbr>, plus a lot of new, unique functionalities.',
-		url: '/guide/#about-inertia',
-	},
-	{
-		title: 'Painless migration',
-		description: 'Migrating is a matter of installing different dependencies and replacing the API.',
-		url: '/guide/migrating-from-inertia',
-	},
-]
+import MiniFeaturesSection from './mini-features/mini-features-section.vue'
 </script>
 
 <template>
@@ -90,6 +51,7 @@ const features: Feature[] = [
 				</div>
 			</div>
 
+			<MiniFeaturesSection />
 			<FeaturesSection />
 		</section>
 	</ClientOnly>
