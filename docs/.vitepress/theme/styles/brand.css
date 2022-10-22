@@ -101,6 +101,13 @@ aside.VPSidebar::-webkit-scrollbar-thumb { /* Foreground */
 	transform: translateX(2px);
 }
 
+/* Docs right sidebar */
+.VPDocAsideOutline > div.content .outline-title {
+	font-size: 15px !important;
+	position: relative;
+	top: -6px;
+}
+
 /* Overriding navbar colors since they're hardcoded at component level */
 
 @media (min-width: 960px) {
