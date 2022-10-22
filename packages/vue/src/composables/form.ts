@@ -60,8 +60,11 @@ export function useForm<T extends Fields = Fields>(options: FormOptions<T>) {
 		if (keys.length === 0) {
 			keys = Object.keys(fields)
 		}
-		keys.forEach((key) => Reflect.set(fields, key, safeClone(Reflect.get(initial, key))))
-		clearErrors()
+
+		keys.forEach((key) => {
+			Reflect.set(fields, key, safeClone(Reflect.get(initial, key)))
+			clearError(key)
+		})
 	}
 
 	/**
@@ -131,8 +134,21 @@ export function useForm<T extends Fields = Fields>(options: FormOptions<T>) {
 	/**
 	 * Clears all errors.
 	 */
-	function clearErrors() {
-		errors.value = {}
+	function clearErrors(...keys: (keyof T)[]) {
+		if (keys.length === 0) {
+			keys = Object.keys(fields)
+		}
+
+		keys.forEach((key) => {
+			clearError(key)
+		})
+	}
+
+	/**
+	 * Clears the given field's error.
+	 */
+	function clearError(key: keyof T) {
+		errors.value[key] = undefined
 	}
 
 	/**
@@ -166,6 +182,7 @@ export function useForm<T extends Fields = Fields>(options: FormOptions<T>) {
 		abort,
 		setErrors,
 		clearErrors,
+		clearError,
 		submitWithOptions: submit,
 		submit: () => submit(),
 		hasErrors: computed(() => Object.values(errors.value).length > 0),
