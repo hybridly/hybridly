@@ -70,6 +70,10 @@ This function initiates a programmatic navigation without any specific default.
 router.navigate(options)
 ```
 
+## `abort`
+
+This function aborts the current request. The `abort` hook will be triggered.
+
 ## `history.get`
 
 This function fetches the given key from the history state. The state is specific to the current [history entry](https://developer.mozilla.org/en-US/docs/Web/API/History).

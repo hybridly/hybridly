@@ -106,8 +106,11 @@ export async function handleBackForwardNavigation(): Promise<void> {
 	window.history.state.version = getRouterContext().version
 
 	await navigate({
+		payload: window.history.state,
 		preserveScroll: true,
-		preserveState: true,
+		preserveState: false,
+		updateHistoryState: false,
+		isBackForward: true,
 	})
 }
 

@@ -88,6 +88,8 @@ The `GlobalHybridlyProperties` interface is used by the Vue adapter to provide d
 
 Overriding this interface by making it extend the generated data object is what provides auto-completion support to `useProperty` and related functionalities.
 
+> To learn how to automatically generate TypeScript interfaces from data object, read the [TypeScript setup](./typescript.md) documentation.
+
 ## Accessing global properties
 
 The `useProperty` function provides typed dot-notation support for accessing global properties.

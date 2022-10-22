@@ -283,6 +283,7 @@ export async function navigate(options: NavigationOptions) {
 	// If the navigation was asking to preserve the current state, we also need to
 	// update the context's state from the history state.
 	if (shouldPreserveState && getHistoryState() && options.payload.view.name === context.view.name) {
+		debug.history('Setting the history from this entry into the context.')
 		setContext({ state: getHistoryState() })
 	}
 
