@@ -15,11 +15,11 @@ import MiniFeaturesSection from './mini-features/mini-features-section.vue'
 						Hybridly
 					</h1>
 					<!-- Subtitle -->
-					<p class="mt-2 text-center text-2xl font-medium lg:text-left lg:text-3xl">
+					<p class="mt-2 text-center text-2xl font-bold lg:text-left lg:text-3xl">
 						Server-driven, client-rendered applications.
 					</p>
 					<!-- Description -->
-					<p class="mt-4 text-center text-lg font-medium opacity-60 lg:text-left lg:text-2xl">
+					<p class="mt-4 max-w-md text-center text-lg font-medium opacity-60 lg:text-left lg:text-xl">
 						Build single-page applications the classic way. No API, no route duplication, no front-end state. Fully server-driven.
 					</p>
 					<!-- Actions -->
