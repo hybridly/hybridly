@@ -36,6 +36,25 @@
 	--vp-c-brand-darker: #f0abfc;
 }
 
+/* Sidebar scrollbar */
+
+aside.VPSidebar {
+	scrollbar-width: thin;
+	scrollbar-color: #252525 transparent;
+}
+aside.VPSidebar::-webkit-scrollbar {
+	width: 10px;
+	height: 10px;
+}
+aside.VPSidebar::-webkit-scrollbar-track { /* Background */
+	background: transparent;
+}
+aside.VPSidebar::-webkit-scrollbar-thumb { /* Foreground */
+	background: #252525;
+	border-radius: 100vh;
+	border: 3px solid #252525;
+}
+
 /* Sidebar links */
 
 .VPSidebar .link::after {
