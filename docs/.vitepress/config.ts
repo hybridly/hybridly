@@ -137,6 +137,7 @@ export default async() => defineConfig({
 					items: [
 						{ text: 'Options', link: '/api/router/options' },
 						{ text: 'Utils', link: '/api/router/utils' },
+						{ text: 'Response', link: '/api/router/response' },
 					],
 				},
 				{
