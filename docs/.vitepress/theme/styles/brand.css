@@ -29,7 +29,7 @@
 }
 
 .dark {
-	--vp-c-brand: #d8b4fe;
+	--vp-c-brand: #d1a5ff;
 	--vp-c-brand-light: #e9d5ff;
 	--vp-c-brand-lighter: #f3e8ff;
 	--vp-c-brand-dark: #f5d0fe;
@@ -41,7 +41,7 @@
 .VPSidebar .link::after {
 	content: '';
 	float: right;
-	width: 2px;
+	width: 2.5px;
 	height: 20px;
 	background: #f0abfc;
 	transform : scaleY(0);
@@ -51,6 +51,19 @@
 
 .VPSidebar .link.active::after {
 	transform : scaleY(1);
+}
+
+.VPSidebarGroup .items {
+	padding-left: 5px;
+	transition: all 0.5s;
+}
+
+.VPSidebarGroup .items > * {
+	transition: all 0.5s;
+}
+
+.VPSidebarGroup .items > *:not(.active):hover {
+	transform: translateX(2px);
 }
 
 /* Overriding navbar colors since they're hardcoded at component level */
