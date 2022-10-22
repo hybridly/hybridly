@@ -36,6 +36,23 @@
 	--vp-c-brand-darker: #f0abfc;
 }
 
+/* Sidebar links */
+
+.VPSidebar .link::after {
+	content: '';
+	float: right;
+	width: 2px;
+	height: 20px;
+	background: #f0abfc;
+	transform : scaleY(0);
+	border-radius: 100px;
+	transition: transform 150ms ease-in;
+}
+
+.VPSidebar .link.active::after {
+	transform : scaleY(1);
+}
+
 /* Overriding navbar colors since they're hardcoded at component level */
 
 @media (min-width: 960px) {
