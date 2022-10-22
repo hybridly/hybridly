@@ -24,7 +24,7 @@ const features: Feature[] = [
 	},
 	{
 		title: 'Authorization',
-		description: 'Hybridly extends <a href="https://github.com/spatie/laravel-data">data objects</a> to provide an interface for generating typing for authorizations.',
+		description: 'Hybridly extends <a href="https://github.com/spatie/laravel-data">data objects</a> to provide an interface for generating typings for authorizations.',
 		url: '/guide/authorization',
 	},
 	{
