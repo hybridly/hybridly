@@ -14,6 +14,18 @@
 	--vp-logo-shadow-3: #f0abfc;
 	--vp-logo-shadow-4: #a78bfa;
 	--vp-logo-shadow-5: #8b5cf6;
+
+	/* Background */
+	--vp-c-black: #171719;
+	--vp-c-black-soft: #202022;
+	--vp-c-black-mute: #2a2b31;
+
+	/* Gray */
+	--vp-c-gray-dark-3: #32323c;
+
+	/* Text */
+	--vp-c-text-dark-1: rgba(246, 247, 255, 0.9);
+	--vp-c-text-dark-2: rgba(222, 226, 236, 0.6);
 }
 
 .dark {
@@ -22,4 +34,19 @@
 	--vp-c-brand-lighter: #f3e8ff;
 	--vp-c-brand-dark: #f5d0fe;
 	--vp-c-brand-darker: #f0abfc;
+}
+
+/* Overriding navbar colors since they're hardcoded at component level */
+
+@media (min-width: 960px) {
+
+	/* VPNav.vue */
+	.dark .VPNav.no-sidebar {
+		background: rgba(32, 32, 34, 0.7) !important;
+	}
+
+	/* VPNavBar.vue */
+	.dark .VPNavBar.has-sidebar .content {
+		background: rgba(32, 32, 34, 0.7) !important;
+	}
 }
