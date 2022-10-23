@@ -7,10 +7,10 @@
 			<div class="flex items-center gap-3">
 				<div
 					class="h-13 w-13 grid place-items-center rounded-lg
-					bg-orange-100/60 text-orange-400 dark:bg-orange-400/90 dark:text-white
+					bg-orange-100/60 text-orange-400 dark:bg-[#26273b]
 					"
 				>
-					<div class="text-xl font-bold">
+					<div class="text-xl font-medium">
 						TS
 					</div>
 				</div>
@@ -26,7 +26,7 @@
 			<div class="flex items-center gap-3">
 				<div
 					class="h-13 w-13 grid place-items-center rounded-lg
-					bg-cyan-100/60 text-cyan-300 dark:bg-cyan-400/90 dark:text-white
+					bg-cyan-100/60 text-cyan-300 dark:bg-[#26273b]
 					"
 				>
 					<div class="i-ph-plugs-connected h-8 w-8" />
@@ -43,7 +43,7 @@
 			<div class="flex items-center gap-3">
 				<div
 					class="h-13 w-13 grid place-items-center rounded-lg
-					bg-pink-100/60 text-pink-300 dark:bg-pink-400 dark:text-white
+					bg-pink-100/60 text-pink-300 dark:bg-[#26273b]
 					"
 				>
 					<div class="i-ph-shield h-8 w-8" />
@@ -60,10 +60,10 @@
 			<div class="flex items-center gap-3">
 				<div
 					class="h-13 w-13 grid place-items-center rounded-lg
-					bg-violet-100/60 text-violet-300 dark:bg-violet-400 dark:text-white
+					bg-violet-100/60 text-violet-300 dark:bg-[#26273b]
 					"
 				>
-					<div class="i-ph-lightning-bold h-8 w-8" />
+					<div class="i-ph-lightning h-8 w-8" />
 				</div>
 				<div class="">
 					<div class="text-lg font-bold">
@@ -77,10 +77,10 @@
 			<div class="flex items-center gap-3">
 				<div
 					class="h-13 w-13 grid place-items-center rounded-lg
-					bg-green-100/60 text-green-300 dark:bg-green-400 dark:text-white
+					bg-green-100/60 text-green-300 dark:bg-[#26273b]
 					"
 				>
-					<div class="i-ph-magnifying-glass h-8 w-8" />
+					<div class="i-ph-magnifying-glass h-7 w-7" />
 				</div>
 				<div class="">
 					<div class="text-lg font-bold">
@@ -94,7 +94,7 @@
 			<div class="flex items-center gap-3">
 				<div
 					class="h-13 w-13 grid place-items-center rounded-lg
-					bg-blue-100/60 text-blue-300 dark:bg-blue-400 dark:text-white
+					bg-blue-100/60 text-blue-300 dark:bg-[#26273b]
 					"
 				>
 					<div class="i-ph-code-simple h-8 w-8" />
