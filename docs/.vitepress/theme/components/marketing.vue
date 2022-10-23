@@ -24,23 +24,51 @@ import MiniFeaturesSection from './mini-features/mini-features-section.vue'
 					</p>
 					<!-- Actions -->
 					<div class="mt-10 flex flex-wrap justify-center gap-4 lg:justify-start">
-						<a class="bg-[var(--vp-c-brand-light)] hover:bg-[var(--vp-c-brand-lighter)] group text-[var(--vp-c-bg)] flex items-center rounded-lg px-4 py-2 font-semibold transition" href="/guide/">
-							Get started
-							<svg
-								class="ml-2 transition group-hover:translate-x-1"
-								xmlns="http://www.w3.org/2000/svg"
-								width="10"
-								height="10"
-								viewBox="0 0 24 24"
-							>
-								<path
-									d="M13.025 1l-2.847 2.828 6.176 6.176h-16.354v3.992h16.354l-6.176 6.176 2.847 2.828 10.975-11z"
-									fill="currentcolor"
+						<a
+							href="/guide/"
+							class="group flex w-40 items-center justify-center gap-2 rounded-full bg-[#FFEAEF] py-3 text-[#DB7DA8]
+							transition hover:bg-[#FFDBE3] hover:text-[#D6689B]
+							dark:bg-violet-500 dark:text-white dark:hover:bg-violet-600 dark:hover:text-white
+							"
+						>
+							<div class="pl-1.5 font-semibold">Get started</div>
+							<div class="relative">
+								<div
+									class="
+									bg-[currentColor] absolute top-1/2 left-1 h-0.5 w-2.5 -translate-y-1/2 rounded-full
+									opacity-0 transition group-hover:translate-x-0.5 group-hover:opacity-100
+									"
 								/>
-							</svg>
+								<div
+									class="i-fluent-chevron-right-16-filled h-5 w-5
+									transition group-hover:translate-x-1
+									"
+								/>
+							</div>
 						</a>
-						<a class="bg-[var(--vp-c-bg-soft)] hover:bg-[var(--vp-c-bg-mute)] group text-[var(--vp-c-text-1)] flex items-center rounded-lg px-4 py-2 font-medium transition" href="/guide/demonstration">Demonstration</a>
-						<a class="bg-[var(--vp-c-bg-soft)] hover:bg-[var(--vp-c-bg-mute)] group text-[var(--vp-c-text-1)] flex items-center rounded-lg px-4 py-2 font-medium transition" href="https://github.com/hybridly/hybridly">See on GitHub</a>
+						<a
+							class="bg-[var(--vp-c-bg-soft)] hover:bg-[var(--vp-c-bg-mute)] group
+							text-[var(--vp-c-text-1)] flex items-center rounded-full px-5 py-2 font-medium transition"
+							href="/guide/demonstration"
+						>
+							<span class="transition group-hover:translate-x-8">Demo</span>
+							<span class="transition group-hover:opacity-0">nstration</span>
+						</a>
+						<a
+							class="bg-[var(--vp-c-bg-soft)] hover:bg-[var(--vp-c-bg-mute)] group text-[var(--vp-c-text-1)]
+							relative flex w-44 items-center justify-center rounded-full py-2 font-medium transition"
+							href="https://github.com/hybridly/hybridly"
+						>
+							<span class="transition group-hover:opacity-0">See on GitHub</span>
+							<span
+								class="absolute top-1/2 right-1/2 flex -translate-y-1/2 translate-x-1/3 items-center gap-2
+								opacity-0 transition group-hover:translate-x-1/2 group-hover:opacity-100
+								"
+							>
+								<div class="i-ph-star-fill h-5 w-5 text-amber-400" />
+								<div class="">Star us!</div>
+							</span>
+						</a>
 					</div>
 				</section>
 
