@@ -19,8 +19,12 @@ import MiniFeaturesSection from './mini-features/mini-features-section.vue'
 						Server-driven, client-rendered applications.
 					</p>
 					<!-- Description -->
-					<p class="mt-4 max-w-md text-center text-lg font-medium opacity-60 lg:text-left lg:text-xl">
-						Build single-page applications the classic way. No API, no route duplication, no front-end state. Fully server-driven.
+					<p class="mt-4 text-center text-lg font-medium opacity-60 lg:text-left lg:text-xl">
+						Build single-page applications the classic way.
+						<br />
+						No API, no route duplication, no front-end state.
+						<br />
+						Fully server-driven.
 					</p>
 					<!-- Actions -->
 					<div class="mt-10 flex flex-wrap justify-center gap-4 lg:justify-start">
