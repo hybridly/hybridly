@@ -50,7 +50,7 @@ export default async() => defineConfig({
 		],
 
 		editLink: {
-			pattern: `${github}/edit/main/docs/:path`,
+			pattern: `${github}/edit/0.x/docs/:path`,
 			text: 'Suggest changes to this page',
 		},
 
