@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import FeaturesSection from './features/features-section.vue'
 import MiniFeaturesSection from './mini-features/mini-features-section.vue'
+import CodeShowcaseSection from './code-showcase/code-showcase-section.vue'
 </script>
 
 <template>
@@ -85,6 +86,7 @@ import MiniFeaturesSection from './mini-features/mini-features-section.vue'
 
 			<MiniFeaturesSection />
 			<FeaturesSection />
+			<CodeShowcaseSection />
 		</section>
 	</ClientOnly>
 </template>
