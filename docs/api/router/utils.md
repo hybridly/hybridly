@@ -22,7 +22,7 @@ router.delete(url, options)
 
 ## `reload`
 
-This function initiates a programmatic navigation on the current URL. By default, the navigation will preserve the scroll position and the component's state.
+This function initiates a programmatic navigation to the current URL. By default, the navigation will preserve the scroll position and the component's state.
 
 ```ts
 router.reload(options)
