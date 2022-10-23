@@ -14,7 +14,7 @@ const discord = 'https://discord.gg/uZ8eC7kRFV'
 const github = 'https://github.com/hybridly/hybridly'
 
 const { version } = JSON.parse(readFileSync(resolve('package.json'), { encoding: 'utf-8' }))
-const branch = execSync('git rev-parse --abbrev-ref HEAD')
+const branch = execSync('echo $BRANCH | grep . || git rev-parse --abbrev-ref HEAD')
 
 export default async() => defineConfig({
 	title,
