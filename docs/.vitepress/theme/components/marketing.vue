@@ -53,7 +53,7 @@ import CodeShowcaseSection from './code-showcase/code-showcase-section.vue'
 						</a>
 						<a
 							class="bg-[var(--vp-c-bg-soft)] hover:bg-[var(--vp-c-bg-mute)] group
-							text-[var(--vp-c-text-1)] flex items-center rounded-full px-5 py-2 font-medium transition"
+							text-[var(--vp-c-text-1)] flex items-center rounded-full px-5 py-3 font-medium transition"
 							href="/guide/demonstration"
 						>
 							<span class="transition group-hover:translate-x-8">Demo</span>
@@ -61,7 +61,7 @@ import CodeShowcaseSection from './code-showcase/code-showcase-section.vue'
 						</a>
 						<a
 							class="bg-[var(--vp-c-bg-soft)] hover:bg-[var(--vp-c-bg-mute)] group text-[var(--vp-c-text-1)]
-							relative flex w-44 items-center justify-center rounded-full py-2 font-medium transition"
+							relative flex w-44 items-center justify-center rounded-full py-3 font-medium transition"
 							href="https://github.com/hybridly/hybridly"
 						>
 							<span class="transition group-hover:opacity-0">See on GitHub</span>
