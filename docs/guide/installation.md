@@ -83,9 +83,6 @@ import 'virtual:hybridly/router'
 initializeHybridly({
 	cleanup: !import.meta.env.DEV,
 	pages: import.meta.glob('../views/pages/**/*.vue', { eager: true }),
-	setup: ({ render, element, hybridly }) => createApp({ render })
-		.use(hybridly)
-		.mount(element),
 })
 ```
 
@@ -261,7 +258,9 @@ The last import is what makes the `route` util typed. If you don't intend on usi
 
 - The `pages` property must contain an object which keys are names of page components and values are the components themselves. `import.meta.glob` conveniently create that for us. Or maybe Hybridly adopter this format because `import.meta.glob` exists. Who knows.
 
-- The `setup` property must be a function that returns the Vue application. The `hybridly` plugin, which contains the Vue DevTools plugin, is available in the object given as the first argument to the function. The DOM element to which the Vue application will be mounted is also there. 
+- The `setup` property is *optional*. If provided, it must be a function that returns the Vue application. The `hybridly` plugin, which contains the Vue DevTools plugin, is available in the object given as the first argument to the function.
+
+You can read more about `initializeHybridly` in the [API documentation](../api/utils/initialize-hybridly.md).
 
 ### Add a `tsconfig.json`
 
