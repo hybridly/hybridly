@@ -6,7 +6,7 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Root View
+    | Root view
     |--------------------------------------------------------------------------
     | By default, Hybridly expects to find a root.blade.php template in your
     | views folder. This option allows you to define an alternative root
