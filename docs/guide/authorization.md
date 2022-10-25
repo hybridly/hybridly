@@ -18,11 +18,11 @@ First, a data object extending `Hybridly\Support\Data\DataResource` needs to be 
 namespace App\Data;
 
 use Carbon\Carbon;
-use Hybridly\Support\Data\DataResource;  // [!vp focus]
+use Hybridly\Support\Data\DataResource;  // [!code focus]
 
-final class ChirpData extends DataResource  // [!vp focus]
+final class ChirpData extends DataResource  // [!code focus]
 {
-    public static array $authorizations = [  // [!vp focus:6]
+    public static array $authorizations = [  // [!code focus:6]
       'comment',
       'like',
       'unlike',
@@ -50,7 +50,7 @@ This property will contain a key for each defined policy action, and will be eva
 	"likes_count": 1,
 	"comments_count": 3,
 	"created_at": "2022-10-12T17:44:05+00:00",
-	"authorization": { // [!vp focus:6]
+	"authorization": { // [!code focus:6]
     "comment": false,
     "like": false,
     "unlike": true,
@@ -70,22 +70,22 @@ class ChirpPolicy
 {
     use HandlesAuthorization;
 
-    public function comment(User $user): bool  // [!vp focus:4]
+    public function comment(User $user): bool  // [!code focus:4]
     {
         return true;
     }
 
-    public function delete(User $user, Chirp $chirp): bool  // [!vp focus:4]
+    public function delete(User $user, Chirp $chirp): bool  // [!code focus:4]
     {
         return $chirp->author->is($user);
     }
 
-    public function like(User $user, Chirp $chirp): bool  // [!vp focus:4]
+    public function like(User $user, Chirp $chirp): bool  // [!code focus:4]
     {
         return !$user->hasLiked($chirp);
     }
 
-    public function unlike(User $user, Chirp $chirp): bool  // [!vp focus:4]
+    public function unlike(User $user, Chirp $chirp): bool  // [!code focus:4]
     {
         return $user->hasLiked($chirp);
     }
@@ -97,16 +97,16 @@ class ChirpPolicy
 When sharing a property from a data resource to the front-end, authorizations could directly be checked against the data object, but the `can` util provides a better syntax.
 
 ```ts
-import { can } from 'hybridly' // [!vp focus]
+import { can } from 'hybridly' // [!code focus]
 
 const $props = defineProps<{
   chirp: App.Data.ChirpData
 }>()
 
-// With the `can` util (recommended) // [!vp focus:2]
+// With the `can` util (recommended) // [!code focus:2]
 const canComment = can($props.chirp, 'comment')
 
-// As-is  // [!vp focus:2]
+// As-is  // [!code focus:2]
 const canComment = $props.chirp.authorization.comment
 ```
 
@@ -123,7 +123,7 @@ public function show(Chirp $chirp)
     $this->authorize('view', $chirp);
 
     return hybridly('chirps.show', [
-        'chirp' => ChirpData::from($chirp)->exclude('authorization'), // [!vp focus]
+        'chirp' => ChirpData::from($chirp)->exclude('authorization'), // [!code focus]
     ]);
 }
 ```

@@ -14,8 +14,8 @@ class ShowUserController
 {
     public function __invoke(User $user)
     {
-        return view('users.show', [ // [!vp --]
-        return hybridly('users.show', [ // [!vp ++]
+        return view('users.show', [ // [!code --]
+        return hybridly('users.show', [ // [!code ++]
             'user' => UserData::from($user)
         ]);
     }
@@ -35,7 +35,7 @@ For it to work, a virtual import is needed:
 ```ts
 import { createApp } from 'vue'
 import { initializeHybridly } from 'hybridly/vue'
-import 'virtual:hybridly/router' // [!vp focus]
+import 'virtual:hybridly/router' // [!code focus]
 
 initializeHybridly({
 	cleanup: !import.meta.env.DEV,

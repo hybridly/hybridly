@@ -49,7 +49,7 @@ import 'virtual:hybridly/router'
 initializeHybridly({
 	cleanup: !import.meta.env.DEV,
 	pages: import.meta.glob('@/views/pages/**/*.vue', { eager: true }),
-	enhanceVue: (vue) => vue // [!vp focus:3]
+	enhanceVue: (vue) => vue // [!code focus:3]
 		.use(createHead())
 		.use(autoAnimate),
 })
@@ -78,7 +78,7 @@ import 'virtual:hybridly/router'
 initializeHybridly({
 	cleanup: !import.meta.env.DEV,
 	pages: import.meta.glob('@/views/pages/**/*.vue', { eager: true }),
-	setup: ({ render, element, hybridly }) => createApp({ render }) // [!vp focus:3]
+	setup: ({ render, element, hybridly }) => createApp({ render }) // [!code focus:3]
 		.use(hybridly)
 		.mount(element),
 })

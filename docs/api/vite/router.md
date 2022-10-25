@@ -8,7 +8,7 @@ For this functionality to work, a virtual import is required. This typically goe
 
 ```ts
 import { initializeHybridly } from 'hybridly/vue'
-import 'virtual:hybridly/router' // [!vp focus]
+import 'virtual:hybridly/router' // [!code focus]
 import './tailwind.css'
 
 initializeHybridly({

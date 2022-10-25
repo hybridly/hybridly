@@ -11,12 +11,12 @@ This is what powers the built-in [progress indicator](./progress-indicator.md). 
 A plugin can be registered through the `plugins` property of the `initializeHybridly` function.
 
 ```ts
-import { MyPlugin } from 'hybridly-plugin-something' // [!vp focus]
+import { MyPlugin } from 'hybridly-plugin-something' // [!code focus]
 
 initializeHybridly({
 	cleanup: !import.meta.env.DEV,
 	pages: import.meta.glob('@/views/pages/**/*.vue', { eager: true }),
-	plugins: [ // [!vp focus:3]
+	plugins: [ // [!code focus:3]
 		MyPlugin()
 	],
 	setup: ({ render, element, hybridly }) => createApp({ render })

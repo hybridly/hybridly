@@ -22,7 +22,7 @@ function useProperty<
 
 ```ts
 <script setup lang="ts">
-const name = useProperty('security.user.full_name') // [!vp focus:5]
+const name = useProperty('security.user.full_name') // [!code focus:5]
 
 useHead({
   title: () => `${name.value}'s profile`

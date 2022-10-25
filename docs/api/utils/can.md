@@ -20,12 +20,12 @@ This example assumes that a `ChirpData` object extending `DataResource` is defin
 
 ```ts
 <script setup lang="ts">
-import { can } from 'hybridly' // [!vp focus]
+import { can } from 'hybridly' // [!code focus]
 
 const $props = defineProps<{
-  chirp: App.Data.ChirpData  // [!vp focus]
+  chirp: App.Data.ChirpData  // [!code focus]
 }>()
 
-const canComment = can($props.chirp, 'comment')  // [!vp focus]
+const canComment = can($props.chirp, 'comment')  // [!code focus]
 </script>
 ```

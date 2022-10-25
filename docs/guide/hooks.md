@@ -22,7 +22,7 @@ This may be useful for requirements for which plugins could be overkill.
 
 ```ts
 <script setup lang="ts">
-registerHook('navigated', ({ isBackForward }) => { // [!vp focus:5]
+registerHook('navigated', ({ isBackForward }) => { // [!code focus:5]
   if (isBackForward) {
     router.reload()
   }

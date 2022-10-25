@@ -15,7 +15,7 @@ Similar to the `<a>` tag, accepts the hyperlink to navigate to. If this doesn't 
 
 ```vue
 <template>
-  <router-link :href="route('index')"> // [!vp focus]
+  <router-link :href="route('index')"> // [!code focus]
     Home
   </router-link>
 </template>
@@ -35,7 +35,7 @@ When set to `true`, disables the custom click handler. This must be used when na
     v-for="link in navigation"
     :key="link.url"
     :href="link.url"
-    :external="link.external" // [!vp focus]
+    :external="link.external" // [!code focus]
     v-text="link.label"
   />
 </template>
@@ -51,12 +51,12 @@ Defines the tag or component to render as.
 
 ```vue
 <script setup lang="ts">
-import BaseButton from '@/views/components/base-button.vue' // [!vp focus]
+import BaseButton from '@/views/components/base-button.vue' // [!code focus]
 </script>
 
 <template>
   <router-link
-    :as="BaseButton" // [!vp focus]
+    :as="BaseButton" // [!code focus]
     method="POST"
     :href="route('chirps.delete')"
   >
