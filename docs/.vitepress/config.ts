@@ -3,7 +3,7 @@ import { readFileSync } from 'node:fs'
 import { execSync } from 'node:child_process'
 import { defineConfig } from 'vitepress'
 import Unocss from 'unocss/vite'
-import highlighter from './shiki-tags/highlighter'
+import highlighter from './shiki/highlighter'
 
 const title = 'Hybridly'
 const description = 'Modern solution to develop server-driven, client-rendered applications.'
