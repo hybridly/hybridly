@@ -3,21 +3,33 @@
 use Hybridly\Hybridly;
 
 return [
+
     /*
     |--------------------------------------------------------------------------
-    | Default root view
+    | Root View
     |--------------------------------------------------------------------------
+    | By default, Hybridly expects to find a root.blade.php template in your
+    | views folder. This option allows you to define an alternative root
+    | template.
+    |
     */
+
     'root_view' => Hybridly::DEFAULT_ROOT_VIEW,
 
     /*
     |--------------------------------------------------------------------------
-    | Route filters
+    | Route Filters
     |--------------------------------------------------------------------------
-    | By default, the router does not pick vendor routes. You may change
-    | that by specifying a vendor name in `router.allowed_vendors`.
-    | You may also exclude routes by adding rules in `exclude`.
+    | This option defines which routes Hybridly will expose to the frontend.
+    |
+    | By default, all vendor routes are hidden, but you may selectively expose
+    | them by adding the vendor to the `allowed_vendors` array.
+    |
+    | Additionally, you may also exclude your own routes by adding them to the
+    | `exclude` array. Filters in the `exclude` array support wildcards (*).
+    |
     */
+
     'router' => [
         'allowed_vendors' => [
             'laravel/fortify',
@@ -37,6 +49,7 @@ return [
     |
     | Supported: null, 'snake', 'camel'
     */
+
     'force_case' => [
         'input' => null,
         'output' => null,
@@ -50,6 +63,7 @@ return [
     | will be written to using this option. To generate that file,
     | you may use the `i18n:generate` artisan command.
     */
+
     'i18n' => [
         'lang_path' => base_path('lang'),
         'write_path' => resource_path('scripts/i18n.json'),
@@ -64,6 +78,7 @@ return [
     | attempts to locate the view as a file relative to any of the
     | paths AND with any of the extensions specified here.
     */
+
     'testing' => [
         'ensure_pages_exist' => true,
         'view_finder' => null,
