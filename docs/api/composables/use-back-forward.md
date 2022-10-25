@@ -21,13 +21,13 @@ The following example reloads the page when a back or forward browser navigation
 
 ```vue
 <script setup lang="ts">
-const { reloadOnBackForward } = useBackForward() // [!vp focus]
+const { reloadOnBackForward } = useBackForward() // [!code focus]
 
 defineProps<{
   users: Paginator<App.Data.UserData>
 }>()
 
-reloadOnBackForward({  // [!vp focus:3]
+reloadOnBackForward({  // [!code focus:3]
   only: ['users']
 })
 </script>
@@ -37,9 +37,9 @@ The following example calls the defined callback when a back or forward browser 
 
 ```vue
 <script setup lang="ts">
-const { onBackForward } = useBackForward() // [!vp focus]
+const { onBackForward } = useBackForward() // [!code focus]
 
-onBackForward(({ url }) => {  // [!vp focus:3]
+onBackForward(({ url }) => {  // [!code focus:3]
   console.log(`Back-forward navigation made to ${url}`)
 })
 </script>

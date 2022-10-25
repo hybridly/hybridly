@@ -10,7 +10,7 @@ To send a response, use the `hybridly` function the same way you would use `view
 use App\Data\ChirpData;
 use App\Models\Chirp;
 
-class ChirpController extends Controller  // [!vp focus:4]
+class ChirpController extends Controller  // [!code focus:4]
 {
     public function index()
     {
@@ -20,11 +20,11 @@ class ChirpController extends Controller  // [!vp focus:4]
             ->forHomePage()
             ->paginate();
 
-        return hybridly('chirps.index', [ // [!vp focus:5]
+        return hybridly('chirps.index', [ // [!code focus:5]
             'chirps' => ChirpData::collection($chirps),
         ]);
     }
-}   // [!vp focus]
+}   // [!code focus]
 ```
 
 In the example above, the corresponding single-file component would simply accept a `chirps` property of the type `ChirpData`:
@@ -47,7 +47,7 @@ When making non-get hybrid requests, you may use redirects to a standard `GET` h
 ```php
 class UsersController extends Controller
 {
-    public function index() // [!vp focus:8]
+    public function index() // [!code focus:8]
     {
         $users = User::paginate();
 
@@ -56,7 +56,7 @@ class UsersController extends Controller
         ]);
     }
 
-    public function store(CreateUserData $data, CreateUser $createUser) // [!vp focus:6]
+    public function store(CreateUserData $data, CreateUser $createUser) // [!code focus:6]
     {
         $createUser->execute($data);
 
@@ -91,11 +91,11 @@ Aside from its obvious benefits in terms of separation of concerns, the class re
 In other terms, you may create a view-model that extends [Data](https://github.com/spatie/laravel-data) in order to get its typings for free:
 
 ```php
-// app/ViewModels/ChirpViewModel // [!vp focus:2]
+// app/ViewModels/ChirpViewModel // [!code focus:2]
 class ChirpViewModel extends Data
 {
     public function __construct(
-        public readonly ChirpData $chirp,   // [!vp focus:4]
+        public readonly ChirpData $chirp,   // [!code focus:4]
         #[DataCollectionOf(ChirpData::class)]
         public readonly PaginatedDataCollection $chirps,
         public readonly string $previous,
@@ -107,10 +107,10 @@ class ChirpViewModel extends Data
 A controller can use a data object in place of an array of properties:
 
 ```php
-// app/Http/Controllers/ChirpsController // [!vp focus]
+// app/Http/Controllers/ChirpsController // [!code focus]
 use App\Data\ChirpData;
 use App\Models\Chirp;
-use App\ViewModels\ChirpViewModel; // [!vp focus:6]
+use App\ViewModels\ChirpViewModel; // [!code focus:6]
 
 class ChirpController extends Controller
 {
@@ -122,7 +122,7 @@ class ChirpController extends Controller
           ->withLikeAndCommentCounts()
           ->paginate();
 
-        return hybridly('chirps.show', new ChirpViewModel( // [!vp focus:9]
+        return hybridly('chirps.show', new ChirpViewModel( // [!code focus:9]
             chirp: ChirpData::from($chirp),
             comments: ChirpData::collection($comments),
             previous: $chirp->parent_id
@@ -138,7 +138,7 @@ In a single-file component, the properties can then be typed thanks to the gener
 
 ```vue
 <script setup lang="ts">
-const $props = defineProps<App.ViewModels.ChirpViewModel>() // [!vp focus]
+const $props = defineProps<App.ViewModels.ChirpViewModel>() // [!code focus]
 </script>
 ```
 

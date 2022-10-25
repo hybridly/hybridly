@@ -1,6 +1,6 @@
 # Router options
 
-Most `router` function accepts an option argument for configuring the request. The purpose of each of these options is documented here.
+Most `router` functions accept an _options_ argument for configuring the request. The purpose of each of these options is documented here.
 
 ## `url`
 
@@ -32,7 +32,7 @@ Read the documentation on [partial reloads](../../guide/partial-reloads.md) for 
 
 - Type: `string` or `string[]`
 
-Defines the properties that will be excluded in the response. Specified [persistent properties](../../guide/persistent-properties.md) will also be excluded.
+Defines the properties that will be excluded from the response. Specified [persistent properties](../../guide/persistent-properties.md) will also be excluded.
 
 Read the documentation on [partial reloads](../../guide/partial-reloads.md) for more information.
 
@@ -40,7 +40,7 @@ Read the documentation on [partial reloads](../../guide/partial-reloads.md) for 
 
 - Type: `boolean`
 
-Defines whether the component's should be fully re-rendered, thus preserving its internal state.
+Defines whether the component should be fully re-rendered, thus preserving its internal state.
 
 ## `preserveUrl`
 

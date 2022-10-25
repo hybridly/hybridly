@@ -12,12 +12,12 @@ This can be done using a link component in the templates, or programmatically by
 
 ```vue
 <script setup lang="ts">
-import { RouterLink } from 'hybridly/vue' // [!vp focus]
+import { RouterLink } from 'hybridly/vue' // [!code focus]
 </script>
 
 <template>
   <div>
-    <router-link href="/"> // [!vp focus:3]
+    <router-link href="/"> // [!code focus:3]
       Home
     </router-link>
   </div>

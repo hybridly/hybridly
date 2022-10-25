@@ -33,10 +33,10 @@ Route::get('/users/{user}', [UsersController::class, 'show'])
 
 ```ts
 <script setup lang="ts">
-const $props = defineProps<{ // [!vp focus:3]
+const $props = defineProps<{ // [!code focus:3]
   user: App.Data.UserData
 }>()
 
-const index = route('users.show', { user: $props.user }) // [!vp focus]
+const index = route('users.show', { user: $props.user }) // [!code focus]
 </script>
 ```

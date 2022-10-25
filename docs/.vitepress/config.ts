@@ -1,8 +1,9 @@
 import { resolve } from 'node:path'
 import { readFileSync } from 'node:fs'
+import { execSync } from 'node:child_process'
 import { defineConfig } from 'vitepress'
 import Unocss from 'unocss/vite'
-import highlighter from './shiki-tags/highlighter'
+import highlighter from './shiki/highlighter'
 
 const title = 'Hybridly'
 const description = 'Modern solution to develop server-driven, client-rendered applications.'
@@ -13,6 +14,7 @@ const discord = 'https://discord.gg/uZ8eC7kRFV'
 const github = 'https://github.com/hybridly/hybridly'
 
 const { version } = JSON.parse(readFileSync(resolve('package.json'), { encoding: 'utf-8' }))
+const branch = execSync('echo $BRANCH | grep . || git rev-parse --abbrev-ref HEAD')
 
 export default async() => defineConfig({
 	title,
@@ -50,7 +52,7 @@ export default async() => defineConfig({
 		],
 
 		editLink: {
-			pattern: `${github}/edit/main/docs/:path`,
+			pattern: `${github}/edit/${branch}/docs/:path`,
 			text: 'Suggest changes to this page',
 		},
 
