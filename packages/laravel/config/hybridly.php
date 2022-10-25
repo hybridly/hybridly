@@ -3,7 +3,6 @@
 use Hybridly\Hybridly;
 
 return [
-
     /*
     |--------------------------------------------------------------------------
     | Root view
@@ -13,7 +12,6 @@ return [
     | template.
     |
     */
-
     'root_view' => Hybridly::DEFAULT_ROOT_VIEW,
 
     /*
@@ -29,7 +27,6 @@ return [
     | `exclude` array. Filters in the `exclude` array support wildcards (*).
     |
     */
-
     'router' => [
         'allowed_vendors' => [
             'laravel/fortify',
@@ -49,7 +46,6 @@ return [
     |
     | Supported: null, 'snake', 'camel'
     */
-
     'force_case' => [
         'input' => null,
         'output' => null,
@@ -63,7 +59,6 @@ return [
     | will be written to using this option. To generate that file,
     | you may use the `i18n:generate` artisan command.
     */
-
     'i18n' => [
         'lang_path' => base_path('lang'),
         'write_path' => resource_path('scripts/i18n.json'),
@@ -78,7 +73,6 @@ return [
     | attempts to locate the view as a file relative to any of the
     | paths AND with any of the extensions specified here.
     */
-
     'testing' => [
         'ensure_pages_exist' => true,
         'view_finder' => null,
