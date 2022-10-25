@@ -3,7 +3,6 @@ import { readFileSync } from 'node:fs'
 import { execSync } from 'node:child_process'
 import { defineConfig } from 'vitepress'
 import Unocss from 'unocss/vite'
-import highlighter from './shiki/highlighter'
 
 const title = 'Hybridly'
 const description = 'Modern solution to develop server-driven, client-rendered applications.'
@@ -16,7 +15,7 @@ const github = 'https://github.com/hybridly/hybridly'
 const { version } = JSON.parse(readFileSync(resolve('package.json'), { encoding: 'utf-8' }))
 const branch = execSync('echo $BRANCH | grep . || git rev-parse --abbrev-ref HEAD')
 
-export default async() => defineConfig({
+export default defineConfig({
 	title,
 	description,
 
@@ -30,9 +29,9 @@ export default async() => defineConfig({
 		['meta', { name: 'twitter:card', content: 'summary_large_image' }],
 		['meta', { name: 'twitter:site', content: `@${twitter}` }],
 		['meta', { name: 'theme-color', content: '#646cff' }],
-		// Remove after https://github.com/vuejs/vitepress/pull/1498 is merged
-		['script', {}, 'window?.localStorage?.setItem("vitepress-theme-appearance", window?.localStorage?.getItem("vitepress-theme-appearance") ?? "dark")'],
 	],
+
+	appearance: 'dark',
 
 	themeConfig: {
 		logo: '/logo.svg',
@@ -177,10 +176,6 @@ export default async() => defineConfig({
 		footer: {
 			message: 'Made with <span class="i-mdi:cards-heart mx-1 inline-block text-pink-300"></span> by <a class="ml-1 underline" href="https://twitter.com/enzoinnocenzi">Enzo Innocenzi</a>',
 		},
-	},
-
-	markdown: {
-		highlight: await highlighter(),
 	},
 
 	vite: {
