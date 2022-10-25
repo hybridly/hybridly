@@ -18,7 +18,7 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Route Filters
+    | Route filters
     |--------------------------------------------------------------------------
     | This option defines which routes Hybridly will expose to the frontend.
     |
