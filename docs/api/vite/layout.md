@@ -35,7 +35,7 @@ Setting `layout` to `false` disables the feature.
 ### `defaultLayoutName`
 
 - Type: `string`
-- Default: `default.vue`
+- Default: `default`
 
 Defines the name of the layout that will be used when no layout name is provided.
 
