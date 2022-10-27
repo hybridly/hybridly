@@ -1,5 +1,4 @@
 import type { AxiosProgressEvent, AxiosResponse } from 'axios'
-import axios from 'axios'
 import { showResponseErrorModal, match, merge, when, debug, random, hasFiles, objectToFormData } from '@hybridly/utils'
 import { ERROR_BAG_HEADER, EXCEPT_DATA_HEADER, EXTERNAL_NAVIGATION_HEADER, ONLY_DATA_HEADER, PARTIAL_COMPONENT_HEADER, HYBRIDLY_HEADER, VERSION_HEADER } from '../constants'
 import { NotAHybridResponseError, NavigationCancelledError } from '../errors'
@@ -109,7 +108,7 @@ export async function performHybridNavigation(options: HybridRequestOptions): Pr
 		await runHooks('start', options.hooks, context)
 		debug.router('Making request with axios.')
 
-		const response = await axios.request({
+		const response = await context.axios.request({
 			url: context.pendingNavigation!.url.toString(),
 			method: options.method ?? 'GET',
 			data: options.method === 'GET' ? {} : options.data,

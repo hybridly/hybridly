@@ -1,4 +1,5 @@
 import { debug } from '@hybridly/utils'
+import axios from 'axios'
 import { createSerializer } from '../router/history'
 import { makeUrl } from '../url'
 import type { HybridPayload } from '../router'
@@ -33,6 +34,7 @@ export async function initializeContext(options: RouterContextOptions): Promise<
 		adapter: options.adapter,
 		scrollRegions: [],
 		plugins: options.plugins ?? [],
+		axios: options.axios ?? axios.create(),
 		hooks: {},
 		state: {},
 	}
