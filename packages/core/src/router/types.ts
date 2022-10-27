@@ -80,6 +80,11 @@ export interface HybridRequestOptions extends Omit<NavigationOptions, 'payload'>
 	hooks?: Partial<Hooks>
 	/** If `true`, force the usage of a `FormData` object. */
 	useFormData?: boolean
+	/**
+	 * If `false`, disable automatic form spoofing.
+	 * @see https://laravel.com/docs/9.x/routing#form-method-spoofing
+	 */
+	spoof?: boolean
 }
 
 export interface NavigationResponse {

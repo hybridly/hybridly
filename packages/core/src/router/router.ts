@@ -59,6 +59,14 @@ export async function performHybridNavigation(options: HybridRequestOptions): Pr
 		if ((hasFiles(options.data) || options.useFormData) && !(options.data instanceof FormData)) {
 			options.data = objectToFormData(options.data)
 			debug.router('Converted data to FormData.', options.data)
+
+			// Automatically spoofs the method of the form, because it is not possible to
+			// send a PUT, PATCH or DELETE request with files in them.
+			if (options.method && ['PUT', 'PATCH', 'DELETE'].includes(options.method) && options.spoof !== false) {
+				debug.router(`Automatically spoofing method ${options.method}.`)
+				options.data.append('_method', options.method)
+				options.method = 'POST'
+			}
 		}
 
 		// Before anything else, we fire the "before" event to make sure

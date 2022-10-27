@@ -88,6 +88,12 @@ Defines the bag in which validation errors will be put.
 
 When set to `true`, forces the conversion of the `data` option to a `FormData` object.
 
+## `spoof`
+
+- Type: `boolean`
+
+Automatically [spoofs](https://laravel.com/docs/9.x/routing#form-method-spoofing) the method when submitting a `FormData` with the `PUT`, `PATCH` or `DELETE` method.
+
 ## `transformUrl`
 
 - Type: `UrlTransformable`
