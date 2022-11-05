@@ -121,7 +121,7 @@ export default defineConfig({
 				{
 					text: 'Components',
 					items: [
-						{ text: '<RouterLink>', link: '/api/components/router-link' },
+						{ text: '&lt;RouterLink&gt;', link: '/api/components/router-link' },
 					],
 				},
 				{
