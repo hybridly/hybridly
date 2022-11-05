@@ -67,7 +67,7 @@ const features: Feature[] = [
 					</p>
 					<!-- Actions -->
 					<div class="mt-10 flex flex-wrap justify-center gap-4 lg:justify-start">
-						<a class="group px-4.5 dark:text-[var(--vp-c-bg)] dark:hover:text-[var(--vp-c-bg)] dark:hover:bg-[var(--vp-c-brand-lighter)] dark:bg-[var(--vp-c-brand-light)] flex items-center rounded-full bg-[#FFEAEF] py-2.5 font-semibold text-[#DB7DA8] transition hover:bg-[#FFDBE3] hover:text-[#D6689B]" href="/guide/">
+						<a class="group px-4.5 dark:text-[var(--vp-c-bg)] dark:hover:text-[var(--vp-c-bg)] dark:hover:bg-[var(--vp-c-brand-lighter)] dark:bg-[var(--vp-c-brand-light)] flex items-center rounded-full bg-[#FFEAEF] py-2.5 text-sm font-semibold text-[#DB7DA8] transition hover:bg-[#FFDBE3] hover:text-[#D6689B]" href="/guide/">
 							Get started
 							<svg
 								class="ml-2 transition group-hover:translate-x-1"
@@ -82,8 +82,8 @@ const features: Feature[] = [
 								/>
 							</svg>
 						</a>
-						<a class="bg-[var(--vp-c-bg-soft)] hover:bg-[var(--vp-c-bg-mute)] group text-[var(--vp-c-text-1)] px-4.5 border-[var(--vp-button-alt-border)] flex items-center rounded-full border py-2.5 font-medium transition" href="/guide/demonstration">Demonstration</a>
-						<a class="bg-[var(--vp-c-bg-soft)] hover:bg-[var(--vp-c-bg-mute)] group text-[var(--vp-c-text-1)] px-4.5 border-[var(--vp-button-alt-border)] flex items-center rounded-full border py-2.5 font-medium transition" href="https://github.com/hybridly/hybridly">See on GitHub</a>
+						<a class="bg-[var(--vp-c-bg-soft)] hover:bg-[var(--vp-c-bg-mute)] group text-[var(--vp-c-text-1)] px-4.5 border-[var(--vp-button-alt-border)] flex items-center rounded-full border py-2 text-sm font-medium transition" href="/guide/demonstration">Demonstration</a>
+						<a class="bg-[var(--vp-c-bg-soft)] hover:bg-[var(--vp-c-bg-mute)] group text-[var(--vp-c-text-1)] px-4.5 border-[var(--vp-button-alt-border)] flex items-center rounded-full border py-2 text-sm font-medium transition" href="https://github.com/hybridly/hybridly">See on GitHub</a>
 					</div>
 				</section>
 
