@@ -61,7 +61,9 @@ return [
     */
     'i18n' => [
         'lang_path' => base_path('lang'),
-        'write_path' => resource_path('application/i18n.json'),
+        'locales_path' => resource_path('i18n/locales'),
+        'file_name_template' => '{locale}.json',
+        'file_name' => 'locales.json',
     ],
 
     /*

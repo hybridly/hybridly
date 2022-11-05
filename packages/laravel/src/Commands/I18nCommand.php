@@ -11,17 +11,13 @@ use Illuminate\Support\Str;
  */
 class I18nCommand extends Command
 {
-    protected $signature = 'hybridly:i18n';
+    protected $signature = 'hybridly:i18n {--L|locales} {--clean}';
     protected $description = 'Generates JSON translation files.';
     protected $hidden = true;
 
     public function handle(): int
     {
-        if ($success = $this->writeTranslations()) {
-            $this->components->info("Translations written to <comment>{$this->getTranslationFilePath()}</comment>.");
-        }
-
-        return $success
+        return $this->writeTranslations()
             ? self::SUCCESS
             : self::FAILURE;
     }
@@ -69,19 +65,63 @@ class I18nCommand extends Command
     }
 
     /**
-     * Gets the translations as an array.
+     * Gets all defined locales for this application.
      */
-    protected function getTranslations(): array
+    protected function getLocales(): array
     {
-        return $this->makeFolderFilesTree(config('hybridly.i18n.lang_path'));
+        if (!$files = scandir(config('hybridly.i18n.lang_path'))) {
+            return [];
+        }
+
+        return collect($files)
+            ->filter(fn ($file) => !\in_array($file, ['.', '..'], true))
+            ->map(fn ($file) => str($file)->beforeLast('.')->toString())
+            ->unique()
+            ->values()
+            ->all();
     }
 
     /**
-     * Gets the path to the translation file.
+     * Gets the translations as an array.
      */
-    protected function getTranslationFilePath(): string
+    protected function getTranslations(string $lang = null): array
     {
-        return str_replace('/', \DIRECTORY_SEPARATOR, config('hybridly.i18n.write_path'));
+        $translations = $this->makeFolderFilesTree(config('hybridly.i18n.lang_path'));
+
+        if ($lang) {
+            return $translations[$lang] ?? [];
+        }
+
+        return $translations;
+    }
+
+    /**
+     * Gets the translations as an JSON-encoded string.
+     */
+    protected function getTranslationsAsJson(string $lang = null): string
+    {
+        return preg_replace('/:(\w+)/', '{${1}}', json_encode($this->getTranslations($lang)));
+    }
+
+    /**
+     * Gets the path to the locales directory.
+     */
+    protected function getLocalesPath(): string
+    {
+        return \dirname(str_replace('/', \DIRECTORY_SEPARATOR, config('hybridly.i18n.locales_path')));
+    }
+
+    /**
+     * Gets the path for the given locale.
+     */
+    protected function getLocalePath(string $locale = null): string
+    {
+        return implode(\DIRECTORY_SEPARATOR, [
+            $this->getLocalesPath(),
+            $locale
+                ? str_replace('{locale}', $locale, config('hybridly.i18n.file_name_template'))
+                : config('hybridly.i18n.file_name', 'locales.json'),
+        ]);
     }
 
     /**
@@ -89,11 +129,62 @@ class I18nCommand extends Command
      */
     protected function writeTranslations(): bool
     {
-        File::ensureDirectoryExists(\dirname($this->getTranslationFilePath()));
+        File::ensureDirectoryExists($this->getLocalesPath());
 
-        return (bool) File::put(
-            $this->getTranslationFilePath(),
-            preg_replace('/:(\w+)/', '{${1}}', json_encode($this->getTranslations())),
+        if ($this->option('locales')) {
+            return $this->writeTranslationsInLocaleFiles();
+        }
+
+        return $this->writeTranslationsInSingleFile();
+    }
+
+    /**
+     * Writes all translations in their locale file.
+     */
+    protected function writeTranslationsInLocaleFiles(): bool
+    {
+        if ($this->option('clean')) {
+            File::cleanDirectory(\dirname($this->getLocalePath()));
+        }
+
+        foreach ($this->getLocales() as $locale) {
+            File::ensureDirectoryExists(\dirname($path = $this->getLocalePath($locale)));
+
+            if (!File::put($path, $this->getTranslationsAsJson($locale))) {
+                return false;
+            }
+
+            $this->writeSuccess($path, $locale);
+        }
+
+        return true;
+    }
+
+    /**
+     * Writes all translations in their own file.
+     */
+    protected function writeTranslationsInSingleFile(): bool
+    {
+        $result = (bool) File::put(
+            $path = $this->getLocalePath(),
+            $this->getTranslationsAsJson(),
+        );
+
+        if ($result) {
+            $this->writeSuccess($path);
+        }
+
+        return $result;
+    }
+
+    protected function writeSuccess(string $path, string $locale = null): void
+    {
+        $this->components->info(
+            sprintf(
+                "%s written to <comment>%s</comment>.",
+                $locale ? "<comment>{$locale}</comment>" : 'Translations',
+                $path,
+            ),
         );
     }
 }
