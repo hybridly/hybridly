@@ -14,12 +14,87 @@
 	--vp-logo-shadow-3: #f0abfc;
 	--vp-logo-shadow-4: #a78bfa;
 	--vp-logo-shadow-5: #8b5cf6;
+
+	--vp-c-scrollbar: var(--vp-c-gray-light-5);
+	--vp-button-alt-border: var(--vp-c-gray-light-5);
 }
 
 .dark {
-	--vp-c-brand: #d8b4fe;
+	--vp-c-brand: #d1a5ff;
 	--vp-c-brand-light: #e9d5ff;
 	--vp-c-brand-lighter: #f3e8ff;
 	--vp-c-brand-dark: #f5d0fe;
 	--vp-c-brand-darker: #f0abfc;
+
+	--vp-c-scrollbar: var(--vp-c-black-mute);
+	--vp-button-alt-border: var(--vp-c-gray-dark-3);
+}
+
+/* Sidebar scrollbar */
+
+aside.VPSidebar {
+	scrollbar-width: thin;
+	scrollbar-color: var(--vp-c-scrollbar) transparent;
+}
+
+aside.VPSidebar::-webkit-scrollbar {
+	width: 10px;
+	height: 10px;
+}
+
+aside.VPSidebar::-webkit-scrollbar-track {
+	background: transparent;
+}
+
+aside.VPSidebar::-webkit-scrollbar-thumb {
+	border-radius: 100vh;
+	background: var(--vp-c-scrollbar) !important;
+	border: 3px solid var(--vp-c-scrollbar) !important;
+}
+
+/* Sidebar links */
+
+.VPSidebar .link {
+	position: relative;
+}
+
+.VPSidebar .link::after {
+	content: "";
+	position: absolute;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	width: 2.5px;
+	height: 20px;
+	background: var(--vp-c-brand);
+	transform: scaleY(0);
+	border-radius: 100px;
+	transition: all 250ms;
+	opacity: 0;
+}
+
+.VPSidebar .link.active::after {
+	transform: scaleY(1);
+	opacity: 1;
+}
+
+.VPSidebarGroup .items {
+	padding-left: 7px;
+	transition: all 300ms;
+}
+
+.VPSidebarGroup .items .link .link-text {
+	display: inline-block;
+	transition: all 300ms;
+}
+
+.VPSidebarGroup .items .link:not(.active):hover .link-text {
+	transform: translateX(2px);
+}
+
+/* Docs right sidebar */
+.VPDocAsideOutline > div.content .outline-title {
+	font-size: 15px !important;
+	position: relative;
+	top: -6px;
 }

@@ -13,7 +13,10 @@ importers:
       '@hybridly/utils': workspace:*
       '@hybridly/vite': workspace:*
       '@hybridly/vue': workspace:*
+      '@iconify-json/fluent': ^1.1.16
+      '@iconify-json/ion': ^1.1.4
       '@iconify-json/mdi': ^1.1.34
+      '@iconify-json/ph': ^1.1.2
       '@innocenzi/eslint-config': ^0.12.0
       '@types/debug': ^4.1.7
       '@types/throttle-debounce': ^5.0.0
@@ -42,7 +45,10 @@ importers:
       '@hybridly/utils': link:packages/utils
       '@hybridly/vite': link:packages/vite
       '@hybridly/vue': link:packages/vue
+      '@iconify-json/fluent': 1.1.16
+      '@iconify-json/ion': 1.1.4
       '@iconify-json/mdi': 1.1.34
+      '@iconify-json/ph': 1.1.2
       '@innocenzi/eslint-config': 0.12.0_wyqvi574yv7oiwfeinomdzmc3m
       '@types/debug': 4.1.7
       '@types/throttle-debounce': 5.0.0
@@ -443,8 +449,26 @@ packages:
     resolution: {integrity: sha512-ZnQMnLV4e7hDlUvw8H+U8ASL02SS2Gn6+9Ac3wGGLIe7+je2AeAOxPY+izIPJDfFDb7eDjev0Us8MO1iFRN8hA==}
     dev: true
 
+  /@iconify-json/fluent/1.1.16:
+    resolution: {integrity: sha512-8pc7JBRh4nvtnx9IxNnW7IrkgVkFilShaspYs+iQekbRUMB/qsB9tcmKEHUnNiWgyoNSXRnKyQezdDfqn7jY4g==}
+    dependencies:
+      '@iconify/types': 2.0.0
+    dev: true
+
+  /@iconify-json/ion/1.1.4:
+    resolution: {integrity: sha512-30sOiE7OIboJXCFqIUfyAcskE49pEUjPyQs2Pl35o4lBXKZ46Jy3RzD+atkWBVz6ftlvTk9jE/qFi2mZ+gk78g==}
+    dependencies:
+      '@iconify/types': 2.0.0
+    dev: true
+
   /@iconify-json/mdi/1.1.34:
     resolution: {integrity: sha512-Jle/BrVmaKMMPVitsO3lbJ8VpXUVCAhfMFAMo0VoxLDX8ZiKiQyVDHXPug9wGaXYb9mrFZE4UWVK63Cjx8L3rQ==}
+    dependencies:
+      '@iconify/types': 2.0.0
+    dev: true
+
+  /@iconify-json/ph/1.1.2:
+    resolution: {integrity: sha512-NuTdtt/UmuxIHS4hfdyv3BP5JiWikNkr81hFHXDScXlH0GUMdRSY/B5T9vDvbXDY/esMLFnIAXoFVDLsGinhpw==}
     dependencies:
       '@iconify/types': 2.0.0
     dev: true
