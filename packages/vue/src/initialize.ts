@@ -5,6 +5,7 @@ import { createRouter } from '@hybridly/core'
 import { showPageComponentErrorModal, debug } from '@hybridly/utils'
 import type { ProgressOptions } from '@hybridly/progress-plugin'
 import { progress } from '@hybridly/progress-plugin'
+import type { Axios } from 'axios'
 import { wrapper } from './components/wrapper'
 import { state } from './stores/state'
 import { plugin } from './devtools'
@@ -25,6 +26,7 @@ export async function initializeHybridly(options: HybridlyOptions) {
 	// Not sure of the side effects so let's keep it commented for now.
 	// state.setView(await resolve(payload.view.name))
 	state.setContext(await createRouter({
+		axios: options.axios,
 		plugins: options.plugins,
 		serializer: options.serializer,
 		adapter: {
@@ -174,6 +176,8 @@ interface HybridlyOptions {
 	plugins?: Plugin[]
 	/** Callback that gets executed before Vue is mounted. */
 	enhanceVue?: (vue: App<Element>) => any
+	/** Custom Axios instance. */
+	axios?: Axios
 }
 
 interface SetupArguments {

@@ -8,7 +8,7 @@ Hybridly works best with session-based authentication systems, such as what Lara
 
 ## Sharing user data
 
-Obtaining information regarding the currently logged-in user is usually be done via [global properties](./global-properties.md). 
+Obtaining information regarding the currently logged-in user is usually done via [global properties](./global-properties.md). 
 
 Ideally, avoid exposing the whole model — rather, select the properties you need and make them a data object.
 

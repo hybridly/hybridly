@@ -17,12 +17,12 @@ The following example uses a layout using the template syntax, and define its pr
 
 ```vue
 <script setup lang="ts">
-defineLayoutProperties({ // [!vp focus:3]
+defineLayoutProperties({ // [!code focus:3]
   fluid: true
 })
 </script>
 
-<template layout="main"> // [!vp focus]
+<template layout="main"> // [!code focus]
   <!-- ... -->
 </template>
 ```

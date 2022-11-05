@@ -38,6 +38,6 @@ class HandleHybridRequests extends Middleware
 
 ## Flashes and validation errors
 
-By default, flash notifications and validation errors are marked are persistent, so users can't miss important information during partial reloads.
+By default, flash notifications and validation errors are marked as persistent, so users can't miss important information during partial reloads.
 
 This cannot be undone unless [turning off flash notification](./flash-notifications.md#disabling-default-flashes) and [validation error](./validation.md) sharing. However, if you need to turn off persistent flash and error data, it most certainly means you have custom sharing logic for them.

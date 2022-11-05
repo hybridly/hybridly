@@ -13,13 +13,13 @@ For this reason, it's possible to preserve the URL of the current page after a r
 ```ts
 const url = $props.chirps.meta.next_page_url!
 
-router.get(url, {  // [!vp focus]
+router.get(url, {  // [!code focus]
 	preserveState: true,
 	preserveScroll: true,
-	preserveUrl: true, // [!vp focus]
+	preserveUrl: true, // [!code focus]
 	only: ['chirps'],
 	hooks: {
 		success: () => chirps.value.push(...$props.chirps.data),
 	},
-}) // [!vp focus]
+}) // [!code focus]
 ```

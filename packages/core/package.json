@@ -1,6 +1,6 @@
 {
   "name": "@hybridly/core",
-  "version": "0.0.1-alpha.7",
+  "version": "0.0.1-alpha.8",
   "description": "A solution to develop server-driven, client-rendered applications",
   "keywords": [
     "hybridly",
@@ -44,7 +44,6 @@
     "qs": "^6.11.0"
   },
   "devDependencies": {
-    "axios": "^1.1.3",
     "defu": "^6.1.0"
   }
 }

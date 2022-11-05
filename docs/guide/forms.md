@@ -16,7 +16,7 @@ Since most forms share the same kind of boilerplate code, Hybridly comes with a 
 
 ```vue
 <script setup lang="ts">
-const login = useForm({ // [!vp focus:8]
+const login = useForm({ // [!code focus:8]
 	method: 'POST',
 	url: route('login'),
 	fields: {
@@ -27,7 +27,7 @@ const login = useForm({ // [!vp focus:8]
 </script>
 
 <template>
-	<form @submit.prevent="login.submit">  // [!vp focus:14]
+	<form @submit.prevent="login.submit">  // [!code focus:14]
 		<!-- Email -->
 		<input v-model="login.fields.email" type="email"/>
 		<span v-if="login.errors.email" v-text="login.errors.email" />
@@ -126,11 +126,11 @@ For instance, clearing the query parameters is as simple as passing an empty str
 
 ```ts
 useForm({
-	url: '/filter?sort=asc',  // [!vp focus]
+	url: '/filter?sort=asc',  // [!code focus]
 	fields: {
 		// ...
 	},
-	transformUrl: { // [!vp focus:3]
+	transformUrl: { // [!code focus:3]
 		search: ''
 	}
 })

@@ -16,7 +16,7 @@ You may customize this behavior by providing a `progress` property to the `initi
 initializeHybridly({
 	cleanup: !import.meta.env.DEV,
 	pages: import.meta.glob('@/views/pages/**/*.vue', { eager: true }),
-	progress: { // The default options are as follow: // [!vp focus:6]
+	progress: { // The default options are as follow: // [!code focus:6]
 		color: '#fca5a5',
 		delay: 250,
 		includeCSS: true,

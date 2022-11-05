@@ -2,7 +2,7 @@
 
 The `router` object contains a few utils that can be used to programmatically navigate through the application.
 
-Most of the navigation functions accept an `options` argument which properties are documented in the [router options](./options.md) page.
+Most of the navigation functions accept an `options` argument whose properties are documented in the [router options](./options.md) page.
 
 When a `url` argument is accepted, its type is the same as the `url` property of the `options` argument.
 
@@ -22,7 +22,7 @@ router.delete(url, options)
 
 ## `reload`
 
-This function initiates a programmatic navigation on the current URL. By default, the navigation will preserve the scroll position and the component's state.
+This function initiates a programmatic navigation to the current URL. By default, the navigation will preserve the scroll position and the component's state.
 
 ```ts
 router.reload(options)

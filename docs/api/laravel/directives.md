@@ -15,7 +15,7 @@ This directive creates the markup required to initialize Vue with Hybridly and i
 			@vite('resources/application/main.ts')
 	</head>
 	<body class="bg-gray-50 antialiased">
-			@hybridly(class: 'flex flex-col') // [!vp focus]
+			@hybridly(class: 'flex flex-col') // [!code focus]
 	</body>
 </html>
 ```

@@ -37,16 +37,16 @@ Open `config/typescript-transformer.php` and update the following properties:
 
 ```php
 'collectors' => [
-    Spatie\TypeScriptTransformer\Collectors\DefaultCollector::class, // [!vp --]
-    Hybridly\Support\TypeScriptTransformer\DataResourceTypeScriptCollector::class, // [!vp ++]
-    Spatie\LaravelData\Support\TypeScriptTransformer\DataTypeScriptCollector::class, // [!vp ++]
+    Spatie\TypeScriptTransformer\Collectors\DefaultCollector::class, // [!code --]
+    Hybridly\Support\TypeScriptTransformer\DataResourceTypeScriptCollector::class, // [!code ++]
+    Spatie\LaravelData\Support\TypeScriptTransformer\DataTypeScriptCollector::class, // [!code ++]
 ],
 'transformers' => [
-    Spatie\LaravelTypeScriptTransformer\Transformers\SpatieStateTransformer::class,  // [!vp --]
-    Spatie\TypeScriptTransformer\Transformers\SpatieEnumTransformer::class, // [!vp --]
-    Spatie\TypeScriptTransformer\Transformers\DtoTransformer::class, // [!vp --]
-    Spatie\LaravelData\Support\TypeScriptTransformer\DataTypeScriptTransformer::class, // [!vp ++]
-    Spatie\TypeScriptTransformer\Transformers\EnumTransformer::class, // [!vp ++]
+    Spatie\LaravelTypeScriptTransformer\Transformers\SpatieStateTransformer::class,  // [!code --]
+    Spatie\TypeScriptTransformer\Transformers\SpatieEnumTransformer::class, // [!code --]
+    Spatie\TypeScriptTransformer\Transformers\DtoTransformer::class, // [!code --]
+    Spatie\LaravelData\Support\TypeScriptTransformer\DataTypeScriptTransformer::class, // [!code ++]
+    Spatie\TypeScriptTransformer\Transformers\EnumTransformer::class, // [!code ++]
 ],
 ```
 
@@ -75,7 +75,7 @@ import { defineConfig } from 'vite'
 import laravel from 'laravel-vite-plugin'
 import hybridly from 'hybridly/vite'
 import vue from '@vitejs/plugin-vue'
-import run from 'vite-plugin-run' // [!vp focus]
+import run from 'vite-plugin-run' // [!code focus]
 
 export default defineConfig({
 	plugins: [
@@ -83,7 +83,7 @@ export default defineConfig({
 			input: 'resources/application/main.ts',
 			valetTls: true,
 		}),
-		run({ // [!vp focus:4]
+		run({ // [!code focus:4]
 			name: 'generate typescript',
 			run: ['php', 'artisan', 'typescript:transform'],
 			condition: (file) => ['Data.php', 'Enums'].some((kw) => file.includes(kw)),
@@ -106,15 +106,15 @@ The following is a `vite.config.ts` example that sets up auto-imports with TypeS
 import { defineConfig } from 'vite'
 import laravel from 'laravel-vite-plugin'
 import hybridly from 'hybridly/vite'
-import hybridlyImports from 'hybridly/auto-imports' // [!vp focus:2]
+import hybridlyImports from 'hybridly/auto-imports' // [!code focus:2]
 import hybridlyResolver from 'hybridly/resolver'
 import vue from '@vitejs/plugin-vue'
-import autoimport from 'unplugin-auto-import/vite' // [!vp focus:2]
+import autoimport from 'unplugin-auto-import/vite' // [!code focus:2]
 import components from 'unplugin-vue-components/vite'
 
 export default defineConfig({
 	plugins: [
-		autoimport({ // [!vp focus:18]
+		autoimport({ // [!code focus:18]
 			imports: [
 				'vue',
 				'@vueuse/core',

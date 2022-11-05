@@ -5,8 +5,12 @@ use Hybridly\Hybridly;
 return [
     /*
     |--------------------------------------------------------------------------
-    | Default root view
+    | Root view
     |--------------------------------------------------------------------------
+    | By default, Hybridly expects to find a root.blade.php template in your
+    | views folder. This option allows you to define an alternative root
+    | template.
+    |
     */
     'root_view' => Hybridly::DEFAULT_ROOT_VIEW,
 
@@ -14,9 +18,14 @@ return [
     |--------------------------------------------------------------------------
     | Route filters
     |--------------------------------------------------------------------------
-    | By default, the router does not pick vendor routes. You may change
-    | that by specifying a vendor name in `router.allowed_vendors`.
-    | You may also exclude routes by adding rules in `exclude`.
+    | This option defines which routes Hybridly will expose to the frontend.
+    |
+    | By default, all vendor routes are hidden, but you may selectively expose
+    | them by adding the vendor to the `allowed_vendors` array.
+    |
+    | Additionally, you may also exclude your own routes by adding them to the
+    | `exclude` array. Filters in the `exclude` array support wildcards (*).
+    |
     */
     'router' => [
         'allowed_vendors' => [

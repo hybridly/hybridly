@@ -1,3 +1,4 @@
+import type { Axios } from 'axios'
 import type { Hooks } from '../plugins/hooks'
 import type { Plugin } from '../plugins/plugin'
 import type { PendingNavigation, ResolveComponent, SwapDialog, SwapView, View, HybridPayload } from '../router'
@@ -12,6 +13,8 @@ export interface RouterContextOptions {
 	serializer?: Serializer
 	/** List of plugins. */
 	plugins?: Plugin[]
+	/** The Axios instance. */
+	axios?: Axios
 }
 
 /** Router context. */
@@ -38,6 +41,8 @@ export interface InternalRouterContext {
 	plugins: Plugin[]
 	/** Global hooks. */
 	hooks: Partial<Record<keyof Hooks, Array<Function>>>
+	/** The Axios instance. */
+	axios: Axios
 }
 
 /** Router context. */

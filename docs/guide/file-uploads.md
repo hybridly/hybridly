@@ -61,7 +61,9 @@ function onFileChange(event: Event) {
 
 It is not natively supported by PHP to upload files using `multipart/form-data` and the `PUT`, `PATCH` or `DELETE` methods. 
 
-Fortunately, Laravel supports [method spoofing](https://laravel.com/docs/9.x/routing#form-method-spoofing), which means you can add a `_method` field with `PUT`, `PATCH` or `DELETE` and send the request using `POST`.
+Fortunately, Laravel supports [method spoofing](https://laravel.com/docs/9.x/routing#form-method-spoofing), which means one can add a `_method` field with `PUT`, `PATCH` or `DELETE` and send the request using `POST`.
+
+Hybridly automatically does this when detecting files and the `PUT`, `PATCH` or `DELETE` method, unless [`spoof`](../api/router/options.md#spoof) is set to `false`.
 
 ```ts
 const avatar = new File()

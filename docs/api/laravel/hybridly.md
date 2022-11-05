@@ -41,7 +41,7 @@ Creates a property that will only get evaluated and included when specifically r
 ```php
 return hybridly('booking.estimates.show', [
   'booking' => BookingData::from($booking)
-  'estimates' => hybridly()->partial(function () { // [!vp focus:3]
+  'estimates' => hybridly()->partial(function () { // [!code focus:3]
     return SearchEstimates::run($booking);
   }),
 ]);

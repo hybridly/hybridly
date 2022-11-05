@@ -49,7 +49,7 @@ import 'virtual:hybridly/router'
 initializeHybridly({
 	cleanup: !import.meta.env.DEV,
 	pages: import.meta.glob('@/views/pages/**/*.vue', { eager: true }),
-	enhanceVue: (vue) => vue // [!vp focus:3]
+	enhanceVue: (vue) => vue // [!code focus:3]
 		.use(createHead())
 		.use(autoAnimate),
 })
@@ -78,7 +78,7 @@ import 'virtual:hybridly/router'
 initializeHybridly({
 	cleanup: !import.meta.env.DEV,
 	pages: import.meta.glob('@/views/pages/**/*.vue', { eager: true }),
-	setup: ({ render, element, hybridly }) => createApp({ render }) // [!vp focus:3]
+	setup: ({ render, element, hybridly }) => createApp({ render }) // [!code focus:3]
 		.use(hybridly)
 		.mount(element),
 })
@@ -124,3 +124,25 @@ When set to `false`, disables the built-in progress indicator. Otherwise, config
 - **Type**: `Plugin[]`
 
 Defines the plugins that should be registered. Refer to the [plugin documentation](../../guide/plugins.md) to learn more about them.
+
+## `axios`
+
+- **Type**: `Axios`
+
+Defines a custom Axios instance that will replace the one Hybridly would internally use otherwise.
+
+```ts
+import { initializeHybridly } from 'hybridly/vue'
+import axios from 'axios'
+import 'virtual:hybridly/router'
+
+initializeHybridly({
+	cleanup: !import.meta.env.DEV,
+	pages: import.meta.glob('@/views/pages/**/*.vue', { eager: true }),
+	axios: axios.create({ // [!code focus:5]
+		headers: {
+			'X-Custom-Header': 'value',
+		},
+	}),
+})
+```

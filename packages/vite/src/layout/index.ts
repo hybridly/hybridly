@@ -13,7 +13,7 @@ const TYPESCRIPT_REGEX = /lang=['"]ts['"]/
  * It must be used before the Vue plugin.
  */
 export default (options: LayoutOptions = {}): Plugin => {
-	const defaultLayoutName = options?.defaultLayoutName ?? 'default'
+	const defaultLayoutName = options?.defaultLayoutName?.replace('.vue', '') ?? 'default'
 	const base = options?.directory
 		? options?.directory
 		: path.resolve(process.cwd(), 'resources', 'views', 'layouts')
