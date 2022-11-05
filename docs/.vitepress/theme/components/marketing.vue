@@ -106,7 +106,7 @@ const features: Feature[] = [
 						:href="feature.url"
 					>
 						<div class="h-25 w-25 absolute right-5 flex shrink-0 items-center justify-center rounded p-2">
-							<div :class="feature.icon" class="text-[var(--vp-c-text-2)] h-full w-full opacity-0 transition group-hover:opacity-10" />
+							<div :class="feature.icon" class="text-[var(--vp-c-text-2)] h-full w-full opacity-0 transition group-hover:opacity-5 dark:group-hover:opacity-10" />
 						</div>
 						<div>
 							<span class="font-semibold" v-text="feature.title" />
