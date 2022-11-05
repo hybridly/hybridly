@@ -70,3 +70,33 @@ If the `route` function is used without its virtual import, or an unknown route 
 
 Additionally, the function is not reactive, in the sense that it returns a `string`, not a `Ref`.
 :::
+
+## Configuration
+
+By default, vendor routes are not made available to the front-end and will not appear when using the `route` util. 
+
+This can be configured by updating the `router.allowed_vendors` key in `config/hybridly.php`.
+
+```php
+return [
+      'router' => [
+        'allowed_vendors' => [ // [!code focus:3]
+            'laravel/fortify',
+        ],
+        'exclude' => [],
+    ],
+];
+```
+
+Additionally, you may exclude specific routes by adding patterns to the `router.exclude` key.
+
+```php
+return [
+      'router' => [
+        'allowed_vendors' => [],
+        'exclude' => [ // [!code focus:3]
+            'admin*'
+        ],
+    ],
+];
+```
