@@ -109,6 +109,7 @@ export default defineConfig({
 						{ text: 'Plugins', link: '/guide/plugins' },
 						{ text: 'Asset versioning', link: '/guide/asset-versioning' },
 						{ text: 'Vue DevTools', link: '/guide/devtools' },
+						{ text: 'Internationalization', link: '/guide/i18n' },
 						{ text: 'Server-side rendering', link: '/guide/ssr' },
 						{ text: 'Migrating from Inertia', link: '/guide/migrating-from-inertia' },
 						{ text: 'Comparison with Inertia', link: '/guide/comparison-with-inertia' },
