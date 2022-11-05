@@ -61,7 +61,7 @@ return [
     */
     'i18n' => [
         'lang_path' => base_path('lang'),
-        'write_path' => resource_path('scripts/i18n.json'),
+        'write_path' => resource_path('application/i18n.json'),
     ],
 
     /*
