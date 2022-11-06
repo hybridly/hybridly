@@ -105,6 +105,19 @@ class TestResponseMacros
     }
 
     /**
+     * Asserts that the given hybrid properties exist.
+     */
+    public function assertHybridProperties(): Closure
+    {
+        return function (array $keys): TestResponse {
+            /** @var TestResponse $this */
+            Assertable::fromTestResponse($this)->hasProperties($keys);
+
+            return $this;
+        };
+    }
+
+    /**
      * Asserts that the payload property at the given path has the expected value.
      */
     public function assertHybridPayload(): Closure

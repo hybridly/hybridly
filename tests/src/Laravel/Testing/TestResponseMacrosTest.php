@@ -49,6 +49,25 @@ test('the `assertHybridProperty` method asserts the property at the given path h
         ->assertHybridProperty('foo', 'bar');
 });
 
+test('the `assertHybridProperties` method asserts the properties using the given array', function () {
+    makeHybridMockRequest(properties: [
+        'foo' => 'bar',
+        'baz' => [1, 2, 3],
+        'uwu' => [
+            'owo' => 'hewwo',
+            'ewe' => 'world',
+        ],
+    ])->assertHybridProperties([
+        'foo', // asserts it exists
+        'foo' => 'bar', // asserts it has the given value
+        'uwu' => ['owo', 'ewe'],
+        'uwu.owo' => 'hewwo', // asserts it has the given value
+        'uwu.ewe' => 'world', // asserts it has the given value
+        'baz' => 3, // asserts it has the given count
+        'uwu' => fn (Assertable $uwu) => $uwu->hasAll(['owo', 'ewe']), // asserts using callback
+    ]);
+});
+
 test('the `assertHybridPayload` method asserts the payload property at the given path has the expected value', function () {
     makeHybridMockRequest(properties: ['foo' => 'bar'])
         ->assertHybridPayload('view.name', 'test')

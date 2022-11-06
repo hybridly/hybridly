@@ -74,6 +74,52 @@ class Assertable extends AssertableJson
         return $this;
     }
 
+    public function hasProperties(array $keys, string $scope = null): self
+    {
+        $scope ??= 'view.properties';
+
+        foreach ($keys as $key => $value) {
+            // ['property_name' => 'property_value'] -> assert that it has the given value
+            if (\is_string($key) && \is_string($value)) {
+                $this->where($scope . '.' . $key, $value);
+
+                continue;
+            }
+
+            // ['property_name'] -> assert that it exists
+            if (\is_int($key) && \is_string($value)) {
+                $this->has($scope . '.' . $value);
+
+                continue;
+            }
+
+            // ['property_name' => 10] -> assert that it exists and has the given count
+            if (\is_string($key) && \is_int($value)) {
+                $this->has($scope . '.' . $key, length: $value);
+
+                continue;
+            }
+
+            // ['property_name' => fn () => ...] -> assert using a callback
+            if (\is_string($key) && \is_callable($value)) {
+                $this->has($scope . '.' . $key, $value);
+
+                continue;
+            }
+
+            // ['property_name' => ['foo']] -> assert using an array
+            if (\is_string($key) && \is_array($value)) {
+                $this->hasProperties($value, scope: $scope . '.' . $key);
+
+                continue;
+            }
+
+            throw new \LogicException("Unknown syntax [{$key} => {$value}]");
+        }
+
+        return $this;
+    }
+
     public function getPayload(): array
     {
         return $this->payload;
