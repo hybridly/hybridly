@@ -6,6 +6,21 @@ Hybridly provides a few testing macros to reduce the boilerplate needed for the 
 
 This method asserts that the given hybrid property exists in the response and is equal to the given value. It accepts the same arguments as `AssertableJson#where`.
 
+## `assertHybridProperties`
+
+This method uses an array to perform assertions. Depending on the syntax, it may assert a property presence, its value, its count, or use a callback.
+
+```php
+$response->assertHybridProperties([
+    'first_name', // asserts `first_name` exists
+    'first_name' => 'Jon', // asserts `foo` exists and has the value `bar`
+    'roles' => ['administrator', 'editor'], // asserts `roles` exists and contains the given properties
+    'roles' => fn (Assertable $roles) => $roles->hasAll(['administrator', 'editor']), // same thing, using a callback
+    'roles' => 2, // asserts `roles` has 2 values
+    'foo.bar' => 'value', // works for nested properties using dot notation as well
+]);
+```
+
 ## `assertHasHybridProperty`
 
 This method asserts that the given hybrid property exists in the response. It accepts the same arguments as [`AssertableJson#has`](https://laravel.com/docs/9.x/http-tests#asserting-json-attribute-presence-and-absence).
