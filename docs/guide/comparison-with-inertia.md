@@ -33,7 +33,10 @@ The following is a non-exhaustive comparison table between Inertia and Hybridly'
 | Server-side rendering                           |                     Yes                      |     <span class="no">Planned</span>     |
 | Built-in meta management                        |                     Yes                      | <span class="no">No <sup>1</sup></span> |
 | Page modal support                              | <span class="no">Planned <sup>2</sup></span> |     <span class="no">Planned</span>     |
-| Events support                                  |                     Yes                      |                   Yes                   |
+| Request events support                          |                     Yes                      |                   Yes                   |
+| Global events support                           |                     Yes                      |                   Yes                   |
+| Internationalization support                    |          <span class="no">No</span>          |                   Yes                   |
+| Property case conversion support                |          <span class="no">No</span>          |                   Yes                   |
 | Exposed back-forward detection                  |          <span class="no">No</span>          |                   Yes                   |
 | Framework-agnostic core                         |                     Yes                      |                   Yes                   |
 | Custom Axios instance support                   |          <span class="no">No</span>          |     <span class="no">Planned</span>     |
