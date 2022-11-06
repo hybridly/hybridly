@@ -24,10 +24,10 @@ export async function forEachPlugin(cb: (plugin: Plugin) => MaybePromise<any>) {
 export async function runPluginHooks<T extends keyof Hooks>(hook: T, ...args: Parameters<Hooks[T]>): Promise<boolean> {
 	let result = true
 
-	forEachPlugin(async(plugin) => {
+	await forEachPlugin(async(plugin) => {
 		if (plugin[hook]) {
-			debug.plugin(plugin.name, `Calling "${hook}" hooks.`)
-			result = await plugin[hook]?.(...args as [any]) ?? result
+			debug.plugin(plugin.name, `Calling "${hook}" hook.`)
+			result &&= await plugin[hook]?.(...args as [any, any]) !== false
 		}
 	})
 
@@ -56,10 +56,12 @@ export async function runHooks<T extends keyof Hooks>(
 	...args: Parameters<Hooks[T]>
 ): Promise<boolean> {
 	const result = await Promise.all<boolean>([
-		requestHooks?.[hook]?.(...args as [any]),
+		requestHooks?.[hook]?.(...args as [any, any]),
 		runGlobalHooks(hook, ...args),
 		runPluginHooks(hook, ...args),
 	])
+
+	debug.hook(`Called all hooks for [${hook}],`, result)
 
 	return !result.includes(false)
 }

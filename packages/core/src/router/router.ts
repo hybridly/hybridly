@@ -70,7 +70,7 @@ export async function performHybridNavigation(options: HybridRequestOptions): Pr
 
 		// Before anything else, we fire the "before" event to make sure
 		// there was no user-specified handler returning "false".
-		if (!await runHooks('before', options.hooks, options)) {
+		if (!await runHooks('before', options.hooks, options, context)) {
 			debug.router('"before" event returned false, aborting the navigation.')
 			throw new NavigationCancelledError('The navigation was cancelled by the "before" event.')
 		}
@@ -132,11 +132,11 @@ export async function performHybridNavigation(options: HybridRequestOptions): Pr
 				await runHooks('progress', options.hooks, {
 					event,
 					percentage: Math.round(event.loaded / (event.total ?? 0) * 100),
-				})
+				}, context)
 			},
 		})
 
-		await runHooks('data', options.hooks, response)
+		await runHooks('data', options.hooks, response, context)
 
 		// An external response is a hybrid response that wants a full page
 		// load to a requested URL. It may be the same URL, in which
@@ -198,7 +198,7 @@ export async function performHybridNavigation(options: HybridRequestOptions): Pr
 			})() as Errors
 
 			debug.router('The request returned validation errors.', errors)
-			await runHooks('error', options.hooks, errors)
+			await runHooks('error', options.hooks, errors, context)
 			setContext({
 				pendingNavigation: {
 					...context.pendingNavigation as any,
@@ -206,7 +206,7 @@ export async function performHybridNavigation(options: HybridRequestOptions): Pr
 				},
 			})
 		} else {
-			await runHooks('success', options.hooks, payload)
+			await runHooks('success', options.hooks, payload, context)
 			setContext({
 				pendingNavigation: {
 					...context.pendingNavigation as any,
@@ -232,13 +232,13 @@ export async function performHybridNavigation(options: HybridRequestOptions): Pr
 			NotAHybridResponseError: async() => {
 				debug.router('The request was not hybridly.')
 				console.error(error)
-				await runHooks('invalid', options.hooks, error)
+				await runHooks('invalid', options.hooks, error, context)
 				showResponseErrorModal(error.response.data)
 			},
 			default: async() => {
 				debug.router('An unknown error occured.', error)
 				console.error(error)
-				await runHooks('exception', options.hooks, error)
+				await runHooks('exception', options.hooks, error, context)
 			},
 		})
 
@@ -349,7 +349,7 @@ export async function navigate(options: NavigationOptions) {
 		restoreScrollPositions()
 	}
 
-	await runHooks('navigated', {}, options)
+	await runHooks('navigated', {}, options, context)
 }
 
 /** Initializes the router by reading the context and registering events if necessary. */

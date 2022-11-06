@@ -89,38 +89,38 @@ export function useForm<T extends Fields = Fields>(options: FormOptions<T>) {
 				? true
 				: optionsOverrides?.preserveState,
 			hooks: {
-				before: (navigation) => {
+				before: (navigation, context) => {
 					failed.value = false
 					successful.value = false
 					recentlySuccessful.value = false
 					clearTimeout(timeoutIds.recentlySuccessful!)
 					clearTimeout(timeoutIds.recentlyFailed!)
 					clearErrors()
-					return options.hooks?.before?.(navigation)
+					return options.hooks?.before?.(navigation, context)
 				},
 				start: (context) => {
 					processing.value = true
 					return options.hooks?.start?.(context)
 				},
-				progress: (incoming) => {
+				progress: (incoming, context) => {
 					progress.value = incoming
-					return options.hooks?.progress?.(incoming)
+					return options.hooks?.progress?.(incoming, context)
 				},
-				error: (incoming) => {
+				error: (incoming, context) => {
 					setErrors(incoming)
 					failed.value = true
 					recentlyFailed.value = true
 					timeoutIds.recentlyFailed = setTimeout(() => recentlyFailed.value = false, options?.timeout ?? 5000)
-					return options.hooks?.error?.(incoming)
+					return options.hooks?.error?.(incoming, context)
 				},
-				success: (payload) => {
+				success: (payload, context) => {
 					if (options?.reset !== false) {
 						reset()
 					}
 					successful.value = true
 					recentlySuccessful.value = true
 					timeoutIds.recentlySuccessful = setTimeout(() => recentlySuccessful.value = false, options?.timeout ?? 5000)
-					return options.hooks?.success?.(payload)
+					return options.hooks?.success?.(payload, context)
 				},
 				after: (context) => {
 					progress.value = undefined

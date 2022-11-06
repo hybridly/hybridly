@@ -8,7 +8,7 @@ export interface Hooks {
 	/**
 	 * Called before anything when a navigation is going to happen.
 	 */
-	before: (options: HybridRequestOptions) => MaybePromise<any | boolean>
+	before: (options: HybridRequestOptions, context: InternalRouterContext) => MaybePromise<any | boolean>
 
 	/**
 	 * Called before the request of a navigation is going to happen.
@@ -18,22 +18,22 @@ export interface Hooks {
 	/**
 	 * Called when progress on the request is being made.
 	 */
-	progress: (progress: Progress) => MaybePromise<any>
+	progress: (progress: Progress, context: InternalRouterContext) => MaybePromise<any>
 
 	/**
 	 * Called when data is received after a request for a navigation.
 	 */
-	data: (response: AxiosResponse) => MaybePromise<any>
+	data: (response: AxiosResponse, context: InternalRouterContext) => MaybePromise<any>
 
 	/**
 	 * Called when a request is successful and there is no error.
 	 */
-	success: (payload: HybridPayload) => MaybePromise<any>
+	success: (payload: HybridPayload, context: InternalRouterContext) => MaybePromise<any>
 
 	/**
 	 * Called when a request is successful but there were errors.
 	 */
-	error: (errors: Errors) => MaybePromise<any>
+	error: (errors: Errors, context: InternalRouterContext) => MaybePromise<any>
 
 	/**
 	 * Called when a request has been aborted.
@@ -43,12 +43,12 @@ export interface Hooks {
 	/**
 	 * Called when a response to a request is not a valid hybrid response.
 	 */
-	invalid: (response: AxiosResponse) => MaybePromise<void>
+	invalid: (response: AxiosResponse, context: InternalRouterContext) => MaybePromise<void>
 
 	/**
 	 * Called when an unknowne exception was triggered.
 	 */
-	exception: (error: Error) => MaybePromise<void>
+	exception: (error: Error, context: InternalRouterContext) => MaybePromise<void>
 
 	/**
 	 * Called whenever the request failed, for any reason, in addition to other hooks.
@@ -63,7 +63,7 @@ export interface Hooks {
 	/**
 	 * Called when a navigation has been made and a page component has been navigated to.
 	 */
-	navigated: (options: NavigationOptions) => MaybePromise<void>
+	navigated: (options: NavigationOptions, context: InternalRouterContext) => MaybePromise<void>
 }
 
 interface HookOptions {
@@ -87,8 +87,8 @@ export function appendCallbackToHooks<T extends keyof Hooks>(hook: T, fn: Hooks[
  */
 export function registerHook<T extends keyof Hooks>(hook: T, fn: Hooks[T], options?: HookOptions): () => void {
 	if (options?.once) {
-		const unregister = appendCallbackToHooks(hook, async(...args: [any]) => {
-			await fn(...args)
+		const unregister = appendCallbackToHooks(hook, async(...args: any[]) => {
+			await fn(...args as [any, any])
 			unregister()
 		})
 
