@@ -45,6 +45,7 @@ export default defineConfig({
 					{ text: `v${version}`, link: `${github}/releases/tag/v${version}` },
 					{ text: 'Repository', link: `${github}` },
 					{ text: 'Demonstration', link: 'https://github.com/hybridly/demo' },
+					{ text: 'Preset', link: 'https://github.com/hybridly/preset' },
 					{ text: 'Discord', link: discord },
 				],
 			},

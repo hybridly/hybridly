@@ -6,9 +6,17 @@ You may install Hybridly in a fresh Laravel project using the preset. If you pre
 
 ## Preset
 
-:::warning
-The preset is not yet available.
-:::
+The recommended way of installing Hybridly is to create a fresh Laravel project and use the preset.
+
+```bash
+composer create-project laravel/laravel my-project
+cd my-project
+npx @preset/cli apply hybridly/preset // [!code focus]
+```
+
+This will configure Tailwind CSS, [Pest](https://pestphp.com), auto-imports via [`unplugin-auto-import`](https://github.com/antfu/unplugin-auto-import) and [`unplugin-vue-components`](https://github.com/antfu/unplugin-vue-components), and optionally internationalization through [`vue-i18n`](https://github.com/intlify/vue-i18n-next).
+
+More information on the options on the [repository](https://github.com/hybridly/preset).
 
 ## Server-side setup
 
