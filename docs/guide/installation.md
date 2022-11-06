@@ -86,6 +86,8 @@ initializeHybridly({
 })
 ```
 
+Use [`enhanceVue`](../api/utils/initialize-hybridly.md#enhancevue) to register plugins, components or directives.
+
 ### Add a `tsconfig.json`
 
 ```json
@@ -246,9 +248,7 @@ import 'virtual:hybridly/router'
 initializeHybridly({
 	cleanup: !import.meta.env.DEV,
 	pages: import.meta.glob('../views/pages/**/*.vue', { eager: true }),
-	setup: ({ render, element, hybridly }) => createApp({ render })
-		.use(hybridly)
-		.mount(element),
+  enhanceVue: (vue) => {}
 })
 ```
 
@@ -258,7 +258,7 @@ The last import is what makes the `route` util typed. If you don't intend on usi
 
 - The `pages` property must contain an object which keys are names of page components and values are the components themselves. `import.meta.glob` conveniently create that for us. Or maybe Hybridly adopter this format because `import.meta.glob` exists. Who knows.
 
-- The `setup` property is *optional*. If provided, it must be a function that returns the Vue application. The `hybridly` plugin, which contains the Vue DevTools plugin, is available in the object given as the first argument to the function.
+- The `enhanceVue` property is *optional*. If provided, it must be a callback to which the Vue instance is given. You may register plugins, components or directives here.
 
 You can read more about `initializeHybridly` in the [API documentation](../api/utils/initialize-hybridly.md).
 
