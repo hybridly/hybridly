@@ -2,11 +2,11 @@
 
 ## Overview
 
-PHP and TypeScript have their own convention when it comes to the code style, specifically regarding objects and arrays. 
+PHP and TypeScript have their own conventions when it comes to coding style, specifically regarding objects and arrays. 
 
 While it's common to have `snake_case` array keys in PHP, TypeScript objects are generally written using `camelCase`. Vue's style guide [also recommends using `camelCase` when defining properties](https://eslint.vuejs.org/rules/prop-name-casing.html) in single-file components.
 
-Hybridly provides a way to keep using `snake_case` when hybrid properties and receiving them in `camelCase` in single-file components.
+Hybridly provides a way to keep using `snake_case` when defining hybrid properties, while still receiving them in `camelCase` in single-file components.
 
 ## Enabling case conversion
 
