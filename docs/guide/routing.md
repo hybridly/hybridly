@@ -40,9 +40,6 @@ import 'virtual:hybridly/router' // [!code focus]
 initializeHybridly({
 	cleanup: !import.meta.env.DEV,
 	pages: import.meta.glob('../views/pages/**/*.vue', { eager: true }),
-	setup: ({ render, element, hybridly }) => createApp({ render })
-		.use(hybridly)
-		.mount(element),
 })
 ```
 

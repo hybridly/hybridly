@@ -19,9 +19,6 @@ initializeHybridly({
 	plugins: [ // [!code focus:3]
 		MyPlugin()
 	],
-	setup: ({ render, element, hybridly }) => createApp({ render })
-		.use(hybridly)
-		.mount(element),
 })
 ```
 

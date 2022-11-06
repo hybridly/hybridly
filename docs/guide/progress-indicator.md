@@ -22,11 +22,6 @@ initializeHybridly({
 		includeCSS: true,
 		spinner: false,
 	},
-	setup: ({ render, element, hybridly }) => createApp({ render })
-		.use(createHead())
-		.use(autoAnimate)
-		.use(hybridly)
-		.mount(element),
 })
 ```
 
