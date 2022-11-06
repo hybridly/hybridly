@@ -2,6 +2,7 @@ import { debounce, debug } from '@hybridly/utils'
 import { SCROLL_REGION_ATTRIBUTE } from '../constants'
 import type { InternalRouterContext, RouterContextOptions, Serializer } from '../context'
 import { getRouterContext, setContext } from '../context'
+import { runHooks } from '../plugins'
 import { saveScrollPositions } from '../scroll'
 import { makeUrl } from '../url'
 import { navigate } from './router'
@@ -53,6 +54,8 @@ export async function registerEventListeners() {
 	// to imitate native browser behavior while keeping the SPA feeling.
 	window?.addEventListener('popstate', async(event) => {
 		debug.history('Navigation detected (popstate event). State:', { state: event.state })
+
+		await runHooks('backForward', {}, event.state, context)
 
 		// If there is no state in this history entry, we come from the user
 		// replacing the URL manually. In this case, we want to restore everything

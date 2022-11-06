@@ -6,6 +6,11 @@ import type { MaybePromise } from '../types'
 
 export interface Hooks {
 	/**
+	 * Called when a back-forward navigation occurs.
+	 */
+	backForward: (state: any, context: InternalRouterContext) => MaybePromise<any>
+
+	/**
 	 * Called before anything when a navigation is going to happen.
 	 */
 	before: (options: HybridRequestOptions, context: InternalRouterContext) => MaybePromise<any | boolean>
