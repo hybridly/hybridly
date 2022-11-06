@@ -44,7 +44,7 @@ return [
     | the same. To be able to stay consistent, Hybridly offers a way to
     | change the case of first-level properties shared to the front.
     |
-    | Supported: null, 'snake', 'camel'
+    | Supported: null, 'snake', 'camel', 'kebab'
     */
     'force_case' => [
         'input' => null,
