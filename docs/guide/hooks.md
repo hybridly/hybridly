@@ -38,41 +38,44 @@ These callbacks will be executed just once for the current request. You can lear
 
 ## Available hooks
 
-Twelve events can be hooked into when hybrid requests are made. It's worth noting that each hook is awaitable and may return a promise that will be waited for.
-
-You can learn more about individual hooks in their [API documentation](../api/router/utils.md), or you can read their interface below:
+All lifecycle events can be hooked into when hybrid requests are made. It's worth noting that each hook is awaitable and may return a promise that will be waited for.
 
 ```ts
 export interface Hooks {
 	/**
-	 * Called before anything when a visit is going to happen.
+	 * Called when a back-forward navigation occurs.
 	 */
-	before: (options: HybridRequestOptions) => MaybePromise<any | boolean>
+	backForward: (state: any, context: InternalRouterContext) => MaybePromise<any>
 
 	/**
-	 * Called before the request of a visit is going to happen.
+	 * Called before anything when a navigation is going to happen.
+	 */
+	before: (options: HybridRequestOptions, context: InternalRouterContext) => MaybePromise<any | boolean>
+
+	/**
+	 * Called before the request of a navigation is going to happen.
 	 */
 	start: (context: InternalRouterContext) => MaybePromise<any>
 
 	/**
 	 * Called when progress on the request is being made.
 	 */
-	progress: (progress: Progress) => MaybePromise<any>
+	progress: (progress: Progress, context: InternalRouterContext) => MaybePromise<any>
 
 	/**
-	 * Called when data is received after a request for a visit.
+	 * Called when data is received after a request for a navigation.
 	 */
-	data: (response: AxiosResponse) => MaybePromise<any>
+	data: (response: AxiosResponse, context: InternalRouterContext) => MaybePromise<any>
 
 	/**
 	 * Called when a request is successful and there is no error.
 	 */
-	success: (payload: HybridPayload) => MaybePromise<any>
+	success: (payload: HybridPayload, context: InternalRouterContext) => MaybePromise<any>
 
 	/**
 	 * Called when a request is successful but there were errors.
 	 */
-	error: (errors: Errors) => MaybePromise<any>
+	error: (errors: Errors, context: InternalRouterContext) => MaybePromise<any>
 
 	/**
 	 * Called when a request has been aborted.
@@ -82,12 +85,12 @@ export interface Hooks {
 	/**
 	 * Called when a response to a request is not a valid hybrid response.
 	 */
-	invalid: (response: AxiosResponse) => MaybePromise<void>
+	invalid: (response: AxiosResponse, context: InternalRouterContext) => MaybePromise<void>
 
 	/**
 	 * Called when an unknowne exception was triggered.
 	 */
-	exception: (error: Error) => MaybePromise<void>
+	exception: (error: Error, context: InternalRouterContext) => MaybePromise<void>
 
 	/**
 	 * Called whenever the request failed, for any reason, in addition to other hooks.
@@ -100,8 +103,8 @@ export interface Hooks {
 	after: (context: InternalRouterContext) => MaybePromise<void>
 
 	/**
-	 * Called when a visit has been made and a page component has been navigated to.
+	 * Called when a navigation has been made and a page component has been navigated to.
 	 */
-	navigated: (options: NavigationOptions) => MaybePromise<void>
+	navigated: (options: NavigationOptions, context: InternalRouterContext) => MaybePromise<void>
 }
 ```
