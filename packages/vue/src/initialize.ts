@@ -99,16 +99,12 @@ function prepare(options: HybridlyOptions) {
 	// Using `window` is the only way I found to be able to get the route collection,
 	// since this initialization is ran after the Vite plugin is done executing.
 	if (typeof window !== 'undefined') {
-		const routes = window.hybridly?.routes
-
-		if (routes) {
-			state.setRoutes(window.hybridly?.routes)
-			window.addEventListener<any>('hybridly:routes', (event: CustomEvent<RouteCollection>) => {
-				if (event.detail) {
-					state.setRoutes(event.detail)
-				}
-			})
-		}
+		state.setRoutes(window?.hybridly?.routes)
+		window.addEventListener<any>('hybridly:routes', (event: CustomEvent<RouteCollection>) => {
+			if (event.detail) {
+				state.setRoutes(event.detail)
+			}
+		})
 	}
 
 	if (options.progress !== false) {
