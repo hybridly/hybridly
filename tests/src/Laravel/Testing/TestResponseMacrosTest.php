@@ -105,3 +105,15 @@ test('the `getHybridPayload` method returns the payload of the hybrid response',
         expect($page['version'])->toBeNull();
     });
 });
+
+test('the `getHybridProperty` method returns the given property', function () {
+    $response = makeHybridMockRequest(properties: [
+        'foo' => 'bar',
+        'uwu' => [
+            'owo' => 'hewwo',
+        ],
+    ]);
+
+    expect($response->getHybridProperty('foo'))->toBe('bar');
+    expect($response->getHybridProperty('uwu.owo'))->toBe('hewwo');
+});

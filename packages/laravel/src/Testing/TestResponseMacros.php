@@ -179,4 +179,15 @@ class TestResponseMacros
             return Assertable::fromTestResponse($this)->toArray();
         };
     }
+
+    /**
+     * Returns the given hybrid property as an array.
+     */
+    public function getHybridProperty(): Closure
+    {
+        return function (string $key): mixed {
+            /** @var TestResponse $this */
+            return Assertable::fromTestResponse($this)->getProperty($key);
+        };
+    }
 }
