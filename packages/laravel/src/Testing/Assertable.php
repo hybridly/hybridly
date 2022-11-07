@@ -130,6 +130,11 @@ class Assertable extends AssertableJson
         return $this->prop($key);
     }
 
+    public function getProperty(string $key): mixed
+    {
+        return $this->prop('view.properties.' . $key);
+    }
+
     public function toArray(): array
     {
         return $this->getPayload();

@@ -36,11 +36,18 @@ test('the `getPayload` method returns the payload', function () {
     });
 });
 
-test('the `getValue` method returns the property value at the given path', function () {
+test('the `getValue` method returns the value at the given path', function () {
     makeHybridMockRequest(properties: ['foo' => 'bar'])
         ->assertHybrid(function (Assertable $page) {
             expect($page->getValue('view.name'))->toBe('test');
             expect($page->getValue('view.properties.foo'))->toBe('bar');
+        });
+});
+
+test('the `getProperty` method returns the property value at the given path', function () {
+    makeHybridMockRequest(properties: ['foo' => 'bar'])
+        ->assertHybrid(function (Assertable $page) {
+            expect($page->getProperty('foo'))->toBe('bar');
         });
 });
 
