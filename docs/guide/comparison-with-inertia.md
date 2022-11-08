@@ -39,7 +39,7 @@ The following is a non-exhaustive comparison table between Inertia and Hybridly'
 | Property case conversion support                |          <span class="no">No</span>          |                   Yes                   |
 | Exposed back-forward detection                  |          <span class="no">No</span>          |                   Yes                   |
 | Framework-agnostic core                         |                     Yes                      |                   Yes                   |
-| Custom Axios instance support                   |          <span class="no">No</span>          |     <span class="no">Planned</span>     |
+| Custom Axios instance support                   |          <span class="no">No</span>          |                   Yes                   |
 | Official React, Svelte, Rails, Django support   |                     Yes                      |       <span class="no">No</span>        |
 
 <div class="opacity-80">
