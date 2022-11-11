@@ -66,13 +66,27 @@ class Hybridly
     }
 
     /**
-     * Checks if the request is hybridly.
+     * Checks if the request is hybrid.
      */
     public function isHybrid(Request $request = null): bool
     {
         $request ??= request();
 
         return $request->headers->has(self::HYBRIDLY_HEADER);
+    }
+
+    /**
+     * Checks if the request is a partial hybrid request.
+     */
+    public function isPartial(Request $request = null): bool
+    {
+        $request ??= request();
+
+        if (!$this->isHybrid($request)) {
+            return false;
+        }
+
+        return $request->headers->has(self::PARTIAL_COMPONENT_HEADER);
     }
 
     /**

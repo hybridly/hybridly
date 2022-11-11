@@ -8,11 +8,21 @@ use Spatie\LaravelData\Contracts\DataObject;
 
 if (!function_exists('is_hybrid')) {
     /**
-     * Checks if the given response uses Hybridly.
+     * Checks if the given request is hybrid.
      */
     function is_hybrid(Request $request = null): bool
     {
         return hybridly()->isHybrid($request);
+    }
+}
+
+if (!function_exists('is_partial')) {
+    /**
+     * Checks if the given request is a partial hybrid request.
+     */
+    function is_partial(Request $request = null): bool
+    {
+        return hybridly()->isPartial($request);
     }
 }
 
