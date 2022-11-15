@@ -27,7 +27,7 @@ const features: Feature[] = [
 	},
 	{
 		icon: 'i-mdi:magnify',
-		title: 'Vue DevToools',
+		title: 'Vue DevTools',
 		description: 'Integrates with Vue DevTools for painless property inspection and debugging.',
 		url: '/guide/devtools',
 	},
