@@ -8,6 +8,18 @@ export function useProperties<T extends object, Global extends GlobalHybridlyPro
 	return readonly(toReactive(computed(() => state.context.value?.view.properties as T & Global)))
 }
 
+/**
+ * Accesses a property with the given type.
+ * @experimental Workaround for not being able to type `useProperty`, might be removed in the future.
+ */
+export function useTypedProperty<T>(path: string, fallback?: T): ComputedRef<T> {
+	return computed(() => (path as string)
+		.split('.')
+		.reduce((o: any, i: string) => o[i], state.context.value?.view.properties) as any
+		?? fallback,
+	) as any
+}
+
 /** Accesses a property with a dot notation. */
 export function useProperty<
 	T = GlobalHybridlyProperties,
