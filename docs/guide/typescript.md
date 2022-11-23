@@ -4,7 +4,7 @@
 
 Hybridly aims to provide typings whenever it's possible. While the core and the front-end adapters of Hybridly are written with TypeScript and always provide definitions, code from the back-end must still be transformed to types in order to benefit from autocompletion while staying [DRY](https://en.wikipedia.org/wiki/Don%27t_repeat_yourself).
 
-This could be a real challenger — fortunately, there are existing solutions to transform PHP classes and enums to TypeScript types and interfaces. Specifically, Hybridly provides back-end typings through [Data](https://github.com/spatie/laravel-data) and [TypeScript Transformer](https://github.com/spatie/laravel-typescript-transformer).
+This could be a real challenge — fortunately, there are existing solutions to transform PHP classes and enums to TypeScript types and interfaces. Specifically, Hybridly provides back-end typings through [Data](https://github.com/spatie/laravel-data) and [TypeScript Transformer](https://github.com/spatie/laravel-typescript-transformer).
 
 :::info Using the preset?
 Note that if you scaffolded an application using the [provided preset](./installation.md#preset), you don't need to take the installation steps described in this page.
