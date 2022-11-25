@@ -11,7 +11,7 @@
     "docs:dev": "vitepress dev docs",
     "docs:build": "vitepress build docs",
     "docs:serve": "vitepress serve docs",
-    "ci": "pnpm run lint && pnpm run build && pnpm run test"
+    "ci": "pnpm run lint && pnpm run build"
   },
   "packageManager": "pnpm@7.13.4",
   "devDependencies": {
