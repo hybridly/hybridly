@@ -1,5 +1,10 @@
+import qs from 'qs'
+import { merge } from '@hybridly/utils'
+
 export type UrlResolvable = string | URL | Location
-export type UrlTransformable = Partial<Omit<URL, 'searchParams' | 'toJSON' | 'toString'>>
+export type UrlTransformable = Partial<Omit<URL, 'searchParams' | 'toJSON' | 'toString'>> & {
+	query?: any
+}
 
 /** Normalizes the given input to an URL. */
 export function normalizeUrl(href: UrlResolvable): string {
@@ -15,7 +20,17 @@ export function makeUrl(href: UrlResolvable, transformations: UrlTransformable =
 		// to double slashes, which breaks URL instanciation.
 		const base = document?.location?.href === '//' ? undefined : document.location.href
 		const url = new URL(String(href), base)
-		Object.entries(transformations ?? {}).forEach(([key, value]) => Reflect.set(url, key, value))
+		Object.entries(transformations ?? {}).forEach(([key, value]) => {
+			if (key === 'query') {
+				key = 'search'
+				value = qs.stringify(merge(qs.parse(url.search, { ignoreQueryPrefix: true }), value), {
+					encodeValuesOnly: true,
+					arrayFormat: 'brackets',
+				})
+			}
+
+			Reflect.set(url, key, value)
+		})
 
 		return url
 	} catch (error) {
