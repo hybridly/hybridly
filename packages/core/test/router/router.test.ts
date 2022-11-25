@@ -8,7 +8,7 @@ beforeEach(() => {
 	vi.stubGlobal('console', { warn: vi.fn() })
 })
 
-it.skip('performs hybridly navigations', async() => {
+it('performs hybridly navigations', async() => {
 	mockUrl('http://localhost.test/navigation', {
 		json: fakePayload({
 			url: 'https://localhost.test/navigation',
