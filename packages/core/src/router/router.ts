@@ -68,6 +68,11 @@ export async function performHybridNavigation(options: HybridRequestOptions): Pr
 			}
 		}
 
+		// Sets the method if not specifically defined.
+		if (!options.method) {
+			debug.router('Setting method to GET because none was provided.')
+			options.method = 'GET'
+		}
 		// Before anything else, we fire the "before" event to make sure
 		// there was no user-specified handler returning "false".
 		if (!await runHooks('before', options.hooks, options, context)) {
