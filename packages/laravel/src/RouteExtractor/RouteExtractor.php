@@ -111,7 +111,12 @@ class RouteExtractor implements JsonSerializable, Arrayable
             return false;
         }
 
-        foreach (config('hybridly.router.allowed_vendors', []) as $vendor) {
+        $allowedVendors = [
+            ...config('hybridly.router.allowed_vendors', []),
+            'hybridly/laravel',
+        ];
+
+        foreach ($allowedVendors as $vendor) {
             if (str_starts_with($path, base_path('vendor/' . $vendor))) {
                 return false;
             }
