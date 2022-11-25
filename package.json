@@ -1,6 +1,6 @@
 {
   "private": true,
-  "version": "0.0.1-alpha.10",
+  "version": "0.0.1-alpha.11",
   "scripts": {
     "release": "bumpp package.json packages/*/package.json --all --execute \"tsx build/bump-php-packages.ts\" --commit \"release: v\"",
     "build": "pnpm -r build",
@@ -50,7 +50,7 @@
   "pnpm": {
     "overrides": {
       "unbuild": "0.6.9",
-			"vitest": "0.25.0"
+      "vitest": "0.25.0"
     },
     "peerDependencyRules": {
       "ignoreMissing": [
