@@ -68,7 +68,8 @@ export const RouterLink = defineComponent({
 	props: {
 		href: {
 			type: String,
-			required: true,
+			required: false,
+			default: undefined,
 		},
 		as: {
 			type: [String, Object],
