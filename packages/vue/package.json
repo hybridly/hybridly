@@ -46,16 +46,16 @@
     "@hybridly/progress-plugin": "workspace:*",
     "@hybridly/utils": "workspace:*",
     "@vue/devtools-api": "^6.4.5",
-    "defu": "^6.1.0",
+    "defu": "^6.1.1",
     "lodash.isequal": "^4.5.0",
     "nprogress": "^0.2.0",
     "qs": "^6.11.0"
   },
   "devDependencies": {
-    "@types/lodash": "^4.14.188",
+    "@types/lodash": "^4.14.190",
     "@types/lodash.clonedeep": "^4.5.7",
     "@types/lodash.isequal": "^4.5.6",
     "@types/nprogress": "^0.2.0",
-    "vue": "^3.2.41"
+    "vue": "^3.2.45"
   }
 }
