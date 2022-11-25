@@ -73,6 +73,17 @@ export async function performHybridNavigation(options: HybridRequestOptions): Pr
 			debug.router('Setting method to GET because none was provided.')
 			options.method = 'GET'
 		}
+
+		// Converts data to query parameters if the method is GET
+		// and some non-FormData data is provided.
+		if (!(options.data instanceof FormData) && options.method === 'GET' && Object.keys(options.data ?? {}).length) {
+			debug.router('Transforming data to query parameters.', options.data)
+			options.url = makeUrl(options.url ?? context.url, {
+				query: options.data,
+			})
+			options.data = {}
+		}
+
 		// Before anything else, we fire the "before" event to make sure
 		// there was no user-specified handler returning "false".
 		if (!await runHooks('before', options.hooks, options, context)) {
@@ -115,7 +126,7 @@ export async function performHybridNavigation(options: HybridRequestOptions): Pr
 
 		const response = await context.axios.request({
 			url: context.pendingNavigation!.url.toString(),
-			method: options.method ?? 'GET',
+			method: options.method,
 			data: options.method === 'GET' ? {} : options.data,
 			params: options.method === 'GET' ? options.data : {},
 			signal: context.pendingNavigation!.controller.signal,
