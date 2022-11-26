@@ -117,7 +117,8 @@ class RouteExtractor implements JsonSerializable, Arrayable
         ];
 
         foreach ($allowedVendors as $vendor) {
-            if (str_starts_with($path, base_path('vendor' . \DIRECTORY_SEPARATOR . $vendor))) {
+            $realVendorPath = strtr($vendor, '\/\\', DIRECTORY_SEPARATOR);
+            if (str_starts_with($path, base_path('vendor' . \DIRECTORY_SEPARATOR . $realVendorPath))) {
                 return false;
             }
         }
