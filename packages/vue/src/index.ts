@@ -1,4 +1,4 @@
-export { initializeHybridly } from './initialize'
+export { initializeHybridly, resolvePageComponent } from './initialize'
 export { RouterLink } from './components/link'
 
 export { router, can } from '@hybridly/core'
