@@ -5,7 +5,7 @@ import { LAYOUT_PLUGIN_NAME } from '../constants'
 import type { LayoutOptions } from '../types'
 import { debug } from '../utils'
 
-const TEMPLATE_LAYOUT_REGEX = /<template +layout(?: *= *['"]((?:[\w\/-_,](?:,\ )?)+)['"] *)?>/
+const TEMPLATE_LAYOUT_REGEX = /<template +layout(?: *= *['"]((?:[\w\/\-_,](?:,\ )?)+)['"] *)?>/
 const TYPESCRIPT_REGEX = /lang=['"]ts['"]/
 
 /**
