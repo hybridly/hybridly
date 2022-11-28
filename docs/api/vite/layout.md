@@ -26,6 +26,14 @@ Additionally, it's possible to use nested persistent layouts by separating layou
 </template>
 ```
 
+It's also possible to organize views by domain and specifying a layout's domain by using a colon:
+
+```vue
+<template layout="booking:default">
+  <!-- resources/domains/booking/layouts/default.vue is used as the layout -->
+</template>
+```
+
 ## Configuration
 
 This plugin can be configured through the `layout` option of the `hybridly` plugin in `vite.config.ts`.
