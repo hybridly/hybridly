@@ -14,21 +14,27 @@ const TYPESCRIPT_REGEX = /lang=['"]ts['"]/
  */
 export default (options: LayoutOptions = {}): Plugin => {
 	const defaultLayoutName = options?.defaultLayoutName?.replace('.vue', '') ?? 'default'
-	const viewsDirectory = options?.views ?? path.resolve(process.cwd(), 'resources', 'views')
-	const layoutsDirectoryName = options?.layoutsDirectoryName ?? 'layouts'
+	const layoutsDirectory = options?.directory ?? path.resolve(process.cwd(), 'resources', 'views', 'layouts')
 	const templateRegExp = options?.templateRegExp ?? TEMPLATE_LAYOUT_REGEX
-	const getLayoutPath = options?.resolve ?? ((layoutName: string) => {
-		if (!layoutName.includes(':')) {
-			return normalizePath(path.resolve(viewsDirectory, layoutsDirectoryName, `${layoutName}.vue`)).replaceAll('\\', '/')
-		}
-		const [domain, layout] = layoutName.split(':')
-		return normalizePath(path.resolve(viewsDirectory, domain, layoutsDirectoryName, `${layout}.vue`)).replaceAll('\\', '/')
-	})
+	const resolveLayoutPath = (layoutName: string) => {
+		const [domain, layout] = layoutName.includes(':')
+			? layoutName.split(':')
+			: [undefined, layoutName]
+
+		const resolve = options?.resolve ?? ((layout: string, domain?: string) => {
+			if (!domain) {
+				return path.resolve(layoutsDirectory, `${layout}.vue`)
+			}
+
+			return path.resolve(process.cwd(), 'resources', 'domains', domain, 'layouts', `${layout}.vue`)
+		})
+
+		return normalizePath(resolve(layout, domain)).replaceAll('\\', '/')
+	}
 
 	debug.layout('Resolved options:', {
 		defaultLayoutName,
-		viewsDirectory,
-		layoutsDirectoryName,
+		layoutsDirectory,
 	})
 
 	return {
@@ -45,7 +51,7 @@ export default (options: LayoutOptions = {}): Plugin => {
 				const exports = layouts.map((_, i) => importName(i))
 				const imports = layouts.reduce((imports, layoutName, i) => `
 					${imports}
-					import ${importName(i)} from '${getLayoutPath(layoutName)}';
+					import ${importName(i)} from '${resolveLayoutPath(layoutName)}';
 				`, '').trim()
 
 				debug.layout(`Resolved layouts "${layouts.join(', ')}":`, {
