@@ -5,7 +5,7 @@ import { LAYOUT_PLUGIN_NAME } from '../constants'
 import type { LayoutOptions } from '../types'
 import { debug } from '../utils'
 
-const TEMPLATE_LAYOUT_REGEX = /<template +layout(?: *= *['"]((?:[\w\/\-_,](?:,\ )?)+)['"] *)?>/
+const TEMPLATE_LAYOUT_REGEX = /<template +layout(?: *= *['"]((?:[\w\/\-_,:](?:,\ )?)+)['"] *)?>/
 const TYPESCRIPT_REGEX = /lang=['"]ts['"]/
 
 /**
@@ -16,7 +16,13 @@ export default (options: LayoutOptions = {}): Plugin => {
 	const defaultLayoutName = options?.defaultLayoutName?.replace('.vue', '') ?? 'default'
 	const base = options?.directory ?? path.resolve(process.cwd(), 'resources', 'views', 'layouts')
 	const templateRegExp = options?.templateRegExp ?? TEMPLATE_LAYOUT_REGEX
-	const getLayoutPath = options?.resolve ?? ((layoutName: string) => normalizePath(path.resolve(base, `${layoutName}.vue`)).replaceAll('\\', '/'))
+	const getLayoutPath = options?.resolve ?? ((layoutName: string) => {
+		if (!layoutName.includes(':')) {
+			return normalizePath(path.resolve(base, `${layoutName}.vue`)).replaceAll('\\', '/')
+		}
+		const [domain, layout] = layoutName.split(':')
+		return normalizePath(path.resolve(base, 'domains', domain, 'layouts', `${layout}.vue`)).replaceAll('\\', '/')
+	})
 
 	debug.layout('Registered layout path:', base)
 
