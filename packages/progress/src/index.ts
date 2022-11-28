@@ -40,7 +40,11 @@ export function progress(options?: Partial<ProgressOptions>) {
 				injectCSS(resolved.color)
 			}
 		},
-		start: () => {
+		start: (context) => {
+			if (context.pendingNavigation?.options.progress === false) {
+				return
+			}
+
 			clearTimeout(timeout)
 			timeout = setTimeout(() => {
 				finishProgress()
