@@ -1,19 +1,28 @@
+const stack: string[] = []
+
 class Modal {
 	private main!: HTMLHtmlElement
 	private overlay!: HTMLDivElement
 	private iframe!: HTMLIFrameElement
 	private style!: HTMLStyleElement
 	private hideOnEscape?: (event: KeyboardEvent) => void
+	private animationDurationInMs: number = 200
 
-	constructor(private html: string, private animationDurationInMs: number = 200) {
-		if (this.initializeDOM() !== false) {
-			this.show()
+	constructor(private html: string, private id: string) {
+		if (stack.includes(id)) {
+			return
 		}
+
+		if (this.initializeDOM() === false) {
+			return
+		}
+
+		this.show()
 	}
 
-	static fromException(response: string) {
+	static fromException(response: string, id: string) {
 		if (typeof response === 'string' && response.trim() !== '') {
-			return new Modal(`<style>${htmlStyle()}</style>${response.toString()}`)
+			return new Modal(`<style>${htmlStyle()}</style>${response.toString()}`, id)
 		}
 
 		return new Modal(`
@@ -25,10 +34,10 @@ class Modal {
 					<pre class="text-sm opacity-80 max-h-[500px] w-full mx-auto text-left mt-6">${JSON.stringify(response, null, 2)}</pre>
 				</div>
 			</div>
-		`)
+		`, id)
 	}
 
-	static forPageComponent(component: string) {
+	static forPageComponent(component: string, id: string) {
 		return new Modal(`
 			<style>${style()}</style>
 			<div class="h-full text-center flex">
@@ -38,7 +47,7 @@ class Modal {
 					<div class="m-2 flex justify-center text-xl opacity-30 underline underline-dotted">${component}</div>
 				</div>
 			</div>
-		`)
+		`, id)
 	}
 
 	initializeDOM() {
@@ -107,6 +116,8 @@ class Modal {
 	}
 
 	show() {
+		stack.push(this.id)
+
 		this.overlay.addEventListener('click', () => this.destroy())
 		this.hideOnEscape = (event: KeyboardEvent) => {
 			if (event.keyCode === 27) {
@@ -126,6 +137,7 @@ class Modal {
 	}
 
 	destroy() {
+		stack.splice(stack.indexOf(this.html), 1)
 		this.overlay.dataset.hybridly = ''
 		setTimeout(() => {
 			this.overlay.outerHTML = ''
@@ -138,11 +150,11 @@ class Modal {
 }
 
 export function showResponseErrorModal(response: string): Modal {
-	return Modal.fromException(response)
+	return Modal.fromException(response, 'non-hybrid-response')
 }
 
 export function showPageComponentErrorModal(response: string): Modal {
-	return Modal.forPageComponent(response)
+	return Modal.forPageComponent(response, `page-component-${response}`)
 }
 
 function htmlStyle() {
