@@ -237,12 +237,10 @@ export async function performHybridNavigation(options: HybridRequestOptions): Pr
 		await match(error.constructor.name, {
 			NavigationCancelledError: async() => {
 				debug.router('The request was cancelled through the "before" hook.', error)
-				console.warn(error)
 				await runHooks('abort', options.hooks, context)
 			},
 			AbortError: async() => {
 				debug.router('The request was cancelled.', error)
-				console.warn(error)
 				await runHooks('abort', options.hooks, context)
 			},
 			NotAHybridResponseError: async() => {
