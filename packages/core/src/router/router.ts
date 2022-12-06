@@ -10,7 +10,7 @@ import type { UrlResolvable } from '../url'
 import { fillHash, makeUrl, normalizeUrl, sameUrls } from '../url'
 import { runHooks } from '../plugins'
 import { setHistoryState, isBackForwardNavigation, handleBackForwardNavigation, registerEventListeners, getHistoryState, getKeyFromHistory, remember } from './history'
-import type { ConditionalNavigationOption, Errors, ComponentNavigationOptions, NavigationOptions, Router, HybridRequestOptions, HybridPayload, NavigationResponse } from './types'
+import type { ConditionalNavigationOption, Errors, ComponentNavigationOptions, NavigationOptions, Router, HybridRequestOptions, HybridPayload, NavigationResponse, Method } from './types'
 
 /**
  * The hybridly router.
@@ -54,6 +54,16 @@ export async function performHybridNavigation(options: HybridRequestOptions): Pr
 	debug.router('Making a hybrid navigation:', { context, options, navigationId })
 
 	try {
+		// Sets the method if not specifically defined.
+		if (!options.method) {
+			debug.router('Setting method to GET because none was provided.')
+			options.method = 'GET'
+		}
+
+		// Force uppercase method because we accept lowercase methods,
+		// *angry look at Hassan*
+		options.method = options.method.toUpperCase() as Method
+
 		// If applicable, converts the data to a `FormData` object.
 		if ((hasFiles(options.data) || options.useFormData) && !(options.data instanceof FormData)) {
 			options.data = objectToFormData(options.data)
@@ -66,12 +76,6 @@ export async function performHybridNavigation(options: HybridRequestOptions): Pr
 				options.data.append('_method', options.method)
 				options.method = 'POST'
 			}
-		}
-
-		// Sets the method if not specifically defined.
-		if (!options.method) {
-			debug.router('Setting method to GET because none was provided.')
-			options.method = 'GET'
 		}
 
 		// Converts data to query parameters if the method is GET

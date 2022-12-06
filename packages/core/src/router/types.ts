@@ -65,7 +65,7 @@ export interface HybridRequestOptions extends Omit<NavigationOptions, 'payload'>
 	/** The URL to navigation. */
 	url?: UrlResolvable
 	/** HTTP verb to use for the request. */
-	method?: Method
+	method?: Method | Lowercase<Method>
 	/** Body of the request. */
 	data?: RequestData
 	/** Which properties to update for this navigation. Other properties will be ignored. */
