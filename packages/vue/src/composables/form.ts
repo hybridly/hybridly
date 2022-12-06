@@ -79,15 +79,17 @@ export function useForm<T extends Fields = Fields>(options: FormOptions<T>) {
 			? options.transform?.(fields)
 			: fields
 
+		const preserveState = optionsOverrides?.preserveState ?? options.preserveState
+
 		return router.navigate({
 			...options,
 			url: url ?? state.context.value?.url,
 			method: options.method ?? 'POST',
 			...optionsOverrides,
 			data: safeClone(data),
-			preserveState: optionsOverrides?.preserveState === undefined && options.method !== 'GET'
+			preserveState: preserveState === undefined && options.method !== 'GET'
 				? true
-				: optionsOverrides?.preserveState,
+				: preserveState,
 			hooks: {
 				before: (navigation, context) => {
 					failed.value = false
