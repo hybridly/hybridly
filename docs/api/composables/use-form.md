@@ -129,6 +129,12 @@ An object containing the error for each one of the fields.
 
 Returns whether the form has pending modifications relative to its [loaded](#loaded) state.
 
+### `hasDirty`
+
+- **Type**: `(...keys: keyof T) => boolean`
+
+A function that returns a boolean value that indicates if the given fields are dirty.
+
 ### `processing`
 
 - **Type**: `boolean`

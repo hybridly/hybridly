@@ -147,6 +147,17 @@ export function useForm<T extends Fields = Fields>(options: FormOptions<T>) {
 	}
 
 	/**
+	 * Checks if the given keys are dirty in the form.
+	 */
+	function hasDirty(...keys: (keyof T)[]) {
+		if (keys.length === 0) {
+			return isDirty.value
+		}
+
+		return keys.some((key) => !isEqual(toRaw(fields[key]), toRaw(initial[key])))
+	}
+
+	/**
 	 * Clears the given field's error.
 	 */
 	function clearError(key: keyof T) {
@@ -185,6 +196,7 @@ export function useForm<T extends Fields = Fields>(options: FormOptions<T>) {
 		setErrors,
 		clearErrors,
 		clearError,
+		hasDirty,
 		submitWithOptions: submit,
 		submit: () => submit(),
 		hasErrors: computed(() => Object.values(errors.value).length > 0),
