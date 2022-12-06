@@ -46,7 +46,7 @@ export async function initializeHybridly(options: HybridlyOptions) {
 		payload,
 	}))
 
-	const render = () => h(wrapper as any, { context: state.context.value })
+	const render = () => h(wrapper as any)
 
 	if (options.setup) {
 		return await options.setup({

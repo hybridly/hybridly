@@ -1,20 +1,17 @@
 /* eslint-disable vue/order-in-components */
-import type { RouterContext } from '@hybridly/core'
 import { debug } from '@hybridly/utils'
-import type { PropType } from 'vue'
-import { defineComponent, h } from 'vue'
+import { toRaw, ref, watch, defineComponent, h } from 'vue'
 import { state } from '../stores/state'
 
 export const wrapper = defineComponent({
 	name: 'Hybridly',
-	setup(props) {
-		if (typeof window !== 'undefined') {
-			state.setContext(props.context)
+	setup() {
+		const properties = ref<any>()
 
-			if (!props.context) {
-				throw new Error('Hybridly was not properly initialized. The context is missing.')
-			}
-		}
+		watch(() => state.context.value?.view?.properties, (value) => {
+			debug.adapter('vue:properties', 'Updating properties.', toRaw(value))
+			properties.value = value
+		}, { immediate: true })
 
 		function renderLayout(child: any) {
 			debug.adapter('vue:render:layout', 'Rendering layout.')
@@ -32,7 +29,7 @@ export const wrapper = defineComponent({
 
 						return h(layout, {
 							...(state.view.value?.layoutProperties ?? {}),
-							...state.context.value!.view.properties,
+							...properties.value,
 						}, () => child)
 					})
 			}
@@ -40,7 +37,7 @@ export const wrapper = defineComponent({
 			return [
 				h(state.view.value?.layout, {
 					...(state.view.value?.layoutProperties ?? {}),
-					...state.context.value!.view.properties,
+					...properties.value,
 				}, () => child),
 				renderDialog(),
 			]
@@ -51,7 +48,7 @@ export const wrapper = defineComponent({
 			state.view.value!.inheritAttrs = !!state.view.value!.inheritAttrs
 
 			return h(state.view.value!, {
-				...state.context.value!.view.properties,
+				...properties.value,
 				key: state.viewKey.value,
 			})
 		}
@@ -67,32 +64,31 @@ export const wrapper = defineComponent({
 			}
 		}
 
-		return () => {
-			if (state.view.value) {
-				const view = renderView()
-
-				if (state.viewLayout.value) {
-					state.view.value.layout = state.viewLayout.value
-					state.viewLayout.value = undefined
-				}
-
-				if (state.viewLayoutProperties.value) {
-					state.view.value.layoutProperties = state.viewLayoutProperties.value
-					state.viewLayoutProperties.value = undefined
-				}
-
-				if (state.view.value.layout) {
-					return renderLayout(view)
-				}
-
-				return [view, renderDialog()]
+		return (...a) => {
+			if (!state.view.value) {
+				return
 			}
+
+			debug.adapter('vue:render:wrapper', 'Rendering wrapper component.', a.map(toRaw))
+
+			const view = renderView()
+
+			if (state.viewLayout.value) {
+				state.view.value.layout = state.viewLayout.value
+				// Maybe we need that back, but it's causing a fast re-render that blocks animations
+				// state.viewLayout.value = undefined
+			}
+
+			if (state.viewLayoutProperties.value) {
+				state.view.value.layoutProperties = state.viewLayoutProperties.value
+				state.viewLayoutProperties.value = undefined
+			}
+
+			if (state.view.value.layout) {
+				return renderLayout(view)
+			}
+
+			return [view, renderDialog()]
 		}
-	},
-	props: {
-		context: {
-			type: Object as PropType<RouterContext>,
-			required: true,
-		},
 	},
 })
