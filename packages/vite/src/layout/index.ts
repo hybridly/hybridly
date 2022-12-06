@@ -57,6 +57,7 @@ export default (options: LayoutOptions = {}): Plugin => {
 				debug.layout(`Resolved layouts "${layouts.join(', ')}":`, {
 					sourceFile: id,
 					layouts,
+					imports,
 				})
 
 				return `
