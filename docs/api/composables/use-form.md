@@ -67,9 +67,9 @@ Defines a transformer function that will be called before submitting data. The d
 ### `key`
 
 - **Type**: `string`
-- **Default**: `form:default`
+- **Default**: `false`
 
-Defines the key under which the form should be remembered in the history state.
+Defines the key under which the form should be remembered in the history state. This is disabled by default to avoid mixing form states when there are multiple ones in the same page.
 
 ## Form return values
 
