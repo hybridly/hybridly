@@ -22,7 +22,9 @@ function safeClone<T>(obj: T): T {
 }
 
 export function useForm<T extends Fields = Fields>(options: FormOptions<T>) {
-	const shouldRemember = options?.key !== false
+	// https://github.com/hybridly/hybridly/issues/23
+	// TODO: explore unique/automatic key generation
+	const shouldRemember = !!options?.key
 	const historyKey = options?.key as string ?? 'form:default'
 	const historyData = shouldRemember ? router.history.get(historyKey) as any : undefined
 	const timeoutIds = {
