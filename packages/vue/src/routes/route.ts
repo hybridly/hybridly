@@ -17,7 +17,7 @@ export class Route {
 
 	static getDefinition(name: RouteName): RouteDefinition {
 		if (!state.routes.value) {
-			throw new Error('Routing is not initialized. Make sure the Vite plugin is enabled and that `virtual:hybridly/router` is imported.')
+			throw new Error('Routing is not initialized. Make sure the Vite plugin is enabled and that `virtual:hybridly/router` is imported and that `php artisan route:list` returns no error.')
 		}
 
 		const routes = state.routes.value as any
