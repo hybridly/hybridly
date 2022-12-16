@@ -62,6 +62,12 @@ export default defineConfig({
 			{ icon: 'discord', link: discord },
 		],
 
+		algolia: {
+			appId: 'IBVT4QTDXF',
+			apiKey: '3b2e1c15434655a09ee419b7204ebd46',
+			indexName: 'hybridly',
+		},
+
 		sidebar: {
 			'/guide/': [
 				{
