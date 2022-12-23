@@ -8,8 +8,7 @@ import { progress } from '@hybridly/progress-plugin'
 import type { Axios } from 'axios'
 import { wrapper } from './components/wrapper'
 import { state } from './stores/state'
-import { plugin } from './devtools'
-import type { RouteCollection } from './routes'
+import { devtools } from './devtools'
 
 export async function initializeHybridly(options: HybridlyOptions) {
 	const { element, payload, resolve } = prepare(options)
@@ -59,7 +58,10 @@ export async function initializeHybridly(options: HybridlyOptions) {
 	}
 
 	const app = createApp({ render })
-	app.use(plugin)
+
+	if (options.devtools !== false) {
+		app.use(devtools)
+	}
 
 	await options.enhanceVue?.(app)
 	return app.mount(element)
@@ -169,6 +171,8 @@ interface HybridlyOptions {
 	serializer?: RouterContextOptions['serializer']
 	/** Clean up the host element's payload dataset after loading. */
 	cleanup?: boolean
+	/** Whether to set up the devtools plugin. */
+	devtools?: boolean
 	/** Progressbar options. */
 	progress?: boolean | Partial<ProgressOptions>
 	/** Sets up the hybridly router. */

@@ -126,7 +126,7 @@ export function setupDevtools(app: App) {
 	})
 }
 
-export const plugin = <Plugin>{
+export const devtools = <Plugin>{
 	install(app) {
 		if (process.env.NODE_ENV === 'development' || __VUE_PROD_DEVTOOLS__) {
 			setupDevtools(app)
