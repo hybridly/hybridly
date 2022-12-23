@@ -1,6 +1,7 @@
 import type { RequestData } from '@hybridly/utils'
 import type { AxiosProgressEvent, AxiosResponse } from 'axios'
 import type { Hooks } from '../plugins/hooks'
+import type { RouteName, RouteParameters } from '../route/types'
 import type { UrlResolvable, UrlTransformable } from '../url'
 
 export type ConditionalNavigationOption =
@@ -108,6 +109,8 @@ export interface Router {
 	navigate: (options: HybridRequestOptions) => Promise<NavigationResponse>
 	/** Reloads the current page. */
 	reload: (options?: HybridRequestOptions) => Promise<NavigationResponse>
+	/** Makes a request to given named route. The HTTP verb is determined automatically but can be overriden. */
+	to: <T extends RouteName>(name: T, parameters?: RouteParameters<T>, options?: Omit<HybridRequestOptions, 'url'>) => Promise<NavigationResponse>
 	/** Makes a GET request to the given URL. */
 	get: (url: UrlResolvable, options?: Omit<HybridRequestOptions, 'method' | 'url'>) => Promise<NavigationResponse>
 	/** Makes a POST request to the given URL. */

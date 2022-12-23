@@ -1,9 +1,9 @@
-import type { RouteCollection } from './routes'
+import type { RoutingConfiguration } from '@hybridly/core'
 
 declare global {
 	interface Window {
 		hybridly: {
-			routes?: RouteCollection
+			routing?: RoutingConfiguration
 		}
 	}
 }

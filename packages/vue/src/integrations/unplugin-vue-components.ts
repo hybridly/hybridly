@@ -14,11 +14,11 @@ export const HybridlyImports = {
 		'usePaginator',
 		'defineLayout',
 		'defineLayoutProperties',
-		'route',
 	],
 	'hybridly': [
 		'registerHook',
 		'router',
+		'route',
 		'can',
 	],
 }

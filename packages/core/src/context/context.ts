@@ -3,6 +3,7 @@ import axios from 'axios'
 import { createSerializer } from '../router/history'
 import { makeUrl } from '../url'
 import type { HybridPayload } from '../router'
+import { updateRoutingConfiguration } from '../route'
 import type { RouterContext, InternalRouterContext, RouterContextOptions, SetContextOptions } from './types'
 
 const state = {
@@ -31,10 +32,14 @@ export async function initializeContext(options: RouterContextOptions): Promise<
 		...options.payload,
 		serializer: createSerializer(options),
 		url: makeUrl(options.payload.url).toString(),
-		adapter: options.adapter,
+		adapter: {
+			...options.adapter,
+			updateRoutingConfiguration,
+		},
 		scrollRegions: [],
 		plugins: options.plugins ?? [],
 		axios: options.axios ?? axios.create(),
+		routing: options.routing,
 		hooks: {},
 		state: {},
 	}

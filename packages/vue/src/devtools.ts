@@ -54,8 +54,8 @@ export function setupDevtools(app: App) {
 
 			payload.instanceData.state.push({
 				type: hybridlyStateType,
-				key: 'router',
-				value: state.routes.value,
+				key: 'routing',
+				value: state.context.value?.routing,
 			})
 		})
 

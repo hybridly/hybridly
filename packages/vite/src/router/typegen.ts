@@ -1,24 +1,24 @@
 import path from 'node:path'
 import fs from 'node:fs'
 import { debounce } from 'throttle-debounce'
-import type { RouteCollection } from '@hybridly/vue'
+import type { RoutingConfiguration } from '@hybridly/core'
 import type { RouterOptions } from '../types'
 import { debug } from '../utils'
-import { fetchRoutesFromArtisan } from './routes'
+import { fetchRoutingFromArtisan } from './routes'
 
 export const write = debounce(1000, writeDefinitions, { atBegin: true })
 
-async function writeDefinitions(options: RouterOptions, collection?: RouteCollection) {
-	collection ??= await fetchRoutesFromArtisan(options)
+async function writeDefinitions(options: RouterOptions, routing?: RoutingConfiguration) {
+	routing ??= await fetchRoutingFromArtisan(options)
 
-	if (options.dts === false || !collection) {
+	if (options.dts === false || !routing) {
 		return
 	}
 
-	debug.router('Writing types for route collection:', collection)
+	debug.router('Writing types for routing:', routing)
 
 	const target = path.resolve(options.dts ?? 'resources/types/routes.d.ts')
-	const routes = Object.fromEntries(Object.entries(collection!.routes).map(([key, route]) => {
+	const routes = Object.fromEntries(Object.entries(routing!.routes).map(([key, route]) => {
 		const bindings = route.bindings
 			? Object.fromEntries(Object.entries(route.bindings).map(([key]) => [key, '__key_placeholder__']))
 			: undefined
@@ -32,7 +32,7 @@ async function writeDefinitions(options: RouterOptions, collection?: RouteCollec
 	}))
 
 	const definitions = generateDefinitions()
-		.replace('__URL__', collection?.url ?? '')
+		.replace('__URL__', routing?.url ?? '')
 		.replace('__ROUTES__', JSON.stringify(routes).replaceAll('"__key_placeholder__"', 'any'))
 
 	fs.mkdirSync(path.dirname(target), { recursive: true })
@@ -45,7 +45,7 @@ function generateDefinitions() {
 // Modifications will be discarded
 // It is recommended to add it in your .gitignore
 
-declare module 'hybridly/vue' {
+declare module 'hybridly' {
 	export interface GlobalRouteCollection {
 		url: '__URL__'
 		routes: __ROUTES__

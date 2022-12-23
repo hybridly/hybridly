@@ -1,24 +1,21 @@
-import type { Method } from '@hybridly/core'
+import type { Method } from '../router/types'
 
-export interface RouterConfiguration {
+export interface RoutingConfiguration {
 	url: string
 	port?: number
 	defaults: Record<string, any>
+	routes: Record<string, RouteDefinition>
 }
 
 export interface RouteDefinition {
 	uri: string
-	methods: Method[]
+	method: Method[]
 	bindings: Record<string, string>
 	domain?: string
 	wheres?: Record<string, string>
 }
 
-export interface RouteCollection extends RouterConfiguration {
-	routes: Record<string, RouteDefinition>
-}
-
-export interface GlobalRouteCollection extends RouteCollection {}
+export interface GlobalRouteCollection extends RoutingConfiguration {}
 
 export type RouteName = keyof GlobalRouteCollection['routes']
 export type RouteParameters<T extends RouteName> = Record<keyof GlobalRouteCollection['routes'][T]['bindings'], any> & Record<string, any>

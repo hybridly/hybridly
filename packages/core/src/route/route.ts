@@ -1,5 +1,5 @@
 import { parse } from 'qs'
-import { state } from '../stores/state'
+import { getInternalRouterContext } from '../context'
 import type { RouteDefinition, RouteName } from './types'
 
 /**
@@ -16,12 +16,13 @@ export class Route {
 	}
 
 	static getDefinition(name: RouteName): RouteDefinition {
-		if (!state.routes.value) {
+		const context = getInternalRouterContext()
+
+		if (!context.routing) {
 			throw new Error('Routing is not initialized. Make sure the Vite plugin is enabled and that `virtual:hybridly/router` is imported and that `php artisan route:list` returns no error.')
 		}
 
-		const routes = state.routes.value as any
-		const route = routes?.routes?.[name]
+		const route = context.routing?.routes?.[name]
 
 		if (!route) {
 			throw new Error(`Route ${name.toString()} does not exist.`)
@@ -37,13 +38,15 @@ export class Route {
 	 * https://{team}.ziggy.dev/user/{user}
 	 */
 	get template(): string {
+		const context = getInternalRouterContext()
+
 		// If  we're building just a path there's no origin, otherwise: if this route has a
 		// domain configured we construct the origin with that, if not we use the app URL
 		const origin = !this.absolute
 			? ''
 			: this.definition.domain
-				? `${state.routes.value?.url.match(/^\w+:\/\//)?.[0]}${this.definition.domain}${state.routes.value?.port ? `:${state.routes.value?.port}` : ''}`
-				: state.routes.value?.url
+				? `${context.routing?.url.match(/^\w+:\/\//)?.[0]}${this.definition.domain}${context.routing?.port ? `:${context.routing?.port}` : ''}`
+				: context.routing?.url
 
 		return `${origin}/${this.definition.uri}`.replace(/\/+$/, '')
 	}
@@ -65,7 +68,7 @@ export class Route {
 	 * Gets whether this route's template matches the given URL.
 	 */
 	matchesUrl(url: string): object | false {
-		if (!this.definition.methods.includes('GET')) {
+		if (!this.definition.method.includes('GET')) {
 			return false
 		}
 

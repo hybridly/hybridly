@@ -1,6 +1,7 @@
 import type { Axios } from 'axios'
 import type { Hooks } from '../plugins/hooks'
 import type { Plugin } from '../plugins/plugin'
+import type { RoutingConfiguration } from '../route/types'
 import type { PendingNavigation, ResolveComponent, SwapDialog, SwapView, View, HybridPayload } from '../router'
 
 /** Options for creating a router context. */
@@ -15,6 +16,8 @@ export interface RouterContextOptions {
 	plugins?: Plugin[]
 	/** The Axios instance. */
 	axios?: Axios
+	/** Initial routing configuration. */
+	routing?: RoutingConfiguration
 }
 
 /** Router context. */
@@ -28,7 +31,7 @@ export interface InternalRouterContext {
 	/** The current local asset version. */
 	version: string
 	/** The current adapter's functions. */
-	adapter: Adapter
+	adapter: ResolvedAdapter
 	/** Scroll positions of the current page's DOM elements. */
 	scrollRegions: ScrollRegion[]
 	/** Arbitrary state. */
@@ -43,6 +46,8 @@ export interface InternalRouterContext {
 	hooks: Partial<Record<keyof Hooks, Array<Function>>>
 	/** The Axios instance. */
 	axios: Axios
+	/** Routing configuration. */
+	routing?: RoutingConfiguration
 }
 
 /** Router context. */
@@ -58,6 +63,10 @@ export interface Adapter {
 	swapDialog: SwapDialog
 	/** Called when the context is updated. */
 	update?: (context: InternalRouterContext) => void
+}
+
+export interface ResolvedAdapter extends Adapter{
+	updateRoutingConfiguration: (routing?: RoutingConfiguration) => void
 }
 
 export interface ScrollRegion {

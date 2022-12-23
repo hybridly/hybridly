@@ -1,14 +1,15 @@
 import { stringify } from 'qs'
-import { state } from '../stores/state'
+import { getInternalRouterContext } from '../context'
 import { Route } from './route'
-import type { RouteName, RouteParameters } from './types'
+import type { RouteName, RouteParameters, RoutingConfiguration } from './types'
 
 /**
  * A collection of Laravel routes. This class constitutes Ziggy's main API.
  */
 export class Router<T extends RouteName> extends String {
-	private route: Route
+	public route: Route
 	private parameters!: RouteParameters<T>
+	private routing: RoutingConfiguration
 
 	constructor(
 		name: T,
@@ -16,7 +17,9 @@ export class Router<T extends RouteName> extends String {
 		absolute: boolean = true,
 	) {
 		super()
+		const context = getInternalRouterContext()
 		this.route = new Route(name, absolute)
+		this.routing = context.routing!
 		this.setParameters(parameters)
 	}
 
@@ -74,7 +77,7 @@ export class Router<T extends RouteName> extends String {
 		this.parameters = ['string', 'number'].includes(typeof this.parameters) ? [this.parameters] : this.parameters
 
 		// Separate segments with and without defaults, and fill in the default values
-		const segments = this.route.parameterSegments.filter(({ name }) => !state.routes.value?.defaults[name])
+		const segments = this.route.parameterSegments.filter(({ name }) => !this.routing.defaults[name])
 
 		if (Array.isArray(this.parameters)) {
 			// If the parameters are an array they have to be in order, so we can transform them into
@@ -107,8 +110,8 @@ export class Router<T extends RouteName> extends String {
 	 */
 	private getDefaults() {
 		return this.route.parameterSegments
-			.filter(({ name }) => state.routes.value?.defaults[name])
-			.reduce((result, { name }) => ({ ...result, [name]: state.routes.value?.defaults[name] }), {})
+			.filter(({ name }) => this.routing.defaults[name])
+			.reduce((result, { name }) => ({ ...result, [name]: this.routing.defaults[name] }), {})
 	}
 
 	/**

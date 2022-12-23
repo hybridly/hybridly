@@ -9,6 +9,8 @@ import { resetScrollPositions, restoreScrollPositions, saveScrollPositions } fro
 import type { UrlResolvable } from '../url'
 import { fillHash, makeUrl, normalizeUrl, sameUrls } from '../url'
 import { runHooks } from '../plugins'
+import { Router as RouteRouter } from '../route/router'
+import { Route as RouteRoute } from '../route/route'
 import { setHistoryState, isBackForwardNavigation, handleBackForwardNavigation, registerEventListeners, getHistoryState, getKeyFromHistory, remember } from './history'
 import type { ConditionalNavigationOption, Errors, ComponentNavigationOptions, NavigationOptions, Router, HybridRequestOptions, HybridPayload, NavigationResponse, Method } from './types'
 
@@ -34,6 +36,11 @@ export const router: Router = {
 	delete: async(url, options = {}) => await performHybridNavigation({ preserveState: true, ...options, url, method: 'DELETE' }),
 	local: async(url, options) => await performLocalNavigation(url, options),
 	external: (url, data = {}) => navigateToExternalUrl(url, data),
+	to: async(name, parameters, options) => {
+		const url = new RouteRouter(name, parameters).toString()
+		const method = RouteRoute.getDefinition(name).method.at(0)
+		return await performHybridNavigation({ url, ...options, method })
+	},
 	history: {
 		get: (key) => getKeyFromHistory(key),
 		remember: (key, value) => remember(key, value),

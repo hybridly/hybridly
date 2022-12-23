@@ -1,6 +1,6 @@
 import type { App, DefineComponent, Plugin as VuePlugin } from 'vue'
 import { createApp, h } from 'vue'
-import type { HybridPayload, ResolveComponent, RouterContext, RouterContextOptions, Plugin } from '@hybridly/core'
+import type { HybridPayload, ResolveComponent, RouterContext, RouterContextOptions, Plugin, RoutingConfiguration } from '@hybridly/core'
 import { createRouter } from '@hybridly/core'
 import { showPageComponentErrorModal, debug } from '@hybridly/utils'
 import type { ProgressOptions } from '@hybridly/progress-plugin'
@@ -45,6 +45,16 @@ export async function initializeHybridly(options: HybridlyOptions) {
 		payload,
 	}))
 
+	// Using `window` is the only way I found to be able to get the route collection,
+	// since this initialization is ran after the Vite plugin is done executing.
+	if (typeof window !== 'undefined') {
+		window.addEventListener<any>('hybridly:routing', (event: CustomEvent<RoutingConfiguration>) => {
+			state.context.value?.adapter.updateRoutingConfiguration(event.detail)
+		})
+
+		window.dispatchEvent(new CustomEvent('hybridly:routing', { detail: window?.hybridly?.routing }))
+	}
+
 	const render = () => h(wrapper as any)
 
 	if (options.setup) {
@@ -52,7 +62,7 @@ export async function initializeHybridly(options: HybridlyOptions) {
 			element,
 			wrapper,
 			render,
-			hybridly: plugin,
+			hybridly: devtools,
 			props: { context: state.context.value! },
 		})
 	}
@@ -96,17 +106,6 @@ function prepare(options: HybridlyOptions) {
 		}
 
 		throw new Error('Either `initializeHybridly#resolve` or `initializeHybridly#pages` should be defined.')
-	}
-
-	// Using `window` is the only way I found to be able to get the route collection,
-	// since this initialization is ran after the Vite plugin is done executing.
-	if (typeof window !== 'undefined') {
-		state.setRoutes(window?.hybridly?.routes)
-		window.addEventListener<any>('hybridly:routes', (event: CustomEvent<RouteCollection>) => {
-			if (event.detail) {
-				state.setRoutes(event.detail)
-			}
-		})
 	}
 
 	if (options.progress !== false) {

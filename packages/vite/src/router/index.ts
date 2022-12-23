@@ -1,11 +1,11 @@
-import type { Plugin } from 'vite'
-import type { RouteCollection } from '@hybridly/vue'
+import type { Plugin, ViteDevServer } from 'vite'
+import type { RoutingConfiguration } from '@hybridly/core'
 import type { RouterOptions } from '../types'
-import { RESOLVED_ROUTER_VIRTUAL_MODULE_ID, ROUTER_HMR_UPDATE_ROUTE, ROUTER_PLUGIN_NAME, ROUTER_VIRTUAL_MODULE_ID } from '../constants'
+import { RESOLVED_ROUTING_VIRTUAL_MODULE_ID, ROUTING_HMR_QUERY_UPDATE_ROUTING, ROUTING_HMR_UPDATE_ROUTING, ROUTING_PLUGIN_NAME, ROUTING_VIRTUAL_MODULE_ID } from '../constants'
 import { debug } from '../utils'
 import { getClientCode } from './client'
 import { write } from './typegen'
-import { fetchRoutesFromArtisan } from './routes'
+import { fetchRoutingFromArtisan } from './routes'
 
 /**
  * A basic Vite plugin that adds a <template layout="name"> syntax to Vite SFCs.
@@ -21,44 +21,52 @@ export default (options: RouterOptions = {}): Plugin => {
 		...options,
 	}
 
-	let previousRoutes: RouteCollection
+	let routingBeforeUpdate: RoutingConfiguration
+	async function sendRoutingUpdate(server: ViteDevServer, force: boolean = false) {
+		const routing = await fetchRoutingFromArtisan(resolved) ?? routingBeforeUpdate
+
+		// When routes changes, we want to update the routes by triggering
+		// a custom HMR event with the new updated route collection.
+		if (force || JSON.stringify(routing) !== JSON.stringify(routingBeforeUpdate)) {
+			debug.router('Updating routes via HMR:', routing)
+
+			server.ws.send({
+				type: 'custom',
+				event: ROUTING_HMR_UPDATE_ROUTING,
+				data: routing,
+			})
+
+			write(resolved)
+			routingBeforeUpdate = routing
+		}
+	}
 
 	return {
-		name: ROUTER_PLUGIN_NAME,
+		name: ROUTING_PLUGIN_NAME,
 		configureServer(server) {
 			write(resolved)
+
+			server.ws.on(ROUTING_HMR_QUERY_UPDATE_ROUTING, () => {
+				sendRoutingUpdate(server, true)
+			})
+
 			server.watcher.on('change', async(path) => {
 				if (!resolved.watch.some((regex) => regex.test(path))) {
 					return
 				}
 
-				const routes = await fetchRoutesFromArtisan(resolved)
-
-				// When routes changes, we want to update the routes by triggering
-				// a custom HMR event with the new updated route collection.
-				if (routes && JSON.stringify(routes) !== JSON.stringify(previousRoutes)) {
-					debug.router('Updating routes via HMR:', routes)
-
-					server.ws.send({
-						type: 'custom',
-						event: ROUTER_HMR_UPDATE_ROUTE,
-						data: routes,
-					})
-
-					write(resolved)
-					previousRoutes = routes
-				}
+				sendRoutingUpdate(server)
 			})
 		},
 		resolveId(id) {
-			if (id === ROUTER_VIRTUAL_MODULE_ID) {
-				return RESOLVED_ROUTER_VIRTUAL_MODULE_ID
+			if (id === ROUTING_VIRTUAL_MODULE_ID) {
+				return RESOLVED_ROUTING_VIRTUAL_MODULE_ID
 			}
 		},
 		async load(id) {
-			if (id === RESOLVED_ROUTER_VIRTUAL_MODULE_ID) {
-				const routes = await fetchRoutesFromArtisan(resolved)
-				return getClientCode(routes)
+			if (id === RESOLVED_ROUTING_VIRTUAL_MODULE_ID) {
+				const routing = await fetchRoutingFromArtisan(resolved)
+				return getClientCode(routing)
 			}
 		},
 		async handleHotUpdate(ctx) {
