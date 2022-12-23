@@ -37,7 +37,7 @@ jobs:
       - name: Install pnpm
         uses: pnpm/action-setup@v2.0.1
         with:
-          version: 6.32.0
+          version: 7.19.0
 
       - name: Setup PHP ${{ matrix.php }}
         uses: shivammathur/setup-php@v2
@@ -67,6 +67,8 @@ jobs:
         run: pnpm install
 
       - name: CI scripts
+        env:
+          PHP_CS_FIXER_IGNORE_ENV: true
         run: |
           pnpm ci
           composer ci
