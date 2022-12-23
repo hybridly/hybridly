@@ -4,7 +4,7 @@ Most `router` functions accept an _options_ argument for configuring the request
 
 ## `url`
 
-- Type: `UrlResolvable`
+- Type: `UrlResolvable | () => UrlResolvable`
 
 The URL to navigate to. Can be a `string`, an [`URL`](https://developer.mozilla.org/en-US/docs/Web/API/URL) object or a [`Location`](https://developer.mozilla.org/en-US/docs/Web/API/Location) object.
 
