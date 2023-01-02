@@ -1,18 +1,11 @@
 /* eslint-disable vue/order-in-components */
 import { debug } from '@hybridly/utils'
-import { toRaw, ref, watch, defineComponent, h } from 'vue'
+import { toRaw, defineComponent, h } from 'vue'
 import { state } from '../stores/state'
 
 export const wrapper = defineComponent({
 	name: 'Hybridly',
 	setup() {
-		const properties = ref<any>()
-
-		watch(() => state.context.value?.view?.properties, (value) => {
-			debug.adapter('vue:properties', 'Updating properties.', toRaw(value))
-			properties.value = value
-		}, { immediate: true })
-
 		function renderLayout(child: any) {
 			debug.adapter('vue:render:layout', 'Rendering layout.')
 
@@ -29,7 +22,7 @@ export const wrapper = defineComponent({
 
 						return h(layout, {
 							...(state.view.value?.layoutProperties ?? {}),
-							...properties.value,
+							...state.properties.value,
 						}, () => child)
 					})
 			}
@@ -37,7 +30,7 @@ export const wrapper = defineComponent({
 			return [
 				h(state.view.value?.layout, {
 					...(state.view.value?.layoutProperties ?? {}),
-					...properties.value,
+					...state.properties.value,
 				}, () => child),
 				renderDialog(),
 			]
@@ -48,7 +41,7 @@ export const wrapper = defineComponent({
 			state.view.value!.inheritAttrs = !!state.view.value!.inheritAttrs
 
 			return h(state.view.value!, {
-				...properties.value,
+				...state.properties.value,
 				key: state.viewKey.value,
 			})
 		}

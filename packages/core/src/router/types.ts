@@ -178,6 +178,8 @@ export type Properties = Record<string | number, Property>
 export interface SwapOptions<T> {
 	/** The new component. */
 	component: T
+	/** The new properties. */
+	properties?: any
 	/** Whether to preserve the state of the component. */
 	preserveState?: boolean
 }

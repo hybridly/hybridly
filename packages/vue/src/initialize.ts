@@ -33,6 +33,7 @@ export async function initializeHybridly(options: HybridlyOptions) {
 			swapDialog: async() => {},
 			swapView: async(options) => {
 				state.setView(options.component)
+				state.setProperties(options.properties)
 
 				if (!options.preserveState) {
 					state.setViewKey(Date.now())

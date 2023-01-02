@@ -9,6 +9,7 @@ type MaybeRef<T> = Ref<T> | T
 export const state = {
 	context: ref<RouterContext>(),
 	view: shallowRef<ComponentOptions>(),
+	properties: ref<any>(),
 	viewLayout: shallowRef<Layout>(),
 	viewLayoutProperties: ref<any>(),
 	viewKey: ref<number>(),
@@ -18,6 +19,11 @@ export const state = {
 	setView(view: MaybeRef<ComponentOptions>) {
 		debug.adapter('vue:state:view', 'Setting view:', view)
 		state.view.value = view
+	},
+
+	setProperties(properties: any) {
+		debug.adapter('vue:state:view', 'Setting properties:', properties)
+		state.properties.value = properties
 	},
 
 	setViewLayout(layout: Layout | Layout[]) {

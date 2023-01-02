@@ -328,14 +328,11 @@ export async function navigate(options: NavigationOptions) {
 
 	// We merge the new request into the current context. That will replace
 	// view, dialog, url and version, so the context is in sync with the
-	// navigation that took place. We do not propagate the context
-	// changes so adapters don't update props before the view.
-	// We also reset the state so the state from one page
-	// is not merged with the state from another one.
+	// navigation that took place.
 	setContext({
 		...options.payload,
 		state: {},
-	}, { propagate: false })
+	})
 
 	// History state must be updated to preserve the expected, native browser behavior.
 	// However, in some cases, we just want to swap the views without making an
@@ -351,6 +348,7 @@ export async function navigate(options: NavigationOptions) {
 	debug.router(`Component [${context.view.name}] resolved to:`, viewComponent)
 	await context.adapter.swapView({
 		component: viewComponent,
+		properties: options.payload?.view.properties,
 		preserveState: shouldPreserveState,
 	})
 
@@ -360,13 +358,10 @@ export async function navigate(options: NavigationOptions) {
 		debug.router(`Dialog [${context.view.name}] resolved to:`, dialogComponent)
 		await context.adapter.swapDialog({
 			component: dialogComponent,
+			properties: options.payload?.dialog?.properties,
 			preserveState: shouldPreserveState,
 		})
 	}
-
-	// Triggers a context propagation, needed after the views were swapped,
-	// so their properties can properly be updated accordingly.
-	setContext()
 
 	if (!shouldPreserveScroll) {
 		resetScrollPositions()
