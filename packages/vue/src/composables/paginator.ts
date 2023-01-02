@@ -8,8 +8,8 @@ declare global {
 	 */
 	interface Paginator<T = any> {
 		data: T[]
-		meta?: PaginatorMeta
-		links?: PaginatorLink[]
+		meta: PaginatorMeta
+		links: PaginatorLink[]
 	}
 
 	/**
