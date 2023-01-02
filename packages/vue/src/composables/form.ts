@@ -99,7 +99,6 @@ export function useForm<T extends Fields = Fields>(options: FormOptions<T>) {
 					recentlySuccessful.value = false
 					clearTimeout(timeoutIds.recentlySuccessful!)
 					clearTimeout(timeoutIds.recentlyFailed!)
-					clearErrors()
 					return options.hooks?.before?.(navigation, context)
 				},
 				start: (context) => {
@@ -118,6 +117,7 @@ export function useForm<T extends Fields = Fields>(options: FormOptions<T>) {
 					return options.hooks?.error?.(incoming, context)
 				},
 				success: (payload, context) => {
+					clearErrors()
 					if (options?.reset !== false) {
 						reset()
 					}
