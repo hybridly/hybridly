@@ -5,6 +5,7 @@
 export const HybridlyImports = {
 	'hybridly/vue': [
 		'useProperty',
+		'useTypedProperty',
 		'useProperties',
 		'useRouter',
 		'useBackForward',
