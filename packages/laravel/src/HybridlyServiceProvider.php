@@ -8,12 +8,12 @@ use Hybridly\Commands\RoutesCommand;
 use Hybridly\Http\Controller;
 use Hybridly\PropertiesResolver\PropertiesResolver;
 use Hybridly\PropertiesResolver\RequestPropertiesResolver;
+use Hybridly\Testing\TestFileViewFinder;
 use Hybridly\Testing\TestResponseMacros;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Router;
 use Illuminate\Testing\TestResponse;
 use Illuminate\View\Compilers\BladeCompiler;
-use Illuminate\View\FileViewFinder;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 
@@ -36,7 +36,7 @@ class HybridlyServiceProvider extends PackageServiceProvider
         $this->registerMacros();
         $this->registerTestingMacros();
 
-        $this->app->bind('hybridly.testing.view_finder', config('hybridly.testing.view_finder') ?? fn ($app) => new FileViewFinder(
+        $this->app->bind('hybridly.testing.view_finder', config('hybridly.testing.view_finder') ?? fn ($app) => new TestFileViewFinder(
             $app['files'],
             $app['config']->get('hybridly.testing.page_paths'),
             $app['config']->get('hybridly.testing.page_extensions'),
