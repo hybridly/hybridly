@@ -84,7 +84,13 @@ export function appendCallbackToHooks<T extends keyof Hooks>(hook: T, fn: Hooks[
 
 	hooks[hook] = [...(hooks[hook] ?? []), fn] as Hooks[T][]
 
-	return () => hooks[hook]?.splice(hooks[hook]!.indexOf(fn), 1)
+	return () => {
+		const index = hooks[hook]!.indexOf(fn)
+
+		if (index !== -1) {
+			hooks[hook]?.splice(index, 1)
+		}
+	}
 }
 
 /**

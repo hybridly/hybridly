@@ -2,6 +2,8 @@
 
 This helper function may be used to add a listener on a [hook](../../guide/hooks.md).
 
+When called inside a Vue component, the listener will unregister itself automatically when the component is unmounted.
+
 ## Usage
 
 ```ts
