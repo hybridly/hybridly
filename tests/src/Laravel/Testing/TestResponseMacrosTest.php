@@ -65,7 +65,9 @@ test('the `assertHybridProperties` method asserts the properties using the given
         'uwu.owo' => 'hewwo', // asserts it has the given value
         'uwu.ewe' => 'world', // asserts it has the given value
         'baz' => 3, // asserts it has the given count
-        'uwu' => fn (Assertable $uwu) => $uwu->hasAll(['owo', 'ewe']), // asserts using callback
+        'uwu' => fn (Assertable $assert) => $assert->hasAll(['owo', 'ewe']), // asserts using callback and typehinted parameter
+        'foo' => fn ($foo) => expect($foo)->toBe('bar'), // asserts using callback
+        'uwu.owo' => fn ($owo) => expect($owo)->toBe('hewwo'), // asserts using callback and dot notation
         'zoo' => null, // assert that value is null
     ]);
 });

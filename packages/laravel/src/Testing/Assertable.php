@@ -102,7 +102,16 @@ class Assertable extends AssertableJson
 
             // ['property_name' => fn () => ...] -> assert using a callback
             if (\is_string($key) && \is_callable($value)) {
-                $this->has($scope . '.' . $key, $value);
+                $firstParameterTypeHint = (new \ReflectionFunction($value))
+                    ->getParameters()[0]
+                    ->getType()
+                    ?->getName();
+
+                if ($firstParameterTypeHint === self::class) {
+                    $this->has($scope . '.' . $key, $value);
+                } else {
+                    $value(data_get($this->properties, $key));
+                }
 
                 continue;
             }

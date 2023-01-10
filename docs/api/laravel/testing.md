@@ -13,9 +13,10 @@ This method uses an array to perform assertions. Depending on the syntax, it may
 ```php
 $response->assertHybridProperties([
     'first_name', // asserts `first_name` exists
+    'first_name' => fn ($name) => expect($name)->toBe('Jon'), // uses a callback to get the value and perform assertions on it
     'first_name' => 'Jon', // asserts `foo` exists and has the value `bar`
     'roles' => ['administrator', 'editor'], // asserts `roles` exists and contains the given properties
-    'roles' => fn (Assertable $roles) => $roles->hasAll(['administrator', 'editor']), // same thing, using a callback
+    'roles' => fn (Assertable $roles) => $roles->hasAll(['administrator', 'editor']), // same thing, using a callback and a typehinted parameter
     'roles' => 2, // asserts `roles` has 2 values
     'foo.bar' => 'value', // works for nested properties using dot notation as well
 ]);
