@@ -57,6 +57,7 @@ test('the `assertHybridProperties` method asserts the properties using the given
             'owo' => 'hewwo',
             'ewe' => 'world',
         ],
+        'zoo' => null,
     ])->assertHybridProperties([
         'foo', // asserts it exists
         'foo' => 'bar', // asserts it has the given value
@@ -65,6 +66,7 @@ test('the `assertHybridProperties` method asserts the properties using the given
         'uwu.ewe' => 'world', // asserts it has the given value
         'baz' => 3, // asserts it has the given count
         'uwu' => fn (Assertable $uwu) => $uwu->hasAll(['owo', 'ewe']), // asserts using callback
+        'zoo' => null, // assert that value is null
     ]);
 });
 

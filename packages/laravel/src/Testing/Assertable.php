@@ -114,6 +114,13 @@ class Assertable extends AssertableJson
                 continue;
             }
 
+            // ['property_name' => null] -> assert that it's a null value
+            if (\is_string($key) && \is_null($value)) {
+                $this->where($scope . '.' . $key, null);
+
+                continue;
+            }
+
             throw new \LogicException("Unknown syntax [{$key} => {$value}]");
         }
 
