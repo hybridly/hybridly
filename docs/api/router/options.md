@@ -62,13 +62,11 @@ Read the documentation on [scroll management](../../guide/scroll-management.md) 
 
 Defines whether to replace the current history state instead of adding an entry. This affects the browser's "back" and "forward" behavior.
 
-## `hooks`
+## **`hooks`**
 
 - Type: `Record<HookName, Function>`
 
-Defines hooks for the lifecycle of the request.
-
-Read the documentation on [hooks](../../guide/hooks.md) for more information.
+Defines hooks for the [lifecycle of the request](../../guide/hooks.md#request-lifecycle-events). Read the documentation on [hooks](../../guide/hooks.md) for more information.
 
 ## `headers`
 

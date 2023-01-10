@@ -1,6 +1,6 @@
 import type { RequestData } from '@hybridly/utils'
 import type { AxiosProgressEvent, AxiosResponse } from 'axios'
-import type { Hooks } from '../plugins/hooks'
+import type { RequestHooks } from '../plugins/hooks'
 import type { RouteName, RouteParameters } from '../route/types'
 import type { UrlResolvable, UrlTransformable } from '../url'
 
@@ -78,7 +78,7 @@ export interface HybridRequestOptions extends Omit<NavigationOptions, 'payload'>
 	/** The bag in which to put potential errors. */
 	errorBag?: string
 	/** Hooks for this navigation. */
-	hooks?: Partial<Hooks>
+	hooks?: Partial<RequestHooks>
 	/** If `true`, force the usage of a `FormData` object. */
 	useFormData?: boolean
 	/**

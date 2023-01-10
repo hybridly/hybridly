@@ -45,3 +45,9 @@ export interface MyPluginOptions {
   // ...
 }
 ```
+
+## Plugin-specific hooks
+
+In addition to the [request lifecycle events](../guide/hooks.md#request-hooks), the following hooks can be registered in plugins. They may also be awaited if necessary.
+
+<<< ./packages/core/src/plugins/hooks.ts#hooks

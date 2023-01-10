@@ -300,6 +300,8 @@ export async function navigate(options: NavigationOptions) {
 	const context = getRouterContext()
 	debug.router('Making an internal navigation:', { context, options })
 
+	await runHooks('navigating', {}, options, context)
+
 	// If no request was given, we use the current context instead.
 	options.payload ??= payloadFromContext()
 
@@ -396,6 +398,8 @@ async function initializeRouter(): Promise<InternalRouterContext> {
 	}
 
 	registerEventListeners()
+
+	await runHooks('ready', {}, context)
 
 	return context
 }

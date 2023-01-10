@@ -4,14 +4,10 @@ import { getRouterContext } from '../context'
 import type { NavigationOptions, HybridRequestOptions, Errors, Progress, HybridPayload } from '../router'
 import type { MaybePromise } from '../types'
 
-export interface Hooks {
-	/**
-	 * Called when a back-forward navigation occurs.
-	 */
-	backForward: (state: any, context: InternalRouterContext) => MaybePromise<any>
-
-	/**
-	 * Called before anything when a navigation is going to happen.
+// #region requesthooks
+export interface RequestHooks {
+/* [!code focus:54] */	/**
+	 * Called before a navigation request is going to happen.
 	 */
 	before: (options: HybridRequestOptions, context: InternalRouterContext) => MaybePromise<any | boolean>
 
@@ -64,12 +60,37 @@ export interface Hooks {
 	 * Called after a request has been made, even if it didn't succeed.
 	 */
 	after: (context: InternalRouterContext) => MaybePromise<void>
+}
+// #endregion requesthooks
+
+// #region hooks
+export interface Hooks extends RequestHooks {
+/* [!code focus:24] */	/**
+	 * Called when Hybridly's context is initialized.
+	 */
+	initialized: (context: InternalRouterContext) => MaybePromise<void>
 
 	/**
-	 * Called when a navigation has been made and a page component has been navigated to.
+	 * Called after Hybridly's initial page load.
+	 */
+	ready: (context: InternalRouterContext) => MaybePromise<void>
+
+	/**
+	 * Called when a back-forward navigation occurs.
+	 */
+	backForward: (state: any, context: InternalRouterContext) => MaybePromise<any>
+
+	/**
+	 * Called when a component navigation is being made.
+	 */
+	navigating: (options: NavigationOptions, context: InternalRouterContext) => MaybePromise<void>
+
+	/**
+	 * Called when a component has been navigated to.
 	 */
 	navigated: (options: NavigationOptions, context: InternalRouterContext) => MaybePromise<void>
 }
+// #endregion hooks
 
 interface HookOptions {
 	/** Executes the hook only once. */

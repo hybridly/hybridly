@@ -1,12 +1,11 @@
 import { debug } from '@hybridly/utils'
-import type { InternalRouterContext } from '../context'
 import { getRouterContext } from '../context'
 import type { MaybePromise } from '../types'
 import type { Hooks } from './hooks'
 
 export interface Plugin extends Partial<Hooks> {
+	/** Identifier of the plugin. */
 	name: string
-	initialized?: (context: InternalRouterContext) => MaybePromise<void>
 }
 
 export function definePlugin(plugin: Plugin): Plugin {

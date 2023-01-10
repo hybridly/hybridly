@@ -4,6 +4,7 @@ import { createSerializer } from '../router/history'
 import { makeUrl } from '../url'
 import type { HybridPayload } from '../router'
 import { updateRoutingConfiguration } from '../route'
+import { runHooks } from '../plugins'
 import type { RouterContext, InternalRouterContext, RouterContextOptions, SetContextOptions } from './types'
 
 const state = {
@@ -44,10 +45,7 @@ export async function initializeContext(options: RouterContextOptions): Promise<
 		state: {},
 	}
 
-	for (const plugin of state.context.plugins) {
-		debug.plugin(plugin.name, 'Calling "initialized" hook.')
-		await plugin.initialized?.(state.context)
-	}
+	await runHooks('initialized', {}, state.context)
 
 	return getInternalRouterContext()
 }
