@@ -36,8 +36,3 @@ The easiest part done, you will need to install Hybridly by following the [insta
 The next step will be to find calls to `Inertia.get`, `useForm` and similar functions and replace them by their Hybridly equivalent.
 
 On the back-end, you may copy over the content of `HandleInertiaRequests` to `HandleHybridRequests` as you see fit.
-
-
-## Guide: moving PingCRM to Hybridly
-
-> TODO

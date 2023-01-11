@@ -51,3 +51,8 @@ The following recording is a small preview of the features of Blue Bird. Example
 <video controls class="mt-8 rounded-lg shadow-lg w-full">
    <source src="../assets/bluebird.webm" type="video/webm">
 </video>
+
+
+## Community projects
+
+[PingCRM](https://github.com/inertiajs/pingcrm), Inertia's demonstration project, has been migrated to Hybridly by [Amine Ilidrissi](https://twitter.com/realaminevg). You may check out the repository [here](https://github.com/hybridly/pingcrm).
