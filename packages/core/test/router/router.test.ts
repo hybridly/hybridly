@@ -5,7 +5,11 @@ import { fakeRouterContext, fakePayload, mockUrl } from '../utils'
 
 beforeEach(() => {
 	fakeRouterContext()
-	vi.stubGlobal('console', { warn: vi.fn() })
+	vi.stubGlobal('console', {
+		warn: vi.fn(),
+		error: vi.fn(),
+		log: vi.fn()
+	})
 })
 
 it('performs hybridly navigations', async() => {
