@@ -8,7 +8,7 @@ beforeEach(() => {
 	vi.stubGlobal('console', {
 		warn: vi.fn(),
 		error: vi.fn(),
-		log: vi.fn()
+		log: vi.fn(),
 	})
 })
 
