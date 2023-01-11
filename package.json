@@ -49,6 +49,9 @@
     "vue": "^3.2.45"
   },
   "pnpm": {
+    "overrides": {
+      "unbuild": "0.8.11"
+    },
     "peerDependencyRules": {
       "ignoreMissing": [
         "@algolia/client-search",
