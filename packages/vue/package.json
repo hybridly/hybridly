@@ -39,7 +39,7 @@
     "stub": "unbuild --stub"
   },
   "peerDependencies": {
-    "vue": "^3.2.37"
+    "vue": "^3.2.45"
   },
   "dependencies": {
     "@hybridly/core": "workspace:*",
@@ -52,7 +52,7 @@
     "qs": "^6.11.0"
   },
   "devDependencies": {
-    "@types/lodash": "^4.14.190",
+    "@types/lodash": "^4.14.191",
     "@types/lodash.clonedeep": "^4.5.7",
     "@types/lodash.isequal": "^4.5.6",
     "@types/nprogress": "^0.2.0",

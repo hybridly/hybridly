@@ -40,15 +40,15 @@
     "stub": "unbuild --stub"
   },
   "peerDependencies": {
-    "vue": "^3.2.33"
+    "vue": "^3.2.45"
   },
   "dependencies": {
     "@hybridly/core": "workspace:*",
     "throttle-debounce": "^5.0.0"
   },
   "devDependencies": {
-    "rollup": "^3.4.0",
-    "vite": "^3.2.4",
+    "rollup": "^3.9.1",
+    "vite": "^4.0.4",
     "vue": "^3.2.45"
   }
 }
