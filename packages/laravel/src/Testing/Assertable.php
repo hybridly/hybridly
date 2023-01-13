@@ -136,6 +136,13 @@ class Assertable extends AssertableJson
                 continue;
             }
 
+            // ['property_name' => true] -> assert that it's a bool value
+            if (\is_string($key) && \is_bool($value)) {
+                $this->where($scope . '.' . $key, $value);
+
+                continue;
+            }
+
             throw new \LogicException("Unknown syntax [{$key} => {$value}]");
         }
 
