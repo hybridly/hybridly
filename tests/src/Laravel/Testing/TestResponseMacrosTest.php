@@ -58,6 +58,7 @@ test('the `assertHybridProperties` method asserts the properties using the given
             'ewe' => 'world',
         ],
         'zoo' => null,
+        'shoo' => true,
     ])->assertHybridProperties([
         'foo', // asserts it exists
         'foo' => 'bar', // asserts it has the given value
@@ -69,6 +70,7 @@ test('the `assertHybridProperties` method asserts the properties using the given
         'foo' => fn ($foo) => expect($foo)->toBe('bar'), // asserts using callback
         'uwu.owo' => fn ($owo) => expect($owo)->toBe('hewwo'), // asserts using callback and dot notation
         'zoo' => null, // assert that value is null
+        'shoo' => true, // assert that value is true
     ]);
 });
 
