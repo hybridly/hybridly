@@ -53,6 +53,7 @@ test('the `assertHybridProperties` method asserts the properties using the given
     makeHybridMockRequest(properties: [
         'foo' => 'bar',
         'baz' => [1, 2, 3],
+        'five' => 5,
         'uwu' => [
             'owo' => 'hewwo',
             'ewe' => 'world',
@@ -65,6 +66,7 @@ test('the `assertHybridProperties` method asserts the properties using the given
         'uwu.owo' => 'hewwo', // asserts it has the given value
         'uwu.ewe' => 'world', // asserts it has the given value
         'baz' => 3, // asserts it has the given count
+        'five' => 5, // asserts it has the given value
         'uwu' => fn (Assertable $assert) => $assert->hasAll(['owo', 'ewe']), // asserts using callback and typehinted parameter
         'foo' => fn ($foo) => expect($foo)->toBe('bar'), // asserts using callback
         'uwu.owo' => fn ($owo) => expect($owo)->toBe('hewwo'), // asserts using callback and dot notation
