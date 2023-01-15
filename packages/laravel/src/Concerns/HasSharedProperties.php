@@ -4,9 +4,12 @@ namespace Hybridly\Concerns;
 
 use Hybridly\Support\Arr;
 use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Support\Traits\Conditionable;
 
 trait HasSharedProperties
 {
+    use Conditionable;
+
     protected array $sharedProperties = [];
 
     /**
@@ -20,30 +23,6 @@ trait HasSharedProperties
             $this->sharedProperties = array_merge($this->sharedProperties, $key->toArray());
         } else {
             Arr::set($this->sharedProperties, $key, value($value));
-        }
-
-        return $this;
-    }
-
-    /**
-     * Only apply the chain calls if the condition is true.
-     */
-    public function when(bool|\Closure $condition): static
-    {
-        if ($condition instanceof \Closure ? $condition($this) : $condition) {
-            return $this;
-        }
-
-        return new static();
-    }
-
-    /**
-     * Unless the condition is true, apply the chain calls.
-     */
-    public function unless(bool|\Closure $condition): static
-    {
-        if ($condition instanceof \Closure ? $condition($this) : $condition) {
-            return new static();
         }
 
         return $this;
