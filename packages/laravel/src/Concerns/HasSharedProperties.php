@@ -26,12 +26,24 @@ trait HasSharedProperties
     }
 
     /**
-     * Shares data to every response if the condition is true.
+     * Only apply the chain calls if the condition is true.
      */
-    public function shareWhen(bool|\Closure $condition, string|array|Arrayable $key, mixed $value = null): static
+    public function when(bool|\Closure $condition): static
     {
         if ($condition instanceof \Closure ? $condition($this) : $condition) {
-            $this->share($key, $value);
+            return $this;
+        }
+
+        return new static();
+    }
+
+    /**
+     * Unless the condition is true, apply the chain calls.
+     */
+    public function unless(bool|\Closure $condition): static
+    {
+        if ($condition instanceof \Closure ? $condition($this) : $condition) {
+            return new static();
         }
 
         return $this;
