@@ -26,6 +26,18 @@ trait HasSharedProperties
     }
 
     /**
+     * Shares data to every response if the condition is true.
+     */
+    public function shareWhen(bool|\Closure $condition, string|array|Arrayable $key, mixed $value = null): static
+    {
+        if ($condition) {
+            $this->share($key, $value);
+        }
+
+        return $this;
+    }
+
+    /**
      * Gets data being shared to every response.
      */
     public function shared(string $key = null, mixed $default = null): mixed
