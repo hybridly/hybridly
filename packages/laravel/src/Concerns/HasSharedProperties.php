@@ -4,12 +4,9 @@ namespace Hybridly\Concerns;
 
 use Hybridly\Support\Arr;
 use Illuminate\Contracts\Support\Arrayable;
-use Illuminate\Support\Traits\Conditionable;
 
 trait HasSharedProperties
 {
-    use Conditionable;
-
     protected array $sharedProperties = [];
 
     /**

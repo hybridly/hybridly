@@ -6,6 +6,7 @@ use Hybridly\Support\Partial;
 use Hybridly\View\Factory;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
+use Illuminate\Support\Traits\Conditionable;
 use Illuminate\Support\Traits\Macroable;
 use Spatie\LaravelData\Contracts\DataObject;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -17,6 +18,7 @@ class Hybridly
     use Concerns\HasRootView;
     use Concerns\HasSharedProperties;
     use Concerns\HasVersion;
+    use Conditionable;
     use Macroable;
 
     public const HYBRIDLY_HEADER = 'x-hybrid';
