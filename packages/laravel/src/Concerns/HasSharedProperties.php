@@ -30,7 +30,7 @@ trait HasSharedProperties
      */
     public function shareWhen(bool|\Closure $condition, string|array|Arrayable $key, mixed $value = null): static
     {
-        if ($condition === true || ($condition instanceof \Closure && $condition() === true)) {
+        if ($condition instanceof \Closure ? $condition($this) : $condition) {
             $this->share($key, $value);
         }
 
