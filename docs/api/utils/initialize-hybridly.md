@@ -106,9 +106,16 @@ By default, the state is serialized using `JSON.parse(JSON.stringify(data))`, an
 ## `cleanup`
 
 - **Type**: `bool`
-- **Required**: true
+- **Required**: false
 
 Defines whether to remove the `data-payload` attribute from the generated element. Note that this is not a security measure, but an aesthetic (and quite useless) one.
+
+## `devtools`
+
+- **Type**: `bool`
+- **Required**: false
+
+Defines whether to register the Vue DevTools plugin when initializing Hybridly.
 
 ## `progress`
 
