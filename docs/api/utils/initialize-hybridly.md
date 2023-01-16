@@ -12,7 +12,6 @@ import { initializeHybridly } from 'hybridly/vue'
 import 'virtual:hybridly/router'
 
 initializeHybridly({
-	cleanup: !import.meta.env.DEV,
 	pages: import.meta.glob('@/views/pages/**/*.vue', { eager: true }),
 })
 ```
@@ -47,7 +46,6 @@ import { initializeHybridly } from 'hybridly/vue'
 import 'virtual:hybridly/router'
 
 initializeHybridly({
-	cleanup: !import.meta.env.DEV,
 	pages: import.meta.glob('@/views/pages/**/*.vue', { eager: true }),
 	enhanceVue: (vue) => vue // [!code focus:3]
 		.use(createHead())
@@ -76,7 +74,6 @@ import { initializeHybridly } from 'hybridly/vue'
 import 'virtual:hybridly/router'
 
 initializeHybridly({
-	cleanup: !import.meta.env.DEV,
 	pages: import.meta.glob('@/views/pages/**/*.vue', { eager: true }),
 	setup: ({ render, element, hybridly }) => createApp({ render }) // [!code focus:3]
 		.use(hybridly)
@@ -109,9 +106,16 @@ By default, the state is serialized using `JSON.parse(JSON.stringify(data))`, an
 ## `cleanup`
 
 - **Type**: `bool`
-- **Required**: true
+- **Required**: false
 
 Defines whether to remove the `data-payload` attribute from the generated element. Note that this is not a security measure, but an aesthetic (and quite useless) one.
+
+## `devtools`
+
+- **Type**: `bool`
+- **Required**: false
+
+Defines whether to register the Vue DevTools plugin when initializing Hybridly.
 
 ## `progress`
 
@@ -137,7 +141,6 @@ import axios from 'axios'
 import 'virtual:hybridly/router'
 
 initializeHybridly({
-	cleanup: !import.meta.env.DEV,
 	pages: import.meta.glob('@/views/pages/**/*.vue', { eager: true }),
 	axios: axios.create({ // [!code focus:5]
 		headers: {

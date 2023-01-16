@@ -14,7 +14,6 @@ A plugin can be registered through the `plugins` property of the `initializeHybr
 import { MyPlugin } from 'hybridly-plugin-something' // [!code focus]
 
 initializeHybridly({
-	cleanup: !import.meta.env.DEV,
 	pages: import.meta.glob('@/views/pages/**/*.vue', { eager: true }),
 	plugins: [ // [!code focus:3]
 		MyPlugin()
