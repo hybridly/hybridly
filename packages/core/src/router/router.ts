@@ -121,13 +121,16 @@ export async function performHybridNavigation(options: HybridRequestOptions): Pr
 			options.url = makeUrl(options.url, transformUrl)
 		}
 
+		const targetUrl = makeUrl(options.url ?? context.url)
+		const abortController = new AbortController()
+
 		// A navigation is being made, we need to add it to the context so it
 		// can be reused later on.
 		setContext({
 			pendingNavigation: {
 				id: navigationId,
-				url: makeUrl(options.url ?? context.url),
-				controller: new AbortController(),
+				url: targetUrl,
+				controller: abortController,
 				options,
 			},
 		})
@@ -136,11 +139,11 @@ export async function performHybridNavigation(options: HybridRequestOptions): Pr
 		debug.router('Making request with axios.')
 
 		const response = await context.axios.request({
-			url: context.pendingNavigation!.url.toString(),
+			url: targetUrl.toString(),
 			method: options.method,
 			data: options.method === 'GET' ? {} : options.data,
 			params: options.method === 'GET' ? options.data : {},
-			signal: context.pendingNavigation!.controller.signal,
+			signal: abortController.signal,
 			headers: {
 				...options.headers,
 				...when(options.only !== undefined || options.except !== undefined, {
@@ -171,7 +174,7 @@ export async function performHybridNavigation(options: HybridRequestOptions): Pr
 		if (isExternalResponse(response)) {
 			debug.router('The response is explicitely external.')
 			await performExternalNavigation({
-				url: fillHash(context.pendingNavigation!.url, response.headers[EXTERNAL_NAVIGATION_HEADER]!),
+				url: fillHash(targetUrl, response.headers[EXTERNAL_NAVIGATION_HEADER]!),
 				preserveScroll: options.preserveScroll === true,
 			})
 
@@ -203,7 +206,7 @@ export async function performHybridNavigation(options: HybridRequestOptions): Pr
 		await navigate({
 			payload: {
 				...payload,
-				url: fillHash(context.pendingNavigation!.url, payload.url),
+				url: fillHash(targetUrl, payload.url),
 			},
 			preserveScroll: options.preserveScroll === true,
 			preserveState: options.preserveState,
