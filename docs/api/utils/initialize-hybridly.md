@@ -12,7 +12,6 @@ import { initializeHybridly } from 'hybridly/vue'
 import 'virtual:hybridly/router'
 
 initializeHybridly({
-	cleanup: !import.meta.env.DEV,
 	pages: import.meta.glob('@/views/pages/**/*.vue', { eager: true }),
 })
 ```
@@ -47,7 +46,6 @@ import { initializeHybridly } from 'hybridly/vue'
 import 'virtual:hybridly/router'
 
 initializeHybridly({
-	cleanup: !import.meta.env.DEV,
 	pages: import.meta.glob('@/views/pages/**/*.vue', { eager: true }),
 	enhanceVue: (vue) => vue // [!code focus:3]
 		.use(createHead())
@@ -76,7 +74,6 @@ import { initializeHybridly } from 'hybridly/vue'
 import 'virtual:hybridly/router'
 
 initializeHybridly({
-	cleanup: !import.meta.env.DEV,
 	pages: import.meta.glob('@/views/pages/**/*.vue', { eager: true }),
 	setup: ({ render, element, hybridly }) => createApp({ render }) // [!code focus:3]
 		.use(hybridly)
@@ -137,7 +134,6 @@ import axios from 'axios'
 import 'virtual:hybridly/router'
 
 initializeHybridly({
-	cleanup: !import.meta.env.DEV,
 	pages: import.meta.glob('@/views/pages/**/*.vue', { eager: true }),
 	axios: axios.create({ // [!code focus:5]
 		headers: {
