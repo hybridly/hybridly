@@ -20,7 +20,6 @@ The following is a non-exhaustive comparison table between Inertia and Hybridly'
 | Dot notation support for partials               |            <span class="no">No</span>             |                          Yes                          |
 | Persistent layout                               |                        Yes                        |                          Yes                          |
 | Persistent layout properties                    |            <span class="no">No</span>             | [Yes](../api/composables/define-layout-properties.md) |
-| Vue DevTools integration                        |            <span class="no">No</span>             |                 [Yes](./devtools.md)                  |
 | Vite integration                                |            <span class="no">No</span>             |                          Yes                          |
 | `layout` support in templates                   |            <span class="no">No</span>             |             [Yes](../api/vite/layout.md)              |
 | Built-in `Paginator` types                      |            <span class="no">No</span>             |            [Yes](./responses.md#overview)             |
@@ -41,10 +40,13 @@ The following is a non-exhaustive comparison table between Inertia and Hybridly'
 | Framework-agnostic core                         |                        Yes                        |                          Yes                          |
 | Custom Axios instance support                   |            <span class="no">No</span>             |   [Yes](../api/utils/initialize-hybridly.md#axios)    |
 | Official React, Svelte, Rails, Django support   |                        Yes                        |              <span class="no">No</span>               |
+| Vue DevTools integration                        |            <span class="no">No</span>             |                 [Yes](./devtools.md)                  |
+| Visual Studio Code extension                    |                 Yes <sup>3</sup>                  |            [Yes](./visual-studio-code.md)             |
 
 <div class="opacity-80">
   1. <a href="https://github.com/vueuse/head"><code>@vueuse/head</code></a> is recommended instead <br />
-  2. Support through thrid-party package using <a href="https://github.com/lepikhinb/momentum-modal">Momentum</a>
+  2. Support through thrid-party package using <a href="https://github.com/lepikhinb/momentum-modal">Momentum</a> <br />
+  3. Unofficial extension by <a href="https://twitter.com/nicolashedger">Nicolas Hedger</a>
 </div>
 
 <style>
@@ -65,3 +67,4 @@ tbody > tr > td {
   white-space: nowrap;
 }
 </style>
+****
