@@ -2,13 +2,13 @@
 
 ## Overview
 
-The official [Visual Studio Code extension](https://marketplace.visualstudio.com/items?itemName=innocenzi.vscode-hybridly), while still experimental, offers improved navigation support throughout Hybridly applications.
+The official [Visual Studio Code extension](https://marketplace.visualstudio.com/items?itemName=innocenzi.vscode-hybridly), while still experimental, offers improved navigation support and auto-completion throughout Hybridly applications.
 
 :::info Customization
 The extension currently only supports the default and domain-based architecture. Custom paths specified in `initializeHybridly` or the Vite plugin configuration are not taken into account.
 :::
 
-### Layout linking
+### Layout linking and auto-completion
 
 When using the [`<template layout>`](../api/vite/layout.md) syntax, the layout names will be linkified to their corresponding layout files.
 
@@ -28,7 +28,7 @@ When using Laravel or Hybridly's `route` functions, the route name will be linki
   class="rounded-lg shadow-lg mt-8"
 />
 
-### Component linking
+### Component linking and auto-completion
 
 When rendering a page with the `hybridly` function, the page name will be linkified to its corresponding single-file component.
 
