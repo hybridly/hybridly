@@ -49,13 +49,13 @@ hybridly()->share([
 ```
 
 :::info Alternative syntax
-It is also possible to instanciate a partial-only property by calling `hybridly()->partial(fn () => ...)` or using `new Lazy(fn () => ...)`.
+It is also possible to instanciate a partial-only property by calling `hybridly()->partial(fn () => ...)`.
 :::
 
 
 ## Lazy evaluation
 
-It is possible to delay the evaluation of a property by using a closure. This property will still be evaluated on first page load and subsequent hybrid requests, but only when it needs to.
+It is possible to delay the evaluation of a property by using a closure. This property will still be evaluated on first page load and subsequent hybrid requests, but only when the response is actually being sent.
 
 ```php
 hybridly()->share([
