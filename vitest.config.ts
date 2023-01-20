@@ -18,6 +18,7 @@ export default defineConfig({
 		isolate: false,
 		mockReset: true,
 		restoreMocks: true,
+		unstubGlobals: true,
 		environment: 'happy-dom',
 		threads: false,
 		setupFiles: [

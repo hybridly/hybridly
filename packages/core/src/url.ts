@@ -1,14 +1,16 @@
 import qs from 'qs'
-import { merge } from '@hybridly/utils'
+import { merge, removeTrailingSlash } from '@hybridly/utils'
 
 export type UrlResolvable = string | URL | Location
-export type UrlTransformable = Partial<Omit<URL, 'searchParams' | 'toJSON' | 'toString'>> & {
+export type UrlTransformable = BaseUrlTransformable | ((string: URL) => BaseUrlTransformable)
+type BaseUrlTransformable = Partial<Omit<URL, 'searchParams' | 'toJSON' | 'toString'>> & {
 	query?: any
+	trailingSlash?: boolean
 }
 
 /** Normalizes the given input to an URL. */
-export function normalizeUrl(href: UrlResolvable): string {
-	return makeUrl(href).toString()
+export function normalizeUrl(href: UrlResolvable, trailingSlash?: boolean): string {
+	return makeUrl(href, { trailingSlash }).toString()
 }
 
 /**
@@ -20,7 +22,11 @@ export function makeUrl(href: UrlResolvable, transformations: UrlTransformable =
 		// to double slashes, which breaks URL instanciation.
 		const base = document?.location?.href === '//' ? undefined : document.location.href
 		const url = new URL(String(href), base)
-		Object.entries(transformations ?? {}).forEach(([key, value]) => {
+		transformations = typeof transformations === 'function'
+			? transformations(url) ?? {}
+			: transformations ?? {}
+
+		Object.entries(transformations).forEach(([key, value]) => {
 			if (key === 'query') {
 				key = 'search'
 				value = qs.stringify(merge(qs.parse(url.search, { ignoreQueryPrefix: true }), value), {
@@ -31,6 +37,11 @@ export function makeUrl(href: UrlResolvable, transformations: UrlTransformable =
 
 			Reflect.set(url, key, value)
 		})
+
+		if (transformations.trailingSlash === false) {
+			const _url = removeTrailingSlash(url.toString().replace(/\/\?/, '?'))
+			url.toString = () => _url
+		}
 
 		return url
 	} catch (error) {

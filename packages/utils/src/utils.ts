@@ -62,3 +62,7 @@ export function when<T, D>(condition: any, data: T, _default?: D): T | D | undef
 export function merge<T>(x: Partial<T>, y: Partial<T>): T {
 	return baseMerge(x, y, { arrayMerge: (_, s) => s })
 }
+
+export function removeTrailingSlash(string: string): string {
+	return string.replace(/\/+$/, '')
+}

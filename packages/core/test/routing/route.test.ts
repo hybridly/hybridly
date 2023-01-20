@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, test } from 'vitest'
+import { beforeEach, describe, expect, test, vi } from 'vitest'
 import { initializeContext } from '../../src/context'
 import { route } from '../../src/routing/index'
 import { makeRouterContextOptions } from '../utils'
@@ -13,28 +13,39 @@ beforeEach(async() => {
 describe('an url can be generated from a route name', () => {
 	test('without parameter', () => {
 		expect(route('index')).toBe('https://bluebird.test')
+		expect(route('index', {}, false)).toBe('')
 	})
 
 	test('with required parameter', () => {
 		expect(route('chirp.show', { chirp: 10 })).toBe('https://bluebird.test/chirps/10')
+		expect(route('chirp.show', { chirp: 10 }, false)).toBe('/chirps/10')
 	})
 
 	test('throws when required parameter is missing', () => {
-		expect(() => route('chirp.show')).toThrowError('[chirp] parameter is required for route [chirp.show]')
+		expect(() => route('chirp.show')).toThrowError('Parameter [chirp] is required for route [chirp.show].')
 	})
 
-	test('does not throw when the required paramter does not respect where constraints', () => {
-		// TODO: Such an error would be better handled by the back-end and the types rather than a runtime check
-		// expect(route('chirp.show', { chirp: 'foobar' })).toBe('https://bluebird.test/chirps/foobar')
-		expect(() => route('chirp.show', { chirp: 'foobar' })).toThrowError('[chirp] parameter does not match required format [[0-9]+] for route [chirp.show]')
+	test('warns when the required paramter does not respect where constraints', () => {
+		const messages: string[] = []
+		vi.stubGlobal('console', {
+			warn: vi.fn((message: string) => messages.push(message)),
+		})
+
+		// Such an error would be better handled by the back-end and the types rather than a runtime check
+		expect(route('chirp.show', { chirp: 'foobar' })).toBe('https://bluebird.test/chirps/foobar')
+		expect(route('chirp.show', { chirp: 'foobar' }, false)).toBe('/chirps/foobar')
+
+		expect(messages.includes('Parameter [chirp] does not match the required format [[0-9]+] for route [chirp.show]'))
 	})
 
-	test('with optional parameters', () => {
+	test('with additional parameters', () => {
 		expect(route('index', { foo: 'bar', bar: ['baz', 'boo'], owo: 69 })).toBe('https://bluebird.test?foo=bar&bar[0]=baz&bar[1]=boo&owo=69')
+		expect(route('index', { foo: 'bar', bar: ['baz', 'boo'], owo: 69 }, false)).toBe('?foo=bar&bar[0]=baz&bar[1]=boo&owo=69')
 	})
 
-	test('with both optional and required parameters', () => {
+	test('with both additional and required parameters', () => {
 		expect(route('chirp.show', { chirp: 10, foo: 'bar' })).toBe('https://bluebird.test/chirps/10?foo=bar')
+		expect(route('chirp.show', { chirp: 10, foo: 'bar' }, false)).toBe('/chirps/10?foo=bar')
 	})
 
 	test('default parameters are added automatically', () => {
