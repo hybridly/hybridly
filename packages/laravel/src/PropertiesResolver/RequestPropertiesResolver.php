@@ -24,7 +24,7 @@ class RequestPropertiesResolver implements PropertiesResolver
         $partial = $this->request->header(Hybridly::PARTIAL_COMPONENT_HEADER) === $component;
 
         if (!$partial) {
-            $properties = array_filter($properties, static fn ($property) => !($property instanceof Partial));
+            $properties = Arr::filterRecursive($properties, static fn ($property) => !($property instanceof Partial));
         }
 
         // The `only` and `except` headers contain json-encoded array data. We want to use them to

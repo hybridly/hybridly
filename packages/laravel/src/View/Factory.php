@@ -17,7 +17,6 @@ class Factory implements HybridResponse
 
     public function __construct(
         protected Hybridly $hybridly,
-        protected PropertiesResolver $resolver,
         protected ResponseFactory $responseFactory,
     ) {
     }
@@ -65,10 +64,14 @@ class Factory implements HybridResponse
 
     public function toResponse($request)
     {
+        // We don't use dependency injection, because the request object
+        // could be different than the one given to `toResponse`.
+        $resolver = resolve(PropertiesResolver::class, ['request' => $request]);
+
         // Properties need to be resolved because they can be impacted
         // in multiple ways. We use a resolver to do so and mutate
         // the view, which will be serialized in the payload.
-        $this->view->properties = $this->resolver->resolve(
+        $this->view->properties = $resolver->resolve(
             $this->view->component,
             array_merge($this->hybridly->shared(), $this->view->properties),
             $this->hybridly->persisted(),

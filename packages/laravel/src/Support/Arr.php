@@ -2,6 +2,7 @@
 
 namespace Hybridly\Support;
 
+use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Arr as SupportArr;
 
 class Arr extends SupportArr
@@ -24,5 +25,25 @@ class Arr extends SupportArr
     public static function exceptDot(array $array, string|array $except): array
     {
         return self::except($array, $except);
+    }
+
+    /**
+     * Same as `array_filter`, but recursive.
+     */
+    public static function filterRecursive(array $array, callable $callback = null): array
+    {
+        $array = \is_callable($callback) ? array_filter($array, $callback) : array_filter($array);
+
+        foreach ($array as &$value) {
+            if ($value instanceof Arrayable) {
+                $value = $value->toArray();
+            }
+
+            if (\is_array($value)) {
+                $value = static::filterRecursive($value, $callback);
+            }
+        }
+
+        return $array;
     }
 }

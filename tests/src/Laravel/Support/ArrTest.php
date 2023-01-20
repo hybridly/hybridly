@@ -2,6 +2,47 @@
 
 use Hybridly\Support\Arr;
 
+it('filters arrays recursively', function ($array, $filter, $expected) {
+    expect(Arr::filterRecursive($array, $filter))->toBe($expected);
+})->with([
+    [
+        [
+            'foo' => true,
+            'bar' => collect([
+                'foo' => true,
+                'bar' => false,
+            ]),
+        ],
+        null,
+        [
+            'foo' => true,
+            'bar' => ['foo' => true],
+        ],
+    ],
+    [
+        [
+            'foo' => true,
+            'bar' => true,
+        ],
+        null,
+        [
+            'foo' => true,
+            'bar' => true,
+        ],
+    ],
+    [
+        [
+            'foo' => true,
+            'bar' => ['baz' => true, 'owo' => false],
+        ],
+        null,
+        [
+            'foo' => true,
+            'bar' => ['baz' => true],
+        ],
+    ],
+]);
+
 it('gets only subsets of an array using dot notation', function ($array, $only, $expected) {
     expect(Arr::onlyDot($array, $only))->toBe($expected);
 })->with([
