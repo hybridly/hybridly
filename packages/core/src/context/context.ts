@@ -3,7 +3,7 @@ import axios from 'axios'
 import { createSerializer } from '../router/history'
 import { makeUrl } from '../url'
 import type { HybridPayload } from '../router'
-import { updateRoutingConfiguration } from '../route'
+import { updateRoutingConfiguration } from '../routing'
 import { runHooks } from '../plugins'
 import type { RouterContext, InternalRouterContext, RouterContextOptions, SetContextOptions } from './types'
 

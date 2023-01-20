@@ -13,8 +13,8 @@ export type { UrlResolvable } from './url'
 export { can } from './authorization'
 export type { Authorizable } from './authorization'
 
-export { route } from './route'
-export type { RouteDefinition, GlobalRouteCollection, RoutingConfiguration, RouteName, RouteParameters } from './route'
+export { route } from './routing'
+export type { RouteDefinition, GlobalRouteCollection, RoutingConfiguration, RouteName, RouteParameters } from './routing'
 
 export * as constants from './constants'
 export * from './types'

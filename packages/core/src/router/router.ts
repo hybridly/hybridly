@@ -9,8 +9,8 @@ import { resetScrollPositions, restoreScrollPositions, saveScrollPositions } fro
 import type { UrlResolvable } from '../url'
 import { fillHash, makeUrl, normalizeUrl, sameUrls } from '../url'
 import { runHooks } from '../plugins'
-import { Router as RouteRouter } from '../route/router'
-import { Route as RouteRoute } from '../route/route'
+import { Router as RouteRouter } from '../routing/router'
+import { Route as RouteRoute } from '../routing/route'
 import { setHistoryState, isBackForwardNavigation, handleBackForwardNavigation, registerEventListeners, getHistoryState, getKeyFromHistory, remember } from './history'
 import type { ConditionalNavigationOption, Errors, ComponentNavigationOptions, NavigationOptions, Router, HybridRequestOptions, HybridPayload, NavigationResponse, Method } from './types'
 

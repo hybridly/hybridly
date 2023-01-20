@@ -1,7 +1,7 @@
 import type { RequestData } from '@hybridly/utils'
 import type { AxiosProgressEvent, AxiosResponse } from 'axios'
 import type { RequestHooks } from '../plugins/hooks'
-import type { RouteName, RouteParameters } from '../route/types'
+import type { RouteName, RouteParameters } from '../routing/types'
 import type { UrlResolvable, UrlTransformable } from '../url'
 
 export type ConditionalNavigationOption =
