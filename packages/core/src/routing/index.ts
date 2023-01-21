@@ -13,8 +13,8 @@ export function route<T extends RouteName>(name: T, parameters?: RouteParameters
 /**
  * Determines if the current route correspond to the given route name and parameters.
  */
-export function current<T extends RouteName>(name: T, parameters?: RouteParameters<T>): boolean {
-	return isCurrentFromName(name, parameters)
+export function current<T extends RouteName>(name: T, parameters?: RouteParameters<T>, mode: 'loose' | 'strict' = 'loose'): boolean {
+	return isCurrentFromName(name, parameters, mode)
 }
 
 export function updateRoutingConfiguration(routing?: RoutingConfiguration) {
