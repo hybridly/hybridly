@@ -13,6 +13,7 @@ export interface RouteDefinition {
 	bindings: Record<string, string>
 	domain?: string
 	wheres?: Record<string, string>
+	name: string
 }
 
 export interface GlobalRouteCollection extends RoutingConfiguration {}

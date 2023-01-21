@@ -1,119 +1,128 @@
-import { parse } from 'qs'
+import qs from 'qs'
 import { getInternalRouterContext } from '../context'
-import type { RouteDefinition, RouteName } from './types'
+import { MissingRouteParameter, RouteNotFound, RoutingNotInitialized } from '../errors'
+import type { UrlTransformable } from '../url'
+import { makeUrl } from '../url'
+import type { RouteDefinition, RouteName, RouteParameters, RoutingConfiguration } from './types'
+
+export function generateRouteFromName<T extends RouteName>(name: T, parameters?: RouteParameters<T>, absolute?: boolean, shouldThrow?: boolean) {
+	const url = getUrlFromName(name, parameters, shouldThrow)
+
+	return absolute === false
+		? url.toString().replace(url.origin, '')
+		: url.toString()
+}
+
+export function getUrlFromName<T extends RouteName>(name: T, parameters?: RouteParameters<T>, shouldThrow?: boolean) {
+	const routing = getRouting()
+	const definition = getRouteDefinition(name)
+	const transforms = getRouteTransformable(name, parameters, shouldThrow)
+	const url = makeUrl(routing.url, (url) => ({
+		hostname: definition.domain || url.hostname,
+		port: routing.port?.toString() || url.port,
+		trailingSlash: false,
+		...transforms,
+	}))
+
+	return url
+}
 
 /**
- * A Laravel route. This class represents one route and its configuration and metadata.
+ * Gets the `UrlTransformable` object for the given route and parameters.
  */
-export class Route {
-	public definition: RouteDefinition
+function getRouteTransformable(routeName: string, routeParameters?: any, shouldThrow?: boolean): UrlTransformable {
+	const routing = getRouting()
+	const definition = getRouteDefinition(routeName)
+	const parameters = routeParameters || {}
+	const missing: string[] = Object.keys(parameters)
+	const path = definition.uri.replace(/{([^}?]+)\??}/g, (match: string, parameterName: string) => {
+		const optional = /\?}$/.test(match)
+		const value = (() => {
+			const value = parameters[parameterName]
+			const bindingProperty = definition.bindings?.[parameterName]
 
-	constructor(
-		public name: RouteName,
-		public absolute: boolean,
-	) {
-		this.definition = Route.getDefinition(name)
-	}
-
-	static getDefinition(name: RouteName): RouteDefinition {
-		const context = getInternalRouterContext()
-
-		if (!context.routing) {
-			throw new Error('Routing is not initialized. Make sure the Vite plugin is enabled and that `virtual:hybridly/router` is imported and that `php artisan route:list` returns no error.')
-		}
-
-		const route = context.routing?.routes?.[name]
-
-		if (!route) {
-			throw new Error(`Route ${name.toString()} does not exist.`)
-		}
-
-		return route
-	}
-
-	/**
-	 * Gets a 'template' of the complete URL for this route.
-	 *
-	 * @example
-	 * https://{team}.ziggy.dev/user/{user}
-	 */
-	get template(): string {
-		const context = getInternalRouterContext()
-
-		// If  we're building just a path there's no origin, otherwise: if this route has a
-		// domain configured we construct the origin with that, if not we use the app URL
-		const origin = !this.absolute
-			? ''
-			: this.definition.domain
-				? `${context.routing?.url.match(/^\w+:\/\//)?.[0]}${this.definition.domain}${context.routing?.port ? `:${context.routing?.port}` : ''}`
-				: context.routing?.url
-
-		return `${origin}/${this.definition.uri}`.replace(/\/+$/, '')
-	}
-
-	/**
-	 * Gets an array of objects representing the parameters that this route accepts.
-	 *
-	 * @example
-	 * [{ name: 'team', required: true }, { name: 'user', required: false }]
-	 */
-	get parameterSegments() {
-		return this.template.match(/{[^}?]+\??}/g)?.map((segment) => ({
-			name: segment.replace(/{|\??}/g, ''),
-			required: !/\?}$/.test(segment),
-		})) ?? []
-	}
-
-	/**
-	 * Gets whether this route's template matches the given URL.
-	 */
-	matchesUrl(url: string): object | false {
-		if (!this.definition.method.includes('GET')) {
-			return false
-		}
-
-		// Transform the route's template into a regex that will match a hydrated URL,
-		// by replacing its parameter segments with matchers for parameter values
-		const pattern = this.template
-			.replace(/(\/?){([^}?]*)(\??)}/g, (_, slash, segment, optional) => {
-				const regex = `(?<${segment}>${this.definition.wheres?.[segment]?.replace(/(^\^)|(\$$)/g, '') || '[^/?]+'})`
-				return optional ? `(${slash}${regex})?` : `${slash}${regex}`
-			})
-			.replace(/^\w+:\/\//, '')
-
-		const [location, query] = url.replace(/^\w+:\/\//, '').split('?')
-		const matches = new RegExp(`^${pattern}/?$`).exec(location)
-
-		return matches
-			? { params: matches.groups, query: parse(query) }
-			: false
-	}
-
-	/**
-	 * Hydrates and return a complete URL for this route with the given parameters.
-	 */
-	compile(params: Record<string, any>): string {
-		const segments = this.parameterSegments
-
-		if (!segments.length) {
-			return this.template
-		}
-
-		return this.template.replace(/{([^}?]+)(\??)}/g, (_, segment, optional) => {
-			// If the parameter is missing but is not optional, throw an error
-			if (!optional && [null, undefined].includes(params?.[segment])) {
-				throw new Error(`Router error: [${segment}] parameter is required for route [${this.name}].`)
+			if (bindingProperty && typeof value === 'object') {
+				return value[bindingProperty]
 			}
 
-			if (segments[segments.length - 1].name === segment && this.definition?.wheres?.[segment] === '.*') {
-				return encodeURIComponent(params[segment] ?? '').replace(/%2F/g, '/')
+			return value
+		})()
+
+		// Removes this parameter from the missing parameter list.
+		missing.splice(missing.indexOf(parameterName), 1)
+
+		// If the parameter is passed, use it.
+		if (value) {
+			const where = definition.wheres?.[parameterName]
+
+			// If the parameter doesn't respect the format, warn.
+			if (where && !(new RegExp(where).test(value))) {
+				console.warn(`[hybridly:routing] Parameter [${parameterName}] does not match the required format [${where}] for route [${routeName}].`)
 			}
 
-			if (this.definition?.wheres?.[segment] && !new RegExp(`^${optional ? `(${this.definition?.wheres?.[segment]})?` : this.definition?.wheres?.[segment]}$`).test(params[segment] ?? '')) {
-				throw new Error(`Router error: [${segment}] parameter does not match required format [${this.definition?.wheres?.[segment]}] for route [${this.name}].`)
-			}
+			return value
+		}
 
-			return encodeURIComponent(params[segment] ?? '')
-		}).replace(/\/+$/, '')
+		// If there is a default parameter, use it.
+		if (routing.defaults?.[parameterName]) {
+			return routing.defaults?.[parameterName]
+		}
+
+		// Otherwise, if it was optional, return an empty string.
+		if (optional) {
+			return ''
+		}
+
+		if (shouldThrow === false) {
+			return ''
+		}
+
+		throw new MissingRouteParameter(parameterName, routeName)
+	})
+
+	// Filters from `parameters` the values from `missing`
+	// and returns a new object with the remaining values.
+	const remaining = Object.keys(parameters)
+		.filter((key) => missing.includes(key))
+		.reduce((obj, key) => ({
+			...obj,
+			[key]: parameters[key],
+		}), {})
+
+	return {
+		pathname: path,
+		search: qs.stringify(remaining, {
+			encodeValuesOnly: true,
+			arrayFormat: 'indices',
+			addQueryPrefix: true,
+		}),
 	}
+}
+
+/**
+ * Gets the route definition.
+ */
+export function getRouteDefinition(name: string): RouteDefinition {
+	const routing = getRouting()
+
+	const definition = routing.routes[name]
+
+	if (!definition) {
+		throw new RouteNotFound(name)
+	}
+
+	return definition
+}
+
+/**
+ * Gets the routing configuration from the current context.
+ */
+export function getRouting(): RoutingConfiguration {
+	const { routing } = getInternalRouterContext()
+
+	if (!routing) {
+		throw new RoutingNotInitialized()
+	}
+
+	return routing
 }

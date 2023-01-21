@@ -9,8 +9,7 @@ import { resetScrollPositions, restoreScrollPositions, saveScrollPositions } fro
 import type { UrlResolvable } from '../url'
 import { fillHash, makeUrl, normalizeUrl, sameUrls } from '../url'
 import { runHooks } from '../plugins'
-import { Router as RouteRouter } from '../routing/router'
-import { Route as RouteRoute } from '../routing/route'
+import { generateRouteFromName, getRouteDefinition } from '../routing/route'
 import { setHistoryState, isBackForwardNavigation, handleBackForwardNavigation, registerEventListeners, getHistoryState, getKeyFromHistory, remember } from './history'
 import type { ConditionalNavigationOption, Errors, ComponentNavigationOptions, NavigationOptions, Router, HybridRequestOptions, HybridPayload, NavigationResponse, Method } from './types'
 
@@ -37,8 +36,8 @@ export const router: Router = {
 	local: async(url, options) => await performLocalNavigation(url, options),
 	external: (url, data = {}) => navigateToExternalUrl(url, data),
 	to: async(name, parameters, options) => {
-		const url = new RouteRouter(name, parameters).toString()
-		const method = RouteRoute.getDefinition(name).method.at(0)
+		const url = generateRouteFromName(name, parameters)
+		const method = getRouteDefinition(name).method.at(0)
 		return await performHybridNavigation({ url, ...options, method })
 	},
 	history: {
@@ -114,11 +113,7 @@ export async function performHybridNavigation(options: HybridRequestOptions): Pr
 
 		// If the URL has transformation options, apply them before using the URL.
 		if (options.url && options.transformUrl) {
-			const transformUrl = typeof options.transformUrl === 'function'
-				? options.transformUrl(makeUrl(options.url).toString())
-				: options.transformUrl
-
-			options.url = makeUrl(options.url, transformUrl)
+			options.url = makeUrl(options.url, options.transformUrl)
 		}
 
 		const targetUrl = makeUrl(options.url ?? context.url)
