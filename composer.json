@@ -83,6 +83,6 @@
     "replace": {
         "hybridly/laravel": "self.version"
     },
-    "minimum-stability": "dev",
+    "minimum-stability": "stable",
     "prefer-stable": true
 }
