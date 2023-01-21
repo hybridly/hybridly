@@ -20,6 +20,7 @@ export const HybridlyImports = {
 	'hybridly': [
 		'router',
 		'route',
+		'current',
 		'can',
 	],
 }
