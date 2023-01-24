@@ -173,10 +173,6 @@ export interface Dialog extends View {
 	baseUrl: string
 	/** URL to which the dialog should redirect when closed. */
 	redirectUrl: string
-	/** Identifier for the state of the dialog. */
-	key: string
-	/** Unique string changed for each request. */
-	nonce: string
 }
 
 export type Property =

@@ -39,6 +39,8 @@ it('updates the context', async() => {
 		url: 'https://localhost/foo/bar/dialog',
 		version: 'new-version-string',
 		dialog: {
+			baseUrl: 'https://base.test',
+			redirectUrl: 'https://base.test/dialog',
 			component: 'some.dialog',
 			properties: {
 				foo: 'bar',

@@ -14,7 +14,7 @@ export function fakePayload(payload: PartialDeep<HybridPayload> = {}): HybridPay
 		url: 'https://localhost',
 		version: 'abc123',
 		view: {
-			name: 'default.view',
+			component: 'default.view',
 			properties: {},
 		},
 	})
