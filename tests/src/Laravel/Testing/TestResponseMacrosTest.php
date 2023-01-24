@@ -91,7 +91,7 @@ test('the `assertHybridProperties` method asserts the properties using the given
 
 test('the `assertHybridPayload` method asserts the payload property at the given path has the expected value', function () {
     makeHybridMockRequest(properties: ['foo' => 'bar'])
-        ->assertHybridPayload('view.name', 'test')
+        ->assertHybridPayload('view.component', 'test')
         ->assertHybridPayload('view.properties', ['foo' => 'bar']);
 });
 
@@ -119,7 +119,7 @@ test('the `getHybridPayload` method returns the payload of the hybrid response',
     $response = makeHybridMockRequest(properties: ['bar' => 'baz']);
 
     tap($response->getHybridPayload(), function (array $page) {
-        expect($page['view']['name'])->toBe('test');
+        expect($page['view']['component'])->toBe('test');
         expect($page['view']['properties'])->toBe(['bar' => 'baz']);
         expect($page['dialog'])->toBeNull();
         expect($page['url'])->toBe(config('app.url') . '/hybrid-mock-url');

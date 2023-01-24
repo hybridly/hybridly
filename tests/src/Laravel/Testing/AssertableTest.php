@@ -27,7 +27,7 @@ test('the `getPayload` method returns the payload', function () {
         expect($page->getPayload())->toBeArray();
         expect($page->getPayload())->toHaveKeys([
             'view',
-            'view.name',
+            'view.component',
             'view.properties',
             'dialog',
             'url',
@@ -39,7 +39,7 @@ test('the `getPayload` method returns the payload', function () {
 test('the `getValue` method returns the value at the given path', function () {
     makeHybridMockRequest(properties: ['foo' => 'bar'])
         ->assertHybrid(function (Assertable $page) {
-            expect($page->getValue('view.name'))->toBe('test');
+            expect($page->getValue('view.component'))->toBe('test');
             expect($page->getValue('view.properties.foo'))->toBe('bar');
         });
 });
@@ -56,7 +56,7 @@ test('the `toArray` function converts the Assertable instance to an array', func
         expect($page->toArray())->toBeArray();
         expect($page->getPayload())->toHaveKeys([
             'view',
-            'view.name',
+            'view.component',
             'view.properties',
             'dialog',
             'url',

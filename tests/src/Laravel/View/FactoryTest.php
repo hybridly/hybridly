@@ -57,7 +57,7 @@ test('hybridly responses to non-hybridly requests', function () {
         'version' => '123',
         'url' => 'http://localhost/users/makise',
         'view' => [
-            'name' => 'users.edit',
+            'component' => 'users.edit',
             'properties' => [
                 'user' => 'Makise Kurisu',
             ],
@@ -81,7 +81,7 @@ test('hybridly responses to hybridly requests', function () {
         'version' => '123',
         'url' => 'http://localhost/users/makise',
         'view' => [
-            'name' => 'users.edit',
+            'component' => 'users.edit',
             'properties' => [
                 'user' => 'Makise Kurisu',
             ],
@@ -107,7 +107,7 @@ test('properties can be added on-the-fly on the factory instance', function () {
         'version' => '123',
         'url' => 'http://localhost/users/makise',
         'view' => [
-            'name' => 'users.edit',
+            'component' => 'users.edit',
             'properties' => [
                 'user' => 'Makise Kurisu',
                 'husband' => 'Okabe Rintarou',
