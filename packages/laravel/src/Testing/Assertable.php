@@ -124,7 +124,7 @@ class Assertable extends AssertableJson
 
             // ['property_name' => ['foo']] -> assert using an array
             if (\is_string($key) && \is_array($value)) {
-                $this->hasProperties($value, scope: $scope . '.' . $key);
+                PHPUnit::assertSame($value, data_get($this->properties, $key));
 
                 continue;
             }
