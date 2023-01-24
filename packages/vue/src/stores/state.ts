@@ -12,9 +12,7 @@ export const state = {
 	properties: ref<any>(),
 	viewLayout: shallowRef<Layout>(),
 	viewLayoutProperties: ref<any>(),
-	viewKey: ref<number>(),
-	dialog: shallowRef<ComponentOptions>(),
-	dialogKey: ref<number>(),
+	viewKey: ref<string>(),
 
 	setView(view: MaybeRef<ComponentOptions>) {
 		debug.adapter('vue:state:view', 'Setting view:', view)
@@ -36,24 +34,14 @@ export const state = {
 		state.viewLayoutProperties.value = properties
 	},
 
-	setDialog(dialog: MaybeRef<ComponentOptions>) {
-		debug.adapter('vue:state:dialog', 'Setting dialog:', dialog)
-		state.dialog.value = dialog
-	},
-
 	setContext(context: MaybeRef<RouterContext>) {
 		debug.adapter('vue:state:context', 'Setting context:', context)
 		state.context.value = unref(context)
 		triggerRef(state.context)
 	},
 
-	setViewKey(key: MaybeRef<number>) {
+	setViewKey(key: MaybeRef<string>) {
 		debug.adapter('vue:state:key', 'Setting view key:', key)
 		state.viewKey.value = unref(key)
-	},
-
-	setDialogKey(key: MaybeRef<number>) {
-		debug.adapter('vue:state:key', 'Setting dialog key:', key)
-		state.dialogKey.value = unref(key)
 	},
 }

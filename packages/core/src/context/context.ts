@@ -59,7 +59,7 @@ export function setContext(merge: Partial<InternalRouterContext> = {}, options: 
 	})
 
 	if (options.propagate !== false) {
-		state.context.adapter.update?.(state.context)
+		state.context.adapter.onContextUpdate?.(state.context)
 	}
 
 	debug.context('Updated context:', { context: state.context, added: merge })

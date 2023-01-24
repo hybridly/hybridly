@@ -8,7 +8,7 @@ it('creates a valid router context', async() => {
 			url: 'https://localhost',
 			version: '123',
 			view: {
-				name: 'my-owo-view',
+				component: 'my-owo-view',
 				properties: {
 					foo: 'bar',
 				},
@@ -39,7 +39,7 @@ it('updates the context', async() => {
 		url: 'https://localhost/foo/bar/dialog',
 		version: 'new-version-string',
 		dialog: {
-			name: 'some.dialog',
+			component: 'some.dialog',
 			properties: {
 				foo: 'bar',
 			},

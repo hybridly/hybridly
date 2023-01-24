@@ -22,6 +22,7 @@ class Hybridly
     use Macroable;
 
     public const HYBRIDLY_HEADER = 'x-hybrid';
+    public const DIALOG_HEADER = 'x-hybrid-dialog';
     public const EXTERNAL_HEADER = 'x-hybrid-external';
     public const PARTIAL_COMPONENT_HEADER = 'x-hybrid-partial-component';
     public const ONLY_DATA_HEADER = 'x-hybrid-only-data';

@@ -4,11 +4,13 @@ namespace Hybridly\View;
 
 use Illuminate\Contracts\Support\Arrayable;
 
-class View implements Arrayable
+class Dialog implements Arrayable
 {
     public function __construct(
         public string $component,
         public array $properties,
+        public string $baseUrl,
+        public string $redirectUrl,
     ) {
     }
 
@@ -17,6 +19,8 @@ class View implements Arrayable
         return [
             'component' => $this->component,
             'properties' => $this->properties,
+            'baseUrl' => $this->baseUrl,
+            'redirectUrl' => $this->redirectUrl,
         ];
     }
 }

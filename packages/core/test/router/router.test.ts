@@ -17,7 +17,7 @@ it('performs hybridly navigations', async() => {
 		json: fakePayload({
 			url: 'https://localhost.test/navigation',
 			view: {
-				name: 'target.view',
+				component: 'target.view',
 				properties: {
 					foo: 'bar',
 				},

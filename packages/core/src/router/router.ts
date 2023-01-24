@@ -1,6 +1,6 @@
 import type { AxiosProgressEvent, AxiosResponse } from 'axios'
 import { showResponseErrorModal, match, merge, when, debug, random, hasFiles, objectToFormData } from '@hybridly/utils'
-import { ERROR_BAG_HEADER, EXCEPT_DATA_HEADER, EXTERNAL_NAVIGATION_HEADER, ONLY_DATA_HEADER, PARTIAL_COMPONENT_HEADER, HYBRIDLY_HEADER, VERSION_HEADER } from '../constants'
+import { ERROR_BAG_HEADER, EXCEPT_DATA_HEADER, EXTERNAL_NAVIGATION_HEADER, ONLY_DATA_HEADER, PARTIAL_COMPONENT_HEADER, HYBRIDLY_HEADER, VERSION_HEADER, DIALOG_HEADER } from '../constants'
 import { NotAHybridResponseError, NavigationCancelledError } from '../errors'
 import type { InternalRouterContext, RouterContextOptions } from '../context'
 import { getRouterContext, initializeContext, payloadFromContext, setContext } from '../context'
@@ -10,6 +10,7 @@ import type { UrlResolvable } from '../url'
 import { fillHash, makeUrl, normalizeUrl, sameUrls } from '../url'
 import { runHooks } from '../plugins'
 import { generateRouteFromName, getRouteDefinition } from '../routing/route'
+import { closeDialog } from '../dialog'
 import { setHistoryState, isBackForwardNavigation, handleBackForwardNavigation, registerEventListeners, getHistoryState, getKeyFromHistory, remember } from './history'
 import type { ConditionalNavigationOption, Errors, ComponentNavigationOptions, NavigationOptions, Router, HybridRequestOptions, HybridPayload, NavigationResponse, Method } from './types'
 
@@ -25,7 +26,6 @@ import type { ConditionalNavigationOption, Errors, ComponentNavigationOptions, N
 export const router: Router = {
 	abort: async() => getRouterContext().pendingNavigation?.controller.abort(),
 	active: () => !!getRouterContext().pendingNavigation,
-	// unstack: () => {},
 	navigate: async(options) => await performHybridNavigation(options),
 	reload: async(options) => await performHybridNavigation({ preserveScroll: true, preserveState: true, ...options }),
 	get: async(url, options = {}) => await performHybridNavigation({ ...options, url, method: 'GET' }),
@@ -39,6 +39,9 @@ export const router: Router = {
 		const url = generateRouteFromName(name, parameters)
 		const method = getRouteDefinition(name).method.at(0)
 		return await performHybridNavigation({ url, ...options, method })
+	},
+	dialog: {
+		close: (options) => closeDialog(options),
 	},
 	history: {
 		get: (key) => getKeyFromHistory(key),
@@ -141,8 +144,9 @@ export async function performHybridNavigation(options: HybridRequestOptions): Pr
 			signal: abortController.signal,
 			headers: {
 				...options.headers,
+				...(context.dialog ? { [DIALOG_HEADER]: context.dialog!.redirectUrl } : {}),
 				...when(options.only !== undefined || options.except !== undefined, {
-					[PARTIAL_COMPONENT_HEADER]: context.view.name,
+					[PARTIAL_COMPONENT_HEADER]: context.view.component,
 					...when(options.only, { [ONLY_DATA_HEADER]: JSON.stringify(options.only) }, {}),
 					...when(options.except, { [EXCEPT_DATA_HEADER]: JSON.stringify(options.except) }, {}),
 				}, {}),
@@ -190,7 +194,7 @@ export async function performHybridNavigation(options: HybridRequestOptions): Pr
 		// If the navigation was asking for specific properties, we ensure that the
 		// new request object contains the properties of the current view context,
 		// because the back-end sent back only the required properties.
-		if ((options.only?.length ?? options.except?.length) && payload.view.name === context.view.name) {
+		if ((options.only?.length ?? options.except?.length) && payload.view.component === context.view.component) {
 			debug.router(`Merging ${options.only ? '"only"' : '"except"'} properties.`, payload.view.properties)
 			payload.view.properties = merge(context.view.properties, payload.view.properties)
 			debug.router('Merged properties:', payload.view.properties)
@@ -314,7 +318,7 @@ export async function navigate(options: NavigationOptions) {
 
 	// If the navigation was asking to preserve the current state, we also need to
 	// update the context's state from the history state.
-	if (shouldPreserveState && getHistoryState() && options.payload.view.name === context.view.name) {
+	if (shouldPreserveState && getHistoryState() && options.payload.view.component === context.view.component) {
 		debug.history('Setting the history from this entry into the context.')
 		setContext({ state: getHistoryState() })
 	}
@@ -344,24 +348,14 @@ export async function navigate(options: NavigationOptions) {
 	}
 
 	// Then, we swap the view.
-	const viewComponent = await context.adapter.resolveComponent(context.view.name)
-	debug.router(`Component [${context.view.name}] resolved to:`, viewComponent)
-	await context.adapter.swapView({
+	const viewComponent = await context.adapter.resolveComponent(context.view.component)
+	debug.router(`Component [${context.view.component}] resolved to:`, viewComponent)
+	await context.adapter.onViewSwap({
 		component: viewComponent,
+		dialog: context.dialog,
 		properties: options.payload?.view.properties,
 		preserveState: shouldPreserveState,
 	})
-
-	// We then replace the dialog if a new one is given.
-	if (context.dialog) {
-		const dialogComponent = await context.adapter.resolveComponent(context.dialog.name)
-		debug.router(`Dialog [${context.view.name}] resolved to:`, dialogComponent)
-		await context.adapter.swapDialog({
-			component: dialogComponent,
-			properties: options.payload?.dialog?.properties,
-			preserveState: shouldPreserveState,
-		})
-	}
 
 	if (!shouldPreserveScroll) {
 		resetScrollPositions()
@@ -414,7 +408,7 @@ async function performLocalNavigation(targetUrl: UrlResolvable, options: Compone
 			dialog: context.dialog,
 			url,
 			view: {
-				name: options.component ?? context.view.name,
+				component: options.component ?? context.view.component,
 				properties: options.properties ?? {},
 			},
 		},

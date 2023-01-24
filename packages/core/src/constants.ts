@@ -3,6 +3,7 @@ export const HYBRIDLY_HEADER = 'x-hybrid'
 export const EXTERNAL_NAVIGATION_HEADER = `${HYBRIDLY_HEADER}-external`
 export const PARTIAL_COMPONENT_HEADER = `${HYBRIDLY_HEADER}-partial-component`
 export const ONLY_DATA_HEADER = `${HYBRIDLY_HEADER}-only-data`
+export const DIALOG_HEADER = `${HYBRIDLY_HEADER}-dialog`
 export const EXCEPT_DATA_HEADER = `${HYBRIDLY_HEADER}-except-data`
 export const CONTEXT_HEADER = `${HYBRIDLY_HEADER}-context`
 export const VERSION_HEADER = `${HYBRIDLY_HEADER}-version`

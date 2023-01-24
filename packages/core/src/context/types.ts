@@ -2,7 +2,7 @@ import type { Axios } from 'axios'
 import type { Hooks } from '../plugins/hooks'
 import type { Plugin } from '../plugins/plugin'
 import type { RoutingConfiguration } from '../routing/types'
-import type { PendingNavigation, ResolveComponent, SwapDialog, SwapView, View, HybridPayload } from '../router'
+import type { PendingNavigation, ResolveComponent, SwapView, View, HybridPayload, Dialog } from '../router'
 
 /** Options for creating a router context. */
 export interface RouterContextOptions {
@@ -27,7 +27,7 @@ export interface InternalRouterContext {
 	/** The current view. */
 	view: View
 	/** The current, optional dialog. */
-	dialog?: View
+	dialog?: Dialog
 	/** The current local asset version. */
 	version: string
 	/** The current adapter's functions. */
@@ -57,12 +57,12 @@ export type RouterContext = Readonly<InternalRouterContext>
 export interface Adapter {
 	/** Resolves a component from the given name. */
 	resolveComponent: ResolveComponent
-	/** Swaps to the given view. */
-	swapView: SwapView
-	/** Swaps to the given dialog. */
-	swapDialog: SwapDialog
+	/** Called when the view is swapped. */
+	onViewSwap: SwapView
 	/** Called when the context is updated. */
-	update?: (context: InternalRouterContext) => void
+	onContextUpdate?: (context: InternalRouterContext) => void
+	/** Called when a dialog is closed. */
+	onDialogClose?: (context: InternalRouterContext) => void
 }
 
 export interface ResolvedAdapter extends Adapter{
