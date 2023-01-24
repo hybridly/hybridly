@@ -1,6 +1,6 @@
 import type { AxiosProgressEvent, AxiosResponse } from 'axios'
 import { showResponseErrorModal, match, merge, when, debug, random, hasFiles, objectToFormData } from '@hybridly/utils'
-import { ERROR_BAG_HEADER, EXCEPT_DATA_HEADER, EXTERNAL_NAVIGATION_HEADER, ONLY_DATA_HEADER, PARTIAL_COMPONENT_HEADER, HYBRIDLY_HEADER, VERSION_HEADER, DIALOG_HEADER } from '../constants'
+import { ERROR_BAG_HEADER, EXCEPT_DATA_HEADER, EXTERNAL_NAVIGATION_HEADER, ONLY_DATA_HEADER, PARTIAL_COMPONENT_HEADER, HYBRIDLY_HEADER, VERSION_HEADER, DIALOG_KEY_HEADER, DIALOG_REDIRECT_HEADER } from '../constants'
 import { NotAHybridResponseError, NavigationCancelledError } from '../errors'
 import type { InternalRouterContext, RouterContextOptions } from '../context'
 import { getRouterContext, initializeContext, payloadFromContext, setContext } from '../context'
@@ -107,7 +107,7 @@ export async function performHybridNavigation(options: HybridRequestOptions): Pr
 		// Abort any active navigation.
 		if (context.pendingNavigation) {
 			debug.router('Aborting current navigation.', context.pendingNavigation)
-			context.pendingNavigation?.controller.abort()
+			context.pendingNavigation?.controller?.abort()
 		}
 
 		// Before making the navigation, we need to make sure the scroll positions are
@@ -129,6 +129,7 @@ export async function performHybridNavigation(options: HybridRequestOptions): Pr
 				id: navigationId,
 				url: targetUrl,
 				controller: abortController,
+				status: 'pending',
 				options,
 			},
 		})
@@ -144,7 +145,8 @@ export async function performHybridNavigation(options: HybridRequestOptions): Pr
 			signal: abortController.signal,
 			headers: {
 				...options.headers,
-				...(context.dialog ? { [DIALOG_HEADER]: context.dialog!.redirectUrl } : {}),
+				...(context.dialog ? { [DIALOG_KEY_HEADER]: context.dialog!.key } : {}),
+				...(context.dialog ? { [DIALOG_REDIRECT_HEADER]: context.dialog!.redirectUrl ?? '' } : {}),
 				...when(options.only !== undefined || options.except !== undefined, {
 					[PARTIAL_COMPONENT_HEADER]: context.view.component,
 					...when(options.only, { [ONLY_DATA_HEADER]: JSON.stringify(options.only) }, {}),
@@ -227,21 +229,23 @@ export async function performHybridNavigation(options: HybridRequestOptions): Pr
 			})() as Errors
 
 			debug.router('The request returned validation errors.', errors)
-			await runHooks('error', options.hooks, errors, context)
 			setContext({
 				pendingNavigation: {
-					...context.pendingNavigation as any,
+					...context.pendingNavigation!,
 					status: 'error',
 				},
 			})
+
+			await runHooks('error', options.hooks, errors, context)
 		} else {
-			await runHooks('success', options.hooks, payload, context)
 			setContext({
 				pendingNavigation: {
-					...context.pendingNavigation as any,
+					...context.pendingNavigation!,
 					status: 'success',
 				},
 			})
+
+			await runHooks('success', options.hooks, payload, context)
 		}
 
 		return { response }

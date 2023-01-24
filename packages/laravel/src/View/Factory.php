@@ -118,6 +118,10 @@ class Factory implements HybridResponse
             version: $this->hybridly->getVersion(),
         );
 
+        if ($payload->dialog) {
+            $payload = $this->renderDialog($request, $payload);
+        }
+
         event('hybridly.response', [
             [
                 'payload' => $payload->toArray(),
@@ -126,10 +130,6 @@ class Factory implements HybridResponse
                 'root_view' => $this->hybridly->getRootView(),
             ],
         ]);
-
-        if ($payload->dialog) {
-            $payload = $this->renderDialog($request, $payload);
-        }
 
         if ($this->hybridly->isHybrid($request)) {
             return new JsonResponse(

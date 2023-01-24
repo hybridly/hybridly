@@ -43,13 +43,10 @@ export async function initializeHybridly(options: HybridlyOptions) {
 					state.setViewKey(generateRandomKey())
 				}
 
-				if (options.dialog && !options.preserveState) {
-					dialogStore.setKey(generateRandomKey())
-				}
-
 				if (options.dialog) {
 					dialogStore.setComponent(await resolve(options.dialog.component))
 					dialogStore.setProperties(options.dialog.properties)
+					dialogStore.setKey(options.dialog.key)
 					dialogStore.show()
 				} else {
 					dialogStore.hide()

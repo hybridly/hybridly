@@ -22,12 +22,17 @@ class DialogResolver
             properties: $view->properties,
             baseUrl: $baseUrl,
             redirectUrl: $this->getRedirectUrl($request) ?? $baseUrl,
+            key: $request->header(Hybridly::DIALOG_KEY_HEADER, str()->uuid()->toString()),
         );
     }
 
     protected function getRedirectUrl(Request $request): ?string
     {
-        if (!$referer = $request->headers->get('referer')) {
+        if ($redirect = $request->headers->get(Hybridly::DIALOG_REDIRECT_HEADER)) {
+            return $redirect;
+        }
+
+        if (empty($referer = $request->headers->get('referer'))) {
             return null;
         }
 

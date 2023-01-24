@@ -15,33 +15,33 @@ export const state = {
 	viewKey: ref<string>(),
 
 	setView(view: MaybeRef<ComponentOptions>) {
-		debug.adapter('vue:state:view', 'Setting view:', view)
+		debug.adapter('vue:state:view', 'Storing view:', view)
 		state.view.value = view
 	},
 
 	setProperties(properties: any) {
-		debug.adapter('vue:state:view', 'Setting properties:', properties)
+		debug.adapter('vue:state:view', 'Storing properties:', properties)
 		state.properties.value = properties
 	},
 
 	setViewLayout(layout: Layout | Layout[]) {
-		debug.adapter('vue:state:view', 'Setting layout', layout)
+		debug.adapter('vue:state:view', 'Storing layout', layout)
 		state.viewLayout.value = layout
 	},
 
 	setViewLayoutProperties(properties: any) {
-		debug.adapter('vue:state:view', 'Setting layout properties:', properties)
+		debug.adapter('vue:state:view', 'Storing layout properties:', properties)
 		state.viewLayoutProperties.value = properties
 	},
 
 	setContext(context: MaybeRef<RouterContext>) {
-		debug.adapter('vue:state:context', 'Setting context:', context)
+		debug.adapter('vue:state:context', 'Storing context:', context)
 		state.context.value = unref(context)
 		triggerRef(state.context)
 	},
 
 	setViewKey(key: MaybeRef<string>) {
-		debug.adapter('vue:state:key', 'Setting view key:', key)
+		debug.adapter('vue:state:key', 'Storing view key:', key)
 		state.viewKey.value = unref(key)
 	},
 }

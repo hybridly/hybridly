@@ -31,7 +31,7 @@ export const dialogStore = {
 	},
 
 	setKey(key: MaybeRef<string>) {
-		debug.adapter(DEBUG_KEY, 'Setting dialog key:', key)
+		debug.adapter(DEBUG_KEY, 'Setting dialog key:', { new: key, previous: dialogStore.state.key.value })
 		dialogStore.state.key.value = unref(key)
 	},
 

@@ -11,6 +11,7 @@ class Dialog implements Arrayable
         public array $properties,
         public string $baseUrl,
         public string $redirectUrl,
+        public string $key,
     ) {
     }
 
@@ -21,6 +22,7 @@ class Dialog implements Arrayable
             'properties' => $this->properties,
             'baseUrl' => $this->baseUrl,
             'redirectUrl' => $this->redirectUrl,
+            'key' => $this->key,
         ];
     }
 }

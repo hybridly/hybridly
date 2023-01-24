@@ -29,8 +29,6 @@ class Middleware
             app()->call([$this, 'beforeHandle']);
         }
 
-        $this->transformHeadersForDialogs($request);
-
         hybridly()->setRootView(fn () => $this->rootView($request));
         hybridly()->setVersion(fn () => $this->version($request));
         hybridly()->persist($this->persistent);
@@ -166,12 +164,5 @@ class Middleware
 
                 return $bags->toArray();
             });
-    }
-
-    private function transformHeadersForDialogs(Request $request): void
-    {
-        if ($referer = $request->header(Hybridly::DIALOG_HEADER)) {
-            $request->headers->set('referer', $referer);
-        }
     }
 }
