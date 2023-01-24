@@ -51,30 +51,41 @@ test('the `assertHybridProperty` method asserts the property at the given path h
 
 test('the `assertHybridProperties` method asserts the properties using the given array', function () {
     makeHybridMockRequest(properties: [
-        'foo' => 'bar',
-        'baz' => [1, 2, 3],
-        'five' => 5,
-        'uwu' => [
-            'owo' => 'hewwo',
-            'ewe' => 'world',
+        'case1' => 'abc',
+        'case2' => 'bar',
+        'case3' => 'zyx',
+        'case4' => [1, 2, 3],
+        'case5' => 5,
+        'case6' => [
+            'hello' => 'world',
+            'say' => 'hi',
         ],
-        'zoo' => null,
-        'true' => true,
-        'false' => false,
+        'case7' => [
+            'drink' => 'water',
+            'stay' => 'hydrated',
+        ],
+        'case8' => null,
+        'case9' => true,
+        'case10' => false,
+        'case11' => ['hey'],
     ])->assertHybridProperties([
-        'foo', // asserts it exists
-        'foo' => 'bar', // asserts it has the given value
-        'uwu' => ['owo', 'ewe'],
-        'uwu.owo' => 'hewwo', // asserts it has the given value
-        'uwu.ewe' => 'world', // asserts it has the given value
-        'baz' => 3, // asserts it has the given count
-        'five' => 5, // asserts it has the given value
-        'uwu' => fn (Assertable $assert) => $assert->hasAll(['owo', 'ewe']), // asserts using callback and typehinted parameter
-        'foo' => fn ($foo) => expect($foo)->toBe('bar'), // asserts using callback
-        'uwu.owo' => fn ($owo) => expect($owo)->toBe('hewwo'), // asserts using callback and dot notation
-        'zoo' => null, // assert that value is null
-        'true' => true, // assert that value is true
-        'false' => false, // assert that value is false
+        'case1', // asserts it exists
+        'case2' => 'bar', // asserts it has the given value
+        'case3' => fn ($case) => expect($case)->toBe('zyx'), // asserts using callback
+        'case4' => 3, // asserts it has the given count
+        'case5' => 5, // asserts it has the given value
+        'case6' => [
+            'hello' => 'world',
+            'say' => 'hi',
+        ],
+        'case6.hello' => 'world', // asserts it has the given value
+        'case6.say' => 'hi', // asserts it has the given value
+        'case6.say' => fn ($say) => expect($say)->toBe('hi'), // asserts using callback and dot notation
+        'case7' => fn (Assertable $assert) => $assert->hasAll(['drink', 'stay']), // asserts using callback and typehinted parameter
+        'case8' => null, // assert that value is null
+        'case9' => true, // assert that value is true
+        'case10' => false, // assert that value is false
+        'case11' => ['hey'],
     ]);
 });
 
