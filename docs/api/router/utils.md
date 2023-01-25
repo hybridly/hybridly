@@ -74,6 +74,14 @@ router.navigate(options)
 
 This function aborts the current request. The `abort` hook will be triggered.
 
+## `dialog.close`
+
+This function closes the current dialog. It takes the same options as the other router functions. 
+
+```ts
+router.dialog.close()
+```
+
 ## `history.get`
 
 This function fetches the given key from the history state. The state is specific to the current [history entry](https://developer.mozilla.org/en-US/docs/Web/API/History).

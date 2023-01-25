@@ -16,6 +16,22 @@ return hybridly()->view('users.show', [
 ]);
 ```
 
+## `base`
+
+Makes the view a [dialog](../../guide/dialogs.md) and defines its base page. It takes a route name and its parameters as its arguments.
+
+> See [dialogs](../../guide/dialogs.md) for more details.
+
+### Usage
+
+```php
+return hybridly()
+  ->view('users.edit', [
+    'user' => UserData::from($user)
+  ])
+  ->base('users.show', $user);
+```
+
 ## `external`
   
 Generates a response for redirecting to an external website, or a non-hybrid page. 

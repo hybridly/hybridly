@@ -90,6 +90,7 @@ export default defineConfig({
 						{ text: 'Partial reloads', link: '/guide/partial-reloads' },
 						{ text: 'Persistent properties', link: '/guide/persistent-properties' },
 						{ text: 'Forms', link: '/guide/forms' },
+						{ text: 'Dialogs', link: '/guide/dialogs' },
 						{ text: 'Hooks', link: '/guide/hooks' },
 					],
 				},
@@ -168,6 +169,7 @@ export default defineConfig({
 					text: 'Composables',
 					items: [
 						{ text: 'useForm', link: '/api/composables/use-form' },
+						{ text: 'useDialog', link: '/api/composables/use-dialog' },
 						{ text: 'useProperty', link: '/api/composables/use-property' },
 						{ text: 'defineLayout', link: '/api/composables/define-layout' },
 						{ text: 'defineLayoutProperties', link: '/api/composables/define-layout-properties' },
