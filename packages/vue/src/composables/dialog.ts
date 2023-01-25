@@ -9,7 +9,7 @@ import { state } from '../stores/state'
 export function useDialog() {
 	return {
 		/** Closes the dialog. */
-		close: router.dialog.close,
+		close: () => router.dialog.close(),
 		/** Unmounts the dialog. Should be called after its closing animations. */
 		unmount: () => dialogStore.removeComponent(),
 		/** Whether the dialog is shown. */
