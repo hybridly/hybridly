@@ -30,11 +30,21 @@ class Factory implements HybridResponse
     }
 
     /**
-     * Sets the base URL for this view, implying a stack will be added.
+     * Sets the base route for this view, implying a dialog will be rendered.
      */
     public function base(string $route, mixed $parameters = null): static
     {
         $this->dialogBaseUrl = route($route, $parameters);
+
+        return $this;
+    }
+
+    /**
+     * Sets the base URL for this view, implying a dialog will be rendered.
+     */
+    public function baseUrl(string $url): static
+    {
+        $this->dialogBaseUrl = $url;
 
         return $this;
     }
