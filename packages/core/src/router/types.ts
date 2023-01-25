@@ -175,8 +175,6 @@ export interface Dialog extends View {
 	baseUrl: string
 	/** URL to which the dialog should redirect when closed. */
 	redirectUrl: string
-	/** Unique identifier for this modal instance. */
-	// nonce: string
 	/** Unique identifier for this modal's lifecycle. */
 	key: string
 }
