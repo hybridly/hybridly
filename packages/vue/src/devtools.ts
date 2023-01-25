@@ -37,7 +37,13 @@ export function setupDevtools(app: App) {
 			payload.instanceData.state.push({
 				type: hybridlyStateType,
 				key: 'component',
-				value: state.context.value?.view.name,
+				value: state.context.value?.view.component,
+			})
+
+			payload.instanceData.state.push({
+				type: hybridlyStateType,
+				key: 'dialog',
+				value: state.context.value?.dialog,
 			})
 
 			payload.instanceData.state.push({

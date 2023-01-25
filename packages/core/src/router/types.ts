@@ -1,6 +1,7 @@
 import type { RequestData } from '@hybridly/utils'
 import type { AxiosProgressEvent, AxiosResponse } from 'axios'
 import type { RequestHooks } from '../plugins/hooks'
+import type { CloseDialogOptions } from '../dialog'
 import type { RouteName, RouteParameters } from '../routing/types'
 import type { UrlResolvable, UrlTransformable } from '../url'
 
@@ -100,6 +101,11 @@ export interface NavigationResponse {
 	}
 }
 
+export interface DialogRouter {
+	/** Closes the current dialog. */
+	close: (options?: CloseDialogOptions) => void
+}
+
 export interface Router {
 	/** Aborts the currently pending navigate, if any. */
 	abort: () => Promise<void>
@@ -125,6 +131,8 @@ export interface Router {
 	external: (url: UrlResolvable, data?: HybridRequestOptions['data']) => void
 	/** Navigates to the given URL without a server round-trip. */
 	local: (url: UrlResolvable, options: ComponentNavigationOptions) => Promise<void>
+	/** Access the dialog router. */
+	dialog: DialogRouter
 	/** Access the history state. */
 	history: {
 		/** Remembers a value for the given route. */
@@ -144,6 +152,8 @@ export interface PendingNavigation {
 	options: HybridRequestOptions
 	/** Navigation identifier. */
 	id: string
+	/** Current status. */
+	status: 'pending' | 'success' | 'error'
 }
 
 /*
@@ -155,9 +165,18 @@ export interface PendingNavigation {
 /** A page or dialog component. */
 export interface View {
 	/** Name of the component to use. */
-	name: string
+	component: string
 	/** Properties to apply to the component. */
 	properties: Properties
+}
+
+export interface Dialog extends View {
+	/** URL that is the base background page when navigating to the dialog directly. */
+	baseUrl: string
+	/** URL to which the dialog should redirect when closed. */
+	redirectUrl: string
+	/** Unique identifier for this modal's lifecycle. */
+	key: string
 }
 
 export type Property =
@@ -182,6 +201,8 @@ export interface SwapOptions<T> {
 	properties?: any
 	/** Whether to preserve the state of the component. */
 	preserveState?: boolean
+	/** Current dialog. */
+	dialog?: Dialog
 }
 
 export type ViewComponent = any
@@ -201,7 +222,7 @@ export interface HybridPayload {
 	/** The view to use in this request. */
 	view: View
 	/** An optional dialog. */
-	dialog?: View
+	dialog?: Dialog
 	/** The current page URL. */
 	url: string
 	/** The current asset version. */

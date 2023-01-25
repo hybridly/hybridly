@@ -1,7 +1,7 @@
 import type { Ref } from 'vue'
 import { isRef, reactive, unref } from 'vue'
 
-type MaybeRef<T> = T | Ref<T>
+export type MaybeRef<T> = T | Ref<T>
 
 /**
  * Converts ref to reactive.

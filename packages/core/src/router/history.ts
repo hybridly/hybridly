@@ -1,7 +1,7 @@
 import { debounce, debug } from '@hybridly/utils'
 import { SCROLL_REGION_ATTRIBUTE } from '../constants'
 import type { InternalRouterContext, RouterContextOptions, Serializer } from '../context'
-import { getRouterContext, setContext } from '../context'
+import { getInternalRouterContext, getRouterContext, setContext } from '../context'
 import { runHooks } from '../plugins'
 import { saveScrollPositions } from '../scroll'
 import { makeUrl } from '../url'
@@ -79,7 +79,7 @@ export async function registerEventListeners() {
 		await navigate({
 			payload: event.state,
 			preserveScroll: true,
-			preserveState: false,
+			preserveState: !!getInternalRouterContext().dialog || !!event.state.dialog,
 			updateHistoryState: false,
 			isBackForward: true,
 		})

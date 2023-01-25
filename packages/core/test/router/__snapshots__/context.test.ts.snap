@@ -21,7 +21,7 @@ exports[`creates a valid router context > context 1`] = `
   "url": "https://localhost/",
   "version": "123",
   "view": {
-    "name": "my-owo-view",
+    "component": "my-owo-view",
     "properties": {
       "foo": "bar",
     },
@@ -50,7 +50,7 @@ exports[`updates the context > base context 1`] = `
   "url": "https://localhost/",
   "version": "abc123",
   "view": {
-    "name": "default.view",
+    "component": "default.view",
     "properties": {},
   },
 }
@@ -77,7 +77,7 @@ exports[`updates the context > updated context 1`] = `
   "url": "https://localhost/foo/bar",
   "version": "new-version-string",
   "view": {
-    "name": "default.view",
+    "component": "default.view",
     "properties": {},
   },
 }
@@ -93,10 +93,12 @@ exports[`updates the context > updated context with dialog 1`] = `
   },
   "axios": [Function],
   "dialog": {
-    "name": "some.dialog",
+    "baseUrl": "https://base.test",
+    "component": "some.dialog",
     "properties": {
       "foo": "bar",
     },
+    "redirectUrl": "https://base.test/dialog",
   },
   "hooks": {},
   "plugins": [],
@@ -110,7 +112,7 @@ exports[`updates the context > updated context with dialog 1`] = `
   "url": "https://localhost/foo/bar/dialog",
   "version": "new-version-string",
   "view": {
-    "name": "default.view",
+    "component": "default.view",
     "properties": {},
   },
 }
@@ -138,7 +140,7 @@ exports[`updates the context > updated context with no dialog 1`] = `
   "url": "https://localhost/foo",
   "version": "new-version-string",
   "view": {
-    "name": "default.view",
+    "component": "default.view",
     "properties": {},
   },
 }

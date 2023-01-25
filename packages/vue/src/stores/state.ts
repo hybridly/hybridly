@@ -12,48 +12,36 @@ export const state = {
 	properties: ref<any>(),
 	viewLayout: shallowRef<Layout>(),
 	viewLayoutProperties: ref<any>(),
-	viewKey: ref<number>(),
-	dialog: shallowRef<ComponentOptions>(),
-	dialogKey: ref<number>(),
+	viewKey: ref<string>(),
 
 	setView(view: MaybeRef<ComponentOptions>) {
-		debug.adapter('vue:state:view', 'Setting view:', view)
+		debug.adapter('vue:state:view', 'Storing view:', view)
 		state.view.value = view
 	},
 
 	setProperties(properties: any) {
-		debug.adapter('vue:state:view', 'Setting properties:', properties)
+		debug.adapter('vue:state:view', 'Storing properties:', properties)
 		state.properties.value = properties
 	},
 
 	setViewLayout(layout: Layout | Layout[]) {
-		debug.adapter('vue:state:view', 'Setting layout', layout)
+		debug.adapter('vue:state:view', 'Storing layout', layout)
 		state.viewLayout.value = layout
 	},
 
 	setViewLayoutProperties(properties: any) {
-		debug.adapter('vue:state:view', 'Setting layout properties:', properties)
+		debug.adapter('vue:state:view', 'Storing layout properties:', properties)
 		state.viewLayoutProperties.value = properties
 	},
 
-	setDialog(dialog: MaybeRef<ComponentOptions>) {
-		debug.adapter('vue:state:dialog', 'Setting dialog:', dialog)
-		state.dialog.value = dialog
-	},
-
 	setContext(context: MaybeRef<RouterContext>) {
-		debug.adapter('vue:state:context', 'Setting context:', context)
+		debug.adapter('vue:state:context', 'Storing context:', context)
 		state.context.value = unref(context)
 		triggerRef(state.context)
 	},
 
-	setViewKey(key: MaybeRef<number>) {
-		debug.adapter('vue:state:key', 'Setting view key:', key)
+	setViewKey(key: MaybeRef<string>) {
+		debug.adapter('vue:state:key', 'Storing view key:', key)
 		state.viewKey.value = unref(key)
-	},
-
-	setDialogKey(key: MaybeRef<number>) {
-		debug.adapter('vue:state:key', 'Setting dialog key:', key)
-		state.dialogKey.value = unref(key)
 	},
 }

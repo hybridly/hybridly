@@ -2,13 +2,14 @@ import type { App, DefineComponent, Plugin as VuePlugin } from 'vue'
 import { createApp, h } from 'vue'
 import type { HybridPayload, ResolveComponent, RouterContext, RouterContextOptions, Plugin, RoutingConfiguration } from '@hybridly/core'
 import { createRouter } from '@hybridly/core'
-import { showPageComponentErrorModal, debug } from '@hybridly/utils'
+import { showPageComponentErrorModal, debug, random } from '@hybridly/utils'
 import type { ProgressOptions } from '@hybridly/progress-plugin'
 import { progress } from '@hybridly/progress-plugin'
 import type { Axios } from 'axios'
 import { wrapper } from './components/wrapper'
 import { state } from './stores/state'
 import { devtools } from './devtools'
+import { dialogStore } from './stores/dialog'
 
 export async function initializeHybridly(options: HybridlyOptions) {
 	const { element, payload, resolve } = prepare(options)
@@ -21,26 +22,34 @@ export async function initializeHybridly(options: HybridlyOptions) {
 		throw new Error('No payload. Are you using `@hybridly` or the `payload` option?')
 	}
 
-	// This causes an issue on first load, the same component renders twice.
-	// Not sure of the side effects so let's keep it commented for now.
-	// state.setView(await resolve(payload.view.name))
 	state.setContext(await createRouter({
 		axios: options.axios,
 		plugins: options.plugins,
 		serializer: options.serializer,
 		adapter: {
 			resolveComponent: resolve,
-			swapDialog: async() => {},
-			swapView: async(options) => {
+			onDialogClose: async() => {
+				dialogStore.hide()
+			},
+			onContextUpdate: (context) => {
+				state.setContext(context)
+			},
+			onViewSwap: async(options) => {
 				state.setView(options.component)
 				state.setProperties(options.properties)
 
-				if (!options.preserveState) {
-					state.setViewKey(Date.now())
+				if (!options.preserveState && !options.dialog) {
+					state.setViewKey(random())
 				}
-			},
-			update: (context) => {
-				state.setContext(context)
+
+				if (options.dialog) {
+					dialogStore.setComponent(await resolve(options.dialog.component))
+					dialogStore.setProperties(options.dialog.properties)
+					dialogStore.setKey(options.dialog.key)
+					dialogStore.show()
+				} else {
+					dialogStore.hide()
+				}
 			},
 		},
 		payload,

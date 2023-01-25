@@ -10,7 +10,7 @@ class Payload implements Arrayable
         public View $view,
         public string $url,
         public ?string $version,
-        public ?View $dialog,
+        public ?Dialog $dialog,
     ) {
     }
 

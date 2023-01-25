@@ -22,7 +22,7 @@ exports[`performs hybridly navigations > context after navigation 1`] = `
   "url": "https://localhost/",
   "version": "abc123",
   "view": {
-    "name": "default.view",
+    "component": "default.view",
     "properties": {},
   },
 }

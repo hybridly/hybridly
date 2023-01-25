@@ -1,6 +1,6 @@
 import { beforeEach, expect, it, vi } from 'vitest'
-import { performHybridNavigation } from '../../src/router/router'
-import { getRouterContext, router, registerHook } from '../../src'
+import { performHybridNavigation, router } from '../../src/router/router'
+import { getRouterContext, registerHook } from '../../src'
 import { fakeRouterContext, fakePayload, mockUrl } from '../utils'
 
 beforeEach(() => {
@@ -17,7 +17,7 @@ it('performs hybridly navigations', async() => {
 		json: fakePayload({
 			url: 'https://localhost.test/navigation',
 			view: {
-				name: 'target.view',
+				component: 'target.view',
 				properties: {
 					foo: 'bar',
 				},

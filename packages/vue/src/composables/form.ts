@@ -37,7 +37,7 @@ export function useForm<T extends Fields = Fields>(options: FormOptions<T>) {
 	/** Fields as they were when loaded. */
 	const loaded = safeClone(historyData?.fields ?? options.fields)
 	/** Current fields. */
-	const fields = reactive<T>(safeClone(historyData?.fields ?? options.fields))
+	const fields = reactive<T>(safeClone(loaded))
 	/** Validation errors for each field. */
 	const errors = ref<Record<keyof T, string>>(historyData?.errors ?? {})
 	/** Whether the form is dirty. */
@@ -54,6 +54,15 @@ export function useForm<T extends Fields = Fields>(options: FormOptions<T>) {
 	const processing = ref(false)
 	/** The current request's progress. */
 	const progress = ref<Progress>()
+
+	/**
+	 * Resets the form to its initial values.
+	 */
+	function setInitial(newInitial: Partial<T>) {
+		Object.entries(newInitial).forEach(([key, value]) => {
+			Reflect.set(initial, key, safeClone(value))
+		})
+	}
 
 	/**
 	 * Resets the form to its initial values.
@@ -118,6 +127,7 @@ export function useForm<T extends Fields = Fields>(options: FormOptions<T>) {
 				},
 				success: (payload, context) => {
 					clearErrors()
+					setInitial(fields)
 					if (options?.reset !== false) {
 						reset()
 					}
@@ -198,6 +208,7 @@ export function useForm<T extends Fields = Fields>(options: FormOptions<T>) {
 		setErrors,
 		clearErrors,
 		clearError,
+		setInitial,
 		hasDirty,
 		submitWithOptions: submit,
 		submit: () => submit(),

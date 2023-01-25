@@ -12,7 +12,7 @@ exports[`setHistoryState > pushes the context into the history > context 1`] = `
         "url": "https://localhost/",
         "version": "abc123",
         "view": {
-          "name": "default.view",
+          "component": "default.view",
           "properties": {},
         },
       },
@@ -35,7 +35,7 @@ exports[`setHistoryState > replaces the context in the current history state > c
         "url": "https://localhost/",
         "version": "abc123",
         "view": {
-          "name": "default.view",
+          "component": "default.view",
           "properties": {},
         },
       },

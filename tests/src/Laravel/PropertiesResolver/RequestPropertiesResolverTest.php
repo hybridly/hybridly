@@ -14,7 +14,7 @@ it('resolves functions', function () {
         ->toResponse(mockRequest())
         ->getData();
 
-    expect($payload->view->name)->toBe('users.edit');
+    expect($payload->view->component)->toBe('users.edit');
     expect($payload->view->properties->user)->toBe('Makise Kurisu');
 });
 
@@ -31,7 +31,7 @@ it('resolves callables', function () {
         ->toResponse(mockRequest())
         ->getData();
 
-    expect($payload->view->name)->toBe('users.edit');
+    expect($payload->view->component)->toBe('users.edit');
     expect($payload->view->properties->type)->toBe('app');
     expect($payload->view->properties->user->name)->toBe('Makise Kurisu');
 });
@@ -49,7 +49,7 @@ it('resolves arrayable properties', function () {
         ->toResponse(mockRequest())
         ->getData();
 
-    expect($payload->view->name)->toBe('users.edit');
+    expect($payload->view->component)->toBe('users.edit');
     expect($payload->view->properties->user->name)->toBe('Makise Kurisu');
 });
 
@@ -62,7 +62,7 @@ it('does not resolve partials by default', function () {
         ->toResponse(mockRequest())
         ->getData();
 
-    expect($payload->view->name)->toBe('users.edit');
+    expect($payload->view->component)->toBe('users.edit');
     expect($payload->view->properties)->user->toBeNull();
     expect($payload->view->properties)->email->toBe('jon@example.org');
 });
@@ -78,7 +78,7 @@ it('does not resolve nested partials by default', function () {
         ->toResponse(mockRequest())
         ->getData();
 
-    expect($payload->view->name)->toBe('users.edit');
+    expect($payload->view->component)->toBe('users.edit');
     expect($payload->view->properties->user)->full_name->toBeNull();
     expect($payload->view->properties->user)->email->toBe('jon@doe.example');
 });
@@ -95,7 +95,7 @@ it('resolves partials', function () {
         ]))
         ->getData();
 
-    expect($payload->view->name)->toBe('users.edit');
+    expect($payload->view->component)->toBe('users.edit');
     expect($payload->view->properties)->full_name->toBe('Jon Doe');
     expect($payload->view->properties)->email->toBe('jon@example.org');
 });
@@ -114,7 +114,7 @@ it('resolves nested partials', function () {
         ]))
         ->getData();
 
-    expect($payload->view->name)->toBe('users.edit');
+    expect($payload->view->component)->toBe('users.edit');
     expect($payload->view->properties->user)->full_name->toBe('Jon Doe');
     expect($payload->view->properties->user)->email->toBe('jon@example.org');
 });

@@ -31,7 +31,7 @@ The following is a non-exhaustive comparison table between Inertia and Hybridly'
 | Infinite scroll support                         |            <span class="no">No</span>             |      [Yes](../api/router/options.md#preserveurl)      |
 | Server-side rendering                           |                        Yes                        |         <span class="planned">Planned</span>          |
 | Built-in meta management                        |                        Yes                        |        <span class="no">No <sup>1</sup></span>        |
-| Page modal support                              | <span class="planned">Planned <sup>2</sup></span> |         <span class="planned">Planned</span>          |
+| Dialogs support                                 | <span class="planned">Planned <sup>2</sup></span> |              [Yes](../guide/dialogs.md)               |
 | Request events support                          |                        Yes                        |                          Yes                          |
 | Global events support                           |                        Yes                        |                          Yes                          |
 | Internationalization support                    |            <span class="no">No</span>             |                [Yes](../guide/i18n.md)                |
@@ -45,7 +45,7 @@ The following is a non-exhaustive comparison table between Inertia and Hybridly'
 
 <div class="opacity-80">
   1. <a href="https://github.com/vueuse/head"><code>@vueuse/head</code></a> is recommended instead <br />
-  2. Support through thrid-party package using <a href="https://github.com/lepikhinb/momentum-modal">Momentum</a> <br />
+  2. Support through third-party package using <a href="https://github.com/lepikhinb/momentum-modal">Momentum</a> <br />
   3. Unofficial extension by <a href="https://twitter.com/nicolashedger">Nicolas Hedger</a>
 </div>
 
