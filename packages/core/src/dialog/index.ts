@@ -12,11 +12,11 @@ export async function closeDialog(options?: CloseDialogOptions) {
 	const context = getInternalRouterContext()
 	const url = context.dialog?.redirectUrl ?? context.dialog?.baseUrl
 
-	context.adapter.onDialogClose?.(context)
-
 	if (!url) {
 		return
 	}
+
+	context.adapter.onDialogClose?.(context)
 
 	return await performHybridNavigation({
 		url,
