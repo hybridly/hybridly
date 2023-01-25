@@ -13,6 +13,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Route;
 use Spatie\LaravelData\Contracts\DataObject;
 
 class Factory implements HybridResponse
@@ -34,17 +35,13 @@ class Factory implements HybridResponse
      */
     public function base(string $route, mixed $parameters = null): static
     {
-        $this->dialogBaseUrl = route($route, $parameters);
+        // In order to provide autocompletion support without adding
+        // a `baseUrl` method, we check if `$route` is a named
+        // route, in which case we call `route` on it.
 
-        return $this;
-    }
-
-    /**
-     * Sets the base URL for this view, implying a dialog will be rendered.
-     */
-    public function baseUrl(string $url): static
-    {
-        $this->dialogBaseUrl = $url;
+        $this->dialogBaseUrl = Route::has($route)
+            ? route($route, $parameters)
+            : $route;
 
         return $this;
     }
