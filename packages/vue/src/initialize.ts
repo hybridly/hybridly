@@ -2,7 +2,7 @@ import type { App, DefineComponent, Plugin as VuePlugin } from 'vue'
 import { createApp, h } from 'vue'
 import type { HybridPayload, ResolveComponent, RouterContext, RouterContextOptions, Plugin, RoutingConfiguration } from '@hybridly/core'
 import { createRouter } from '@hybridly/core'
-import { showPageComponentErrorModal, debug } from '@hybridly/utils'
+import { showPageComponentErrorModal, debug, random } from '@hybridly/utils'
 import type { ProgressOptions } from '@hybridly/progress-plugin'
 import { progress } from '@hybridly/progress-plugin'
 import type { Axios } from 'axios'
@@ -10,7 +10,6 @@ import { wrapper } from './components/wrapper'
 import { state } from './stores/state'
 import { devtools } from './devtools'
 import { dialogStore } from './stores/dialog'
-import { generateRandomKey } from './utils'
 
 export async function initializeHybridly(options: HybridlyOptions) {
 	const { element, payload, resolve } = prepare(options)
@@ -40,7 +39,7 @@ export async function initializeHybridly(options: HybridlyOptions) {
 				state.setProperties(options.properties)
 
 				if (!options.preserveState && !options.dialog) {
-					state.setViewKey(generateRandomKey())
+					state.setViewKey(random())
 				}
 
 				if (options.dialog) {

@@ -48,7 +48,3 @@ export function toReactive<T extends object>(
 
 	return reactive(proxy) as T
 }
-
-export function generateRandomKey() {
-	return Math.random().toString(36).substr(2, 9)
-}
