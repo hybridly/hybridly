@@ -38,10 +38,10 @@ const features: Feature[] = [
 		url: '/guide/#about-inertia',
 	},
 	{
-		icon: 'i-mdi:human-greeting-variant',
-		title: 'Painless migration',
-		description: 'Migrating is a matter of installing different dependencies and replacing the API.',
-		url: '/guide/migrating-from-inertia',
+		icon: 'i-mdi:dock-window',
+		title: 'Dialogs',
+		description: 'Effortlessly implement URL-based dialogs, just like you would implement a page component.',
+		url: '/guide/dialogs',
 	},
 ]
 </script>
