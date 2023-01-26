@@ -44,22 +44,22 @@ export interface RequestHooks {
 	/**
 	 * Called when a response to a request is not a valid hybrid response.
 	 */
-	invalid: (response: AxiosResponse, context: InternalRouterContext) => MaybePromise<void>
+	invalid: (response: AxiosResponse, context: InternalRouterContext) => MaybePromise<any>
 
 	/**
 	 * Called when an unknowne exception was triggered.
 	 */
-	exception: (error: Error, context: InternalRouterContext) => MaybePromise<void>
+	exception: (error: Error, context: InternalRouterContext) => MaybePromise<any>
 
 	/**
 	 * Called whenever the request failed, for any reason, in addition to other hooks.
 	 */
-	fail: (context: InternalRouterContext) => MaybePromise<void>
+	fail: (context: InternalRouterContext) => MaybePromise<any>
 
 	/**
 	 * Called after a request has been made, even if it didn't succeed.
 	 */
-	after: (context: InternalRouterContext) => MaybePromise<void>
+	after: (context: InternalRouterContext) => MaybePromise<any>
 }
 // #endregion requesthooks
 
@@ -68,12 +68,12 @@ export interface Hooks extends RequestHooks {
 /* [!code focus:24] */	/**
 	 * Called when Hybridly's context is initialized.
 	 */
-	initialized: (context: InternalRouterContext) => MaybePromise<void>
+	initialized: (context: InternalRouterContext) => MaybePromise<any>
 
 	/**
 	 * Called after Hybridly's initial page load.
 	 */
-	ready: (context: InternalRouterContext) => MaybePromise<void>
+	ready: (context: InternalRouterContext) => MaybePromise<any>
 
 	/**
 	 * Called when a back-forward navigation occurs.
@@ -83,12 +83,12 @@ export interface Hooks extends RequestHooks {
 	/**
 	 * Called when a component navigation is being made.
 	 */
-	navigating: (options: NavigationOptions, context: InternalRouterContext) => MaybePromise<void>
+	navigating: (options: NavigationOptions, context: InternalRouterContext) => MaybePromise<any>
 
 	/**
 	 * Called when a component has been navigated to.
 	 */
-	navigated: (options: NavigationOptions, context: InternalRouterContext) => MaybePromise<void>
+	navigated: (options: NavigationOptions, context: InternalRouterContext) => MaybePromise<any>
 }
 // #endregion hooks
 
