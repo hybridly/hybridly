@@ -25,7 +25,7 @@ describe('an url can be generated from a route name', () => {
 		expect(() => route('chirp.show')).toThrowError('Parameter [chirp] is required for route [chirp.show].')
 	})
 
-	test('warns when the required paramter does not respect where constraints', () => {
+	test('warns when the required parameter does not respect where constraints', () => {
 		const messages: string[] = []
 		vi.stubGlobal('console', {
 			warn: vi.fn((message: string) => messages.push(message)),
