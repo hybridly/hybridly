@@ -34,6 +34,10 @@ defineProps<{
 import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
 
 const { show, close, unmount } = useDialog() // [!code focus]
+
+defineProps<{
+  title?: string
+}>()
 </script>
 
 <template>
