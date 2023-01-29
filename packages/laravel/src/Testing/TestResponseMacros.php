@@ -144,6 +144,19 @@ class TestResponseMacros
     }
 
     /**
+     * Asserts that the hybrid response's dialog view is the expected value.
+     */
+    public function assertHybridDialogView(): Closure
+    {
+        return function (string $dialogView, ?string $baseUrl = null): TestResponse {
+            /** @var TestResponse $this */
+            Assertable::fromTestResponse($this)->dialogView($dialogView, $baseUrl);
+
+            return $this;
+        };
+    }
+
+    /**
      * Asserts that the hybrid response's version is the expected value.
      */
     public function assertHybridVersion(): Closure
