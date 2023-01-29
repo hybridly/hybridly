@@ -35,7 +35,7 @@ function getRouteTransformable(routeName: string, routeParameters?: any, shouldT
 	const definition = getRouteDefinition(routeName)
 	const parameters = routeParameters || {}
 	const missing: string[] = Object.keys(parameters)
-	const path = definition.uri.replace(/{([^}?]+)\??}/g, (match: string, parameterName: string) => {
+	const replaceParameter = (match: string, parameterName: string) => {
 		const optional = /\?}$/.test(match)
 		const value = (() => {
 			const value = parameters[parameterName]
@@ -78,7 +78,10 @@ function getRouteTransformable(routeName: string, routeParameters?: any, shouldT
 		}
 
 		throw new MissingRouteParameter(parameterName, routeName)
-	})
+	}
+
+	const path = definition.uri.replace(/{([^}?]+)\??}/g, replaceParameter)
+	const domain = definition.domain?.replace(/{([^}?]+)\??}/g, replaceParameter)
 
 	// Filters from `parameters` the values from `missing`
 	// and returns a new object with the remaining values.
@@ -90,6 +93,7 @@ function getRouteTransformable(routeName: string, routeParameters?: any, shouldT
 		}), {})
 
 	return {
+		...domain && { hostname: domain },
 		pathname: path,
 		search: qs.stringify(remaining, {
 			encodeValuesOnly: true,

@@ -43,6 +43,14 @@
 			"bindings": [],
 			"wheres": []
 		},
+		"subdomain": {
+			"domain": "{subdomain}.bluebird.test",
+			"method": ["GET", "HEAD"],
+			"uri": "",
+			"name": "subdomain",
+			"bindings": { "subdomain": "subdomain" },
+			"wheres": []
+		},
 		"chirp.store": {
 			"domain": null,
 			"method": ["POST"],

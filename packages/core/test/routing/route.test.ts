@@ -19,6 +19,7 @@ describe('an url can be generated from a route name', () => {
 	test('with required parameter', () => {
 		expect(route('chirp.show', { chirp: 10 })).toBe('https://bluebird.test/chirps/10')
 		expect(route('chirp.show', { chirp: 10 }, false)).toBe('/chirps/10')
+		expect(route('subdomain', { subdomain: 'demo' })).toBe('https://demo.bluebird.test')
 	})
 
 	test('throws when required parameter is missing', () => {
