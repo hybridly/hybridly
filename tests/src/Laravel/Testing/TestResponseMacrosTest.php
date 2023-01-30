@@ -1,9 +1,10 @@
 <?php
 
 use Hybridly\Testing\Assertable;
-use Hybridly\View\Factory;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Testing\TestResponse;
+
+use function Pest\Laravel\get;
 
 test('the `assertHybrid` method runs its callback', function () {
     $success = false;
@@ -16,15 +17,11 @@ test('the `assertHybrid` method runs its callback', function () {
     expect($success)->toBeTrue();
 });
 
-test('the `assertDialog` method asserts dialog view component, base url and properties', function () {
+test('the `assertHybridDialog` method asserts dialog view component & base url & properties', function () {
     Route::get('/test/page', fn () => hybridly('test.page'))->name('test.page');
-    Route::get('/test/dialog', fn () => hybridly('test.dialog', ['foo' => 'bar']))->name('test.dialog');
+    Route::get('/test/dialog', fn () => hybridly('test.dialog', ['foo' => 'bar'])->base('test.page'))->name('test.dialog');
 
-    makeHybridMockRequest(
-        component: 'test.dialog',
-        url: '/test/dialog',
-        tap: fn (Factory $factory) => $factory->base('test.page'),
-    )
+    get('/test/dialog')
         ->assertHybridView('test.page')
         ->assertHybridUrl('http://localhost/test/dialog')
         ->assertHybridDialog(
