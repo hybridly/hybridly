@@ -39,10 +39,16 @@ function makeMockRequest(mixed $response, string $url = '/mock-url'): TestRespon
     return get($url);
 }
 
-function makeHybridMockRequest(string $component = 'test', mixed $properties = [], string $url = '/hybrid-mock-url'): TestResponse
+function makeHybridMockRequest(string $component = 'test', mixed $properties = [], string $url = '/hybrid-mock-url', \Closure $tap = null): TestResponse
 {
+    $response = hybridly($component, $properties);
+
+    if (is_callable($tap)) {
+        $response = $tap($response);
+    }
+
     return makeMockRequest(
-        response: hybridly($component, $properties),
+        response: $response,
         url: $url,
     );
 }

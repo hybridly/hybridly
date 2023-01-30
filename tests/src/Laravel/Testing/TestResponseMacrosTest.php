@@ -1,6 +1,8 @@
 <?php
 
 use Hybridly\Testing\Assertable;
+use Hybridly\View\Factory;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Testing\TestResponse;
 
 test('the `assertHybrid` method runs its callback', function () {
@@ -12,6 +14,26 @@ test('the `assertHybrid` method runs its callback', function () {
     });
 
     expect($success)->toBeTrue();
+});
+
+test('the `assertDialog` method asserts dialog view component, base url and properties', function () {
+    Route::get('/test/page', fn () => hybridly('test.page'))->name('test.page');
+    Route::get('/test/dialog', fn () => hybridly('test.dialog', ['foo' => 'bar']))->name('test.dialog');
+
+    makeHybridMockRequest(
+        component: 'test.dialog',
+        url: '/test/dialog',
+        tap: fn (Factory $factory) => $factory->base('test.page'),
+    )
+        ->assertHybridView('test.page')
+        ->assertHybridUrl('http://localhost/test/dialog')
+        ->assertHybridDialog(
+            baseUrl: 'http://localhost/test/page',
+            view: 'test.dialog',
+            properties: [
+                'foo' => 'bar',
+            ],
+        );
 });
 
 test('the `assertNotHybrid` method asserts that non-hybrid responses are non-hybrid', function () {
