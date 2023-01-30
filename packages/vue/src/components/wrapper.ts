@@ -11,24 +11,23 @@ export const wrapper = defineComponent({
 			debug.adapter('vue:render:layout', 'Rendering layout.')
 
 			if (typeof state.view.value?.layout === 'function') {
-				return state.view.value.layout(h, view)
+				return state.view.value.layout(h, view, renderDialog())
 			}
 
 			if (Array.isArray(state.view.value?.layout)) {
-				return state.view
+				const layoutsAndView = state.view
 					.value!.layout.concat(view)
 					.reverse()
 					.reduce((child, layout) => {
 						layout.inheritAttrs = !!layout.inheritAttrs
 
-						return [
-							h(layout, {
-								...(state.view.value?.layoutProperties ?? {}),
-								...state.properties.value,
-							}, () => child),
-							renderDialog(),
-						]
+						return h(layout, {
+							...(state.view.value?.layoutProperties ?? {}),
+							...state.properties.value,
+						}, () => child)
 					})
+
+				return [layoutsAndView, renderDialog()]
 			}
 
 			return [
