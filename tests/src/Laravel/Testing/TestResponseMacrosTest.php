@@ -1,7 +1,10 @@
 <?php
 
 use Hybridly\Testing\Assertable;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Testing\TestResponse;
+
+use function Pest\Laravel\get;
 
 test('the `assertHybrid` method runs its callback', function () {
     $success = false;
@@ -12,6 +15,22 @@ test('the `assertHybrid` method runs its callback', function () {
     });
 
     expect($success)->toBeTrue();
+});
+
+test('the `assertHybridDialog` method asserts dialog view component & base url & properties', function () {
+    Route::get('/test/page', fn () => hybridly('test.page'))->name('test.page');
+    Route::get('/test/dialog', fn () => hybridly('test.dialog', ['foo' => 'bar'])->base('test.page'))->name('test.dialog');
+
+    get('/test/dialog')
+        ->assertHybridView('test.page')
+        ->assertHybridUrl('http://localhost/test/dialog')
+        ->assertHybridDialog(
+            baseUrl: 'http://localhost/test/page',
+            view: 'test.dialog',
+            properties: [
+                'foo' => 'bar',
+            ],
+        );
 });
 
 test('the `assertNotHybrid` method asserts that non-hybrid responses are non-hybrid', function () {

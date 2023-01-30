@@ -155,7 +155,6 @@ class Factory implements HybridResponse
 
     protected function renderDialog(Request $request, Payload $payload)
     {
-        // TODO the context thing
         $kernel = app()->make(Kernel::class);
         $url = $payload->dialog->redirectUrl;
 

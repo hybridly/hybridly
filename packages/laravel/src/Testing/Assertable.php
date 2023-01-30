@@ -14,8 +14,8 @@ class Assertable extends AssertableJson
     protected string $url;
     protected array $payload;
     protected array $properties;
+    protected ?array $dialog;
     protected ?string $version;
-    protected ?string $dialog;
 
     public static function fromTestResponse(TestResponse $response): self
     {
@@ -38,8 +38,8 @@ class Assertable extends AssertableJson
         $instance->payload = $payload;
         $instance->view = $payload['view']['component'];
         $instance->properties = $payload['view']['properties'];
-        $instance->dialog = $payload['dialog'];
         $instance->url = $payload['url'];
+        $instance->dialog = $payload['dialog'];
         $instance->version = $payload['version'];
 
         return $instance;
@@ -50,11 +50,35 @@ class Assertable extends AssertableJson
         PHPUnit::assertSame($value, $this->view, 'Unexpected Hybridly page view.');
 
         if ($shouldExist || (\is_null($shouldExist) && config('hybridly.testing.ensure_pages_exist', true))) {
-            try {
-                app('hybridly.testing.view_finder')->find($value);
-            } catch (InvalidArgumentException) {
-                PHPUnit::fail(sprintf('Hybridly page view file [%s] does not exist.', $value));
+            $this->ensurePageExists($value);
+        }
+
+        return $this;
+    }
+
+    public function dialog(array $properties = null, string $view = null, string $baseUrl = null, string $redirectUrl = null): self
+    {
+        ray($this->dialog);
+        PHPUnit::assertNotNull($this->dialog, 'There is no dialog.');
+
+        if ($baseUrl) {
+            PHPUnit::assertSame($baseUrl, $this->dialog['baseUrl'], 'Unexpected dialog base URL.');
+        }
+
+        if ($redirectUrl) {
+            PHPUnit::assertSame($redirectUrl, $this->dialog['redirectUrl'], 'Unexpected dialog redirect URL.');
+        }
+
+        if ($view) {
+            PHPUnit::assertSame($view, $this->dialog['component'], 'Unexpected dialog view component.');
+
+            if (config('hybridly.testing.ensure_pages_exist', true)) {
+                $this->ensurePageExists($view);
             }
+        }
+
+        if ($properties) {
+            $this->hasProperties($properties, 'dialog.properties');
         }
 
         return $this;
@@ -167,5 +191,14 @@ class Assertable extends AssertableJson
     public function toArray(): array
     {
         return $this->getPayload();
+    }
+
+    protected function ensurePageExists(string $value): void
+    {
+        try {
+            app('hybridly.testing.view_finder')->find($value);
+        } catch (InvalidArgumentException) {
+            PHPUnit::fail(sprintf('Hybridly view file [%s] does not exist.', $value));
+        }
     }
 }
