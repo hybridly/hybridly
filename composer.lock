@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "19cd96372beed453a5f763b42236dc16",
+    "content-hash": "17d651ce47129abcbb63ecb4895c3eb1",
     "packages": [
         {
             "name": "brick/math",
@@ -6024,6 +6024,133 @@
             "time": "2022-11-29T22:30:20+00:00"
         },
         {
+            "name": "permafrost-dev/code-snippets",
+            "version": "1.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/permafrost-dev/code-snippets.git",
+                "reference": "639827ba7118a6b5521c861a265358ce5bd2b0c5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/permafrost-dev/code-snippets/zipball/639827ba7118a6b5521c861a265358ce5bd2b0c5",
+                "reference": "639827ba7118a6b5521c861a265358ce5bd2b0c5",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.3|^8.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^9.5",
+                "spatie/phpunit-snapshot-assertions": "^4.2"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Permafrost\\CodeSnippets\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Patrick Organ",
+                    "email": "patrick@permafrost.dev",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Easily work with code snippets in PHP",
+            "homepage": "https://github.com/permafrost-dev/code-snippets",
+            "keywords": [
+                "code",
+                "code-snippets",
+                "permafrost",
+                "snippets"
+            ],
+            "support": {
+                "issues": "https://github.com/permafrost-dev/code-snippets/issues",
+                "source": "https://github.com/permafrost-dev/code-snippets/tree/1.2.0"
+            },
+            "funding": [
+                {
+                    "url": "https://permafrost.dev/open-source",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/permafrost-dev",
+                    "type": "github"
+                }
+            ],
+            "time": "2021-07-27T05:15:06+00:00"
+        },
+        {
+            "name": "permafrost-dev/php-code-search",
+            "version": "1.10.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/permafrost-dev/php-code-search.git",
+                "reference": "8bd830ebbb179d7d88f9c414751d9be8bc54ffed"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/permafrost-dev/php-code-search/zipball/8bd830ebbb179d7d88f9c414751d9be8bc54ffed",
+                "reference": "8bd830ebbb179d7d88f9c414751d9be8bc54ffed",
+                "shasum": ""
+            },
+            "require": {
+                "nikic/php-parser": "^4.10",
+                "permafrost-dev/code-snippets": "^1.2.0",
+                "php": "^7.3|^8.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^9.5",
+                "spatie/phpunit-snapshot-assertions": "^4.2"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "src/Support/helpers.php"
+                ],
+                "psr-4": {
+                    "Permafrost\\PhpCodeSearch\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Patrick Organ",
+                    "email": "patrick@permafrost.dev",
+                    "homepage": "https://permafrost.dev",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Search PHP code for function & method calls, variable assignments, and more",
+            "homepage": "https://github.com/permafrost-dev/php-code-search",
+            "keywords": [
+                "code",
+                "permafrost",
+                "php",
+                "search",
+                "sourcecode"
+            ],
+            "support": {
+                "issues": "https://github.com/permafrost-dev/php-code-search/issues",
+                "source": "https://github.com/permafrost-dev/php-code-search/tree/1.10.5"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/sponsors/permafrost-dev",
+                    "type": "github"
+                }
+            ],
+            "time": "2021-08-18T00:23:11+00:00"
+        },
+        {
             "name": "pestphp/pest",
             "version": "v1.22.3",
             "source": {
@@ -8913,6 +9040,78 @@
             "time": "2022-11-18T15:28:35+00:00"
         },
         {
+            "name": "spatie/x-ray",
+            "version": "1.1.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/spatie/x-ray.git",
+                "reference": "249f03073665fb793262e64deac9a9aadae04683"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/spatie/x-ray/zipball/249f03073665fb793262e64deac9a9aadae04683",
+                "reference": "249f03073665fb793262e64deac9a9aadae04683",
+                "shasum": ""
+            },
+            "require": {
+                "permafrost-dev/code-snippets": "^1.2.0",
+                "permafrost-dev/php-code-search": "^1.10.5",
+                "php": "^8.0",
+                "symfony/console": "^5.3|^6.0",
+                "symfony/finder": "^5.3|^6.0",
+                "symfony/yaml": "^5.3|^6.0"
+            },
+            "require-dev": {
+                "phpstan/phpstan": "^0.12.92",
+                "phpunit/phpunit": "^9.5",
+                "spatie/phpunit-snapshot-assertions": "^4.2"
+            },
+            "bin": [
+                "bin/x-ray"
+            ],
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Spatie\\XRay\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Patrick Organ",
+                    "email": "patrick@permafrost.dev",
+                    "homepage": "https://permafrost.dev",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Quickly scan source code for calls to Ray",
+            "homepage": "https://github.com/spatie/x-ray",
+            "keywords": [
+                "permafrost",
+                "ray",
+                "search",
+                "spatie"
+            ],
+            "support": {
+                "issues": "https://github.com/spatie/x-ray/issues",
+                "source": "https://github.com/spatie/x-ray/tree/1.1.1"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/sponsors/permafrost-dev",
+                    "type": "github"
+                },
+                {
+                    "url": "https://github.com/sponsors/spatie",
+                    "type": "github"
+                }
+            ],
+            "time": "2022-04-15T23:47:26+00:00"
+        },
+        {
             "name": "symfony/filesystem",
             "version": "v6.2.0",
             "source": {
@@ -9560,7 +9759,7 @@
         }
     ],
     "aliases": [],
-    "minimum-stability": "dev",
+    "minimum-stability": "stable",
     "stability-flags": [],
     "prefer-stable": true,
     "prefer-lowest": false,

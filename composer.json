@@ -28,6 +28,7 @@
         "spatie/laravel-data": "^2.0.13",
         "spatie/laravel-ray": "^1.31",
         "spatie/laravel-typescript-transformer": "^2.1.5",
+        "spatie/x-ray": "^1.1",
         "symplify/monorepo-builder": "^11.1.10"
     },
     "autoload": {
@@ -74,10 +75,12 @@
         "lint:fix": "vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.php --allow-risky=yes",
         "analyze": "vendor/bin/phpstan analyse",
         "test": "pest",
+				"xray": "vendor/bin/x-ray ./tests ./packages/laravel --snippets --github --no-progress",
         "ci": [
             "@monorepo:validate",
             "@lint",
-            "@test"
+            "@test",
+						"@xray"
         ]
     },
     "replace": {

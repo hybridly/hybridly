@@ -10,7 +10,7 @@ on:
   pull_request:
 
 jobs:
-  build:
+  test:
     if: ${{ !startsWith(github.event.head_commit.message, 'release:') }}
     runs-on: ${{ matrix.os }}
 
