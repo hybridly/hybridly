@@ -48,6 +48,26 @@ This method asserts that the `url` property of the hybrid response is equal to t
 
 This method asserts that the property at the given path is equal to the given value. The path supports dot notation.
 
+## `assertHybridDialog`
+
+This method asserts that the given dialog exists, in addition to being able to asserts the correctness of its view component, its properties and its base URL.
+
+### Usage
+
+```php
+get('/users/create')
+    ->assertHybridView('users.index')
+    ->assertHybridUrl('http://localhost/users/create')
+    ->assertHybridDialog(
+        baseUrl: 'http://localhost/users',
+        view: 'users.create',
+        properties: [
+            'teamId' => $teamId,
+        ],
+    );
+```
+
+
 ## `assertHybrid`
 
 This method accepts a callback that gets an `Hybridly\Testing\Assertable` instance as a parameter. 
