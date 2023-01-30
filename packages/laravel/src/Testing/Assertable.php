@@ -58,7 +58,6 @@ class Assertable extends AssertableJson
 
     public function dialog(array $properties = null, string $view = null, string $baseUrl = null, string $redirectUrl = null): self
     {
-        ray($this);
         PHPUnit::assertNotNull($this->dialog, 'There is no dialog.');
 
         if ($baseUrl) {
