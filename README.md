@@ -39,7 +39,7 @@
 > &nbsp;
 
 **When should I use Hybridly instead of Inertia?**
-> Inertia is popular and sponsored by Laravel. It's the safe option. Hybridly is moving faster, and exists because Inertia has issues and a different philosophy. Chose Inertia for better community supoport, and Hybridly if you value developer experience more at the expense of a smaller community.
+> Inertia is popular and sponsored by Laravel. It's the safe option. Hybridly is moving faster, and exists because Inertia has issues and a different philosophy. Chose Inertia for better community support, and Hybridly if you value developer experience more at the expense of a smaller community.
 
 > &nbsp;
 
