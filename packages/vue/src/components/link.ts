@@ -30,7 +30,7 @@ export const RouterLink = defineComponent({
 			}
 
 			if (as === 'a' && method !== 'GET') {
-				debug.adapter('vue', `Creating POST/PUT/PATCH/DELETE <a> links is discouraged as it causes "Open Link in New Tab/Window" accessibility issues.\n\nPlease specify a more appropriate element using the "as" attribute. For example:\n\n<Link href="${url}" method="${method}" as="button">...</Link>`)
+				debug.adapter('vue', `Creating POST/PUT/PATCH/DELETE <a> links is discouraged as it causes "Open Link in New Tab/Window" accessibility issues.\n\nPlease specify a more appropriate element using the "as" attribute. For example:\n\n<RouterLink href="${url}" method="${method}" as="button">...</RouterLink>`)
 			}
 
 			return h(props.as as any, {
