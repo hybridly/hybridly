@@ -2,6 +2,7 @@ export type RequestData = Record<string, FormDataConvertible> | FormDataConverti
 export type FormDataConvertible =
 	| { [key: string]: FormDataConvertible }
 	| Array<FormDataConvertible>
+	| Set<FormDataConvertible>
 	| Blob
 	| File
 	| FormDataEntryValue
@@ -38,7 +39,7 @@ export function objectToFormData(
 	source ??= {}
 	form ??= new FormData()
 
-	if (typeof source !== 'object' || Array.isArray(source) || (source instanceof Blob) || (source instanceof Date) || (source instanceof FormData)) {
+	if (typeof source !== 'object' || (source instanceof Set) || Array.isArray(source) || (source instanceof Blob) || (source instanceof Date) || (source instanceof FormData)) {
 		throw new TypeError('Source must be an object literal to be converted to a FormData object.')
 	}
 
@@ -56,7 +57,9 @@ function composeKey(key: string, parentKey?: string): string {
 }
 
 function append(form: FormData, key: string, value: FormDataConvertible): void {
-	if (Array.isArray(value)) {
+	if (value instanceof Set) {
+		return [...value].forEach((_value, index) => append(form, composeKey(index.toString(), key), _value))
+	} else if (Array.isArray(value)) {
 		return Array.from(value.keys()).forEach((index) => append(form, composeKey(index.toString(), key), value[index]))
 	} else if (value instanceof Date) {
 		return form.append(key, value.toISOString())
