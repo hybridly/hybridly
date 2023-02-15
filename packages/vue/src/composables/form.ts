@@ -74,7 +74,6 @@ export function useForm<T extends Fields = Fields>(options: FormOptions<T>) {
 
 		keys.forEach((key) => {
 			Reflect.set(fields, key, safeClone(Reflect.get(initial, key)))
-			clearError(key)
 		})
 	}
 
