@@ -100,6 +100,7 @@ class Assertable extends AssertableJson
     public function hasProperties(array $keys, string $scope = null): self
     {
         $scope ??= 'view.properties';
+        $properties = data_get($this->payload, $scope);
 
         foreach ($keys as $key => $value) {
             // ['property_name' => 'property_value'] -> assert that it has the given value
@@ -120,7 +121,7 @@ class Assertable extends AssertableJson
             if (\is_string($key) && \is_int($value)) {
                 // If the value is countable or iterable, assert that it has the given count.
                 // If not, assert its exact value
-                if (is_countable(data_get($this->properties, $key)) || is_iterable(data_get($this->properties, $key))) {
+                if (is_countable(data_get($properties, $key)) || is_iterable(data_get($properties, $key))) {
                     $this->has($scope . '.' . $key, $value);
                 } else {
                     $this->where($scope . '.' . $key, $value);
@@ -139,7 +140,7 @@ class Assertable extends AssertableJson
                 if ($firstParameterTypeHint === self::class) {
                     $this->has($scope . '.' . $key, $value);
                 } else {
-                    $value(data_get($this->properties, $key));
+                    $value(data_get($properties, $key));
                 }
 
                 continue;
@@ -147,7 +148,7 @@ class Assertable extends AssertableJson
 
             // ['property_name' => ['foo']] -> assert using an array
             if (\is_string($key) && \is_array($value)) {
-                PHPUnit::assertSame($value, data_get($this->properties, $key));
+                PHPUnit::assertSame($value, data_get($properties, $key));
 
                 continue;
             }
