@@ -62,7 +62,7 @@ jobs:
 
       - name: Install PHP dependencies
         run: |
-          composer update --${{ matrix.stability }} --prefer-dist --no-interaction
+          composer install --no-interaction
           composer require "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" --no-interaction --no-progress --with-all-dependencies
 
       - name: Install Node dependencies
