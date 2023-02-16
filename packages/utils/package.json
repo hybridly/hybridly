@@ -38,7 +38,7 @@
   },
   "dependencies": {
     "debug": "^4.3.4",
-    "deepmerge": "^4.2.2",
+    "deepmerge": "^4.3.0",
     "lodash.clonedeep": "^4.5.0"
   }
 }
