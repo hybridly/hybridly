@@ -25,10 +25,10 @@ jobs:
         php: [8.1, 8.2]
         laravel: [9.*, 10.*]
         include:
-          - laravel: 9.*
-            testbench: 7.*
           - laravel: 10.*
             testbench: 8.*
+          - laravel: 9.*
+            testbench: 7.*
 
     name: P${{ matrix.php }} - L${{ matrix.laravel }} - N${{ matrix.node-version }} - ${{ matrix.os }}
 
@@ -62,8 +62,9 @@ jobs:
 
       - name: Install PHP dependencies
         run: |
+          composer install
+          composer require "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" --no-interaction --no-progress
           composer update --${{ matrix.stability }} --prefer-dist --no-interaction
-          composer require "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" --no-interaction --no-update
 
       - name: Install Node dependencies
         run: pnpm install
