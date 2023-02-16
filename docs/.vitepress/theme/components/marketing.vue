@@ -67,7 +67,7 @@ const features: Feature[] = [
 					</p>
 					<!-- Actions -->
 					<div class="mt-10 flex flex-wrap justify-center gap-4 lg:justify-start">
-						<a class="group px-4.5 dark:text-[var(--vp-c-bg)] dark:hover:text-[var(--vp-c-bg)] dark:hover:bg-[var(--vp-c-brand-lighter)] dark:bg-[var(--vp-c-brand-light)] flex items-center rounded-full bg-[#FFEAEF] py-2.5 text-sm font-semibold text-[#DB7DA8] transition hover:bg-[#FFDBE3] hover:text-[#D6689B]" href="/guide/">
+						<a class="px-4.5 group dark:bg-[var(--vp-c-brand-light)] dark:text-[var(--vp-c-bg)] dark:hover:bg-[var(--vp-c-brand-lighter)] dark:hover:text-[var(--vp-c-bg)] flex items-center rounded-full bg-[#FFEAEF] py-2.5 text-sm font-semibold text-[#DB7DA8] transition hover:bg-[#FFDBE3] hover:text-[#D6689B]" href="/guide/">
 							Get started
 							<svg
 								class="ml-2 transition group-hover:translate-x-1"
@@ -82,8 +82,8 @@ const features: Feature[] = [
 								/>
 							</svg>
 						</a>
-						<a class="bg-[var(--vp-c-bg-soft)] hover:bg-[var(--vp-c-bg-mute)] group text-[var(--vp-c-text-1)] px-4.5 border-[var(--vp-button-alt-border)] flex items-center rounded-full border py-2 text-sm font-medium transition" href="/guide/demonstration">Demonstration</a>
-						<a class="bg-[var(--vp-c-bg-soft)] hover:bg-[var(--vp-c-bg-mute)] group text-[var(--vp-c-text-1)] px-4.5 border-[var(--vp-button-alt-border)] flex items-center rounded-full border py-2 text-sm font-medium transition" href="https://github.com/hybridly/hybridly">See on GitHub</a>
+						<a class="px-4.5 group border-[var(--vp-button-alt-border)] bg-[var(--vp-c-bg-soft)] text-[var(--vp-c-text-1)] hover:bg-[var(--vp-c-bg-mute)] flex items-center rounded-full border py-2 text-sm font-medium transition" href="/guide/demonstration">Demonstration</a>
+						<a class="px-4.5 group border-[var(--vp-button-alt-border)] bg-[var(--vp-c-bg-soft)] text-[var(--vp-c-text-1)] hover:bg-[var(--vp-c-bg-mute)] flex items-center rounded-full border py-2 text-sm font-medium transition" href="https://github.com/hybridly/hybridly">See on GitHub</a>
 					</div>
 				</section>
 
@@ -99,7 +99,7 @@ const features: Feature[] = [
 				<template v-for="feature in features" :key="feature.title">
 					<component
 						:is="feature.url ? 'a' : 'div'"
-						class="bg-[var(--vp-c-bg-soft)] group relative flex flex-col justify-center gap-4 rounded-lg p-6"
+						class="group bg-[var(--vp-c-bg-soft)] relative flex flex-col justify-center gap-4 rounded-lg p-6"
 						:class="{
 							'transition cursor-pointer hover:bg-[var(--vp-c-bg-mute)]': feature.url
 						}"
