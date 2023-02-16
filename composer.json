@@ -68,7 +68,8 @@
         }
     },
     "scripts": {
-        "monorepo:release": "vendor/bin/monorepo-builder release",
+        "monorepo:bump": "vendor/bin/monorepo-builder bump-interdependency",
+        "monorepo:alias": "vendor/bin/monorepo-builder package-alias",
         "monorepo:merge": "vendor/bin/monorepo-builder merge",
         "monorepo:validate": "vendor/bin/monorepo-builder validate",
         "lint": "vendor/bin/php-cs-fixer fix --dry-run --config=.php-cs-fixer.php --allow-risky=yes",
