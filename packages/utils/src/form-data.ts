@@ -60,6 +60,13 @@ function append(form: FormData, key: string, value: FormDataConvertible): void {
 	if (value instanceof Set) {
 		return [...value].forEach((_value, index) => append(form, composeKey(index.toString(), key), _value))
 	} else if (Array.isArray(value)) {
+		// FormData cannot have empty arrays, so we use an empty string instead,
+		// which back-end should interpret as a null value.
+		// See: https://github.com/inertiajs/inertia/pull/876
+		if (!value.length) {
+			return form.append(key, '')
+		}
+
 		return Array.from(value.keys()).forEach((index) => append(form, composeKey(index.toString(), key), value[index]))
 	} else if (value instanceof Date) {
 		return form.append(key, value.toISOString())
