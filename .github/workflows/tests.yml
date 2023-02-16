@@ -23,8 +23,10 @@ jobs:
         node-version: [16.x]
         os: [ubuntu-latest]
         php: [8.1, 8.2]
-        laravel: [9.*]
+        laravel: [9.*, 10.*]
         include:
+          - laravel: 10.*
+            testbench: 8.*
           - laravel: 9.*
             testbench: 7.*
 
@@ -60,8 +62,8 @@ jobs:
 
       - name: Install PHP dependencies
         run: |
-          composer require "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" --no-interaction --no-update
-          composer update --${{ matrix.stability }} --prefer-dist --no-interaction
+          composer install --no-interaction
+          composer require "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" --no-interaction --no-progress --with-all-dependencies
 
       - name: Install Node dependencies
         run: pnpm install
