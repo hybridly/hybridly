@@ -29,6 +29,8 @@ if (!function_exists('is_partial')) {
 if (!function_exists('hybridly')) {
     /**
      * Gets the hybridly instance or returns a view.
+     *
+     * @phpstan-return ($component is string ? \Hybridly\View\Factory : \Hybridly\Hybridly)
      */
     function hybridly(string $component = null, array|Arrayable|DataObject $properties = []): Hybridly|Factory
     {
