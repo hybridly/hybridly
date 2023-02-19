@@ -26,7 +26,7 @@
         "phpstan/phpstan-deprecation-rules": "^1.0",
         "phpstan/phpstan-phpunit": "^1.1.1",
         "phpunit/phpunit": "^9.5.25",
-        "spatie/laravel-data": "^2.0.13",
+        "spatie/laravel-data": "^3.1.0",
         "spatie/laravel-ray": "^1.31",
         "spatie/laravel-typescript-transformer": "^2.1.5",
         "spatie/x-ray": "^1.1",

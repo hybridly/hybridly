@@ -51,9 +51,9 @@
   },
   "dependencies": {
     "@hybridly/core": "workspace:*",
+    "@hybridly/progress-plugin": "workspace:*",
     "@hybridly/vite": "workspace:*",
     "@hybridly/vue": "workspace:*",
-    "@hybridly/progress-plugin": "workspace:*",
     "unconfig": "^0.3.7"
   }
 }
