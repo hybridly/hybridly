@@ -1,8 +1,10 @@
 import path from 'node:path'
+import type { ResolvedHybridlyConfig } from 'hybridly'
+import { resolveLayoutsDirectory } from 'hybridly'
 import type { Plugin } from 'vite'
 import { normalizePath } from 'vite'
 import { LAYOUT_PLUGIN_NAME } from '../constants'
-import type { LayoutOptions } from '../types'
+import type { ViteOptions } from '../types'
 import { debug } from '../utils'
 
 const TEMPLATE_LAYOUT_REGEX = /<template +layout(?: *= *['"]((?:[\w\/\-_,:](?:,\ )?)+)['"] *)?>/
@@ -12,24 +14,18 @@ const TYPESCRIPT_REGEX = /lang=['"]ts['"]/
  * A basic Vite plugin that adds a <template layout="name"> syntax to Vite SFCs.
  * It must be used before the Vue plugin.
  */
-export default (options: LayoutOptions = {}): Plugin => {
-	const defaultLayoutName = options?.defaultLayoutName?.replace('.vue', '') ?? 'default'
-	const layoutsDirectory = options?.directory ?? path.resolve(process.cwd(), 'resources', 'views', 'layouts')
-	const templateRegExp = options?.templateRegExp ?? TEMPLATE_LAYOUT_REGEX
+export default (options: ViteOptions, config: ResolvedHybridlyConfig): Plugin => {
+	const defaultLayoutName = options?.layout?.defaultLayoutName?.replace('.vue', '') ?? 'default'
+	const layoutsDirectory = path.resolve(process.cwd(), config.root, config.layouts)
+	const templateRegExp = options?.layout?.templateRegExp ?? TEMPLATE_LAYOUT_REGEX
 	const resolveLayoutPath = (layoutName: string) => {
 		const [domain, layout] = layoutName.includes(':')
 			? layoutName.split(':')
 			: [undefined, layoutName]
 
-		const resolve = options?.resolve ?? ((layout: string, domain?: string) => {
-			if (!domain) {
-				return path.resolve(layoutsDirectory, `${layout}.vue`)
-			}
+		const layoutPath = path.resolve(resolveLayoutsDirectory(config, domain), `${layout}.vue`)
 
-			return path.resolve(process.cwd(), 'resources', 'domains', domain, 'layouts', `${layout}.vue`)
-		})
-
-		return normalizePath(resolve(layout, domain)).replaceAll('\\', '/')
+		return normalizePath(layoutPath).replaceAll('\\', '/')
 	}
 
 	debug.layout('Resolved options:', {
@@ -39,6 +35,7 @@ export default (options: LayoutOptions = {}): Plugin => {
 
 	return {
 		name: LAYOUT_PLUGIN_NAME,
+		enforce: 'pre',
 		transform: (code: string, id: string) => {
 			if (!templateRegExp.test(code)) {
 				return

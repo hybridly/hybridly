@@ -5,7 +5,7 @@ import { ROUTING_HMR_UPDATE_ROUTING, ROUTING_HMR_QUERY_UPDATE_ROUTING } from '..
 * Injects the route collection into the client code.
 * When HMR triggers, an event with the new routes is dispatched.
 */
-export function getClientCode(routing?: RoutingConfiguration) {
+export function getRouterClientCode(routing?: RoutingConfiguration) {
 	return `
 		if (typeof window !== 'undefined') {
 			window.hybridly = {

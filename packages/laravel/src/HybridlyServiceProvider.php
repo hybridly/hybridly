@@ -2,6 +2,7 @@
 
 namespace Hybridly;
 
+use Hybridly\Commands\GenerateGlobalTypesCommand;
 use Hybridly\Commands\I18nCommand;
 use Hybridly\Commands\InstallCommand;
 use Hybridly\Commands\RoutesCommand;
@@ -26,6 +27,7 @@ class HybridlyServiceProvider extends PackageServiceProvider
             ->hasConfigFile()
             ->hasCommand(InstallCommand::class)
             ->hasCommand(I18nCommand::class)
+            ->hasCommand(GenerateGlobalTypesCommand::class)
             ->hasCommand(RoutesCommand::class);
     }
 
@@ -35,6 +37,11 @@ class HybridlyServiceProvider extends PackageServiceProvider
         $this->registerDirectives();
         $this->registerMacros();
         $this->registerTestingMacros();
+
+        config(['view.paths' => [
+            resource_path('views'),
+            resource_path(),
+        ]]);
 
         $this->app->bind('hybridly.testing.view_finder', config('hybridly.testing.view_finder') ?? fn ($app) => new TestFileViewFinder(
             $app['files'],

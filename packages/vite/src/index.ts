@@ -1,15 +1,34 @@
+import { loadHybridlyConfig } from 'hybridly'
 import type { PluginOption } from 'vite'
+import laravel from 'laravel-vite-plugin'
+import initialize from './config'
 import layout from './layout'
 import router from './router'
-import type { Options } from './types'
+import type { ViteOptions } from './types'
+import { getRunOptions, run } from './integrations/run'
+import { getLaravelOptions } from './integrations/laravel'
+import { getAutoImportsOptions, autoimport } from './integrations/auto-imports'
+import { getVueComponentsOptions, vueComponents } from './integrations/vue-components'
+import { getIconsOptions, icons } from './integrations/icons'
+import { getVueOptions, vue } from './integrations/vue'
+import { generateTsConfig, generateVueShims } from './typegen'
 
-/** Registers `unplugin-vue-define-options`. */
-function plugin(options: Options = {}): PluginOption[] {
+export default async function plugin(options: ViteOptions = {}): Promise<PluginOption[]> {
+	const config = await loadHybridlyConfig()
+	generateTsConfig(options, config)
+	generateVueShims(options)
+
 	return [
-		options.layout !== false && layout(options.layout),
-		options.router !== false && router(options.router),
+		initialize(options, config),
+		layout(options, config),
+		router(options, config),
+		options.laravel !== false && laravel(getLaravelOptions(options, config)),
+		options.run !== false && run(getRunOptions(options)),
+		options.vueComponents !== false && vueComponents(getVueComponentsOptions(options, config)),
+		options.autoImports !== false && autoimport(getAutoImportsOptions(options, config)),
+		options.icons !== false && icons(getIconsOptions(options, config)),
+		options.vue !== false && vue(getVueOptions(options)),
 	]
 }
 
-export { layout, router, Options }
-export default plugin
+export { layout, router, ViteOptions as Options }

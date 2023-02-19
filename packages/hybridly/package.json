@@ -38,15 +38,8 @@
       "import": "./dist/vue.mjs",
       "types": "./dist/vue.d.ts"
     },
-    "./auto-imports": {
-      "require": "./dist/auto-imports.cjs",
-      "import": "./dist/auto-imports.mjs",
-      "types": "./dist/auto-imports.d.ts"
-    },
-    "./resolver": {
-      "require": "./dist/resolver.cjs",
-      "import": "./dist/resolver.mjs",
-      "types": "./dist/resolver.d.ts"
+    "./client": {
+      "types": "./client.d.ts"
     }
   },
   "main": "dist/index.cjs",
@@ -59,6 +52,8 @@
   "dependencies": {
     "@hybridly/core": "workspace:*",
     "@hybridly/vite": "workspace:*",
-    "@hybridly/vue": "workspace:*"
+    "@hybridly/vue": "workspace:*",
+    "@hybridly/progress-plugin": "workspace:*",
+    "unconfig": "^0.3.7"
   }
 }

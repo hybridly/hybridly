@@ -209,7 +209,7 @@ At this point, your `package.json` should look like the following:
 				"laravel-vite-plugin": "^0.6.0",
 				"lodash": "^4.17.19",
 				"postcss": "^8.1.14",
-				"vite": "^3.0.0",
+				"vite": "^4.1.2",
 				"vue": "^3.2.41"
 		}
 }
