@@ -78,7 +78,7 @@ class HybridlyServiceProvider extends PackageServiceProvider
                 $id = $options->get('id', 'root');
                 $class = $options->get('class', '');
                 $template = <<<HTML
-                    <${element} id="${id}" class="${class}" data-payload="{{ json_encode(\$payload) }}"></${element}>
+                    <{$element} id="{$id}" class="{$class}" data-payload="{{ json_encode(\$payload) }}"></{$element}>
                 HTML;
 
                 return implode(' ', array_map('trim', explode("\n", $template)));
