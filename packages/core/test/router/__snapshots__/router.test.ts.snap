@@ -12,6 +12,7 @@ exports[`performs hybridly navigations > context after navigation 1`] = `
   "hooks": {},
   "pendingNavigation": undefined,
   "plugins": [],
+  "responseErrorModals": undefined,
   "routing": undefined,
   "scrollRegions": [],
   "serializer": {
