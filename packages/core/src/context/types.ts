@@ -18,6 +18,8 @@ export interface RouterContextOptions {
 	axios?: Axios
 	/** Initial routing configuration. */
 	routing?: RoutingConfiguration
+	/** Whether to display response error modals. */
+	responseErrorModals?: boolean
 }
 
 /** Router context. */
@@ -48,6 +50,8 @@ export interface InternalRouterContext {
 	axios: Axios
 	/** Routing configuration. */
 	routing?: RoutingConfiguration
+	/** Whether to display response error modals. */
+	responseErrorModals?: boolean
 }
 
 /** Router context. */

@@ -26,6 +26,7 @@ export async function initializeHybridly(options: HybridlyOptions) {
 		axios: options.axios,
 		plugins: options.plugins,
 		serializer: options.serializer,
+		responseErrorModals: options.responseErrorModals ?? process.env.NODE_ENV === 'development',
 		adapter: {
 			resolveComponent: resolve,
 			onDialogClose: async() => {
@@ -184,6 +185,8 @@ interface HybridlyOptions {
 	devtools?: boolean
 	/** Progressbar options. */
 	progress?: boolean | Partial<ProgressOptions>
+	/** Whether to display error modals. */
+	responseErrorModals?: boolean
 	/** Sets up the hybridly router. */
 	setup?: (options: SetupArguments) => any
 	/** List of Hybridly plugins. */

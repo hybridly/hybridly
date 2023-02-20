@@ -264,7 +264,9 @@ export async function performHybridNavigation(options: HybridRequestOptions): Pr
 				debug.router('The request was not hybridly.')
 				console.error(error)
 				await runHooks('invalid', options.hooks, error, context)
-				showResponseErrorModal(error.response.data)
+				if (context.responseErrorModals) {
+					showResponseErrorModal(error.response.data)
+				}
 			},
 			default: async() => {
 				debug.router('An unknown error occured.', error)
