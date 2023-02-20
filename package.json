@@ -27,6 +27,7 @@
     "@iconify-json/ph": "^1.1.4",
     "@innocenzi/eslint-config": "^0.14.1",
     "@types/debug": "^4.1.7",
+    "@types/node": "^18.14.0",
     "@types/qs": "^6.9.7",
     "@types/throttle-debounce": "^5.0.0",
     "@vitest/ui": "^0.28.5",

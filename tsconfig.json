@@ -18,7 +18,7 @@
       "@hybridly/utils": ["./packages/utils/src/index.ts"],
       "@hybridly/progress": ["./packages/progress/src/index.ts"],
     },
-		"types": ["vite/client"]
+		"types": ["vite/client", "node"]
   },
   "exclude": [
     "**/dist/**",
