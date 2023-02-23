@@ -16,12 +16,10 @@ In `main.ts`, import `createHead` and register its return value as a plugin.
 
 ```ts
 import { createApp } from 'vue'
-import { initializeHybridly } from 'hybridly/vue'
+import { initializeHybridly } from 'virtual:hybridly/config'
 import { createHead } from '@vueuse/head' // [!code hl]
-import 'virtual:hybridly/router'
 
 initializeHybridly({
-	pages: import.meta.glob('@/views/pages/**/*.vue', { eager: true }),
   enhanceVue: (vue) => {
     vue.use(createHead())  // [!code hl]
   }
@@ -34,8 +32,6 @@ A title template could be defined in a persistent (or normal) layout. That way, 
 
 ```vue
 <script setup lang="ts">
-import { useHead } from '@vueuse/head'
-
 useHead({
 	titleTemplate: (title) => `${title} - Blue Bird`,
 })
@@ -49,8 +45,6 @@ useHead({
 
 ```vue
 <script setup lang="ts">
-import { useHead } from '@vueuse/head'
-
 useHead({
 	title: 'Recent chirps',
 })
