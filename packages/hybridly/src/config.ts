@@ -37,9 +37,9 @@ export async function loadHybridlyConfig(): Promise<ResolvedHybridlyConfig> {
 		pages: 'pages',
 		layouts: 'layouts',
 		...config,
-		domains: config.domains === true
+		domains: config?.domains === true
 			? 'domains'
-			: (config.domains ?? false),
+			: (config?.domains ?? false),
 	}
 
 	return {
