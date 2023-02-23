@@ -29,10 +29,6 @@ export interface ViteOptions {
 }
 
 export interface LayoutOptions {
-	/** The directory in which layouts are stored. */
-	directory?: string
-	/** Function that resolves the layout path given its name. */
-	resolve?: (layout: string, domain?: string) => string
 	/** Custom RegExp for parsing the template string. */
 	templateRegExp?: RegExp
 	/** Name of the layout used when no argument is provided to `layout`. */

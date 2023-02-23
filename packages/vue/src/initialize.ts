@@ -1,18 +1,23 @@
 import type { App, DefineComponent, Plugin as VuePlugin } from 'vue'
 import { createApp, h } from 'vue'
-import type { HybridPayload, RouterContext, RoutingConfiguration } from '@hybridly/core'
+import type { HybridPayload, Plugin, ResolveComponent, RouterContext, RouterContextOptions, RoutingConfiguration } from '@hybridly/core'
 import { createRouter } from '@hybridly/core'
 import { showPageComponentErrorModal, debug, random } from '@hybridly/utils'
-import { progress } from '@hybridly/progress-plugin'
 import type { Axios } from 'axios'
 import type { HybridlyConfig } from 'hybridly'
+import type { ProgressOptions } from '@hybridly/progress-plugin'
+import { progress } from '@hybridly/progress-plugin'
 import { wrapper } from './components/wrapper'
 import { state } from './stores/state'
 import { devtools } from './devtools'
 import { dialogStore } from './stores/dialog'
 
-export async function initializeHybridly(options: InitializeOptions) {
-	const { element, payload, resolve } = prepare(options)
+/**
+ * Initializes Hybridly's router and context.
+ */
+export async function initializeHybridly(options: InitializeOptions = {}) {
+	const resolved = options as ResolvedInitializeOptions
+	const { element, payload, resolve } = prepare(resolved)
 
 	if (!element) {
 		throw new Error('Could not find an HTML element to initialize Vue on.')
@@ -23,9 +28,9 @@ export async function initializeHybridly(options: InitializeOptions) {
 	}
 
 	state.setContext(await createRouter({
-		axios: options.axios,
-		plugins: options.plugins,
-		serializer: options.serializer,
+		axios: resolved.axios,
+		plugins: resolved.plugins,
+		serializer: resolved.serializer,
 		responseErrorModals: options.responseErrorModals ?? process.env.NODE_ENV === 'development',
 		adapter: {
 			resolveComponent: resolve,
@@ -80,7 +85,7 @@ export async function initializeHybridly(options: InitializeOptions) {
 
 	const app = createApp({ render })
 
-	if (options.devtools !== false) {
+	if (resolved.devtools !== false) {
 		app.use(devtools)
 	}
 
@@ -88,7 +93,7 @@ export async function initializeHybridly(options: InitializeOptions) {
 	return app.mount(element)
 }
 
-function prepare(options: InitializeOptions) {
+function prepare(options: ResolvedInitializeOptions) {
 	debug.adapter('vue', 'Preparing Hybridly with options:', options)
 	const isServer = typeof window === 'undefined'
 	const id = options.id ?? 'root'
@@ -121,9 +126,7 @@ function prepare(options: InitializeOptions) {
 
 	if (options.progress !== false) {
 		options.plugins = [
-			progress(typeof options.progress === 'object'
-				? options.progress
-				: {}),
+			progress(typeof options.progress === 'object' ? options.progress : {}),
 			...options.plugins ?? [],
 		]
 	}
@@ -139,7 +142,7 @@ function prepare(options: InitializeOptions) {
 /**
  * Resolves a page component.
  */
-export async function resolvePageComponent(name: string, options: InitializeOptions) {
+export async function resolvePageComponent(name: string, options: ResolvedInitializeOptions) {
 	const components = options.components!
 
 	if (name.includes(':')) {
@@ -167,19 +170,33 @@ export async function resolvePageComponent(name: string, options: InitializeOpti
 	return component
 }
 
-interface InitializeOptions extends HybridlyConfig {
-	/** Initial view data. */
-	payload?: HybridPayload
-	/** A collection of pages components. */
-	components?: Record<string, any>
-	/** An optional default persistent layout. */
-	layout?: any
-	/** Sets up the hybridly router. */
-	setup?: (options: SetupArguments) => any
+type ResolvedInitializeOptions = InitializeOptions & HybridlyConfig
+
+interface InitializeOptions {
 	/** Callback that gets executed before Vue is mounted. */
 	enhanceVue?: (vue: App<Element>) => any
+	/** ID of the app element. */
+	id?: string
+	/** Clean up the host element's payload dataset after loading. */
+	cleanup?: boolean
+	/** Whether to set up the devtools plugin. */
+	devtools?: boolean
+	/** A custom component resolution option. */
+	resolve?: ResolveComponent
+	/** Custom history state serialization functions. */
+	serializer?: RouterContextOptions['serializer']
+	/** Progressbar options. */
+	progress?: false | Partial<ProgressOptions>
+	/** Sets up the hybridly router. */
+	setup?: (options: SetupArguments) => any
+	/** List of Hybridly plugins. */
+	plugins?: Plugin[]
 	/** Custom Axios instance. */
 	axios?: Axios
+	/** Initial view data. This is automatically set by Laravel, using this option would override the default behavior. */
+	payload?: HybridPayload
+	/** A custom collection of pages components. This is automatically determined thanks to `root` and `pages`, using this would override the default behavior. */
+	components?: Record<string, any>
 }
 
 interface SetupArguments {

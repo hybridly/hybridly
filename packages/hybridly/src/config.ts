@@ -1,7 +1,5 @@
 import path from 'node:path'
 import { loadConfig } from 'unconfig'
-import type { RouterContextOptions, ResolveComponent, Plugin } from '@hybridly/core'
-import type { ProgressOptions } from '@hybridly/progress'
 
 export function resolvePageGlob(config: ResolvedHybridlyConfig) {
 	if (config.domains !== false) {
@@ -35,13 +33,13 @@ export async function loadHybridlyConfig(): Promise<ResolvedHybridlyConfig> {
 	})
 
 	const _default: Omit<ResolvedHybridlyConfig, 'pagesGlob'> = {
-		id: 'root',
-		eager: true,
-		domains: false,
 		root: 'resources',
 		pages: 'pages',
 		layouts: 'layouts',
 		...config,
+		domains: config.domains === true
+			? 'domains'
+			: (config.domains ?? false),
 	}
 
 	return {
@@ -57,38 +55,22 @@ export function defineConfig(config: HybridlyConfig) {
 	return config
 }
 
-export interface ResolvedHybridlyConfig extends HybridlyConfig {
+type WithRequired<T, K extends keyof T> = T & { [P in K]-?: T[P] }
+
+export interface ResolvedHybridlyConfig extends WithRequired<HybridlyConfig, 'root' | 'domains' | 'pages' | 'layouts'> {
 	pagesGlob: string
-	root: string
 	domains: false | string
-	pages: string
-	layouts: string
-	eager: boolean
 }
 
 export interface HybridlyConfig {
-	/** ID of the app element. */
-	id?: string
+	/** Whether to eagerly load page components. */
+	eager?: boolean
 	/** Directory where pages, layouts and domains subdirectories are. */
 	root?: string
 	/** Name of the domain directory. */
-	domains?: false | string
+	domains?: boolean | string
 	/** Name of the page directory. */
 	pages?: string
 	/** Name of the layout directory. */
 	layouts?: string
-	/** Whether to eagerly load page components. */
-	eager?: boolean
-	/** Clean up the host element's payload dataset after loading. */
-	cleanup?: boolean
-	/** Whether to set up the devtools plugin. */
-	devtools?: boolean
-	/** A custom component resolution option. */
-	resolve?: ResolveComponent
-	/** Custom history state serialization functions. */
-	serializer?: RouterContextOptions['serializer']
-	/** Progressbar options. */
-	progress?: false | Partial<ProgressOptions>
-	/** List of Hybridly plugins. */
-	plugins?: Plugin[]
 }

@@ -10,7 +10,7 @@ export class NavigationCancelledError extends Error {}
 
 export class RoutingNotInitialized extends Error {
 	constructor() {
-		super('Routing is not initialized. Make sure the Vite plugin is enabled and that `virtual:hybridly/router` is imported and that `php artisan route:list` returns no error.')
+		super('Routing is not initialized. Make sure the Vite plugin is enabled and that `php artisan route:list` returns no error.')
 	}
 }
 

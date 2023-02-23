@@ -52,16 +52,3 @@ Defines the name of the layout that will be used when no layout name is provided
 - Type: `RegExp`
 
 Defines the regular expression that parses the `<template>` tag for finding the defined layout.
-
-### `directory`
-
-- Type: `string`
-- Default: `./resources/views/layouts`
-
-Defines the directory in which layouts are stored.
-
-### `resolve`
-
-- Type: `(name: string) => string`
-
-Overrides how the path of the given layout name is generated.
