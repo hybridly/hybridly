@@ -31,7 +31,7 @@ export async function initializeHybridly(options: InitializeOptions = {}) {
 		axios: resolved.axios,
 		plugins: resolved.plugins,
 		serializer: resolved.serializer,
-		responseErrorModals: options.responseErrorModals ?? process.env.NODE_ENV === 'development',
+		responseErrorModals: resolved.responseErrorModals ?? process.env.NODE_ENV === 'development',
 		adapter: {
 			resolveComponent: resolve,
 			onDialogClose: async() => {
@@ -181,6 +181,8 @@ interface InitializeOptions {
 	cleanup?: boolean
 	/** Whether to set up the devtools plugin. */
 	devtools?: boolean
+	/** Whether to display response error modals. */
+	responseErrorModals?: boolean
 	/** A custom component resolution option. */
 	resolve?: ResolveComponent
 	/** Custom history state serialization functions. */

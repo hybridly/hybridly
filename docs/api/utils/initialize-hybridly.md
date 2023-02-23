@@ -50,6 +50,19 @@ Defines whether to remove the `data-payload` attribute from the generated elemen
 
 Defines whether to register the Vue DevTools plugin when initializing Hybridly.
 
+## `responseErrorModals`
+
+- **Type**: `bool`
+- **Required**: false
+
+Defines whether to display an error modal when a hybrid request receives an invalid response. By default, this is `true` only in development.
+
+## `progress`
+
+- **Type**: `false` or `ProgressOptions`
+
+When set to `false`, disables the built-in progress indicator. Otherwise, configures it. Refer to the [progress indicator](../../guide/progress-indicator.md) documentation for more information.
+
 ## `plugins`
 
 - **Type**: `Plugin[]`
