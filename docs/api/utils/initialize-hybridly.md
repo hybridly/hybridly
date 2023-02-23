@@ -127,6 +127,6 @@ By default, the state is serialized using `JSON.parse(JSON.stringify(data))`, an
 
 - **Type**: `Record<string, Component>`
 
-Page components are usually determined automatically by Hybridly thanks to the [`root`](../configuration.md#root) and [`pages`](../configuration.md#pages) configuration options.
+Page components are usually determined automatically by Hybridly thanks to the [`root`](../../configuration/architecture.md#root) and [`pages`](../../configuration/architecture.md#pages) configuration options.
 
 Even though it is not advised to, you can define a custom collection of pages Hybridly should be aware of when navigating. This is a shortcut for defining a `resolve` function. Typically, it accepts the result of Vite's `import.meta.glob`. 
