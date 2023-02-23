@@ -20,6 +20,24 @@ export default (options: ViteOptions, config: ResolvedHybridlyConfig): Plugin =>
 				},
 			}
 		},
+		configureServer(server) {
+			const reloadServer = (file: string) => {
+				if (!file.endsWith('hybridly.config.ts')) {
+					return
+				}
+
+				server.config.logger.info('Hybridly configuration file was changed: forcing a server restart.', {
+					clear: server.config.clearScreen,
+					timestamp: true,
+				})
+
+				server?.restart()
+			}
+
+			server.watcher.on('add', reloadServer)
+			server.watcher.on('change', reloadServer)
+			server.watcher.on('unlink', reloadServer)
+		},
 		resolveId(id) {
 			if (id === CONFIG_VIRTUAL_MODULE_ID) {
 				return RESOLVED_CONFIG_VIRTUAL_MODULE_ID

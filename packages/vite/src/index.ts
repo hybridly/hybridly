@@ -1,5 +1,4 @@
 import { loadHybridlyConfig } from 'hybridly'
-import type { PluginOption } from 'vite'
 import laravel from 'laravel-vite-plugin'
 import initialize from './config'
 import layout from './layout'
@@ -13,7 +12,7 @@ import { getIconsOptions, icons } from './integrations/icons'
 import { getVueOptions, vue } from './integrations/vue'
 import { generateTsConfig, generateVueShims } from './typegen'
 
-export default async function plugin(options: ViteOptions = {}): Promise<PluginOption[]> {
+export default async function plugin(options: ViteOptions = {}) {
 	const config = await loadHybridlyConfig()
 	generateTsConfig(options, config)
 	generateVueShims(options)
