@@ -5,6 +5,7 @@ namespace Hybridly\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
+use Illuminate\Support\Stringable;
 
 /**
  * Generates a JSON file with all translations.
@@ -100,7 +101,10 @@ class I18nCommand extends Command
      */
     protected function getTranslationsAsJson(string $lang = null): string
     {
-        return preg_replace('/:(\w+)/', '{${1}}', json_encode($this->getTranslations($lang)));
+        return Str::of(json_encode($this->getTranslations($lang)))
+            ->pipe(fn(Stringable $str) => preg_replace('/:(\w+)/', '{${1}}', $str->toString()))
+            ->pipe(fn(Stringable $str) => preg_replace('/\@/', '{\'@\'}', $str->toString()))
+            ->toString();
     }
 
     /**
