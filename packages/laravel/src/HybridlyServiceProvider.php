@@ -39,8 +39,8 @@ class HybridlyServiceProvider extends PackageServiceProvider
         $this->registerTestingMacros();
 
         config(['view.paths' => [
-            resource_path('views'),
-            resource_path(),
+            ...config('view.paths'),
+            resource_path('application'),
         ]]);
 
         $this->app->bind('hybridly.testing.view_finder', config('hybridly.testing.view_finder') ?? fn ($app) => new TestFileViewFinder(

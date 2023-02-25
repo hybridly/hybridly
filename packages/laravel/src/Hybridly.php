@@ -31,7 +31,7 @@ class Hybridly
     public const CONTEXT_HEADER = 'x-hybrid-context';
     public const ERROR_BAG_HEADER = 'x-hybrid-error-bag';
     public const VERSION_HEADER = 'x-hybrid-version';
-    public const DEFAULT_ROOT_VIEW = 'application.root';
+    public const DEFAULT_ROOT_VIEW = 'root';
 
     /**
      * Returns a hybrid view.
