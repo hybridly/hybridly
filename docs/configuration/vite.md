@@ -109,7 +109,7 @@ export default defineConfig({
 	plugins: [
 		hybridly({ // [!code focus:7]
 			vueComponents: {
-				resolvers: [
+				customResolvers: [
 					HeadlessUiResolver(),
 				],
 			},
@@ -118,7 +118,11 @@ export default defineConfig({
 })
 ```
 
-Note that disabling it would also de-active auto-importing of [icons](#icons) and built-in components such as [`<router-link>`](../api/components/router-link.md).
+Note that you should use `customResolvers` to add new resolvers. Using the `resolvers` option would override the existing ones.
+
+:::info Disabling
+Disabling `vueComponents` would also de-active auto-importing of [icons](#icons) and built-in components such as [`<router-link>`](../api/components/router-link.md).
+:::
 
 ## Icons
 
@@ -152,7 +156,6 @@ import IconAccessibility from '~icons/carbon/accessibility' // [!code focus]
 	<i-carbon-accessibility class="w-4" /> // [!code focus]
 </template>
 ```
-
 
 ## Custom icons
 

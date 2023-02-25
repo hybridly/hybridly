@@ -1,11 +1,17 @@
 import type { ResolvedHybridlyConfig } from 'hybridly'
 import vueComponents from 'unplugin-vue-components/vite'
 import iconsResolver from 'unplugin-icons/resolver'
+import type { ComponentResolver } from 'unplugin-vue-components/types'
 import type { ViteOptions } from '../types'
 
 type VueComponentsOptions = Parameters<typeof vueComponents>[0] & {
 	/** Name of the Link component. */
 	linkName?: string
+}
+
+export interface CustomComponentsOptions extends VueComponentsOptions {
+	/** Custom component resolvers. */
+	customResolvers?: ComponentResolver | ComponentResolver[]
 }
 
 function getVueComponentsOptions(options: ViteOptions, config: ResolvedHybridlyConfig): VueComponentsOptions {
@@ -15,6 +21,11 @@ function getVueComponentsOptions(options: ViteOptions, config: ResolvedHybridlyC
 
 	const linkName = options.vueComponents?.linkName ?? 'RouterLink'
 	const hasIcons = options?.icons !== false
+	const customResolvers = options.vueComponents?.customResolvers
+		?	Array.isArray(options.vueComponents?.customResolvers)
+			? options.vueComponents?.customResolvers
+			: [options.vueComponents?.customResolvers]
+		: []
 
 	return {
 		globs: [
@@ -40,7 +51,7 @@ function getVueComponentsOptions(options: ViteOptions, config: ResolvedHybridlyC
 					}
 				},
 			},
-			...options.vueComponents?.resolvers ?? [],
+			...customResolvers,
 		],
 	}
 }

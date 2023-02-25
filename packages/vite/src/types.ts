@@ -3,7 +3,7 @@ import type { CustomIconOptions, IconsOptions } from './integrations/icons'
 import type { LaravelOptions } from './integrations/laravel'
 import type { Runner } from './integrations/run'
 import type { VueOptions } from './integrations/vue'
-import type { VueComponentsOptions } from './integrations/vue-components'
+import type { CustomComponentsOptions } from './integrations/vue-components'
 
 export interface ViteOptions {
 	/** Options for the layout plugin. */
@@ -19,7 +19,7 @@ export interface ViteOptions {
 	/** Options for `unplugin-auto-import`. Set to `false` to disable. */
 	autoImports?: false | AutoImportOptions
 	/** Options for `unplugin-vue-components`. Set to `false` to disable. */
-	vueComponents?: false | VueComponentsOptions
+	vueComponents?: false | CustomComponentsOptions
 	/** Options for `unplugin-icons`. Set to `false` to disable. */
 	icons?: false | IconsOptions
 	/** Options for custom icon collections. */
