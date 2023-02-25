@@ -4,7 +4,7 @@
 
 Using a protocol similar to the one [Jonathan Reinink](https://reinink.ca) invented for [Inertia](https://inertiajs.com), Hybridly makes it possible to build application using Vue instead of Blade, while keeping the benefits of classic monolithic application.
 
-Hybridly is essentially very similar to [Inertia](https://inertiajs.com). It has a different philosophy, which results in a few more features and an improved development experience since it focuses on Laravel, Vite and Vue, instead of being completely framework agnostic.
+Hybridly is essentially very similar to [Inertia](https://inertiajs.com). It has a different philosophy, which results in a few more features and an improved development experience since it focuses on Laravel, Vite and Vue instead of being completely framework-agnostic.
 
 ## About Inertia and Hybridly
 
