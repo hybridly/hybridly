@@ -1,7 +1,7 @@
 {
-  "name": "@hybridly/utils",
+  "name": "@hybridly/config",
   "version": "0.0.1-alpha.24",
-  "description": "Utils used in Hybridly packages",
+  "description": "Configuration utils for Hybridly",
   "keywords": [
     "hybridly"
   ],
@@ -13,14 +13,13 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/hybridly/hybridly.git",
-    "directory": "packages/utils"
+    "directory": "packages/config"
   },
   "funding": "https://github.com/sponsors/innocenzi",
   "author": "Enzo Innocenzi <enzo@innocenzi.dev>",
   "sideEffects": false,
   "files": [
-    "dist",
-    "*.d.ts"
+    "dist"
   ],
   "exports": {
     ".": {
@@ -37,8 +36,6 @@
     "stub": "unbuild --stub"
   },
   "dependencies": {
-    "debug": "^4.3.4",
-    "deepmerge": "^4.3.0",
-    "lodash.clonedeep": "^4.5.0"
+    "unconfig": "^0.3.7"
   }
 }

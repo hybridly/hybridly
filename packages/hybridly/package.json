@@ -1,7 +1,7 @@
 {
   "name": "hybridly",
   "version": "0.0.1-alpha.24",
-  "description": "A solution to develop server-driven, client-rendered applications",
+  "description": "Solution to develop server-driven, client-rendered applications",
   "keywords": [
     "hybridly",
     "inertiajs"
@@ -38,6 +38,11 @@
       "import": "./dist/vue.mjs",
       "types": "./dist/vue.d.ts"
     },
+    "./config": {
+      "require": "./dist/config.cjs",
+      "import": "./dist/config.mjs",
+      "types": "./dist/config.d.ts"
+    },
     "./client": {
       "types": "./client.d.ts"
     }
@@ -54,6 +59,6 @@
     "@hybridly/progress-plugin": "workspace:*",
     "@hybridly/vite": "workspace:*",
     "@hybridly/vue": "workspace:*",
-    "unconfig": "^0.3.7"
+    "@hybridly/config": "workspace:*"
   }
 }

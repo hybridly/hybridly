@@ -1,6 +1,6 @@
 import type { Plugin, ViteDevServer } from 'vite'
 import type { RoutingConfiguration } from '@hybridly/core'
-import type { HybridlyConfig } from 'hybridly'
+import type { HybridlyConfig } from '@hybridly/config'
 import type { ViteOptions, RouterOptions } from '../types'
 import { RESOLVED_ROUTING_VIRTUAL_MODULE_ID, ROUTING_HMR_QUERY_UPDATE_ROUTING, ROUTING_HMR_UPDATE_ROUTING, ROUTING_PLUGIN_NAME, ROUTING_VIRTUAL_MODULE_ID } from '../constants'
 import { debug } from '../utils'
@@ -8,10 +8,6 @@ import { getRouterClientCode } from './client'
 import { write } from './typegen'
 import { fetchRoutingFromArtisan } from './routes'
 
-/**
- * A basic Vite plugin that adds a <template layout="name"> syntax to Vite SFCs.
- * It must be used before the Vue plugin.
- */
 export default (options: ViteOptions, config: HybridlyConfig): Plugin => {
 	const resolved: Required<RouterOptions> = {
 		php: 'php',

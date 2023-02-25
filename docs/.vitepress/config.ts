@@ -78,6 +78,7 @@ export default defineConfig({
 						{ text: 'Installation', link: '/guide/installation' },
 						{ text: 'Demonstration', link: '/guide/demonstration' },
 						{ text: 'TypeScript', link: '/guide/typescript' },
+						{ text: 'Upgrade guide', link: '/guide/upgrade' },
 					],
 				},
 				{

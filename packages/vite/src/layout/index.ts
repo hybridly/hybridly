@@ -1,6 +1,6 @@
 import path from 'node:path'
-import type { ResolvedHybridlyConfig } from 'hybridly'
-import { resolveLayoutsDirectory } from 'hybridly'
+import type { ResolvedHybridlyConfig } from '@hybridly/config'
+import { resolveLayoutsDirectory } from '@hybridly/config'
 import type { Plugin } from 'vite'
 import { normalizePath } from 'vite'
 import { LAYOUT_PLUGIN_NAME } from '../constants'
@@ -10,10 +10,6 @@ import { debug } from '../utils'
 const TEMPLATE_LAYOUT_REGEX = /<template +layout(?: *= *['"]((?:[\w\/\-_,:](?:,\ )?)+)['"] *)?>/
 const TYPESCRIPT_REGEX = /lang=['"]ts['"]/
 
-/**
- * A basic Vite plugin that adds a <template layout="name"> syntax to Vite SFCs.
- * It must be used before the Vue plugin.
- */
 export default (options: ViteOptions, config: ResolvedHybridlyConfig): Plugin => {
 	const defaultLayoutName = options?.layout?.defaultLayoutName?.replace('.vue', '') ?? 'default'
 	const layoutsDirectory = path.resolve(process.cwd(), config.root, config.layouts)

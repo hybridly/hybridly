@@ -1,4 +1,4 @@
-import type { ResolvedHybridlyConfig } from 'hybridly'
+import type { ResolvedHybridlyConfig } from '@hybridly/config'
 import icons from 'unplugin-icons/vite'
 import { FileSystemIconLoader } from 'unplugin-icons/loaders'
 import type { ViteOptions } from '../types'

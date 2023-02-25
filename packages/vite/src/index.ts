@@ -1,4 +1,4 @@
-import { loadHybridlyConfig } from 'hybridly'
+import { loadHybridlyConfig } from '@hybridly/config'
 import laravel from 'laravel-vite-plugin'
 import initialize from './config'
 import layout from './layout'

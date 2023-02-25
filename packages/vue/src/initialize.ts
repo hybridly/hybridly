@@ -4,7 +4,7 @@ import type { HybridPayload, Plugin, ResolveComponent, RouterContext, RouterCont
 import { createRouter } from '@hybridly/core'
 import { showPageComponentErrorModal, debug, random, showDomainsDisabledErrorModal } from '@hybridly/utils'
 import type { Axios } from 'axios'
-import type { HybridlyConfig } from 'hybridly'
+import type { HybridlyConfig } from '@hybridly/config'
 import type { ProgressOptions } from '@hybridly/progress-plugin'
 import { progress } from '@hybridly/progress-plugin'
 import { wrapper } from './components/wrapper'

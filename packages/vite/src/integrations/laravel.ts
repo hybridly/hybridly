@@ -1,4 +1,4 @@
-import type { ResolvedHybridlyConfig } from 'hybridly'
+import type { ResolvedHybridlyConfig } from '@hybridly/config'
 import laravel from 'laravel-vite-plugin'
 import type { ViteOptions } from '../types'
 

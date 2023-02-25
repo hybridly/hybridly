@@ -8,6 +8,7 @@ importers:
   .:
     specifiers:
       '@fontsource/rubik': ^4.5.14
+      '@hybridly/config': workspace:*
       '@hybridly/core': workspace:*
       '@hybridly/progress-plugin': workspace:*
       '@hybridly/utils': workspace:*
@@ -43,6 +44,7 @@ importers:
       vue: ^3.2.47
     devDependencies:
       '@fontsource/rubik': 4.5.14
+      '@hybridly/config': link:packages/config
       '@hybridly/core': link:packages/core
       '@hybridly/progress-plugin': link:packages/progress
       '@hybridly/utils': link:packages/utils
@@ -77,6 +79,12 @@ importers:
       vitest: 0.28.5_o4skuonesh7lsu53tagp7v47aq
       vue: 3.2.47
 
+  packages/config:
+    specifiers:
+      unconfig: ^0.3.7
+    dependencies:
+      unconfig: 0.3.7
+
   packages/core:
     specifiers:
       '@hybridly/utils': workspace:*
@@ -90,17 +98,17 @@ importers:
 
   packages/hybridly:
     specifiers:
+      '@hybridly/config': workspace:*
       '@hybridly/core': workspace:*
       '@hybridly/progress-plugin': workspace:*
       '@hybridly/vite': workspace:*
       '@hybridly/vue': workspace:*
-      unconfig: ^0.3.7
     dependencies:
+      '@hybridly/config': link:../config
       '@hybridly/core': link:../core
       '@hybridly/progress-plugin': link:../progress
       '@hybridly/vite': link:../vite
       '@hybridly/vue': link:../vue
-      unconfig: 0.3.7
 
   packages/progress:
     specifiers:
@@ -154,6 +162,7 @@ importers:
 
   packages/vue:
     specifiers:
+      '@hybridly/config': workspace:*
       '@hybridly/core': workspace:*
       '@hybridly/progress-plugin': workspace:*
       '@hybridly/utils': workspace:*
@@ -168,6 +177,7 @@ importers:
       qs: ^6.11.0
       vue: ^3.2.47
     dependencies:
+      '@hybridly/config': link:../config
       '@hybridly/core': link:../core
       '@hybridly/progress-plugin': link:../progress
       '@hybridly/utils': link:../utils

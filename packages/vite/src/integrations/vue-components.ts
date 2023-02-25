@@ -1,4 +1,4 @@
-import type { ResolvedHybridlyConfig } from 'hybridly'
+import type { ResolvedHybridlyConfig } from '@hybridly/config'
 import vueComponents from 'unplugin-vue-components/vite'
 import iconsResolver from 'unplugin-icons/resolver'
 import type { ComponentResolver } from 'unplugin-vue-components/types'

@@ -19,6 +19,7 @@
     "@hybridly/core": "workspace:*",
     "@hybridly/progress-plugin": "workspace:*",
     "@hybridly/utils": "workspace:*",
+    "@hybridly/config": "workspace:*",
     "@hybridly/vite": "workspace:*",
     "@hybridly/vue": "workspace:*",
     "@iconify-json/fluent": "^1.1.18",

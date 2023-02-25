@@ -1,4 +1,4 @@
-import type { ResolvedHybridlyConfig } from 'hybridly'
+import type { ResolvedHybridlyConfig } from '@hybridly/config'
 import autoimport from 'unplugin-auto-import/vite'
 import type { ViteOptions } from '../types'
 
