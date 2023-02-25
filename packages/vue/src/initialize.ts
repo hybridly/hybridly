@@ -2,7 +2,7 @@ import type { App, DefineComponent, Plugin as VuePlugin } from 'vue'
 import { createApp, h } from 'vue'
 import type { HybridPayload, Plugin, ResolveComponent, RouterContext, RouterContextOptions, RoutingConfiguration } from '@hybridly/core'
 import { createRouter } from '@hybridly/core'
-import { showPageComponentErrorModal, debug, random } from '@hybridly/utils'
+import { showPageComponentErrorModal, debug, random, showDomainsDisabledErrorModal } from '@hybridly/utils'
 import type { Axios } from 'axios'
 import type { HybridlyConfig } from 'hybridly'
 import type { ProgressOptions } from '@hybridly/progress-plugin'
@@ -146,6 +146,13 @@ export async function resolvePageComponent(name: string, options: ResolvedInitia
 	const components = options.components!
 
 	if (name.includes(':')) {
+		if (options.domains === false) {
+			showDomainsDisabledErrorModal(name)
+			console.warn(`${name} is a domain-based component, but domains are disabled.`)
+
+			return
+		}
+
 		const [domain, page] = name.split(':')
 		name = `${options.domains}.${domain}.${options.pages}.${page}`
 	}
