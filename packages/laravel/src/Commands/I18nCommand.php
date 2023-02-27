@@ -102,8 +102,8 @@ class I18nCommand extends Command
     protected function getTranslationsAsJson(string $lang = null): string
     {
         return Str::of(json_encode($this->getTranslations($lang)))
-            ->pipe(fn(Stringable $str) => preg_replace('/:(\w+)/', '{${1}}', $str->toString()))
-            ->pipe(fn(Stringable $str) => preg_replace('/\@/', '{\'@\'}', $str->toString()))
+            ->replaceMatches('/:(\w+)/', '{${1}}')
+            ->replaceMatches('/\@/', '{\'@\'}')
             ->toString();
     }
 
