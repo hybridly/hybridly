@@ -15,6 +15,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Router;
 use Illuminate\Testing\TestResponse;
 use Illuminate\View\Compilers\BladeCompiler;
+use Illuminate\View\Factory;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 
@@ -38,28 +39,14 @@ class HybridlyServiceProvider extends PackageServiceProvider
         $this->registerMacros();
         $this->registerTestingMacros();
 
-        config(['view.paths' => [
-            ...config('view.paths'),
-            resource_path('application'),
-        ]]);
-
         $this->app->bind('hybridly.testing.view_finder', config('hybridly.testing.view_finder') ?? fn ($app) => new TestFileViewFinder(
             $app['files'],
             $app['config']->get('hybridly.testing.page_paths'),
             $app['config']->get('hybridly.testing.page_extensions'),
         ));
-    }
 
-    protected function registerMacros(): void
-    {
-        /** Checks if the request is hybridly. */
-        Request::macro('isHybrid', fn () => hybridly()->isHybrid());
-        /** Serves a hybrid route. */
-        Router::macro('hybridly', function (string $uri, string $component, array $properties = []) {
-            /** @phpstan-ignore-next-line */
-            return $this->match(['GET', 'HEAD'], $uri, Controller::class)
-                ->defaults('component', $component)
-                ->defaults('properties', $properties);
+        $this->callAfterResolving('view', function (Factory $view) {
+            $view->addLocation(resource_path('application'));
         });
     }
 
@@ -90,6 +77,19 @@ class HybridlyServiceProvider extends PackageServiceProvider
 
                 return implode(' ', array_map('trim', explode("\n", $template)));
             });
+        });
+    }
+
+    protected function registerMacros(): void
+    {
+        /** Checks if the request is hybridly. */
+        Request::macro('isHybrid', fn () => hybridly()->isHybrid());
+        /** Serves a hybrid route. */
+        Router::macro('hybridly', function (string $uri, string $component, array $properties = []) {
+            /** @phpstan-ignore-next-line */
+            return $this->match(['GET', 'HEAD'], $uri, Controller::class)
+                ->defaults('component', $component)
+                ->defaults('properties', $properties);
         });
     }
 
