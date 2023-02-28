@@ -9,10 +9,8 @@ type VueComponentsOptions = Parameters<typeof vueComponents>[0] & {
 	linkName?: string
 }
 
-export interface CustomComponentsOptions extends VueComponentsOptions {
-	/** Custom component resolvers. */
-	customResolvers?: ComponentResolver | ComponentResolver[]
-}
+export type CustomResolvers = ComponentResolver | ComponentResolver[]
+export type CustomComponentsOptions = VueComponentsOptions
 
 function getVueComponentsOptions(options: ViteOptions, config: ResolvedHybridlyConfig): VueComponentsOptions {
 	if (options.vueComponents === false) {
@@ -21,10 +19,13 @@ function getVueComponentsOptions(options: ViteOptions, config: ResolvedHybridlyC
 
 	const linkName = options.vueComponents?.linkName ?? 'RouterLink'
 	const hasIcons = options?.icons !== false
-	const customResolvers = options.vueComponents?.customResolvers
-		?	Array.isArray(options.vueComponents?.customResolvers)
-			? options.vueComponents?.customResolvers
-			: [options.vueComponents?.customResolvers]
+	const customCollections = Array.isArray(options.customIcons)
+		? options.customIcons
+		: options.customIcons?.collections ?? []
+	const customResolvers = options.customResolvers
+		?	Array.isArray(options.customResolvers)
+			? options.customResolvers
+			: [options.customResolvers]
 		: []
 
 	return {
@@ -34,11 +35,7 @@ function getVueComponentsOptions(options: ViteOptions, config: ResolvedHybridlyC
 		],
 		dts: '.hybridly/components.d.ts',
 		resolvers: [
-			...(hasIcons ? [
-				iconsResolver({
-					customCollections: options?.customIcons?.collections,
-				}),
-			] : []),
+			...(hasIcons ? [iconsResolver({ customCollections })] : []),
 			{
 				type: 'component' as const,
 				resolve: (name: string) => {

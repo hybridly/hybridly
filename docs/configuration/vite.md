@@ -103,26 +103,43 @@ You may disable it by setting `vueComponents` to `false`, or you may update its 
 ```ts
 import { defineConfig } from 'vite'
 import hybridly from 'hybridly/vite'
-import { HeadlessUiResolver } from 'unplugin-vue-components/resolvers' // [!code focus]
 
 export default defineConfig({
 	plugins: [
 		hybridly({ // [!code focus:7]
 			vueComponents: {
-				customResolvers: [
-					HeadlessUiResolver(),
-				],
+				linkName: 'HybridlyLink',
 			},
 		}),
 	],
 })
 ```
 
-Note that you should use `customResolvers` to add new resolvers. Using the `resolvers` option would override the existing ones.
+Note that you should use root-level [`customResolvers`](#custom-resolvers) option to add new resolvers. Using the `resolvers` option in `vueComponents` would override the existing ones.
 
 :::info Disabling
 Disabling `vueComponents` would also de-active auto-importing of [icons](#icons) and built-in components such as [`<router-link>`](../api/components/router-link.md).
 :::
+
+## Custom resolvers
+
+If `vueComponents` is not disabled, it is possible to add custom resolvers using the `customResolvers` option:
+
+```ts
+import { defineConfig } from 'vite'
+import hybridly from 'hybridly/vite'
+import { HeadlessUiResolver } from 'unplugin-vue-components/resolvers' // [!code focus]
+
+export default defineConfig({
+	plugins: [
+		hybridly({ // [!code focus:7]
+			customResolvers: [
+        HeadlessUiResolver()
+      ],
+		}),
+	],
+})
+```
 
 ## Icons
 

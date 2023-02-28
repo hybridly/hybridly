@@ -5,7 +5,7 @@ import type { ViteOptions } from '../types'
 
 type IconsOptions = Parameters<typeof icons>[0]
 
-interface CustomIconOptions {
+type CustomIconOptions = string[] | {
 	/** Name of the icons directory under the root directory. */
 	icons?: string
 	/** Names of the custom icon collections that should be registered. */
@@ -17,8 +17,12 @@ function getIconsOptions(options: ViteOptions, config: ResolvedHybridlyConfig): 
 		return {}
 	}
 
-	const customIconDirectoryName = options.customIcons?.icons ?? 'icons'
-	const customCollections = Object.fromEntries(options?.customIcons?.collections?.map((collection) => [
+	const resolved = Array.isArray(options.customIcons)
+		? { icons: undefined, collections: options.customIcons }
+		: options.customIcons
+
+	const customIconDirectoryName = resolved?.icons ?? 'icons'
+	const customCollections = Object.fromEntries(resolved?.collections?.map((collection) => [
 		collection, FileSystemIconLoader(`./${config.root}/${customIconDirectoryName}/${collection}`),
 	]) ?? [])
 
