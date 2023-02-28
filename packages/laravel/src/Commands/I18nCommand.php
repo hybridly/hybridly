@@ -28,8 +28,13 @@ class I18nCommand extends Command
     protected function makeFolderFilesTree(string $directory): array
     {
         $tree = [];
+
+        if (!is_dir($directory)) {
+            return $tree;
+        }
+
         if (!$files = scandir($directory)) {
-            return [];
+            return $tree;
         }
 
         foreach ($files as $fileName) {
@@ -69,7 +74,7 @@ class I18nCommand extends Command
      */
     protected function getLocales(): array
     {
-        if (!$files = scandir(config('hybridly.i18n.lang_path'))) {
+        if (!$files = scandir(config('hybridly.i18n.lang_path', lang_path()))) {
             return [];
         }
 
