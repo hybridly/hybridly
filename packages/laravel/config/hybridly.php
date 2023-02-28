@@ -60,8 +60,6 @@ return [
     | you may use the `i18n:generate` artisan command.
     */
     'i18n' => [
-        'lang_path' => base_path('lang'),
-        'locales_path' => base_path('.hybridly/i18n.json'),
         'file_name_template' => '{locale}.json',
         'file_name' => 'locales.json',
     ],

@@ -113,7 +113,7 @@ class I18nCommand extends Command
      */
     protected function getLocalesPath(): string
     {
-        return \dirname(str_replace('/', \DIRECTORY_SEPARATOR, config('hybridly.i18n.locales_path')));
+        return \dirname(str_replace('/', \DIRECTORY_SEPARATOR, config('hybridly.i18n.locales_path', base_path('.hybridly/i18n.json'))));
     }
 
     /**
