@@ -16,6 +16,7 @@ return (new PhpCsFixer\Config())
     ->setRules([
         '@PSR12' => true,
         '@PhpCsFixer:risky' => true,
+        'heredoc_indentation' => ['indentation' => 'same_as_start'],
         'comment_to_phpdoc' => false,
         'is_null' => false,
         'ternary_operator_spaces' => true,
