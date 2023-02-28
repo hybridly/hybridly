@@ -1,6 +1,6 @@
 {
   "name": "@hybridly/config",
-  "version": "0.1.0-alpha.0",
+  "version": "0.1.0-alpha.1",
   "description": "Configuration utils for Hybridly",
   "keywords": [
     "hybridly"
