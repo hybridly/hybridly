@@ -42,10 +42,10 @@
     "vue": "^3.2.45"
   },
   "dependencies": {
+    "@hybridly/config": "workspace:*",
     "@hybridly/core": "workspace:*",
     "@hybridly/progress-plugin": "workspace:*",
     "@hybridly/utils": "workspace:*",
-    "@hybridly/config": "workspace:*",
     "@vue/devtools-api": "^6.5.0",
     "defu": "^6.1.2",
     "lodash.isequal": "^4.5.0",

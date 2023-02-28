@@ -44,18 +44,18 @@
   },
   "dependencies": {
     "@hybridly/core": "workspace:*",
-    "@iconify/json": "^2.2.24",
     "@vitejs/plugin-vue": "^4.0.0",
     "laravel-vite-plugin": "^0.7.4",
     "throttle-debounce": "^5.0.0",
-    "unplugin-auto-import": "^0.14.3",
+    "unplugin-auto-import": "^0.15.0",
     "unplugin-icons": "^0.15.3",
     "unplugin-vue-components": "^0.24.0",
-    "vite-plugin-run": "^0.3.2"
+    "vite-plugin-run": "^0.4.0"
   },
   "devDependencies": {
-    "rollup": "^3.17.1",
-    "vite": "^4.1.2",
+		"@iconify/json": "^2.2.24",
+    "rollup": "^3.17.3",
+    "vite": "^4.1.4",
     "vue": "^3.2.47"
   }
 }

@@ -55,10 +55,10 @@
     "stub": "unbuild --stub"
   },
   "dependencies": {
+    "@hybridly/config": "workspace:*",
     "@hybridly/core": "workspace:*",
     "@hybridly/progress-plugin": "workspace:*",
     "@hybridly/vite": "workspace:*",
-    "@hybridly/vue": "workspace:*",
-    "@hybridly/config": "workspace:*"
+    "@hybridly/vue": "workspace:*"
   }
 }
