@@ -28,8 +28,9 @@ class I18nCommand extends Command
     protected function makeFolderFilesTree(string $directory): array
     {
         $tree = [];
-        if (!$files = scandir($directory)) {
-            return [];
+
+        if (!$files = @scandir($directory)) {
+            return $tree;
         }
 
         foreach ($files as $fileName) {
@@ -69,7 +70,7 @@ class I18nCommand extends Command
      */
     protected function getLocales(): array
     {
-        if (!$files = scandir(config('hybridly.i18n.lang_path'))) {
+        if (!$files = @scandir($this->getLangPath())) {
             return [];
         }
 
@@ -86,7 +87,7 @@ class I18nCommand extends Command
      */
     protected function getTranslations(string $lang = null): array
     {
-        $translations = $this->makeFolderFilesTree(config('hybridly.i18n.lang_path'));
+        $translations = $this->makeFolderFilesTree($this->getLangPath());
 
         if ($lang) {
             return $translations[$lang] ?? [];
@@ -111,7 +112,15 @@ class I18nCommand extends Command
      */
     protected function getLocalesPath(): string
     {
-        return \dirname(str_replace('/', \DIRECTORY_SEPARATOR, config('hybridly.i18n.locales_path')));
+        return \dirname(str_replace('/', \DIRECTORY_SEPARATOR, config('hybridly.i18n.locales_path', base_path('.hybridly/i18n.json'))));
+    }
+
+    /**
+     * Gets the path to the lang directory.
+     */
+    protected function getLangPath(): string
+    {
+        return config('hybridly.i18n.lang_path', lang_path());
     }
 
     /**

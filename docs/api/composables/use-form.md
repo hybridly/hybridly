@@ -1,3 +1,7 @@
+---
+outline: 'deep'
+---
+
 # `useForm`
 
 This composable helps with defining and submiting forms.

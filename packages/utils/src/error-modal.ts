@@ -50,6 +50,22 @@ class Modal {
 		`, id)
 	}
 
+	static domainsDisabled(component: string, id: string) {
+		return new Modal(`
+			<style>${style()}</style>
+			<div class="h-full text-center flex">
+				<div class="m-auto">
+					<div class="text-5xl font-thin">Error</div>
+					<div class="opacity-30 text-lg font-thin m-1">
+						A domain-based page component was specificed, but domains are disabled. <br />
+						Set <code>domains</code> to <code>true</code> in <a class="underline underline-dotted" href="https://hybridly.dev/configuration/architecture.html#domains"><code>hybridly.config.ts</code></a>.
+					</div>
+					<div class="m-2 flex justify-center text-xl opacity-30 underline underline-dotted">${component}</div>
+				</div>
+			</div>
+		`, id)
+	}
+
 	initializeDOM() {
 		if (!this.html) {
 			return false
@@ -157,6 +173,10 @@ export function showPageComponentErrorModal(response: string): Modal {
 	return Modal.forPageComponent(response, `page-component-${response}`)
 }
 
+export function showDomainsDisabledErrorModal(response: string): Modal {
+	return Modal.domainsDisabled(response, `domains-disabled-${response}`)
+}
+
 function htmlStyle() {
 	return `
 		html {
@@ -166,6 +186,10 @@ function htmlStyle() {
 			display: flex;
 			flex-direction: column;
 			height: 100%;
+		}
+
+		a {
+			color: white;
 		}
 	`
 }

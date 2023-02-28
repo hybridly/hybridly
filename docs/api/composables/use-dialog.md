@@ -1,3 +1,7 @@
+---
+outline: 'deep'
+---
+
 # `useDialog`
 
 This util returns functions which control [dialogs](../../guide/dialogs.md).
@@ -12,19 +16,22 @@ const { show, close, unmount } = useModal()
 
 It returns a `close` and `unmount` function which control the currently displayed dialog, as well as a `show` property that defines whether the dialog should be shown.
 
-## `show`
+
+## Options
+
+### `show`
 
 - **Type**: `Computed<boolean>`
 
 Defines whether the dialog should be shown. Generally, it is used to control the transition components wrapping the dialog.
 
-## `close`
+### `close`
 
 - **Type**: `() => void`
 
 Closes the dialog, effectively assigning `false` to `show`.
 
-## `unmount`
+### `unmount`
 
 - **Type**: `() => void`
 

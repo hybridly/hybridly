@@ -30,20 +30,6 @@ Since pages are written in single-file components, global Laravel functions like
 
 Instead, you may use Hybridly's [`route`](../api/utils/route) util. This function is typed and its typings are updated live as your `routes/*.php` files are saved.
 
-For it to work, a virtual import is needed:
-
-```ts
-import { createApp } from 'vue'
-import { initializeHybridly } from 'hybridly/vue'
-import 'virtual:hybridly/router' // [!code focus]
-
-initializeHybridly({
-	pages: import.meta.glob('../views/pages/**/*.vue', { eager: true }),
-})
-```
-
-This import is required by the Vite plugin to register the routes at the moment the development server is started and to set up hot-module replacement for them. 
-
 ```php
 // routes/web.php
 Route::get('/', ShowIndexController::class)
@@ -55,16 +41,12 @@ Route::get('/users/{user}', [UsersController::class, 'show'])
 
 ```ts vue
 // In a .vue or .ts file
-import { route } from 'hybridly/vue'
-
 route('index')
 route('users.show', { user: 1 })
 ```
 
 :::info Gotchas
-If the `route` function is used without its virtual import, or an unknown route name is given, an error will be thrown.
-
-Additionally, the function is not reactive, in the sense that it returns a `string`, not a `Ref`.
+The `route` function is not reactive, in the sense that it returns a `string`, not a `Ref`.
 :::
 
 ## Configuration

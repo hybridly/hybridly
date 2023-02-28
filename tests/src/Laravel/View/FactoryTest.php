@@ -42,7 +42,7 @@ test('external responses with redirect responses as input', function () {
 });
 
 test('hybridly responses to non-hybridly requests', function () {
-    hybridly()->setRootView('root');
+    hybridly()->setRootView(Hybridly::DEFAULT_ROOT_VIEW);
     hybridly()->setVersion('123');
 
     $request = mockRequest(url: '/users/makise', hybridly: false, bind: true);
@@ -66,7 +66,7 @@ test('hybridly responses to non-hybridly requests', function () {
 });
 
 test('hybridly responses to hybridly requests', function () {
-    hybridly()->setRootView('root');
+    hybridly()->setRootView(Hybridly::DEFAULT_ROOT_VIEW);
     hybridly()->setVersion('123');
 
     $request = mockRequest(url: '/users/makise', hybridly: true, bind: true);
@@ -90,7 +90,7 @@ test('hybridly responses to hybridly requests', function () {
 });
 
 test('properties can be added on-the-fly on the factory instance', function () {
-    hybridly()->setRootView('root');
+    hybridly()->setRootView(Hybridly::DEFAULT_ROOT_VIEW);
     hybridly()->setVersion('123');
 
     $request = mockRequest(url: '/users/makise', hybridly: true, bind: true);

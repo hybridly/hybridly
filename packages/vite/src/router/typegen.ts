@@ -17,7 +17,7 @@ async function writeDefinitions(options: RouterOptions, routing?: RoutingConfigu
 
 	debug.router('Writing types for routing:', routing)
 
-	const target = path.resolve(options.dts ?? 'resources/types/routes.d.ts')
+	const target = path.resolve(options.dts ?? '.hybridly/routes.d.ts')
 	const routes = Object.fromEntries(Object.entries(routing!.routes).map(([key, route]) => {
 		const bindings = route.bindings
 			? Object.fromEntries(Object.entries(route.bindings).map(([key]) => [key, '__key_placeholder__']))
