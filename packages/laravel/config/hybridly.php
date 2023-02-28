@@ -80,8 +80,6 @@ return [
             resource_path('pages'),
         ],
         'page_extensions' => [
-            'js',
-            'jsx',
             'ts',
             'tsx',
             'vue',
