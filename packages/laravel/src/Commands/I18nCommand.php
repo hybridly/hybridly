@@ -5,7 +5,6 @@ namespace Hybridly\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
-use Illuminate\Support\Stringable;
 
 /**
  * Generates a JSON file with all translations.
