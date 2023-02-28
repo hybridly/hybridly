@@ -72,7 +72,7 @@ class GenerateGlobalTypesCommand extends Command
             '--output' => '../.hybridly/back-end.d.ts',
         ]);
 
-        if (!$definitions = $this->getTypeDefinitions()) {
+        if (!$definitions = rescue(fn () => $this->getTypeDefinitions(), rescue: false, report: false)) {
             return false;
         }
 
