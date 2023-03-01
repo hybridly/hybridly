@@ -33,21 +33,25 @@ function getAutoImportsOptions(options: ViteOptions, config: ResolvedHybridlyCon
 		return
 	}
 
-	return merge<AutoImportOptions>({
-		vueTemplate: true,
-		dts: '.hybridly/auto-imports.d.ts',
-		dirs: [
-			`${config.root}/utils`,
-			`${config.root}/composables`,
-		],
-		imports: [
-			'vue',
-			'vue/macros',
-			'@vueuse/core',
-			'@vueuse/head',
-			HybridlyImports,
-		],
-	}, options.autoImports ?? {})
+	return merge<AutoImportOptions>(
+		{
+			vueTemplate: true,
+			dts: '.hybridly/auto-imports.d.ts',
+			dirs: [
+				`${config.root}/utils`,
+				`${config.root}/composables`,
+			],
+			imports: [
+				'vue',
+				'vue/macros',
+				'@vueuse/core',
+				'@vueuse/head',
+				HybridlyImports,
+			],
+		},
+		options.autoImports ?? {},
+		{ overwriteArray: false },
+	)
 }
 
 export { getAutoImportsOptions, AutoImportOptions, autoimport }

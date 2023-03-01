@@ -43,18 +43,22 @@ function getVueComponentsOptions(options: ViteOptions, config: ResolvedHybridlyC
 			: [options.customResolvers]
 		: []
 
-	return merge<VueComponentsOptions>({
-		globs: [
-			`${config.root}/components/**/*.vue`,
-			...(config.domains ? [`${config.root}/${config.domains}/**/components/**/*.vue`] : []),
-		],
-		dts: '.hybridly/components.d.ts',
-		resolvers: [
-			...(hasIcons ? [iconsResolver({ customCollections })] : []),
-			HybridlyResolver(options.vueComponents?.linkName),
-			...customResolvers,
-		],
-	}, options.vueComponents ?? {})
+	return merge<VueComponentsOptions>(
+		{
+			globs: [
+				`${config.root}/components/**/*.vue`,
+				...(config.domains ? [`${config.root}/${config.domains}/**/components/**/*.vue`] : []),
+			],
+			dts: '.hybridly/components.d.ts',
+			resolvers: [
+				...(hasIcons ? [iconsResolver({ customCollections })] : []),
+				HybridlyResolver(options.vueComponents?.linkName),
+				...customResolvers,
+			],
+		},
+		options.vueComponents ?? {},
+		{ overwriteArray: false },
+	)
 }
 
 export { VueComponentsOptions, getVueComponentsOptions, vueComponents }

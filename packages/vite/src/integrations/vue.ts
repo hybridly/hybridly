@@ -9,14 +9,18 @@ function getVueOptions(options: ViteOptions): VueOptions {
 		return
 	}
 
-	return merge<VueOptions>({
-		template: {
-			transformAssetUrls: {
-				base: null,
-				includeAbsolute: false,
+	return merge<VueOptions>(
+		{
+			template: {
+				transformAssetUrls: {
+					base: null,
+					includeAbsolute: false,
+				},
 			},
 		},
-	}, options.vue ?? {})
+		options.vue ?? {},
+		{ overwriteArray: false },
+	)
 }
 
 export { VueOptions, getVueOptions, vue }
