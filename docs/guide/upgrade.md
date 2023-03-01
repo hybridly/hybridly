@@ -145,3 +145,5 @@ A pre-configured `tsconfig.json` file is generated when the development server s
 - **Likelihood of impact**: low
 
 Previously, the recommended emplacement for `root.blade.php` was in `resources/views`. This has now moved to `resources/application`, so you may move it or keep it where it was.
+
+If you no longer have any file in `resources/views`, you may remove this path from `config/view.php` to avoid any issue while caching views during deployment.
