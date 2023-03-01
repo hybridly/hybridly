@@ -2,6 +2,7 @@ import type { ResolvedHybridlyConfig } from '@hybridly/config'
 import vueComponents from 'unplugin-vue-components/vite'
 import iconsResolver from 'unplugin-icons/resolver'
 import type { ComponentResolver } from 'unplugin-vue-components/types'
+import { merge } from '@hybridly/utils'
 import type { ViteOptions } from '../types'
 
 type VueComponentsOptions = Parameters<typeof vueComponents>[0] & {
@@ -10,14 +11,28 @@ type VueComponentsOptions = Parameters<typeof vueComponents>[0] & {
 }
 
 export type CustomResolvers = ComponentResolver | ComponentResolver[]
-export type CustomComponentsOptions = VueComponentsOptions
+export type CustomComponentsOptions = Omit<VueComponentsOptions, 'dirs'>
+
+export function HybridlyResolver(linkName: string = 'RouterLink') {
+	return {
+		type: 'component' as const,
+		resolve: (name: string) => {
+			if (name === linkName) {
+				return {
+					from: 'hybridly/vue',
+					name: 'RouterLink',
+					as: linkName,
+				}
+			}
+		},
+	}
+}
 
 function getVueComponentsOptions(options: ViteOptions, config: ResolvedHybridlyConfig): VueComponentsOptions {
 	if (options.vueComponents === false) {
 		return {}
 	}
 
-	const linkName = options.vueComponents?.linkName ?? 'RouterLink'
 	const hasIcons = options?.icons !== false
 	const customCollections = Array.isArray(options.customIcons)
 		? options.customIcons
@@ -28,7 +43,7 @@ function getVueComponentsOptions(options: ViteOptions, config: ResolvedHybridlyC
 			: [options.customResolvers]
 		: []
 
-	return {
+	return merge<VueComponentsOptions>({
 		globs: [
 			`${config.root}/components/**/*.vue`,
 			...(config.domains ? [`${config.root}/${config.domains}/**/components/**/*.vue`] : []),
@@ -36,21 +51,10 @@ function getVueComponentsOptions(options: ViteOptions, config: ResolvedHybridlyC
 		dts: '.hybridly/components.d.ts',
 		resolvers: [
 			...(hasIcons ? [iconsResolver({ customCollections })] : []),
-			{
-				type: 'component' as const,
-				resolve: (name: string) => {
-					if (name === linkName) {
-						return {
-							from: 'hybridly/vue',
-							name: 'RouterLink',
-							as: linkName,
-						}
-					}
-				},
-			},
+			HybridlyResolver(options.vueComponents?.linkName),
 			...customResolvers,
 		],
-	}
+	}, options.vueComponents ?? {})
 }
 
 export { VueComponentsOptions, getVueComponentsOptions, vueComponents }
