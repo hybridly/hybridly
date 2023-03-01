@@ -6,8 +6,8 @@ import router from './router'
 import type { ViteOptions } from './types'
 import { getRunOptions, run } from './integrations/run'
 import { getLaravelOptions } from './integrations/laravel'
-import { getAutoImportsOptions, autoimport } from './integrations/auto-imports'
-import { getVueComponentsOptions, vueComponents } from './integrations/vue-components'
+import { getAutoImportsOptions, autoimport, HybridlyImports } from './integrations/auto-imports'
+import { getVueComponentsOptions, vueComponents, HybridlyResolver } from './integrations/vue-components'
 import { getIconsOptions, icons } from './integrations/icons'
 import { getVueOptions, vue } from './integrations/vue'
 import { generateTsConfig, generateVueShims } from './typegen'
@@ -30,4 +30,4 @@ export default async function plugin(options: ViteOptions = {}) {
 	]
 }
 
-export { layout, router, ViteOptions as Options }
+export { layout, router, ViteOptions as Options, HybridlyImports, HybridlyResolver }
