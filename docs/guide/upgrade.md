@@ -32,7 +32,7 @@ Previously, the expected emplacement for both page components and layouts was in
 The function that initializes Hybridly was previously exported by `hybridly/vue`. To simplify the setup, it is now exported by a virtual import, so the `pages` options is no longer needed.
 
 ```ts
-import { initializeHybridly } from 'virtual:hybridly/setup' // [!code ++]
+import { initializeHybridly } from 'virtual:hybridly/config' // [!code ++]
 import { initializeHybridly } from 'hybridly/vue' // [!code --]
 import 'virtual:hybridly/router' // [!code --]
 
