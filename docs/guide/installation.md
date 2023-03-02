@@ -78,7 +78,6 @@ export default defineConfig({
 Delete the `resources/js` directory, and create a `resources/application/main.ts` file with the following snippet:
 
 ```ts
-import { createApp } from 'vue'
 import { initializeHybridly } from 'virtual:hybridly/config'
 
 initializeHybridly()
