@@ -24,8 +24,8 @@ export interface ViteOptions {
 	icons?: false | IconsOptions
 	/** Options for custom icon collections. */
 	customIcons?: CustomIconOptions
-	/** Custom vue component resolvers. */
-	customResolvers?: CustomResolvers
+	/** Override vue component resolvers. */
+	overrideResolvers?: CustomResolvers
 	/** Whether to write shims. */
 	shims?: boolean
 }

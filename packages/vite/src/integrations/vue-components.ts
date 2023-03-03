@@ -1,8 +1,10 @@
 import type { ResolvedHybridlyConfig } from '@hybridly/config'
 import vueComponents from 'unplugin-vue-components/vite'
+import { HeadlessUiResolver } from 'unplugin-vue-components/resolvers'
 import iconsResolver from 'unplugin-icons/resolver'
 import type { ComponentResolver } from 'unplugin-vue-components/types'
 import { merge } from '@hybridly/utils'
+import { isPackageExists } from 'local-pkg'
 import type { ViteOptions } from '../types'
 
 type VueComponentsOptions = Parameters<typeof vueComponents>[0] & {
@@ -37,11 +39,13 @@ function getVueComponentsOptions(options: ViteOptions, config: ResolvedHybridlyC
 	const customCollections = Array.isArray(options.customIcons)
 		? options.customIcons
 		: options.customIcons?.collections ?? []
-	const customResolvers = options.customResolvers
-		?	Array.isArray(options.customResolvers)
-			? options.customResolvers
-			: [options.customResolvers]
-		: []
+	const overrideResolvers = options.overrideResolvers
+		?	Array.isArray(options.overrideResolvers)
+			? options.overrideResolvers
+			: [options.overrideResolvers]
+		: false
+
+	const hasHeadlessUI = isPackageExists('@headlessui/vue')
 
 	return merge<VueComponentsOptions>(
 		{
@@ -50,10 +54,10 @@ function getVueComponentsOptions(options: ViteOptions, config: ResolvedHybridlyC
 				...(config.domains ? [`${config.root}/${config.domains}/**/components/**/*.vue`] : []),
 			],
 			dts: '.hybridly/components.d.ts',
-			resolvers: [
+			resolvers: overrideResolvers || [
 				...(hasIcons ? [iconsResolver({ customCollections })] : []),
+				...(hasHeadlessUI ? [HeadlessUiResolver()] : []),
 				HybridlyResolver(options.vueComponents?.linkName),
-				...customResolvers,
 			],
 		},
 		options.vueComponents ?? {},
