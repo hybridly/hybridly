@@ -1,8 +1,8 @@
 import type { ResolvedHybridlyConfig } from '@hybridly/config'
 import { merge } from '@hybridly/utils'
 import autoimport from 'unplugin-auto-import/vite'
-import { isPackageExists } from 'local-pkg'
 import type { ViteOptions } from '../types'
+import { isPackageInstalled } from '../utils'
 
 type AutoImportOptions = Parameters<typeof autoimport>[0]
 
@@ -47,7 +47,7 @@ function getAutoImportsOptions(options: ViteOptions, config: ResolvedHybridlyCon
 			imports: [
 				'vue',
 				'vue/macros',
-				...presets.filter((pkg) => isPackageExists(pkg)),
+				...presets.filter((pkg) => isPackageInstalled(pkg)),
 				HybridlyImports,
 			],
 		},

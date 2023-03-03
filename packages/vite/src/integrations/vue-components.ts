@@ -4,8 +4,8 @@ import { HeadlessUiResolver } from 'unplugin-vue-components/resolvers'
 import iconsResolver from 'unplugin-icons/resolver'
 import type { ComponentResolver } from 'unplugin-vue-components/types'
 import { merge } from '@hybridly/utils'
-import { isPackageExists } from 'local-pkg'
 import type { ViteOptions } from '../types'
+import { isPackageInstalled } from '../utils'
 
 type VueComponentsOptions = Parameters<typeof vueComponents>[0] & {
 	/** Name of the Link component. */
@@ -13,7 +13,7 @@ type VueComponentsOptions = Parameters<typeof vueComponents>[0] & {
 }
 
 export type CustomResolvers = ComponentResolver | ComponentResolver[]
-export type CustomComponentsOptions = Omit<VueComponentsOptions, 'dirs'>
+export type CustomComponentsOptions = VueComponentsOptions
 
 export function HybridlyResolver(linkName: string = 'RouterLink') {
 	return {
@@ -45,7 +45,7 @@ function getVueComponentsOptions(options: ViteOptions, config: ResolvedHybridlyC
 			: [options.overrideResolvers]
 		: false
 
-	const hasHeadlessUI = isPackageExists('@headlessui/vue')
+	const hasHeadlessUI = isPackageInstalled('@headlessui/vue')
 
 	return merge<VueComponentsOptions>(
 		{
