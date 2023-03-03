@@ -47,6 +47,7 @@
     "@vitejs/plugin-vue": "^4.0.0",
     "laravel-vite-plugin": "^0.7.4",
     "local-pkg": "^0.4.3",
+    "fast-glob": "^3.2.12",
     "throttle-debounce": "^5.0.0",
     "unplugin-auto-import": "^0.15.0",
     "unplugin-icons": "^0.15.3",

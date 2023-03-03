@@ -128,6 +128,7 @@ importers:
       '@hybridly/core': workspace:*
       '@iconify/json': ^2.2.24
       '@vitejs/plugin-vue': ^4.0.0
+      fast-glob: ^3.2.12
       laravel-vite-plugin: ^0.7.4
       local-pkg: ^0.4.3
       rollup: ^3.17.3
@@ -141,6 +142,7 @@ importers:
     dependencies:
       '@hybridly/core': link:../core
       '@vitejs/plugin-vue': 4.0.0_vite@4.1.4+vue@3.2.47
+      fast-glob: 3.2.12
       laravel-vite-plugin: 0.7.4_vite@4.1.4
       local-pkg: 0.4.3
       throttle-debounce: 5.0.0
@@ -4568,8 +4570,8 @@ packages:
       brace-expansion: 2.0.1
     dev: false
 
-  /minimatch/7.3.0:
-    resolution: {integrity: sha512-WaMDuhKa7a6zKiwplR1AOz+zGvJba24k5VU1Cy6NhEguavT2YRlHxuINUgTas4wiS6fwBpYq4TcA1XIECSntyw==}
+  /minimatch/7.4.2:
+    resolution: {integrity: sha512-xy4q7wou3vUoC9k1xGTXc+awNdGaGVHtFUaey8tiX4H1QRc04DZ/rmDFwNm2EBsuYEhAZ6SgMmYf3InGY6OauA==}
     engines: {node: '>=10'}
     dependencies:
       brace-expansion: 2.0.1
@@ -5958,7 +5960,7 @@ packages:
       '@rollup/pluginutils': 5.0.2_rollup@3.17.3
       local-pkg: 0.4.3
       magic-string: 0.30.0
-      minimatch: 7.3.0
+      minimatch: 7.4.2
       unimport: 3.0.2_rollup@3.17.3
       unplugin: 1.1.0
     transitivePeerDependencies:
