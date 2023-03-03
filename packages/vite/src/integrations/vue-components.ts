@@ -49,10 +49,14 @@ function getVueComponentsOptions(options: ViteOptions, config: ResolvedHybridlyC
 
 	return merge<VueComponentsOptions>(
 		{
-			globs: [
+			globs: config.domains !== false ? [
 				`${config.root}/components/**/*.vue`,
-				...(config.domains ? [`${config.root}/${config.domains}/**/components/**/*.vue`] : []),
-			],
+				`${config.root}/${config.domains}/**/components/**/*.vue`,
+			] : undefined,
+			dirs: config.domains === false ? [
+				`./${config.root}/components`,
+			] : [],
+			directoryAsNamespace: true,
 			dts: '.hybridly/components.d.ts',
 			resolvers: overrideResolvers || [
 				...(hasIcons ? [iconsResolver({ customCollections })] : []),
