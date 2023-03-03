@@ -1,6 +1,7 @@
 import type { ResolvedHybridlyConfig } from '@hybridly/config'
 import { merge } from '@hybridly/utils'
 import autoimport from 'unplugin-auto-import/vite'
+import { isPackageExists } from 'local-pkg'
 import type { ViteOptions } from '../types'
 
 type AutoImportOptions = Parameters<typeof autoimport>[0]
@@ -33,6 +34,8 @@ function getAutoImportsOptions(options: ViteOptions, config: ResolvedHybridlyCon
 		return
 	}
 
+	const presets = ['@vueuse/core', '@vueuse/head', 'vue-i18n'] as const
+
 	return merge<AutoImportOptions>(
 		{
 			vueTemplate: true,
@@ -44,8 +47,7 @@ function getAutoImportsOptions(options: ViteOptions, config: ResolvedHybridlyCon
 			imports: [
 				'vue',
 				'vue/macros',
-				'@vueuse/core',
-				'@vueuse/head',
+				...presets.filter((pkg) => isPackageExists(pkg)),
 				HybridlyImports,
 			],
 		},

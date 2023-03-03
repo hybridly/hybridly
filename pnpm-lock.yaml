@@ -129,6 +129,7 @@ importers:
       '@iconify/json': ^2.2.24
       '@vitejs/plugin-vue': ^4.0.0
       laravel-vite-plugin: ^0.7.4
+      local-pkg: ^0.4.3
       rollup: ^3.17.3
       throttle-debounce: ^5.0.0
       unplugin-auto-import: ^0.15.0
@@ -141,6 +142,7 @@ importers:
       '@hybridly/core': link:../core
       '@vitejs/plugin-vue': 4.0.0_vite@4.1.4+vue@3.2.47
       laravel-vite-plugin: 0.7.4_vite@4.1.4
+      local-pkg: 0.4.3
       throttle-debounce: 5.0.0
       unplugin-auto-import: 0.15.0_rollup@3.17.3
       unplugin-icons: 0.15.3
