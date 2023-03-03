@@ -1,6 +1,6 @@
 import path from 'node:path'
 import fs from 'node:fs'
-import type { HybridlyConfig } from 'hybridly'
+import type { HybridlyConfig } from 'hybridly/config'
 import type { ViteOptions } from '../types'
 
 export function generateTsConfig(options: ViteOptions, config: HybridlyConfig) {
