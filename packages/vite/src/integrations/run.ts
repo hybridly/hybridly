@@ -12,9 +12,9 @@ function getRunOptions(options: ViteOptions): Runner[] {
 			name: 'Generate TypeScript types',
 			run: ['php', 'artisan', 'hybridly:types'],
 			pattern: [
-				'(app|src)/**/*Data.php',
-				'(app|src)/**/Enums/*.php',
-				'(app|src)/**/Middlewrare/HandleHybridRequests.php',
+				'+(app|src)/**/*Data.php',
+				'+(app|src)/**/Enums/*.php',
+				'+(app|src)/**/Middlewrare/HandleHybridRequests.php',
 			],
 		},
 		{
