@@ -143,7 +143,7 @@ export default defineConfig({
 
 ## Icons
 
-`unplugin-icons` is iuncluded to provide Iconify and custom icons support.
+`unplugin-icons` is included to provide Iconify and custom icons support.
 
 It may be disabled by setting `icons` to `false`, or you may adjust its configuration if needed:
 
