@@ -28,7 +28,7 @@ These conventions are good, but you may update or rename directories by creating
 This configuration will be used by the Vite plugin, the Vue adapter and the IDE extensions to provide consistent support throughout the tooling.
 
 ```ts
-import { defineConfig } from 'hybridly'
+import { defineConfig } from 'hybridly/config'
 
 export default defineConfig({
 	domains: true,
