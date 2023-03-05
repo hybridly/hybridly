@@ -31,7 +31,7 @@ export function useProperty<
 ): ComputedRef<[PathValue<T, P>] extends [never] ? Fallback : PathValue<T, P>> {
 	return computed(() => (path as string)
 		.split('.')
-		.reduce((o: any, i: string) => o[i], state.context.value?.view.properties) as any
+		.reduce((o: any, i: string) => o?.[i], state.context.value?.view.properties) as any
 		?? fallback,
 	)
 }
