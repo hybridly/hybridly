@@ -41,10 +41,10 @@ export function useProperty<
 
 type PathImpl<T, K extends keyof T> =
 	K extends string
-		? T[K] extends Record<string, any>
-			? T[K] extends ArrayLike<any>
-				? K | `${K}.${PathImpl<T[K], Exclude<keyof T[K], keyof any[]>>}`
-				: K | `${K}.${PathImpl<T[K], keyof T[K]>}`
+		? NonNullable<T[K]> extends Record<string, any>
+			? NonNullable<T[K]> extends ArrayLike<any>
+				? K | `${K}.${PathImpl<NonNullable<T[K]>, Exclude<keyof NonNullable<T[K]>, keyof any[]>>}`
+				: K | `${K}.${PathImpl<NonNullable<T[K]>, keyof NonNullable<T[K]>>}`
 			: K
 		: never
 
