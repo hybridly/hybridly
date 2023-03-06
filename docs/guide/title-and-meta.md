@@ -13,6 +13,7 @@ npm i -D @vueuse/head
 ```
 
 In `main.ts`, import `createHead` and register its return value as a plugin.
+Here you may also define a title template that will be used across your pages by defining `titleTemplate` in the options.
 
 ```ts
 import { createApp } from 'vue'
@@ -23,19 +24,23 @@ import 'virtual:hybridly/router'
 initializeHybridly({
 	pages: import.meta.glob('@/views/pages/**/*.vue', { eager: true }),
   enhanceVue: (vue) => {
-    vue.use(createHead())  // [!code hl]
+    vue.use(createHead({ // [!code hl:3]
+			titleTemplate: (title) => title ? `${title} - Hybridly ®` : 'Hybridly ®',
+		})) 
   }
 })
 ```
 
 ## Usage
 
-A title template could be defined in a persistent (or normal) layout. That way, titles can be set in page components.
+A title template could also be defined in a persistent (or normal) layout. That way, titles can be set in page components.
+You can safly skip this, if you have defined it in `main.ts`.
 
 ```vue
 <script setup lang="ts">
 import { useHead } from '@vueuse/head'
 
+// You can safly skip this, if you have defined it in `main.ts`.
 useHead({
 	titleTemplate: (title) => `${title} - Blue Bird`,
 })
@@ -46,6 +51,7 @@ useHead({
   <slot />
 </template>
 ```
+On your pages, then use it like this:
 
 ```vue
 <script setup lang="ts">
