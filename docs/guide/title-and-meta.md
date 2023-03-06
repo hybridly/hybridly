@@ -13,7 +13,6 @@ npm i -D @vueuse/head
 ```
 
 In `main.ts`, import `createHead` and register its return value as a plugin.
-Here you may also define a title template that will be used across your pages by defining `titleTemplate` in the options.
 
 ```ts
 import { createApp } from 'vue'
@@ -25,24 +24,25 @@ initializeHybridly({
 	pages: import.meta.glob('@/views/pages/**/*.vue', { eager: true }),
   enhanceVue: (vue) => {
     vue.use(createHead({ // [!code hl:3]
-			titleTemplate: (title) => title ? `${title} - Hybridly ®` : 'Hybridly ®',
+			titleTemplate: (title) => title ? `${title} - Blue Bird` : 'Blue Bird',
 		})) 
   }
 })
 ```
 
+`createHead` may be used to define a default `titleTemplate` callback that will be active for the entire application.
+
 ## Usage
 
-A title template could also be defined in a persistent (or normal) layout. That way, titles can be set in page components.
-You can safly skip this, if you have defined it in `main.ts`.
+The latest `useHead` call is persisted, which means you may override `titleTemplate` on a layout. 
 
-```vue
+Page titles may be defined using the `title` property in page components.
+
+:::code-group
+```vue [layouts/default.vue]
 <script setup lang="ts">
-import { useHead } from '@vueuse/head'
-
-// You can safly skip this, if you have defined it in `main.ts`.
 useHead({
-	titleTemplate: (title) => `${title} - Blue Bird`,
+	titleTemplate: (title) => `${title} - Blue Bird`, // [!code hl]
 })
 </script>
 
@@ -51,14 +51,11 @@ useHead({
   <slot />
 </template>
 ```
-On your pages, then use it like this:
 
-```vue
+```vue [chirps/index.vue]
 <script setup lang="ts">
-import { useHead } from '@vueuse/head'
-
 useHead({
-	title: 'Recent chirps',
+	title: 'Recent chirps', // Recent chirps - Blue Bird // [!code hl]
 })
 </script>
 
@@ -66,5 +63,6 @@ useHead({
   <!-- Page component -->
 </template>
 ```
+:::
 
 For more information regarding the functionalities of `@vueuse/head`, refer to [its documentation](https://github.com/vueuse/head).
