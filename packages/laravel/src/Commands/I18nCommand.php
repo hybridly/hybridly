@@ -120,7 +120,15 @@ class I18nCommand extends Command
      */
     protected function getLangPath(): string
     {
-        return config('hybridly.i18n.lang_path', lang_path());
+        // Could be improved by loading both the
+        // Laravel-provided langs and custom ones.
+        $langPath = config('hybridly.i18n.lang_path', lang_path());
+
+        if (!File::isDirectory($langPath)) {
+            return base_path('vendor/laravel/framework/src/Illuminate/Translation/lang');
+        }
+
+        return $langPath;
     }
 
     /**
