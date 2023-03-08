@@ -69,7 +69,7 @@ export function generateLaravelIdeaHelper(config: HybridlyConfig) {
 	const ideJson = {
 		$schema: 'https://laravel-ide.com/schema/laravel-ide-v2.json',
 		completions: [
-			{
+			...(config.domains ? [] : [{
 				complete: 'directoryFiles',
 				options: {
 					directory: `/${config.root}/${config.pages}`,
@@ -81,7 +81,7 @@ export function generateLaravelIdeaHelper(config: HybridlyConfig) {
 						parameters: [1],
 					},
 				],
-			},
+			}]),
 		],
 	}
 
