@@ -65,6 +65,29 @@ export function generateVueShims(options: ViteOptions) {
 	write(shims, 'vue-shims.d.ts')
 }
 
+export function generateLaravelIdeaHelper(config: HybridlyConfig) {
+	const ideJson = {
+		$schema: 'https://laravel-ide.com/schema/laravel-ide-v2.json',
+		completions: [
+			...(config.domains ? [] : [{
+				complete: 'directoryFiles',
+				options: {
+					directory: `/${config.root}/${config.pages}`,
+					suffixToClear: '.vue',
+				},
+				condition: [
+					{
+						functionNames: ['hybridly'],
+						parameters: [1],
+					},
+				],
+			}]),
+		],
+	}
+
+	write(JSON.stringify(ideJson, null, 2), 'ide.json')
+}
+
 function write(data: any, filename: string) {
 	const hybridlyPath = path.resolve(process.cwd(), '.hybridly')
 
