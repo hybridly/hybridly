@@ -59,8 +59,19 @@ export function when<T, D>(condition: any, data: T, _default?: D): T | D | undef
 	return data
 }
 
-export function merge<T>(x: Partial<T>, y: Partial<T>): T {
-	return baseMerge(x, y, { arrayMerge: (_, s) => s })
+interface MergeOptions {
+	overwriteArray?: boolean
+	arrayMerge?: (target: any[], source: any[]) => any[]
+}
+
+export function merge<T>(x: Partial<T>, y: Partial<T>, options: MergeOptions = {}): T {
+	const arrayMerge = typeof options?.arrayMerge === 'function'
+		? options.arrayMerge
+		: options?.overwriteArray !== false
+			? (_: any, s: any) => s
+			: undefined
+
+	return baseMerge(x, y, { arrayMerge })
 }
 
 export function removeTrailingSlash(string: string): string {

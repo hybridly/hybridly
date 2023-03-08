@@ -14,9 +14,7 @@ cd my-project
 npx @preset/cli apply hybridly/preset // [!code focus]
 ```
 
-This will configure Tailwind CSS, [Pest](https://pestphp.com), auto-imports via [`unplugin-auto-import`](https://github.com/antfu/unplugin-auto-import) and [`unplugin-vue-components`](https://github.com/antfu/unplugin-vue-components), and optionally internationalization through [`vue-i18n`](https://github.com/intlify/vue-i18n-next).
-
-More information on the options on the [repository](https://github.com/hybridly/preset).
+This will configure Tailwind CSS, [Pest](https://pestphp.com), and optionally internationalization through [`vue-i18n`](https://github.com/intlify/vue-i18n-next). More information about the options on the [repository](https://github.com/hybridly/preset).
 
 ## Server-side setup
 
@@ -29,23 +27,22 @@ composer require hybridly/laravel
 php artisan hybridly:install
 ```
 
-### Create `root.blade.php`
+### Create `root.blade.php` in `resources/application`
 
 ```blade
+<!-- resources/application/root.blade.php -->
 <!DOCTYPE html>
 <html>
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
-		@vite(['resources/css/app.css', 'resources/js/main.ts'])
+		@vite(['resources/css/app.css', 'resources/application/main.ts'])
 	</head>
 	<body class="antialiased">
 		@hybridly
 	</body>
 </html>
 ```
-
-You may also delete `welcome.blade.php`.
 
 ## Client-side setup
 
@@ -54,43 +51,36 @@ This section is a summary of what's needed client-side, so that you can convenie
 ### Install the dependencies
 
 ```shell
-npm install hybridly vue axios@^1.0 @vitejs/plugin-vue -D
+npm install hybridly vue axios -D
 ```
 
 ### Configure Vite
 
-Rename `vite.config.js` to `vite.config.ts`, and import `@vitejs/plugin-vue` and `hybridly/vite` and register them as plugins.
+Rename `vite.config.js` to `vite.config.ts`, and register `hybridly/vite` as a plugin.
 
 ```ts
 import { defineConfig } from 'vite'
-import vue from '@vitejs/plugin-vue'
-import laravel from 'laravel-vite-plugin'
 import hybridly from 'hybridly/vite'
 
 export default defineConfig({
 	plugins: [
-		laravel({
-			input: ['resources/css/app.css', 'resources/js/main.ts'],
-			valetTls: true
+		hybridly({
+			laravel: {
+				valetTls: true
+			}
 		}),
-		hybridly(),
-		vue(),
 	],
 })
 ```
 
 ### Initialize Hybridly
 
-Delete `resources/js/app.js` and `resources/js/bootstrap.js`. In `resources/js/main.ts`, paste the following snippet:
+Delete the `resources/js` directory, and create a `resources/application/main.ts` file with the following snippet:
 
 ```ts
-import { createApp } from 'vue'
-import { initializeHybridly } from 'hybridly/vue'
-import 'virtual:hybridly/router'
+import { initializeHybridly } from 'virtual:hybridly/config'
 
-initializeHybridly({
-	pages: import.meta.glob('../views/pages/**/*.vue', { eager: true }),
-})
+initializeHybridly()
 ```
 
 Use [`enhanceVue`](../api/utils/initialize-hybridly.md#enhancevue) to register plugins, components or directives.
@@ -99,28 +89,7 @@ Use [`enhanceVue`](../api/utils/initialize-hybridly.md#enhancevue) to register p
 
 ```json
 {
-	"compilerOptions": {
-		"target": "esnext",
-		"module": "esnext",
-		"moduleResolution": "node",
-		"strict": true,
-		"jsx": "preserve",
-		"sourceMap": true,
-		"resolveJsonModule": true,
-		"esModuleInterop": true,
-		"allowSyntheticDefaultImports": true,
-		"lib": ["esnext", "dom"],
-		"types": ["vite/client"],
-		"baseUrl": ".",
-		"paths": {
-			"@/*": ["resources/*"]
-		}
-	},
-	"vueCompilerOptions": {
-		"experimentalSuppressInvalidJsxElementTypeErrors": true
-	},
-	"include": ["resources/**/*"],
-	"exclude": ["public/**/*", "node_modules", "vendor"]
+	"extends": "./.hybridly/tsconfig.json"
 }
 ```
 
@@ -165,9 +134,9 @@ That middleware is, by default, located in `app/Http/Middleware/HandleHybridRequ
 
 ### Create `root.blade.php`
 
-Hybridly needs a `root.blade.php` file that will be loaded on the first page render. The name is configurable, but you don't want to configure it. You want `root`. Not `app`. `root`.
+Hybridly needs a `root.blade.php` file that will be loaded on the first page render. The name and path are configurable, but it's a good default.
 
-Proceed to delete `welcome.blade.php` and create `root.blade.php`. It needs to contain the `@hybridly` directive and to load assets.
+Proceed to delete `resources/views`, and create `resources/application/root.blade.php`. It needs to contain the `@hybridly` directive and to load assets.
 
 ```blade
 <!DOCTYPE html>
@@ -175,7 +144,7 @@ Proceed to delete `welcome.blade.php` and create `root.blade.php`. It needs to c
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
-		@vite(['resources/css/app.css', 'resources/js/main.ts'])
+		@vite(['resources/css/app.css', 'resources/application/main.ts'])
 	</head>
 	<body class="antialiased">
 		@hybridly
@@ -187,10 +156,10 @@ Proceed to delete `welcome.blade.php` and create `root.blade.php`. It needs to c
 
 The next step is to install and register the Vite plugin. It is, along with the Vue adapter, distributed in the `hybridly` package on npm.
 
-We also need to install Vue, as long as the Vue plugin for Vite and the latest version of Axios.
+We also need to install Vue and the latest version of Axios.
 
 ```bash
-npm install hybridly vue axios@^1.0 @vitejs/plugin-vue -D
+npm install hybridly vue axios -D
 ```
 
 At this point, your `package.json` should look like the following:
@@ -203,38 +172,29 @@ At this point, your `package.json` should look like the following:
 				"build": "vite build"
 		},
 		"devDependencies": {
-				"@vitejs/plugin-vue": "^3.1.2",
-				"axios": "^1.0",
-				"hybridly": "0.0.1-alpha.3",
-				"laravel-vite-plugin": "^0.6.0",
+				"axios": "^1.3.0",
+				"hybridly": "0.0.1-alpha.21",
 				"lodash": "^4.17.19",
 				"postcss": "^8.1.14",
-				"vite": "^3.0.0",
+				"vite": "^4.1.2",
 				"vue": "^3.2.41"
 		}
 }
 ```
 
-Now is a good time to open `vite.config.js` and add the `hybridly` plugin. If you're feeling adventurous, and you probably are if you are reading this documentation, rename `vite.config.js` to `vite.config.ts`. Much better.
-
-The Vite plugin is exported by `hybridly/vite`. Simply import it and add it to the list of plugins. I also recommend removing the default `refresh` parameter and adding `valetTls`.
-
-Don't forget to also register the `vue` plugin, after `hybridly`. The order is important because `hybridly` has a layout plugin that depends on non-transformed SFCs.
+Now is a good time to rename `vite.config.js` to `vite.config.ts` and register the `hybridly` plugin, exported by `hybridly/vite`.
 
 ```ts
 import { defineConfig } from 'vite'
-import vue from '@vitejs/plugin-vue'
-import laravel from 'laravel-vite-plugin'
 import hybridly from 'hybridly/vite'
 
 export default defineConfig({
 	plugins: [
-		laravel({
-			input: ['resources/css/app.css', 'resources/js/main.ts'],
-			valetTls: true
+		hybridly({
+			laravel: {
+				valetTls: true
+			}
 		}),
-		hybridly(),
-		vue(),
 	],
 })
 ```
@@ -243,65 +203,30 @@ If you add `valetTls`, which you should, don't forget to also run `valet secure`
 
 ### Initialize Hybridly
 
-The Vite part is done, now you need to make your scripts aware of Hybridly. Rename `resources/js/app.js` to `resources/js/main.ts` and don't forget to update `vite.config.ts` accordingly. You can also delete `resources/js/bootstrap.js`, we don't need that.
-
-In `main.ts`, paste the following snippet:
+The Vite part is done, now you need to make your scripts aware of Hybridly. Delete the `resources/js` directory and create `resources/application/main.ts`, which should contain the following snippet:
 
 ```ts
 import { createApp } from 'vue'
-import { initializeHybridly } from 'hybridly/vue'
-import 'virtual:hybridly/router'
+import { initializeHybridly } from 'virtual:hybridly/config'
 
 initializeHybridly({
-	pages: import.meta.glob('../views/pages/**/*.vue', { eager: true }),
-  enhanceVue: (vue) => {}
+	enhanceVue: (vue) => {}
 })
 ```
-
-The last import is what makes the `route` util typed. If you don't intend on using it because you prefer hardcoding URLs directly and having to replace them in your whole codebase when Quality Assurance need you to change pluralize your URLs, feel free to omit it.
-
-- The `cleanup` property defines whether the properties should be removed from the DOM after the first load. This is not necessary but if we can do it, why not?
-
-- The `pages` property must contain an object which keys are names of page components and values are the components themselves. `import.meta.glob` conveniently create that for us. Or maybe Hybridly adopter this format because `import.meta.glob` exists. Who knows.
-
-- The `enhanceVue` property is *optional*. If provided, it must be a callback to which the Vue instance is given. You may register plugins, components or directives here.
 
 You can read more about `initializeHybridly` in the [API documentation](../api/utils/initialize-hybridly.md).
 
 ### Add a `tsconfig.json`
 
-Now, if you have keen eyes, you should have noticed that `import.meta` is yelling at you because `env` and `glob` don't exist. Mind you, they do exist - they're Vite things - but TypeScript doesn't know about it.
-
-You guessed it, we need a `tsconfig.json`. Feel free to copy-paste the following and never look at it again:
+Your project needs a `tsconfig.json` file to understand objects such as `import.meta` or imports like `virtual:hybridly/config`. The complicated part of this file is automatically generated by Hybridly when the development server is started, so you can create your own simple `tsconfig.json` that extends it:
 
 ```json
 {
-	"compilerOptions": {
-		"target": "esnext",
-		"module": "esnext",
-		"moduleResolution": "node",
-		"strict": true,
-		"jsx": "preserve",
-		"sourceMap": true,
-		"resolveJsonModule": true,
-		"esModuleInterop": true,
-		"allowSyntheticDefaultImports": true,
-		"lib": ["esnext", "dom"],
-		"types": ["vite/client"],
-		"baseUrl": ".",
-		"paths": {
-			"@/*": ["resources/*"]
-		}
-	},
-	"vueCompilerOptions": {
-		"experimentalSuppressInvalidJsxElementTypeErrors": true
-	},
-	"include": ["resources/**/*"],
-	"exclude": ["public/**/*", "node_modules", "vendor"]
+	"extends": "./.hybridly/tsconfig.json"
 }
 ```
 
-If you're interested in what each of these option do, feel free to look at the [TypeScript documentation](https://www.typescriptlang.org/tsconfig).
+The [TypeScript documentation](https://www.typescriptlang.org/tsconfig) is a good place to understand the configuration options that are available in this file.
 
 ### Create a page component
 

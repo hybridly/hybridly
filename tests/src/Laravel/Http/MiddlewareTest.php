@@ -1,5 +1,6 @@
 <?php
 
+use Hybridly\Hybridly;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Support\Facades\Route;
 
@@ -11,7 +12,7 @@ test('the middleware applies session errors', function () {
 
     $response = get('/');
     $response->assertOk();
-    $response->assertViewIs('root');
+    $response->assertViewIs(Hybridly::DEFAULT_ROOT_VIEW);
     $payload = $response->getOriginalContent()->getData()['payload'];
 
     expect(data_get($payload, 'view.properties.errors'))->toBeObject();

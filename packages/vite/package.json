@@ -1,7 +1,7 @@
 {
   "name": "@hybridly/vite",
-  "version": "0.0.1-alpha.23",
-  "description": "A solution to develop server-driven, client-rendered applications",
+  "version": "0.1.0-alpha.3",
+  "description": "Vite plugin for Hybridly",
   "keywords": [
     "hybridly",
     "inertiajs",
@@ -44,11 +44,20 @@
   },
   "dependencies": {
     "@hybridly/core": "workspace:*",
-    "throttle-debounce": "^5.0.0"
+    "@vitejs/plugin-vue": "^4.0.0",
+    "laravel-vite-plugin": "^0.7.4",
+    "local-pkg": "^0.4.3",
+    "fast-glob": "^3.2.12",
+    "throttle-debounce": "^5.0.0",
+    "unplugin-auto-import": "^0.15.0",
+    "unplugin-icons": "^0.15.3",
+    "unplugin-vue-components": "^0.24.0",
+    "vite-plugin-run": "^0.4.0"
   },
   "devDependencies": {
-    "rollup": "^3.15.0",
-    "vite": "^4.1.1",
+    "@iconify/json": "^2.2.24",
+    "rollup": "^3.17.3",
+    "vite": "^4.1.4",
     "vue": "^3.2.47"
   }
 }

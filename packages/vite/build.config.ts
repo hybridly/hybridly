@@ -9,6 +9,9 @@ export default defineBuildConfig({
 	externals: [
 		'vite',
 		'debug',
+		'hybridly',
+		'@hybridly/config',
+		'@hybridly/utils',
 	],
 	rollup: {
 		emitCJS: true,

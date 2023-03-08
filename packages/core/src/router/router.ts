@@ -257,19 +257,26 @@ export async function performHybridNavigation(options: HybridRequestOptions): Pr
 				await runHooks('abort', options.hooks, context)
 			},
 			AbortError: async() => {
-				debug.router('The request was cancelled.', error)
+				debug.router('The request was aborted.', error)
 				await runHooks('abort', options.hooks, context)
 			},
 			NotAHybridResponseError: async() => {
 				debug.router('The request was not hybridly.')
 				console.error(error)
 				await runHooks('invalid', options.hooks, error, context)
-				showResponseErrorModal(error.response.data)
+				if (context.responseErrorModals) {
+					showResponseErrorModal(error.response.data)
+				}
 			},
 			default: async() => {
-				debug.router('An unknown error occured.', error)
-				console.error(error)
-				await runHooks('exception', options.hooks, error, context)
+				if (error?.name === 'CanceledError') {
+					debug.router('The request was cancelled.', error)
+					await runHooks('abort', options.hooks, context)
+				} else {
+					debug.router('An unknown error occured.', error)
+					console.error(error)
+					await runHooks('exception', options.hooks, error, context)
+				}
 			},
 		})
 

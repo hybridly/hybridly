@@ -60,8 +60,6 @@ return [
     | you may use the `i18n:generate` artisan command.
     */
     'i18n' => [
-        'lang_path' => base_path('lang'),
-        'locales_path' => resource_path('i18n/locales'),
         'file_name_template' => '{locale}.json',
         'file_name' => 'locales.json',
     ],
@@ -79,11 +77,9 @@ return [
         'ensure_pages_exist' => true,
         'view_finder' => null,
         'page_paths' => [
-            resource_path('views/pages'),
+            resource_path('pages'),
         ],
         'page_extensions' => [
-            'js',
-            'jsx',
             'ts',
             'tsx',
             'vue',

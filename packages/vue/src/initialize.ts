@@ -1,18 +1,23 @@
 import type { App, DefineComponent, Plugin as VuePlugin } from 'vue'
 import { createApp, h } from 'vue'
-import type { HybridPayload, ResolveComponent, RouterContext, RouterContextOptions, Plugin, RoutingConfiguration } from '@hybridly/core'
+import type { HybridPayload, Plugin, ResolveComponent, RouterContext, RouterContextOptions, RoutingConfiguration } from '@hybridly/core'
 import { createRouter } from '@hybridly/core'
-import { showPageComponentErrorModal, debug, random } from '@hybridly/utils'
+import { showPageComponentErrorModal, debug, random, showDomainsDisabledErrorModal } from '@hybridly/utils'
+import type { Axios } from 'axios'
+import type { HybridlyConfig } from '@hybridly/config'
 import type { ProgressOptions } from '@hybridly/progress-plugin'
 import { progress } from '@hybridly/progress-plugin'
-import type { Axios } from 'axios'
 import { wrapper } from './components/wrapper'
 import { state } from './stores/state'
 import { devtools } from './devtools'
 import { dialogStore } from './stores/dialog'
 
-export async function initializeHybridly(options: HybridlyOptions) {
-	const { element, payload, resolve } = prepare(options)
+/**
+ * Initializes Hybridly's router and context.
+ */
+export async function initializeHybridly(options: InitializeOptions = {}) {
+	const resolved = options as ResolvedInitializeOptions
+	const { element, payload, resolve } = prepare(resolved)
 
 	if (!element) {
 		throw new Error('Could not find an HTML element to initialize Vue on.')
@@ -23,9 +28,10 @@ export async function initializeHybridly(options: HybridlyOptions) {
 	}
 
 	state.setContext(await createRouter({
-		axios: options.axios,
-		plugins: options.plugins,
-		serializer: options.serializer,
+		axios: resolved.axios,
+		plugins: resolved.plugins,
+		serializer: resolved.serializer,
+		responseErrorModals: resolved.responseErrorModals ?? process.env.NODE_ENV === 'development',
 		adapter: {
 			resolveComponent: resolve,
 			onDialogClose: async() => {
@@ -79,7 +85,7 @@ export async function initializeHybridly(options: HybridlyOptions) {
 
 	const app = createApp({ render })
 
-	if (options.devtools !== false) {
+	if (resolved.devtools !== false) {
 		app.use(devtools)
 	}
 
@@ -87,7 +93,7 @@ export async function initializeHybridly(options: HybridlyOptions) {
 	return app.mount(element)
 }
 
-function prepare(options: HybridlyOptions) {
+function prepare(options: ResolvedInitializeOptions) {
 	debug.adapter('vue', 'Preparing Hybridly with options:', options)
 	const isServer = typeof window === 'undefined'
 	const id = options.id ?? 'root'
@@ -111,8 +117,8 @@ function prepare(options: HybridlyOptions) {
 			return component.default ?? component
 		}
 
-		if (options.pages) {
-			return await resolvePageComponent(name, options.pages, options.layout)
+		if (options.components) {
+			return await resolvePageComponent(name, options)
 		}
 
 		throw new Error('Either `initializeHybridly#resolve` or `initializeHybridly#pages` should be defined.')
@@ -120,9 +126,7 @@ function prepare(options: HybridlyOptions) {
 
 	if (options.progress !== false) {
 		options.plugins = [
-			progress(typeof options.progress === 'object'
-				? options.progress
-				: {}),
+			progress(typeof options.progress === 'object' ? options.progress : {}),
 			...options.plugins ?? [],
 		]
 	}
@@ -138,60 +142,70 @@ function prepare(options: HybridlyOptions) {
 /**
  * Resolves a page component.
  */
-export async function resolvePageComponent(name: string, pages: Record<string, any>, defaultLayout?: any) {
+export async function resolvePageComponent(name: string, options: ResolvedInitializeOptions) {
+	const components = options.components!
+
 	if (name.includes(':')) {
+		if (options.domains === false) {
+			showDomainsDisabledErrorModal(name)
+			console.warn(`${name} is a domain-based component, but domains are disabled.`)
+
+			return
+		}
+
 		const [domain, page] = name.split(':')
-		name = `domains.${domain}.pages.${page}`
+		name = `${options.domains}.${domain}.${options.pages}.${page}`
 	}
 
-	const path = Object.keys(pages)
+	const path = Object.keys(components)
 		.sort((a, b) => a.length - b.length)
 		.find((path) => path.endsWith(`${name.replaceAll('.', '/')}.vue`))
 
 	if (!path) {
 		showPageComponentErrorModal(name)
-		console.warn(`Page component "${name}" could not be found. Available pages:`, Object.keys(pages))
+		console.warn(`Page component "${name}" could not be found. Available pages:`, Object.keys(components))
 
 		return
 	}
 
-	let component = typeof pages[path] === 'function'
-		? await pages[path]()
-		: pages[path]
+	let component = typeof components[path] === 'function'
+		? await components[path]()
+		: components[path]
 
 	component = component.default ?? component
-	component.layout ??= defaultLayout
 
 	return component
 }
 
-interface HybridlyOptions {
+type ResolvedInitializeOptions = InitializeOptions & HybridlyConfig
+
+interface InitializeOptions {
+	/** Callback that gets executed before Vue is mounted. */
+	enhanceVue?: (vue: App<Element>) => any
 	/** ID of the app element. */
 	id?: string
-	/** Initial view data. */
-	payload?: HybridPayload
-	/** A collection of pages. */
-	pages?: Record<string, any>
-	/** An optional default persistent layout. */
-	layout?: any
-	/** A custom component resolution option. */
-	resolve?: ResolveComponent
-	/** Custom history state serialization functions. */
-	serializer?: RouterContextOptions['serializer']
 	/** Clean up the host element's payload dataset after loading. */
 	cleanup?: boolean
 	/** Whether to set up the devtools plugin. */
 	devtools?: boolean
+	/** Whether to display response error modals. */
+	responseErrorModals?: boolean
+	/** A custom component resolution option. */
+	resolve?: ResolveComponent
+	/** Custom history state serialization functions. */
+	serializer?: RouterContextOptions['serializer']
 	/** Progressbar options. */
-	progress?: boolean | Partial<ProgressOptions>
+	progress?: false | Partial<ProgressOptions>
 	/** Sets up the hybridly router. */
 	setup?: (options: SetupArguments) => any
 	/** List of Hybridly plugins. */
 	plugins?: Plugin[]
-	/** Callback that gets executed before Vue is mounted. */
-	enhanceVue?: (vue: App<Element>) => any
 	/** Custom Axios instance. */
 	axios?: Axios
+	/** Initial view data. This is automatically set by Laravel, using this option would override the default behavior. */
+	payload?: HybridPayload
+	/** A custom collection of pages components. This is automatically determined thanks to `root` and `pages`, using this would override the default behavior. */
+	components?: Record<string, any>
 }
 
 interface SetupArguments {

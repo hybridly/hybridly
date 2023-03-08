@@ -172,7 +172,7 @@ export function useForm<T extends Fields = Fields>(options: FormOptions<T>) {
 	 * Clears the given field's error.
 	 */
 	function clearError(key: keyof T) {
-		errors.value[key] = undefined
+		delete errors.value[key]
 	}
 
 	/**

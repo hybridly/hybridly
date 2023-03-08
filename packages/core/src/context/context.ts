@@ -31,6 +31,7 @@ export async function initializeContext(options: RouterContextOptions): Promise<
 	state.initialized = true
 	state.context = {
 		...options.payload,
+		responseErrorModals: options.responseErrorModals,
 		serializer: createSerializer(options),
 		url: makeUrl(options.payload.url).toString(),
 		adapter: {

@@ -1,19 +1,19 @@
 {
   "name": "@hybridly/utils",
-  "version": "0.0.1-alpha.23",
-  "description": "A solution to develop server-driven, client-rendered applications",
+  "version": "0.1.0-alpha.3",
+  "description": "Utils used in Hybridly packages",
   "keywords": [
-    "hybridly",
-    "inertiajs"
+    "hybridly"
   ],
-  "homepage": "https://github.com/hybridly/hybridly#readme",
+  "homepage": "https://github.com/hybridly/hybridly/tree/main/packages/config#readme",
   "bugs": {
     "url": "https://github.com/hybridly/hybridly/issues"
   },
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/hybridly/hybridly.git"
+    "url": "git+https://github.com/hybridly/hybridly.git",
+    "directory": "packages/utils"
   },
   "funding": "https://github.com/sponsors/innocenzi",
   "author": "Enzo Innocenzi <enzo@innocenzi.dev>",

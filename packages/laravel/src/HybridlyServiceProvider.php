@@ -2,6 +2,7 @@
 
 namespace Hybridly;
 
+use Hybridly\Commands\GenerateGlobalTypesCommand;
 use Hybridly\Commands\I18nCommand;
 use Hybridly\Commands\InstallCommand;
 use Hybridly\Commands\RoutesCommand;
@@ -14,6 +15,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Router;
 use Illuminate\Testing\TestResponse;
 use Illuminate\View\Compilers\BladeCompiler;
+use Illuminate\View\Factory;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 
@@ -26,6 +28,7 @@ class HybridlyServiceProvider extends PackageServiceProvider
             ->hasConfigFile()
             ->hasCommand(InstallCommand::class)
             ->hasCommand(I18nCommand::class)
+            ->hasCommand(GenerateGlobalTypesCommand::class)
             ->hasCommand(RoutesCommand::class);
     }
 
@@ -41,18 +44,9 @@ class HybridlyServiceProvider extends PackageServiceProvider
             $app['config']->get('hybridly.testing.page_paths'),
             $app['config']->get('hybridly.testing.page_extensions'),
         ));
-    }
 
-    protected function registerMacros(): void
-    {
-        /** Checks if the request is hybridly. */
-        Request::macro('isHybrid', fn () => hybridly()->isHybrid());
-        /** Serves a hybrid route. */
-        Router::macro('hybridly', function (string $uri, string $component, array $properties = []) {
-            /** @phpstan-ignore-next-line */
-            return $this->match(['GET', 'HEAD'], $uri, Controller::class)
-                ->defaults('component', $component)
-                ->defaults('properties', $properties);
+        $this->callAfterResolving('view', function (Factory $view) {
+            $view->addLocation(resource_path('application'));
         });
     }
 
@@ -78,11 +72,24 @@ class HybridlyServiceProvider extends PackageServiceProvider
                 $id = $options->get('id', 'root');
                 $class = $options->get('class', '');
                 $template = <<<HTML
-                    <${element} id="${id}" class="${class}" data-payload="{{ json_encode(\$payload) }}"></${element}>
+                    <{$element} id="{$id}" class="{$class}" data-payload="{{ json_encode(\$payload) }}"></{$element}>
                 HTML;
 
                 return implode(' ', array_map('trim', explode("\n", $template)));
             });
+        });
+    }
+
+    protected function registerMacros(): void
+    {
+        /** Checks if the request is hybridly. */
+        Request::macro('isHybrid', fn () => hybridly()->isHybrid());
+        /** Serves a hybrid route. */
+        Router::macro('hybridly', function (string $uri, string $component, array $properties = []) {
+            /** @phpstan-ignore-next-line */
+            return $this->match(['GET', 'HEAD'], $uri, Controller::class)
+                ->defaults('component', $component)
+                ->defaults('properties', $properties);
         });
     }
 

@@ -4,15 +4,15 @@ export default defineBuildConfig({
 	entries: [
 		'src/index',
 		'src/vite',
+		'src/config',
 		'src/vue',
-		'src/auto-imports',
-		'src/resolver',
 	],
 	clean: true,
 	declaration: true,
 	externals: [
 		'vite',
 		'vue',
+		'@hybridly/progress-plugin',
 	],
 	rollup: {
 		emitCJS: true,

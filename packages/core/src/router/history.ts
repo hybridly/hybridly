@@ -55,6 +55,12 @@ export async function registerEventListeners() {
 	window?.addEventListener('popstate', async(event) => {
 		debug.history('Navigation detected (popstate event). State:', { state: event.state })
 
+		// Abort any active navigation.
+		if (context.pendingNavigation) {
+			debug.router('Aborting current navigation.', context.pendingNavigation)
+			context.pendingNavigation?.controller?.abort()
+		}
+
 		await runHooks('backForward', {}, event.state, context)
 
 		// If there is no state in this history entry, we come from the user

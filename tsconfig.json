@@ -15,10 +15,11 @@
       "@hybridly/core": ["./packages/core/src/index.ts"],
       "@hybridly/vite": ["./packages/vite/src/index.ts"],
       "@hybridly/vue": ["./packages/vue/src/index.ts"],
+      "@hybridly/config": ["./packages/config/src/index.ts"],
       "@hybridly/utils": ["./packages/utils/src/index.ts"],
-      "@hybridly/progress": ["./packages/progress/src/index.ts"],
+      "@hybridly/progress-plugin": ["./packages/progress/src/index.ts"],
     },
-		"types": ["vite/client"]
+		"types": ["vite/client", "node"]
   },
   "exclude": [
     "**/dist/**",

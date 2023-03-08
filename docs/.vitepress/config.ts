@@ -39,6 +39,7 @@ export default defineConfig({
 		nav: [
 			{ text: 'Guide', link: '/guide/', activeMatch: '/guide/' },
 			{ text: 'API', link: '/api/components/router-link', activeMatch: '/api/' },
+			{ text: 'Configuration', link: '/configuration/vite' },
 			{
 				text: 'Resources',
 				items: [
@@ -77,6 +78,7 @@ export default defineConfig({
 						{ text: 'Installation', link: '/guide/installation' },
 						{ text: 'Demonstration', link: '/guide/demonstration' },
 						{ text: 'TypeScript', link: '/guide/typescript' },
+						{ text: 'Upgrade guide', link: '/guide/upgrade' },
 					],
 				},
 				{
@@ -179,11 +181,13 @@ export default defineConfig({
 						{ text: 'useContext', link: '/api/composables/use-context' },
 					],
 				},
+			],
+			'/configuration/': [
 				{
-					text: 'Vite plugin',
+					text: 'Configuration',
 					items: [
-						{ text: 'layout', link: '/api/vite/layout' },
-						{ text: 'router', link: '/api/vite/router' },
+						{ text: 'Vite', link: '/configuration/vite' },
+						{ text: 'Architecture', link: '/configuration/architecture' },
 					],
 				},
 			],

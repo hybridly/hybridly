@@ -83,7 +83,7 @@ body:
           required: true
         - label: Make sure this is a Hybridly issue and not an issue related to something else (Vite, Vue...). For example, if it's a Vue SFC related bug, it should likely be reported to [vuejs/core](https://github.com/vuejs/core) instead.
           required: true
-        - label: Check that this is a concrete bug. For Q&A open a [GitHub Discussion](https://github.com/hybridly/hybridly/discussions).
+        - label: Check that this is a concrete bug. For Q&A, join our [Discord server](https://discord.gg/uZ8eC7kRFV).
           required: true
         - label: The provided reproduction is a [minimal reproducible example](https://stackoverflow.com/help/minimal-reproducible-example) of the bug.
           required: true

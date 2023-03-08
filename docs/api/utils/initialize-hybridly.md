@@ -8,25 +8,10 @@ The following snippet is a typical example of how Hybridly could be set up.
 
 ```ts
 import { createApp } from 'vue'
-import { initializeHybridly } from 'hybridly/vue'
-import 'virtual:hybridly/router'
+import { initializeHybridly } from 'virtual:hybridly/setup'
 
-initializeHybridly({
-	pages: import.meta.glob('@/views/pages/**/*.vue', { eager: true }),
-})
+initializeHybridly()
 ```
-
-## `id`
-
-- **Type**: `string`
-
-Defines the `id` of the element the Vue application should be mounted on. When changing this value to something else than `root`, it must be updated in the [directive](../laravel/directives.md#id) as well.
-
-## `pages`
-
-- **Type**: `Record<string, Component>`
-
-Defines the collection of pages Hybridly should be aware of when navigating. This is a shortcut for defining a `resolve` function. Typically, it accepts the result of Vite's `import.meta.glob`.
 
 ## `enhanceVue`
 
@@ -42,14 +27,64 @@ This can be used to register additionnal Vue plugins, directives or components.
 import { createApp } from 'vue'
 import { createHead } from '@vueuse/head'
 import { autoAnimatePlugin as autoAnimate } from '@formkit/auto-animate/vue'
-import { initializeHybridly } from 'hybridly/vue'
-import 'virtual:hybridly/router'
+import { initializeHybridly } from 'virtual:hybridly/setup'
 
 initializeHybridly({
-	pages: import.meta.glob('@/views/pages/**/*.vue', { eager: true }),
 	enhanceVue: (vue) => vue // [!code focus:3]
 		.use(createHead())
 		.use(autoAnimate),
+})
+```
+
+## `cleanup`
+
+- **Type**: `bool`
+- **Required**: false
+
+Defines whether to remove the `data-payload` attribute from the generated element. Note that this is not a security measure, but an aesthetic (and quite useless) one.
+
+## `devtools`
+
+- **Type**: `bool`
+- **Required**: false
+
+Defines whether to register the Vue DevTools plugin when initializing Hybridly.
+
+## `responseErrorModals`
+
+- **Type**: `bool`
+- **Required**: false
+
+Defines whether to display an error modal when a hybrid request receives an invalid response. By default, this is `true` only in development.
+
+## `progress`
+
+- **Type**: `false` or `ProgressOptions`
+
+When set to `false`, disables the built-in progress indicator. Otherwise, configures it. Refer to the [progress indicator](../../guide/progress-indicator.md) documentation for more information.
+
+## `plugins`
+
+- **Type**: `Plugin[]`
+
+Defines the plugins that should be registered. Refer to the [plugin documentation](../../guide/plugins.md) to learn more about them.
+
+## `axios`
+
+- **Type**: `Axios`
+
+Defines a custom Axios instance that will replace the one Hybridly would internally use otherwise.
+
+```ts
+import { initializeHybridly } from 'virtual:hybridly/setup'
+import axios from 'axios'
+
+initializeHybridly({
+	axios: axios.create({ // [!code focus:5] 
+		headers: {
+			'X-Custom-Header': 'value',
+		},
+	}),
 })
 ```
 
@@ -70,22 +105,20 @@ By default, `setup` is optional because the Vue application is created under the
 
 ```ts
 import { createApp } from 'vue'
-import { initializeHybridly } from 'hybridly/vue'
-import 'virtual:hybridly/router'
+import { initializeHybridly } from 'virtual:hybridly/setup'
 
 initializeHybridly({
-	pages: import.meta.glob('@/views/pages/**/*.vue', { eager: true }),
 	setup: ({ render, element, hybridly }) => createApp({ render }) // [!code focus:3]
 		.use(hybridly)
 		.mount(element),
 })
 ```
 
-## `layout`
+## `id`
 
-- **Type**: `Component`
+- **Type**: `string`
 
-Defines the default persistent layout.
+Defines the `id` of the element the Vue application should be mounted on. When changing this value to something else than `root`, it must be updated in the [directive](../laravel/directives.md#id) as well.
 
 ## `resolve`
 
@@ -103,49 +136,10 @@ Provides custom serialization functions that are used when saving and loading da
 
 By default, the state is serialized using `JSON.parse(JSON.stringify(data))`, and unserialized as-is.
 
-## `cleanup`
+## `components`
 
-- **Type**: `bool`
-- **Required**: false
+- **Type**: `Record<string, Component>`
 
-Defines whether to remove the `data-payload` attribute from the generated element. Note that this is not a security measure, but an aesthetic (and quite useless) one.
+Page components are usually determined automatically by Hybridly thanks to the [`root`](../../configuration/architecture.md#root) and [`pages`](../../configuration/architecture.md#pages) configuration options.
 
-## `devtools`
-
-- **Type**: `bool`
-- **Required**: false
-
-Defines whether to register the Vue DevTools plugin when initializing Hybridly.
-
-## `progress`
-
-- **Type**: `boolean` or `ProgressOptions`
-
-When set to `false`, disables the built-in progress indicator. Otherwise, configures it. Refer to the [progress indicator](../../guide/progress-indicator.md) documentation for more information.
-
-## `plugins`
-
-- **Type**: `Plugin[]`
-
-Defines the plugins that should be registered. Refer to the [plugin documentation](../../guide/plugins.md) to learn more about them.
-
-## `axios`
-
-- **Type**: `Axios`
-
-Defines a custom Axios instance that will replace the one Hybridly would internally use otherwise.
-
-```ts
-import { initializeHybridly } from 'hybridly/vue'
-import axios from 'axios'
-import 'virtual:hybridly/router'
-
-initializeHybridly({
-	pages: import.meta.glob('@/views/pages/**/*.vue', { eager: true }),
-	axios: axios.create({ // [!code focus:5]
-		headers: {
-			'X-Custom-Header': 'value',
-		},
-	}),
-})
-```
+Even though it is not advised to, you can define a custom collection of pages Hybridly should be aware of when navigating. This is a shortcut for defining a `resolve` function. Typically, it accepts the result of Vite's `import.meta.glob`. 
