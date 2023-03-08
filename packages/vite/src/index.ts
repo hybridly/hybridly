@@ -10,7 +10,7 @@ import { getAutoImportsOptions, autoimport, HybridlyImports } from './integratio
 import { getVueComponentsOptions, vueComponents, HybridlyResolver } from './integrations/vue-components'
 import { getIconsOptions, icons } from './integrations/icons'
 import { getVueOptions, vue } from './integrations/vue'
-import {generateLaravelIdeaHelper, generateTsConfig, generateVueShims} from './typegen'
+import { generateLaravelIdeaHelper, generateTsConfig, generateVueShims } from './typegen'
 
 export default async function plugin(options: ViteOptions = {}) {
 	const config = await loadHybridlyConfig()
