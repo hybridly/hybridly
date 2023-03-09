@@ -64,9 +64,6 @@ export default defineConfig({
 				valetTls: true,
 			},
 			customIcons: ['aircraft'], // registers icons in `resources/icons/aircraft`
-			customResolvers: [
-				HeadlessUiResolver(),
-			],
 		}),
 	]
 })
