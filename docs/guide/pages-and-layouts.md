@@ -20,7 +20,7 @@ const $props = defineProps<{
 }>()
 
 useHead({
-  title: () => `${user.full_name}'s profile`
+  title: () => `${$props.user.full_name}'s profile`
 })
 </script>
 
