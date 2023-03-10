@@ -25,8 +25,9 @@ export function resolveLayoutsDirectory(config: ResolvedHybridlyConfig, domain?:
 	return resolveDirectory(config.layouts, config, domain)
 }
 
-export async function loadHybridlyConfig(): Promise<ResolvedHybridlyConfig> {
+export async function loadHybridlyConfig(cwd?: string): Promise<ResolvedHybridlyConfig> {
 	const { config } = await loadConfig<HybridlyConfig>({
+		cwd,
 		sources: {
 			files: 'hybridly.config',
 		},
