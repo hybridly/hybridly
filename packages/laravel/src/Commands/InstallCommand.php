@@ -35,7 +35,7 @@ class InstallCommand extends GeneratorCommand
         $httpKernel = file_get_contents(app_path('Http/Kernel.php'));
 
         $middlewareGroups = str($httpKernel)->betweenFirst('$middlewareGroups = [', '];');
-        $middlewareGroup = str($middlewareGroups)->betweenFirst("'${group}' => [", '],');
+        $middlewareGroup = str($middlewareGroups)->betweenFirst("'{$group}' => [", '],');
 
         if (!str_contains($middlewareGroup, $name)) {
             $modifiedMiddlewareGroup = str_replace(
