@@ -11,6 +11,7 @@ function getRunOptions(options: ViteOptions): Runner[] {
 		{
 			name: 'Generate TypeScript types',
 			run: ['php', 'artisan', 'hybridly:types'],
+			build: false,
 			pattern: [
 				'+(app|src)/**/*Data.php',
 				'+(app|src)/**/Enums/*.php',
