@@ -1,8 +1,8 @@
 import isEqual from 'lodash.isequal'
 import type { Progress, UrlResolvable, HybridRequestOptions } from '@hybridly/core'
 import type { DeepReadonly } from 'vue'
-import { clone } from '@hybridly/utils'
 import { computed, reactive, ref, toRaw, watch } from 'vue'
+import { clone } from '@hybridly/utils'
 import { router } from '@hybridly/core'
 import { state } from '../stores/state'
 
@@ -179,7 +179,10 @@ export function useForm<T extends Fields = Fields>(options: FormOptions<T>) {
 	 * Sets current errors.
 	 */
 	function setErrors(incoming: Record<string, string>) {
-		errors.value = incoming
+		clearErrors()
+		Object.entries(incoming).forEach(([key, value]) => {
+			errors.value[key as keyof T] = value as any
+		})
 	}
 
 	/**
