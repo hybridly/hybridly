@@ -55,6 +55,13 @@ Defines the shape of the form data. It is mandatory and provides typings for oth
 
 Defines whether the fields should be reset when the submission is successful.
 
+### `updateInitials`
+
+- **Type**: `boolean`
+- **Default**: `false`
+
+Defines whether the current fields should be set as the default fields after the submission is successful. If `true`, subsequent `reset` calls will reset the form to use these fields.
+
 ### `timeout`
 
 - **Type**: `number`
@@ -174,6 +181,12 @@ Returns whether the form's has recently failed. This value is reset after the [t
 - **Type**: `(...keys: keyof T) => void`
 
 A function that resets the given fields, or all fields if none are given. All cleared fields will also have their errors cleared.
+
+### `clear`
+
+- **Type**: `(...keys: keyof T) => void`
+
+A function that clears the given fields, or all fields if none are given. This is different than `reset`, in the sense that the fields will specifically be set to `undefined`.
 
 ### `progress`
 
