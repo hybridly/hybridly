@@ -55,6 +55,13 @@ Defines the shape of the form data. It is mandatory and provides typings for oth
 
 Defines whether the fields should be reset when the submission is successful.
 
+### `updateInitials`
+
+- **Type**: `boolean`
+- **Default**: `false`
+
+Defines whether the current fields should be set as the default fields after the submission is successful. If `true`, subsequent `reset` calls will reset the form to use these fields.
+
 ### `timeout`
 
 - **Type**: `number`
