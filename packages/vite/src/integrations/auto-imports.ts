@@ -9,7 +9,6 @@ type AutoImportOptions = Parameters<typeof autoimport>[0]
 export const HybridlyImports = {
 	'hybridly/vue': [
 		'useProperty',
-		'useTypedProperty',
 		'useProperties',
 		'useBackForward',
 		'useContext',
