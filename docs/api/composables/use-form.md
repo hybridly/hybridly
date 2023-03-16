@@ -182,6 +182,12 @@ Returns whether the form's has recently failed. This value is reset after the [t
 
 A function that resets the given fields, or all fields if none are given. All cleared fields will also have their errors cleared.
 
+### `clear`
+
+- **Type**: `(...keys: keyof T) => void`
+
+A function that clears the given fields, or all fields if none are given. This is different than `reset`, in the sense that the fields will specifically be set to `undefined`.
+
 ### `progress`
 
 - **Type**: `{ event: AxiosProgressEvent; percentage: number }`

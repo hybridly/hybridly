@@ -93,6 +93,19 @@ export function useForm<T extends Fields = Fields>(options: FormOptions<T>) {
 	}
 
 	/**
+	 * Clear the form fields.
+	 */
+	function clear(...keys: (keyof T)[]) {
+		if (keys.length === 0) {
+			keys = Object.keys(fields)
+		}
+
+		keys.forEach((key) => {
+			delete fields[key]
+		})
+	}
+
+	/**
 	 * Submits the form.
 	 */
 	function submit(optionsOverrides?: Omit<HybridRequestOptions, 'data'>) {
@@ -222,6 +235,7 @@ export function useForm<T extends Fields = Fields>(options: FormOptions<T>) {
 
 	return reactive({
 		reset,
+		clear,
 		fields,
 		abort,
 		setErrors,
