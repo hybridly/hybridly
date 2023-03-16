@@ -126,7 +126,19 @@ class Factory implements HybridResponse
         );
 
         if ($payload->dialog) {
+
+            // TODO : This is a hack to make sure the session is kept while using the database driver
+            // We should find a better way to do this in the future
+            $isUsingDatabaseSessionDriver = config('session.driver') === 'database';
+            $originalRequestSessionId = null;
+            if($isUsingDatabaseSessionDriver){
+                $originalRequestSessionId = $request->session()->getId();
+            }
+
             $payload = $this->renderDialog($request, $payload);
+
+            // Restore the original session id
+            $isUsingDatabaseSessionDriver && session()->setId($originalRequestSessionId);
         }
 
         event('hybridly.response', [
