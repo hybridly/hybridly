@@ -68,9 +68,11 @@ class GenerateGlobalTypesCommand extends Command
 
     protected function writeTypes(): bool
     {
-        Artisan::call('typescript:transform', [
-            '--output' => '../.hybridly/back-end.d.ts',
-        ]);
+        if (class_exists('Spatie\LaravelTypeScriptTransformer\Commands\TypeScriptTransformCommand')) {
+            Artisan::call('typescript:transform', [
+                '--output' => '../.hybridly/back-end.d.ts',
+            ]);
+        }
 
         if (!$definitions = rescue(fn () => $this->getTypeDefinitions(), rescue: false, report: false)) {
             return false;
