@@ -9,7 +9,6 @@ type AutoImportOptions = Parameters<typeof autoimport>[0]
 export const HybridlyImports = {
 	'hybridly/vue': [
 		'useProperty',
-		'useTypedProperty',
 		'useProperties',
 		'useBackForward',
 		'useContext',
@@ -43,6 +42,10 @@ function getAutoImportsOptions(options: ViteOptions, config: ResolvedHybridlyCon
 			dirs: [
 				`${config.root}/utils`,
 				`${config.root}/composables`,
+				...(config.domains ? [
+					`${config.root}/${config.domains}/**/utils`,
+					`${config.root}/${config.domains}/**/composables`,
+				] : []),
 			],
 			imports: [
 				'vue',

@@ -1,8 +1,8 @@
 import isEqual from 'lodash.isequal'
 import type { Progress, UrlResolvable, HybridRequestOptions } from '@hybridly/core'
 import type { DeepReadonly } from 'vue'
-import { clone } from '@hybridly/utils'
 import { computed, reactive, ref, toRaw, watch } from 'vue'
+import { clone } from '@hybridly/utils'
 import { router } from '@hybridly/core'
 import { state } from '../stores/state'
 
@@ -12,8 +12,23 @@ interface FormOptions<T extends Fields> extends Omit<HybridRequestOptions, 'data
 	fields: T
 	url?: UrlResolvable | (() => UrlResolvable)
 	key?: string | false
+	/**
+	 * Defines the delay after which the `recentlySuccessful` and `recentlyFailed` variables are reset to `false`.
+	 */
 	timeout?: number
+	/**
+	 * Resets the fields of the form to their initial value after a successful submission.
+	 * @default true
+	 */
 	reset?: boolean
+	/**
+	 * Updates the initial values from the form after a successful submission.
+	 * @default false
+	 */
+	updateInitials?: boolean
+	/**
+	 * Callback executed before the form submission for transforming the fields.
+	 */
 	transform?: (fields: T) => Fields
 }
 
@@ -56,7 +71,7 @@ export function useForm<T extends Fields = Fields>(options: FormOptions<T>) {
 	const progress = ref<Progress>()
 
 	/**
-	 * Resets the form to its initial values.
+	 * Sets new initial values for the form, so subsequent resets will use thse values.
 	 */
 	function setInitial(newInitial: Partial<T>) {
 		Object.entries(newInitial).forEach(([key, value]) => {
@@ -74,6 +89,19 @@ export function useForm<T extends Fields = Fields>(options: FormOptions<T>) {
 
 		keys.forEach((key) => {
 			Reflect.set(fields, key, safeClone(Reflect.get(initial, key)))
+		})
+	}
+
+	/**
+	 * Clear the form fields.
+	 */
+	function clear(...keys: (keyof T)[]) {
+		if (keys.length === 0) {
+			keys = Object.keys(fields)
+		}
+
+		keys.forEach((key) => {
+			delete fields[key]
 		})
 	}
 
@@ -126,7 +154,9 @@ export function useForm<T extends Fields = Fields>(options: FormOptions<T>) {
 				},
 				success: (payload, context) => {
 					clearErrors()
-					setInitial(fields)
+					if (options?.updateInitials) {
+						setInitial(fields)
+					}
 					if (options?.reset !== false) {
 						reset()
 					}
@@ -179,7 +209,10 @@ export function useForm<T extends Fields = Fields>(options: FormOptions<T>) {
 	 * Sets current errors.
 	 */
 	function setErrors(incoming: Record<string, string>) {
-		errors.value = incoming
+		clearErrors()
+		Object.entries(incoming).forEach(([key, value]) => {
+			errors.value[key as keyof T] = value as any
+		})
 	}
 
 	/**
@@ -202,6 +235,7 @@ export function useForm<T extends Fields = Fields>(options: FormOptions<T>) {
 
 	return reactive({
 		reset,
+		clear,
 		fields,
 		abort,
 		setErrors,

@@ -1,12 +1,14 @@
 import path from 'node:path'
 import { loadConfig } from 'unconfig'
 
-export function resolvePageGlob(config: ResolvedHybridlyConfig) {
+export function resolvePageOrLayoutGlob(type: 'pages' | 'layouts', config: ResolvedHybridlyConfig) {
+	const directory = type === 'pages' ? config.pages : config.layouts
+
 	if (config.domains !== false) {
-		return `/${config.root}/${config.domains}/**/${config.pages}/**/*.vue`
+		return `/${config.root}/${config.domains}/**/${directory}/**/*.vue`
 	}
 
-	return `/${config.root}/${config.pages}/**/*.vue`
+	return `/${config.root}/${directory}/**/*.vue`
 }
 
 export function resolveDirectory(name: string, config: ResolvedHybridlyConfig, domain?: string) {
@@ -25,8 +27,9 @@ export function resolveLayoutsDirectory(config: ResolvedHybridlyConfig, domain?:
 	return resolveDirectory(config.layouts, config, domain)
 }
 
-export async function loadHybridlyConfig(): Promise<ResolvedHybridlyConfig> {
+export async function loadHybridlyConfig(cwd?: string): Promise<ResolvedHybridlyConfig> {
 	const { config } = await loadConfig<HybridlyConfig>({
+		cwd,
 		sources: {
 			files: 'hybridly.config',
 		},
@@ -44,7 +47,7 @@ export async function loadHybridlyConfig(): Promise<ResolvedHybridlyConfig> {
 
 	return {
 		..._default,
-		pagesGlob: resolvePageGlob(_default as ResolvedHybridlyConfig),
+		pagesGlob: resolvePageOrLayoutGlob('pages', _default as ResolvedHybridlyConfig),
 	}
 }
 
