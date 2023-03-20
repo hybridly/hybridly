@@ -5,9 +5,9 @@ import type { CloseDialogOptions } from '../dialog'
 import type { RouteName, RouteParameters } from '../routing/types'
 import type { UrlResolvable, UrlTransformable } from '../url'
 
-export type ConditionalNavigationOption =
-	| boolean
-	| ((payload: HybridPayload) => boolean)
+export type ConditionalNavigationOption<T extends boolean | string> =
+	| T
+	| ((payload: NavigationOptions) => T)
 
 export interface ComponentNavigationOptions {
 	/** Name of the component to use. */
@@ -18,11 +18,11 @@ export interface ComponentNavigationOptions {
 	 * Whether to replace the current history state instead of adding
 	 * one. This affects the browser's "back" and "forward" features.
 	 */
-	replace?: ConditionalNavigationOption
+	replace?: ConditionalNavigationOption<boolean>
 	/** Whether to preserve the current scrollbar position. */
-	preserveScroll?: ConditionalNavigationOption
+	preserveScroll?: ConditionalNavigationOption<boolean>
 	/** Whether to preserve the current page component state. */
-	preserveState?: ConditionalNavigationOption
+	preserveState?: ConditionalNavigationOption<boolean>
 }
 
 export interface NavigationOptions {
@@ -32,13 +32,13 @@ export interface NavigationOptions {
 	 * Whether to replace the current history state instead of adding
 	 * one. This affects the browser's "back" and "forward" features.
 	 */
-	replace?: ConditionalNavigationOption
-	/** Whether to preserve the current scrollbar position. */
-	preserveScroll?: ConditionalNavigationOption
+	replace?: ConditionalNavigationOption<boolean>
+	/** Whether to preserve the scrollbars positions on the page. */
+	preserveScroll?: ConditionalNavigationOption<boolean>
 	/** Whether to preserve the current page component's state. */
-	preserveState?: ConditionalNavigationOption
+	preserveState?: ConditionalNavigationOption<boolean>
 	/** Whether to preserve the current URL. */
-	preserveUrl?: ConditionalNavigationOption
+	preserveUrl?: ConditionalNavigationOption<boolean>
 	/**
 	 * Properties of the given URL to override.
 	 * @example

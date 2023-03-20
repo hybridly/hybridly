@@ -25,6 +25,7 @@ export function saveScrollPositions(): void {
 /** Gets DOM elements which scroll positions should be saved. */
 export function getScrollRegions(): Element[] {
 	return Array.from(document?.querySelectorAll(`[${SCROLL_REGION_ATTRIBUTE}]`) ?? [])
+		.concat(document.documentElement, document.body)
 }
 
 /**
@@ -33,12 +34,10 @@ export function getScrollRegions(): Element[] {
  */
 export function resetScrollPositions(): void {
 	debug.scroll('Resetting scroll positions.')
-	getScrollRegions()
-		.concat(document.documentElement, document.body)
-		.forEach((element) => element.scrollTo({
-			top: 0,
-			left: 0,
-		}))
+	getScrollRegions().forEach((element) => element.scrollTo({
+		top: 0,
+		left: 0,
+	}))
 
 	saveScrollPositions()
 

@@ -209,7 +209,7 @@ export async function performHybridNavigation(options: HybridRequestOptions): Pr
 				...payload,
 				url: fillHash(targetUrl, payload.url),
 			},
-			preserveScroll: options.preserveScroll === true,
+			preserveScroll: options.preserveScroll,
 			preserveState: options.preserveState,
 			preserveUrl: options.preserveUrl,
 			replace: options.replace === true || sameUrls(payload.url, window.location.href) || options.preserveUrl,
@@ -318,9 +318,11 @@ export async function navigate(options: NavigationOptions) {
 	// If no request was given, we use the current context instead.
 	options.payload ??= payloadFromContext()
 
-	const evaluateConditionalOption = (option?: ConditionalNavigationOption) => typeof option === 'function'
-		? option(options.payload!)
-		: option
+	function evaluateConditionalOption<T extends boolean | string>(option?: ConditionalNavigationOption<T>) {
+		return typeof option === 'function'
+			? option(options)
+			: option
+	}
 
 	const shouldPreserveState = evaluateConditionalOption(options.preserveState)
 	const shouldPreserveScroll = evaluateConditionalOption(options.preserveScroll)
@@ -368,10 +370,10 @@ export async function navigate(options: NavigationOptions) {
 		preserveState: shouldPreserveState,
 	})
 
-	if (!shouldPreserveScroll) {
-		resetScrollPositions()
-	} else {
+	if (options.isBackForward) {
 		restoreScrollPositions()
+	} else if (!shouldPreserveScroll) {
+		resetScrollPositions()
 	}
 
 	await runHooks('navigated', {}, options, context)
