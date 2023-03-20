@@ -15,11 +15,9 @@ export function useProperty<
 	P extends Path<T> = Path<T>
 >(
 	path: [F] extends [never]
-		? [P] extends [never]
-			? string
-			: P
+		? ([P] extends [never] ? string : P)
 		: string,
-): ComputedRef<[F] extends [never] ? [PathValue<T, P>] extends [never] ? never : PathValue<T, P> : F> {
+): ComputedRef<[F] extends [never] ? ([PathValue<T, P>] extends [never] ? never : PathValue<T, P>) : F> {
 	return computed(() => {
 		return (path as string)
 			.split('.')
