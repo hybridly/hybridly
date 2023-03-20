@@ -14,7 +14,16 @@ exports[`performs hybridly navigations > context after navigation 1`] = `
   "plugins": [],
   "responseErrorModals": undefined,
   "routing": undefined,
-  "scrollRegions": [],
+  "scrollRegions": [
+    {
+      "left": 0,
+      "top": 0,
+    },
+    {
+      "left": 0,
+      "top": 0,
+    },
+  ],
   "serializer": {
     "serialize": [Function],
     "unserialize": [Function],
