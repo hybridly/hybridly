@@ -7,7 +7,7 @@ import { getRouterContext, initializeContext, payloadFromContext, setContext } f
 import { handleExternalNavigation, isExternalResponse, isExternalNavigation, performExternalNavigation, navigateToExternalUrl } from '../external'
 import { resetScrollPositions, restoreScrollPositions, saveScrollPositions } from '../scroll'
 import type { UrlResolvable } from '../url'
-import { fillHash, makeUrl, normalizeUrl, sameUrls } from '../url'
+import { sameHashes, fillHash, makeUrl, normalizeUrl, sameUrls } from '../url'
 import { runHooks } from '../plugins'
 import { generateRouteFromName, getRouteDefinition } from '../routing/route'
 import { closeDialog } from '../dialog'
@@ -212,7 +212,7 @@ export async function performHybridNavigation(options: HybridRequestOptions): Pr
 			preserveScroll: options.preserveScroll,
 			preserveState: options.preserveState,
 			preserveUrl: options.preserveUrl,
-			replace: options.replace === true || sameUrls(payload.url, window.location.href) || options.preserveUrl,
+			replace: options.replace === true || sameHashes(payload.url, window.location.href) || options.preserveUrl,
 		})
 
 		// If the new view's properties has errors, userland expects an event

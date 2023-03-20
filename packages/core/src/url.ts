@@ -67,6 +67,23 @@ export function sameUrls(...hrefs: UrlResolvable[]): boolean {
 }
 
 /**
+ * Checks if the given URLs have the same origin, path, and hash.
+ */
+export function sameHashes(...hrefs: UrlResolvable[]): boolean {
+	if (hrefs.length < 2) {
+		return true
+	}
+
+	try {
+		return hrefs.every((href) => {
+			return makeUrl(href).toJSON() === makeUrl(hrefs.at(0)!).toJSON()
+		})
+	} catch {}
+
+	return false
+}
+
+/**
  * If the back-end did not specify a hash, if the navigation specified one,
  * and both URLs lead to the same endpoint, we update the target URL
  * to use the hash of the initially-requested URL.
