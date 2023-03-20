@@ -55,15 +55,30 @@ class GenerateGlobalTypesCommand extends Command
             return null;
         }
 
+        if (!class_exists($data)) {
+            return null;
+        }
+
         if (!class_implements($data, DataObject::class)) {
             return null;
         }
 
         $namespace = str_replace('\\', '.', $data);
 
-        return <<<TYPESCRIPT
-        interface GlobalHybridlyProperties extends {$namespace} {
+        return $this->getGlobalHybridPropertiesInterface($namespace);
+    }
+
+    protected function getGlobalHybridPropertiesInterface(?string $namespace = null): string
+    {
+        if ($namespace) {
+            return <<<TYPESCRIPT
+            interface GlobalHybridlyProperties extends {$namespace} {
+            }
+            TYPESCRIPT;
         }
+
+        return <<<TYPESCRIPT
+        type GlobalHybridlyProperties = never
         TYPESCRIPT;
     }
 
@@ -75,13 +90,10 @@ class GenerateGlobalTypesCommand extends Command
             ]);
         }
 
-        if (!$definitions = rescue(fn () => $this->getTypeDefinitions(), rescue: false, report: false)) {
-            return false;
-        }
-
+        $definitions = rescue(fn () => $this->getTypeDefinitions(), rescue: false, report: false);
         $result = (bool) File::put(
             $path = base_path('.hybridly/hybridly.d.ts'),
-            $definitions,
+            $definitions ?? $this->getGlobalHybridPropertiesInterface(),
         );
 
         if ($result) {
