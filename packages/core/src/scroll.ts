@@ -6,7 +6,7 @@ import { setHistoryState } from './router/history'
 /** Saves the current page's scrollbar positions into the history state. */
 export function saveScrollPositions(): void {
 	const regions = getScrollRegions()
-	debug.scroll('Saving scroll positions of:', regions)
+	debug.scroll('Saving scroll positions of:', regions.map((el) => ({ el, scroll: { top: el.scrollTop, left: el.scrollLeft } })))
 
 	// The context stores the scroll positions. Upon saving, we need to
 	// update it first.
@@ -51,7 +51,6 @@ export function resetScrollPositions(): void {
 
 /** Restores the scroll positions stored in the context. */
 export async function restoreScrollPositions(): Promise<void> {
-	debug.scroll('Restoring scroll positions stored in the context.')
 	const context = getRouterContext()
 	const regions = getScrollRegions()
 
@@ -60,30 +59,11 @@ export async function restoreScrollPositions(): Promise<void> {
 		return
 	}
 
-	// There is a case where the page has not fully loaded when restoring scroll positions.
-	// We can detect this by comparing the stored scroll regions with the detected ones.
-	// If the count does not match, we wait a few milliseconds before retrying.
-	let tries = 0
-	const timer = setInterval(restore, 50)
-	restore()
-
-	function restore() {
+	context.adapter.onWaitingForMount(() => {
 		debug.scroll(`Restoring ${regions.length}/${context.scrollRegions.length} region(s).`)
-		if (context.scrollRegions.length !== regions.length) {
-			if (++tries > 20) {
-				debug.scroll('The limit of tries has been reached. Cancelling scroll restoration.')
-				clearInterval(timer)
-				return
-			}
-
-			debug.scroll(`The scroll regions count do not match. Waiting for page to fully load (try #${tries}).`)
-			return
-		}
-
-		clearInterval(timer)
 		regions.forEach((el: Element, i) => el.scrollTo({
 			top: context.scrollRegions.at(i)?.top ?? el.scrollTop,
 			left: context.scrollRegions.at(i)?.top ?? el.scrollLeft,
 		}))
-	}
+	})
 }

@@ -1,7 +1,8 @@
 /* eslint-disable vue/order-in-components */
 import { debug } from '@hybridly/utils'
-import { toRaw, defineComponent, h } from 'vue'
+import { toRaw, defineComponent, h, withDirectives, nextTick } from 'vue'
 import { dialogStore } from '../stores/dialog'
+import { onMountedCallbacks } from '../stores/mount'
 import { state } from '../stores/state'
 
 export const wrapper = defineComponent({
@@ -43,10 +44,17 @@ export const wrapper = defineComponent({
 			debug.adapter('vue:render:view', 'Rendering view.')
 			state.view.value!.inheritAttrs = !!state.view.value!.inheritAttrs
 
-			return h(state.view.value!, {
+			return withDirectives(h(state.view.value!, {
 				...state.properties.value,
 				key: state.viewKey.value,
-			})
+			}), [[{
+				mounted: () => {
+					nextTick(() => {
+						debug.adapter('vue:render:view', 'Calling mounted callbacks.')
+						onMountedCallbacks.pop()?.()
+					})
+				},
+			}]])
 		}
 
 		function renderDialog() {

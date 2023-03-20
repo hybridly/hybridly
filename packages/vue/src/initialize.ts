@@ -11,6 +11,7 @@ import { wrapper } from './components/wrapper'
 import { state } from './stores/state'
 import { devtools } from './devtools'
 import { dialogStore } from './stores/dialog'
+import { onMountedCallbacks } from './stores/mount'
 
 /**
  * Initializes Hybridly's router and context.
@@ -34,6 +35,9 @@ export async function initializeHybridly(options: InitializeOptions = {}) {
 		responseErrorModals: resolved.responseErrorModals ?? process.env.NODE_ENV === 'development',
 		adapter: {
 			resolveComponent: resolve,
+			onWaitingForMount: (callback) => {
+				onMountedCallbacks.push(callback)
+			},
 			onDialogClose: async() => {
 				dialogStore.hide()
 			},

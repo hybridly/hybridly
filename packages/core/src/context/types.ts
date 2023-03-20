@@ -67,6 +67,8 @@ export interface Adapter {
 	onContextUpdate?: (context: InternalRouterContext) => void
 	/** Called when a dialog is closed. */
 	onDialogClose?: (context: InternalRouterContext) => void
+	/** Called when Hybridly is waiting for a component to be mounted. The given callback should be executed after the view component is mounted. */
+	onWaitingForMount: (callback: Function) => void
 }
 
 export interface ResolvedAdapter extends Adapter{
