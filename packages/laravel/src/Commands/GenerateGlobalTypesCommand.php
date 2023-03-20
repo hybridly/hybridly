@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\File;
 use ReflectionMethod;
 use Spatie\LaravelData\Contracts\DataObject;
+use Spatie\LaravelTypeScriptTransformer\Commands\TypeScriptTransformCommand;
 use Spatie\StructureDiscoverer\Discover;
 
 class GenerateGlobalTypesCommand extends Command
@@ -68,8 +69,8 @@ class GenerateGlobalTypesCommand extends Command
 
     protected function writeTypes(): bool
     {
-        if (class_exists('Spatie\LaravelTypeScriptTransformer\Commands\TypeScriptTransformCommand')) {
-            Artisan::call('typescript:transform', [
+        if (class_exists(TypeScriptTransformCommand::class)) {
+            Artisan::call(TypeScriptTransformCommand::class, [
                 '--output' => '../.hybridly/back-end.d.ts',
             ]);
         }
