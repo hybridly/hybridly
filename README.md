@@ -1,4 +1,4 @@
-<br>
+****<br>
 
 <p align="center">
   <img src=".github/assets/logo-shadow.svg" style="width:200px;" />
@@ -22,8 +22,6 @@
 <div align="center">
   <br />
   A solution to develop server-driven, client-rendered applications.
-  <br />
-  Hybridly is still experimental — use at your own risk. Read the <a href="https://hybridly.dev">documentation</a>.
   <br />
   <br />
   <br />
