@@ -41,7 +41,7 @@
   },
   "dependencies": {
     "@hybridly/utils": "workspace:*",
-    "qs": "^6.11.0"
+    "qs": "^6.11.1"
   },
   "devDependencies": {
     "defu": "^6.1.2"
