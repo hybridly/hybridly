@@ -12,6 +12,8 @@ import { getSubstringBetween, isPackageInstalled, toKebabCase } from '../utils'
 type VueComponentsOptions = Parameters<typeof vueComponents>[0] & {
 	/** Name of the Link component. */
 	linkName?: string
+	/** Custom prefix for Headless UI components. */
+	headlessUiPrefix?: string
 }
 
 export type CustomResolvers = ComponentResolver | ComponentResolver[]
@@ -59,7 +61,7 @@ function getVueComponentsOptions(options: ViteOptions, config: ResolvedHybridlyC
 			dts: '.hybridly/components.d.ts',
 			resolvers: overrideResolvers || [
 				...(hasIcons ? [iconsResolver({ customCollections })] : []),
-				...(hasHeadlessUI ? [HeadlessUiResolver()] : []),
+				...(hasHeadlessUI ? [HeadlessUiResolver({ prefix: options?.vueComponents?.headlessUiPrefix ?? 'headlessui' })] : []),
 				...(isUsingDomains ? [DomainComponentsResolver(config)] : []),
 				HybridlyResolver(options.vueComponents?.linkName),
 			],
