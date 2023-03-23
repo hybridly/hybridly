@@ -57,17 +57,19 @@ function composeKey(key: string, parentKey?: string): string {
 }
 
 function append(form: FormData, key: string, value: FormDataConvertible): void {
-	if (value instanceof Set) {
-		return [...value].forEach((_value, index) => append(form, composeKey(index.toString(), key), _value))
-	} else if (Array.isArray(value)) {
+	if (Array.isArray(value) || value instanceof Set) {
+		const valueAsArray = value instanceof Set
+			? [...value]
+			: value
+
 		// FormData cannot have empty arrays, so we use an empty string instead,
 		// which back-end should interpret as a null value.
 		// See: https://github.com/inertiajs/inertia/pull/876
-		if (!value.length) {
+		if (!valueAsArray.length) {
 			return form.append(key, '')
 		}
 
-		return Array.from(value.keys()).forEach((index) => append(form, composeKey(index.toString(), key), value[index]))
+		return Array.from(valueAsArray.keys()).forEach((index) => append(form, composeKey(index.toString(), key), valueAsArray[index]))
 	} else if (value instanceof Date) {
 		return form.append(key, value.toISOString())
 	} else if (value instanceof File) {
