@@ -1,4 +1,5 @@
 import { debounce, debug } from '@hybridly/utils'
+import { stringify, parse } from 'superjson'
 import { SCROLL_REGION_ATTRIBUTE } from '../constants'
 import type { InternalRouterContext, RouterContextOptions, Serializer } from '../context'
 import { getInternalRouterContext, getRouterContext, setContext } from '../context'
@@ -25,7 +26,7 @@ export function setHistoryState(options: HistoryOptions = {}) {
 	debug.history('Setting history state:', {
 		method,
 		context,
-		serialized,
+		// serialized,
 	})
 
 	try {
@@ -38,11 +39,12 @@ export function setHistoryState(options: HistoryOptions = {}) {
 
 /** Gets the current history state if it exists. */
 export function getHistoryState<T = any>(key?: string): T {
-	const state = key
-		? window.history.state?.state?.[key]
-		: window.history.state?.state
+	const context = getRouterContext()
+	const data = context.serializer.unserialize<SerializedContext>(window.history.state)
 
-	return getRouterContext().serializer.unserialize<T>(state)
+	return key
+		? data?.state?.[key] as T
+		: data?.state as T
 }
 
 /** Register history-related event listeneners. */
@@ -61,12 +63,13 @@ export async function registerEventListeners() {
 			context.pendingNavigation?.controller?.abort()
 		}
 
-		await runHooks('backForward', {}, event.state, context)
+		const state = context.serializer.unserialize<SerializedContext>(event.state)
+		await runHooks('backForward', {}, state, context)
 
 		// If there is no state in this history entry, we come from the user
 		// replacing the URL manually. In this case, we want to restore everything
 		// like it was. We need to copy the hash if any and restore the scroll positions.
-		if (!event.state) {
+		if (!state) {
 			debug.history('There is no state. Adding hash if any and restoring scroll positions.')
 
 			return await navigate({
@@ -83,9 +86,9 @@ export async function registerEventListeners() {
 		// If the history entry has been tempered with, we want
 		// to use it. We swap the components accordingly.
 		await navigate({
-			payload: event.state,
+			payload: state,
 			preserveScroll: true,
-			preserveState: !!getInternalRouterContext().dialog || !!event.state.dialog,
+			preserveState: !!getInternalRouterContext().dialog || !!state.dialog,
 			updateHistoryState: false,
 			isBackForward: true,
 		})
@@ -131,7 +134,7 @@ export function remember<T = any>(key: string, value: T): void {
 	// render by telling the adapter we updated.
 	setContext({
 		state: {
-			...getRouterContext().state,
+			...getHistoryState(),
 			[key]: value,
 		},
 	}, { propagate: false })
@@ -145,15 +148,15 @@ export function getKeyFromHistory<T = any>(key: string): T {
 }
 
 /** Serializes the context so it can be written to the history state. */
-export function serializeContext(context: InternalRouterContext): SerializedContext {
-	return {
+export function serializeContext(context: InternalRouterContext): string {
+	return context.serializer.serialize<SerializedContext>({
 		url: context.url,
 		version: context.version,
-		view: context.serializer.serialize(context.view),
+		view: context.view,
 		dialog: context.dialog,
 		scrollRegions: context.scrollRegions,
-		state: context.serializer.serialize(context.state),
-	}
+		state: context.state,
+	})
 }
 
 export function createSerializer(options: RouterContextOptions): Serializer {
@@ -162,8 +165,16 @@ export function createSerializer(options: RouterContextOptions): Serializer {
 	}
 
 	return {
-		serialize: (view) => JSON.parse(JSON.stringify(view)),
-		unserialize: (state) => state,
+		serialize: (data) => {
+			return stringify(data)
+		},
+		unserialize: (data) => {
+			if (!data) {
+				return
+			}
+
+			return parse(data)
+		},
 	}
 }
 

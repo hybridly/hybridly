@@ -42,6 +42,7 @@ it('updates the context', async() => {
 			baseUrl: 'https://base.test',
 			redirectUrl: 'https://base.test/dialog',
 			component: 'some.dialog',
+			key: 'abc',
 			properties: {
 				foo: 'bar',
 			},

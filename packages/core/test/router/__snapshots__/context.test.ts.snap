@@ -98,6 +98,7 @@ exports[`updates the context > updated context with dialog 1`] = `
   "dialog": {
     "baseUrl": "https://base.test",
     "component": "some.dialog",
+    "key": "abc",
     "properties": {
       "foo": "bar",
     },

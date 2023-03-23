@@ -82,8 +82,8 @@ export interface ScrollRegion {
 
 /** Provides methods to serialize the state into the history state. */
 export interface Serializer {
-	serialize: <T>(view: T) => any
-	unserialize: <T>(state: any) => T
+	serialize: <T>(view: T) => string
+	unserialize: <T>(state?: string) => T | undefined
 }
 
 export interface SetContextOptions {
