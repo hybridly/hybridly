@@ -73,7 +73,7 @@ The plugin can be disabled by setting `run` to `false`.
 
 ## Auto-imports
 
-`unplugin-auto-imports` is included to support auto-importing of Hybridly utils, Vue functions such as `ref` or `computed`, or utils and composables in your `<root>/composables` and `<root>/utils` directories.
+`unplugin-auto-import` is included to support auto-importing of Hybridly utils, Vue functions such as `ref` or `computed`, or utils and composables in your `<root>/composables` and `<root>/utils` directories.
 
 You may disable it by setting `autoImports` to `false` or override its configuration by using the same key:
 
