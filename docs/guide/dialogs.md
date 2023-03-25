@@ -143,7 +143,7 @@ defineProps<{
   chirp: App.Data.ChirpData
 }>()
 
-const { close } = useModal() // [!code hl]
+const { close } = useDialog() // [!code hl]
 </script>
 
 <template>

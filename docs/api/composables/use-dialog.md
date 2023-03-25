@@ -8,10 +8,10 @@ This util returns functions which control [dialogs](../../guide/dialogs.md).
 
 ## Usage
 
-`useModal` doesn't accept any option. 
+`useDialog` doesn't accept any option. 
 
 ```ts
-const { show, close, unmount } = useModal()
+const { show, close, unmount } = useDialog()
 ```
 
 It returns a `close` and `unmount` function which control the currently displayed dialog, as well as a `show` property that defines whether the dialog should be shown.
