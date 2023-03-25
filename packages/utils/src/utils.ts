@@ -1,4 +1,5 @@
 import baseMerge from 'deepmerge'
+import { isPlainObject } from 'is-plain-object'
 export { default as clone } from 'lodash.clonedeep'
 
 export function random(length: number = 10): string {
@@ -61,6 +62,7 @@ export function when<T, D>(condition: any, data: T, _default?: D): T | D | undef
 
 interface MergeOptions {
 	overwriteArray?: boolean
+	mergePlainObjects?: boolean
 	arrayMerge?: (target: any[], source: any[]) => any[]
 }
 
@@ -71,7 +73,14 @@ export function merge<T>(x: Partial<T>, y: Partial<T>, options: MergeOptions = {
 			? (_: any, s: any) => s
 			: undefined
 
-	return baseMerge(x, y, { arrayMerge })
+	const isMergeableObject = options?.mergePlainObjects
+		? isPlainObject
+		: undefined
+
+	return baseMerge(x, y, {
+		arrayMerge,
+		isMergeableObject,
+	})
 }
 
 export function removeTrailingSlash(string: string): string {
