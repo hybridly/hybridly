@@ -33,7 +33,7 @@ export const router: Router = {
 	put: async(url, options = {}) => await performHybridNavigation({ preserveState: true, ...options, url, method: 'PUT' }),
 	patch: async(url, options = {}) => await performHybridNavigation({ preserveState: true, ...options, url, method: 'PATCH' }),
 	delete: async(url, options = {}) => await performHybridNavigation({ preserveState: true, ...options, url, method: 'DELETE' }),
-	local: async(url, options) => await performLocalNavigation(url, options),
+	local: async(url, options = {}) => await performLocalNavigation(url, options),
 	external: (url, data = {}) => navigateToExternalUrl(url, data),
 	to: async(name, parameters, options) => {
 		const url = generateRouteFromName(name, parameters)
@@ -410,7 +410,7 @@ async function initializeRouter(): Promise<InternalRouterContext> {
 }
 
 /** Performs a local navigation to the given component without a round-trip. */
-async function performLocalNavigation(targetUrl: UrlResolvable, options: ComponentNavigationOptions) {
+export async function performLocalNavigation(targetUrl: UrlResolvable, options?: ComponentNavigationOptions) {
 	const context = getRouterContext()
 	const url = normalizeUrl(targetUrl)
 
@@ -418,11 +418,11 @@ async function performLocalNavigation(targetUrl: UrlResolvable, options: Compone
 		...options,
 		payload: {
 			version: context.version,
-			dialog: context.dialog,
+			dialog: options?.dialog === false ? undefined : (options?.dialog ?? context.dialog),
 			url,
 			view: {
-				component: options.component ?? context.view.component,
-				properties: options.properties ?? {},
+				component: options?.component ?? context.view.component,
+				properties: options?.properties ?? {},
 			},
 		},
 	})

@@ -10,6 +10,8 @@ export type ConditionalNavigationOption<T extends boolean | string> =
 	| ((payload: NavigationOptions) => T)
 
 export interface ComponentNavigationOptions {
+	/** Dialog data. */
+	dialog?: Dialog | false
 	/** Name of the component to use. */
 	component?: string
 	/** Properties to apply to the component. */
