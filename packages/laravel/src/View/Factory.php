@@ -6,15 +6,16 @@ use Hybridly\Contracts\HybridResponse;
 use Hybridly\DialogResolver;
 use Hybridly\Hybridly;
 use Hybridly\PropertiesResolver\PropertiesResolver;
-use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Route;
 use Spatie\LaravelData\Contracts\DataObject;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class Factory implements HybridResponse
 {
@@ -105,21 +106,8 @@ class Factory implements HybridResponse
 
     public function toResponse($request)
     {
-        // We don't use dependency injection, because the request object
-        // could be different than the one given to `toResponse`.
-        $resolver = resolve(PropertiesResolver::class, ['request' => $request]);
-
-        // Properties need to be resolved because they can be impacted
-        // in multiple ways. We use a resolver to do so and mutate
-        // the view, which will be serialized in the payload.
-        $this->view->properties = $resolver->resolve(
-            $this->view->component,
-            array_merge($this->hybridly->shared(), $this->view->properties),
-            $this->hybridly->persisted(),
-        );
-
         $payload = new Payload(
-            view: $this->view,
+            view:  $this->resolveView($this->view, $request),
             dialog: $this->resolveDialog($request),
             url: $request->fullUrl(),
             version: $this->hybridly->getVersion(),
@@ -155,29 +143,12 @@ class Factory implements HybridResponse
 
     protected function renderDialog(Request $request, Payload $payload)
     {
-        $kernel = app()->make(Kernel::class);
-        $url = $payload->dialog->redirectUrl;
-
-        do {
-            $response = $kernel->handle(
-                $this->createBaseRequest($request, $payload, $url),
-            );
-
-            if (!$response->headers->get(Hybridly::HYBRIDLY_HEADER) && !$response->isRedirect()) {
-                return $response;
-            }
-
-            $url = $response->isRedirect() ? $response->getTargetUrl() : null;
-        } while ($url);
-
-        app()->instance('request', $request);
-
-        $basePayload = $response->getData(true);
+        $view = $this->getBaseRouteView($request, $payload->dialog->redirectUrl);
 
         return new Payload(
             view: new View(
-                component: $basePayload['view']['component'],
-                properties: $basePayload['view']['properties'],
+                component: $view->component,
+                properties: $view->properties,
             ),
             url: $payload->url,
             version: $payload->version,
@@ -185,17 +156,63 @@ class Factory implements HybridResponse
         );
     }
 
-    protected function createBaseRequest(Request $request, Payload $payload, string $url)
+    protected function getBaseRouteView(Request $originalRequest, string $targetUrl): View
     {
-        $baseRequest = Request::create($url, Request::METHOD_GET);
-        $baseRequest->headers->replace([
-            ...$request->headers->all(),
-            'Accept' => 'text/html, application/xhtml+xml',
-            'X-Requested-With' => 'XMLHttpRequest',
-            Hybridly::HYBRIDLY_HEADER => true,
-            Hybridly::VERSION_HEADER => $payload->version,
-        ]);
+        $request = Request::create(
+            uri: $targetUrl,
+            method: Request::METHOD_GET,
+            parameters: $originalRequest->query->all(),
+            cookies: $originalRequest->cookies->all(),
+            files: $originalRequest->files->all(),
+            server: $originalRequest->server->all(),
+            content: $originalRequest->getContent(),
+        );
 
-        return $baseRequest;
+        $route = $this->router->getRoutes()->match($request);
+
+        $request->headers->replace($originalRequest->headers->all());
+        $request->setJson($originalRequest->json());
+        $request->setUserResolver(fn () => $originalRequest->getUserResolver());
+        $request->setRouteResolver(fn () => $route);
+
+        if ($originalRequest->hasSession() && $session = $originalRequest->session()) {
+            $request->setLaravelSession($session);
+        }
+
+        app()->instance('request', $request);
+
+        $response = (new SubstituteBindings($this->router))->handle(
+            request: $request,
+            next: fn () => $route->run(),
+        );
+
+        if ($response instanceof RedirectResponse) {
+            return $this->getBaseRouteView($request, $response->getTargetUrl());
+        }
+
+        if (!$response instanceof self) {
+            throw new \LogicException(sprintf('Target URL [%s] does not return a hybrid response.', $targetUrl));
+        }
+
+        return $this->resolveView($response->view, $request);
+    }
+
+    /**
+     * Resolves the properties on the given view.
+     */
+    protected function resolveView(View $view, Request $request): View
+    {
+        // We don't use dependency injection, because the request object
+        // could be different than the one given to `toResponse`.
+        $resolver = resolve(PropertiesResolver::class, ['request' => $request]);
+
+        return new View(
+            component: $view->component,
+            properties: $resolver->resolve(
+                component: $view->component,
+                properties: [...$this->hybridly->shared(), ...$view->properties],
+                persisted: $this->hybridly->persisted(),
+            ),
+        );
     }
 }
