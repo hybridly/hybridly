@@ -1,6 +1,6 @@
 /* eslint-disable vue/order-in-components */
 import { debug } from '@hybridly/utils'
-import { toRaw, defineComponent, h, withDirectives, nextTick } from 'vue'
+import { toRaw, defineComponent, h, nextTick } from 'vue'
 import { dialogStore } from '../stores/dialog'
 import { onMountedCallbacks } from '../stores/mount'
 import { state } from '../stores/state'
@@ -44,17 +44,21 @@ export const wrapper = defineComponent({
 			debug.adapter('vue:render:view', 'Rendering view.')
 			state.view.value!.inheritAttrs = !!state.view.value!.inheritAttrs
 
-			return withDirectives(h(state.view.value!, {
+			// Overrides the `mounted` hook of the view component,
+			// so we can pop the mounted callback from outside.
+			const actual = state.view.value?.mounted
+			state.view.value!.mounted = () => {
+				actual?.()
+				nextTick(() => {
+					debug.adapter('vue:render:view', 'Calling mounted callbacks.')
+					onMountedCallbacks.pop()?.()
+				})
+			}
+
+			return h(state.view.value!, {
 				...state.properties.value,
 				key: state.viewKey.value,
-			}), [[{
-				mounted: () => {
-					nextTick(() => {
-						debug.adapter('vue:render:view', 'Calling mounted callbacks.')
-						onMountedCallbacks.pop()?.()
-					})
-				},
-			}]])
+			})
 		}
 
 		function renderDialog() {
