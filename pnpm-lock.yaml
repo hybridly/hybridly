@@ -119,10 +119,12 @@ importers:
     specifiers:
       debug: ^4.3.4
       deepmerge: ^4.3.1
+      is-plain-object: ^5.0.0
       lodash.clonedeep: ^4.5.0
     dependencies:
       debug: 4.3.4
       deepmerge: 4.3.1
+      is-plain-object: 5.0.0
       lodash.clonedeep: 4.5.0
 
   packages/vite:
@@ -1179,7 +1181,6 @@ packages:
 
   /@types/node/18.15.5:
     resolution: {integrity: sha512-Ark2WDjjZO7GmvsyFFf81MXuGTA/d6oP38anyxWOL6EREyBKAxKoFHwBhaZxCfLRLpO8JgVXwqOwSwa7jRcjew==}
-    dev: true
 
   /@types/normalize-package-data/2.4.1:
     resolution: {integrity: sha512-Gj7cI7z+98M282Tqmp2K5EIsoouUEzbBJhQQzDE3jSIRk6r9gsz0oUokqIUR4u1R3dMHo0pDHM7sNOHyhulypw==}
@@ -1528,7 +1529,7 @@ packages:
       vite: ^4.0.0
       vue: ^3.2.25
     dependencies:
-      vite: 4.2.1
+      vite: 4.2.1_@types+node@18.15.5
       vue: 3.2.47
 
   /@vitest/expect/0.29.7:
@@ -3892,6 +3893,11 @@ packages:
     engines: {node: '>=8'}
     dev: true
 
+  /is-plain-object/5.0.0:
+    resolution: {integrity: sha512-VRSzKkbMm5jMDoKLbltAkFQ5Qr7VDiTFGXxYFXXowVj387GeGNOCsOH6Msy00SGZ3Fp84b1Naa1psqgcCIEP5Q==}
+    engines: {node: '>=0.10.0'}
+    dev: false
+
   /is-reference/1.2.1:
     resolution: {integrity: sha512-U82MsXXiFIrjCK4otLT+o2NA2Cd2g5MLoOVXUZjIOhLurrRxpEXzI8O0KZHr3IjLvlAH1kTPYSuqer5T9ZVBKQ==}
     dependencies:
@@ -5747,7 +5753,6 @@ packages:
       rollup: 3.20.0
     optionalDependencies:
       fsevents: 2.3.2
-    dev: true
 
   /vitepress/1.0.0-alpha.61_@types+node@18.15.5:
     resolution: {integrity: sha512-NvzERVS3/TU9YkYcaiK7yNSe0zY9UcSV58tx3mxbvVLCuwRykzO4OWbl6vQT6Ut6YGuZU1y3Z5WcSS+fHfaxJA==}

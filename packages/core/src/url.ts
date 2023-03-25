@@ -28,10 +28,17 @@ export function makeUrl(href: UrlResolvable, transformations: UrlTransformable =
 
 		Object.entries(transformations).forEach(([key, value]) => {
 			if (key === 'query') {
+				const currentQueryParameters = merge(
+					qs.parse(url.search, { ignoreQueryPrefix: true }),
+					value,
+					{ mergePlainObjects: true },
+				)
+
 				key = 'search'
-				value = qs.stringify(merge(qs.parse(url.search, { ignoreQueryPrefix: true }), value), {
+				value = qs.stringify(currentQueryParameters, {
 					encodeValuesOnly: true,
 					arrayFormat: 'brackets',
+					filter: (_, object) => object instanceof Set ? [...object] : object,
 				})
 			}
 
