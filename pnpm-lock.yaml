@@ -162,6 +162,7 @@ importers:
 
   packages/vue:
     specifiers:
+      '@clickbar/dot-diver': ^1.0.1
       '@hybridly/config': workspace:*
       '@hybridly/core': workspace:*
       '@hybridly/progress-plugin': workspace:*
@@ -187,6 +188,7 @@ importers:
       nprogress: 0.2.0
       qs: 6.11.1
     devDependencies:
+      '@clickbar/dot-diver': 1.0.1
       '@types/lodash': 4.14.191
       '@types/lodash.clonedeep': 4.5.7
       '@types/lodash.isequal': 4.5.6
@@ -522,6 +524,10 @@ packages:
       '@babel/helper-string-parser': 7.19.4
       '@babel/helper-validator-identifier': 7.19.1
       to-fast-properties: 2.0.0
+
+  /@clickbar/dot-diver/1.0.1:
+    resolution: {integrity: sha512-Jepnq6e/2DApECLgXzflMyo069oW3j36wdceCCydcsxWl+0nHcBgZ47lucb8JG3L2QJwa1EXj4kOer+ScXKtUg==}
+    dev: true
 
   /@docsearch/css/3.3.3:
     resolution: {integrity: sha512-6SCwI7P8ao+se1TUsdZ7B4XzL+gqeQZnBc+2EONZlcVa0dVrk0NjETxozFKgMv0eEGH8QzP1fkN+A1rH61l4eg==}
