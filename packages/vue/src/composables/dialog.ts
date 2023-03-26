@@ -10,6 +10,8 @@ export function useDialog() {
 	return {
 		/** Closes the dialog. */
 		close: () => router.dialog.close(),
+		/** Closes the dialog without a server round-trip. */
+		closeLocally: () => router.dialog.close({ local: true }),
 		/** Unmounts the dialog. Should be called after its closing animations. */
 		unmount: () => dialogStore.removeComponent(),
 		/** Whether the dialog is shown. */

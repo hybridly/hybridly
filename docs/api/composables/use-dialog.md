@@ -31,6 +31,12 @@ Defines whether the dialog should be shown. Generally, it is used to control the
 
 Closes the dialog, effectively assigning `false` to `show`.
 
+### `closeLocally`
+
+- **Type**: `() => void`
+
+Closes the dialog without making a server round-trip, effectively assigning `false` to `show`.
+
 ### `unmount`
 
 - **Type**: `() => void`

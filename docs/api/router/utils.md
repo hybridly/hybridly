@@ -76,7 +76,7 @@ This function aborts the current request. The `abort` hook will be triggered.
 
 ## `dialog.close`
 
-This function closes the current dialog. It takes the same options as the other router functions. 
+This function closes the current dialog. It takes the same options as the other router functions, as well as a `local` option that indicates whether a round-trip to the server will be made to update the base page's properties.
 
 ```ts
 router.dialog.close()
