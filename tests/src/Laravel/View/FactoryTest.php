@@ -3,6 +3,7 @@
 use Hybridly\Hybridly;
 use Hybridly\View\Factory;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Route;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -113,5 +114,41 @@ test('properties can be added on-the-fly on the factory instance', function () {
                 'husband' => 'Okabe Rintarou',
             ],
         ],
+    ]);
+});
+
+test('dialogs and their properties can be resolved', function () {
+    Route::get('/', fn () => hybridly('index', ['foo' => 'bar']))->name('index');
+
+    $request = mockRequest(url: '/users/makise', hybridly: true, bind: true);
+    $factory = hybridly('users.edit', [
+        'user' => 'Makise Kurisu',
+        'email' => fn () => 'makise@gadgetlab.jp',
+    ])->base('index');
+
+    $response = $factory->toResponse($request);
+    $payload = $response->getOriginalContent();
+
+    expect($factory)->toBeInstanceOf(Factory::class);
+    expect($response)->toBeInstanceOf(JsonResponse::class);
+    expect($payload)->toMatchArray([
+        'view' => [
+            'component' => 'index',
+            'properties' => [
+                'foo' => 'bar',
+            ],
+        ],
+        'dialog' => [
+            'component' => 'users.edit',
+            'properties' => [
+                'user' => 'Makise Kurisu',
+                'email' => 'makise@gadgetlab.jp',
+            ],
+            'baseUrl' => 'http://localhost',
+            'redirectUrl' => 'http://localhost',
+            'key' => data_get($payload, 'dialog.key'),
+        ],
+        'url' => 'http://localhost/users/makise',
+        'version' => null,
     ]);
 });

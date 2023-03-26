@@ -88,22 +88,6 @@ class Factory implements HybridResponse
             ->getContent();
     }
 
-    protected function resolveDialog(Request $request): ?Dialog
-    {
-        if (!$this->dialogBaseUrl) {
-            return null;
-        }
-
-        return $this->dialogResolver->resolve(
-            baseUrl: $this->dialogBaseUrl,
-            request: $request,
-            view: new View(
-                component: $this->view->component,
-                properties: Arr::except($this->view->properties, array_keys($this->hybridly->shared())),
-            ),
-        );
-    }
-
     public function toResponse($request)
     {
         $payload = new Payload(
@@ -117,14 +101,12 @@ class Factory implements HybridResponse
             $payload = $this->renderDialog($request, $payload);
         }
 
-        event('hybridly.response', [
-            [
-                'payload' => $payload->toArray(),
-                'request' => $request,
-                'version' => $this->hybridly->getVersion(),
-                'root_view' => $this->hybridly->getRootView(),
-            ],
-        ]);
+        event('hybridly.response', [[
+            'payload' => $payload->toArray(),
+            'request' => $request,
+            'version' => $this->hybridly->getVersion(),
+            'root_view' => $this->hybridly->getRootView(),
+        ]]);
 
         if ($this->hybridly->isHybrid($request)) {
             return new JsonResponse(
@@ -143,20 +125,24 @@ class Factory implements HybridResponse
 
     protected function renderDialog(Request $request, Payload $payload)
     {
-        $view = $this->getBaseRouteView($request, $payload->dialog->redirectUrl);
-
         return new Payload(
-            view: new View(
-                component: $view->component,
-                properties: $view->properties,
-            ),
+            view: $this->getBaseView($payload->dialog->redirectUrl, $request),
             url: $payload->url,
             version: $payload->version,
-            dialog: $payload->dialog,
+            dialog: new Dialog(
+                component: $payload->dialog->component,
+                properties: $this->resolveProperties($payload->dialog, $request),
+                baseUrl: $payload->dialog->baseUrl,
+                redirectUrl: $payload->dialog->redirectUrl,
+                key: $payload->dialog->key,
+            ),
         );
     }
 
-    protected function getBaseRouteView(Request $originalRequest, string $targetUrl): View
+    /**
+     * Gets the base view for the given URL.
+     */
+    protected function getBaseView(string $targetUrl, Request $originalRequest): View
     {
         $request = Request::create(
             uri: $targetUrl,
@@ -187,7 +173,7 @@ class Factory implements HybridResponse
         );
 
         if ($response instanceof RedirectResponse) {
-            return $this->getBaseRouteView($request, $response->getTargetUrl());
+            return $this->getBaseView($response->getTargetUrl(), $request);
         }
 
         if (!$response instanceof self) {
@@ -198,21 +184,48 @@ class Factory implements HybridResponse
     }
 
     /**
-     * Resolves the properties on the given view.
+     * Resolves the dialog from the request.
+     */
+    protected function resolveDialog(Request $request): ?Dialog
+    {
+        if (!$this->dialogBaseUrl) {
+            return null;
+        }
+
+        return $this->dialogResolver->resolve(
+            baseUrl: $this->dialogBaseUrl,
+            request: $request,
+            view: new View(
+                component: $this->view->component,
+                properties: Arr::except($this->view->properties, array_keys($this->hybridly->shared())),
+            ),
+        );
+    }
+
+    /**
+     * Resolves the view from the request.
      */
     protected function resolveView(View $view, Request $request): View
+    {
+        return new View(
+            component: $view->component,
+            properties: $this->resolveProperties($view, $request),
+        );
+    }
+
+    /**
+     * Resolves the properties on the given view or dialog.
+     */
+    protected function resolveProperties(Dialog|View $view, Request $request): array
     {
         // We don't use dependency injection, because the request object
         // could be different than the one given to `toResponse`.
         $resolver = resolve(PropertiesResolver::class, ['request' => $request]);
 
-        return new View(
+        return $resolver->resolve(
             component: $view->component,
-            properties: $resolver->resolve(
-                component: $view->component,
-                properties: [...$this->hybridly->shared(), ...$view->properties],
-                persisted: $this->hybridly->persisted(),
-            ),
+            properties: [...$this->hybridly->shared(), ...$view->properties],
+            persisted: $this->hybridly->persisted(),
         );
     }
 }

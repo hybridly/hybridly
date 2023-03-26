@@ -15,6 +15,17 @@ class Dialog implements Arrayable
     ) {
     }
 
+    public function withProperties(array $properties): self
+    {
+        return new self(
+            component: $this->component,
+            properties: $properties,
+            baseUrl: $this->baseUrl,
+            redirectUrl: $this->redirectUrl,
+            key: $this->key,
+        );
+    }
+
     public function toArray()
     {
         return [
