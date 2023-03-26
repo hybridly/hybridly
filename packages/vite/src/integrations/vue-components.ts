@@ -61,7 +61,7 @@ function getVueComponentsOptions(options: ViteOptions, config: ResolvedHybridlyC
 			dts: '.hybridly/components.d.ts',
 			resolvers: overrideResolvers || [
 				...(hasIcons ? [iconsResolver({ customCollections })] : []),
-				...(hasHeadlessUI ? [HeadlessUiResolver({ prefix: options?.vueComponents?.headlessUiPrefix ?? 'headlessui' })] : []),
+				...(hasHeadlessUI ? [HeadlessUiResolver({ prefix: options?.vueComponents?.headlessUiPrefix ?? 'Headless' })] : []),
 				...(isUsingDomains ? [DomainComponentsResolver(config)] : []),
 				HybridlyResolver(options.vueComponents?.linkName),
 			],
