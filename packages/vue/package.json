@@ -42,6 +42,7 @@
     "vue": "^3.2.45"
   },
   "dependencies": {
+    "@clickbar/dot-diver": "^1.0.1",
     "@hybridly/config": "workspace:*",
     "@hybridly/core": "workspace:*",
     "@hybridly/progress-plugin": "workspace:*",
@@ -53,7 +54,6 @@
     "qs": "^6.11.1"
   },
   "devDependencies": {
-    "@clickbar/dot-diver": "^1.0.1",
     "@types/lodash": "^4.14.191",
     "@types/lodash.clonedeep": "^4.5.7",
     "@types/lodash.isequal": "^4.5.6",

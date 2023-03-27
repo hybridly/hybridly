@@ -17,7 +17,6 @@ export default defineBuildConfig({
 		'hybridly',
 		'@vue/shared',
 		'axios',
-		'@clickbar/dot-diver',
 	],
 	rollup: {
 		emitCJS: true,
