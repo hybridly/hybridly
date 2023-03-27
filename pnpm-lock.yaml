@@ -178,6 +178,7 @@ importers:
       qs: ^6.11.1
       vue: ^3.2.47
     dependencies:
+      '@clickbar/dot-diver': 1.0.1
       '@hybridly/config': link:../config
       '@hybridly/core': link:../core
       '@hybridly/progress-plugin': link:../progress
@@ -188,7 +189,6 @@ importers:
       nprogress: 0.2.0
       qs: 6.11.1
     devDependencies:
-      '@clickbar/dot-diver': 1.0.1
       '@types/lodash': 4.14.191
       '@types/lodash.clonedeep': 4.5.7
       '@types/lodash.isequal': 4.5.6
@@ -527,7 +527,7 @@ packages:
 
   /@clickbar/dot-diver/1.0.1:
     resolution: {integrity: sha512-Jepnq6e/2DApECLgXzflMyo069oW3j36wdceCCydcsxWl+0nHcBgZ47lucb8JG3L2QJwa1EXj4kOer+ScXKtUg==}
-    dev: true
+    dev: false
 
   /@docsearch/css/3.3.3:
     resolution: {integrity: sha512-6SCwI7P8ao+se1TUsdZ7B4XzL+gqeQZnBc+2EONZlcVa0dVrk0NjETxozFKgMv0eEGH8QzP1fkN+A1rH61l4eg==}
@@ -1187,6 +1187,7 @@ packages:
 
   /@types/node/18.15.5:
     resolution: {integrity: sha512-Ark2WDjjZO7GmvsyFFf81MXuGTA/d6oP38anyxWOL6EREyBKAxKoFHwBhaZxCfLRLpO8JgVXwqOwSwa7jRcjew==}
+    dev: true
 
   /@types/normalize-package-data/2.4.1:
     resolution: {integrity: sha512-Gj7cI7z+98M282Tqmp2K5EIsoouUEzbBJhQQzDE3jSIRk6r9gsz0oUokqIUR4u1R3dMHo0pDHM7sNOHyhulypw==}
@@ -1535,7 +1536,7 @@ packages:
       vite: ^4.0.0
       vue: ^3.2.25
     dependencies:
-      vite: 4.2.1_@types+node@18.15.5
+      vite: 4.2.1
       vue: 3.2.47
 
   /@vitest/expect/0.29.7:
@@ -5759,6 +5760,7 @@ packages:
       rollup: 3.20.0
     optionalDependencies:
       fsevents: 2.3.2
+    dev: true
 
   /vitepress/1.0.0-alpha.61_@types+node@18.15.5:
     resolution: {integrity: sha512-NvzERVS3/TU9YkYcaiK7yNSe0zY9UcSV58tx3mxbvVLCuwRykzO4OWbl6vQT6Ut6YGuZU1y3Z5WcSS+fHfaxJA==}
