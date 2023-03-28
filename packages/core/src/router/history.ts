@@ -115,10 +115,19 @@ export function isBackForwardNavigation(): boolean {
 /** Handles a navigation which was going back or forward. */
 export async function handleBackForwardNavigation(): Promise<void> {
 	debug.router('Handling a back/forward navigation.')
-	window.history.state.version = getRouterContext().version
+
+	const context = getRouterContext()
+	const state = getHistoryState()
+
+	if (!state) {
+		throw new Error('Tried to handling a back/forward navigation, but there was no state in the history. This should not happen.')
+	}
 
 	await navigate({
-		payload: window.history.state,
+		payload: {
+			...state,
+			version: context.version,
+		},
 		preserveScroll: true,
 		preserveState: false,
 		updateHistoryState: false,
