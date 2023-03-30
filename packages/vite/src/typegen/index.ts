@@ -51,20 +51,6 @@ export function generateTsConfig(options: ViteOptions, config: HybridlyConfig) {
 	write(JSON.stringify(tsconfig, null, 2), 'tsconfig.json')
 }
 
-export function generateVueShims(options: ViteOptions) {
-	if (options.shims === false) {
-		return
-	}
-
-	const shims = `declare module '*.vue' {
-	import type { DefineComponent } from 'vue'
-	const component: DefineComponent<{}, {}, any>
-	export default component
-}`
-
-	write(shims, 'vue-shims.d.ts')
-}
-
 export function generateLaravelIdeaHelper(config: HybridlyConfig) {
 	const ideJson = {
 		$schema: 'https://laravel-ide.com/schema/laravel-ide-v2.json',
