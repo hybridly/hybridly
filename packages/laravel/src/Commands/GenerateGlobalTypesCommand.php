@@ -72,12 +72,16 @@ class GenerateGlobalTypesCommand extends Command
     {
         if ($namespace) {
             return <<<TYPESCRIPT
+            /* eslint-disable */
+            /* prettier-ignore */
             interface GlobalHybridlyProperties extends {$namespace} {
             }
             TYPESCRIPT;
         }
 
         return <<<TYPESCRIPT
+        /* eslint-disable */
+        /* prettier-ignore */
         type GlobalHybridlyProperties = never
         TYPESCRIPT;
     }
