@@ -134,16 +134,14 @@ class ChirpController extends Controller
 
 ```
 
-In a single-file component, the properties can then be typed thanks to the generated interface:
+Unfortunately, since Vue [doesn't have support](https://vuejs.org/api/sfc-script-setup.html#typescript-only-features) for `defineProps`'s generic parameter to be a global type, you will have to manually type the property keys:
 
 ```vue
 <script setup lang="ts">
-const $props = defineProps<App.ViewModels.ChirpViewModel>() // [!code focus]
+const $props = defineProps<{ // [!code focus:5]
+  chirp: App.ViewModels.ChirpViewModel['chirp'],
+  comments: App.ViewModels.ChirpViewModel['comments'],
+  previous: App.ViewModels.ChirpViewModel['previous'],
+}>()
 </script>
 ```
-
-You end up with proper separation of concerns *and* type safety through TypeScript, while writing the shape of your data in only one place.
-
-:::warning Vue support
-Vue doesn't support this syntax natively. To make it work, you need to enable the [`betterDefine`](https://vue-macros.sxzz.moe/features/better-define.html) feature from [Vue Macros](https://vue-macros.sxzz.moe).
-:::
