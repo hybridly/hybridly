@@ -22,11 +22,11 @@
 }
 
 .dark {
-	--vp-c-brand: #d1a5ff;
+	--vp-c-brand: #f0abfc;
 	--vp-c-brand-light: #e9d5ff;
 	--vp-c-brand-lighter: #f3e8ff;
 	--vp-c-brand-dark: #f5d0fe;
-	--vp-c-brand-darker: #f0abfc;
+	--vp-c-brand-darker: #d1a5ff;
 
 	--vp-c-scrollbar: var(--vp-c-black-mute);
 	--vp-button-alt-border: var(--vp-c-gray-dark-3);

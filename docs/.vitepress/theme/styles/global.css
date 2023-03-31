@@ -3,13 +3,19 @@ pre code {
 }
 
 a:has(code) {
-	text-decoration: underline;
 	color: var(--vp-c-text-code) !important;
 }
 
 .vp-doc a > code {
-	color: inherit;
+	color: var(--vp-c-brand-dark);
 	transition: color 0.25s;
+}
+
+.vp-doc .custom-block a {
+	text-decoration: underline;
+	text-decoration-style: dotted;
+	text-underline-offset: 4px;
+	font-weight: 400;
 }
 
 hr {
