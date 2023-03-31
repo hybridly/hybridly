@@ -14,7 +14,7 @@ He came up with Inertia, which is now backed by Laravel. It powers [Forge](https
 
 **However, Inertia has its issues**.
 
-Prior to its v1.0 release, the pace of development of Inertia has been a source of frustration for its users. 
+The pace of development of Inertia has been a source of frustration for its users. 
 
 There have been months without release or news about its development. Months without any commit to the repository. Months during which pull requests and issues were not handled, and are, to this day, still not addressed.
 

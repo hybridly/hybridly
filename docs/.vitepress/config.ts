@@ -74,11 +74,11 @@ export default defineConfig({
 				{
 					text: 'Getting started',
 					items: [
-						{ text: 'What is Hybridly?', link: '/guide/' },
+						{ text: 'Introduction', link: '/guide/' },
 						{ text: 'Installation', link: '/guide/installation' },
 						{ text: 'Demonstration', link: '/guide/demonstration' },
 						{ text: 'TypeScript', link: '/guide/typescript' },
-						{ text: 'Upgrade guide', link: '/guide/upgrade' },
+						// { text: 'Upgrade guide', link: '/guide/upgrade' },
 					],
 				},
 				{

@@ -38,18 +38,16 @@ Note that there is no way to un-persist a persistent property.
 
 ## Partial-only properties
 
-It's often desirable to not evaluate a property until specifically needed — that is, included in a partial reload. To achieve this, you can use `Hybridly\Support\Partial`.
+It's often desirable to not evaluate a property until specifically needed — that is, included in a partial reload. To achieve this, you can use the `partial` method:
 
 ```php
-use Hybridly\Support\Partial;
-
 hybridly()->share([
-  'filters' => Partial::make(fn () => $filters)
+  'filters' => hybridly()->partial(fn () => $filters)
 ]);
 ```
 
 :::info Alternative syntax
-It is also possible to instanciate a partial-only property by calling `hybridly()->partial(fn () => ...)`.
+It is also possible to instanciate a partial-only property by calling `\Hybridly\Support\Partial::make(fn () => ...)`.
 :::
 
 

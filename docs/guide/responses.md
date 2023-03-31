@@ -143,3 +143,7 @@ const $props = defineProps<App.ViewModels.ChirpViewModel>() // [!code focus]
 ```
 
 You end up with proper separation of concerns *and* type safety through TypeScript, while writing the shape of your data in only one place.
+
+:::warning Vue support
+Vue doesn't support this syntax natively. To make it work, you need to enable the [`betterDefine`](https://vue-macros.sxzz.moe/features/better-define.html) feature from [Vue Macros](https://vue-macros.sxzz.moe).
+:::

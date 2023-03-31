@@ -7,15 +7,24 @@ a:has(code) {
 }
 
 .vp-doc a > code {
-	color: var(--vp-c-brand-dark);
+	/* color: var(--vp-c-brand-dark); */
 	transition: color 0.25s;
 }
 
 .vp-doc .custom-block a {
 	text-decoration: underline;
-	text-decoration-style: dotted;
-	text-underline-offset: 4px;
+	text-underline-offset: 3px;
+	text-decoration-color: var(--vp-c-text-code);
 	font-weight: 400;
+}
+
+.vp-doc .custom-block.warning a {
+	color: var(--vp-custom-block-warning-border) !important;
+	text-decoration-color: var(--vp-custom-block-warning-border);
+}
+
+.vp-doc .custom-block.info a {
+	text-decoration-color: var(--vp-custom-block-info-border);
 }
 
 hr {

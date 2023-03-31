@@ -4,17 +4,13 @@
 
 Because Hybridly creates a single-page application, a special navigation needs to be made to avoid reloading the whole framework to load a page.
 
-This can be done using a link component in the templates, or programmatically by using the routing API.
+This can be done using a link component in the templates, or programmatically by using the [routing API](../api/router/utils.md).
 
 ## Using the component
 
-`RouterLink` is a simple component that acts as an anchor tag, except it catches navigation to make hybrid requests.
+`RouterLink` is a simple component that acts as an anchor tag, except it catches navigations to make hybrid requests.
 
 ```vue
-<script setup lang="ts">
-import { RouterLink } from 'hybridly/vue' // [!code focus]
-</script>
-
 <template>
   <div>
     <router-link href="/"> // [!code focus:3]

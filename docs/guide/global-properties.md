@@ -4,7 +4,7 @@
 
 In most applications, some data needs to be available globally. This is generally the case, for instance, of the logged-in user, but it could be anything else. To answer to this need, you may use global properties. 
 
-Global properties are shared in every hybrid request — unless it's a [partial reload](./partial-reloads.md) — and can be accessed in the front-end using `useProperty` or `useProperties`.
+Global properties are shared in every hybrid request — unless it's a [partial reload](./partial-reloads.md) — and can be accessed in the front-end using [`useProperty`](../api/composables/use-property.md) or [`useProperties`](../api/composables/use-properties.md).
 
 ## From the middleware
 

@@ -13,8 +13,6 @@ Pages are basic single-file components that receive data from controller as thei
 ```vue
 <!-- resources/views/pages/users/show.vue -->
 <script setup lang="ts">
-import { useHead } from '@vueuse/head'
-
 const $props = defineProps<{
   user: App.Data.User
 }>()
@@ -64,9 +62,9 @@ import MainLayout from '@/views/layouts/main.vue'
 </script>
 
 <template>
-  <MainLayout>
+  <main-layout>
     <!-- ... -->
-  </MainLayout>
+  </main-layout>
 </template>
 ```
 
