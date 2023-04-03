@@ -10,6 +10,7 @@ exports[`performs hybridly navigations > context after navigation 1`] = `
   },
   "axios": [Function],
   "hooks": {},
+  "memo": {},
   "pendingNavigation": undefined,
   "plugins": [],
   "responseErrorModals": undefined,
@@ -28,7 +29,6 @@ exports[`performs hybridly navigations > context after navigation 1`] = `
     "serialize": [Function],
     "unserialize": [Function],
   },
-  "state": {},
   "url": "https://localhost/",
   "version": "abc123",
   "view": {

@@ -7,7 +7,7 @@ exports[`setHistoryState > pushes the context into the history > context 1`] = `
   {
     "type": "return",
     "value": [
-      "{\\"json\\":{\\"url\\":\\"https://localhost/\\",\\"version\\":\\"abc123\\",\\"view\\":{\\"component\\":\\"default.view\\",\\"properties\\":{}},\\"dialog\\":null,\\"scrollRegions\\":[],\\"state\\":{}},\\"meta\\":{\\"values\\":{\\"dialog\\":[\\"undefined\\"]}}}",
+      "{\\"json\\":{\\"url\\":\\"https://localhost/\\",\\"version\\":\\"abc123\\",\\"view\\":{\\"component\\":\\"default.view\\",\\"properties\\":{}},\\"dialog\\":null,\\"scrollRegions\\":[],\\"memo\\":{}},\\"meta\\":{\\"values\\":{\\"dialog\\":[\\"undefined\\"]}}}",
       "",
       "https://localhost/",
     ],
@@ -20,7 +20,7 @@ exports[`setHistoryState > replaces the context in the current history state > c
   {
     "type": "return",
     "value": [
-      "{\\"json\\":{\\"url\\":\\"https://localhost/\\",\\"version\\":\\"abc123\\",\\"view\\":{\\"component\\":\\"default.view\\",\\"properties\\":{}},\\"dialog\\":null,\\"scrollRegions\\":[],\\"state\\":{}},\\"meta\\":{\\"values\\":{\\"dialog\\":[\\"undefined\\"]}}}",
+      "{\\"json\\":{\\"url\\":\\"https://localhost/\\",\\"version\\":\\"abc123\\",\\"view\\":{\\"component\\":\\"default.view\\",\\"properties\\":{}},\\"dialog\\":null,\\"scrollRegions\\":[],\\"memo\\":{}},\\"meta\\":{\\"values\\":{\\"dialog\\":[\\"undefined\\"]}}}",
       "",
       "https://localhost/",
     ],
