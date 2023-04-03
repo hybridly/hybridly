@@ -212,7 +212,7 @@ export async function performHybridNavigation(options: HybridRequestOptions): Pr
 			preserveScroll: options.preserveScroll,
 			preserveState: options.preserveState,
 			preserveUrl: options.preserveUrl,
-			replace: options.replace === true || sameHashes(payload.url, window.location.href) || options.preserveUrl,
+			replace: options.replace === true || options.preserveUrl,
 		})
 
 		// If the new view's properties has errors, userland expects an event
