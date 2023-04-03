@@ -6,6 +6,7 @@ import { getInternalRouterContext, getRouterContext, setContext } from '../conte
 import { runHooks } from '../plugins'
 import { saveScrollPositions } from '../scroll'
 import { makeUrl } from '../url'
+import type { HybridPayload } from '../router'
 import { navigate } from './router'
 
 type SerializedContext = Omit<InternalRouterContext, 'adapter' | 'serializer' | 'plugins' | 'hooks' | 'axios' | 'routes'>
@@ -37,14 +38,19 @@ export function setHistoryState(options: HistoryOptions = {}) {
 	}
 }
 
-/** Gets the current history state if it exists. */
-export function getHistoryState<T = any>(key?: string): T {
-	const context = getRouterContext()
-	const data = context.serializer.unserialize<SerializedContext>(window.history.state)
+/** Gets the current history data if it exists. */
+export function getHistoryState(): SerializedContext | undefined {
+	return getRouterContext()
+		.serializer
+		.unserialize<SerializedContext>(window.history.state)
+}
 
+/** Gets the current history state if it exists. */
+export function getHistoryMemo<T = any>(key?: string): T {
+	const state = getHistoryState()
 	return key
-		? data?.state?.[key] as T
-		: data?.state as T
+		? state?.memo?.[key] as T
+		: state?.memo as T
 }
 
 /** Register history-related event listeneners. */
@@ -114,7 +120,7 @@ export function isBackForwardNavigation(): boolean {
 
 /** Handles a navigation which was going back or forward. */
 export async function handleBackForwardNavigation(): Promise<void> {
-	debug.router('Handling a back/forward navigation.')
+	debug.router('Handling a back/forward navigation from an external URL.')
 
 	const context = getRouterContext()
 	const state = getHistoryState()
@@ -125,7 +131,7 @@ export async function handleBackForwardNavigation(): Promise<void> {
 
 	await navigate({
 		payload: {
-			...state,
+			...state satisfies HybridPayload,
 			version: context.version,
 		},
 		preserveScroll: true,
@@ -142,18 +148,13 @@ export function remember<T = any>(key: string, value: T): void {
 	// We avoid propagation in order to not trigger a recursive
 	// render by telling the adapter we updated.
 	setContext({
-		state: {
-			...getHistoryState(),
+		memo: {
+			...getHistoryMemo(),
 			[key]: value,
 		},
 	}, { propagate: false })
 
 	setHistoryState({ replace: true })
-}
-
-/** Gets a value saved into the current history state. */
-export function getKeyFromHistory<T = any>(key: string): T {
-	return getHistoryState<T>(key)
 }
 
 /** Serializes the context so it can be written to the history state. */
@@ -164,7 +165,7 @@ export function serializeContext(context: InternalRouterContext): string {
 		view: context.view,
 		dialog: context.dialog,
 		scrollRegions: context.scrollRegions,
-		state: context.state,
+		memo: context.memo,
 	})
 }
 
@@ -175,10 +176,12 @@ export function createSerializer(options: RouterContextOptions): Serializer {
 
 	return {
 		serialize: (data) => {
+			debug.history('Serializing data.', data)
 			return stringify(data)
 		},
 		unserialize: (data) => {
 			if (!data) {
+				debug.history('No data to unserialize.')
 				return
 			}
 

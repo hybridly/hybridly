@@ -43,7 +43,7 @@ export async function initializeContext(options: RouterContextOptions): Promise<
 		axios: options.axios ?? axios.create(),
 		routing: options.routing,
 		hooks: {},
-		state: {},
+		memo: {},
 	}
 
 	await runHooks('initialized', {}, state.context)

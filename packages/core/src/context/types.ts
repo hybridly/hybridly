@@ -37,7 +37,7 @@ export interface InternalRouterContext {
 	/** Scroll positions of the current page's DOM elements. */
 	scrollRegions: ScrollRegion[]
 	/** Arbitrary state. */
-	state: Record<string, any>
+	memo: Record<string, any>
 	/** Currently pending navigation. */
 	pendingNavigation?: PendingNavigation
 	/** History state serializer. */

@@ -7,11 +7,11 @@ import { getRouterContext, initializeContext, payloadFromContext, setContext } f
 import { handleExternalNavigation, isExternalResponse, isExternalNavigation, performExternalNavigation, navigateToExternalUrl } from '../external'
 import { resetScrollPositions, restoreScrollPositions, saveScrollPositions } from '../scroll'
 import type { UrlResolvable } from '../url'
-import { sameHashes, fillHash, makeUrl, normalizeUrl, sameUrls } from '../url'
+import { fillHash, makeUrl, normalizeUrl, sameUrls } from '../url'
 import { runHooks } from '../plugins'
 import { generateRouteFromName, getRouteDefinition } from '../routing/route'
 import { closeDialog } from '../dialog'
-import { setHistoryState, isBackForwardNavigation, handleBackForwardNavigation, registerEventListeners, getHistoryState, getKeyFromHistory, remember } from './history'
+import { setHistoryState, isBackForwardNavigation, handleBackForwardNavigation, registerEventListeners, getHistoryMemo, remember } from './history'
 import type { ConditionalNavigationOption, Errors, ComponentNavigationOptions, NavigationOptions, Router, HybridRequestOptions, HybridPayload, NavigationResponse, Method } from './types'
 
 /**
@@ -44,7 +44,7 @@ export const router: Router = {
 		close: (options) => closeDialog(options),
 	},
 	history: {
-		get: (key) => getKeyFromHistory(key),
+		get: (key) => getHistoryMemo(key),
 		remember: (key, value) => remember(key, value),
 	},
 }
@@ -331,9 +331,9 @@ export async function navigate(options: NavigationOptions) {
 
 	// If the navigation was asking to preserve the current state, we also need to
 	// update the context's state from the history state.
-	if (shouldPreserveState && getHistoryState() && options.payload.view.component === context.view.component) {
-		debug.history('Setting the history from this entry into the context.')
-		setContext({ state: getHistoryState() })
+	if (shouldPreserveState && getHistoryMemo() && options.payload.view.component === context.view.component) {
+		debug.history('Setting the memo from this history entry into the current context.')
+		setContext({ memo: getHistoryMemo() })
 	}
 
 	// If the navigation required the URL to be preserved, we skip its update
@@ -348,7 +348,7 @@ export async function navigate(options: NavigationOptions) {
 	// navigation that took place.
 	setContext({
 		...options.payload,
-		state: {},
+		memo: {},
 	})
 
 	// History state must be updated to preserve the expected, native browser behavior.
@@ -366,7 +366,7 @@ export async function navigate(options: NavigationOptions) {
 	await context.adapter.onViewSwap({
 		component: viewComponent,
 		dialog: context.dialog,
-		properties: options.payload?.view.properties,
+		properties: options.payload?.view?.properties,
 		preserveState: shouldPreserveState,
 	})
 
