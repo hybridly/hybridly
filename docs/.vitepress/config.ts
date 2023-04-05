@@ -7,7 +7,7 @@ import Unocss from 'unocss/vite'
 const title = 'Hybridly'
 const description = 'Modern solution to develop server-driven, client-rendered applications.'
 const url = 'https://hybridly.dev'
-const image = '/og.jpg'
+const image = `${url}/og.jpg`
 const twitter = 'enzoinnocenzi'
 const discord = 'https://discord.gg/uZ8eC7kRFV'
 const github = 'https://github.com/hybridly/hybridly'
