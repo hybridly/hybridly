@@ -12,10 +12,14 @@ export function useProperties<T extends object, Global extends GlobalHybridlyPro
 
 /** Accesses a property with a dot notation. */
 export function useProperty<
+	Override = never,
 	T extends SearchableObject = GlobalHybridlyProperties,
-	P extends Path<T> & string = Path<T> & string
+	P extends Path<T> & string = Path<T> & string,
+	ReturnType = [Override] extends [never] ? PathValue<T, P> : Override
 >(
-	path: P,
-): ComputedRef<PathValue<T, P>> {
-	return computed(() => getByPath(state.context.value?.view.properties as GlobalHybridlyProperties, path) as PathValue<T, P>)
+	path: [Override] extends [never]
+		? P
+		: string,
+): ComputedRef<ReturnType> {
+	return computed(() => getByPath(state.context.value?.view.properties as GlobalHybridlyProperties, path) as ReturnType)
 }

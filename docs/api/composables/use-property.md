@@ -8,15 +8,14 @@ This is the preferred method to access global properties, but it can also access
 
 ```ts
 function useProperty<
-	T = Path<GlobalHybridlyProperties>,
-  Fallback = any
+	Override = never,
+  T = GlobalHybridlyProperties,
 >(
-	path: T,
-	fallback?: Fallback,
-): ComputedRef<T>
+	path: T | string,
+): ComputedRef<T | Override>
 ```
 
-`useProperty` accepts a dot-notated path as its first parameter, and a fallback value as its second. It returns a `ComputedRef` with the value at the given path, or the fallback.
+`useProperty` accepts a dot-notated path as its first parameter and returns a `ComputedRef` with the value at the given path.
 
 ## Example
 
@@ -28,4 +27,12 @@ useHead({
   title: () => `${name.value}'s profile`
 })
 </script>
+```
+
+## Accessing page properties
+
+While `useProperty` is primarily made for accessing typed, global properties, you may provide a custom generic type to opt-out of global type-checking if you need to access page-specific properties.
+
+```ts
+const posts = useProperty<App.Data.Post[]>('posts')
 ```
