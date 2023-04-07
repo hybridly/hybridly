@@ -11,7 +11,7 @@ Generates a `HybridResponse` with the given component and optional properties. T
 ### Usage
 
 ```php
-return hybridly()->view('users.show', [
+return hybridly('users.show', [
   'user' => UserData::from($user)
 ]);
 ```
