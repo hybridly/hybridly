@@ -35,6 +35,8 @@ class Hybridly
 
     /**
      * Returns a hybrid view.
+     *
+     * @see https://hybridly.dev/api/laravel/hybridly.html#view
      */
     public function view(string $component, array|Arrayable|DataObject $properties = []): Factory
     {
@@ -42,7 +44,10 @@ class Hybridly
     }
 
     /**
-     * Redirects to the given URL using a full page load.
+     * Generates a response for redirecting to an external website, or a non-hybrid page.
+     * This can also be used to redirect to a hybrid page when it is not known whether the current request is hybrid or not.
+     *
+     * @see https://hybridly.dev/api/laravel/hybridly.html#external
      */
     public function external(string|RedirectResponse $url): Response
     {
@@ -61,8 +66,10 @@ class Hybridly
     }
 
     /**
-     * Creates a property that will get evaluated only when included in a partial reload.
+     * Creates a property that will only get evaluated and included when specifically requested through a partial reload.
      * Partial properties are not included during the first load.
+     *
+     * @see https://hybridly.dev/api/laravel/hybridly.html#partial
      */
     public function partial(\Closure $callback): Partial
     {
@@ -70,7 +77,9 @@ class Hybridly
     }
 
     /**
-     * Checks if the request is hybrid.
+     * Determines whether the current request is hybrid.
+     *
+     * @see https://hybridly.dev/api/laravel/hybridly.html#ishybrid
      */
     public function isHybrid(Request $request = null): bool
     {
@@ -80,7 +89,9 @@ class Hybridly
     }
 
     /**
-     * Checks if the request is a partial hybrid request.
+     * Determines whether the current request is a partial reload.
+     *
+     * @see https://hybridly.dev/api/laravel/hybridly.html#ispartial
      */
     public function isPartial(Request $request = null): bool
     {
