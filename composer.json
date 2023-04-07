@@ -33,6 +33,7 @@
     },
     "autoload": {
         "files": [
+            "packages/laravel/src/global_helpers.php",
             "packages/laravel/src/helpers.php"
         ],
         "psr-4": {

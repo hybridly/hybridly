@@ -32,6 +32,7 @@
             "Hybridly\\": "src"
         },
         "files": [
+            "src/global_helpers.php",
             "src/helpers.php"
         ]
     },
