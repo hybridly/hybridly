@@ -31,8 +31,6 @@ defineProps<{
 
 ```vue [components/base-modal.vue]
 <script setup lang="ts">
-import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
-
 const { show, close, unmount } = useDialog() // [!code focus]
 
 defineProps<{
@@ -41,18 +39,18 @@ defineProps<{
 </script>
 
 <template>
-	<TransitionRoot
+	<headless-transition-root
     appear
     as="template"
     :show="show"
     @after-leave="unmount" // [!code focus] // [!code hl]
   >
-		<Dialog // [!code focus:5]
+		<headless-dialog // [!code focus:5]
       as="div"
       class="relative z-30"
       @close="close" // [!code hl]
     >
-			<TransitionChild
+			<headless-transition-child
 				as="template"
 				enter="ease-out duration-300"
 				enter-from="opacity-0"
@@ -62,11 +60,11 @@ defineProps<{
 				leave-to="opacity-0"
 			>
 				<div class="fixed inset-0 bg-gray-500/75 backdrop-blur-sm transition-opacity" />
-			</TransitionChild>
+			</headless-transition-child>
 
 			<div class="fixed inset-0 z-30 overflow-y-auto">
 				<div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
-					<TransitionChild
+					<headless-transition-child
 						as="template"
 						enter="ease-out duration-100"
 						enter-from="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
@@ -75,16 +73,16 @@ defineProps<{
 						leave-from="opacity-100 translate-y-0 sm:scale-100"
 						leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
 					>
-						<DialogPanel class="relative overflow-hidden flex flex-col rounded-lg bg-white px-4 pt-5 pb-4 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-2xl sm:p-6">
+						<headless-dialog-panel class="relative overflow-hidden flex flex-col rounded-lg bg-white px-4 pt-5 pb-4 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-2xl sm:p-6">
 							<div class="justify-between flex items-center mb-2">
-								<DialogTitle v-if="title" as="h3" class="text-lg font-medium leading-6 text-gray-800" v-text="title" />
+								<headless-dialog-title v-if="title" as="h3" class="text-lg font-medium leading-6 text-gray-800" v-text="title" />
 								<button  // [!code focus:5]
 									type="button"
 									class="rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
 									@click="close" // [!code hl]
 								>
 									<span class="sr-only">Close</span>
-									<i-mdi:close class="h-6 w-6" aria-hidden="true" />
+									<i-mdi-close class="h-6 w-6" aria-hidden="true" />
 								</button> // [!code focus]
 							</div>
 							<div class="sm:flex sm:items-start">
@@ -94,12 +92,12 @@ defineProps<{
 									</div>
 								</div>
 							</div>
-						</DialogPanel>
-					</TransitionChild>
+						</headless-dialog-panel>
+					</headless-transition-child>
 				</div>
 			</div>
-		</Dialog>
-	</TransitionRoot>
+		</headless-dialog>
+	</headless-transition-root>
 </template>
 ```
 :::
