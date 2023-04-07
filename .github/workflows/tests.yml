@@ -70,5 +70,5 @@ jobs:
         env:
           PHP_CS_FIXER_IGNORE_ENV: true
         run: |
-          pnpm ci
+          pnpm run ci
           composer ci
