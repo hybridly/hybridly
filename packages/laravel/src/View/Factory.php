@@ -57,8 +57,38 @@ class Factory implements HybridResponse
         }
 
         $this->view = new View(
-            $component,
-            $properties,
+            component: $component,
+            properties: $properties,
+        );
+
+        return $this;
+    }
+
+    /**
+     * Sets the view component.
+     */
+    public function component(string $component): static
+    {
+        $this->view = new View(
+            component: $component,
+            properties: $this->view?->properties ?? [],
+        );
+
+        return $this;
+    }
+
+    /**
+     * Sets the view properties.
+     */
+    public function properties(array|Arrayable|DataObject $properties): static
+    {
+        if (!isset($this->view)) {
+            throw new \LogicException('The `properties` method requires a view to be defined. Call `view` or `component` before.');
+        }
+
+        $this->view = new View(
+            component: $this->view->component,
+            properties: $properties,
         );
 
         return $this;
