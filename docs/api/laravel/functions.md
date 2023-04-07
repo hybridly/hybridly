@@ -77,3 +77,19 @@ use function Hybridly\to_external_url;
 
 return to_external_url('https://google.com');
 ```
+
+## Namespaced testing functions
+
+### `partial_headers`
+
+Generates headers for testing partial requests. The first parameter is the page component name, and the second and third parameters are an array of `only` and `except` properties, respectively.
+
+> See also: [partial reloads](../../guide/partial-reloads.md)
+
+```php
+use function Hybridly\Testing\partial_headers;
+
+get('/', partial_headers('users.show', only: ['posts']))
+    ->assertMissingHybridProperty('user')
+    ->assertHybridProperty('posts');
+```

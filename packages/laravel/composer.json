@@ -36,6 +36,11 @@
             "src/helpers.php"
         ]
     },
+    "autoload-dev": {
+        "files": [
+            "src/Testing/helpers.php"
+        ]
+    },
     "config": {
         "sort-packages": true
     },

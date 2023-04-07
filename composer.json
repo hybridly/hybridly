@@ -45,6 +45,9 @@
         }
     },
     "autoload-dev": {
+        "files": [
+            "packages/laravel/src/Testing/Helpers.php"
+        ],
         "psr-4": {
             "Build\\": [
                 "build"
