@@ -7,7 +7,7 @@ import { getRouterContext, initializeContext, payloadFromContext, setContext } f
 import { handleExternalNavigation, isExternalResponse, isExternalNavigation, performExternalNavigation, navigateToExternalUrl } from '../external'
 import { resetScrollPositions, restoreScrollPositions, saveScrollPositions } from '../scroll'
 import type { UrlResolvable } from '../url'
-import { fillHash, makeUrl, normalizeUrl, sameUrls } from '../url'
+import { sameHashes, fillHash, makeUrl, normalizeUrl, sameUrls } from '../url'
 import { runHooks } from '../plugins'
 import { generateRouteFromName, getRouteDefinition } from '../routing/route'
 import { closeDialog } from '../dialog'
@@ -27,7 +27,7 @@ export const router: Router = {
 	abort: async() => getRouterContext().pendingNavigation?.controller.abort(),
 	active: () => !!getRouterContext().pendingNavigation,
 	navigate: async(options) => await performHybridNavigation(options),
-	reload: async(options) => await performHybridNavigation({ preserveScroll: true, preserveState: true, ...options }),
+	reload: async(options) => await performHybridNavigation({ preserveScroll: true, preserveState: true, replace: true, ...options }),
 	get: async(url, options = {}) => await performHybridNavigation({ ...options, url, method: 'GET' }),
 	post: async(url, options = {}) => await performHybridNavigation({ preserveState: true, ...options, url, method: 'POST' }),
 	put: async(url, options = {}) => await performHybridNavigation({ preserveState: true, ...options, url, method: 'PUT' }),
@@ -212,7 +212,7 @@ export async function performHybridNavigation(options: HybridRequestOptions): Pr
 			preserveScroll: options.preserveScroll,
 			preserveState: options.preserveState,
 			preserveUrl: options.preserveUrl,
-			replace: options.replace === true || options.preserveUrl,
+			replace: options.replace === true || options.preserveUrl || (sameUrls(payload.url, window.location.href) && !sameHashes(payload.url, window.location.href)),
 		})
 
 		// If the new view's properties has errors, userland expects an event
