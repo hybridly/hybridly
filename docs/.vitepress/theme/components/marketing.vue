@@ -34,7 +34,7 @@ const features: Feature[] = [
 	{
 		icon: 'i-mdi:chevron-double-right',
 		title: 'Built on battle-tested tech',
-		description: 'Hybridly is a fork of Inertia. Benefit from <abbr title="Except server-side rendering. For now.">all of its features</abbr>, plus a lot of new, unique functionalities.',
+		description: 'Hybridly is a inspired by Inertia. Benefit from <abbr title="Except server-side rendering. For now.">all of its features</abbr>, plus a lot of new, unique functionalities.',
 		url: '/guide/#about-inertia',
 	},
 	{
