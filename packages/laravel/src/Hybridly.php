@@ -18,6 +18,7 @@ class Hybridly
     use Concerns\HasRootView;
     use Concerns\HasSharedProperties;
     use Concerns\HasVersion;
+    use Concerns\ResolvesUrls;
     use Conditionable;
     use Macroable;
 

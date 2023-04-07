@@ -123,7 +123,7 @@ class Factory implements HybridResponse
         $payload = new Payload(
             view:  $this->resolveView($this->view, $request),
             dialog: $this->resolveDialog($request),
-            url: $request->fullUrl(),
+            url: $this->resolveUrl($request),
             version: $this->hybridly->getVersion(),
         );
 
@@ -257,5 +257,19 @@ class Factory implements HybridResponse
             properties: [...$this->hybridly->shared(), ...$view->properties],
             persisted: $this->hybridly->persisted(),
         );
+    }
+
+    /**
+     * Resolves the URL that will be shown in the browser.
+     */
+    protected function resolveUrl(Request $request): string
+    {
+        if ($resolver = $this->hybridly->getUrlResolver()) {
+            return app()->call($resolver, [
+                'request' => $request,
+            ]);
+        }
+
+        return $request->fullUrl();
     }
 }

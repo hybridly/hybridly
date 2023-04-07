@@ -3,6 +3,7 @@
 use Hybridly\Hybridly;
 use Hybridly\View\Factory;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -150,5 +151,18 @@ test('dialogs and their properties can be resolved', function () {
         ],
         'url' => 'http://localhost/users/makise',
         'version' => null,
+    ]);
+});
+
+test('the url resolver is used when constructing a response', function () {
+    hybridly()->setUrlResolver(fn (Request $request) => 'https://customdomain.com' . $request->getRequestUri());
+
+    $request = mockRequest(url: '/users/makise', hybridly: true, bind: true);
+    $payload = hybridly('foo.bar')
+        ->toResponse($request)
+        ->getOriginalContent();
+
+    expect($payload)->toMatchArray([
+        'url' => 'https://customdomain.com/users/makise',
     ]);
 });
