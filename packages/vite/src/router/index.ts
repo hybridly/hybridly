@@ -8,6 +8,7 @@ import { getRouterClientCode } from './client'
 import { write } from './typegen'
 import { fetchRoutingFromArtisan } from './routes'
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars, unused-imports/no-unused-vars
 export default (options: ViteOptions, config: HybridlyConfig): Plugin => {
 	const resolved: Required<RouterOptions> = {
 		php: 'php',

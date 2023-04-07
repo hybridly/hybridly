@@ -47,7 +47,7 @@ const features: Feature[] = [
 </script>
 
 <template>
-	<ClientOnly>
+	<client-only>
 		<section class="mx-auto mt-20 flex h-full w-full max-w-5xl flex-col lg:mt-40">
 			<!-- Hero -->
 			<div class="flex w-full flex-col items-center justify-between gap-x-40 px-6 lg:flex-row lg:items-start lg:px-0">
@@ -117,7 +117,7 @@ const features: Feature[] = [
 				</template>
 			</section>
 		</section>
-	</ClientOnly>
+	</client-only>
 </template>
 
 <style scoped>
