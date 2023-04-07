@@ -47,7 +47,7 @@ hybridly()->share([
 ```
 
 :::info Alternative syntax
-It is also possible to instanciate a partial-only property by calling `\Hybridly\Support\Partial::make(fn () => ...)`.
+It is also possible to instanciate a partial-only property by calling `\Hybridly\partial(...)` or `\Hybridly\Support\Partial::make(...)`.
 :::
 
 
