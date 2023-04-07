@@ -1,6 +1,6 @@
 # Hybridly
 
-`Hybridly\Hybridly` is a singleton instance that contains shortcuts for common actions.
+`Hybridly\Hybridly` is a singleton instance that contains shortcuts for common actions. It can be accessed by dependency injection or by service location using the [`hybridly()` global function](./functions.md#hybridly).
 
 ## `view`
 
@@ -38,6 +38,8 @@ Generates a response for redirecting to an external website, or a non-hybrid pag
 
 This can also be used to redirect to a hybrid page when it is not known whether the current request is hybrid or not.
 
+> See also: [`to_external_url`](./functions.md#to-external-url)
+> 
 > See [external redirects](../../guide/responses.md#external-redirects) for more details.
 
 ### Usage
@@ -50,6 +52,8 @@ return hybridly()->external('https://google.com');
 
 Creates a property that will only get evaluated and included when specifically requested through a partial reload.
 
+> See also: [`partial`](./functions.md#partial)
+> 
 > See [partial reloads](../../guide/partial-reloads.md) for more details.
 
 ### Usage
@@ -65,14 +69,28 @@ return hybridly('booking.estimates.show', [
 
 ## `isHybrid`
 
-> See also: [`is_hybrid`](./global-functions.md#is_hybrid)
+> See also: [`is_hybrid`](./functions.md#is-hybrid)
 
-Determines whether the current request is hybrid. If a `Illuminate\Http\Request` instance is given, uses this instance instead of the current request.
+Determines whether the current request is hybrid. Optionally, a `Illuminate\Http\Request` instance can be given instead of using the current request.
 
 ### Usage
 
 ```php
 if (hybridly()->isHybrid()) {
+  // ...
+}
+```
+
+## `isPartial`
+
+> See also: [`is_partial`](./functions.md#is-partial)
+
+Determines whether the current request is a [partial reload](../../guide/partial-reloads.md). Optionally, a `Illuminate\Http\Request` instance can be given instead of using the current request.
+
+### Usage
+
+```php
+if (hybridly()->isPartial()) {
   // ...
 }
 ```

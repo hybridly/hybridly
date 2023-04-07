@@ -148,7 +148,7 @@ export default defineConfig({
 					text: 'Laravel',
 					items: [
 						{ text: 'Hybridly', link: '/api/laravel/hybridly' },
-						{ text: 'Global functions', link: '/api/laravel/global-functions' },
+						{ text: 'Functions', link: '/api/laravel/functions' },
 						{ text: 'Testing', link: '/api/laravel/testing' },
 						{ text: 'Directives', link: '/api/laravel/directives' },
 					],
