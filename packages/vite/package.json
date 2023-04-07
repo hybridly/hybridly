@@ -49,14 +49,14 @@
     "laravel-vite-plugin": "^0.7.4",
     "local-pkg": "^0.4.3",
     "throttle-debounce": "^5.0.0",
-    "unplugin-auto-import": "^0.15.1",
-    "unplugin-icons": "^0.15.3",
+    "unplugin-auto-import": "^0.15.2",
+    "unplugin-icons": "^0.16.1",
     "unplugin-vue-components": "^0.24.1",
-    "vite-plugin-run": "^0.4.0"
+    "vite-plugin-run": "^0.4.1"
   },
   "devDependencies": {
-    "@iconify/json": "^2.2.37",
-    "rollup": "^3.20.0",
+    "@iconify/json": "^2.2.46",
+    "rollup": "^3.20.2",
     "vite": "^4.2.1",
     "vue": "^3.2.47"
   }
