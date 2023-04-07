@@ -1,63 +1,63 @@
 {
-  "name": "@hybridly/vite",
-  "version": "0.2.1",
-  "description": "Vite plugin for Hybridly",
-  "keywords": [
-    "hybridly",
-    "inertiajs",
-    "vite",
-    "vite-plugin"
-  ],
-  "homepage": "https://github.com/hybridly/hybridly/tree/main/packages/vite#readme",
-  "bugs": {
-    "url": "https://github.com/hybridly/hybridly/issues"
-  },
-  "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/hybridly/hybridly.git",
-    "directory": "packages/vite"
-  },
-  "funding": "https://github.com/sponsors/innocenzi",
-  "author": "Enzo Innocenzi <enzo@innocenzi.dev>",
-  "sideEffects": false,
-  "files": [
-    "dist",
-    "*.d.ts"
-  ],
-  "exports": {
-    ".": {
-      "require": "./dist/index.cjs",
-      "import": "./dist/index.mjs",
-      "types": "./dist/index.d.ts"
+    "name": "@hybridly/vite",
+    "version": "0.2.1",
+    "description": "Vite plugin for Hybridly",
+    "keywords": [
+        "hybridly",
+        "inertiajs",
+        "vite",
+        "vite-plugin"
+    ],
+    "homepage": "https://github.com/hybridly/hybridly/tree/main/packages/vite#readme",
+    "bugs": {
+        "url": "https://github.com/hybridly/hybridly/issues"
+    },
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/hybridly/hybridly.git",
+        "directory": "packages/vite"
+    },
+    "funding": "https://github.com/sponsors/innocenzi",
+    "author": "Enzo Innocenzi <enzo@innocenzi.dev>",
+    "sideEffects": false,
+    "files": [
+        "dist",
+        "*.d.ts"
+    ],
+    "exports": {
+        ".": {
+            "require": "./dist/index.cjs",
+            "import": "./dist/index.mjs",
+            "types": "./dist/index.d.ts"
+        }
+    },
+    "main": "dist/index.cjs",
+    "module": "dist/index.mjs",
+    "types": "dist/index.d.ts",
+    "scripts": {
+        "build": "unbuild",
+        "stub": "unbuild --stub"
+    },
+    "peerDependencies": {
+        "vue": "^3.2.45"
+    },
+    "dependencies": {
+        "@hybridly/core": "workspace:*",
+        "@vitejs/plugin-vue": "^4.1.0",
+        "fast-glob": "^3.2.12",
+        "laravel-vite-plugin": "^0.7.4",
+        "local-pkg": "^0.4.3",
+        "throttle-debounce": "^5.0.0",
+        "unplugin-auto-import": "^0.15.2",
+        "unplugin-icons": "^0.16.1",
+        "unplugin-vue-components": "^0.24.1",
+        "vite-plugin-run": "^0.4.1"
+    },
+    "devDependencies": {
+        "@iconify/json": "^2.2.46",
+        "rollup": "^3.20.2",
+        "vite": "^4.2.1",
+        "vue": "^3.2.47"
     }
-  },
-  "main": "dist/index.cjs",
-  "module": "dist/index.mjs",
-  "types": "dist/index.d.ts",
-  "scripts": {
-    "build": "unbuild",
-    "stub": "unbuild --stub"
-  },
-  "peerDependencies": {
-    "vue": "^3.2.45"
-  },
-  "dependencies": {
-    "@hybridly/core": "workspace:*",
-    "@vitejs/plugin-vue": "^4.1.0",
-    "fast-glob": "^3.2.12",
-    "laravel-vite-plugin": "^0.7.4",
-    "local-pkg": "^0.4.3",
-    "throttle-debounce": "^5.0.0",
-    "unplugin-auto-import": "^0.15.2",
-    "unplugin-icons": "^0.16.1",
-    "unplugin-vue-components": "^0.24.1",
-    "vite-plugin-run": "^0.4.1"
-  },
-  "devDependencies": {
-    "@iconify/json": "^2.2.46",
-    "rollup": "^3.20.2",
-    "vite": "^4.2.1",
-    "vue": "^3.2.47"
-  }
 }

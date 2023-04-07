@@ -1,50 +1,50 @@
 {
-  "name": "@hybridly/core",
-  "version": "0.2.1",
-  "description": "Core functionality of Hybridly",
-  "keywords": [
-    "hybridly",
-    "inertiajs"
-  ],
-  "homepage": "https://github.com/hybridly/hybridly#readme",
-  "bugs": {
-    "url": "https://github.com/hybridly/hybridly/issues"
-  },
-  "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/hybridly/hybridly.git"
-  },
-  "funding": "https://github.com/sponsors/innocenzi",
-  "author": "Enzo Innocenzi <enzo@innocenzi.dev>",
-  "sideEffects": false,
-  "files": [
-    "dist",
-    "*.d.ts"
-  ],
-  "exports": {
-    ".": {
-      "require": "./dist/index.cjs",
-      "import": "./dist/index.mjs",
-      "types": "./dist/index.d.ts"
+    "name": "@hybridly/core",
+    "version": "0.2.1",
+    "description": "Core functionality of Hybridly",
+    "keywords": [
+        "hybridly",
+        "inertiajs"
+    ],
+    "homepage": "https://github.com/hybridly/hybridly#readme",
+    "bugs": {
+        "url": "https://github.com/hybridly/hybridly/issues"
+    },
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/hybridly/hybridly.git"
+    },
+    "funding": "https://github.com/sponsors/innocenzi",
+    "author": "Enzo Innocenzi <enzo@innocenzi.dev>",
+    "sideEffects": false,
+    "files": [
+        "dist",
+        "*.d.ts"
+    ],
+    "exports": {
+        ".": {
+            "require": "./dist/index.cjs",
+            "import": "./dist/index.mjs",
+            "types": "./dist/index.d.ts"
+        }
+    },
+    "main": "dist/index.cjs",
+    "module": "dist/index.mjs",
+    "types": "dist/index.d.ts",
+    "scripts": {
+        "build": "unbuild",
+        "stub": "unbuild --stub"
+    },
+    "peerDependencies": {
+        "axios": "^1"
+    },
+    "dependencies": {
+        "@hybridly/utils": "workspace:*",
+        "qs": "^6.11.1",
+        "superjson": "^1.12.2"
+    },
+    "devDependencies": {
+        "defu": "^6.1.2"
     }
-  },
-  "main": "dist/index.cjs",
-  "module": "dist/index.mjs",
-  "types": "dist/index.d.ts",
-  "scripts": {
-    "build": "unbuild",
-    "stub": "unbuild --stub"
-  },
-  "peerDependencies": {
-    "axios": "^1"
-  },
-  "dependencies": {
-    "@hybridly/utils": "workspace:*",
-    "qs": "^6.11.1",
-    "superjson": "^1.12.2"
-  },
-  "devDependencies": {
-    "defu": "^6.1.2"
-  }
 }

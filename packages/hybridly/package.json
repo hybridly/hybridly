@@ -1,64 +1,64 @@
 {
-  "name": "hybridly",
-  "version": "0.2.1",
-  "description": "Solution to develop server-driven, client-rendered applications",
-  "keywords": [
-    "hybridly",
-    "inertiajs"
-  ],
-  "homepage": "https://github.com/hybridly/hybridly#readme",
-  "bugs": {
-    "url": "https://github.com/hybridly/hybridly/issues"
-  },
-  "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/hybridly/hybridly.git"
-  },
-  "funding": "https://github.com/sponsors/innocenzi",
-  "author": "Enzo Innocenzi <enzo@innocenzi.dev>",
-  "sideEffects": false,
-  "files": [
-    "dist",
-    "*.d.ts"
-  ],
-  "exports": {
-    ".": {
-      "require": "./dist/index.cjs",
-      "import": "./dist/index.mjs",
-      "types": "./dist/index.d.ts"
+    "name": "hybridly",
+    "version": "0.2.1",
+    "description": "Solution to develop server-driven, client-rendered applications",
+    "keywords": [
+        "hybridly",
+        "inertiajs"
+    ],
+    "homepage": "https://github.com/hybridly/hybridly#readme",
+    "bugs": {
+        "url": "https://github.com/hybridly/hybridly/issues"
     },
-    "./vite": {
-      "require": "./dist/vite.cjs",
-      "import": "./dist/vite.mjs",
-      "types": "./dist/vite.d.ts"
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/hybridly/hybridly.git"
     },
-    "./vue": {
-      "require": "./dist/vue.cjs",
-      "import": "./dist/vue.mjs",
-      "types": "./dist/vue.d.ts"
+    "funding": "https://github.com/sponsors/innocenzi",
+    "author": "Enzo Innocenzi <enzo@innocenzi.dev>",
+    "sideEffects": false,
+    "files": [
+        "dist",
+        "*.d.ts"
+    ],
+    "exports": {
+        ".": {
+            "require": "./dist/index.cjs",
+            "import": "./dist/index.mjs",
+            "types": "./dist/index.d.ts"
+        },
+        "./vite": {
+            "require": "./dist/vite.cjs",
+            "import": "./dist/vite.mjs",
+            "types": "./dist/vite.d.ts"
+        },
+        "./vue": {
+            "require": "./dist/vue.cjs",
+            "import": "./dist/vue.mjs",
+            "types": "./dist/vue.d.ts"
+        },
+        "./config": {
+            "require": "./dist/config.cjs",
+            "import": "./dist/config.mjs",
+            "types": "./dist/config.d.ts"
+        },
+        "./client": {
+            "types": "./client.d.ts"
+        }
     },
-    "./config": {
-      "require": "./dist/config.cjs",
-      "import": "./dist/config.mjs",
-      "types": "./dist/config.d.ts"
+    "main": "dist/index.cjs",
+    "module": "dist/index.mjs",
+    "types": "index.d.ts",
+    "scripts": {
+        "build": "unbuild",
+        "stub": "unbuild --stub"
     },
-    "./client": {
-      "types": "./client.d.ts"
+    "dependencies": {
+        "@hybridly/config": "workspace:*",
+        "@hybridly/core": "workspace:*",
+        "@hybridly/progress-plugin": "workspace:*",
+        "@hybridly/vite": "workspace:*",
+        "@hybridly/vue": "workspace:*"
     }
-  },
-  "main": "dist/index.cjs",
-  "module": "dist/index.mjs",
-  "types": "index.d.ts",
-  "scripts": {
-    "build": "unbuild",
-    "stub": "unbuild --stub"
-  },
-  "dependencies": {
-    "@hybridly/config": "workspace:*",
-    "@hybridly/core": "workspace:*",
-    "@hybridly/progress-plugin": "workspace:*",
-    "@hybridly/vite": "workspace:*",
-    "@hybridly/vue": "workspace:*"
-  }
 }
