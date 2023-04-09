@@ -22,6 +22,8 @@ yarn dlx @preset/cli apply hybridly/preset
 ```
 :::
 
+The presets automatically sets up [**Tailwind CSS**](https://tailwindcss.com), and [**Pest**](https://pestphp.com).
+
 You may add any of the following flags to the previous command to customize the preset.
 
 |Flag|Description|
