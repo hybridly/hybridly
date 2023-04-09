@@ -6,15 +6,35 @@ You may install Hybridly in a fresh Laravel project using the preset. If you pre
 
 ## Preset
 
-The recommended way of installing Hybridly is to create a fresh Laravel project and use the preset.
+The easiest way to get started with Hybridly in a **fresh Laravel project** is to use the preset.
 
-```bash
-composer create-project laravel/laravel my-project
-cd my-project
-npx @preset/cli apply hybridly/preset // [!code focus]
+Run the following command in the root of your project.
+
+:::code-group
+```bash [npm]
+npx @preset/cli apply hybridly/preset
 ```
+```bash [pnpm]
+pnpm dlx @preset/cli apply hybridly/preset
+```
+```bash [yarn]
+yarn dlx @preset/cli apply hybridly/preset
+```
+:::
 
-This will configure Tailwind CSS, [Pest](https://pestphp.com), and optionally internationalization through [`vue-i18n`](https://github.com/intlify/vue-i18n-next). More information about the options on the [repository](https://github.com/hybridly/preset).
+You may add any of the following flags to the previous command to customize the preset.
+
+|Flag|Description|
+|---|---|
+|`--i18n`|Install and setup [**vue-i18n**](https://vue-i18n.intlify.dev/)|
+|`--no-auto-imports`|Do not setup [**unplugin-auto-import**](https://github.com/antfu/unplugin-auto-import) and [**unplugin-vue-components**](https://github.com/antfu/unplugin-vue-components).|
+|`--no-icons`|Do not setup [**unplugin-icons**](https://github.com/antfu/unplugin-icons).|
+|`--no-ide`|Do not setup [**laravel-ide-helper**](https://github.com/barryvdh/laravel-ide-helper).|
+|`--no-pest`|Do not setup [**Pest**](https://pestphp.com/).|
+|`--no-strict`|Do not setup Laravel strict mode.|
+
+More information about the preset can be found on the [**repository**](https://github.com/hybridly/preset).
+
 
 ## Server-side setup
 
