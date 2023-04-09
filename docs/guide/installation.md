@@ -6,7 +6,7 @@ You may install Hybridly in a fresh Laravel project using the preset. If you pre
 
 ## Preset
 
-The easiest way to get started with Hybridly in a **fresh Laravel project** is to use the preset.
+The easiest way to get started with Hybridly in a [**fresh Laravel project**](https://laravel.com/docs/installation) is to use the preset.
 
 Run the following command in the root of your project.
 
@@ -148,7 +148,7 @@ composer require hybridly/laravel
 php artisan hybridly:install
 ```
 
-The last command extracted the middleware that is required to intercept responses and convert them to the Hybridly protocol. 
+The last command extracted the middleware that is required to intercept responses and convert them to the Hybridly protocol.
 
 That middleware is, by default, located in `app/Http/Middleware/HandleHybridRequests.php`. It has automatically been registered into the `web` middleware group in `app/Http/Kernel.php`.
 
