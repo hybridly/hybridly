@@ -6,9 +6,7 @@ You may install Hybridly in a fresh Laravel project using the preset. If you pre
 
 ## Preset
 
-The easiest way to get started with Hybridly in a [**fresh Laravel project**](https://laravel.com/docs/installation) is to use the preset.
-
-Run the following command in the root of your project.
+The recommended way of installing Hybridly is to use the preset in a [**fresh Laravel project**](https://laravel.com/docs/installation). Run the following command in the root of your project:
 
 :::code-group
 ```bash [npm]
@@ -22,20 +20,16 @@ yarn dlx @preset/cli apply hybridly/preset
 ```
 :::
 
-The presets automatically sets up [**Tailwind CSS**](https://tailwindcss.com), and [**Pest**](https://pestphp.com).
+The preset automatically sets up [**Tailwind CSS**](https://tailwindcss.com) and [**Pest**](https://pestphp.com). You may add any of the following flags to the previous command to customize the preset:
 
-You may add any of the following flags to the previous command to customize the preset.
+| Flag          | Description                                                                           |
+| ------------- | ------------------------------------------------------------------------------------- |
+| `--i18n`      | Install and setup [**vue-i18n**](https://vue-i18n.intlify.dev/)                       |
+| `--no-pest`   | Do not setup [**Pest**](https://pestphp.com/)                                         |
+| `--no-strict` | Do not setup Laravel strict mode                                                      |
+| `--no-ide`    | Do not setup [**laravel-ide-helper**](https://github.com/barryvdh/laravel-ide-helper) |
 
-|Flag|Description|
-|---|---|
-|`--i18n`|Install and setup [**vue-i18n**](https://vue-i18n.intlify.dev/)|
-|`--no-auto-imports`|Do not setup [**unplugin-auto-import**](https://github.com/antfu/unplugin-auto-import) and [**unplugin-vue-components**](https://github.com/antfu/unplugin-vue-components).|
-|`--no-icons`|Do not setup [**unplugin-icons**](https://github.com/antfu/unplugin-icons).|
-|`--no-ide`|Do not setup [**laravel-ide-helper**](https://github.com/barryvdh/laravel-ide-helper).|
-|`--no-pest`|Do not setup [**Pest**](https://pestphp.com/).|
-|`--no-strict`|Do not setup Laravel strict mode.|
-
-More information about the preset can be found on the [**repository**](https://github.com/hybridly/preset).
+More information about the preset can be found on its [**repository**](https://github.com/hybridly/preset).
 
 
 ## Server-side setup
