@@ -5,6 +5,7 @@ namespace Hybridly\Tests;
 use Hybridly\HybridlyServiceProvider;
 use Illuminate\Support\Facades\View;
 use Orchestra\Testbench\TestCase as Orchestra;
+use Spatie\LaravelData\LaravelDataServiceProvider;
 
 class TestCase extends Orchestra
 {
@@ -12,6 +13,7 @@ class TestCase extends Orchestra
     {
         return [
             HybridlyServiceProvider::class,
+            LaravelDataServiceProvider::class,
         ];
     }
 
