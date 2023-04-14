@@ -1,6 +1,7 @@
 <?php
 
-use Hybridly\Hybridly;
+use function Hybridly\Testing\partial_headers;
+
 use Hybridly\View\Factory;
 use Illuminate\Contracts\Support\Arrayable;
 
@@ -53,6 +54,29 @@ it('resolves arrayable properties', function () {
     expect($payload->view->properties->user->name)->toBe('Makise Kurisu');
 });
 
+it('does not evaluate lazy properties when they are excluded', function () {
+    $evaluated = false;
+    $payload = resolve(Factory::class)
+        ->view('users.edit', [
+            'full_name' => function () use (&$evaluated) {
+                $evaluated = true;
+
+                return 'Jon Doe';
+            },
+            'email' => 'jon@example.org',
+        ])
+        ->toResponse(mockRequest(headers: partial_headers(
+            component: 'users.edit',
+            only: ['email'],
+        )))
+        ->getData();
+
+    expect($evaluated)->toBeFalse();
+    expect($payload->view->component)->toBe('users.edit');
+    expect($payload->view->properties)->full_name->toBeNull();
+    expect($payload->view->properties)->email->toBe('jon@example.org');
+});
+
 it('does not resolve partials by default', function () {
     $payload = resolve(Factory::class)
         ->view('users.edit', [
@@ -89,10 +113,10 @@ it('resolves partials', function () {
             'full_name' => hybridly()->partial(fn () => 'Jon Doe'),
             'email' => 'jon@example.org',
         ])
-        ->toResponse(mockRequest(headers: [
-            Hybridly::PARTIAL_COMPONENT_HEADER => 'users.edit',
-            Hybridly::ONLY_DATA_HEADER => json_encode(['full_name', 'email']),
-        ]))
+        ->toResponse(mockRequest(headers: partial_headers(
+            component: 'users.edit',
+            only: ['full_name', 'email'],
+        )))
         ->getData();
 
     expect($payload->view->component)->toBe('users.edit');
@@ -108,10 +132,10 @@ it('resolves nested partials', function () {
                 'email' => 'jon@example.org',
             ],
         ])
-        ->toResponse(mockRequest(headers: [
-            Hybridly::PARTIAL_COMPONENT_HEADER => 'users.edit',
-            Hybridly::ONLY_DATA_HEADER => json_encode(['user.full_name', 'user.email']),
-        ]))
+        ->toResponse(mockRequest(headers: partial_headers(
+            component: 'users.edit',
+            only: ['user.full_name', 'user.email'],
+        )))
         ->getData();
 
     expect($payload->view->component)->toBe('users.edit');

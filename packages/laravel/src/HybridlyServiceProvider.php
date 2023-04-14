@@ -9,6 +9,7 @@ use Hybridly\Commands\RoutesCommand;
 use Hybridly\Http\Controller;
 use Hybridly\PropertiesResolver\PropertiesResolver;
 use Hybridly\PropertiesResolver\RequestPropertiesResolver;
+use Hybridly\Support\Data\PartialLazy;
 use Hybridly\Testing\TestFileViewFinder;
 use Hybridly\Testing\TestResponseMacros;
 use Illuminate\Http\Request;
@@ -16,6 +17,7 @@ use Illuminate\Routing\Router;
 use Illuminate\Testing\TestResponse;
 use Illuminate\View\Compilers\BladeCompiler;
 use Illuminate\View\Factory;
+use Spatie\LaravelData\Lazy;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 
@@ -90,6 +92,9 @@ class HybridlyServiceProvider extends PackageServiceProvider
             return $this->match(['GET', 'HEAD'], $uri, Controller::class)
                 ->defaults('component', $component)
                 ->defaults('properties', $properties);
+        });
+        Lazy::macro('partial', function (\Closure $value): PartialLazy {
+            return new PartialLazy($value);
         });
     }
 

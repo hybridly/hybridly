@@ -27,65 +27,87 @@ class RequestPropertiesResolver implements PropertiesResolver
             $properties = Arr::filterRecursive($properties, static fn ($property) => !($property instanceof Partial));
         }
 
+        // First, we need to resolve property instances to an array that
+        // we can recursively traverse. This is needed to include
+        // or exclude properties using the dot-notation.
+        $properties = $this->resolvePropertyInstances($properties);
+
         // The `only` and `except` headers contain json-encoded array data. We want to use them to
         // retrieve the properties whose paths they describe using dot-notation.
         // We only do that when the request is specifically for partial data though.
         if ($partial && $this->request->hasHeader(Hybridly::ONLY_DATA_HEADER)) {
-            $only = array_filter(json_decode($this->request->header(Hybridly::ONLY_DATA_HEADER, ''), true) ?? []);
+            $only = array_filter(json_decode($this->request->header(Hybridly::ONLY_DATA_HEADER, default: ''), associative: true) ?? []);
             $only = $this->convertPartialPropertiesCase($only);
             $properties = Arr::onlyDot($properties, array_merge($only, $persisted));
         }
 
         if ($partial && $this->request->hasHeader(Hybridly::EXCEPT_DATA_HEADER)) {
-            $except = array_filter(json_decode($this->request->header(Hybridly::EXCEPT_DATA_HEADER, ''), true) ?? []);
+            $except = array_filter(json_decode($this->request->header(Hybridly::EXCEPT_DATA_HEADER, default: ''), associative: true) ?? []);
             $except = $this->convertPartialPropertiesCase($except);
             $properties = Arr::exceptDot($properties, $except);
         }
 
         return $this->convertOutputCase(
-            array: $this->resolvePropertyInstances($properties, $this->request),
+            // Only when we only have the properties we need, we can
+            // evaluated the lazy ones. If we did it earlier, we
+            // could evaluate them even if they were excluded.
+            array: $this->evaluatePropertyInstances($properties),
         );
     }
 
     /**
-     * Resolve all necessary class instances in the given props.
+     * Resolves all specific property instances to an array.
      */
-    protected function resolvePropertyInstances(array $props, Request $request, bool $unpackDotProps = true): array
+    protected function resolvePropertyInstances(array $properties, bool $unpackDotProps = true): array
     {
-        foreach ($props as $key => $value) {
-            if (\is_object($value) && \is_callable($value)) {
-                $value = app()->call($value);
-            }
-
-            if ($value instanceof Partial) {
-                $value = app()->call($value);
-            }
-
-            if ($value instanceof \GuzzleHttp\Promise\PromiseInterface) {
-                $value = $value->wait();
-            }
-
-            if ($value instanceof ResourceResponse || $value instanceof JsonResource) {
-                $value = $value->toResponse($request)->getData(true);
-            }
-
+        foreach ($properties as $key => $value) {
             if ($value instanceof Arrayable) {
                 $value = $value->toArray();
             }
 
             if (\is_array($value)) {
-                $value = $this->resolvePropertyInstances($value, $request, false);
+                $value = $this->resolvePropertyInstances($value, unpackDotProps: false);
             }
 
             if ($unpackDotProps && str_contains($key, '.')) {
-                data_set($props, $key, $value);
-                unset($props[$key]);
+                data_set($properties, $key, $value);
+                unset($properties[$key]);
             } else {
-                $props[$key] = $value;
+                $properties[$key] = $value;
             }
         }
 
-        return $props;
+        return $properties;
+    }
+
+    /**
+     * Evaluates all properties recursively.
+     */
+    protected function evaluatePropertyInstances(array $properties): array
+    {
+        foreach ($properties as $key => $value) {
+            if (\is_object($value) && \is_callable($value)) {
+                $value = app()->call($value);
+            }
+
+            // This could potentially be in `resolvePropertyInstances`. Feel free to PR if needed.
+            if ($value instanceof \GuzzleHttp\Promise\PromiseInterface) {
+                $value = $value->wait();
+            }
+
+            // This could potentially be in `resolvePropertyInstances`. Feel free to PR if needed.
+            if ($value instanceof ResourceResponse || $value instanceof JsonResource) {
+                $value = $value->toResponse($this->request)->getData(true);
+            }
+
+            if (\is_array($value)) {
+                $value = $this->evaluatePropertyInstances($value);
+            }
+
+            $properties[$key] = $value;
+        }
+
+        return $properties;
     }
 
     protected function convertPartialPropertiesCase(array $array): array
