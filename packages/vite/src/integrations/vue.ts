@@ -1,3 +1,4 @@
+import path from 'node:path'
 import { merge } from '@hybridly/utils'
 import vue from '@vitejs/plugin-vue'
 import type { ViteOptions } from '../types'
@@ -16,6 +17,11 @@ function getVueOptions(options: ViteOptions): VueOptions {
 					base: null,
 					includeAbsolute: false,
 				},
+			},
+			script: {
+				globalTypeFiles: [
+					path.resolve('.hybridly/back-end.d.ts'),
+				],
 			},
 		},
 		options.vue ?? {},
