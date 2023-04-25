@@ -1,54 +1,44 @@
 <p align="center">
-  <img src=".github/assets/banner-dark.svg" />
-  <br />
-  <a href="https://github.com/hybridly/hybridly/actions/workflows/tests.yml"><img alt="Status" src="https://github.com/hybridly/hybridly/actions/workflows/tests.yml/badge.svg"></a>
-  <span>&nbsp;</span>
-  <a href="https://github.com/hybridly/hybridly/releases"><img alt="version" src="https://img.shields.io/github/v/release/hybridly/hybridly?include_prereleases&label=version"></a>
-  <span>&nbsp;</span>
-  <a href="https://discord.gg/uZ8eC7kRFV"><img alt="discord" src="https://img.shields.io/discord/1032376983214116914"></a>
-  <br />
-  <br />
-  <pre><div align="center">npm i -D hybridly</div></pre>
+  <a href="https://hybridly.dev">
+    <img src=".github/assets/banner-dark.svg" />
+  </a>
 </p>
 
-
-<div align="center">
-  <br />
-  A solution to develop server-driven, client-rendered applications.
-  <br />
-  <br />
-  <br />
-</div>
-
-<br>
-
-# Q&A
+<h1 align="center">Q&A</h1>
+<br />
 
 **What's the goal of this project?**
 > Hybridly aims to provide the best developer experience possible when using Laravel, Vue and Vite. Over time, it might become closer to what Nuxt 3 currently is in terms of DX.
 
-> &nbsp;
+&nbsp;
 
 **When should I use Hybridly instead of Inertia?**
 > Inertia is popular and sponsored by Laravel. It's the safe option. Hybridly is moving faster, and exists because Inertia has issues and a different philosophy. Chose Inertia for better community support, and Hybridly if you value developer experience more at the expense of a smaller community.
 
-> &nbsp;
+&nbsp;
 
 **Why fork Inertia instead of contributing?**
 > That's what I tried before writing Hybridly, but the maintenance of Inertia is highly lacking, pull requests and issues are not being addressed. Additionally, its minimalist philosophy is not compatible with my developer experience needs.
 
-> &nbsp;
+&nbsp;
 
 **Can I use Hybridly with other frameworks than Laravel or Vue?**
 > The core of Hybridly is framework-agnostic, just like Inertia's. But there is no plan for an official adapter other than Laravel and Vue, because that is what I am using and willing to maintain. Feel free to create your own adapter though.
 
-> &nbsp;
+&nbsp;
 
 **Will Hybridly be properly maintained?**
 > I'm primarily building Hybridly for myself. I am actively using and improving it. That means Hybridly is an opinionated project and may not suit your tastes, but it will live as long as I am a developer and I didn't find a better way to build web applications.
 
 <p align="center">
   <br />
+  <br />
+  <br />
+  <a href="https://github.com/hybridly/hybridly/actions/workflows/tests.yml"><img alt="Status" src="https://github.com/hybridly/hybridly/actions/workflows/tests.yml/badge.svg"></a>
+  <span>&nbsp;</span>
+  <a href="https://github.com/hybridly/hybridly/releases"><img alt="version" src="https://img.shields.io/github/v/release/hybridly/hybridly?include_prereleases&label=version"></a>
+  <span>&nbsp;</span>
+  <a href="https://discord.gg/uZ8eC7kRFV"><img alt="discord" src="https://img.shields.io/discord/1032376983214116914"></a>
   <br />
   <br />
   <br />
