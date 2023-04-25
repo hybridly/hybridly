@@ -1,12 +1,5 @@
-****<br>
-
 <p align="center">
-  <img src=".github/assets/logo-shadow.svg" style="width:200px;" />
-</p>
-
-<h1 align="center">Hybridly</h1>
-
-<p align="center">
+  <img src=".github/assets/banner-dark.svg" />
   <br />
   <a href="https://github.com/hybridly/hybridly/actions/workflows/tests.yml"><img alt="Status" src="https://github.com/hybridly/hybridly/actions/workflows/tests.yml/badge.svg"></a>
   <span>&nbsp;</span>
