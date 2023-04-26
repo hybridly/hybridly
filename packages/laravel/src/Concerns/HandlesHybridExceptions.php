@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\Response;
 trait HandlesHybridExceptions
 {
     /**
-     * List of HTTP status codes that hybridly will handle.
+     * List of HTTP status codes that Hybridly will handle.
      */
     protected $handleHybridly = [
         Response::HTTP_INTERNAL_SERVER_ERROR,
@@ -22,6 +22,14 @@ trait HandlesHybridExceptions
         Response::HTTP_UNAUTHORIZED,
     ];
 
+    /**
+     * List of environments that should not handle Hybridly exceptions.
+     */
+    protected $skipEnvironments = ['local', 'testing'];
+
+    /**
+     * Renders an exception into an HTTP response.
+     */
     public function render($request, \Throwable $e)
     {
         /** @var Response $response */
@@ -67,7 +75,7 @@ trait HandlesHybridExceptions
             return false;
         }
 
-        if (app()->environment(['local', 'testing'])) {
+        if (app()->environment($this->skipEnvironments)) {
             return false;
         }
 
