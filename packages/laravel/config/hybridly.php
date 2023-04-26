@@ -5,17 +5,6 @@ use Hybridly\Hybridly;
 return [
     /*
     |--------------------------------------------------------------------------
-    | Root view
-    |--------------------------------------------------------------------------
-    | By default, Hybridly expects to find a root.blade.php template in your
-    | views folder. This option allows you to define an alternative root
-    | template.
-    |
-    */
-    'root_view' => Hybridly::DEFAULT_ROOT_VIEW,
-
-    /*
-    |--------------------------------------------------------------------------
     | Route filters
     |--------------------------------------------------------------------------
     | This option defines which routes Hybridly will expose to the frontend.
@@ -38,34 +27,6 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Force case
-    |--------------------------------------------------------------------------
-    | The case conventions between back-end and front-end is generally not
-    | the same. To be able to stay consistent, Hybridly offers a way to
-    | change the case of first-level properties shared to the front.
-    |
-    | Supported: null, 'snake', 'camel', 'kebab'
-    */
-    'force_case' => [
-        'input' => null,
-        'output' => null,
-    ],
-
-    /*
-    |--------------------------------------------------------------------------
-    | i18n
-    |--------------------------------------------------------------------------
-    | You can chose where the generated internationalization JSON file
-    | will be written to using this option. To generate that file,
-    | you may use the `i18n:generate` artisan command.
-    */
-    'i18n' => [
-        'file_name_template' => '{locale}.json',
-        'file_name' => 'locales.json',
-    ],
-
-    /*
-    |--------------------------------------------------------------------------
     | Testing
     |--------------------------------------------------------------------------
     | The values described here are used to locate hybrid views on the
@@ -84,5 +45,44 @@ return [
             'tsx',
             'vue',
         ],
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | i18n
+    |--------------------------------------------------------------------------
+    | You can chose where the generated internationalization JSON file
+    | will be written to using this option. To generate that file,
+    | you may use the `i18n:generate` artisan command.
+    */
+    'i18n' => [
+        'file_name_template' => '{locale}.json',
+        'file_name' => 'locales.json',
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Root view
+    |--------------------------------------------------------------------------
+    | By default, Hybridly expects to find a root.blade.php template in your
+    | views folder. This option allows you to define an alternative root
+    | template.
+    |
+    */
+    'root_view' => Hybridly::DEFAULT_ROOT_VIEW,
+
+    /*
+    |--------------------------------------------------------------------------
+    | Force case
+    |--------------------------------------------------------------------------
+    | The case conventions between back-end and front-end is generally not
+    | the same. To be able to stay consistent, Hybridly offers a way to
+    | change the case of first-level properties shared to the front.
+    |
+    | Supported: null, 'snake', 'camel', 'kebab'
+    */
+    'force_case' => [
+        'input' => null,
+        'output' => null,
     ],
 ];
