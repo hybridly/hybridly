@@ -29,12 +29,12 @@ class ExactFilter implements FilterContract
     /**
      * Creates a filter that uses an exact match to filter records.
      */
-    public static function make(string $property, array $aliases = []): Filter
+    public static function make(string $property, ?string $alias = null): Filter
     {
         return new Filter(
             filter: new static(),
             property: $property,
-            aliases: $aliases,
+            alias: $alias,
         );
     }
 }

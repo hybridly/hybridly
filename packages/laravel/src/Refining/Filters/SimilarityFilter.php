@@ -47,12 +47,12 @@ class SimilarityFilter implements FilterContract
     /**
      * Creates a filter that uses an exact match to filter records.
      */
-    public static function make(string $property, array $aliases = [], string $mode = self::LOOSE): Filter
+    public static function make(string $property, ?string $alias = null, string $mode = self::LOOSE): Filter
     {
         return new Filter(
             filter: new static($mode),
             property: $property,
-            aliases: $aliases,
+            alias: $alias,
         );
     }
 }

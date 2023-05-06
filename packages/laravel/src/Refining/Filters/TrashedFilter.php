@@ -28,12 +28,12 @@ class TrashedFilter implements FilterContract
     /**
      * Creates a filter that configures whether trashed records should be queried.
      */
-    public static function make(string $name = 'trashed', array $aliases = []): Filter
+    public static function make(string $name = 'trashed', ?string $alias = null): Filter
     {
         return new Filter(
             filter: new static(),
             property: $name,
-            aliases: $aliases,
+            alias: $alias,
         );
     }
 }

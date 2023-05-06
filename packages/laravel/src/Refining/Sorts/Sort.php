@@ -1,59 +1,47 @@
 <?php
 
-namespace Hybridly\Refining\Filters;
+namespace Hybridly\Refining\Sorts;
 
 use Hybridly\Components;
-use Hybridly\Refining\Contracts\Filter as FilterContract;
 use Hybridly\Refining\Contracts\Refiner as RefinerContract;
+use Hybridly\Refining\Contracts\Sort as SortContract;
 use Hybridly\Refining\Refine;
 use Illuminate\Contracts\Database\Eloquent\Builder;
-use Illuminate\Validation\ValidationException;
 
-class Filter extends Components\Component implements RefinerContract
+class Sort extends Components\Component implements RefinerContract
 {
-    use Components\Concerns\HasDefaultValue;
     use Components\Concerns\HasLabel;
     use Components\Concerns\HasMetadata;
     use Components\Concerns\HasName;
-    use Concerns\HasType;
+    use Concerns\HasDefault;
 
-    protected mixed $value = null;
+    protected null|string $direction = null;
 
     public function __construct(
-        protected FilterContract $filter,
+        protected SortContract $sort,
         protected string $property,
         protected ?string $alias = null,
     ) {
         $this->name($alias ?? $property);
         $this->label(str($this->getName())->headline()->lower()->ucfirst());
-        $this->type($filter->getType());
         $this->setUp();
     }
 
     public function refine(Refine $refiner, Builder $builder): void
     {
-        if (!$this->value = $refiner->getFilterValueFromRequest($this->property, $this->alias) ?? $this->getDefaultValue()) {
+        if (\is_null($this->direction = $refiner->getSortDirectionFromRequest($this->property, $this->alias) ?? $this->getDefaultDirection())) {
             return;
         }
 
-        try {
-            $this->filter->__invoke($builder, $this->value, $this->property);
-        } catch (\TypeError $th) {
-            if (str_contains($th->getMessage(), 'Argument #2 ($')) {
-                throw ValidationException::withMessages([
-                    $this->property => 'This filter is invalid.',
-                ]);
-            }
-        } catch (\Throwable $th) {
-            throw $th;
-        }
+        $this->sort->__invoke($builder, $this->direction, $this->property);
     }
 
     protected function getDefaultEvaluationParameters(): array
     {
         return [
             'filter' => $this,
-            'value' => $this->value,
+            'direction' => $this->direction,
+            'descending' => $this->direction === 'desc',
         ];
     }
 
@@ -62,8 +50,12 @@ class Filter extends Components\Component implements RefinerContract
         return [
             'name' => $this->getName(),
             'label' => $this->getLabel(),
-            'type' => $this->getType(),
             'metadata' => $this->getMetadata(),
+            'direction' => $this->direction,
+            'descending' => $this->direction === 'desc',
+            'next' => $this->direction === 'desc'
+                ? $this->getName()
+                : "-{$this->getName()}",
         ];
     }
 }

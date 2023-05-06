@@ -36,38 +36,53 @@ trait HasRefiners
         return $this;
     }
 
-    /**
-     * Defines how a value should be retrieved.
-     */
-    public function setValueRetriever(\Closure $callback): static
+    public function getSortDirectionFromRequest(string $property, ?string $alias = null): ?string
     {
-        $this->getFilterValueFromRequestCallback = $callback;
+        $callback = static function (Request $request, string $scope, string $property, ?string $alias) {
+            $sorts = collect(explode(',', $request->get($scope)));
+            $property = $alias ?? $property;
 
-        return $this;
+            return $sorts->first(fn (string $sort) => ltrim($sort, '-') === $property);
+        };
+
+        $sort = $this->evaluate($callback, [
+            'request' => $this->getRequest(),
+            'scope' => $this->formatScope('sort'),
+            'property' => $property,
+            'alias' => $alias,
+        ]);
+
+        // If we didn't get a sort value, there is no sort.
+        if (!$sort) {
+            return null;
+        }
+
+        // Otherwise, we infer the direction depending on the presence of `-`.
+        return '-' === $sort[0]
+            ? 'desc'
+            : 'asc';
     }
 
-    public function getFilterValueFromRequest(string $name, array $aliases = []): mixed
+    public function getFilterValueFromRequest(string $property, ?string $alias = null): mixed
     {
-        $callback = $this->getFilterValueFromRequestCallback ?? static function (Request $request, string $scope, string $name, array $aliases) {
+        $callback = static function (Request $request, string $scope, string $property, ?string $alias) {
             $filters = $request->get($scope);
 
             // If there is no alias, we use the given name to
             // find the value and return null if there is none.
-            if (\count($aliases) === 0) {
-                return $filters[$name] ?? null;
+            if (\is_null($alias)) {
+                return $filters[$property] ?? null;
             }
 
-            // Otherwise, we find the value for the first alias that
-            // matches and return that, or null if nothing matches.
-            return collect($aliases)->first(fn (string $alias) => $filters[$alias] ?? null);
+            // Otherwise, we find the value for the alias if it exists.
+            return $filters[$alias] ?? null;
         };
 
         return $this->evaluate($callback, [
-            'refine' => $this,
             'request' => $this->getRequest(),
             'scope' => $this->formatScope('filters'),
-            'name' => $name,
-            'aliases' => $aliases,
+            'property' => $property,
+            'alias' => $alias,
         ]);
     }
 }

@@ -30,7 +30,7 @@ it('throws a validation exception when the type of the received value cannot be 
     mock_refiner(
         callback: fn (Request $request) => $request->query->set('filters', ['airpods_gen' => 'abcd']),
         refiners: [
-            CallbackFilter::make('airpods_gen', fn (Builder $query, int $value) => null),
+            CallbackFilter::make('airpods_gen', fn (Builder $builder, int $value) => null),
         ],
     )->get();
 })->throws(ValidationException::class, 'This filter is invalid.');
@@ -45,7 +45,7 @@ it('filters according to the given callback', function () {
     )->create();
 
     $filters = mock_refiner(
-        callback: fn (Request $request) => $request->query->set('filters', ['airpods_gen' => 2]),
+        query: ['filters' => ['airpods_gen' => 2]],
         refiners: [
             CallbackFilter::make('airpods_gen', fn (Builder $query, int $value) => match ($value) {
                 2 => $query->where('name', 'like', '%(2nd generation)'),

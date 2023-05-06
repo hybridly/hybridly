@@ -1,6 +1,6 @@
 <?php
 
-namespace Hybridly\Refining\Concerns;
+namespace Hybridly\Refining\Filters\Concerns;
 
 trait HasType
 {
