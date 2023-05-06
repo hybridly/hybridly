@@ -3,6 +3,9 @@
 namespace Hybridly\Refining;
 
 use Hybridly\Components;
+use Hybridly\Refining\Contracts\Refiner;
+use Hybridly\Refining\Filters\Filter;
+use Hybridly\Refining\Sorts\Sort;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
@@ -53,6 +56,14 @@ class Refine extends Components\Component
     }
 
     /**
+     * Gets the serialized refinements for the front-end to use.
+     */
+    public function refinements(): array
+    {
+        return $this->jsonSerialize();
+    }
+
+    /**
      * Adds the given filters or sorts to the refiner.
      */
     public function with(iterable $refiners): static
@@ -66,19 +77,54 @@ class Refine extends Components\Component
         // underlying builder instance is called and the query is ran.
         $this->applyRefiners();
 
-        return $this->forwardCallTo($this->getBuilderInstance(), $name, $arguments);
+        return $this->forwardDecoratedCallTo($this->getBuilderInstance(), $name, $arguments);
     }
 
     protected function getDefaultEvaluationParameters(): array
     {
         return [
-            'filters' => $this,
+            'refine' => $this,
         ];
+    }
+
+    protected function getSorts(): array
+    {
+        return collect($this->getRefiners())
+            ->filter(fn (Refiner $refiner) => $refiner instanceof Sort)
+            ->values()
+            ->toArray();
+    }
+
+    protected function getFilters(): array
+    {
+        return collect($this->getRefiners())
+            ->filter(fn (Refiner $refiner) => $refiner instanceof Filter)
+            ->values()
+            ->toArray();
+    }
+
+    public function getSortsKey(): string
+    {
+        // TODO: make configurable
+        return 'sort';
+    }
+
+    public function getFiltersKey(): string
+    {
+        // TODO: make configurable
+        return 'filters';
     }
 
     public function jsonSerialize(): array
     {
-        // TODO
-        return [];
+        return [
+            'sorts' => $this->getSorts(),
+            'filters' => $this->getFilters(),
+            'scope' => $this->formatScope(),
+            'keys' => [
+                'sorts' => $this->getSortsKey(),
+                'filters' => $this->getFiltersKey(),
+            ],
+        ];
     }
 }

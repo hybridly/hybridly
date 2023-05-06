@@ -41,8 +41,22 @@ class Sort extends Components\Component implements RefinerContract
         return [
             'filter' => $this,
             'direction' => $this->direction,
-            'descending' => $this->direction === 'desc',
         ];
+    }
+
+    public function isActive(): bool
+    {
+        return !\is_null($this->direction);
+    }
+
+    protected function getDescendingValue(): string
+    {
+        return $this->getName();
+    }
+
+    protected function getAscendingValue(): string
+    {
+        return "-{$this->getName()}";
     }
 
     public function jsonSerialize(): mixed
@@ -51,11 +65,16 @@ class Sort extends Components\Component implements RefinerContract
             'name' => $this->getName(),
             'label' => $this->getLabel(),
             'metadata' => $this->getMetadata(),
+            'is_active' => $this->isActive(),
             'direction' => $this->direction,
-            'descending' => $this->direction === 'desc',
-            'next' => $this->direction === 'desc'
-                ? $this->getName()
-                : "-{$this->getName()}",
+            'default' => $this->getDefaultDirection(),
+            'desc' => $this->getDescendingValue(),
+            'asc' => $this->getAscendingValue(),
+            'next' => match ($this->direction) {
+                'desc' => null,
+                'asc' => $this->getAscendingValue(),
+                default => $this->getDescendingValue(),
+            },
         ];
     }
 }

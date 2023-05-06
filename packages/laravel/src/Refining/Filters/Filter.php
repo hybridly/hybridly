@@ -57,6 +57,11 @@ class Filter extends Components\Component implements RefinerContract
         ];
     }
 
+    public function isActive(): bool
+    {
+        return !\is_null($this->value);
+    }
+
     public function jsonSerialize(): mixed
     {
         return [
@@ -64,6 +69,8 @@ class Filter extends Components\Component implements RefinerContract
             'label' => $this->getLabel(),
             'type' => $this->getType(),
             'metadata' => $this->getMetadata(),
+            'is_active' => $this->isActive(),
+            'value' => $this->value,
         ];
     }
 }

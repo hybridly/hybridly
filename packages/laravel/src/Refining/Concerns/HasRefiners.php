@@ -47,7 +47,7 @@ trait HasRefiners
 
         $sort = $this->evaluate($callback, [
             'request' => $this->getRequest(),
-            'scope' => $this->formatScope('sort'),
+            'scope' => $this->formatScope($this->getSortsKey()),
             'property' => $property,
             'alias' => $alias,
         ]);
@@ -80,7 +80,7 @@ trait HasRefiners
 
         return $this->evaluate($callback, [
             'request' => $this->getRequest(),
-            'scope' => $this->formatScope('filters'),
+            'scope' => $this->formatScope($this->getFiltersKey()),
             'property' => $property,
             'alias' => $alias,
         ]);

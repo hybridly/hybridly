@@ -8,4 +8,6 @@ use Illuminate\Contracts\Database\Eloquent\Builder;
 interface Refiner
 {
     public function refine(Refine $refiner, Builder $builder): void;
+
+    public function isActive(): bool;
 }
