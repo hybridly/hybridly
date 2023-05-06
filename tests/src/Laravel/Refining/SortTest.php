@@ -25,8 +25,11 @@ it('can be serialized', function () {
             'metadata' => [
                 'foo' => 'bar',
             ],
+            'is_active' => false,
             'direction' => null,
-            'descending' => false,
+            'default' => null,
+            'desc' => '-created_at',
+            'asc' => 'created_at',
             'next' => '-created_at',
         ]);
 });
@@ -38,8 +41,11 @@ it('uses its alias as name when serialized', function () {
             'name' => 'date',
             'label' => 'Date',
             'metadata' => [],
+            'is_active' => false,
             'direction' => null,
-            'descending' => false,
+            'default' => null,
+            'desc' => '-date',
+            'asc' => 'date',
             'next' => '-date',
         ]);
 });

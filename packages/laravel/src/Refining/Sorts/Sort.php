@@ -51,12 +51,12 @@ class Sort extends Components\Component implements RefinerContract
 
     protected function getDescendingValue(): string
     {
-        return $this->getName();
+        return "-{$this->getName()}";
     }
 
     protected function getAscendingValue(): string
     {
-        return "-{$this->getName()}";
+        return $this->getName();
     }
 
     public function jsonSerialize(): mixed

@@ -112,6 +112,8 @@ test('filters can be serialized', function () {
             'label' => 'Airpods gen',
             'type' => 'callback',
             'metadata' => [],
+            'is_active' => false,
+            'value' => null,
         ]);
 });
 
@@ -129,5 +131,7 @@ test('filters use their alias as name when defined', function () {
             'label' => 'Airpods generation',
             'type' => 'callback',
             'metadata' => [],
+            'is_active' => false,
+            'value' => null,
         ]);
 });

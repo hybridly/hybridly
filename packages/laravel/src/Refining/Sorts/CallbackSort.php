@@ -19,6 +19,7 @@ class CallbackSort implements SortContract
     {
         $this->evaluate($this->callback, [
             'builder' => $builder,
+            'direction' => $direction,
             'property' => $property,
         ]);
     }

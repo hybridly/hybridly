@@ -18,6 +18,8 @@ it('can be serialized', function () {
             'metadata' => [
                 'foo' => 'bar',
             ],
+            'is_active' => false,
+            'value' => null,
         ]);
 });
 
