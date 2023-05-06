@@ -77,3 +77,23 @@ test('sorts use the alias when defined', function (?string $sort, array $expecte
     ['published_at', ['AirPods', 'AirPods Pro', 'Macbook Pro M1']],
     ['-published_at', ['AirPods', 'AirPods Pro', 'Macbook Pro M1']],
 ]);
+
+test('serialization takes current state into account', function () {
+    $sorts = mock_refiner(
+        query: array_filter(['sort' => '-date']),
+        refiners: [FieldSort::make('published_at', alias: 'date')],
+        apply: true,
+    );
+
+    expect(data_get(json_decode(json_encode($sorts)), 'sorts.0'))->toMatchArray([
+        'name' => 'date',
+        'label' => 'Date',
+        'metadata' => [],
+        'is_active' => true,
+        'direction' => 'desc',
+        'default' => null,
+        'desc' => '-date',
+        'asc' => 'date',
+        'next' => null,
+    ]);
+});

@@ -135,3 +135,26 @@ test('filters use their alias as name when defined', function () {
             'value' => null,
         ]);
 });
+
+test('serialization takes current state into account', function () {
+    $filters = mock_refiner(
+        query: ['filters' => ['product' => 'AirPods Pro']],
+        refiners: [
+            new Filter(
+                filter: $this->filter,
+                property: 'name',
+                alias: 'product',
+            ),
+        ],
+        apply: true,
+    );
+
+    expect(data_get(json_decode(json_encode($filters)), 'filters.0'))->toMatchArray([
+        'name' => 'product',
+        'label' => 'Product',
+        'type' => 'callback',
+        'metadata' => [],
+        'is_active' => true,
+        'value' => 'AirPods Pro',
+    ]);
+});

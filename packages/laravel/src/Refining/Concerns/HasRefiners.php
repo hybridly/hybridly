@@ -11,6 +11,7 @@ trait HasRefiners
 {
     protected array $refiners = [];
     protected ?\Closure $getFilterValueFromRequestCallback = null;
+    protected bool $refined = false;
 
     public function addRefiners(iterable $refiners): static
     {
@@ -27,11 +28,20 @@ trait HasRefiners
         return $this->refiners;
     }
 
-    protected function applyRefiners(): static
+    /**
+     * Applies refiner. Automatically called when accessing the underlying query.
+     */
+    public function applyRefiners(): static
     {
+        if ($this->refined) {
+            return $this;
+        }
+
         foreach ($this->getRefiners() as $refiner) {
             $refiner->refine($this, $this->getBuilderInstance());
         }
+
+        $this->refined = true;
 
         return $this;
     }
