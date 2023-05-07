@@ -3,12 +3,22 @@ pre code {
 }
 
 a:has(code) {
-	color: var(--vp-c-text-code) !important;
+	text-decoration: none !important;
+}
+
+.vp-doc :not(pre) > code {
+	padding: 4px 5px 2px 5px !important;
 }
 
 .vp-doc a > code {
-	/* color: var(--vp-c-brand-dark); */
-	transition: color 0.25s;
+	color: var(--vp-c-text-code);
+	transition: color 0.15s, border 0.15s;
+	border: 1px solid var(--vp-c-code-link) !important;
+}
+
+.vp-doc a:hover > code {
+	color: var(--vp-c-text-code);
+	border: 1px solid var(--vp-c-brand) !important;
 }
 
 .vp-doc .custom-block a {
