@@ -6,11 +6,14 @@ import { toReactive } from '../utils'
 
 type SortDirection = 'asc' | 'desc'
 
-interface ToggleSortOptions extends HybridRequestOptions {
+type AvailableHybridRequestOptions = Omit<HybridRequestOptions, 'url' | 'data'>
+
+interface ToggleSortOptions extends AvailableHybridRequestOptions {
 	direction?: SortDirection
 }
 
 declare global {
+// #region interfaces
 	interface FilterRefinement {
 		/**
 		 * Whether this filter is currently active.
@@ -104,6 +107,7 @@ declare global {
 			filters: string
 		}
 	}
+// #endregion interfaces
 }
 
 export function useRefinements<
@@ -111,12 +115,12 @@ export function useRefinements<
 	RefinementsKey extends {
 		[K in keyof Properties]: Properties[K] extends Refinements ? K : never;
 	}[keyof Properties],
->(properties: Properties, refinementsKeys: RefinementsKey, defaultOptions: HybridRequestOptions = {}) {
+>(properties: Properties, refinementsKeys: RefinementsKey, defaultOptions: AvailableHybridRequestOptions = {}) {
 	const refinements = computed(() => properties[refinementsKeys] as Refinements)
 	const sortsKey = computed(() => refinements.value.keys.sorts)
 	const filtersKey = computed(() => refinements.value.keys.filters)
 
-	async function reset(options: HybridRequestOptions = {}) {
+	async function reset(options: AvailableHybridRequestOptions = {}) {
 		return await router.reload({
 			...defaultOptions,
 			...options,
@@ -127,7 +131,7 @@ export function useRefinements<
 		})
 	}
 
-	async function resetFilters(options: HybridRequestOptions = {}) {
+	async function clearFilters(options: AvailableHybridRequestOptions = {}) {
 		return await router.reload({
 			...defaultOptions,
 			...options,
@@ -137,7 +141,7 @@ export function useRefinements<
 		})
 	}
 
-	async function clearFilter(filter: string, options: HybridRequestOptions = {}) {
+	async function clearFilter(filter: string, options: AvailableHybridRequestOptions = {}) {
 		return await router.reload({
 			...defaultOptions,
 			...options,
@@ -149,7 +153,7 @@ export function useRefinements<
 		})
 	}
 
-	async function applyFilter(filter: string, value: any, options: HybridRequestOptions = {}) {
+	async function applyFilter(filter: string, value: any, options: AvailableHybridRequestOptions = {}) {
 		if (!refinements.value.filters.find(({ name }) => name === filter)) {
 			return
 		}
@@ -165,7 +169,7 @@ export function useRefinements<
 		})
 	}
 
-	async function resetSorts(options: HybridRequestOptions = {}) {
+	async function clearSorts(options: AvailableHybridRequestOptions = {}) {
 		return await router.reload({
 			...defaultOptions,
 			...options,
@@ -252,11 +256,11 @@ export function useRefinements<
 		/**
 		 * Resets all sorts.
 		 */
-		resetSorts,
+		clearSorts,
 		/**
 		 * Resets all filters.
 		 */
-		resetFilters,
+		clearFilters,
 		/**
 		 * Applies the given filter.
 		 */
