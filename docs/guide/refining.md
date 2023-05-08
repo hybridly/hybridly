@@ -11,7 +11,7 @@ The refining process happens as follows:
 - The view uses [`useRefinements`](../api/composables/use-refinements.md) to generate a user interface and apply sorts and filters
 
 :::info Experimental
-This feature is new and experimental. Feel free to report issues on our Discord server.
+This feature has not been dogfed yet and is considered experimental. Its API may change at any time. Feel free to give feedback on our Discord server.
 :::
 
 ## Refining a query
