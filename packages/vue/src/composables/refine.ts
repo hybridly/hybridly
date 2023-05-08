@@ -39,6 +39,10 @@ declare global {
 		 * The current value of the filter.
 		 */
 		value: any
+		/**
+		 * Whether this filter is hidden.
+		 */
+		hidden: boolean
 	}
 
 	interface SortRefinement {
@@ -78,6 +82,10 @@ declare global {
 		 * The value that will be applied on toggle.
 		 */
 		next: string
+		/**
+		 * Whether this sort is hidden.
+		 */
+		hidden: boolean
 	}
 
 	interface Refinements {

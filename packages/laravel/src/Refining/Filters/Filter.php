@@ -11,10 +11,11 @@ use Illuminate\Validation\ValidationException;
 
 class Filter extends Components\Component implements RefinerContract
 {
-    use Components\Concerns\HasDefaultValue;
     use Components\Concerns\HasLabel;
     use Components\Concerns\HasMetadata;
     use Components\Concerns\HasName;
+    use Components\Concerns\IsHideable;
+    use Concerns\HasDefaultValue;
     use Concerns\HasType;
 
     protected mixed $value = null;
@@ -56,8 +57,10 @@ class Filter extends Components\Component implements RefinerContract
     protected function getDefaultEvaluationParameters(): array
     {
         return [
-            'filter' => $this,
+            'filter' => $this->filter,
             'value' => $this->value,
+            'property' => $this->property,
+            'alias' => $this->alias,
         ];
     }
 
@@ -70,6 +73,7 @@ class Filter extends Components\Component implements RefinerContract
     {
         return [
             'name' => $this->getName(),
+            'hidden' => $this->isHidden(),
             'label' => $this->getLabel(),
             'type' => $this->getType(),
             'metadata' => $this->getMetadata(),

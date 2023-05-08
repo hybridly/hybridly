@@ -18,6 +18,7 @@ it('can be serialized', function () {
         ->toBeInstanceOf(Filter::class)
         ->jsonSerialize()->toBe([
             'name' => 'airpods_gen',
+            'hidden' => false,
             'label' => 'Airpods gen',
             'type' => 'callback',
             'metadata' => [

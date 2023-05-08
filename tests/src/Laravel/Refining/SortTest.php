@@ -21,6 +21,7 @@ it('can be serialized', function () {
         ->toBeInstanceOf(Sort::class)
         ->jsonSerialize()->toBe([
             'name' => 'created_at',
+            'hidden' => false,
             'label' => 'Creation date',
             'metadata' => [
                 'foo' => 'bar',
@@ -39,6 +40,7 @@ it('uses its alias as name when serialized', function () {
         ->toBeInstanceOf(Sort::class)
         ->jsonSerialize()->toBe([
             'name' => 'date',
+            'hidden' => false,
             'label' => 'Date',
             'metadata' => [],
             'is_active' => false,

@@ -13,6 +13,7 @@ class Sort extends Components\Component implements RefinerContract
     use Components\Concerns\HasLabel;
     use Components\Concerns\HasMetadata;
     use Components\Concerns\HasName;
+    use Components\Concerns\IsHideable;
     use Concerns\HasDefault;
 
     protected null|string $direction = null;
@@ -39,8 +40,10 @@ class Sort extends Components\Component implements RefinerContract
     protected function getDefaultEvaluationParameters(): array
     {
         return [
-            'filter' => $this,
+            'sort' => $this->sort,
             'direction' => $this->direction,
+            'property' => $this->property,
+            'alias' => $this->alias,
         ];
     }
 
@@ -63,6 +66,7 @@ class Sort extends Components\Component implements RefinerContract
     {
         return [
             'name' => $this->getName(),
+            'hidden' => $this->isHidden(),
             'label' => $this->getLabel(),
             'metadata' => $this->getMetadata(),
             'is_active' => $this->isActive(),

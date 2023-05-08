@@ -42,6 +42,7 @@ test('the refine instance can be serialized', function () {
         'sorts' => [
             [
                 'name' => 'date',
+                'hidden' => false,
                 'label' => 'Date',
                 'metadata' => [],
                 'is_active' => false,
@@ -55,6 +56,7 @@ test('the refine instance can be serialized', function () {
         'filters' => [
             [
                 'name' => 'name',
+                'hidden' => false,
                 'label' => 'Name',
                 'type' => 'similar:loose',
                 'metadata' => [],

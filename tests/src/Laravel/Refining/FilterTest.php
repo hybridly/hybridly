@@ -98,6 +98,7 @@ test('filters can be serialized', function () {
         ->toBeInstanceOf(Filter::class)
         ->jsonSerialize()->toBe([
             'name' => 'airpods_gen',
+            'hidden' => false,
             'label' => 'Airpods gen',
             'type' => 'callback',
             'metadata' => [],
@@ -117,6 +118,7 @@ test('filters use their alias as name when defined', function () {
         ->toBeInstanceOf(Filter::class)
         ->jsonSerialize()->toBe([
             'name' => 'airpods_generation',
+            'hidden' => false,
             'label' => 'Airpods generation',
             'type' => 'callback',
             'metadata' => [],

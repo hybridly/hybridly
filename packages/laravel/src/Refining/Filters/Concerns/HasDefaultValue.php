@@ -1,6 +1,6 @@
 <?php
 
-namespace Hybridly\Components\Concerns;
+namespace Hybridly\Refining\Filters\Concerns;
 
 trait HasDefaultValue
 {

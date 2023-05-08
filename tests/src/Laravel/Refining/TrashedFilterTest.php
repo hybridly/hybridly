@@ -14,6 +14,7 @@ it('can be serialized', function () {
         ->toBeInstanceOf(Filter::class)
         ->jsonSerialize()->toBe([
             'name' => 'deleted',
+            'hidden' => false,
             'label' => 'Show deleted',
             'type' => 'trashed',
             'metadata' => [

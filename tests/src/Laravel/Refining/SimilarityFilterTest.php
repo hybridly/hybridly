@@ -22,6 +22,7 @@ it('can be serialized', function () {
         ->toBeInstanceOf(Filter::class)
         ->jsonSerialize()->toBe([
             'name' => 'name',
+            'hidden' => false,
             'label' => 'Product name',
             'type' => 'similar:begins_with_strict',
             'metadata' => [
