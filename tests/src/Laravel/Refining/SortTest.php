@@ -97,3 +97,44 @@ test('serialization takes current state into account', function () {
         'next' => null,
     ]);
 });
+
+test('sorts key is globally configurable', function () {
+    config(['hybridly.refining.sorts_key' => 'product-sorts']);
+
+    $sorts = mock_refiner(
+        query: ['product-sorts' => '-name'],
+        refiners: [
+            FieldSort::make('name'),
+        ],
+    );
+
+    expect($sorts)
+        ->first()->name->toBe('Macbook Pro M1')
+        ->count()->toBe(3);
+});
+
+test('sorts key is locally configurable', function () {
+    $sorts = mock_refiner(
+        query: ['product-sorts' => '-name'],
+        refiners: [
+            FieldSort::make('name'),
+        ],
+    )->sortsKey('product-sorts');
+
+    expect($sorts)
+        ->first()->name->toBe('Macbook Pro M1')
+        ->count()->toBe(3);
+});
+
+test('sorts keys respect the scope', function () {
+    $sorts = mock_refiner(
+        query: ['products-sorting' => '-name'],
+        refiners: [
+            FieldSort::make('name'),
+        ],
+    )->scope('products')->sortsKey('sorting');
+
+    expect($sorts)
+        ->first()->name->toBe('Macbook Pro M1')
+        ->count()->toBe(3);
+});

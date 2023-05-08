@@ -16,10 +16,10 @@ use InvalidArgumentException;
 class Refine extends Components\Component
 {
     use Components\Concerns\HasScope;
+    use Concerns\ConfiguresKeys;
     use Concerns\HasBuilderInstance;
     use Concerns\HasRefiners;
     use Concerns\HasRequest;
-    use Concerns\HasSorts;
     use ForwardsCalls;
 
     final public function __construct(Request $request)
@@ -103,18 +103,6 @@ class Refine extends Components\Component
             ->toArray();
     }
 
-    public function getSortsKey(): string
-    {
-        // TODO: make configurable
-        return 'sort';
-    }
-
-    public function getFiltersKey(): string
-    {
-        // TODO: make configurable
-        return 'filters';
-    }
-
     public function jsonSerialize(): array
     {
         return [
@@ -122,8 +110,8 @@ class Refine extends Components\Component
             'filters' => $this->getFilters(),
             'scope' => $this->formatScope(),
             'keys' => [
-                'sorts' => $this->getSortsKey(),
-                'filters' => $this->getFiltersKey(),
+                'sorts' => $this->formatScope($this->getSortsKey()),
+                'filters' => $this->formatScope($this->getFiltersKey()),
             ],
         ];
     }
