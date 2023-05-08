@@ -1,7 +1,10 @@
 <?php
 
 use Hybridly\Hybridly;
+use Hybridly\Refining\Refine;
+use Hybridly\Tests\Fixtures\Database\Product;
 use Hybridly\Tests\TestCase;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Testing\TestResponse;
 
@@ -45,4 +48,27 @@ function makeHybridMockRequest(string $component = 'test', mixed $properties = [
         response: hybridly($component, $properties),
         url: $url,
     );
+}
+
+function mock_refiner(array $refiners, array $query = null, \Closure $callback = null, string|Builder $classOrQuery = Product::class, bool $apply = false): Refine
+{
+    $request = Request::createFromGlobals();
+
+    if ($callback) {
+        $callback($request);
+    }
+
+    if ($query) {
+        $request->query->add($query);
+    }
+
+    app()->when(Refine::class)->needs(Request::class)->give(fn () => $request);
+
+    $refine = Refine::query($classOrQuery)->with($refiners);
+
+    if ($apply) {
+        $refine->applyRefiners();
+    }
+
+    return $refine;
 }

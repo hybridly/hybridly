@@ -19,7 +19,7 @@ function getVueOptions(options: ViteOptions): VueOptions {
 				},
 			},
 			script: {
-				// @ts-expect-error
+				// @ts-ignore
 				globalTypeFiles: [
 					path.resolve('.hybridly/back-end.d.ts'),
 				],

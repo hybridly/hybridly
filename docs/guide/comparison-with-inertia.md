@@ -32,6 +32,7 @@ The following is a non-exhaustive comparison table between Inertia and Hybridly'
 | Server-side rendering                           |                        Yes                        |         <span class="planned">Planned</span>          |
 | Built-in meta management                        |                        Yes                        |        <span class="no">No <sup>1</sup></span>        |
 | Dialogs support                                 | <span class="planned">Planned <sup>2</sup></span> |              [Yes](../guide/dialogs.md)               |
+| Refining                                        |            <span class="no">No</span>             |              [Yes](../guide/refining.md)              |
 | Request events support                          |                        Yes                        |                          Yes                          |
 | Global events support                           |                        Yes                        |                          Yes                          |
 | Internationalization support                    |            <span class="no">No</span>             |                [Yes](../guide/i18n.md)                |
