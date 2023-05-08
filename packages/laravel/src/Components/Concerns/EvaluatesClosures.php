@@ -11,7 +11,9 @@ trait EvaluatesClosures
     {
         $this->evaluationParametersToRemove = $exceptParameters;
 
-        if ($value instanceof \Closure) {
+        // We exclude strings because 'date' would
+        // be considered as callable since it's a class name.
+        if (!\is_string($value) && \is_callable($value)) {
             return app()->call(
                 $value,
                 array_merge(

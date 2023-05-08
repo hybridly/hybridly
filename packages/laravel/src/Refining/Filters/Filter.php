@@ -37,7 +37,11 @@ class Filter extends Components\Component implements RefinerContract
         }
 
         try {
-            $this->filter->__invoke($builder, $this->value, $this->property);
+            $this->evaluate($this->filter, [
+                'builder' => $builder,
+                'value' => $this->value,
+                'property' => $this->property,
+            ]);
         } catch (\TypeError $th) {
             if (str_contains($th->getMessage(), 'Argument #2 ($')) {
                 throw ValidationException::withMessages([

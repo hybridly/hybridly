@@ -10,18 +10,35 @@ class CallbackFilter implements FilterContract
 {
     use EvaluatesClosures;
 
-    private function __construct(
-        protected \Closure $callback,
-    ) {
+    protected ?FilterContract $class = null;
+    protected ?\Closure $callback = null;
+
+    private function __construct(string|\Closure $classOrCallback)
+    {
+        if (\is_string($classOrCallback)) {
+            $this->class = resolve($this->callback);
+        } else {
+            $this->callback = $classOrCallback;
+        }
     }
 
     public function getType(): string
     {
+        if ($this->class) {
+            return $this->class->getType();
+        }
+
         return 'callback';
     }
 
     public function __invoke(Builder $builder, mixed $value, string $property): void
     {
+        if ($this->class) {
+            $this->class->__invoke($builder, $value, $property);
+
+            return;
+        }
+
         $this->evaluate($this->callback, [
             'builder' => $builder,
             'query' => $builder,
@@ -31,9 +48,9 @@ class CallbackFilter implements FilterContract
     }
 
     /**
-     * Creates a filter that uses a callback to filter records.
+     * Creates a filter that uses a callback or invokable class to filter records.
      */
-    public static function make(string $property, \Closure $callback, ?string $alias = null): Filter
+    public static function make(string $property, string|\Closure $callback, ?string $alias = null): Filter
     {
         return new Filter(
             filter: new static($callback),
