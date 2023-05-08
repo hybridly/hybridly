@@ -104,6 +104,8 @@ The [`useRefinements`](../api/composables/use-refinements.md) composable may be 
 
 It provides methods that can be used to apply or reset filters and sorts, and it has properties that may enumerate available and current refiners.
 
+The following example shows how to create a basic user interface using the `filters` properties:
+
 ```vue
 <script setup lang="ts">
 const $props = defineProps<{ // [!code focus:4]
@@ -137,4 +139,86 @@ const refine = useRefinements($props, 'refinements') // [!code focus]
 
   </div>
 </template>
+```
+
+## Using an alias
+
+It may not be desirable to expose the name of a database column to users. You may use the `alias` argument to specify a name that will identify a refiner:
+
+```php
+// ?sort=date
+Sorts\FieldSort::make('created_at', alias: 'date');
+```
+
+In the example above, `date` is used to apply the sort instead of the column name `created_at`.
+
+## Available filters and sorts
+
+### `ExactFilter`
+
+This filter will use the provided column to find an exact match using a `where column = ?` statement:
+
+```php
+// ?filters[user_id]=1
+Filters\ExactFilter::make('user_id')
+```
+
+### `TrashedFilter`
+
+This filter will include or exclude soft-deleted records:
+
+```php
+// ?filters[trashed]=only
+Filters\TrashedFilter::make()
+```
+
+### `SimilarityFilter`
+
+This filter will use the `LIKE` operator to find records depending on the specified mode.
+
+
+```php
+// WHERE full_name LIKE '%jon%'
+Filters\SimilarityFilter::make('full_name', mode: SimilarityFilter::LOOSE)
+
+// WHERE full_name LIKE '%jon'
+Filters\SimilarityFilter::make('full_name', mode: SimilarityFilter::BEGINS_WITH_STRICT)
+
+// WHERE full_name LIKE 'doe%'
+Filters\SimilarityFilter::make('full_name', mode: SimilarityFilter::ENDS_WITH_STRICT)
+```
+
+### `FieldSort`
+
+This sort will sort the records by the specified field:
+
+```php
+// ?sort=created_at
+Sorts\FieldSort::make('created_at')
+```
+
+## Custom filters and sorts
+
+The provided filters are relatively basic and will not suit every situation, notably the ones where relationships are involved.
+
+You may use the provided `CallbackFilter` to implement your own filter using a closure or an invokable class:
+
+```php
+Refine::model(Chirp::class)->with([
+    Filters\CallbackFilter::make('own_chirps', OwnChirpsFilter::class),
+    Filters\CallbackFilter::make('own_chirps', function (Builder $builder, mixed $value, string $property) {
+        $builder->where('author_id', auth()->id());
+    }),
+]);
+```
+
+Similary, the `CallbackSort` class can be used to implement a custom sort:
+
+```php
+Refine::model(Chirp::class)->with([
+    Sorts\CallbackSort::make('date', DateSort::class),
+    Sorts\CallbackSort::make('date', function (Builder $builder, string $direction, string $property) {
+        $builder->orderBy('created_at', $direction);
+    }),
+]);
 ```
