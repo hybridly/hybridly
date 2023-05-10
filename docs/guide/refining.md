@@ -222,3 +222,20 @@ Refine::model(Chirp::class)->with([
     }),
 ]);
 ```
+
+Additionally, you may pass any custom parameter to the callbacks or invokable classes:
+
+```php
+Refine::model(Chirp::class)->with([
+    Sorts\CallbackSort::make(
+        name: 'date',
+        callback: function (Builder $builder, string $direction, string $foo) {
+            // $foo = 'bar'
+            $builder->orderBy('created_at', $direction);
+        },
+        parameters: [
+          'foo' => 'bar'
+        ]
+      ),
+]);
+```
