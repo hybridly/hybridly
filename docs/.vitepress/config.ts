@@ -109,7 +109,7 @@ export default defineConfig({
 						{ text: 'Title & meta', link: '/guide/title-and-meta' },
 						{ text: 'File uploads', link: '/guide/file-uploads' },
 						{ text: 'Flash notifications', link: '/guide/flash-notifications' },
-						{ text: 'Error handling', link: '/guide/error-handling' },
+						{ text: 'Exception handling', link: '/guide/exception-handling' },
 						{ text: 'Progress indicator', link: '/guide/progress-indicator' },
 						{ text: 'Testing', link: '/guide/testing' },
 					],
