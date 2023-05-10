@@ -10,40 +10,32 @@ class CallbackSort implements SortContract
 {
     use EvaluatesClosures;
 
-    protected ?SortContract $class = null;
-    protected ?\Closure $callback = null;
-
-    private function __construct(string|\Closure $classOrCallback)
-    {
+    private function __construct(
+        protected null|SortContract|\Closure $classOrCallback,
+        protected array $parameters = [],
+    ) {
         if (\is_string($classOrCallback)) {
-            $this->class = resolve($this->callback);
-        } else {
-            $this->callback = $classOrCallback;
+            $this->classOrCallback = resolve($this->classOrCallback);
         }
     }
 
     public function __invoke(Builder $builder, string $direction, string $property): void
     {
-        if ($this->class) {
-            $this->class->__invoke($builder, $direction, $property);
-
-            return;
-        }
-
-        $this->evaluate($this->callback, [
+        $this->evaluate($this->classOrCallback, [
             'builder' => $builder,
             'direction' => $direction,
             'property' => $property,
+            ...$this->parameters,
         ]);
     }
 
     /**
      * Sorts using the specified query.
      */
-    public static function make(string $name, \Closure $callback): Sort
+    public static function make(string $name, \Closure $callback, array $parameters = []): Sort
     {
         return new Sort(
-            sort: new static($callback),
+            sort: new static($callback, $parameters),
             property: $name,
             alias: null,
         );

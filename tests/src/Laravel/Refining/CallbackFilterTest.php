@@ -4,12 +4,11 @@ use Hybridly\Refining\Filters\CallbackFilter;
 use Hybridly\Refining\Filters\Filter;
 use Hybridly\Tests\Fixtures\Database\ProductFactory;
 use Illuminate\Contracts\Database\Eloquent\Builder;
-use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 
 it('can be serialized', function () {
-    $filter = CallbackFilter::make('airpods_gen', function (Builder $query, mixed $value) {
-        return $query->where('generation', $value);
+    $filter = CallbackFilter::make('airpods_gen', function (Builder $builder, mixed $value) {
+        return $builder->where('generation', $value);
     })->metadata([
         'foo' => 'bar',
     ]);
@@ -29,9 +28,29 @@ it('can be serialized', function () {
         ]);
 });
 
+it('accepts custom parameters', function () {
+    ProductFactory::new()->count(10)->create();
+    ProductFactory::new()->create([
+        'name' => 'Black AirPods',
+    ]);
+
+    $airpods = mock_refiner(
+        query: ['filters' => ['airpods_gen' => 'AirPods']],
+        refiners: [
+            CallbackFilter::make('airpods_gen', function (Builder $builder, mixed $value, string $fallback) {
+                $builder
+                    ->where('name', $value)
+                    ->orWhere('name', $fallback);
+            }, ['fallback' => 'Black AirPods']),
+        ],
+    )->get();
+
+    expect($airpods->first())->name->toBe('Black AirPods');
+});
+
 it('throws a validation exception when the type of the received value cannot be cast to the type of the expected one', function () {
     mock_refiner(
-        callback: fn (Request $request) => $request->query->set('filters', ['airpods_gen' => 'abcd']),
+        query: ['filters' => ['airpods_gen' => 'abcd']],
         refiners: [
             CallbackFilter::make('airpods_gen', fn (Builder $builder, int $value) => null),
         ],
@@ -50,9 +69,9 @@ it('filters according to the given callback', function () {
     $filters = mock_refiner(
         query: ['filters' => ['airpods_gen' => 2]],
         refiners: [
-            CallbackFilter::make('airpods_gen', fn (Builder $query, int $value) => match ($value) {
-                2 => $query->where('name', 'like', '%(2nd generation)'),
-                3 => $query->where('name', 'like', '%(3rd generation)'),
+            CallbackFilter::make('airpods_gen', fn (Builder $builder, int $value) => match ($value) {
+                2 => $builder->where('name', 'like', '%(2nd generation)'),
+                3 => $builder->where('name', 'like', '%(3rd generation)'),
                 default => null
             }),
         ],

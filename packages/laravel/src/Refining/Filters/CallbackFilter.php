@@ -10,22 +10,19 @@ class CallbackFilter implements FilterContract
 {
     use EvaluatesClosures;
 
-    protected ?FilterContract $class = null;
-    protected ?\Closure $callback = null;
-
-    private function __construct(string|\Closure $classOrCallback)
-    {
+    private function __construct(
+        protected null|FilterContract|\Closure $classOrCallback,
+        protected array $parameters = [],
+    ) {
         if (\is_string($classOrCallback)) {
-            $this->class = resolve($this->callback);
-        } else {
-            $this->callback = $classOrCallback;
+            $this->classOrCallback = resolve($this->classOrCallback);
         }
     }
 
     public function getType(): string
     {
-        if ($this->class) {
-            return $this->class->getType();
+        if ($this->classOrCallback instanceof FilterContract) {
+            return $this->classOrCallback->getType();
         }
 
         return 'callback';
@@ -33,27 +30,24 @@ class CallbackFilter implements FilterContract
 
     public function __invoke(Builder $builder, mixed $value, string $property): void
     {
-        if ($this->class) {
-            $this->class->__invoke($builder, $value, $property);
-
-            return;
-        }
-
-        $this->evaluate($this->callback, [
+        $this->evaluate($this->classOrCallback, [
             'builder' => $builder,
-            'query' => $builder,
             'value' => $value,
             'property' => $property,
+            ...$this->parameters,
         ]);
     }
 
     /**
      * Creates a filter that uses a callback or invokable class to filter records.
      */
-    public static function make(string $property, string|\Closure $callback, ?string $alias = null): Filter
+    public static function make(string $property, string|\Closure $callback, array $parameters = [], ?string $alias = null): Filter
     {
         return new Filter(
-            filter: new static($callback),
+            filter: new static(
+                classOrCallback: $callback,
+                parameters: $parameters,
+            ),
             property: $property,
             alias: $alias,
         );
