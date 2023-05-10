@@ -11,7 +11,7 @@ use Illuminate\Support\Str;
  */
 class I18nCommand extends Command
 {
-    protected $signature = 'hybridly:i18n {--L|locales} {--clean}';
+    protected $signature = 'hybridly:i18n {--L|locales}';
     protected $description = 'Generates JSON translation files.';
     protected $hidden = true;
 
@@ -163,10 +163,6 @@ class I18nCommand extends Command
      */
     protected function writeTranslationsInLocaleFiles(): bool
     {
-        if ($this->option('clean')) {
-            File::cleanDirectory(\dirname($this->getLocalePath()));
-        }
-
         foreach ($this->getLocales() as $locale) {
             File::ensureDirectoryExists(\dirname($path = $this->getLocalePath($locale)));
 
