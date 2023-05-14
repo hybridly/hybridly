@@ -86,3 +86,64 @@ export function merge<T>(x: Partial<T>, y: Partial<T>, options: MergeOptions = {
 export function removeTrailingSlash(string: string): string {
 	return string.replace(/\/+$/, '')
 }
+
+/**
+ * Sets a value at a path in an object
+ *
+ * This function will set a value at a path in an object, creating any missing
+ * objects along the way. The object is modified in place.
+ *
+ * @param obj the object to set the value in
+ * @param path a dot-separated path to the property to set
+ * @param value the value to set
+ */
+export function setValueAtPath(obj: any, path: string, value: any): void {
+	// If the path doesn't contain a dot, then we can just set the value.
+	if (!path.includes('.')) {
+		obj[path] = value
+		return
+	}
+
+	// Otherwise, we need to split the path into segments and walk down the
+	// object tree until we find the right place to set the value.
+	const segments = path.split('.')
+	let nestedObject = obj
+	for (let i = 0; i < segments.length - 1; i++) {
+		const key = segments[i]
+		nestedObject = nestedObject[key] = nestedObject[key] || {}
+	}
+	nestedObject[segments[segments.length - 1]] = value
+}
+
+/**
+ * Unsets a property at a path in an object
+ *
+ * This function will unset a property at a path in an object, deleting any
+ * objects along the way that are empty. The object is modified in place.
+ *
+ * @param obj the object to unset the property in
+ * @param path a dot-separated path to the property to unset
+ */
+export function unsetPropertyAtPath(obj: any, path: string): void {
+	// If the path doesn't contain a dot, then we can just delete the property.
+	if (!path.includes('.')) {
+		delete obj[path]
+		return
+	}
+
+	// Otherwise, we need to split the path into segments and walk down the
+	// object tree until we find the right place to delete the property.
+	const segments = path.split('.')
+	let nestedObject = obj
+	for (let i = 0; i < segments.length - 1; i++) {
+		const key = segments[i]
+		nestedObject = nestedObject[key] = nestedObject[key] || {}
+	}
+
+	delete nestedObject[segments[segments.length - 1]]
+
+	// If the nested object is now empty, delete it.
+	if (Object.keys(nestedObject).length === 0) {
+		unsetPropertyAtPath(obj, segments.slice(0, -1).join('.'))
+	}
+}

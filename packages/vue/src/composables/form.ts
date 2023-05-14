@@ -2,7 +2,7 @@ import isEqual from 'lodash.isequal'
 import type { Progress, UrlResolvable, HybridRequestOptions } from '@hybridly/core'
 import type { DeepReadonly } from 'vue'
 import { computed, reactive, ref, toRaw, watch } from 'vue'
-import { clone } from '@hybridly/utils'
+import { clone, setValueAtPath, unsetPropertyAtPath } from '@hybridly/utils'
 import { router } from '@hybridly/core'
 import { state } from '../stores/state'
 
@@ -177,7 +177,7 @@ export function useForm<T extends Fields = Fields>(options: FormOptions<T>) {
 	/**
 	 * Clears all errors.
 	 */
-	function clearErrors(...keys: (keyof T)[]) {
+	function clearErrors(...keys: string[]) {
 		if (keys.length === 0) {
 			keys = Object.keys(fields)
 		}
@@ -201,18 +201,8 @@ export function useForm<T extends Fields = Fields>(options: FormOptions<T>) {
 	/**
 	 * Clears the given field's error.
 	 */
-	function clearError(key: keyof T) {
-		delete errors.value[key]
-	}
-
-	function setNestedValue(obj: any, path: string, value: any) {
-		const segments = path.split('.')
-		let nestedObject = obj
-		for (let i = 0; i < segments.length - 1; i++) {
-			const key = segments[i]
-			nestedObject = nestedObject[key] = nestedObject[key] || {}
-		}
-		nestedObject[segments[segments.length - 1]] = value
+	function clearError(key: string) {
+		unsetPropertyAtPath(errors.value, key)
 	}
 
 	/**
@@ -220,14 +210,8 @@ export function useForm<T extends Fields = Fields>(options: FormOptions<T>) {
 	 */
 	function setErrors(incoming: Record<string, string>) {
 		clearErrors()
-		Object.entries(incoming).forEach(([key, value]) => {
-			// if the key is a dot-notated path, we expand it to set the error
-			// on the correct field
-			if (key.includes('.')) {
-				setNestedValue(errors.value, key, value)
-			} else {
-				errors.value[key] = value
-			}
+		Object.entries(incoming).forEach(([path, value]) => {
+			setValueAtPath(errors.value, path, value)
 		})
 	}
 
