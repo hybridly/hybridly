@@ -205,13 +205,29 @@ export function useForm<T extends Fields = Fields>(options: FormOptions<T>) {
 		delete errors.value[key]
 	}
 
+	function setNestedValue(obj: any, path: string, value: any) {
+		const segments = path.split('.')
+		let nestedObject = obj
+		for (let i = 0; i < segments.length - 1; i++) {
+			const key = segments[i]
+			nestedObject = nestedObject[key] = nestedObject[key] || {}
+		}
+		nestedObject[segments[segments.length - 1]] = value
+	}
+
 	/**
 	 * Sets current errors.
 	 */
 	function setErrors(incoming: Record<string, string>) {
 		clearErrors()
 		Object.entries(incoming).forEach(([key, value]) => {
-			errors.value[key as keyof T] = value as any
+			// if the key is a dot-notated path, we expand it to set the error
+			// on the correct field
+			if (key.includes('.')) {
+				setNestedValue(errors.value, key, value)
+			} else {
+				errors.value[key] = value
+			}
 		})
 	}
 
