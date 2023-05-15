@@ -93,9 +93,12 @@ class HybridlyServiceProvider extends PackageServiceProvider
                 ->defaults('component', $component)
                 ->defaults('properties', $properties);
         });
-        Lazy::macro('partial', function (\Closure $value): PartialLazy {
-            return new PartialLazy($value);
-        });
+
+        if (class_exists(\Spatie\LaravelData\Lazy::class)) {
+            Lazy::macro('partial', function (\Closure $value): PartialLazy {
+                return new PartialLazy($value);
+            });
+        }
     }
 
     protected function registerTestingMacros(): void
