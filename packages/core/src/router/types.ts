@@ -238,6 +238,4 @@ export interface Progress {
 	percentage: Readonly<number>
 }
 
-export interface Errors {
-	[key: string]: string
-}
+export type Errors = any
