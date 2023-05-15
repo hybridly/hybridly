@@ -2,13 +2,19 @@ import isEqual from 'lodash.isequal'
 import type { Progress, UrlResolvable, HybridRequestOptions } from '@hybridly/core'
 import type { DeepReadonly } from 'vue'
 import { computed, reactive, ref, toRaw, watch } from 'vue'
-import { clone } from '@hybridly/utils'
+import { clone, setValueAtPath, unsetPropertyAtPath } from '@hybridly/utils'
 import { router } from '@hybridly/core'
+import type { Path, SearchableObject } from '@clickbar/dot-diver'
+import { getByPath } from '@clickbar/dot-diver'
 import { state } from '../stores/state'
 
-type Fields = Record<string, any>
+type Errors<T extends SearchableObject> = {
+	[K in keyof T]?: T[K] extends Record<string, any>
+		? Errors<T[K]>
+		: string;
+}
 
-interface FormOptions<T extends Fields> extends Omit<HybridRequestOptions, 'data' | 'url'> {
+interface FormOptions<T extends SearchableObject> extends Omit<HybridRequestOptions, 'data' | 'url'> {
 	fields: T
 	url?: UrlResolvable | (() => UrlResolvable)
 	key?: string | false
@@ -29,14 +35,17 @@ interface FormOptions<T extends Fields> extends Omit<HybridRequestOptions, 'data
 	/**
 	 * Callback executed before the form submission for transforming the fields.
 	 */
-	transform?: (fields: T) => Fields
+	transform?: (fields: T) => any
 }
 
 function safeClone<T>(obj: T): T {
 	return clone(toRaw(obj))
 }
 
-export function useForm<T extends Fields = Fields>(options: FormOptions<T>) {
+export function useForm<
+	T extends SearchableObject,
+	P extends Path<T> & string = Path<T> & string
+>(options: FormOptions<T>) {
 	// https://github.com/hybridly/hybridly/issues/23
 	// TODO: explore unique/automatic key generation
 	const shouldRemember = !!options?.key
@@ -52,9 +61,9 @@ export function useForm<T extends Fields = Fields>(options: FormOptions<T>) {
 	/** Fields as they were when loaded. */
 	const loaded = safeClone(historyData?.fields ?? options.fields)
 	/** Current fields. */
-	const fields = reactive<T>(safeClone(loaded))
+	const fields = reactive<T>(safeClone(loaded)) as T
 	/** Validation errors for each field. */
-	const errors = ref<Record<keyof T, string>>(historyData?.errors ?? {})
+	const errors = ref<Errors<T>>(historyData?.errors ?? {})
 	/** Whether the form is dirty. */
 	const isDirty = ref(false)
 	/** Whether the submission was recently successful. */
@@ -82,9 +91,9 @@ export function useForm<T extends Fields = Fields>(options: FormOptions<T>) {
 	/**
 	 * Resets the form to its initial values.
 	 */
-	function reset(...keys: (keyof T)[]) {
+	function reset(...keys: P[]) {
 		if (keys.length === 0) {
-			keys = Object.keys(fields)
+			keys = Object.keys(fields) as P[]
 		}
 
 		keys.forEach((key) => {
@@ -95,9 +104,9 @@ export function useForm<T extends Fields = Fields>(options: FormOptions<T>) {
 	/**
 	 * Clear the form fields.
 	 */
-	function clear(...keys: (keyof T)[]) {
+	function clear(...keys: P[]) {
 		if (keys.length === 0) {
-			keys = Object.keys(fields)
+			keys = Object.keys(fields) as P[]
 		}
 
 		keys.forEach((key) => {
@@ -177,9 +186,9 @@ export function useForm<T extends Fields = Fields>(options: FormOptions<T>) {
 	/**
 	 * Clears all errors.
 	 */
-	function clearErrors(...keys: (keyof T)[]) {
+	function clearErrors(...keys: P[]) {
 		if (keys.length === 0) {
-			keys = Object.keys(fields)
+			keys = Object.keys(fields) as P[]
 		}
 
 		keys.forEach((key) => {
@@ -190,28 +199,28 @@ export function useForm<T extends Fields = Fields>(options: FormOptions<T>) {
 	/**
 	 * Checks if the given keys are dirty in the form.
 	 */
-	function hasDirty(...keys: (keyof T)[]) {
+	function hasDirty(...keys: P[]) {
 		if (keys.length === 0) {
 			return isDirty.value
 		}
 
-		return keys.some((key) => !isEqual(toRaw(fields[key]), toRaw(initial[key])))
+		return keys.some((key) => !isEqual(toRaw(getByPath(fields, key)), toRaw(getByPath(initial, key))))
 	}
 
 	/**
 	 * Clears the given field's error.
 	 */
-	function clearError(key: keyof T) {
-		delete errors.value[key]
+	function clearError(key: P) {
+		unsetPropertyAtPath(errors.value, key)
 	}
 
 	/**
 	 * Sets current errors.
 	 */
-	function setErrors(incoming: Record<string, string>) {
+	function setErrors(incoming: Errors<T>) {
 		clearErrors()
-		Object.entries(incoming).forEach(([key, value]) => {
-			errors.value[key as keyof T] = value as any
+		Object.entries(incoming).forEach(([path, value]) => {
+			setValueAtPath(errors.value, path, value)
 		})
 	}
 
