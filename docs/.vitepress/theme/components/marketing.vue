@@ -26,22 +26,22 @@ const features: Feature[] = [
 		url: '/guide/authorization',
 	},
 	{
+		icon: 'i-mdi:dock-window',
+		title: 'Dialogs',
+		description: 'Effortlessly implement URL-based dialogs, just like you would implement a page component.',
+		url: '/guide/dialogs',
+	},
+	{
 		icon: 'i-mdi:magnify',
 		title: 'Vue DevTools',
 		description: 'Integrates with Vue DevTools for painless property inspection and debugging.',
 		url: '/guide/devtools',
 	},
 	{
-		icon: 'i-mdi:chevron-double-right',
-		title: 'Built on battle-tested tech',
-		description: 'Hybridly is a inspired by Inertia. Benefit from <abbr title="Except server-side rendering. For now.">all of its features</abbr>, plus a lot of new, unique functionalities.',
-		url: '/guide/#about-inertia',
-	},
-	{
-		icon: 'i-mdi:dock-window',
-		title: 'Dialogs',
-		description: 'Effortlessly implement URL-based dialogs, just like you would implement a page component.',
-		url: '/guide/dialogs',
+		icon: 'i-heroicons:funnel',
+		title: 'Refining',
+		description: 'Filter and sort queries using the built-in refinement tools and build your UI around the provided composable.',
+		url: '/guide/refining',
 	},
 ]
 </script>
