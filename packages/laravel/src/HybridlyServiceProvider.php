@@ -5,7 +5,7 @@ namespace Hybridly;
 use Hybridly\Commands\GenerateGlobalTypesCommand;
 use Hybridly\Commands\I18nCommand;
 use Hybridly\Commands\InstallCommand;
-use Hybridly\Commands\RoutesCommand;
+use Hybridly\Commands\PrintConfigurationCommand;
 use Hybridly\Http\Controller;
 use Hybridly\PropertiesResolver\PropertiesResolver;
 use Hybridly\PropertiesResolver\RequestPropertiesResolver;
@@ -29,9 +29,9 @@ class HybridlyServiceProvider extends PackageServiceProvider
             ->name('hybridly')
             ->hasConfigFile()
             ->hasCommand(InstallCommand::class)
+            ->hasCommand(PrintConfigurationCommand::class)
             ->hasCommand(I18nCommand::class)
-            ->hasCommand(GenerateGlobalTypesCommand::class)
-            ->hasCommand(RoutesCommand::class);
+            ->hasCommand(GenerateGlobalTypesCommand::class);
     }
 
     public function registeringPackage(): void

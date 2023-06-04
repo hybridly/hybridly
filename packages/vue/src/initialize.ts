@@ -1,10 +1,9 @@
 import type { App, DefineComponent, Plugin as VuePlugin } from 'vue'
 import { createApp, h } from 'vue'
-import type { HybridPayload, Plugin, ResolveComponent, RouterContext, RouterContextOptions, RoutingConfiguration } from '@hybridly/core'
+import type { Plugin, RouterContext, RouterContextOptions, RoutingConfiguration } from '@hybridly/core'
 import { createRouter } from '@hybridly/core'
-import { showPageComponentErrorModal, debug, random, showDomainsDisabledErrorModal } from '@hybridly/utils'
+import { showPageComponentErrorModal, debug, random } from '@hybridly/utils'
 import type { Axios } from 'axios'
-import type { HybridlyConfig } from '@hybridly/config'
 import type { ProgressOptions } from '@hybridly/progress-plugin'
 import { progress } from '@hybridly/progress-plugin'
 import { wrapper } from './components/wrapper'
@@ -22,10 +21,6 @@ export async function initializeHybridly(options: InitializeOptions = {}) {
 
 	if (!element) {
 		throw new Error('Could not find an HTML element to initialize Vue on.')
-	}
-
-	if (!payload) {
-		throw new Error('No payload. Are you using `@hybridly` or the `payload` option?')
 	}
 
 	state.setContext(await createRouter({
@@ -53,7 +48,7 @@ export async function initializeHybridly(options: InitializeOptions = {}) {
 				}
 
 				if (options.dialog) {
-					dialogStore.setComponent(await resolve(options.dialog.component))
+					dialogStore.setComponent(await resolve(options.dialog.component) as any)
 					dialogStore.setProperties(options.dialog.properties)
 					dialogStore.setKey(options.dialog.key)
 					dialogStore.show()
@@ -104,9 +99,13 @@ function prepare(options: ResolvedInitializeOptions) {
 	const element = document?.getElementById(id) ?? undefined
 
 	debug.adapter('vue', `Element "${id}" is:`, element)
-	const payload = options.payload ?? element?.dataset.payload
+	const payload = element?.dataset.payload
 		? JSON.parse(element!.dataset.payload!)
 		: undefined
+
+	if (!payload) {
+		throw new Error('No payload found. Are you using the `@hybridly` directive?')
+	}
 
 	if (options.cleanup !== false) {
 		delete element!.dataset.payload
@@ -116,16 +115,11 @@ function prepare(options: ResolvedInitializeOptions) {
 	const resolve = async(name: string): Promise<DefineComponent> => {
 		debug.adapter('vue', 'Resolving component', name)
 
-		if (options.resolve) {
-			const component = await options.resolve?.(name)
-			return component.default ?? component
+		if (!options.components) {
+			throw new Error('Either `initializeHybridly#resolve` or `initializeHybridly#pages` should be defined.')
 		}
 
-		if (options.components) {
-			return await resolvePageComponent(name, options)
-		}
-
-		throw new Error('Either `initializeHybridly#resolve` or `initializeHybridly#pages` should be defined.')
+		return await resolveViewComponent(name, options)
 	}
 
 	if (options.progress !== false) {
@@ -144,31 +138,18 @@ function prepare(options: ResolvedInitializeOptions) {
 }
 
 /**
- * Resolves a page component.
+ * Resolves a view by its name.
  */
-export async function resolvePageComponent(name: string, options: ResolvedInitializeOptions) {
-	const components = options.components!
-
-	if (name.includes(':')) {
-		if (options.domains === false) {
-			showDomainsDisabledErrorModal(name)
-			console.warn(`${name} is a domain-based component, but domains are disabled.`)
-
-			return
-		}
-
-		const [domain, page] = name.split(':')
-		name = `${options.domains}.${domain}.${options.pages}.${page}`
-	}
-
+async function resolveViewComponent(name: string, options: ResolvedInitializeOptions) {
+	const components = options.components.imported!
+	const result = options.components.views.find((view) => name === view.identifier)
 	const path = Object.keys(components)
 		.sort((a, b) => a.length - b.length)
-		.find((path) => path.endsWith(`${name.replaceAll('.', '/')}.vue`))
+		.find((path) => result?.path.endsWith(path))
 
-	if (!path) {
+	if (!result || !path) {
+		console.warn(`Page component [${name}] not found. Available components: `, options.components.views.map(({ identifier }) => identifier))
 		showPageComponentErrorModal(name)
-		console.warn(`Page component "${name}" could not be found. Available pages:`, Object.keys(components))
-
 		return
 	}
 
@@ -181,7 +162,22 @@ export async function resolvePageComponent(name: string, options: ResolvedInitia
 	return component
 }
 
-type ResolvedInitializeOptions = InitializeOptions & HybridlyConfig
+type ResolvedInitializeOptions = InitializeOptions & {
+	components: {
+		/** List of views defined from the back-end. */
+		views: Component[]
+		/** List of layouts defined from the back-end. */
+		layouts: Component[]
+		/** List of components imported by `import.meta.glob`. */
+		imported: Record<string, any>
+	}
+}
+
+interface Component {
+	path: string
+	identifier: string
+	namespace: string
+}
 
 interface InitializeOptions {
 	/** Callback that gets executed before Vue is mounted. */
@@ -194,8 +190,6 @@ interface InitializeOptions {
 	devtools?: boolean
 	/** Whether to display response error modals. */
 	responseErrorModals?: boolean
-	/** A custom component resolution option. */
-	resolve?: ResolveComponent
 	/** Custom history state serialization functions. */
 	serializer?: RouterContextOptions['serializer']
 	/** Progressbar options. */
@@ -206,10 +200,6 @@ interface InitializeOptions {
 	plugins?: Plugin[]
 	/** Custom Axios instance. */
 	axios?: Axios
-	/** Initial view data. This is automatically set by Laravel, using this option would override the default behavior. */
-	payload?: HybridPayload
-	/** A custom collection of pages components. This is automatically determined thanks to `root` and `pages`, using this would override the default behavior. */
-	components?: Record<string, any>
 }
 
 interface SetupArguments {

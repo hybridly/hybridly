@@ -1,3 +1,4 @@
+import type { RoutingConfiguration } from 'hybridly'
 import type { AutoImportOptions } from './integrations/auto-imports'
 import type { CustomIconOptions, IconsOptions } from './integrations/icons'
 import type { LaravelOptions } from './integrations/laravel'
@@ -5,7 +6,23 @@ import type { Runner } from './integrations/run'
 import type { VueOptions } from './integrations/vue'
 import type { CustomComponentsOptions, CustomResolvers } from './integrations/vue-components'
 
+export interface Configuration {
+	architecture: {
+		root: string
+	}
+	components: {
+		eager?: boolean
+		directories: string[]
+		views: Array<{ path: string; identifier: string; namespace: string }>
+		layouts: Array<{ path: string; identifier: string; namespace: string }>
+		components: Array<{ path: string; identifier: string; namespace: string }>
+	}
+	routes: RoutingConfiguration
+}
+
 export interface ViteOptions {
+	/** Path to the PHP executable. */
+	php?: string
 	/** Options for the layout plugin. */
 	layout?: LayoutOptions
 	/** Options for the router plugin. */
@@ -38,10 +55,6 @@ export interface LayoutOptions {
 }
 
 export interface RouterOptions {
-	/** Path to the PHP executable. */
-	php?: string
-	/** Path to definition file. */
-	dts?: false | string
 	/** File patterns to watch. */
 	watch?: RegExp[]
 }

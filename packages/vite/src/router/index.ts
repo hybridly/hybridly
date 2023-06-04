@@ -1,7 +1,6 @@
 import type { Plugin, ViteDevServer } from 'vite'
 import type { RoutingConfiguration } from '@hybridly/core'
-import type { HybridlyConfig } from '@hybridly/config'
-import type { ViteOptions, RouterOptions } from '../types'
+import type { Configuration, ViteOptions } from '../types'
 import { RESOLVED_ROUTING_VIRTUAL_MODULE_ID, ROUTING_HMR_QUERY_UPDATE_ROUTING, ROUTING_HMR_UPDATE_ROUTING, ROUTING_PLUGIN_NAME, ROUTING_VIRTUAL_MODULE_ID } from '../constants'
 import { debug } from '../utils'
 import { getRouterClientCode } from './client'
@@ -9,15 +8,16 @@ import { write } from './typegen'
 import { fetchRoutingFromArtisan } from './routes'
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars, unused-imports/no-unused-vars
-export default (options: ViteOptions, config: HybridlyConfig): Plugin => {
-	const resolved: Required<RouterOptions> = {
-		php: 'php',
-		dts: '.hybridly/routes.d.ts',
-		watch: [
-			/routes\/.*\.php/,
-		],
+export default (options: ViteOptions, config: Configuration): Plugin => {
+	const resolved = {
 		...options,
-	}
+		router: {
+			watch: [
+				/routes\/.*\.php/,
+			],
+			...options?.router,
+		},
+	} satisfies ViteOptions
 
 	let routingBeforeUpdate: RoutingConfiguration
 	async function sendRoutingUpdate(server: ViteDevServer, force: boolean = false) {
@@ -49,7 +49,7 @@ export default (options: ViteOptions, config: HybridlyConfig): Plugin => {
 			})
 
 			server.watcher.on('change', async(path) => {
-				if (!resolved.watch.some((regex) => regex.test(path))) {
+				if (!resolved.router.watch.some((regex) => regex.test(path))) {
 					return
 				}
 
@@ -68,8 +68,7 @@ export default (options: ViteOptions, config: HybridlyConfig): Plugin => {
 			}
 		},
 		async handleHotUpdate(ctx) {
-			// Prevent triggering a page reload when the definition file is rewritten
-			if (typeof resolved.dts === 'string' && ctx.file.endsWith(resolved.dts)) {
+			if (ctx.file.includes('.hybridly')) {
 				return []
 			}
 		},

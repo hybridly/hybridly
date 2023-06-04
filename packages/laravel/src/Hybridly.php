@@ -4,6 +4,7 @@ namespace Hybridly;
 
 use Hybridly\Support\Partial;
 use Hybridly\View\Factory;
+use Hybridly\ViewFinder\VueViewFinder;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Traits\Conditionable;
@@ -12,12 +13,13 @@ use Spatie\LaravelData\Contracts\DataObject;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 
-class Hybridly
+final class Hybridly
 {
     use Concerns\HasPersistentProperties;
     use Concerns\HasRootView;
     use Concerns\HasSharedProperties;
     use Concerns\HasVersion;
+    use Concerns\HasViewFinder;
     use Concerns\ResolvesUrls;
     use Conditionable;
     use Macroable;
@@ -33,6 +35,11 @@ class Hybridly
     public const ERROR_BAG_HEADER = 'x-hybrid-error-bag';
     public const VERSION_HEADER = 'x-hybrid-version';
     public const DEFAULT_ROOT_VIEW = 'root';
+
+    public function __construct(
+        private readonly VueViewFinder $finder,
+    ) {
+    }
 
     /**
      * Returns a hybrid view.

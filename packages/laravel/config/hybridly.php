@@ -95,4 +95,16 @@ return [
         'input' => null,
         'output' => null,
     ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Architecture
+    |--------------------------------------------------------------------------
+    | `root` defines the directory for which the `@` alias is applied.
+    | `eager_load_views` defines whether views are eager-loaded by Vite.
+    */
+    'architecture' => [
+        'root' => 'resources',
+        'eager_load_views' => true,
+    ],
 ];

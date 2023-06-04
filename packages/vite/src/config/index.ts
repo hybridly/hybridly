@@ -1,10 +1,9 @@
 import path from 'node:path'
 import type { Plugin } from 'vite'
-import type { ResolvedHybridlyConfig } from '@hybridly/config'
 import { CONFIG_PLUGIN_NAME, CONFIG_VIRTUAL_MODULE_ID, RESOLVED_CONFIG_VIRTUAL_MODULE_ID, ROUTING_VIRTUAL_MODULE_ID } from '../constants'
-import type { ViteOptions } from '../types'
+import type { ViteOptions, Configuration } from '../types'
 
-export default (options: ViteOptions, config: ResolvedHybridlyConfig): Plugin => {
+export default (options: ViteOptions, config: Configuration): Plugin => {
 	return {
 		name: CONFIG_PLUGIN_NAME,
 		enforce: 'pre',
@@ -12,7 +11,7 @@ export default (options: ViteOptions, config: ResolvedHybridlyConfig): Plugin =>
 			return {
 				resolve: {
 					alias: {
-						'@': path.join(process.cwd(), config.root),
+						'@': path.join(process.cwd(), config.architecture.root),
 						'#': path.join(process.cwd(), '.hybridly'),
 						'~': path.join(process.cwd()),
 					},
@@ -21,7 +20,7 @@ export default (options: ViteOptions, config: ResolvedHybridlyConfig): Plugin =>
 		},
 		configureServer(server) {
 			const reloadServer = (file: string) => {
-				if (!file.endsWith('hybridly.config.ts')) {
+				if (!file.endsWith('config/hybridly.php')) {
 					return
 				}
 
@@ -44,6 +43,10 @@ export default (options: ViteOptions, config: ResolvedHybridlyConfig): Plugin =>
 		},
 		async load(id) {
 			if (id === RESOLVED_CONFIG_VIRTUAL_MODULE_ID) {
+				const paths = config.components.views
+					.map(({ path }) => path.replace(process.cwd(), '~'))
+					.map((path) => `"${path}"`).join(',')
+
 				return `
 					import { initializeHybridly as init } from 'hybridly/vue'
 					import '${ROUTING_VIRTUAL_MODULE_ID}'
@@ -51,7 +54,11 @@ export default (options: ViteOptions, config: ResolvedHybridlyConfig): Plugin =>
 					export function initializeHybridly(config) {
 						return init({
 							...${JSON.stringify(config)},
-							components: import.meta.glob("${config.pagesGlob}", { eager: ${config.eager ?? true} }),
+							components: {
+								views: ${JSON.stringify(config.components.views)},
+								layouts: ${JSON.stringify(config.components.layouts)},
+								imported: import.meta.glob([${paths}], { eager: ${config.components.eager ?? true} }),
+							},
 							...config,
 						})
 					}

@@ -1,32 +1,17 @@
-import path from 'node:path'
-import type { ResolvedHybridlyConfig } from '@hybridly/config'
-import { resolveLayoutsDirectory } from '@hybridly/config'
 import type { Plugin } from 'vite'
-import { normalizePath } from 'vite'
 import { LAYOUT_PLUGIN_NAME } from '../constants'
-import type { ViteOptions } from '../types'
+import type { Configuration, ViteOptions } from '../types'
 import { debug } from '../utils'
 
 const TEMPLATE_LAYOUT_REGEX = /<template +layout(?: *= *['"]((?:[\w\/\-_,:](?:,\ )?)+)['"] *)?>/
 const TYPESCRIPT_REGEX = /lang=['"]ts['"]/
 
-export default (options: ViteOptions, config: ResolvedHybridlyConfig): Plugin => {
+export default (options: ViteOptions, config: Configuration): Plugin => {
 	const defaultLayoutName = options?.layout?.defaultLayoutName?.replace('.vue', '') ?? 'default'
-	const layoutsDirectory = path.resolve(process.cwd(), config.root, config.layouts)
 	const templateRegExp = options?.layout?.templateRegExp ?? TEMPLATE_LAYOUT_REGEX
-	const resolveLayoutPath = (layoutName: string) => {
-		const [domain, layout] = layoutName.includes(':')
-			? layoutName.split(':')
-			: [undefined, layoutName]
-
-		const layoutPath = path.resolve(resolveLayoutsDirectory(config, domain), `${layout}.vue`)
-
-		return normalizePath(layoutPath).replaceAll('\\', '/')
-	}
 
 	debug.layout('Resolved options:', {
 		defaultLayoutName,
-		layoutsDirectory,
 	})
 
 	return {
@@ -44,7 +29,7 @@ export default (options: ViteOptions, config: ResolvedHybridlyConfig): Plugin =>
 				const exports = layouts.map((_, i) => importName(i))
 				const imports = layouts.reduce((imports, layoutName, i) => `
 					${imports}
-					import ${importName(i)} from '${resolveLayoutPath(layoutName)}';
+					import ${importName(i)} from '${resolveLayoutImportPath(layoutName, config)}';
 				`, '').trim()
 
 				debug.layout(`Resolved layouts "${layouts.join(', ')}":`, {
@@ -63,4 +48,17 @@ export default (options: ViteOptions, config: ResolvedHybridlyConfig): Plugin =>
 			})
 		},
 	}
+}
+
+/**
+ * Resolves a layout by its name.
+ */
+function resolveLayoutImportPath(name: string, config: Configuration) {
+	const { path } = config.components.layouts.find((layout) => layout.identifier === name) ?? {}
+
+	if (!path) {
+		throw new Error(`Layout [${name}] could not be found.`)
+	}
+
+	return path
 }

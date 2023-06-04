@@ -1,7 +1,6 @@
-import type { ResolvedHybridlyConfig } from '@hybridly/config'
 import { merge } from '@hybridly/utils'
 import autoimport from 'unplugin-auto-import/vite'
-import type { ViteOptions } from '../types'
+import type { Configuration, ViteOptions } from '../types'
 import { isPackageInstalled } from '../utils'
 
 type AutoImportOptions = Parameters<typeof autoimport>[0]
@@ -29,7 +28,7 @@ export const HybridlyImports = {
 	],
 }
 
-function getAutoImportsOptions(options: ViteOptions, config: ResolvedHybridlyConfig): AutoImportOptions {
+function getAutoImportsOptions(options: ViteOptions, config: Configuration): AutoImportOptions {
 	if (options.autoImports === false) {
 		return
 	}
@@ -41,12 +40,9 @@ function getAutoImportsOptions(options: ViteOptions, config: ResolvedHybridlyCon
 			vueTemplate: true,
 			dts: '.hybridly/auto-imports.d.ts',
 			dirs: [
-				`${config.root}/utils`,
-				`${config.root}/composables`,
-				...(config.domains ? [
-					`${config.root}/${config.domains}/**/utils`,
-					`${config.root}/${config.domains}/**/composables`,
-				] : []),
+				`${config.architecture.root}/utils`,
+				`${config.architecture.root}/composables`,
+				...config.components.directories.map((directory) => `${directory}/**/*.ts`),
 			],
 			imports: [
 				'vue',

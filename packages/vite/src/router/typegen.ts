@@ -2,22 +2,22 @@ import path from 'node:path'
 import fs from 'node:fs'
 import { debounce } from 'throttle-debounce'
 import type { RoutingConfiguration } from '@hybridly/core'
-import type { RouterOptions } from '../types'
+import type { ViteOptions } from '../types'
 import { debug } from '../utils'
 import { fetchRoutingFromArtisan } from './routes'
 
 export const write = debounce(1000, writeDefinitions, { atBegin: true })
 
-async function writeDefinitions(options: RouterOptions, routing?: RoutingConfiguration) {
+async function writeDefinitions(options: ViteOptions, routing?: RoutingConfiguration) {
 	routing ??= await fetchRoutingFromArtisan(options)
 
-	if (options.dts === false || !routing) {
+	if (options.router?.dts === false || !routing) {
 		return
 	}
 
 	debug.router('Writing types for routing:', routing)
 
-	const target = path.resolve(options.dts ?? '.hybridly/routes.d.ts')
+	const target = path.resolve(options.router?.dts ?? '.hybridly/routes.d.ts')
 	const routes = Object.fromEntries(Object.entries(routing!.routes).map(([key, route]) => {
 		const bindings = route.bindings
 			? Object.fromEntries(Object.entries(route.bindings).map(([key]) => [key, '__key_placeholder__']))

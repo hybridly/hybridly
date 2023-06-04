@@ -1,9 +1,8 @@
 import path from 'node:path'
 import fs from 'node:fs'
-import type { HybridlyConfig } from 'hybridly/config'
-import type { ViteOptions } from '../types'
+import type { Configuration, ViteOptions } from '../types'
 
-export function generateTsConfig(options: ViteOptions, config: HybridlyConfig) {
+export function generateTsConfig(options: ViteOptions, config: Configuration) {
 	const tsconfig = {
 		compilerOptions: {
 			target: 'esnext',
@@ -33,12 +32,14 @@ export function generateTsConfig(options: ViteOptions, config: HybridlyConfig) {
 					'./*',
 				],
 				'@/*': [
-					`./${config.root}/*`,
+					`./${config.architecture.root}/*`,
 				],
 			},
 		},
 		include: [
-			`../${config.root}/**/*`,
+			...config.components.views.map(({ path }) => path),
+			...config.components.layouts.map(({ path }) => path),
+			`../${config.architecture.root}/**/*`,
 			'./*',
 		],
 		exclude: [
@@ -51,15 +52,14 @@ export function generateTsConfig(options: ViteOptions, config: HybridlyConfig) {
 	write(JSON.stringify(tsconfig, null, 2), 'tsconfig.json')
 }
 
-export function generateLaravelIdeaHelper(config: HybridlyConfig) {
+export function generateLaravelIdeaHelper(config: Configuration) {
 	const ideJson = {
 		$schema: 'https://laravel-ide.com/schema/laravel-ide-v2.json',
 		completions: [
-			...(config.domains ? [] : [{
-				complete: 'directoryFiles',
+			{
+				complete: 'staticStrings',
 				options: {
-					directory: `/${config.root}/${config.pages}`,
-					suffixToClear: '.vue',
+					strings: config.components.views.map(({ identifier }) => identifier),
 				},
 				condition: [
 					{
@@ -67,7 +67,7 @@ export function generateLaravelIdeaHelper(config: HybridlyConfig) {
 						parameters: [1],
 					},
 				],
-			}]),
+			},
 		],
 	}
 

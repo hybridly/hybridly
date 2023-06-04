@@ -1,17 +1,12 @@
-import { exec } from 'node:child_process'
-import { promisify } from 'node:util'
-import type { RouterOptions } from '../types'
+import type { ViteOptions } from '../types'
+import { loadConfiguration } from '../config/load'
 import { write } from './typegen'
-const shell = promisify(exec)
 
-export async function fetchRoutingFromArtisan(options: RouterOptions) {
+export async function fetchRoutingFromArtisan(options: ViteOptions) {
 	try {
-		const php = options.php ?? 'php'
-		const result = await shell(`${php} artisan hybridly:routes`)
-		const routing = JSON.parse(result.stdout)
+		const { routes } = await loadConfiguration(options)
+		write(options, routes)
 
-		write(options, routing)
-
-		return routing
+		return routes
 	} catch {}
 }

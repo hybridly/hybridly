@@ -1,4 +1,3 @@
-import { loadHybridlyConfig } from '@hybridly/config'
 import laravel from 'laravel-vite-plugin'
 import initialize from './config'
 import layout from './layout'
@@ -11,9 +10,10 @@ import { getVueComponentsOptions, vueComponents, HybridlyResolver } from './inte
 import { getIconsOptions, icons } from './integrations/icons'
 import { getVueOptions, vue } from './integrations/vue'
 import { generateLaravelIdeaHelper, generateTsConfig } from './typegen'
+import { loadConfiguration } from './config/load'
 
 export default async function plugin(options: ViteOptions = {}) {
-	const config = await loadHybridlyConfig()
+	const config = await loadConfiguration(options)
 	generateTsConfig(options, config)
 	generateLaravelIdeaHelper(config)
 
