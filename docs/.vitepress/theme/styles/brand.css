@@ -6,7 +6,7 @@
 	--vp-c-brand-dark: #a78bfa;
 	--vp-c-brand-darker: #8b5cf6;
 
-	--vp-c-code-link: #8b75ab;
+	--vp-c-code-underline: #7e7e99;
 
 	--vp-code-line-height: 1.8;
 	--docsearch-container-background: rgba(0, 0, 0, 0.5);
@@ -29,6 +29,8 @@
 	--vp-c-brand-lighter: #f3e8ff;
 	--vp-c-brand-dark: #f5d0fe;
 	--vp-c-brand-darker: #d1a5ff;
+
+	--vp-c-code-underline: #7e7e99;
 
 	--vp-c-scrollbar: var(--vp-c-black-mute);
 	--vp-button-alt-border: var(--vp-c-gray-dark-3);

@@ -7,18 +7,16 @@ a:has(code) {
 }
 
 .vp-doc :not(pre) > code {
-	padding: 4px 5px 2px 5px !important;
+	padding: 4px 5px 3px 5px !important;
 }
 
 .vp-doc a > code {
 	color: var(--vp-c-text-code);
+	padding: 4px 5px 5px 5px !important;
 	transition: color 0.15s, border 0.15s;
-	border: 1px solid var(--vp-c-code-link) !important;
-}
-
-.vp-doc a:hover > code {
-	color: var(--vp-c-text-code);
-	border: 1px solid var(--vp-c-brand) !important;
+	text-decoration: underline;
+	text-underline-offset: 4px;
+	text-decoration-color: var(--vp-c-code-underline);
 }
 
 .vp-doc .custom-block a {
