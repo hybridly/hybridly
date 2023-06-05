@@ -60,5 +60,5 @@ function resolveLayoutImportPath(name: string, config: Configuration) {
 		throw new Error(`Layout [${name}] could not be found.`)
 	}
 
-	return path
+	return `~/${path}`
 }

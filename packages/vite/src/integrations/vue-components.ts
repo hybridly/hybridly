@@ -71,13 +71,19 @@ export function ProvidedComponentListResolver(config: Configuration): ComponentR
 	function resolveComponentPath(name: string): string | undefined {
 		const kebabName = toKebabCase(name)
 
-		return config.components.components.find((view) => {
+		const path = config.components.components.find((view) => {
 			const identifierAsComponentName = view.identifier
 				.replace('::', '-')
 				.replace('.', '-')
 
 			return identifierAsComponentName === kebabName
 		})?.path
+
+		if (!path) {
+			return
+		}
+
+		return `~/${path}`
 	}
 
 	return {

@@ -44,8 +44,7 @@ export default (options: ViteOptions, config: Configuration): Plugin => {
 		async load(id) {
 			if (id === RESOLVED_CONFIG_VIRTUAL_MODULE_ID) {
 				const paths = config.components.views
-					.map(({ path }) => path.replace(process.cwd(), '~'))
-					.map((path) => `"${path}"`).join(',')
+					.map(({ path }) => `"~/${path}"`).join(',')
 
 				return `
 					import { initializeHybridly as init } from 'hybridly/vue'

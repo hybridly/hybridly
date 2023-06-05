@@ -68,7 +68,7 @@ final class VueViewFinder
             throw new Exception("Directory [{$directory}] does not exist.");
         }
 
-        $this->loadedDirectories[] = $directory;
+        $this->loadedDirectories[] = str_replace(base_path('/'), '', $directory);
 
         return $this;
     }
@@ -142,7 +142,7 @@ final class VueViewFinder
                 if (str_ends_with($path, '.vue')) {
                     $files[] = [
                         'namespace' => $namespace,
-                        'path' => $path,
+                        'path' => str_replace(base_path('/'), '', $path),
                         'identifier' => $this->getIdentifier($path, $baseDirectory, $namespace),
                     ];
                 }

@@ -37,8 +37,8 @@ export function generateTsConfig(options: ViteOptions, config: Configuration) {
 			},
 		},
 		include: [
-			...config.components.views.map(({ path }) => path),
-			...config.components.layouts.map(({ path }) => path),
+			...config.components.views.map(({ path }) => `../${path}`),
+			...config.components.layouts.map(({ path }) => `../${path}`),
 			`../${config.architecture.root}/**/*`,
 			'./*',
 		],
