@@ -120,14 +120,6 @@ initializeHybridly({
 
 Defines the `id` of the element the Vue application should be mounted on. When changing this value to something else than `root`, it must be updated in the [directive](../laravel/directives.md#id) as well.
 
-## `resolve`
-
-- **Type**: `(name: string) => Component`
-
-Defines the function that is used to find a component based on its name. 
-
-By default, the resolver uses the same syntax as Blade's (eg. `users.index` instead of `Users/Index` when using Inertia).
-
 ## `serializer`
 
 - **Type**: `{ serialize: (data: object) => object; unserialize: (data: object) => object}`
@@ -135,11 +127,3 @@ By default, the resolver uses the same syntax as Blade's (eg. `users.index` inst
 Provides custom serialization functions that are used when saving and loading data from the history state.
 
 By default, the state is serialized using `JSON.parse(JSON.stringify(data))`, and unserialized as-is.
-
-## `components`
-
-- **Type**: `Record<string, Component>`
-
-Page components are usually determined automatically by Hybridly thanks to the [`root`](../../configuration/architecture.md#root) and [`pages`](../../configuration/architecture.md#pages) configuration options.
-
-Even though it is not advised to, you can define a custom collection of pages Hybridly should be aware of when navigating. This is a shortcut for defining a `resolve` function. Typically, it accepts the result of Vite's `import.meta.glob`. 

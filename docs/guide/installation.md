@@ -279,10 +279,6 @@ npm run dev
 open https://hybridly-app.test
 ```
 
-:::tip A preset is available
-If you found that installation process tedious, consider using the [preset](#preset) for your next project.
-:::
-
 ## What's next?
 
 Hybridly has many features. You probably want to know how to pass data from the server to the front-end or how to navigate between pages.

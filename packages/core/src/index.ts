@@ -16,5 +16,7 @@ export type { Authorizable } from './authorization'
 export { route, current } from './routing'
 export type { RouteDefinition, GlobalRouteCollection, RoutingConfiguration, RouteName, RouteParameters } from './routing'
 
+export type { DynamicConfiguration } from './config'
+
 export * as constants from './constants'
 export * from './types'

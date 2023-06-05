@@ -1,6 +1,6 @@
-import type { ResolvedHybridlyConfig } from '@hybridly/config'
 import icons from 'unplugin-icons/vite'
 import { FileSystemIconLoader } from 'unplugin-icons/loaders'
+import type { DynamicConfiguration } from '@hybridly/core'
 import type { ViteOptions } from '../types'
 
 type IconsOptions = Parameters<typeof icons>[0]
@@ -12,7 +12,7 @@ type CustomIconOptions = string[] | {
 	collections?: string[]
 }
 
-function getIconsOptions(options: ViteOptions, config: ResolvedHybridlyConfig): IconsOptions {
+function getIconsOptions(options: ViteOptions, config: DynamicConfiguration): IconsOptions {
 	if (options.icons === false) {
 		return {}
 	}
@@ -23,7 +23,7 @@ function getIconsOptions(options: ViteOptions, config: ResolvedHybridlyConfig): 
 
 	const customIconDirectoryName = resolved?.icons ?? 'icons'
 	const customCollections = Object.fromEntries(resolved?.collections?.map((collection) => [
-		collection, FileSystemIconLoader(`./${config.root}/${customIconDirectoryName}/${collection}`),
+		collection, FileSystemIconLoader(`./${config.architecture.root}/${customIconDirectoryName}/${collection}`),
 	]) ?? [])
 
 	return {

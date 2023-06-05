@@ -38,11 +38,6 @@
             "import": "./dist/vue.mjs",
             "types": "./dist/vue.d.ts"
         },
-        "./config": {
-            "require": "./dist/config.cjs",
-            "import": "./dist/config.mjs",
-            "types": "./dist/config.d.ts"
-        },
         "./client": {
             "types": "./client.d.ts"
         }
@@ -55,7 +50,6 @@
         "stub": "unbuild --stub"
     },
     "dependencies": {
-        "@hybridly/config": "workspace:*",
         "@hybridly/core": "workspace:*",
         "@hybridly/progress-plugin": "workspace:*",
         "@hybridly/vite": "workspace:*",

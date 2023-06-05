@@ -10,7 +10,6 @@ export default defineBuildConfig({
 		'vite',
 		'debug',
 		'hybridly',
-		'@hybridly/config',
 		'@hybridly/utils',
 	],
 	rollup: {

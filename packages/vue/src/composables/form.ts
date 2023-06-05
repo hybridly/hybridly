@@ -254,7 +254,7 @@ export function useForm<
 		hasDirty,
 		submitWithOptions: submit,
 		submit: () => submit(),
-		hasErrors: computed(() => Object.values(errors.value).length > 0),
+		hasErrors: computed(() => Object.values(errors.value ?? {}).length > 0),
 		initial: initial as DeepReadonly<typeof initial>,
 		loaded: loaded as DeepReadonly<typeof loaded>,
 		progress: progress as DeepReadonly<typeof progress>,

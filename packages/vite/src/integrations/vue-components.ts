@@ -1,13 +1,11 @@
-import path from 'node:path'
-import type { ResolvedHybridlyConfig } from '@hybridly/config'
 import vueComponents from 'unplugin-vue-components/vite'
 import { HeadlessUiResolver } from 'unplugin-vue-components/resolvers'
 import iconsResolver from 'unplugin-icons/resolver'
 import type { ComponentResolver } from 'unplugin-vue-components/types'
 import { merge } from '@hybridly/utils'
-import glob from 'fast-glob'
+import type { DynamicConfiguration } from '@hybridly/core'
 import type { ViteOptions } from '../types'
-import { getSubstringBetween, isPackageInstalled, toKebabCase } from '../utils'
+import { isPackageInstalled, toKebabCase } from '../utils'
 
 type VueComponentsOptions = Parameters<typeof vueComponents>[0] & {
 	/** Name of the Link component. */
@@ -34,7 +32,7 @@ export function HybridlyResolver(linkName: string = 'RouterLink') {
 	}
 }
 
-function getVueComponentsOptions(options: ViteOptions, config: ResolvedHybridlyConfig): VueComponentsOptions {
+function getVueComponentsOptions(options: ViteOptions, config: DynamicConfiguration): VueComponentsOptions {
 	if (options.vueComponents === false) {
 		return {}
 	}
@@ -50,19 +48,18 @@ function getVueComponentsOptions(options: ViteOptions, config: ResolvedHybridlyC
 		: false
 
 	const hasHeadlessUI = isPackageInstalled('@headlessui/vue')
-	const isUsingDomains = config.domains !== false
 
 	return merge<VueComponentsOptions>(
 		{
 			dirs: [
-				`./${config.root}/components`,
+				`./${config.architecture.root}/components`,
 			],
 			directoryAsNamespace: true,
 			dts: '.hybridly/components.d.ts',
 			resolvers: overrideResolvers || [
 				...(hasIcons ? [iconsResolver({ customCollections })] : []),
 				...(hasHeadlessUI ? [HeadlessUiResolver({ prefix: options?.vueComponents?.headlessUiPrefix ?? 'Headless' })] : []),
-				...(isUsingDomains ? [DomainComponentsResolver(config)] : []),
+				ProvidedComponentListResolver(config),
 				HybridlyResolver(options.vueComponents?.linkName),
 			],
 		},
@@ -71,43 +68,28 @@ function getVueComponentsOptions(options: ViteOptions, config: ResolvedHybridlyC
 	)
 }
 
-export function resolveComponentUsingPaths(config: ResolvedHybridlyConfig, paths: string[], name: string, resolve: (...part: string[]) => string) {
-	if (!config.domains) {
-		return
-	}
+export function ProvidedComponentListResolver(config: DynamicConfiguration): ComponentResolver {
+	function resolveComponentPath(name: string): string | undefined {
+		const kebabName = toKebabCase(name)
 
-	const kebabName = `${toKebabCase(name)}.vue`
+		const path = config.components.components.find((view) => {
+			const identifierAsComponentName = view.identifier
+				.replace('::', '-')
+				.replace('.', '-')
 
-	for (const possiblePath of paths) {
-		const domain = getSubstringBetween(possiblePath, `${resolve(config.root, config.domains)}/`, '/components/')
+			return identifierAsComponentName === kebabName
+		})?.path
 
-		if (!domain) {
-			continue
+		if (!path) {
+			return
 		}
 
-		const kebabPath = toKebabCase(possiblePath.replaceAll('/', '-')).replaceAll('--', '-').replace('components-', '')
-
-		if (kebabPath.endsWith(kebabName) && kebabName.includes(domain)) {
-			return possiblePath
-		}
+		return `~/${path}`
 	}
-}
 
-function DomainComponentsResolver(config: ResolvedHybridlyConfig): ComponentResolver {
 	return {
 		type: 'component',
-		resolve: (name: string) => {
-			if (config.domains === false) {
-				return
-			}
-
-			return resolveComponentUsingPaths(
-				config,
-				glob.sync(`${path.resolve(process.cwd(), config.root, config.domains as string)}/**/*.vue`),
-				name,
-				path.resolve,
-			)
-		},
+		resolve: (name: string) => resolveComponentPath(name),
 	}
 }
 

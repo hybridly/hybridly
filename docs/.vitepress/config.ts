@@ -1,5 +1,5 @@
 import { resolve } from 'node:path'
-import { readFileSync } from 'node:fs'
+import { existsSync, readFileSync } from 'node:fs'
 import { execSync } from 'node:child_process'
 import { defineConfig } from 'vitepress'
 import Unocss from 'unocss/vite'
@@ -13,7 +13,9 @@ const discord = 'https://discord.gg/uZ8eC7kRFV'
 const github = 'https://github.com/hybridly/hybridly'
 
 const { version } = JSON.parse(readFileSync(resolve('package.json'), { encoding: 'utf-8' }))
+const cleanVersion = String(version).replace(/\.\d+$/, '.x')
 const branch = execSync('echo $BRANCH | grep . || git rev-parse --abbrev-ref HEAD')
+const hasUpgradeGuide = existsSync(resolve(`./docs/guide/upgrade/${cleanVersion}.md`))
 
 export default defineConfig({
 	title,
@@ -81,7 +83,9 @@ export default defineConfig({
 						{ text: 'Installation', link: '/guide/installation' },
 						{ text: 'Demonstration', link: '/guide/demonstration' },
 						{ text: 'TypeScript', link: '/guide/typescript' },
-						// { text: 'Upgrade guide', link: '/guide/upgrade' },
+						...(hasUpgradeGuide ? [
+							{ text: `Upgrade to ${cleanVersion}`, link: `/guide/upgrade/${cleanVersion}` },
+						] : []),
 					],
 				},
 				{
@@ -132,6 +136,7 @@ export default defineConfig({
 						{ text: 'Internationalization', link: '/guide/i18n' },
 						{ text: 'Case conversion', link: '/guide/case-conversion' },
 						{ text: 'Server-side rendering', link: '/guide/ssr' },
+						{ text: 'Architecture', link: '/guide/architecture' },
 						{ text: 'Migrating from Inertia', link: '/guide/migrating-from-inertia' },
 						{ text: 'Comparison with Inertia', link: '/guide/comparison-with-inertia' },
 					],
@@ -191,7 +196,7 @@ export default defineConfig({
 					text: 'Configuration',
 					items: [
 						{ text: 'Vite', link: '/configuration/vite' },
-						{ text: 'Architecture', link: '/configuration/architecture' },
+						{ text: 'Laravel', link: '/configuration/laravel' },
 					],
 				},
 			],

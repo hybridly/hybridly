@@ -6,10 +6,10 @@ import type { VueOptions } from './integrations/vue'
 import type { CustomComponentsOptions, CustomResolvers } from './integrations/vue-components'
 
 export interface ViteOptions {
+	/** Path to the PHP executable. */
+	php?: string
 	/** Options for the layout plugin. */
 	layout?: LayoutOptions
-	/** Options for the router plugin. */
-	router?: RouterOptions
 	/** Options for `@vitejs/plugin-vue`. */
 	vue?: false | VueOptions
 	/** Options for `laravel-vite-plugin`. Set to `false` to disable. */
@@ -35,13 +35,4 @@ export interface LayoutOptions {
 	templateRegExp?: RegExp
 	/** Name of the layout used when no argument is provided to `layout`. */
 	defaultLayoutName?: string
-}
-
-export interface RouterOptions {
-	/** Path to the PHP executable. */
-	php?: string
-	/** Path to definition file. */
-	dts?: false | string
-	/** File patterns to watch. */
-	watch?: RegExp[]
 }
