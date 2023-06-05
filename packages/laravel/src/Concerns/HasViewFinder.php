@@ -55,9 +55,9 @@ trait HasViewFinder
         }
 
         $namespace ??= basename($directory);
-        $pagesDirectory = config('hybridly.architecture.pages_directory');
-        $layoutsDirectory = config('hybridly.architecture.layouts_directory');
-        $componentsDirectory = config('hybridly.architecture.components_directory');
+        $pagesDirectory = config('hybridly.architecture.pages_directory', 'pages');
+        $layoutsDirectory = config('hybridly.architecture.layouts_directory', 'layouts');
+        $componentsDirectory = config('hybridly.architecture.components_directory', 'components');
 
         $this->getViewFinder()->loadDirectory($directory);
 

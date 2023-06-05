@@ -27,15 +27,18 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Testing
+    | Architecture
     |--------------------------------------------------------------------------
-    | The values described here are used to locate hybrid views on the
-    | filesystem. For instance, when using `assertHybrid`, the assertion
-    | attempts to locate the view as a file relative to any of the
-    | paths AND with any of the extensions specified here.
+    | Hybridly has presets for a default, one-level architecture, as well
+    | as a module-based architecture. Optionally, you may disable the
+    | presets altogether and define your own architecture.
+    |
+    | See: https://hybridly.dev/guide/architecture.html
     */
-    'testing' => [
-        'ensure_pages_exist' => true,
+    'architecture' => [
+        'preset' => 'default',
+        'root' => 'resources',
+        'eager_load_views' => true,
     ],
 
     /*
@@ -74,6 +77,19 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Testing
+    |--------------------------------------------------------------------------
+    | The values described here are used to locate hybrid views on the
+    | filesystem. For instance, when using `assertHybrid`, the assertion
+    | attempts to locate the view as a file relative to any of the
+    | paths AND with any of the extensions specified here.
+    */
+    'testing' => [
+        'ensure_pages_exist' => true,
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | Force case
     |--------------------------------------------------------------------------
     | The case conventions between back-end and front-end is generally not
@@ -85,26 +101,5 @@ return [
     'force_case' => [
         'input' => null,
         'output' => null,
-    ],
-
-    /*
-    |--------------------------------------------------------------------------
-    | Architecture
-    |--------------------------------------------------------------------------
-    | Hybridly has presets for a default, one-level architecture, as well
-    | as a module-based architecture. Optionally, you may disable the
-    | presets altogether and define your own architecture.
-    |
-    | See: https://hybridly.dev/guide/architecture.html
-    */
-    'architecture' => [
-        'preset' => 'default',
-        'root' => 'resources',
-        'eager_load_views' => true,
-        'domains_directory' => 'domains',
-        'pages_directory' => 'pages',
-        'layouts_directory' => 'layouts',
-        'components_directory' => 'components',
-        'extensions' => ['vue', 'tsx'],
     ],
 ];

@@ -24,7 +24,7 @@ final class VueViewFinder
     {
         $this->extensions = array_map(function (string $extension) {
             return ".{$extension}";
-        }, config('hybridly.architecture.extensions', ['vue']));
+        }, config('hybridly.architecture.extensions', ['vue', 'tsx']));
     }
 
     /**
