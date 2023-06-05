@@ -28,6 +28,16 @@ trait HasViewFinder
     }
 
     /**
+     * Loads component files from the given directory and associates them to the given namespace.
+     */
+    public function loadComponentsFrom(string $directory, ?string $namespace = null): static
+    {
+        $this->finder->loadComponentsFrom($directory, $namespace);
+
+        return $this;
+    }
+
+    /**
      * Gets the view finder.
      */
     public function getViewFinder(): VueViewFinder
@@ -45,12 +55,15 @@ trait HasViewFinder
         }
 
         $namespace ??= basename($directory);
+        $pagesDirectory = config('hybridly.architecture.pages_directory');
+        $layoutsDirectory = config('hybridly.architecture.layouts_directory');
+        $componentsDirectory = config('hybridly.architecture.components_directory');
 
         $this->getViewFinder()->loadDirectory($directory);
 
-        rescue(fn () => $this->getViewFinder()->loadViewsFrom($directory . '/pages', $namespace), report: false);
-        rescue(fn () => $this->getViewFinder()->loadLayoutsFrom($directory . '/layouts', $namespace), report: false);
-        rescue(fn () => $this->getViewFinder()->loadComponentsFrom($directory . '/components', $namespace), report: false);
+        rescue(fn () => $this->getViewFinder()->loadViewsFrom($directory . '/' . $pagesDirectory, $namespace), report: false);
+        rescue(fn () => $this->getViewFinder()->loadLayoutsFrom($directory . '/' . $layoutsDirectory, $namespace), report: false);
+        rescue(fn () => $this->getViewFinder()->loadComponentsFrom($directory . '/' . $componentsDirectory, $namespace), report: false);
 
         return $this;
     }

@@ -100,13 +100,19 @@ return [
     |--------------------------------------------------------------------------
     | Architecture
     |--------------------------------------------------------------------------
-    | `root` defines the directory for which the `@` alias is applied.
-    | `eager_load_views` defines whether views are eager-loaded by Vite.
-    | `type` specifies a predefined architecture.
+    | Hybridly has presets for a default, one-level architecture, as well
+    | as a module-based architecture. Optionally, you may disable the
+    | presets altogether and define your own architecture.
+    |
+    | See: https://hybridly.dev/guide/architecture.html
     */
     'architecture' => [
+        'preset' => 'default',
         'root' => 'resources',
         'eager_load_views' => true,
-        'type' => 'default',
+        'domains_directory' => 'domains',
+        'pages_directory' => 'pages',
+        'layouts_directory' => 'layouts',
+        'components_directory' => 'components',
     ],
 ];

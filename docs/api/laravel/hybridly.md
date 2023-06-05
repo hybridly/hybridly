@@ -94,3 +94,96 @@ if (hybridly()->isPartial()) {
   // ...
 }
 ```
+
+## `loadModuleFrom`
+
+> See also: [architecture](../../guide/architecture.md#custom)
+
+Loads pages, layouts and components from the given directory. They must be located in the `pages`, `layouts` and `components` directories, respectively.
+
+### Usage
+
+```php
+public function boot(Hybridly $hybridly): void
+{
+    $hybridly->loadModuleFrom(
+      directory: __DIR__,
+      namespace: 'billing'
+    );
+}
+```
+
+## `loadModulesFrom`
+
+> See also: [architecture](../../guide/architecture.md#custom)
+
+Loads pages, layouts and components from the subdirectories of the given directory.
+
+### Usage
+
+```php
+public function boot(Hybridly $hybridly): void
+{
+    $hybridly->loadModulesFrom(resource_path('modules'));
+}
+```
+
+## `loadViewsFrom`
+
+> See also: [architecture](../../guide/architecture.md#custom)
+
+Recursively loads Vue files in the given directory and registers them as views for the given namespace (or no namespace if left empty).
+
+### Usage
+
+```php
+public function boot(Hybridly $hybridly): void
+{
+    $hybridly->loadViewsFrom(
+      directory: __DIR__.'/pages',
+      namespace: 'billing',
+    );
+}
+```
+
+## `loadLayoutsFrom`
+
+> See also: [architecture](../../guide/architecture.md#custom)
+
+Loads Vue files in the given directory and registers them as layouts for the given namespace (or no namespace if left empty).
+
+### Usage
+
+```php
+public function boot(Hybridly $hybridly): void
+{
+    $hybridly->loadLayoutsFrom(
+      directory: __DIR__.'/layouts',
+      namespace: 'billing',
+    );
+}
+```
+
+
+## `loadComponentsFrom`
+
+> See also: [architecture](../../guide/architecture.md#custom)
+
+Loads Vue files in the given directory and registers them as components for the given namespace (or no namespace if left empty). 
+
+These components may be auto-imported by using their namespace and relative dot-notated path. 
+
+### Usage
+
+```php
+// src/Billing/BillingServiceProvider.php
+public function boot(Hybridly $hybridly): void
+{
+    $hybridly->loadComponentsFrom(
+      directory: __DIR__.'/components',
+      namespace: 'billing',
+    );
+}
+```
+
+Using the example above, the component `src/Billing/components/invoice/item.vue` can be auto-imported as `<billing-invoice-item />`.

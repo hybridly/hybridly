@@ -116,8 +116,8 @@ function prepare(options: ResolvedInitializeOptions) {
 	const resolve = async(name: string): Promise<DefineComponent> => {
 		debug.adapter('vue', 'Resolving component', name)
 
-		if (!options.components) {
-			throw new Error('Either `initializeHybridly#resolve` or `initializeHybridly#pages` should be defined.')
+		if (!options.imported) {
+			throw new Error('No component loaded. Did you initialize Hybridly? Does `php artisan hybridly:config` return an error?')
 		}
 
 		return await resolveViewComponent(name, options)

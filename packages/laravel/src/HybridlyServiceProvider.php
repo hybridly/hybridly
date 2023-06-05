@@ -57,7 +57,7 @@ class HybridlyServiceProvider extends PackageServiceProvider
     {
         match (config('hybridly.architecture.preset', 'default')) {
             'default' => $this->app->make(Hybridly::class)->loadModuleFrom(resource_path(), 'default'),
-            'domains' => $this->app->make(Hybridly::class)->loadModulesFrom(resource_path('domains')),
+            'modules' => $this->app->make(Hybridly::class)->loadModulesFrom(resource_path(config('hybridly.architecture.domains_directory', 'domains'))),
             default => null
         };
     }

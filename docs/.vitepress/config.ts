@@ -136,6 +136,7 @@ export default defineConfig({
 						{ text: 'Internationalization', link: '/guide/i18n' },
 						{ text: 'Case conversion', link: '/guide/case-conversion' },
 						{ text: 'Server-side rendering', link: '/guide/ssr' },
+						{ text: 'Architecture', link: '/guide/architecture' },
 						{ text: 'Migrating from Inertia', link: '/guide/migrating-from-inertia' },
 						{ text: 'Comparison with Inertia', link: '/guide/comparison-with-inertia' },
 					],
@@ -195,7 +196,7 @@ export default defineConfig({
 					text: 'Configuration',
 					items: [
 						{ text: 'Vite', link: '/configuration/vite' },
-						{ text: 'Architecture', link: '/configuration/architecture' },
+						{ text: 'Laravel', link: '/configuration/laravel' },
 					],
 				},
 			],
