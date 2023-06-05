@@ -50,7 +50,6 @@
         "stub": "unbuild --stub"
     },
     "dependencies": {
-        "@hybridly/config": "workspace:*",
         "@hybridly/core": "workspace:*",
         "@hybridly/progress-plugin": "workspace:*",
         "@hybridly/vite": "workspace:*",

@@ -67,7 +67,7 @@ function getVueComponentsOptions(options: ViteOptions, config: Configuration): V
 	)
 }
 
-function ProvidedComponentListResolver(config: Configuration): ComponentResolver {
+export function ProvidedComponentListResolver(config: Configuration): ComponentResolver {
 	function resolveComponentPath(name: string): string | undefined {
 		const kebabName = toKebabCase(name)
 

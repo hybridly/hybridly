@@ -16,7 +16,6 @@
     "packageManager": "pnpm@7.13.4",
     "devDependencies": {
         "@fontsource/rubik": "^4.5.14",
-        "@hybridly/config": "workspace:*",
         "@hybridly/core": "workspace:*",
         "@hybridly/progress-plugin": "workspace:*",
         "@hybridly/utils": "workspace:*",
