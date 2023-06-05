@@ -1,7 +1,6 @@
 import laravel from 'laravel-vite-plugin'
 import initialize from './config'
 import layout from './layout'
-import router from './router'
 import type { ViteOptions } from './types'
 import { getRunOptions, run } from './integrations/run'
 import { getLaravelOptions } from './integrations/laravel'
@@ -9,18 +8,14 @@ import { getAutoImportsOptions, autoimport, HybridlyImports } from './integratio
 import { getVueComponentsOptions, vueComponents, HybridlyResolver } from './integrations/vue-components'
 import { getIconsOptions, icons } from './integrations/icons'
 import { getVueOptions, vue } from './integrations/vue'
-import { generateLaravelIdeaHelper, generateTsConfig } from './typegen'
 import { loadConfiguration } from './config/load'
 
 export default async function plugin(options: ViteOptions = {}) {
 	const config = await loadConfiguration(options)
-	generateTsConfig(options, config)
-	generateLaravelIdeaHelper(config)
 
 	return [
 		initialize(options, config),
 		layout(options, config),
-		router(options, config),
 		options.laravel !== false && laravel(getLaravelOptions(options, config)),
 		options.run !== false && run(getRunOptions(options)),
 		options.vueComponents !== false && vueComponents(getVueComponentsOptions(options, config)),
@@ -30,4 +25,4 @@ export default async function plugin(options: ViteOptions = {}) {
 	]
 }
 
-export { layout, router, ViteOptions as Options, HybridlyImports, HybridlyResolver }
+export { layout, ViteOptions as Options, HybridlyImports, HybridlyResolver }

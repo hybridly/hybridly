@@ -1,12 +1,13 @@
 import type { Plugin } from 'vite'
+import type { DynamicConfiguration } from '@hybridly/core'
 import { LAYOUT_PLUGIN_NAME } from '../constants'
-import type { Configuration, ViteOptions } from '../types'
+import type { ViteOptions } from '../types'
 import { debug } from '../utils'
 
 const TEMPLATE_LAYOUT_REGEX = /<template +layout(?: *= *['"]((?:[\w\/\-_,:](?:,\ )?)+)['"] *)?>/
 const TYPESCRIPT_REGEX = /lang=['"]ts['"]/
 
-export default (options: ViteOptions, config: Configuration): Plugin => {
+export default (options: ViteOptions, config: DynamicConfiguration): Plugin => {
 	const defaultLayoutName = options?.layout?.defaultLayoutName?.replace('.vue', '') ?? 'default'
 	const templateRegExp = options?.layout?.templateRegExp ?? TEMPLATE_LAYOUT_REGEX
 
@@ -53,7 +54,7 @@ export default (options: ViteOptions, config: Configuration): Plugin => {
 /**
  * Resolves a layout by its name.
  */
-function resolveLayoutImportPath(name: string, config: Configuration) {
+function resolveLayoutImportPath(name: string, config: DynamicConfiguration) {
 	const { path } = config.components.layouts.find((layout) => layout.identifier === name) ?? {}
 
 	if (!path) {

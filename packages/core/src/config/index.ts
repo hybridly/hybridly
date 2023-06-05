@@ -1,0 +1,1 @@
+export { DynamicConfiguration } from './types'

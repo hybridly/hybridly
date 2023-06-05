@@ -32,7 +32,7 @@ class PrintConfigurationCommand extends Command
                 'views' => $this->hybridly->getViewFinder()->getViews(),
                 'components' => $this->hybridly->getViewFinder()->getComponents(),
             ],
-            'routes' => $this->routeExtractor->toArray(),
+            'routing' => $this->routeExtractor->toArray(),
         ]);
 
         return self::SUCCESS;

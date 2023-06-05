@@ -1,6 +1,7 @@
 import { merge } from '@hybridly/utils'
 import autoimport from 'unplugin-auto-import/vite'
-import type { Configuration, ViteOptions } from '../types'
+import type { DynamicConfiguration } from '@hybridly/core'
+import type { ViteOptions } from '../types'
 import { isPackageInstalled } from '../utils'
 
 type AutoImportOptions = Parameters<typeof autoimport>[0]
@@ -28,7 +29,7 @@ export const HybridlyImports = {
 	],
 }
 
-function getAutoImportsOptions(options: ViteOptions, config: Configuration): AutoImportOptions {
+function getAutoImportsOptions(options: ViteOptions, config: DynamicConfiguration): AutoImportOptions {
 	if (options.autoImports === false) {
 		return
 	}

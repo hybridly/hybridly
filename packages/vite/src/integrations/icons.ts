@@ -1,6 +1,7 @@
 import icons from 'unplugin-icons/vite'
 import { FileSystemIconLoader } from 'unplugin-icons/loaders'
-import type { Configuration, ViteOptions } from '../types'
+import type { DynamicConfiguration } from '@hybridly/core'
+import type { ViteOptions } from '../types'
 
 type IconsOptions = Parameters<typeof icons>[0]
 
@@ -11,7 +12,7 @@ type CustomIconOptions = string[] | {
 	collections?: string[]
 }
 
-function getIconsOptions(options: ViteOptions, config: Configuration): IconsOptions {
+function getIconsOptions(options: ViteOptions, config: DynamicConfiguration): IconsOptions {
 	if (options.icons === false) {
 		return {}
 	}

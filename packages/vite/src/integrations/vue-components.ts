@@ -3,7 +3,8 @@ import { HeadlessUiResolver } from 'unplugin-vue-components/resolvers'
 import iconsResolver from 'unplugin-icons/resolver'
 import type { ComponentResolver } from 'unplugin-vue-components/types'
 import { merge } from '@hybridly/utils'
-import type { Configuration, ViteOptions } from '../types'
+import type { DynamicConfiguration } from '@hybridly/core'
+import type { ViteOptions } from '../types'
 import { isPackageInstalled, toKebabCase } from '../utils'
 
 type VueComponentsOptions = Parameters<typeof vueComponents>[0] & {
@@ -31,7 +32,7 @@ export function HybridlyResolver(linkName: string = 'RouterLink') {
 	}
 }
 
-function getVueComponentsOptions(options: ViteOptions, config: Configuration): VueComponentsOptions {
+function getVueComponentsOptions(options: ViteOptions, config: DynamicConfiguration): VueComponentsOptions {
 	if (options.vueComponents === false) {
 		return {}
 	}
@@ -67,7 +68,7 @@ function getVueComponentsOptions(options: ViteOptions, config: Configuration): V
 	)
 }
 
-export function ProvidedComponentListResolver(config: Configuration): ComponentResolver {
+export function ProvidedComponentListResolver(config: DynamicConfiguration): ComponentResolver {
 	function resolveComponentPath(name: string): string | undefined {
 		const kebabName = toKebabCase(name)
 

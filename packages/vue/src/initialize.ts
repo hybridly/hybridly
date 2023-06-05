@@ -1,6 +1,6 @@
 import type { App, DefineComponent, Plugin as VuePlugin } from 'vue'
 import { createApp, h } from 'vue'
-import type { Plugin, RouterContext, RouterContextOptions, RoutingConfiguration } from '@hybridly/core'
+import type { DynamicConfiguration, Plugin, RouterContext, RouterContextOptions, RoutingConfiguration } from '@hybridly/core'
 import { createRouter } from '@hybridly/core'
 import { showPageComponentErrorModal, debug, random } from '@hybridly/utils'
 import type { Axios } from 'axios'
@@ -28,6 +28,7 @@ export async function initializeHybridly(options: InitializeOptions = {}) {
 		plugins: resolved.plugins,
 		serializer: resolved.serializer,
 		responseErrorModals: resolved.responseErrorModals ?? process.env.NODE_ENV === 'development',
+		routing: resolved.routing,
 		adapter: {
 			resolveComponent: resolve,
 			onWaitingForMount: (callback) => {
@@ -60,13 +61,13 @@ export async function initializeHybridly(options: InitializeOptions = {}) {
 		payload,
 	}))
 
-	// Using `window` is the only way I found to be able to get the route collection,
-	// since this initialization is ran after the Vite plugin is done executing.
 	if (typeof window !== 'undefined') {
 		window.addEventListener<any>('hybridly:routing', (event: CustomEvent<RoutingConfiguration>) => {
 			state.context.value?.adapter.updateRoutingConfiguration(event.detail)
 		})
 
+		// Instantly dispatches the event we just registered a
+		// listener for in order to trigger its side-effects
 		window.dispatchEvent(new CustomEvent('hybridly:routing', { detail: window?.hybridly?.routing }))
 	}
 
@@ -141,7 +142,7 @@ function prepare(options: ResolvedInitializeOptions) {
  * Resolves a view by its name.
  */
 async function resolveViewComponent(name: string, options: ResolvedInitializeOptions) {
-	const components = options.components.imported!
+	const components = options.imported!
 	const result = options.components.views.find((view) => name === view.identifier)
 	const path = Object.keys(components)
 		.sort((a, b) => a.length - b.length)
@@ -162,21 +163,9 @@ async function resolveViewComponent(name: string, options: ResolvedInitializeOpt
 	return component
 }
 
-type ResolvedInitializeOptions = InitializeOptions & {
-	components: {
-		/** List of views defined from the back-end. */
-		views: Component[]
-		/** List of layouts defined from the back-end. */
-		layouts: Component[]
-		/** List of components imported by `import.meta.glob`. */
-		imported: Record<string, any>
-	}
-}
-
-interface Component {
-	path: string
-	identifier: string
-	namespace: string
+type ResolvedInitializeOptions = InitializeOptions & DynamicConfiguration & {
+	/** List of components imported by `import.meta.glob`. */
+	imported: Record<string, any>
 }
 
 interface InitializeOptions {

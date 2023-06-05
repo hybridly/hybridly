@@ -1,9 +1,17 @@
 import path from 'node:path'
 import type { Plugin } from 'vite'
-import { CONFIG_PLUGIN_NAME, CONFIG_VIRTUAL_MODULE_ID, RESOLVED_CONFIG_VIRTUAL_MODULE_ID, ROUTING_VIRTUAL_MODULE_ID } from '../constants'
-import type { ViteOptions, Configuration } from '../types'
+import type { DynamicConfiguration } from '@hybridly/core'
+import { CONFIG_PLUGIN_NAME, CONFIG_VIRTUAL_MODULE_ID, RESOLVED_CONFIG_VIRTUAL_MODULE_ID } from '../constants'
+import type { ViteOptions } from '../types'
+import { generateRouteDefinitionFile, generateLaravelIdeaHelper, generateTsConfig } from '../typegen'
+import { loadConfiguration } from './load'
+import { getClientCode } from './client'
 
-export default (options: ViteOptions, config: Configuration): Plugin => {
+export default (options: ViteOptions, config: DynamicConfiguration): Plugin => {
+	generateTsConfig(options, config)
+	generateLaravelIdeaHelper(config)
+	generateRouteDefinitionFile(options, config)
+
 	return {
 		name: CONFIG_PLUGIN_NAME,
 		enforce: 'pre',
@@ -19,22 +27,48 @@ export default (options: ViteOptions, config: Configuration): Plugin => {
 			}
 		},
 		configureServer(server) {
-			const reloadServer = (file: string) => {
-				if (!file.endsWith('config/hybridly.php')) {
+			let restarting = false
+
+			async function forceRestart(message: string) {
+				if (restarting) {
 					return
 				}
 
-				server.config.logger.info('Hybridly configuration file was changed: forcing a server restart.', {
+				restarting = true
+				server.config.logger.info(`${message}: forcing a server restart.`, {
 					clear: server.config.clearScreen,
 					timestamp: true,
 				})
 
-				server?.restart()
+				return await server?.restart()
 			}
 
-			server.watcher.on('add', reloadServer)
-			server.watcher.on('change', reloadServer)
-			server.watcher.on('unlink', reloadServer)
+			async function handleFileChange(file: string) {
+				// Force-reload the server when the config changes
+				if (file.endsWith('config/hybridly.php')) {
+					return await forceRestart('Configuration file changed')
+				}
+
+				// When routing changes, write route definitions
+				// to the disk and force-reload the dev server
+				if (/routes\/.*\.php/.test(file)) {
+					return await forceRestart('Routing changed')
+				}
+
+				// Force-reload the server when the routing or components change
+				if (/.*\.vue$/.test(file)) {
+					const updatedConfig = await loadConfiguration(options)
+					const pagesOrLayoutsChanged = didPagesOrLayoutsChange(updatedConfig, config)
+
+					if (pagesOrLayoutsChanged) {
+						return await forceRestart('Page or layout changed')
+					}
+				}
+			}
+
+			server.watcher.on('add', handleFileChange)
+			server.watcher.on('change', handleFileChange)
+			server.watcher.on('unlink', handleFileChange)
 		},
 		resolveId(id) {
 			if (id === CONFIG_VIRTUAL_MODULE_ID) {
@@ -43,26 +77,23 @@ export default (options: ViteOptions, config: Configuration): Plugin => {
 		},
 		async load(id) {
 			if (id === RESOLVED_CONFIG_VIRTUAL_MODULE_ID) {
-				const paths = config.components.views
-					.map(({ path }) => `"~/${path}"`).join(',')
-
-				return `
-					import { initializeHybridly as init } from 'hybridly/vue'
-					import '${ROUTING_VIRTUAL_MODULE_ID}'
-
-					export function initializeHybridly(config) {
-						return init({
-							...${JSON.stringify(config)},
-							components: {
-								views: ${JSON.stringify(config.components.views)},
-								layouts: ${JSON.stringify(config.components.layouts)},
-								imported: import.meta.glob([${paths}], { eager: ${config.components.eager ?? true} }),
-							},
-							...config,
-						})
-					}
-				`
+				return getClientCode(config)
+			}
+		},
+		// Denies HMR for `.hybridly` content, it causes unwanted reloads
+		async handleHotUpdate(ctx) {
+			if (ctx.file.includes('.hybridly')) {
+				return []
 			}
 		},
 	}
+}
+
+function didPagesOrLayoutsChange(updatedConfig: DynamicConfiguration, previousConfig?: DynamicConfiguration) {
+	if (!previousConfig) {
+		return false
+	}
+
+	return JSON.stringify(updatedConfig.components.views) !== JSON.stringify(previousConfig.components.views)
+		|| JSON.stringify(updatedConfig.components.layouts) !== JSON.stringify(previousConfig.components.layouts)
 }

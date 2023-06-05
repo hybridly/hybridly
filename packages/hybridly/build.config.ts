@@ -4,7 +4,6 @@ export default defineBuildConfig({
 	entries: [
 		'src/index',
 		'src/vite',
-		'src/config',
 		'src/vue',
 	],
 	clean: true,
