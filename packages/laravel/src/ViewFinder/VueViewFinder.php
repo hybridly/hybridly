@@ -68,9 +68,14 @@ final class VueViewFinder
             throw new Exception("Directory [{$directory}] does not exist.");
         }
 
-        $this->loadedDirectories[] = str_replace(base_path('/'), '', $directory);
+        $this->loadedDirectories[] = $this->normalizeDirectory($directory);
 
         return $this;
+    }
+
+    public function isDirectoryLoaded(string $directory): bool
+    {
+        return \array_key_exists($this->normalizeDirectory($directory), $this->loadedDirectories);
     }
 
     /**
@@ -165,5 +170,10 @@ final class VueViewFinder
             ->kebab()
             ->when($namespace !== 'default')
             ->prepend("{$namespace}::");
+    }
+
+    protected function normalizeDirectory(string $directory): string
+    {
+        return str_replace(base_path('/'), '', $directory);
     }
 }

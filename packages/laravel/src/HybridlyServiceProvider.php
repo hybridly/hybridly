@@ -40,6 +40,7 @@ class HybridlyServiceProvider extends PackageServiceProvider
         $this->registerDirectives();
         $this->registerMacros();
         $this->registerTestingMacros();
+        $this->registerArchitecture();
 
         $this->app->bind('hybridly.testing.view_finder', config('hybridly.testing.view_finder') ?? fn ($app) => new TestFileViewFinder(
             $app['files'],
@@ -47,9 +48,18 @@ class HybridlyServiceProvider extends PackageServiceProvider
             $app['config']->get('hybridly.testing.page_extensions'),
         ));
 
-        $this->callAfterResolving('view', function (Factory $view) {
+        $this->callAfterResolving('view', static function (Factory $view): void {
             $view->addLocation(resource_path('application'));
         });
+    }
+
+    protected function registerArchitecture(): void
+    {
+        match (config('hybridly.architecture.preset', 'default')) {
+            'default' => $this->app->make(Hybridly::class)->loadModuleFrom(resource_path(), 'default'),
+            'domains' => $this->app->make(Hybridly::class)->loadModulesFrom(resource_path('domains')),
+            default => null
+        };
     }
 
     protected function registerBindings(): void

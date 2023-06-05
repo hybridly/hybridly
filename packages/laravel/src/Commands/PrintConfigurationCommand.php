@@ -8,7 +8,7 @@ use Illuminate\Console\Command;
 
 class PrintConfigurationCommand extends Command
 {
-    protected $name = 'hybridly:config';
+    protected $signature = 'hybridly:config {--pretty}';
     protected $description = 'Prints the internal Hybridly configuration.';
     protected $hidden = true;
 
@@ -21,7 +21,7 @@ class PrintConfigurationCommand extends Command
 
     public function handle(): int
     {
-        echo json_encode([
+        $configuration = [
             'architecture' => [
                 'root' => config('hybridly.architecture.root', 'resources'),
             ],
@@ -33,7 +33,13 @@ class PrintConfigurationCommand extends Command
                 'components' => $this->hybridly->getViewFinder()->getComponents(),
             ],
             'routing' => $this->routeExtractor->toArray(),
-        ]);
+        ];
+
+        $flags = $this->option('pretty')
+            ? \JSON_PRETTY_PRINT | \JSON_UNESCAPED_SLASHES
+            : 0;
+
+        echo json_encode($configuration, $flags);
 
         return self::SUCCESS;
     }

@@ -35,22 +35,40 @@ trait HasViewFinder
         return $this->finder;
     }
 
-    public function useDomains(string $directoryName = 'domains'): void
+    /**
+     * Loads a namespaced module and its pages, layouts and components.
+     */
+    public function loadModuleFrom(string $directory, ?string $namespace = null): static
     {
-        $root = config('hybridly.architecture.root', 'resources');
-        $directory = base_path($root . '/' . $directoryName);
+        if ($this->getViewFinder()->isDirectoryLoaded($directory)) {
+            return $this;
+        }
 
-        foreach (scandir($directory) as $domain) {
-            if (\in_array($domain, ['.', '..'], true)) {
+        $namespace ??= basename($directory);
+
+        $this->getViewFinder()->loadDirectory($directory);
+
+        rescue(fn () => $this->getViewFinder()->loadViewsFrom($directory . '/pages', $namespace), report: false);
+        rescue(fn () => $this->getViewFinder()->loadLayoutsFrom($directory . '/layouts', $namespace), report: false);
+        rescue(fn () => $this->getViewFinder()->loadComponentsFrom($directory . '/components', $namespace), report: false);
+
+        return $this;
+    }
+
+    /**
+     * Loads all modules in the given directory.
+     */
+    public function loadModulesFrom(string $directory): void
+    {
+        foreach (scandir($directory) as $namespace) {
+            if (\in_array($namespace, ['.', '..'], true)) {
                 continue;
             }
 
-            $base = $directory . '/' . $domain;
-
-            rescue(fn () => $this->getViewFinder()->loadDirectory($base), report: false);
-            rescue(fn () => $this->getViewFinder()->loadViewsFrom($base . '/pages', $domain), report: false);
-            rescue(fn () => $this->getViewFinder()->loadLayoutsFrom($base . '/layouts', $domain), report: false);
-            rescue(fn () => $this->getViewFinder()->loadComponentsFrom($base . '/components', $domain), report: false);
+            $this->loadModuleFrom(
+                directory: $directory . '/' . $namespace,
+                namespace: $namespace,
+            );
         }
     }
 }
