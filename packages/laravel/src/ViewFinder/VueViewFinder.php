@@ -18,6 +18,15 @@ final class VueViewFinder
     /** @var string[] */
     protected array $loadedDirectories = [];
 
+    protected array $extensions = [];
+
+    public function __construct()
+    {
+        $this->extensions = array_map(function (string $extension) {
+            return ".{$extension}";
+        }, config('hybridly.architecture.extensions', ['vue']));
+    }
+
     /**
      * Loads view files from the given directory and associates them to the given namespace.
      */
@@ -89,6 +98,16 @@ final class VueViewFinder
     }
 
     /**
+     * Determines whether the given identifier is registered as a view.
+     */
+    public function hasView(string $identifier): bool
+    {
+        return collect($this->views)->contains(function (array $view) use ($identifier) {
+            return $view['identifier'] === $identifier;
+        });
+    }
+
+    /**
      * Gets namespaced layouts files.
      *
      * @return array<{path: string, identifier: string}>
@@ -144,7 +163,7 @@ final class VueViewFinder
             if (is_dir($path)) {
                 $files = array_merge($files, $this->findVueFiles($path, $baseDirectory, $namespace));
             } else {
-                if (str_ends_with($path, '.vue')) {
+                if (str($path)->endsWith($this->extensions)) {
                     $files[] = [
                         'namespace' => $namespace,
                         'path' => str_replace(base_path('/'), '', $path),
@@ -166,7 +185,7 @@ final class VueViewFinder
             ->after($baseDirectory)
             ->ltrim('/\\')
             ->replace(['/', '\\'], '.')
-            ->replace('.vue', '')
+            ->replace($this->extensions, '')
             ->kebab()
             ->when($namespace !== 'default')
             ->prepend("{$namespace}::");

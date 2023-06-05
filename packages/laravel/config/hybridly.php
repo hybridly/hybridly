@@ -36,15 +36,6 @@ return [
     */
     'testing' => [
         'ensure_pages_exist' => true,
-        'view_finder' => null,
-        'page_paths' => [
-            resource_path('pages'),
-        ],
-        'page_extensions' => [
-            'ts',
-            'tsx',
-            'vue',
-        ],
     ],
 
     /*
@@ -114,5 +105,6 @@ return [
         'pages_directory' => 'pages',
         'layouts_directory' => 'layouts',
         'components_directory' => 'components',
+        'extensions' => ['vue', 'tsx'],
     ],
 ];

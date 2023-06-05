@@ -2,6 +2,7 @@
 
 namespace Hybridly\Testing;
 
+use Hybridly\Hybridly;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Illuminate\Testing\TestResponse;
 use InvalidArgumentException;
@@ -193,12 +194,12 @@ class Assertable extends AssertableJson
         return $this->getPayload();
     }
 
-    protected function ensurePageExists(string $value): void
+    protected function ensurePageExists(string $identifier): void
     {
         try {
-            app('hybridly.testing.view_finder')->find($value);
+            resolve(Hybridly::class)->getViewFinder()->hasView($identifier);
         } catch (InvalidArgumentException) {
-            PHPUnit::fail(sprintf('Hybridly view file [%s] does not exist.', $value));
+            PHPUnit::fail(sprintf('Hybridly view [%s] is not registered.', $identifier));
         }
     }
 }
