@@ -11,7 +11,7 @@ export default defineConfig({
 	],
 	theme: {
 		fontFamily: {
-			title: '"RubikVariable", var(--vp-font-family-base)',
+			title: '"Rubik Variable", var(--vp-font-family-base)',
 		},
 	},
 	transformers: [
