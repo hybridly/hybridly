@@ -12,6 +12,7 @@ export interface DynamicConfiguration {
 		components: Component[]
 	}
 	routing: RoutingConfiguration
+	ssr: boolean
 }
 
 interface Component {

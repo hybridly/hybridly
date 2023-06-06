@@ -33,6 +33,7 @@ class PrintConfigurationCommand extends Command
                 'components' => $this->hybridly->getViewFinder()->getComponents(),
             ],
             'routing' => $this->routeExtractor->toArray(),
+            'ssr' => true,
         ];
 
         $flags = $this->option('pretty')

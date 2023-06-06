@@ -1,6 +1,7 @@
 import type { App, DefineComponent, Plugin as VuePlugin } from 'vue'
-import { createApp, h } from 'vue'
-import type { DynamicConfiguration, Plugin, RouterContext, RouterContextOptions, RoutingConfiguration } from '@hybridly/core'
+import { createApp, createSSRApp, h } from 'vue'
+import { renderToString } from '@vue/server-renderer'
+import type { DynamicConfiguration, Plugin, RouterContext, RouterContextOptions } from '@hybridly/core'
 import { createRouter } from '@hybridly/core'
 import { showPageComponentErrorModal, debug, random } from '@hybridly/utils'
 import type { Axios } from 'axios'
@@ -17,58 +18,54 @@ import { onMountedCallbacks } from './stores/mount'
  */
 export async function initializeHybridly(options: InitializeOptions = {}) {
 	const resolved = options as ResolvedInitializeOptions
-	const { element, payload, resolve } = prepare(resolved)
+	const { isServer, id, element, payload, resolve } = prepare(resolved)
 
-	if (!element) {
+	if (!isServer && !element) {
 		throw new Error('Could not find an HTML element to initialize Vue on.')
 	}
 
-	state.setContext(await createRouter({
-		axios: resolved.axios,
-		plugins: resolved.plugins,
-		serializer: resolved.serializer,
-		responseErrorModals: resolved.responseErrorModals ?? process.env.NODE_ENV === 'development',
-		routing: resolved.routing,
-		adapter: {
-			resolveComponent: resolve,
-			onWaitingForMount: (callback) => {
-				onMountedCallbacks.push(callback)
-			},
-			onDialogClose: async() => {
-				dialogStore.hide()
-			},
-			onContextUpdate: (context) => {
-				state.setContext(context)
-			},
-			onViewSwap: async(options) => {
-				state.setView(options.component)
-				state.setProperties(options.properties)
-
-				if (!options.preserveState && !options.dialog) {
-					state.setViewKey(random())
-				}
-
-				if (options.dialog) {
-					dialogStore.setComponent(await resolve(options.dialog.component) as any)
-					dialogStore.setProperties(options.dialog.properties)
-					dialogStore.setKey(options.dialog.key)
-					dialogStore.show()
-				} else {
+	async function initializeContext(payload: any) {
+		state.setContext(await createRouter({
+			axios: resolved.axios,
+			plugins: resolved.plugins,
+			serializer: resolved.serializer,
+			responseErrorModals: resolved.responseErrorModals ?? process.env.NODE_ENV === 'development',
+			routing: resolved.routing,
+			adapter: {
+				resolveComponent: resolve,
+				onWaitingForMount: (callback) => {
+					onMountedCallbacks.push(callback)
+				},
+				onDialogClose: async() => {
 					dialogStore.hide()
-				}
+				},
+				onContextUpdate: (context) => {
+					state.setContext(context)
+				},
+				onViewSwap: async(options) => {
+					state.setView(options.component)
+					state.setProperties(options.properties)
+
+					if (!options.preserveState && !options.dialog) {
+						state.setViewKey(random())
+					}
+
+					if (options.dialog) {
+						dialogStore.setComponent(await resolve(options.dialog.component) as any)
+						dialogStore.setProperties(options.dialog.properties)
+						dialogStore.setKey(options.dialog.key)
+						dialogStore.show()
+					} else {
+						dialogStore.hide()
+					}
+				},
 			},
-		},
-		payload,
-	}))
+			payload,
+		}))
+	}
 
-	if (typeof window !== 'undefined') {
-		window.addEventListener<any>('hybridly:routing', (event: CustomEvent<RoutingConfiguration>) => {
-			state.context.value?.adapter.updateRoutingConfiguration(event.detail)
-		})
-
-		// Instantly dispatches the event we just registered a
-		// listener for in order to trigger its side-effects
-		window.dispatchEvent(new CustomEvent('hybridly:routing', { detail: window?.hybridly?.routing }))
+	if (!isServer) {
+		await initializeContext(payload)
 	}
 
 	const render = () => h(wrapper as any)
@@ -85,30 +82,48 @@ export async function initializeHybridly(options: InitializeOptions = {}) {
 
 	const app = createApp({ render })
 
+	await options.enhanceVue?.(app)
+
+	if (isServer) {
+		return async(payload: any) => {
+			await initializeContext(payload)
+
+			const ssr = createSSRApp({
+				render: () => h('div', {
+					id,
+					'data-payload': JSON.stringify(payload),
+				}),
+			})
+
+			return await renderToString(ssr)
+		}
+	}
+
 	if (resolved.devtools !== false) {
 		app.use(devtools)
 	}
 
-	await options.enhanceVue?.(app)
-	return app.mount(element)
+	return app.mount(element!)
 }
 
 function prepare(options: ResolvedInitializeOptions) {
 	debug.adapter('vue', 'Preparing Hybridly with options:', options)
 	const isServer = typeof window === 'undefined'
 	const id = options.id ?? 'root'
-	const element = document?.getElementById(id) ?? undefined
+	const element = !isServer
+		? document.getElementById(id) ?? undefined
+		: undefined
 
 	debug.adapter('vue', `Element "${id}" is:`, element)
 	const payload = element?.dataset.payload
 		? JSON.parse(element!.dataset.payload!)
 		: undefined
 
-	if (!payload) {
+	if (!isServer && !payload) {
 		throw new Error('No payload found. Are you using the `@hybridly` directive?')
 	}
 
-	if (options.cleanup !== false) {
+	if (!isServer && options.cleanup !== false) {
 		delete element!.dataset.payload
 	}
 
@@ -131,6 +146,7 @@ function prepare(options: ResolvedInitializeOptions) {
 	}
 
 	return {
+		id,
 		isServer,
 		element,
 		payload,
@@ -193,7 +209,7 @@ interface InitializeOptions {
 
 interface SetupArguments {
 	/** DOM element to mount Vue on. */
-	element: Element
+	element?: Element
 	/** Hybridly wrapper component. */
 	wrapper: any
 	/** Hybridly wrapper component properties. */

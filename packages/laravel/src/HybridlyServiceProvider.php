@@ -76,8 +76,20 @@ class HybridlyServiceProvider extends PackageServiceProvider
                 $element = $options->get('element', 'div');
                 $id = $options->get('id', 'root');
                 $class = $options->get('class', '');
+
                 $template = <<<HTML
-                    <{$element} id="{$id}" class="{$class}" data-payload="{{ json_encode(\$payload) }}"></{$element}>
+                    <?php
+                    if (!isset(\$__ssr_dispatched)) {
+                        \$__ssr_dispatched = true;
+                        \$__ssr_response = resolve(\Hybridly\ServerSideRendering\Gateway::class)->dispatch(\$payload);
+                    }
+                    ?>
+
+                    <?php if (\$__ssr_response): ?>
+                        {{ \$__ssr_response }}
+                    <?php else: ?>
+                        <{$element} id="{$id}" class="{$class}" data-payload="{{ json_encode(\$payload) }}"></{$element}>
+                    <?php endif; ?>
                 HTML;
 
                 return implode(' ', array_map('trim', explode("\n", $template)));

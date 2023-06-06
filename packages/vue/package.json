@@ -39,6 +39,7 @@
         "stub": "unbuild --stub"
     },
     "peerDependencies": {
+        "@vue/server-renderer": "^3.3.4",
         "vue": "^3.2.45"
     },
     "dependencies": {
@@ -53,10 +54,13 @@
         "qs": "^6.11.2"
     },
     "devDependencies": {
+        "@fastify/middie": "^8.3.0",
         "@types/lodash": "^4.14.195",
         "@types/lodash.clonedeep": "^4.5.7",
         "@types/lodash.isequal": "^4.5.6",
         "@types/nprogress": "^0.2.0",
+        "@vue/server-renderer": "^3.3.4",
+        "fastify": "^4.17.0",
         "vue": "^3.3.4"
     }
 }
