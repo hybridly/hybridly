@@ -9,6 +9,8 @@ trait HasViewFinder
 {
     /**
      * Loads view files from the given directory and associates them to the given namespace.
+     *
+     * @see https://hybridly.dev/api/laravel/hybridly.html#loadviewsfrom
      */
     public function loadViewsFrom(string $directory, ?string $namespace = null): static
     {
@@ -19,6 +21,8 @@ trait HasViewFinder
 
     /**
      * Loads layout files from the given directory and associates them to the given namespace.
+     *
+     * @see https://hybridly.dev/api/laravel/hybridly.html#loadlayoutsfrom
      */
     public function loadLayoutsFrom(string $directory, ?string $namespace = null): static
     {
@@ -29,6 +33,8 @@ trait HasViewFinder
 
     /**
      * Loads component files from the given directory and associates them to the given namespace.
+     *
+     * @see https://hybridly.dev/api/laravel/hybridly.html#loadcomponentsfrom
      */
     public function loadComponentsFrom(string $directory, ?string $namespace = null): static
     {
@@ -47,6 +53,8 @@ trait HasViewFinder
 
     /**
      * Loads a namespaced module and its pages, layouts and components.
+     *
+     * @see https://hybridly.dev/api/laravel/hybridly.html#loadmodulefrom
      */
     public function loadModuleFrom(string $directory, ?string $namespace = null): static
     {
@@ -70,6 +78,8 @@ trait HasViewFinder
 
     /**
      * Loads all modules in the given directory.
+     *
+     * @see https://hybridly.dev/api/laravel/hybridly.html#loadmodulesfrom
      */
     public function loadModulesFrom(string $directory): void
     {
