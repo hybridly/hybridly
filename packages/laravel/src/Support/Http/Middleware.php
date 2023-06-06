@@ -1,6 +1,6 @@
 <?php
 
-namespace Hybridly\Http;
+namespace Hybridly\Support\Http;
 
 use Closure;
 use Hybridly\Concerns;

@@ -2,7 +2,7 @@
 
 namespace Hybridly\Concerns;
 
-use Hybridly\ViewFinder\VueViewFinder;
+use Hybridly\Support\VueViewFinder;
 
 /** @mixin \Hybridly\Hybridly */
 trait HasViewFinder

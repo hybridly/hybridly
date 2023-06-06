@@ -4,7 +4,7 @@ namespace Hybridly;
 
 use Hybridly\Support\Partial;
 use Hybridly\View\Factory;
-use Hybridly\ViewFinder\VueViewFinder;
+use Hybridly\Support\VueViewFinder;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Traits\Conditionable;

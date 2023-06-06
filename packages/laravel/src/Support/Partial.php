@@ -5,10 +5,10 @@ namespace Hybridly\Support;
 /**
  * Represents a property that will get evaluated only when specified in a partial reload.
  */
-class Partial
+final class Partial
 {
     public function __construct(
-        protected \Closure $callback,
+        private readonly \Closure $callback,
     ) {
     }
 

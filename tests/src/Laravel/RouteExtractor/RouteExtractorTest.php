@@ -1,6 +1,6 @@
 <?php
 
-use Hybridly\RouteExtractor\RouteExtractor;
+use Hybridly\Support\RouteExtractor;
 use Illuminate\Broadcasting\BroadcastController;
 use Illuminate\Support\Facades\Route;
 use Pest\Expectation;

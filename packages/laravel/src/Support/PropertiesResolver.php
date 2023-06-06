@@ -1,21 +1,18 @@
 <?php
 
-namespace Hybridly\PropertiesResolver;
+namespace Hybridly\Support;
 
 use Hybridly\Hybridly;
-use Hybridly\Support\Arr;
-use Hybridly\Support\CaseConverter;
-use Hybridly\Support\Partial;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\Json\ResourceResponse;
 
-class RequestPropertiesResolver implements PropertiesResolver
+final class PropertiesResolver
 {
     public function __construct(
-        protected Request $request,
-        protected CaseConverter $caseConverter,
+        protected readonly Request $request,
+        protected readonly CaseConverter $caseConverter,
     ) {
     }
 

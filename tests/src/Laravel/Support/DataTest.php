@@ -1,6 +1,6 @@
 <?php
 
-use Hybridly\PropertiesResolver\RequestPropertiesResolver;
+use Hybridly\Support\PropertiesResolver;
 
 use function Hybridly\Testing\partial_headers;
 
@@ -17,8 +17,8 @@ function resolve_properties(array $properties, array $headers = [], array $persi
         ...($partial ? partial_headers($component, $only, $except) : []),
     ]);
 
-    /** @var RequestPropertiesResolver */
-    $resolver = resolve(RequestPropertiesResolver::class, [
+    /** @var PropertiesResolver */
+    $resolver = resolve(PropertiesResolver::class, [
         'request' => $request,
     ]);
 

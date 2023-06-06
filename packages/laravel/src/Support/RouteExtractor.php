@@ -1,6 +1,6 @@
 <?php
 
-namespace Hybridly\RouteExtractor;
+namespace Hybridly\Support;
 
 use Illuminate\Contracts\Routing\UrlRoutable;
 use Illuminate\Contracts\Support\Arrayable;
@@ -11,10 +11,10 @@ use JsonSerializable;
 use ReflectionClass;
 use ReflectionMethod;
 
-class RouteExtractor implements JsonSerializable, Arrayable
+final class RouteExtractor implements JsonSerializable, Arrayable
 {
     public function __construct(
-        private Router $router,
+        private readonly Router $router,
     ) {
     }
 

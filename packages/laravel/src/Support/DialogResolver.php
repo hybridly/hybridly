@@ -1,17 +1,18 @@
 <?php
 
-namespace Hybridly;
+namespace Hybridly\Support;
 
+use Hybridly\Hybridly;
 use Hybridly\View\Dialog;
 use Hybridly\View\View;
 use Illuminate\Contracts\Routing\UrlGenerator;
 use Illuminate\Http\Request;
 
-class DialogResolver
+final class DialogResolver
 {
     public function __construct(
-        private Hybridly $hybridly,
-        private UrlGenerator $urlGenerator,
+        private readonly Hybridly $hybridly,
+        private readonly UrlGenerator $urlGenerator,
     ) {
     }
 

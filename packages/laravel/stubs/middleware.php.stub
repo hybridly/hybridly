@@ -3,7 +3,7 @@
 namespace {{ namespace }};
 
 use Illuminate\Http\Request;
-use Hybridly\Http\Middleware;
+use Hybridly\Support\Http\Middleware;
 
 class {{ class }} extends Middleware
 {

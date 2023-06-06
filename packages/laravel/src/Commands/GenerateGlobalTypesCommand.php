@@ -35,7 +35,7 @@ class GenerateGlobalTypesCommand extends Command
             ->ignoreFiles(base_path('node_modules'))
             ->ignoreFiles(base_path('resources'))
             ->classes()
-            ->extending(\Hybridly\Http\Middleware::class)
+            ->extending(\Hybridly\Support\Http\Middleware::class)
             ->get();
 
         if (!$class) {

@@ -3,7 +3,7 @@
 namespace Hybridly\Commands;
 
 use Hybridly\Hybridly;
-use Hybridly\RouteExtractor\RouteExtractor;
+use Hybridly\Support\RouteExtractor;
 use Illuminate\Console\Command;
 
 class PrintConfigurationCommand extends Command

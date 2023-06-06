@@ -1,6 +1,6 @@
 <?php
 
-namespace Hybridly\ViewFinder;
+namespace Hybridly\Support;
 
 use Exception;
 
@@ -18,13 +18,16 @@ final class VueViewFinder
     /** @var string[] */
     protected array $loadedDirectories = [];
 
+    /** @var string[] */
     protected array $extensions = [];
 
-    public function __construct()
-    {
-        $this->extensions = array_map(function (string $extension) {
-            return ".{$extension}";
-        }, config('hybridly.architecture.extensions', ['vue', 'tsx']));
+    public function __construct(
+        private readonly \Illuminate\Config\Repository $config,
+    ) {
+        $this->extensions = array_map(
+            callback: fn (string $extension) => ".{$extension}",
+            array: $config->get('hybridly.architecture.extensions', ['vue', 'tsx']),
+        );
     }
 
     /**

@@ -1,6 +1,6 @@
 <?php
 
-use Hybridly\ViewFinder\VueViewFinder;
+use Hybridly\Support\VueViewFinder;
 use Illuminate\Support\Facades\File;
 
 function with_page_component(string $targetPath, \Closure $assertion): void
