@@ -32,8 +32,8 @@
             "Hybridly\\": "src"
         },
         "files": [
-            "src/global_helpers.php",
-            "src/helpers.php"
+            "src/Support/global_helpers.php",
+            "src/Support/helpers.php"
         ]
     },
     "autoload-dev": {
