@@ -3,8 +3,8 @@
 namespace Hybridly;
 
 use Hybridly\Support\Partial;
-use Hybridly\View\Factory;
 use Hybridly\Support\VueViewFinder;
+use Hybridly\View\Factory;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Traits\Conditionable;
