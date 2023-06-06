@@ -7,7 +7,7 @@ use Hybridly\Commands\I18nCommand;
 use Hybridly\Commands\InstallCommand;
 use Hybridly\Commands\PrintConfigurationCommand;
 use Hybridly\Support\Data\PartialLazy;
-use Hybridly\Support\Http\Controller;
+use Hybridly\Http\Controller;
 use Hybridly\Testing\TestResponseMacros;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Router;
