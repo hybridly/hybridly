@@ -73,7 +73,7 @@ Though you don't have to set it up, CSRF protection is still enabled in hybrid a
 
 In a local environment, even when using `HandlesHybridExceptions`, Laravel's exception handler keeps behaving as usual.
 
-To work on `renderHybridResponse`'s implementation or simply preview the error page, you may override the `$skipEnvironments` property. By default, it's set to `local` and `test`, but you may change it to your needs:
+To work on `renderHybridResponse`'s implementation or simply preview the error page, you may use the `$skipEnvironments` property. By default, it's set to `local` and `test`, but you may change it to your needs:
 
 ```php
 class Handler extends ExceptionHandler

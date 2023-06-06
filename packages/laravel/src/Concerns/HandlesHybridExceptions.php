@@ -23,11 +23,6 @@ trait HandlesHybridExceptions
     ];
 
     /**
-     * List of environments that should not handle Hybridly exceptions.
-     */
-    protected $skipEnvironments = ['local', 'testing'];
-
-    /**
      * Renders an exception into an HTTP response.
      */
     public function render($request, \Throwable $e)
@@ -75,7 +70,7 @@ trait HandlesHybridExceptions
             return false;
         }
 
-        if (app()->environment($this->skipEnvironments)) {
+        if (app()->environment($this->skipHandlingInEnvironments())) {
             return false;
         }
 
@@ -88,5 +83,13 @@ trait HandlesHybridExceptions
     protected function shouldHandleTokenMismatch(Response $response, Request $request, \Throwable $e): bool
     {
         return $response->status() === 419;
+    }
+
+    /**
+     * Determines which environments hybrid errors should not be handled on.
+     */
+    protected function skipHandlingInEnvironments(): array
+    {
+        return $this->skipEnvironments ?? ['local', 'testing'];
     }
 }
