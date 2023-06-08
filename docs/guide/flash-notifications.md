@@ -28,7 +28,7 @@ return back()->with('success', 'Lorem ipsum dolor sit amet.');
 By default, flash notifications are not typed, so using `useProperty` to access them will result in a type error. You may use a data object to provide their definitions:
 
 ```php
-final class FlashBagData
+final class FlashBagData extends Data
 {
     public function __construct(
       public readonly ?string $success,
