@@ -169,7 +169,7 @@ final class VueViewFinder
                 if (str($path)->endsWith($this->extensions)) {
                     $files[] = [
                         'namespace' => $namespace,
-                        'path' => str_replace(base_path(DIRECTORY_SEPARATOR), '', $path),
+                        'path' => str_replace(base_path(\DIRECTORY_SEPARATOR), '', $path),
                         'identifier' => $this->getIdentifier($path, $baseDirectory, $namespace),
                     ];
                 }
