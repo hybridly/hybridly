@@ -41,6 +41,7 @@ export function generateTsConfig(options: ViteOptions, config: DynamicConfigurat
 		include: [
 			...config.components.views.map(({ path }) => `../${path}`),
 			...config.components.layouts.map(({ path }) => `../${path}`),
+			...config.components.components.map(({ path }) => `../${path}`),
 			`../${config.architecture.root}/**/*`,
 			'./*',
 		],
