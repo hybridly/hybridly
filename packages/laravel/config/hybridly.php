@@ -14,7 +14,6 @@ return [
     |
     | Additionally, you may also exclude your own routes by adding them to the
     | `exclude` array. Filters in the `exclude` array support wildcards (*).
-    |
     */
     'router' => [
         'allowed_vendors' => [
@@ -45,6 +44,11 @@ return [
     |--------------------------------------------------------------------------
     | Refining
     |--------------------------------------------------------------------------
+    | When refininig queries, the `sorts_key` and `filters_key` options
+    | define the names of the query parameters that will be generated
+    | using the provided front-end utilities.
+    |
+    | See: https://hybridly.dev/guide/refining.html
     */
     'refining' => [
         'sorts_key' => 'sort',
@@ -68,10 +72,9 @@ return [
     |--------------------------------------------------------------------------
     | Root view
     |--------------------------------------------------------------------------
-    | By default, Hybridly expects to find a root.blade.php template in your
-    | views folder. This option allows you to define an alternative root
-    | template.
-    |
+    | By default, Hybridly expects to find a `root.blade.php` template in
+    | `resources/application`. This option allows you to define an
+    | alternative root template.
     */
     'root_view' => Hybridly::DEFAULT_ROOT_VIEW,
 
@@ -79,27 +82,10 @@ return [
     |--------------------------------------------------------------------------
     | Testing
     |--------------------------------------------------------------------------
-    | The values described here are used to locate hybrid views on the
-    | filesystem. For instance, when using `assertHybrid`, the assertion
-    | attempts to locate the view as a file relative to any of the
-    | paths AND with any of the extensions specified here.
+    | When `ensure_pages_exist` is enabled, Hybridly will ensure that pages
+    | actually exist on the disk when hybrid testing utilities are used.
     */
     'testing' => [
         'ensure_pages_exist' => true,
-    ],
-
-    /*
-    |--------------------------------------------------------------------------
-    | Force case
-    |--------------------------------------------------------------------------
-    | The case conventions between back-end and front-end is generally not
-    | the same. To be able to stay consistent, Hybridly offers a way to
-    | change the case of first-level properties shared to the front.
-    |
-    | Supported: null, 'snake', 'camel', 'kebab'
-    */
-    'force_case' => [
-        'input' => null,
-        'output' => null,
     ],
 ];
