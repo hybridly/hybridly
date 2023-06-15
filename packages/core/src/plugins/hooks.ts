@@ -89,6 +89,11 @@ export interface Hooks extends RequestHooks {
 	 * Called when a component has been navigated to.
 	 */
 	navigated: (options: NavigationOptions, context: InternalRouterContext) => MaybePromise<any>
+
+	/**
+	 * Called when a component has been navigated to and was mounted by the adapter.
+	 */
+	mounted: (context: InternalRouterContext) => MaybePromise<any>
 }
 // #endregion hooks
 

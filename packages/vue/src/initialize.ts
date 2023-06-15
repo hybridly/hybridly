@@ -31,7 +31,7 @@ export async function initializeHybridly(options: InitializeOptions = {}) {
 		routing: resolved.routing,
 		adapter: {
 			resolveComponent: resolve,
-			onWaitingForMount: (callback) => {
+			executeOnMounted: (callback) => {
 				onMountedCallbacks.push(callback)
 			},
 			onDialogClose: async() => {

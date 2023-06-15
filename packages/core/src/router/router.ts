@@ -377,6 +377,10 @@ export async function navigate(options: NavigationOptions) {
 	}
 
 	await runHooks('navigated', {}, options, context)
+
+	context.adapter.executeOnMounted(() => {
+		runHooks('mounted', {}, context)
+	})
 }
 
 /** Initializes the router by reading the context and registering events if necessary. */

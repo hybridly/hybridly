@@ -51,7 +51,10 @@ export const wrapper = defineComponent({
 				actual?.()
 				nextTick(() => {
 					debug.adapter('vue:render:view', 'Calling mounted callbacks.')
-					onMountedCallbacks.pop()?.()
+
+					while (onMountedCallbacks.length) {
+						onMountedCallbacks.shift()?.()
+					}
 				})
 			}
 

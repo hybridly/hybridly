@@ -59,7 +59,7 @@ export async function restoreScrollPositions(): Promise<void> {
 		return
 	}
 
-	context.adapter.onWaitingForMount(() => {
+	context.adapter.executeOnMounted(() => {
 		debug.scroll(`Restoring ${regions.length}/${context.scrollRegions.length} region(s).`)
 		regions.forEach((el: Element, i) => el.scrollTo({
 			top: context.scrollRegions.at(i)?.top ?? el.scrollTop,
