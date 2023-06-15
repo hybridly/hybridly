@@ -3,7 +3,7 @@ import { showResponseErrorModal, match, merge, when, debug, random, hasFiles, ob
 import { ERROR_BAG_HEADER, EXCEPT_DATA_HEADER, EXTERNAL_NAVIGATION_HEADER, ONLY_DATA_HEADER, PARTIAL_COMPONENT_HEADER, HYBRIDLY_HEADER, VERSION_HEADER, DIALOG_KEY_HEADER, DIALOG_REDIRECT_HEADER } from '../constants'
 import { NotAHybridResponseError, NavigationCancelledError } from '../errors'
 import type { InternalRouterContext, RouterContextOptions } from '../context'
-import { getRouterContext, initializeContext, payloadFromContext, setContext } from '../context'
+import { getInternalRouterContext, getRouterContext, initializeContext, payloadFromContext, setContext } from '../context'
 import { handleExternalNavigation, isExternalResponse, isExternalNavigation, performExternalNavigation, navigateToExternalUrl } from '../external'
 import { resetScrollPositions, restoreScrollPositions, saveScrollPositions } from '../scroll'
 import type { UrlResolvable } from '../url'
@@ -13,6 +13,7 @@ import { generateRouteFromName, getRouteDefinition } from '../routing/route'
 import { closeDialog } from '../dialog'
 import { setHistoryState, isBackForwardNavigation, handleBackForwardNavigation, registerEventListeners, getHistoryMemo, remember } from './history'
 import type { ConditionalNavigationOption, Errors, ComponentNavigationOptions, NavigationOptions, Router, HybridRequestOptions, HybridPayload, NavigationResponse, Method } from './types'
+import { discardPreloadedRequest, getPreloadedRequest, performPreloadRequest } from './preload'
 
 /**
  * The hybridly router.
@@ -34,6 +35,7 @@ export const router: Router = {
 	patch: async(url, options = {}) => await performHybridNavigation({ preserveState: true, ...options, url, method: 'PATCH' }),
 	delete: async(url, options = {}) => await performHybridNavigation({ preserveState: true, ...options, url, method: 'DELETE' }),
 	local: async(url, options = {}) => await performLocalNavigation(url, options),
+	preload: async(url, options = {}) => await performPreloadRequest({ ...options, url, method: 'GET' }),
 	external: (url, data = {}) => navigateToExternalUrl(url, data),
 	to: async(name, parameters, options) => {
 		const url = generateRouteFromName(name, parameters)
@@ -136,37 +138,7 @@ export async function performHybridNavigation(options: HybridRequestOptions): Pr
 
 		await runHooks('start', options.hooks, context)
 		debug.router('Making request with axios.')
-
-		const response = await context.axios.request({
-			url: targetUrl.toString(),
-			method: options.method,
-			data: options.method === 'GET' ? {} : options.data,
-			params: options.method === 'GET' ? options.data : {},
-			signal: abortController.signal,
-			headers: {
-				...options.headers,
-				...(context.dialog ? { [DIALOG_KEY_HEADER]: context.dialog!.key } : {}),
-				...(context.dialog ? { [DIALOG_REDIRECT_HEADER]: context.dialog!.redirectUrl ?? '' } : {}),
-				...when(options.only !== undefined || options.except !== undefined, {
-					[PARTIAL_COMPONENT_HEADER]: context.view.component,
-					...when(options.only, { [ONLY_DATA_HEADER]: JSON.stringify(options.only) }, {}),
-					...when(options.except, { [EXCEPT_DATA_HEADER]: JSON.stringify(options.except) }, {}),
-				}, {}),
-				...when(options.errorBag, { [ERROR_BAG_HEADER]: options.errorBag }, {}),
-				...when(context.version, { [VERSION_HEADER]: context.version }, {}),
-				[HYBRIDLY_HEADER]: true,
-				'X-Requested-With': 'XMLHttpRequest',
-				'Accept': 'text/html, application/xhtml+xml',
-			},
-			validateStatus: () => true,
-			onUploadProgress: async(event: AxiosProgressEvent) => {
-				await runHooks('progress', options.hooks, {
-					event,
-					percentage: Math.round(event.loaded / (event.total ?? 0) * 100),
-				}, context)
-			},
-		})
-
+		const response = await performHybridRequest(targetUrl, options, abortController)
 		await runHooks('data', options.hooks, response, context)
 
 		// An external response is a hybrid response that wants a full page
@@ -380,6 +352,48 @@ export async function navigate(options: NavigationOptions) {
 
 	context.adapter.executeOnMounted(() => {
 		runHooks('mounted', {}, context)
+	})
+}
+
+export async function performHybridRequest(targetUrl: URL, options: HybridRequestOptions, abortController?: AbortController): Promise<AxiosResponse> {
+	const context = getInternalRouterContext()
+	const preloaded = getPreloadedRequest(targetUrl)
+
+	if (preloaded) {
+		debug.router(`Found a pre-loaded request for [${targetUrl}]`)
+		discardPreloadedRequest(targetUrl)
+
+		return preloaded
+	}
+
+	return await context.axios.request({
+		url: targetUrl.toString(),
+		method: options.method,
+		data: options.method === 'GET' ? {} : options.data,
+		params: options.method === 'GET' ? options.data : {},
+		signal: abortController?.signal,
+		headers: {
+			...options.headers,
+			...(context.dialog ? { [DIALOG_KEY_HEADER]: context.dialog!.key } : {}),
+			...(context.dialog ? { [DIALOG_REDIRECT_HEADER]: context.dialog!.redirectUrl ?? '' } : {}),
+			...when(options.only !== undefined || options.except !== undefined, {
+				[PARTIAL_COMPONENT_HEADER]: context.view.component,
+				...when(options.only, { [ONLY_DATA_HEADER]: JSON.stringify(options.only) }, {}),
+				...when(options.except, { [EXCEPT_DATA_HEADER]: JSON.stringify(options.except) }, {}),
+			}, {}),
+			...when(options.errorBag, { [ERROR_BAG_HEADER]: options.errorBag }, {}),
+			...when(context.version, { [VERSION_HEADER]: context.version }, {}),
+			[HYBRIDLY_HEADER]: true,
+			'X-Requested-With': 'XMLHttpRequest',
+			'Accept': 'text/html, application/xhtml+xml',
+		},
+		validateStatus: () => true,
+		onUploadProgress: async(event: AxiosProgressEvent) => {
+			await runHooks('progress', options.hooks, {
+				event,
+				percentage: Math.round(event.loaded / (event.total ?? 0) * 100),
+			}, context)
+		},
 	})
 }
 

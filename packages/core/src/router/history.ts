@@ -9,7 +9,7 @@ import { makeUrl } from '../url'
 import type { HybridPayload } from '../router'
 import { navigate } from './router'
 
-type SerializedContext = Omit<InternalRouterContext, 'adapter' | 'serializer' | 'plugins' | 'hooks' | 'axios' | 'routes'>
+type SerializedContext = Omit<InternalRouterContext, 'adapter' | 'serializer' | 'plugins' | 'hooks' | 'axios' | 'routes' | 'preloadCache'>
 
 /** Puts the given context into the history state. */
 export function setHistoryState(options: HistoryOptions = {}) {

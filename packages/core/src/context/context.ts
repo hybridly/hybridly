@@ -42,6 +42,7 @@ export async function initializeContext(options: RouterContextOptions): Promise<
 		plugins: options.plugins ?? [],
 		axios: options.axios ?? axios.create(),
 		routing: options.routing,
+		preloadCache: new Map(),
 		hooks: {},
 		memo: {},
 	}

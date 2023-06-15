@@ -12,6 +12,7 @@ export const RouterLink = defineComponent({
 	setup(_, { slots, attrs }) {
 		return (props: typeof _) => {
 			let data = props.data ?? {}
+			const preloads = props.preload ?? false
 			const url = makeUrl(props.href ?? '')
 			const method: Method = props.method?.toUpperCase() as Method ?? 'GET'
 			const as = typeof props.as === 'object'
@@ -37,6 +38,28 @@ export const RouterLink = defineComponent({
 				...attrs,
 				...as === 'a' ? { href: url } : {},
 				...props.disabled ? { disabled: props.disabled } : {},
+				onMouseenter: () => {
+					if (!preloads) {
+						return
+					}
+
+					if (props.external) {
+						return
+					}
+
+					if (props.disabled) {
+						return
+					}
+
+					if (method !== 'GET') {
+						return
+					}
+
+					router.preload(url, {
+						data,
+						...props.options,
+					})
+				},
 				onClick: (event: KeyboardEvent) => {
 					// If the target is external, we don't want hybridly to handle the
 					// navigation, so we return early to avoid preventing the event.
@@ -99,6 +122,10 @@ export const RouterLink = defineComponent({
 			type: String,
 			required: false,
 			default: undefined,
+		},
+		preload: {
+			type: Boolean,
+			default: false,
 		},
 	},
 })
