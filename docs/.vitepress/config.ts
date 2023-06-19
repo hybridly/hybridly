@@ -116,6 +116,7 @@ export default defineConfig({
 						{ text: 'Exception handling', link: '/guide/exception-handling' },
 						{ text: 'Progress indicator', link: '/guide/progress-indicator' },
 						{ text: 'Testing', link: '/guide/testing' },
+						{ text: 'Debugging', link: '/guide/debugging' },
 					],
 				},
 				{
