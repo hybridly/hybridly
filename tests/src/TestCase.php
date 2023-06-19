@@ -7,6 +7,7 @@ use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
 use Illuminate\Support\Facades\View;
 use Orchestra\Testbench\TestCase as Orchestra;
 use Spatie\LaravelData\LaravelDataServiceProvider;
+use Spatie\LaravelRay\RayServiceProvider;
 
 class TestCase extends Orchestra
 {
@@ -17,6 +18,7 @@ class TestCase extends Orchestra
         return [
             HybridlyServiceProvider::class,
             LaravelDataServiceProvider::class,
+            RayServiceProvider::class,
         ];
     }
 

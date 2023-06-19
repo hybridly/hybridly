@@ -3,6 +3,7 @@
 namespace Hybridly\Support;
 
 use Illuminate\Contracts\Events\Dispatcher;
+use Spatie\LaravelRay\Ray;
 
 final class RayDumper
 {
@@ -10,6 +11,7 @@ final class RayDumper
 
     public function __construct(
         private readonly Dispatcher $dispatcher,
+        private readonly Ray $ray,
     ) {
         $this->registerListener();
     }
@@ -21,7 +23,7 @@ final class RayDumper
                 return;
             }
 
-            ray()->table([
+            $this->ray->table([
                 'Payload' => $response['payload'],
                 'Request' => $response['request'],
                 'Version' => $response['version'],

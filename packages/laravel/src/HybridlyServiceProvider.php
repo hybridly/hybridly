@@ -44,6 +44,28 @@ class HybridlyServiceProvider extends PackageServiceProvider
         });
     }
 
+    public function packageBooted(): void
+    {
+        if (class_exists(\Spatie\LaravelData\Lazy::class)) {
+            \Spatie\LaravelData\Lazy::macro('partial', function (\Closure $value): PartialLazy {
+                return new PartialLazy($value);
+            });
+        }
+
+        if (class_exists(\Spatie\LaravelRay\Ray::class)) {
+            $this->app->singleton(RayDumper::class);
+            $dumper = $this->app->get(RayDumper::class);
+
+            \Spatie\LaravelRay\Ray::macro('showHybridRequests', function () use ($dumper) {
+                $dumper->showHybridRequests();
+            });
+
+            \Spatie\LaravelRay\Ray::macro('stopShowingHybridRequests', function () use ($dumper) {
+                $dumper->stopShowingHybridRequests();
+            });
+        }
+    }
+
     protected function registerArchitecture(): void
     {
         $preset = $this->app['config']->get('hybridly.architecture.preset', 'default');
@@ -97,25 +119,6 @@ class HybridlyServiceProvider extends PackageServiceProvider
                 ->defaults('component', $component)
                 ->defaults('properties', $properties);
         });
-
-        if (class_exists(\Spatie\LaravelData\Lazy::class)) {
-            \Spatie\LaravelData\Lazy::macro('partial', function (\Closure $value): PartialLazy {
-                return new PartialLazy($value);
-            });
-        }
-
-        if (class_exists(\Spatie\LaravelRay\Ray::class)) {
-            $this->app->singleton(RayDumper::class);
-            $dumper = $this->app->get(RayDumper::class);
-
-            \Spatie\LaravelRay\Ray::macro('showHybridRequests', function () use ($dumper) {
-                $dumper->showHybridRequests();
-            });
-
-            \Spatie\LaravelRay\Ray::macro('stopShowingHybridRequests', function () use ($dumper) {
-                $dumper->stopShowingHybridRequests();
-            });
-        }
     }
 
     protected function registerTestingMacros(): void
