@@ -133,6 +133,8 @@ export interface Router {
 	external: (url: UrlResolvable, data?: HybridRequestOptions['data']) => void
 	/** Navigates to the given URL without a server round-trip. */
 	local: (url: UrlResolvable, options: ComponentNavigationOptions) => Promise<void>
+	/** Preloads the given URL. The next time this URL is navigated to, it will be loaded from the cache. */
+	preload: (url: UrlResolvable, options?: Omit<HybridRequestOptions, 'method' | 'url'>) => Promise<boolean>
 	/** Access the dialog router. */
 	dialog: DialogRouter
 	/** Access the history state. */

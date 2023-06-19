@@ -1,4 +1,4 @@
-# `<RouterLink>`
+# `<router-link>`
 
 This built-in component can be used to replace [anchor tags](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a) to navigate from a hybrid page to another.
 
@@ -88,3 +88,9 @@ Options for the hybrid request. This is the same as the `options` argument in [p
 - **Type**: boolean
 
 When set to `true`, the click handler will not be triggered and the `disabled` HTML attribute will be added.
+
+## `preload`
+
+- **Type**: boolean
+
+When set to `true`, the URL will be pre-loaded when hovering over the link. Note that you may only preload `GET` hybrid requests.

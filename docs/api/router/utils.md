@@ -70,6 +70,14 @@ This function initiates a programmatic navigation without any specific default.
 router.navigate(options)
 ```
 
+## `preload`
+
+This function preloads the given URL. Note that you may only preload `GET` hybrid requests.
+
+```ts
+router.preload(url, options)
+```
+
 ## `abort`
 
 This function aborts the current request. The `abort` hook will be triggered.

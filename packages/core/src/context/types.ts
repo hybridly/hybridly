@@ -1,4 +1,4 @@
-import type { Axios } from 'axios'
+import type { Axios, AxiosResponse } from 'axios'
 import type { Hooks } from '../plugins/hooks'
 import type { Plugin } from '../plugins/plugin'
 import type { RoutingConfiguration } from '../routing/types'
@@ -52,6 +52,8 @@ export interface InternalRouterContext {
 	routing?: RoutingConfiguration
 	/** Whether to display response error modals. */
 	responseErrorModals?: boolean
+	/** Cache of preload requests. */
+	preloadCache: Map<string, AxiosResponse>
 }
 
 /** Router context. */
