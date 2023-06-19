@@ -51,7 +51,7 @@ export default (options: ViteOptions, config: DynamicConfiguration): Plugin => {
 
 				// When routing changes, write route definitions
 				// to the disk and force-reload the dev server
-				if (/routes\/.*\.php/.test(file)) {
+				if (/routes\/.*\.php/.test(file) || /routes\.php/.test(file)) {
 					return await forceRestart('Routing changed')
 				}
 
