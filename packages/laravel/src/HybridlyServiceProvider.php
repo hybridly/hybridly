@@ -8,6 +8,7 @@ use Hybridly\Commands\InstallCommand;
 use Hybridly\Commands\PrintConfigurationCommand;
 use Hybridly\Http\Controller;
 use Hybridly\Support\Data\PartialLazy;
+use Hybridly\Support\RayDumper;
 use Hybridly\Testing\TestResponseMacros;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Router;
@@ -17,6 +18,7 @@ use Illuminate\View\Factory;
 use Spatie\LaravelData\Lazy;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
+use Spatie\Ray\Ray;
 
 class HybridlyServiceProvider extends PackageServiceProvider
 {
@@ -99,8 +101,21 @@ class HybridlyServiceProvider extends PackageServiceProvider
         });
 
         if (class_exists(\Spatie\LaravelData\Lazy::class)) {
-            Lazy::macro('partial', function (\Closure $value): PartialLazy {
+            \Spatie\LaravelData\Lazy::macro('partial', function (\Closure $value): PartialLazy {
                 return new PartialLazy($value);
+            });
+        }
+
+        if (class_exists(\Spatie\LaravelRay\Ray::class)) {
+            $this->app->singleton(RayDumper::class);
+            $dumper = $this->app->get(RayDumper::class);
+
+            \Spatie\LaravelRay\Ray::macro('showHybridRequests', function () use ($dumper) {
+                $dumper->showHybridRequests();
+            });
+
+            \Spatie\LaravelRay\Ray::macro('stopShowingHybridRequests', function () use ($dumper) {
+                $dumper->stopShowingHybridRequests();
             });
         }
     }
