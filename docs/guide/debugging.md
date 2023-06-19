@@ -8,20 +8,29 @@ Hybridly comes with a built-in Vue plugin that integrates with Vue Devtools. You
 
 During tests, you may use the `hdd` macro on `TestResponse` instances.
 
+```php
+test('guests can see the login page', function () {
+    get('/login')
+        ->hdd()
+        ->assertOk()
+        ->assertHybrid();
+});
+```
+
+When using `hdd` on non-hybrid responses, the response's body will be shown instead.
+
 <img
   src="../assets/hdd.webp"
   alt="hdd macro"
   class="mt-8"
 />
 
-When using `hdd` on non-hybrid responses, the response's body will be shown instead.
-
 ## Using Ray
 
-If you are using [Ray](https://spatie.be/docs/ray/v1/introduction) by Spatie, the `showHybridResponses` macro will automatically be registered.
+If you are using [Ray](https://spatie.be/docs/ray/v1/introduction) by Spatie, the `showHybridRequests` macro will automatically be registered.
 
 ```php
-ray()->showHybridResponses();
+ray()->showHybridRequests();
 ```
 
 This may be useful, for instance, to investigate which properties are sent to the front-end.
@@ -31,4 +40,4 @@ This may be useful, for instance, to investigate which properties are sent to th
   alt="Ray debugging"
 />
 
-To stop showing hybrid responses, you may also call `stopShowingHybridResponses`.
+To stop showing hybrid responses, you may also call `stopShowingHybridRequests`.
