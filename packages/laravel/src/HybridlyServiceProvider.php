@@ -15,10 +15,8 @@ use Illuminate\Routing\Router;
 use Illuminate\Testing\TestResponse;
 use Illuminate\View\Compilers\BladeCompiler;
 use Illuminate\View\Factory;
-use Spatie\LaravelData\Lazy;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use Spatie\Ray\Ray;
 
 class HybridlyServiceProvider extends PackageServiceProvider
 {
