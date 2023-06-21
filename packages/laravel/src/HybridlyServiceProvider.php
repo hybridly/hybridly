@@ -39,8 +39,8 @@ class HybridlyServiceProvider extends PackageServiceProvider
         $this->registerTestingMacros();
         $this->registerArchitecture();
 
-        $this->callAfterResolving('view', static function (Factory $view): void {
-            $view->addLocation(resource_path('application'));
+        $this->callAfterResolving('view', function (Factory $view): void {
+            $view->addLocation($this->getRootPath('application'));
         });
     }
 
@@ -68,12 +68,12 @@ class HybridlyServiceProvider extends PackageServiceProvider
 
     protected function registerArchitecture(): void
     {
-        $preset = $this->app['config']->get('hybridly.architecture.preset', 'default');
-        $domainsDirectory = $this->app['config']->get('hybridly.architecture.domains_directory', 'domains');
+        $preset = config('hybridly.architecture.preset', 'default');
+        $domainsDirectory = config('hybridly.architecture.domains_directory', 'domains');
 
         match ($preset) {
-            'default' => $this->app->make(Hybridly::class)->loadModuleFrom(resource_path(), 'default'),
-            'modules' => $this->app->make(Hybridly::class)->loadModulesFrom(resource_path($domainsDirectory)),
+            'default' => $this->app->make(Hybridly::class)->loadModuleFrom($this->getRootPath(), 'default'),
+            'modules' => $this->app->make(Hybridly::class)->loadModulesFrom($this->getRootPath($domainsDirectory)),
             default => null
         };
     }
@@ -124,5 +124,13 @@ class HybridlyServiceProvider extends PackageServiceProvider
     protected function registerTestingMacros(): void
     {
         TestResponse::mixin(new TestResponseMacros());
+    }
+
+    private function getRootPath(...$segments): string
+    {
+        return base_path(implode(DIRECTORY_SEPARATOR, [
+            config('hybridly.architecture.root', 'resources'),
+            ...$segments ?? []
+        ]));
     }
 }
