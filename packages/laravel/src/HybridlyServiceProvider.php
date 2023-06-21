@@ -128,9 +128,9 @@ class HybridlyServiceProvider extends PackageServiceProvider
 
     private function getRootPath(...$segments): string
     {
-        return base_path(implode(DIRECTORY_SEPARATOR, [
+        return base_path(implode(\DIRECTORY_SEPARATOR, [
             config('hybridly.architecture.root', 'resources'),
-            ...$segments ?? []
+            ...$segments ?? [],
         ]));
     }
 }
