@@ -13,7 +13,7 @@
         "docs:serve": "vitepress serve docs",
         "ci": "pnpm run lint && pnpm run build && pnpm run test"
     },
-    "packageManager": "pnpm@7.13.4",
+    "packageManager": "pnpm@8.6.3",
     "devDependencies": {
         "@fontsource-variable/rubik": "^5.0.2",
         "@hybridly/core": "workspace:*",
