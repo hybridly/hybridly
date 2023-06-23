@@ -10,7 +10,7 @@ The extension currently only supports the default and domain-based architecture.
 
 ### Layout linking and auto-completion
 
-When using the [`<template layout>`](../api/vite/layout.md) syntax, the layout names will be linkified to their corresponding layout files.
+When using the `<template layout>` syntax, the layout names will be linkified to their corresponding layout files.
 
 <img
   src="../assets/vscode-layouts.jpg"

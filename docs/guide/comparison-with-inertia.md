@@ -21,7 +21,7 @@ The following is a non-exhaustive comparison table between Inertia and Hybridly'
 | Persistent layout                               |                        Yes                        |                          Yes                          |
 | Persistent layout properties                    |            <span class="no">No</span>             | [Yes](../api/composables/define-layout-properties.md) |
 | Vite integration                                |            <span class="no">No</span>             |                          Yes                          |
-| `layout` support in templates                   |            <span class="no">No</span>             |             [Yes](../api/vite/layout.md)              |
+| `layout` support in templates                   |            <span class="no">No</span>             |         [Yes](../guide/pages-and-layouts.md)          |
 | Built-in `Paginator` types                      |            <span class="no">No</span>             |            [Yes](./responses.md#overview)             |
 | Built-in `form` util                            |                        Yes                        |                          Yes                          |
 | Built-in `route` util with TypeScript support   |            <span class="no">No</span>             |             [Yes](../api/utils/route.md)              |

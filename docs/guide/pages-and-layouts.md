@@ -74,7 +74,7 @@ However, this technique has a drawback: when navigating between pages, the layou
 
 Persistent layouts are components that will not get destroyed upon navigation. Their state will be persisted when changing pages.
 
-A persistent layout can be defined in two ways. When using the [Layout plugin](../api/vite/layout.md), a shortcut is available:
+A persistent layout can be defined in two ways. You can use the `layout` attribute on the `template` element of the page component:
 
 ```vue
 <template layout="main">
