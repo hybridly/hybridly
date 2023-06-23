@@ -2,13 +2,19 @@
 
 ## Overview
 
-Like most Laravel packages, Hybridly has a few settings available for modification in `config/hybridly.php`. 
+Like most Laravel packages, Hybridly has a few settings available for modification in `config/hybridly.php`.
 
 The defaults are generally good, but you may change them to your liking.
 
+Run the following command to publish the `config/hybridly.php` file.
+
+```bash
+php artisan vendor:publish --tag=hybridly-config
+```
+
 ## Route filters
 
-The built-in [route support](../api/utils/route.md) requires Hybridly to share available routes to the front-end. 
+The built-in [route support](../api/utils/route.md) requires Hybridly to share available routes to the front-end.
 
 In most cases, this is not an issue, but in some situations you may want to restrict which routes are directly exposed in order to reduce the surface of a potential attack.
 
