@@ -79,14 +79,6 @@ export async function performHybridNavigation(options: HybridRequestOptions): Pr
 		if ((hasFiles(options.data) || options.useFormData) && !(options.data instanceof FormData)) {
 			options.data = objectToFormData(options.data)
 			debug.router('Converted data to FormData.', options.data)
-
-			// Automatically spoofs the method of the form, because it is not possible to
-			// send a PUT, PATCH or DELETE request with files in them.
-			if (options.method && ['PUT', 'PATCH', 'DELETE'].includes(options.method) && options.spoof !== false) {
-				debug.router(`Automatically spoofing method ${options.method}.`)
-				options.data.append('_method', options.method)
-				options.method = 'POST'
-			}
 		}
 
 		// Converts data to query parameters if the method is GET
@@ -97,6 +89,23 @@ export async function performHybridNavigation(options: HybridRequestOptions): Pr
 				query: options.data,
 			})
 			options.data = {}
+		}
+
+		// Automatically spoofs PUT, PATCH and DELETE requests.
+		if (['PUT', 'PATCH', 'DELETE'].includes(options.method) && options.spoof !== false) {
+			debug.router(`Automatically spoofing method ${options.method}.`)
+
+			if (options.data instanceof FormData) {
+				options.data.append('_method', options.method)
+			} else if (Object.keys(options.data ?? {}).length) {
+				Object.assign(options.data!, { _method: options.method })
+			} else if (typeof options.data === 'undefined') {
+				options.data = { _method: options.method }
+			} else {
+				debug.router('Could not spoof method because body type is not supported.', options.data)
+			}
+
+			options.method = 'POST'
 		}
 
 		// Before anything else, we fire the "before" event to make sure
