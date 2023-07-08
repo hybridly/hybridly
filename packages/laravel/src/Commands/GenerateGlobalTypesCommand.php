@@ -90,13 +90,13 @@ class GenerateGlobalTypesCommand extends Command
     {
         if (class_exists(TypeScriptTransformCommand::class)) {
             Artisan::call(TypeScriptTransformCommand::class, [
-                '--output' => '../.hybridly/back-end.d.ts',
+                '--output' => '../.hybridly/php-types.d.ts',
             ]);
         }
 
         $definitions = rescue(fn () => $this->getTypeDefinitions(), rescue: false, report: false);
         $result = (bool) File::put(
-            $path = base_path('.hybridly/hybridly.d.ts'),
+            $path = base_path('.hybridly/global-types.d.ts'),
             $definitions ?? $this->getGlobalHybridPropertiesInterface(),
         );
 
