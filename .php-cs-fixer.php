@@ -15,13 +15,20 @@ $finder = Symfony\Component\Finder\Finder::create()
 return (new PhpCsFixer\Config())
     ->setRules([
         '@PSR12' => true,
+        '@PHP82Migration' => true,
         '@PhpCsFixer:risky' => true,
+        'single_space_around_construct' => true,
         'heredoc_indentation' => ['indentation' => 'same_as_start'],
+        'declare_strict_types' => false,
+        'single_quote' => true,
+        'multiline_whitespace_before_semicolons' => ['strategy' => 'no_multi_line'],
         'comment_to_phpdoc' => false,
         'is_null' => false,
+        'types_spaces' => true,
         'ternary_operator_spaces' => true,
         'array_syntax' => ['syntax' => 'short'],
         'ordered_imports' => ['sort_algorithm' => 'alpha'],
+        // 'ordered_class_elements' => ['sort_algorithm' => 'alpha'],
         'no_trailing_whitespace_in_string' => false,
         'no_unused_imports' => true,
         'no_useless_else' => true,
@@ -48,6 +55,7 @@ return (new PhpCsFixer\Config())
         'class_attributes_separation' => [
             'elements' => [
                 'method' => 'one',
+                'trait_import' => 'none',
             ],
         ],
         'method_argument_space' => [
@@ -62,7 +70,10 @@ return (new PhpCsFixer\Config())
         'no_singleline_whitespace_before_semicolons' => true,
         'trim_array_spaces' => true,
         'whitespace_after_comma_in_array' => true,
-        'single_blank_line_before_namespace' => true,
+        'blank_lines_before_namespace' => true,
+        'curly_braces_position' => [
+            'anonymous_classes_opening_brace' => 'next_line_unless_newline_at_signature_end',
+        ],
         'no_extra_blank_lines' => [
             'tokens' => [
                 'case',
@@ -75,7 +86,6 @@ return (new PhpCsFixer\Config())
                 'switch',
                 'throw',
                 'use',
-                'use_trait',
             ],
         ],
         'native_constant_invocation' => [
