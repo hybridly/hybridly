@@ -1,4 +1,3 @@
-
 import type { HybridRequestOptions } from '@hybridly/core'
 import { router } from '@hybridly/core'
 import { computed } from 'vue'
