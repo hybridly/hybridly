@@ -5,6 +5,7 @@ namespace Hybridly\Concerns;
 use Exception;
 use Hybridly\Contracts\HybridResponse;
 use Illuminate\Foundation\Exceptions\Handler;
+use Illuminate\Foundation\ViteManifestNotFoundException;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -66,6 +67,11 @@ trait HandlesHybridExceptions
      */
     protected function shouldRenderHybridResponse(Response $response, Request $request, \Throwable $e): bool
     {
+        if ($e instanceof ViteManifestNotFoundException) {
+            return false;
+        }
+
+        // TODO: remove in a few versions
         if (str_contains($e->getMessage(), 'Vite manifest not found')) {
             return false;
         }
