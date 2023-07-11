@@ -32,7 +32,7 @@ class SimilarityFilter implements FilterContract
         };
 
         $bindings = match ($this->mode) {
-            self::LOOSE => ["%" . mb_strtolower($value, 'UTF8') . "%"],
+            self::LOOSE => ['%' . mb_strtolower($value, 'UTF8') . '%'],
             self::BEGINS_WITH_STRICT => ["{$value}%"],
             self::ENDS_WITH_STRICT => ["%{$value}"],
         };

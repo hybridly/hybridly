@@ -121,7 +121,7 @@ class Factory implements HybridResponse
     public function toResponse($request)
     {
         $payload = new Payload(
-            view:  $this->resolveView($this->view, $request),
+            view: $this->resolveView($this->view, $request),
             dialog: $this->resolveDialog($request),
             url: $this->resolveUrl($request),
             version: $this->hybridly->getVersion(),

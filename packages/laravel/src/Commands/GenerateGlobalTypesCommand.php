@@ -111,7 +111,7 @@ class GenerateGlobalTypesCommand extends Command
     {
         $this->components->info(
             sprintf(
-                "Types written to <comment>%s</comment>.",
+                'Types written to <comment>%s</comment>.',
                 $path,
             ),
         );

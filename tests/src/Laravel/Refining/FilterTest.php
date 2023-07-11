@@ -11,7 +11,8 @@ beforeEach(function () {
     ProductFactory::new()->create(['name' => 'AirPods Pro']);
     ProductFactory::new()->create(['name' => 'Macbook Pro M1']);
 
-    $this->filter = new class () implements ContractsFilter {
+    $this->filter = new class () implements ContractsFilter
+    {
         public function getType(): string
         {
             return 'callback';

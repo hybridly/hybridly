@@ -61,7 +61,7 @@ abstract class DataResource extends Data implements DataResourceContract
                     throw new \ArgumentCountError(
                         previous: $previous,
                         message: sprintf(
-                            "Could not find authorization for action `%s` on model `%s`. %s",
+                            'Could not find authorization for action `%s` on model `%s`. %s',
                             $action,
                             $model::class,
                             $previous->getMessage(),

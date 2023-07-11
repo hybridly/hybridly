@@ -197,7 +197,7 @@ class I18nCommand extends Command
     {
         $this->components->info(
             sprintf(
-                "%s written to <comment>%s</comment>.",
+                '%s written to <comment>%s</comment>.',
                 $locale ? "<comment>{$locale}</comment>" : 'Translations',
                 $path,
             ),

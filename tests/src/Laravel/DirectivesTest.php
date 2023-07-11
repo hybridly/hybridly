@@ -28,7 +28,7 @@ it("supports changing the wrapper element's class", function () {
         ->toBe('<div id="root" class="h-full" data-payload="{{ json_encode($payload) }}"></div>');
 });
 
-it("supports multiple named arguments", function () {
+it('supports multiple named arguments', function () {
     expect(test()->directives['hybridly']('class: "h-full", id: "app", element: "main"'))
         ->toBe('<main id="app" class="h-full" data-payload="{{ json_encode($payload) }}"></main>');
 });

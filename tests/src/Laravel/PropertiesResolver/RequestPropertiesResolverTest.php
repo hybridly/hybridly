@@ -20,7 +20,8 @@ it('resolves functions', function () {
 });
 
 it('resolves callables', function () {
-    $callable = new class () {
+    $callable = new class ()
+    {
         public function __invoke()
         {
             return ['name' => 'Makise Kurisu'];
@@ -38,7 +39,8 @@ it('resolves callables', function () {
 });
 
 it('resolves arrayable properties', function () {
-    $callable = new class () implements Arrayable {
+    $callable = new class () implements Arrayable
+    {
         public function toArray()
         {
             return ['name' => 'Makise Kurisu'];
