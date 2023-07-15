@@ -43,6 +43,14 @@
             "bindings": [],
             "wheres": []
         },
+        "fixed-subdomain": {
+            "domain": "fixed.bluebird.test",
+            "method": ["GET", "HEAD"],
+            "uri": "",
+            "name": "fixed-subdomain",
+            "bindings": [],
+            "wheres": []
+        },
         "subdomain": {
             "domain": "{subdomain}.bluebird.test",
             "method": ["GET", "HEAD"],
