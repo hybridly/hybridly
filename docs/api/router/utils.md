@@ -82,6 +82,19 @@ router.preload(url, options)
 
 This function aborts the current request. The `abort` hook will be triggered.
 
+## `current`
+
+This function returns the current route name, if defined.
+
+## `matches`
+
+This function returns `true` if the given route name matches the current route name. Optionally, you may pass parameters to match more specific routes.
+
+```ts
+router.matches('tenant.*')
+router.matches('profile', { user: currentUserId })
+```
+
 ## `dialog.close`
 
 This function closes the current dialog. It takes the same options as the other router functions, as well as a `local` option that indicates whether a round-trip to the server will be made to update the base page's properties.

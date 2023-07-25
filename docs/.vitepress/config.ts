@@ -183,6 +183,7 @@ export default defineConfig({
 						{ text: 'useDialog', link: '/api/composables/use-dialog' },
 						{ text: 'useProperty', link: '/api/composables/use-property' },
 						{ text: 'useRefinements', link: '/api/composables/use-refinements' },
+						{ text: 'useRoute', link: '/api/composables/use-route' },
 						{ text: 'defineLayout', link: '/api/composables/define-layout' },
 						{ text: 'defineLayoutProperties', link: '/api/composables/define-layout-properties' },
 						{ text: 'useBackForward', link: '/api/composables/use-back-forward' },
