@@ -2,6 +2,7 @@
 
 namespace Hybridly;
 
+use Composer\InstalledVersions;
 use Hybridly\Commands\GenerateGlobalTypesCommand;
 use Hybridly\Commands\I18nCommand;
 use Hybridly\Commands\InstallCommand;
@@ -10,6 +11,7 @@ use Hybridly\Http\Controller;
 use Hybridly\Support\Data\PartialLazy;
 use Hybridly\Support\RayDumper;
 use Hybridly\Testing\TestResponseMacros;
+use Illuminate\Foundation\Console\AboutCommand;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Router;
 use Illuminate\Testing\TestResponse;
@@ -38,6 +40,7 @@ class HybridlyServiceProvider extends PackageServiceProvider
         $this->registerMacros();
         $this->registerTestingMacros();
         $this->registerArchitecture();
+        $this->registerAbout();
 
         $this->callAfterResolving('view', function (Factory $view): void {
             $view->addLocation($this->getRootPath('application'));
@@ -124,6 +127,19 @@ class HybridlyServiceProvider extends PackageServiceProvider
     protected function registerTestingMacros(): void
     {
         TestResponse::mixin(new TestResponseMacros());
+    }
+
+    protected function registerAbout(): void
+    {
+        AboutCommand::add('hybridly', [
+            'Version' => InstalledVersions::getPrettyVersion('hybridly/laravel'),
+            'Eager view loading' => config('hybridly.architecture.eager_load_views') ? '<fg=yellow;options=bold>ENABLED</>' : 'OFF',
+            'Root' => $this->getRootPath(),
+            'Architecture' => match (config('hybridly.architecture.preset', 'default')) {
+                'modules' => 'module-based',
+                default => 'classic Laravel'
+            },
+        ]);
     }
 
     private function getRootPath(...$segments): string
