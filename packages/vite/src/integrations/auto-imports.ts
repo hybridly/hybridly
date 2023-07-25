@@ -20,11 +20,11 @@ export const HybridlyImports = {
 		'defineLayout',
 		'defineLayoutProperties',
 		'registerHook',
+		'useRoute',
 	],
 	'hybridly': [
 		'router',
 		'route',
-		'current',
 		'can',
 	],
 }
