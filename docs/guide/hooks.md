@@ -40,4 +40,4 @@ These callbacks will be executed just once for the current request. You can lear
 
 The following lifecycle events can be hooked into when making a request, via the [`hooks`](../api/router/options.md#hooks) navigation option. They may be awaited if necessary.
 
-<<< ./packages/core/src/plugins/hooks.ts#requesthooks
+<<< @/../packages/core/src/plugins/hooks.ts#requesthooks

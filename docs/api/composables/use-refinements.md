@@ -113,4 +113,4 @@ The list of available sorts. They are configured by the `Refine` object in the b
 
 The following are relevant interfaces used by `useRefinements` and its return value.
 
-<<< ./packages/vue/src/composables/refine.ts#interfaces
+<<< @/../packages/vue/src/composables/refine.ts#interfaces
