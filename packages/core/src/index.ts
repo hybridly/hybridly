@@ -13,7 +13,7 @@ export type { UrlResolvable } from './url'
 export { can } from './authorization'
 export type { Authorizable } from './authorization'
 
-export { route, current } from './routing'
+export { route } from './routing'
 export type { RouteDefinition, GlobalRouteCollection, RoutingConfiguration, RouteName, RouteParameters } from './routing'
 
 export type { DynamicConfiguration } from './config'

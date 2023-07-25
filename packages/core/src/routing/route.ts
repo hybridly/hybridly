@@ -55,11 +55,8 @@ function getUrlRegexForRoute<T extends RouteName>(name: T) {
 
 /**
  * Check if a given URL matches a route based on its name.
- *
  * Additionally you can pass an object of parameters to check if the URL matches the route with the given parameters.
- *
  * Otherwise it will accept and thus return true for any values for the parameters defined by the route.
- *
  * Note: passing additional parameters that are not defined by the route or included in the current URL will cause this to return false.
  */
 export function urlMatchesRoute<T extends RouteName>(url: string, name: T, routeParameters?: RouteParameters<T>): boolean {
@@ -241,4 +238,11 @@ export function getRouting(): RoutingConfiguration {
 	}
 
 	return routing
+}
+
+/**
+ * Generates a route from the given route name.
+ */
+export function route<T extends RouteName>(name: T, parameters?: RouteParameters<T>, absolute?: boolean) {
+	return generateRouteFromName(name, parameters, absolute)
 }

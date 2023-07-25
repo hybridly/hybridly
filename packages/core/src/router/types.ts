@@ -135,6 +135,10 @@ export interface Router {
 	local: (url: UrlResolvable, options: ComponentNavigationOptions) => Promise<void>
 	/** Preloads the given URL. The next time this URL is navigated to, it will be loaded from the cache. */
 	preload: (url: UrlResolvable, options?: Omit<HybridRequestOptions, 'method' | 'url'>) => Promise<boolean>
+	/** Determines if the given route name and parameters matches the current route. */
+	matches: <T extends RouteName>(name: T, parameters?: RouteParameters<T>) => boolean
+	/** Gets the current route name. Returns `undefined` is unknown. */
+	current: () => string | undefined
 	/** Access the dialog router. */
 	dialog: DialogRouter
 	/** Access the history state. */

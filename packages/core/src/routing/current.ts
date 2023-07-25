@@ -11,7 +11,17 @@ function getCurrentUrl() {
 	return window.location.toString()
 }
 
-export function isCurrentFromName<T extends RouteName>(name: T, parameters?: RouteParameters<T>): boolean {
+/**
+ * Determines whether the current route matches the given name and parameters.
+ * If multiple routes match, the first one will be returned.
+ *
+ * @example
+ * ```ts
+ * currentRouteMatches('tenant.*') // matches all routes starting with 'tenant.'
+ * currentRouteMatches('tenant.*.admin') // matches all routes starting with 'tenant.' and ending with '.admin'
+ * ```
+ */
+export function currentRouteMatches<T extends RouteName>(name: T, parameters?: RouteParameters<T>): boolean {
 	// We escape all dots and replace all stars with a regex that matches any character sequence to build the regex
 	const namePattern = name.replaceAll('.', '\\.').replaceAll('*', '.*')
 	const possibleRoutes = Object.values(getRouting().routes)
