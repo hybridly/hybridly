@@ -11,6 +11,7 @@ import { sameHashes, fillHash, makeUrl, normalizeUrl, sameUrls } from '../url'
 import { runHooks } from '../plugins'
 import { generateRouteFromName, getRouteDefinition } from '../routing/route'
 import { closeDialog } from '../dialog'
+import { currentRouteMatches, getCurrentRouteName } from '../routing/current'
 import { setHistoryState, isBackForwardNavigation, handleBackForwardNavigation, registerEventListeners, getHistoryMemo, remember } from './history'
 import type { ConditionalNavigationOption, Errors, ComponentNavigationOptions, NavigationOptions, Router, HybridRequestOptions, HybridPayload, NavigationResponse, Method } from './types'
 import { discardPreloadedRequest, getPreloadedRequest, performPreloadRequest } from './preload'
@@ -42,6 +43,8 @@ export const router: Router = {
 		const method = getRouteDefinition(name).method.at(0)
 		return await performHybridNavigation({ url, ...options, method })
 	},
+	matches: (name, parameters) => currentRouteMatches(name, parameters),
+	current: () => getCurrentRouteName(),
 	dialog: {
 		close: (options) => closeDialog(options),
 	},

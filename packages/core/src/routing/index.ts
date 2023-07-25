@@ -1,21 +1,8 @@
 import { setContext } from '../context'
-import { isCurrentFromName } from './current'
-import { generateRouteFromName } from './route'
-import type { RoutingConfiguration, RouteName, RouteParameters } from './types'
+import type { RoutingConfiguration } from './types'
 
-/**
- * Generates a route from the given route name.
- */
-export function route<T extends RouteName>(name: T, parameters?: RouteParameters<T>, absolute?: boolean) {
-	return generateRouteFromName(name, parameters, absolute)
-}
-
-/**
- * Determines if the current route correspond to the given route name and parameters.
- */
-export function current<T extends RouteName>(name: T, parameters?: RouteParameters<T>, mode: 'loose' | 'strict' = 'loose'): boolean {
-	return isCurrentFromName(name, parameters, mode)
-}
+export { route } from './route'
+export { currentRouteMatches, getCurrentRouteName } from './current'
 
 export function updateRoutingConfiguration(routing?: RoutingConfiguration) {
 	if (!routing) {
