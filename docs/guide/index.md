@@ -2,13 +2,13 @@
 
 ## Overview
 
-Using a protocol similar to the one [Jonathan Reinink](https://reinink.ca) invented for [Inertia](https://inertiajs.com), Hybridly makes it possible to build application using Vue instead of Blade, while keeping the benefits of classic monolithic application.
+Using a protocol similar to the one [Jonathan Reinink](https://reinink.ca) invented for [Inertia](https://inertiajs.com), Hybridly makes it possible to build applications using Vue instead of Blade, while keeping the benefits of classic monolithic applications.
 
 Hybridly is essentially very similar to [Inertia](https://inertiajs.com). It has a different philosophy, which results in a few more features and an improved development experience since it focuses on Laravel, Vite and Vue instead of being completely framework-agnostic.
 
 ## About Inertia and Hybridly
 
-I was barely into the Laravel ecosystem when Jonathan Reinink [was already looking for a way to build Vue-powered Laravel applications the right way](https://reinink.ca/articles/server-side-apps-with-client-side-rendering).
+I was barely into the Laravel ecosystem when Jonathan Reinink was already looking for [a way to build Vue-powered Laravel applications](https://reinink.ca/articles/server-side-apps-with-client-side-rendering) the right way.
 
 He came up with Inertia, which is now backed by Laravel. It powers [Forge](https://forge.laravel.com). It is a well-established tool. If you already build applications using Inertia and you don't feel like you should change your stack, there is no need to reach for a different tool.
 
@@ -18,7 +18,7 @@ The pace of development of Inertia has been a source of frustration for its user
 
 There have been months without release or news about its development. Months without any commit to the repository. Months during which pull requests and issues were not handled, and are, to this day, still not addressed.
 
-Because of that, a few other issues with the implementation itself, and some of my opinions diverging from the philosophy of the maintainers, I simply decided to build my own solution.
+Because of that, other issues with the implementation itself, and some of my opinions diverging from the philosophy of the maintainers, I simply decided to build my own solution.
 
 ## Questions & answers
 
