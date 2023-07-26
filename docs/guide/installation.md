@@ -246,7 +246,7 @@ The [TypeScript documentation](https://www.typescriptlang.org/tsconfig) is a goo
 
 ### Create a page component
 
-It's almost done. We just need a page component and a route to serve it. Create a `resources/views/pages/index.vue` file. A page component is a standard Vue component, except it's now a page component.
+It's almost done. We just need a page component and a route to serve it. Create a `resources/pages/index.vue` file. A page component is a standard Vue component, except it's now a page component.
 
 ```vue
 <script setup lang="ts">
