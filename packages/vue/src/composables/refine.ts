@@ -194,11 +194,19 @@ export function useRefinements<
 		return refinements.value.filters.filter(({ is_active }) => is_active)
 	}
 
-	function isSorting(): boolean {
+	function isSorting(name?: string): boolean {
+		if (name) {
+			return currentSorts().some((sort) => sort.name === name)
+		}
+
 		return currentSorts().length !== 0
 	}
 
-	function isFiltering(): boolean {
+	function isFiltering(name?: string): boolean {
+		if (name) {
+			return currentFilters().some((filter) => filter.name === name)
+		}
+
 		return currentFilters().length !== 0
 	}
 
