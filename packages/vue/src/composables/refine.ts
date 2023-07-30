@@ -127,6 +127,11 @@ export function useRefinements<
 	const sortsKey = computed(() => refinements.value.keys.sorts)
 	const filtersKey = computed(() => refinements.value.keys.filters)
 
+	defaultOptions = {
+		replace: false,
+		...defaultOptions,
+	}
+
 	async function reset(options: AvailableHybridRequestOptions = {}) {
 		return await router.reload({
 			...defaultOptions,
