@@ -1,6 +1,6 @@
 {
     "name": "@hybridly/utils",
-    "version": "0.4.1",
+    "version": "0.4.2",
     "description": "Utils used in Hybridly packages",
     "keywords": [
         "hybridly"
