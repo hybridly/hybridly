@@ -27,7 +27,7 @@ class HandleHybridRequests extends Middleware
     
     public function share()
     {
-        return GlobalProperties::from([
+        return SharedData::from([
             'security' => [
                 'user' => UserData::optional(auth()->user()),
             ],

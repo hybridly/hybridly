@@ -11,9 +11,9 @@ Global properties are shared in every hybrid request — unless it's a [partial 
 The most common way of defining global properties is to define them in the `HandleHybridRequests` middleware. It has a `share` method specifically for this purpose.
 
 ```php
-public function share(): GlobalProperties
+public function share(): SharedData
 {
-    return GlobalProperties::from([
+    return SharedData::from([
         'security' => [
             'user' => UserData::optional(auth()->user()),
         ],
@@ -23,11 +23,11 @@ public function share(): GlobalProperties
 
 Though this method can return any serializable property, such as a `Collection`, an array, a `Resource`, or anything `Arrayable`, a data object class is preferred in order to benefit from automatically-generated TypeScript definitions.
 
-In the example above, `GlobalProperties` is a simple data object that takes a `SecurityData`, which accepts a `UserData`.
+In the example above, `SharedData` is a simple data object that takes a `SecurityData`, which accepts a `UserData`.
 
 :::code-group
-```php [app/Data/GlobalProperties.php]
-final class GlobalProperties extends Data
+```php [app/Data/SharedData.php]
+final class SharedData extends Data
 {
     public function __construct(
         public readonly SecurityData $security,

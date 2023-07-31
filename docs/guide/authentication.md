@@ -14,9 +14,9 @@ Ideally, avoid exposing the whole model — rather, select the properties you ne
 
 ```php
 // app/Http/Middleware/HandleHybridRequests.php
-public function share(): GlobalProperties
+public function share(): SharedData
 {
-    return GlobalProperties::from([
+    return SharedData::from([
         'security' => [
             'user' => UserData::optional(auth()->user()),
         ],
