@@ -76,8 +76,8 @@ class Sort extends Components\Component implements RefinerContract
             'asc' => $this->getAscendingValue(),
             'next' => match ($this->direction) {
                 'desc' => null,
-                'asc' => $this->getAscendingValue(),
-                default => $this->getDescendingValue(),
+                'asc' => $this->getDescendingValue(),
+                default => $this->getAscendingValue(),
             },
         ];
     }
