@@ -143,6 +143,14 @@ export function useRefinements<
 		...defaultOptions,
 	}
 
+	function getSort(name: string): SortRefinement | undefined {
+		return refinements.value.sorts.find((sort) => sort.name === name)
+	}
+
+	function getFilter(name: string): FilterRefinement | undefined {
+		return refinements.value.filters.find((sort) => sort.name === name)
+	}
+
 	async function reset(options: AvailableHybridRequestOptions = {}) {
 		return await router.reload({
 			...defaultOptions,
@@ -176,13 +184,15 @@ export function useRefinements<
 		})
 	}
 
-	async function applyFilter(filter: string, value: any, options: AvailableHybridRequestOptions = {}) {
-		const _filter = refinements.value.filters.find(({ name }) => name === filter)
-		if (!_filter) {
+	async function applyFilter(name: string, value: any, options: AvailableHybridRequestOptions = {}) {
+		const filter = getFilter(name)
+
+		if (!filter) {
+			console.warn(`[Refinement] Filter "${name} does not exist."`)
 			return
 		}
 
-		if (['', null].includes(value) || value === _filter.default) {
+		if (['', null].includes(value) || value === filter.default) {
 			value = undefined
 		}
 
@@ -191,7 +201,7 @@ export function useRefinements<
 			...options,
 			data: {
 				[filtersKey.value]: {
-					[filter]: value,
+					[name]: value,
 				},
 			},
 		})
@@ -231,11 +241,11 @@ export function useRefinements<
 		return currentFilters().length !== 0
 	}
 
-	async function toggleSort(sortName: string, options?: ToggleSortOptions) {
-		const sort = refinements.value.sorts.find(({ name }) => name === sortName)
+	async function toggleSort(name: string, options?: ToggleSortOptions) {
+		const sort = getSort(name)
 
 		if (!sort) {
-			console.warn(`[Refinement] Sort "${sortName} does not exist."`)
+			console.warn(`[Refinement] Sort "${name} does not exist."`)
 			return
 		}
 
@@ -279,6 +289,14 @@ export function useRefinements<
 		 * Available sorts.
 		 */
 		sorts: toReactive(refinements.value.sorts),
+		/**
+		 * Gets a filter by name.
+		 */
+		getFilter,
+		/**
+		 * Gets a sort by name.
+		 */
+		getSort,
 		/**
 		 * Resets all filters and sorts.
 		 */

@@ -109,6 +109,18 @@ The list of available filters. They are configured by the `Refine` object in the
 
 The list of available sorts. They are configured by the `Refine` object in the back-end.
 
+## `getFilter`
+
+- Type: `(name: string): FilterRefinement|undefined`
+
+Gets a filter by name.
+
+## `getSort`
+
+- Type: `(name: string): SortRefinement|undefined`
+
+Gets a sort by name.
+
 ### `bindFilter`
 
 - Type: `<T>(name: string, options?: BindOptions) => Ref<T>`
