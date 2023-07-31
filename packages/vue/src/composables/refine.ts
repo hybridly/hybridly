@@ -166,8 +166,13 @@ export function useRefinements<
 	}
 
 	async function applyFilter(filter: string, value: any, options: AvailableHybridRequestOptions = {}) {
-		if (!refinements.value.filters.find(({ name }) => name === filter)) {
+		const _filter = refinements.value.filters.find(({ name }) => name === filter)
+		if (!_filter) {
 			return
+		}
+
+		if (['', null].includes(value) || value === _filter.default) {
+			value = undefined
 		}
 
 		return await router.reload({
@@ -175,7 +180,7 @@ export function useRefinements<
 			...options,
 			data: {
 				[filtersKey.value]: {
-					[filter]: value === '' ? undefined : value,
+					[filter]: value,
 				},
 			},
 		})
