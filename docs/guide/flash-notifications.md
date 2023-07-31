@@ -42,7 +42,7 @@ final class FlashBagData extends Data
 Do not forget to include this data object in the one that describes your global properties:
 
 ```php
-final class GlobalProperties extends Data
+final class SharedData extends Data
 {
     public function __construct(
         public readonly SecurityData $security,
