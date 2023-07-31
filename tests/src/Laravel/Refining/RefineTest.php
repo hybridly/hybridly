@@ -50,7 +50,7 @@ test('the refine instance can be serialized', function () {
                 'default' => null,
                 'desc' => '-date',
                 'asc' => 'date',
-                'next' => '-date',
+                'next' => 'date',
             ],
         ],
         'filters' => [
@@ -62,6 +62,7 @@ test('the refine instance can be serialized', function () {
                 'metadata' => [],
                 'is_active' => false,
                 'value' => null,
+                'default' => null,
             ],
         ],
         'scope' => 'products',

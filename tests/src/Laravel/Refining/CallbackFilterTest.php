@@ -25,6 +25,7 @@ it('can be serialized', function () {
             ],
             'is_active' => false,
             'value' => null,
+            'default' => null,
         ]);
 });
 

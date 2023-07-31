@@ -105,6 +105,7 @@ test('filters can be serialized', function () {
             'metadata' => [],
             'is_active' => false,
             'value' => null,
+            'default' => null,
         ]);
 });
 
@@ -125,6 +126,7 @@ test('filters use their alias as name when defined', function () {
             'metadata' => [],
             'is_active' => false,
             'value' => null,
+            'default' => null,
         ]);
 });
 

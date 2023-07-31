@@ -31,7 +31,7 @@ it('can be serialized', function () {
             'default' => null,
             'desc' => '-created_at',
             'asc' => 'created_at',
-            'next' => '-created_at',
+            'next' => 'created_at',
         ]);
 });
 
@@ -48,7 +48,7 @@ it('uses its alias as name when serialized', function () {
             'default' => null,
             'desc' => '-date',
             'asc' => 'date',
-            'next' => '-date',
+            'next' => 'date',
         ]);
 });
 
@@ -140,3 +140,19 @@ test('sorts keys respect the scope', function () {
         ->first()->name->toBe('Macbook Pro M1')
         ->count()->toBe(3);
 });
+
+test('`next` toggles between possible sorts', function (?string $query, ?string $next) {
+    $sorts = mock_refiner(
+        query: ['sort' => $query],
+        refiners: [
+            FieldSort::make('name'),
+        ],
+        apply: true,
+    );
+
+    expect($sorts->getSorts()[0]->jsonSerialize()['next'])->toBe($next);
+})->with([
+    [null, 'name'],
+    ['name', '-name'],
+    ['-name', null],
+]);

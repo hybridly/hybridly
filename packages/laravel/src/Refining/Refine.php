@@ -87,7 +87,7 @@ class Refine extends Components\Component
         ];
     }
 
-    protected function getSorts(): array
+    public function getSorts(): array
     {
         return collect($this->getRefiners())
             ->filter(fn (Refiner $refiner) => $refiner instanceof Sort)
@@ -95,7 +95,7 @@ class Refine extends Components\Component
             ->toArray();
     }
 
-    protected function getFilters(): array
+    public function getFilters(): array
     {
         return collect($this->getRefiners())
             ->filter(fn (Refiner $refiner) => $refiner instanceof Filter)
