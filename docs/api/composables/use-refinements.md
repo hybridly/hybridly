@@ -109,6 +109,21 @@ The list of available filters. They are configured by the `Refine` object in the
 
 The list of available sorts. They are configured by the `Refine` object in the back-end.
 
+### `bindFilter`
+
+- Type: `<T>(name: string, options?: BindOptions) => Ref<T>`
+
+Binds the given filter to a ref. The second parameter, `options`, accepts an alternative `watch` function.
+
+#### Examples
+
+```ts
+const commercial = refine.bindFilter<bool>('commercial')
+const search = refine.bindFilter<string>('search', {
+	watch: (ref, cb) => watchDebounced(ref, cb, { debounce: 200 }),
+})
+```
+
 ## Interfaces
 
 The following are relevant interfaces used by `useRefinements` and its return value.

@@ -1,6 +1,7 @@
 import type { HybridRequestOptions } from '@hybridly/core'
 import { router } from '@hybridly/core'
-import { computed } from 'vue'
+import type { Ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { toReactive } from '../utils'
 
 type SortDirection = 'asc' | 'desc'
@@ -9,6 +10,12 @@ type AvailableHybridRequestOptions = Omit<HybridRequestOptions, 'url' | 'data'>
 
 interface ToggleSortOptions extends AvailableHybridRequestOptions {
 	direction?: SortDirection
+}
+
+interface BindFilterOptions<T> extends AvailableHybridRequestOptions {
+	transformValue?: (value?: T) => any
+	/** If specified, this callback will watch the ref and apply  */
+	watch?: (ref: Ref<T>, cb: any) => void
 }
 
 declare global {
@@ -42,6 +49,10 @@ declare global {
 		 * Whether this filter is hidden.
 		 */
 		hidden: boolean
+		/**
+		 * The default value of the filter.
+		 */
+		default: any
 	}
 
 	interface SortRefinement {
@@ -241,7 +252,25 @@ export function useRefinements<
 		})
 	}
 
+	function bindFilter<T = any>(name: string, options: BindFilterOptions<T> = {}) {
+		const transform = options?.transformValue ?? ((value) => value)
+		const watchFn = options?.watch ?? watch
+		const _ref = ref(transform(refinements.value.filters.find((f) => f.name === name)?.value))
+
+		watch(() => refinements.value.filters.find((f) => f.name === name), (filter) => {
+			_ref.value = transform(filter?.value)
+		}, { deep: true })
+
+		watchFn(_ref, (value: T) => applyFilter(name, transform(value), options))
+
+		return _ref as Ref<T>
+	}
+
 	return {
+		/**
+		 * Binds a named filter to a ref, applying filters when it changes and updating the ref accordingly.
+		 */
+		bindFilter,
 		/**
 		 * Available filters.
 		 */
