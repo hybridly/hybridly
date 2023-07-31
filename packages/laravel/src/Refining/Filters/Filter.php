@@ -79,6 +79,7 @@ class Filter extends Components\Component implements RefinerContract
             'metadata' => $this->getMetadata(),
             'is_active' => $this->isActive(),
             'value' => $this->value,
+            'default' => $this->defaultValue,
         ];
     }
 }
