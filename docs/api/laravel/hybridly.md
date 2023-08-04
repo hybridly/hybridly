@@ -8,6 +8,10 @@ Generates a `HybridResponse` with the given component and optional properties. T
 
 > See [responses](../../guide/responses.md) for more details.
 
+:::info Notes
+- Component names will only use lowercase names, so if you have a `Dashboard.vue` page component, please make sure to use `hybridly('dashboard')`.
+:::
+
 ### Usage
 
 ```php
