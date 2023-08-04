@@ -2,7 +2,6 @@
 
 namespace Hybridly;
 
-use Composer\InstalledVersions;
 use Hybridly\Commands\GenerateGlobalTypesCommand;
 use Hybridly\Commands\I18nCommand;
 use Hybridly\Commands\InstallCommand;
@@ -10,6 +9,7 @@ use Hybridly\Commands\PrintConfigurationCommand;
 use Hybridly\Http\Controller;
 use Hybridly\Support\Data\PartialLazy;
 use Hybridly\Support\RayDumper;
+use Hybridly\Support\Version;
 use Hybridly\Testing\TestResponseMacros;
 use Illuminate\Foundation\Console\AboutCommand;
 use Illuminate\Http\Request;
@@ -132,7 +132,8 @@ class HybridlyServiceProvider extends PackageServiceProvider
     protected function registerAbout(): void
     {
         AboutCommand::add('hybridly', [
-            'Version' => InstalledVersions::getPrettyVersion('hybridly/laravel'),
+            'Version (composer)' => Version::getPrettyComposerVersion(),
+            'Version (npm)' => Version::getPrettyNpmVersion(),
             'Eager view loading' => config('hybridly.architecture.eager_load_views') ? '<fg=yellow;options=bold>ENABLED</>' : 'OFF',
             'Root' => $this->getRootPath(),
             'Architecture' => match (config('hybridly.architecture.preset', 'default')) {
