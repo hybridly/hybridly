@@ -61,5 +61,5 @@ function resolveLayoutImportPath(name: string, config: DynamicConfiguration) {
 		throw new Error(`Layout [${name}] could not be found.`)
 	}
 
-	return `~/${path}`
+	return `~/${path.replaceAll("\\", "/")}`;
 }

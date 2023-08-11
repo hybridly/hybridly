@@ -146,7 +146,9 @@ async function resolveViewComponent(name: string, options: ResolvedInitializeOpt
 	const result = options.components.views.find((view) => name === view.identifier)
 	const path = Object.keys(components)
 		.sort((a, b) => a.length - b.length)
-		.find((path) => result ? path.endsWith(result?.path) : false)
+		.find((path) =>
+			result ? path.endsWith(result?.path.replaceAll("\\", "/")) : false
+		);
 
 	if (!result || !path) {
 		console.warn(`Page component [${name}] not found. Available components: `, options.components.views.map(({ identifier }) => identifier))

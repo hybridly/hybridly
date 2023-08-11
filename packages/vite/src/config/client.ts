@@ -1,7 +1,9 @@
 import type { DynamicConfiguration } from '@hybridly/core'
 
 export function getClientCode(config: DynamicConfiguration) {
-	const paths = config.components.views.map(({ path }) => `"~/${path}"`).join(',')
+	const paths = config.components.views
+		.map(({ path }) => `"~/${path.replaceAll("\\", "/")}"`)
+		.join(",");
 
 	return `
 		import { initializeHybridly as init } from 'hybridly/vue'
