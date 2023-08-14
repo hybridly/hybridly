@@ -52,17 +52,21 @@ final class Version
 
     public static function getPrettyNpmVersion(): string
     {
-        try {
-            ['version' => $version] = File::json(base_path('node_modules/hybridly/package.json'));
+        ['version' => $version] = rescue(
+            callback: fn () => File::json(base_path('node_modules/hybridly/package.json')),
+            rescue: ['version' => null],
+            report: false,
+        );
 
-            return static::formatVersion($version);
-        } catch (\Throwable) {
-            return '<fg=red;options=bold>NOT INSTALLED</>';
-        }
+        return static::formatVersion($version);
     }
 
-    private static function formatVersion(string $version): string
+    private static function formatVersion(?string $version): string
     {
+        if (!$version) {
+            return '<fg=red;options=bold>NOT INSTALLED</>';
+        }
+
         $version = str($version)->start('v');
 
         if (static::isLatestVersion()) {
