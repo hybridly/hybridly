@@ -189,7 +189,6 @@ final class VueViewFinder
             ->ltrim('/\\')
             ->replace(['/', '\\'], '.')
             ->replace($this->extensions, '')
-            ->kebab()
             ->when($namespace !== 'default')
             ->prepend("{$namespace}::");
     }
