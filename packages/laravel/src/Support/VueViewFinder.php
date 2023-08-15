@@ -176,7 +176,9 @@ final class VueViewFinder
             }
         }
 
-        return $files;
+        return collect($files)
+            ->map(fn ($file) => str_replace(['/', '\\'], '/', $file))
+            ->toArray();
     }
 
     /**
