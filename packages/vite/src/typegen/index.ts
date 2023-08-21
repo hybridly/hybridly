@@ -2,7 +2,7 @@ import path from 'node:path'
 import fs from 'node:fs'
 import type { DynamicConfiguration } from '@hybridly/core'
 import type { ViteOptions } from '../types'
-import { debug } from '../utils'
+import { debug, isPackageInstalled } from '../utils'
 
 export function generateTsConfig(options: ViteOptions, config: DynamicConfiguration) {
 	const tsconfig = {
@@ -23,7 +23,7 @@ export function generateTsConfig(options: ViteOptions, config: DynamicConfigurat
 			types: [
 				'vite/client',
 				'hybridly/client',
-				...(options.icons !== false ? ['unplugin-icons/types/vue'] : []),
+				...(options.icons !== false && isPackageInstalled('unplugin-icons') ? ['unplugin-icons/types/vue'] : []),
 			],
 			baseUrl: '..',
 			paths: {
