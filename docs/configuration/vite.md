@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Vite plugin, in addition to providing Hybridly-specific features, wraps a few external Vite plugins that are often needed in single-page applications. 
+The Vite plugin, in addition to providing Hybridly-specific features, wraps a few external Vite plugins that are often needed in single-page applications.
 
 These plugins are provided with a good default configuration, but are still individually configurable.
 
@@ -20,7 +20,7 @@ export default defineConfig({
 	plugins: [
 		hybridly({ // [!code focus:5]
 			laravel: {
-				valetTls: true,
+				detectTls: true,
 			},
 		}),
 	],
