@@ -82,7 +82,7 @@ export default defineConfig({
 	plugins: [
 		hybridly({
 			laravel: {
-				valetTls: true
+				detectTls: true
 			}
 		}),
 	],
@@ -208,14 +208,14 @@ export default defineConfig({
 	plugins: [
 		hybridly({
 			laravel: {
-				valetTls: true
+				detectTls: true
 			}
 		}),
 	],
 })
 ```
 
-If you add `valetTls`, which you should, don't forget to also run `valet secure` and set up `APP_URL` in `.env`.
+If you add `detectTls`, which you should, don't forget to also run `valet secure` and set up `APP_URL` in `.env`.
 
 ### Initialize Hybridly
 

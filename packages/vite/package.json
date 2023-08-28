@@ -46,7 +46,7 @@
         "@hybridly/core": "workspace:*",
         "@vitejs/plugin-vue": "^4.2.3",
         "fast-glob": "^3.3.0",
-        "laravel-vite-plugin": "^0.7.8",
+        "laravel-vite-plugin": "^0.8.0",
         "local-pkg": "^0.4.3",
         "throttle-debounce": "^5.0.0",
         "unplugin-auto-import": "^0.16.6",
