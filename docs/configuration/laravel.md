@@ -41,3 +41,57 @@ By default, routes from vendor packages are not available to the front-end. You 
     ],
 ],
 ```
+
+## Architecture
+
+Hybridly is flexible when it comes to architecturing your application. 
+
+It offers two presets: the default one, a [single-level architecture](../guide/architecture.md#single-level) similar to the architecture that Laravel promotes, and a [modular](../guide/architecture.md#modular) one.
+
+## Specifying a preset
+
+You may specify the preset you want to use in the `architecture.preset` option. Possible values are `default` and `modules`.
+
+```php
+'architecture' => [  // [!code focus:2]
+    'preset' => 'default', // [!code hl]
+    'root' => 'resources', 
+    'eager_load_views' => true,
+],  // [!code focus]
+```
+
+If you want to use a custom architecture, you may disable the presets by setting that option to `false`. 
+
+To learn how to define your own architecture, read the [corresponding documentation](../guide/architecture.html#custom).
+
+## Updating the root directory
+
+By default, Laravel comes with the `resources` directory, that is used by many external packages and Laravel itself. 
+
+Hybridly also uses `resources` for its default architecture, but you may chose to use a separate directory if you want. To do that, update the `architecture.root` option:
+
+```php
+'architecture' => [  // [!code focus]
+    'preset' => 'default',
+    'root' => 'frontend', // [!code focus] 
+    'eager_load_views' => true,
+],  // [!code focus]
+```
+
+This directory is used by the `@` import alias and for some of the integrations, like auto-imports, icons, or for loading the `<root>/application/main.ts` entrypoint.
+
+## Eager-loading views
+
+By default, Hybridly will eager-load page components, which means that users will have to load all views at once when accessing the application.
+
+This is a good default, but if your application has a lot of pages, you may need to disable eager-loading, so views can be lazy-loaded as needed by your users.
+
+To do that, simply set `architecture.eager_load_views` to `false`.
+
+```php
+'architecture' => [  // [!code focus]
+    'preset' => 'default',
+    'root' => 'frontend',
+    'eager_load_views' => false, // [!code focus] 
+],  // [!code focus]
+```
