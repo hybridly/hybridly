@@ -34,32 +34,44 @@ export const RouterLink = defineComponent({
 				debug.adapter('vue', `Creating POST/PUT/PATCH/DELETE <a> links is discouraged as it causes "Open Link in New Tab/Window" accessibility issues.\n\nPlease specify a more appropriate element using the "as" attribute. For example:\n\n<RouterLink href="${url}" method="${method}" as="button">...</RouterLink>`)
 			}
 
+			function performPreload(type: 'hover' | 'mount') {
+				if (!preloads) {
+					return
+				}
+
+				if (props.external) {
+					return
+				}
+
+				if (method !== 'GET') {
+					return
+				}
+
+				if (type !== 'mount' && props.disabled) {
+					return
+				}
+
+				if (type === 'hover' && preloads === 'mount') {
+					return
+				}
+
+				if (type === 'mount' && preloads !== 'mount') {
+					return
+				}
+
+				router.preload(url, {
+					data,
+					...props.options,
+				})
+			}
+
+			performPreload('mount')
+
 			return h(props.as as any, {
 				...attrs,
 				...as === 'a' ? { href: url } : {},
 				...props.disabled ? { disabled: props.disabled } : {},
-				onMouseenter: () => {
-					if (!preloads) {
-						return
-					}
-
-					if (props.external) {
-						return
-					}
-
-					if (props.disabled) {
-						return
-					}
-
-					if (method !== 'GET') {
-						return
-					}
-
-					router.preload(url, {
-						data,
-						...props.options,
-					})
-				},
+				onMouseenter: () => performPreload('hover'),
 				onClick: (event: KeyboardEvent) => {
 					// If the target is external, we don't want hybridly to handle the
 					// navigation, so we return early to avoid preventing the event.
@@ -124,7 +136,7 @@ export const RouterLink = defineComponent({
 			default: undefined,
 		},
 		preload: {
-			type: Boolean,
+			type: [Boolean, String] as PropType<boolean | 'hover' | 'mount'>,
 			default: false,
 		},
 	},

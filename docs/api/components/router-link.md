@@ -91,6 +91,9 @@ When set to `true`, the click handler will not be triggered and the `disabled` H
 
 ## `preload`
 
-- **Type**: boolean
+- **Type**: `boolean | 'mount' | 'hover'`
 
-When set to `true`, the URL will be pre-loaded when hovering over the link. Note that you may only preload `GET` hybrid requests.
+When set to `true`, the URL will be preloaded when hovering over the link. 
+When set to `mount`, the preloading will be done when the link component is mounted.
+
+Read more on [preloading](../../guide/navigation.md#preloading-requests).

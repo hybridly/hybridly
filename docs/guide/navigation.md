@@ -31,8 +31,31 @@ router.get(url, options)
 router.post(url, options)
 router.delete(url, options)
 router.external(url, options)
+router.preload(url, options)
 router.reload(options)
 router.navigate(options)
 ```
 
-Learn more about the methods and options available on their [API documentation](../api/router/utils).
+Learn more about the functions and options available in their [API documentation](../api/router/utils).
+
+## Preloading requests
+
+Preloading pages will perform the usual underlying AJAX request, but instead of following-up with the navigation, Hybridly will cache the request result until the navigation is actually required.
+
+This results in a smoother, snappy user experience that may make your application more enjoyable to use.
+
+### Using the link component
+
+`<router-link>` supports the [`preload` attribute](../api/components/router-link.md#preload), which will preload the corresponding URL when the link component is hovered or mounted, depending on its value.
+
+```html
+<!-- Preloads when the link is hovered -->
+<router-link href="/" preload>Home</router-link>
+
+<!-- Preloads when the link mounts (on page load) -->
+<router-link href="/" preload="mount">Home</router-link>
+```
+
+### Programmatically
+
+Alternatively, you may use the [`router.preload(url, options)`](../api/router/utils.md#preload) function. As for the link component, the navigation will be cached until the next navigation, programmatic or not.
