@@ -78,6 +78,7 @@ export default defineConfig({
 			'/guide/': [
 				{
 					text: 'Getting started',
+					collapsed: false,
 					items: [
 						{ text: 'Introduction', link: '/guide/' },
 						{ text: 'Installation', link: '/guide/installation' },
@@ -90,6 +91,7 @@ export default defineConfig({
 				},
 				{
 					text: 'Core concepts',
+					collapsed: true,
 					items: [
 						{ text: 'Routing', link: '/guide/routing' },
 						{ text: 'Responses', link: '/guide/responses' },
@@ -106,6 +108,7 @@ export default defineConfig({
 				},
 				{
 					text: 'Essentials',
+					collapsed: true,
 					items: [
 						{ text: 'Validation', link: '/guide/validation' },
 						{ text: 'Authentication', link: '/guide/authentication' },
@@ -121,6 +124,7 @@ export default defineConfig({
 				},
 				{
 					text: 'Tooling',
+					collapsed: true,
 					items: [
 						{ text: 'Vue DevTools', link: '/guide/devtools' },
 						{ text: 'Code extension', link: '/guide/visual-studio-code' },
@@ -128,6 +132,7 @@ export default defineConfig({
 				},
 				{
 					text: 'Extra topics',
+					collapsed: true,
 					items: [
 						{ text: 'Preserving URLs', link: '/guide/preserving-urls' },
 						{ text: 'Scroll management', link: '/guide/scroll-management' },
