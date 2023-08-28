@@ -52,7 +52,7 @@
   <br />
   <br />
   <sub>
-    Built with ❤︎ by <a href="https://github.com/enzoinnocenzi">Enzo Innocenzi</a>
+    Built with ❤︎ by <a href="https://twitter.com/enzoinnocenzi">Enzo Innocenzi</a>
     <br/>
     Acknowledgments to <a href="https://reinink.ca">Jonathan Reinink</a>, the Inertia team and its contributors.
   </sub>
