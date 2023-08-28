@@ -2,7 +2,7 @@
 
 Hybridly consists of a Laravel adapter, a Vue adapter and a Vite plugin. These last two are distributed together in the `hybridly` npm package.
 
-You may install Hybridly in a fresh Laravel project using the preset. If you prefer, you can proceed to a manual installation. Alternatively, you can follow a detailed installation guide.
+The simplest way to get started with Hybridly is to use the preset in a fresh Laravel project. Alternatively, you can proceed to a manual installation following this guide.
 
 ## Preset
 
@@ -14,6 +14,9 @@ npx @preset/cli apply hybridly/preset
 ```
 ```bash [pnpm]
 pnpm dlx @preset/cli apply hybridly/preset
+```
+```bash [bun]
+bunx @preset/cli apply hybridly/preset
 ```
 ```bash [yarn]
 yarn dlx @preset/cli apply hybridly/preset
@@ -30,6 +33,10 @@ The preset automatically sets up [**Tailwind CSS**](https://tailwindcss.com) and
 | `--no-ide`    | Do not setup [**laravel-ide-helper**](https://github.com/barryvdh/laravel-ide-helper) |
 
 More information about the preset can be found on its [**repository**](https://github.com/hybridly/preset).
+
+:::info Installation
+Once you have installed the preset, **you do not need to follow the rest of the installation guide**. Hybridly is already installed.
+:::
 
 
 ## Server-side setup
@@ -66,9 +73,23 @@ This section is a summary of what's needed client-side, so that you can convenie
 
 ### Install the dependencies
 
-```shell
-npm install hybridly vue axios -D
+:::code-group
+```bash [ni]
+ni hybridly vue axios -D
 ```
+```bash [pnpm]
+pnpm i hybridly vue axios -D
+```
+```bash [bun]
+bin i hybridly vue axios -D
+```
+```bash [npm]
+npm i hybridly vue axios -D
+```
+```bash [yarn]
+yarn i hybridly vue axios -D
+```
+:::
 
 ### Configure Vite
 
@@ -281,6 +302,6 @@ open https://hybridly-app.test
 
 ## What's next?
 
-Hybridly has many features. You probably want to know how to pass data from the server to the front-end or how to navigate between pages.
+Hybridly has many features. You probably want to know how to [pass data from the server](../guide/responses.md) to the front-end or how to [navigate between pages](../guide/navigation.md).
 
 Feel free to explore the whole documentation before committing to Hybridly. Have fun building your applications!
