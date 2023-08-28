@@ -68,9 +68,10 @@ function injectCSS(color: string) {
 	element.textContent = `
     #nprogress {
       pointer-events: none;
+			--progress-color: ${color};
     }
     #nprogress .bar {
-      background: ${color};
+      background: var(--progress-color);
       position: fixed;
       z-index: 1031;
       top: 0;
@@ -84,7 +85,7 @@ function injectCSS(color: string) {
       right: 0px;
       width: 100px;
       height: 100%;
-      box-shadow: 0 0 10px ${color}, 0 0 5px ${color};
+      box-shadow: 0 0 10px var(--progress-color), 0 0 5px var(--progress-color);
       opacity: 1.0;
       -webkit-transform: rotate(3deg) translate(0px, -4px);
           -ms-transform: rotate(3deg) translate(0px, -4px);
@@ -102,8 +103,8 @@ function injectCSS(color: string) {
       height: 18px;
       box-sizing: border-box;
       border: solid 2px transparent;
-      border-top-color: ${color};
-      border-left-color: ${color};
+      border-top-color: var(--progress-color);
+      border-left-color: var(--progress-color);
       border-radius: 50%;
       -webkit-animation: nprogress-spinner 400ms linear infinite;
               animation: nprogress-spinner 400ms linear infinite;
