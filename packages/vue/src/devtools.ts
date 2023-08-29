@@ -128,7 +128,7 @@ export function setupDevtools(app: App) {
 				if (event === 'after') {
 					setTimeout(() => {
 						triggerRef(state.context)
-						api.notifyComponentUpdate(app)
+						api.notifyComponentUpdate()
 					}, 100)
 				}
 			}, { once: true }))
