@@ -23,6 +23,12 @@ a:has(code) {
 	text-decoration-color: var(--vp-c-code-underline);
 }
 
+.vp-doc .custom-block code {
+	color: var(--vp-c-text-2) !important;
+	font-weight: 700;
+	background-color: var(--vp-c-bg-soft);
+}
+
 .vp-doc .custom-block a {
 	text-decoration: underline;
 	text-underline-offset: 3px;
