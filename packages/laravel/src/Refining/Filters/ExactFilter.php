@@ -2,11 +2,14 @@
 
 namespace Hybridly\Refining\Filters;
 
+use Hybridly\Refining\Concerns\SupportsRelationConstraints;
 use Hybridly\Refining\Contracts\Filter as FilterContract;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 
 class ExactFilter implements FilterContract
 {
+    use SupportsRelationConstraints;
+
     private function __construct()
     {
     }
@@ -18,11 +21,14 @@ class ExactFilter implements FilterContract
 
     public function __invoke(Builder $builder, mixed $value, string $property): void
     {
-        // TODO: support dot-notated relationships
-        $builder->where(
-            column: $builder->qualifyColumn($property),
-            operator: '=',
-            value: $value,
+        $this->applyRelationConstraint(
+            builder: $builder,
+            property: $property,
+            callback: fn (Builder $builder, string $column) => $builder->where(
+                column: $builder->qualifyColumn($column),
+                operator: '=',
+                value: $value,
+            ),
         );
     }
 

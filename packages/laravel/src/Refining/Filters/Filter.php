@@ -25,7 +25,7 @@ class Filter extends Components\Component implements RefinerContract
         protected string $property,
         protected ?string $alias = null,
     ) {
-        $this->name($alias ?? $property);
+        $this->name(str($alias ?? $property)->replace('.', '_'));
         $this->label(str($this->getName())->headline()->lower()->ucfirst());
         $this->type($filter->getType());
         $this->setUp();

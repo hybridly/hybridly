@@ -2,11 +2,14 @@
 
 namespace Hybridly\Refining\Filters;
 
+use Hybridly\Refining\Concerns\SupportsRelationConstraints;
 use Hybridly\Refining\Contracts\Filter as FilterContract;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 
 class SimilarityFilter implements FilterContract
 {
+    use SupportsRelationConstraints;
+
     public const LOOSE = 'loose';
     public const BEGINS_WITH_STRICT = 'begins_with_strict';
     public const ENDS_WITH_STRICT = 'ends_with_strict';
@@ -25,22 +28,27 @@ class SimilarityFilter implements FilterContract
 
     public function __invoke(Builder $builder, mixed $value, string $property): void
     {
-        $sql = match ($this->mode) {
-            self::LOOSE => "LOWER({$property}) LIKE ?",
-            self::BEGINS_WITH_STRICT => "{$property} LIKE ?",
-            self::ENDS_WITH_STRICT => "{$property} LIKE ?",
-        };
+        $this->applyRelationConstraint(
+            builder: $builder,
+            property: $property,
+            callback: function (Builder $builder, string $column) use ($value) {
+                $sql = match ($this->mode) {
+                    self::LOOSE => "LOWER({$column}) LIKE ?",
+                    self::BEGINS_WITH_STRICT => "{$column} LIKE ?",
+                    self::ENDS_WITH_STRICT => "{$column} LIKE ?",
+                };
 
-        $bindings = match ($this->mode) {
-            self::LOOSE => ['%' . mb_strtolower($value, 'UTF8') . '%'],
-            self::BEGINS_WITH_STRICT => ["{$value}%"],
-            self::ENDS_WITH_STRICT => ["%{$value}"],
-        };
+                $bindings = match ($this->mode) {
+                    self::LOOSE => ['%' . mb_strtolower($value, 'UTF8') . '%'],
+                    self::BEGINS_WITH_STRICT => ["{$value}%"],
+                    self::ENDS_WITH_STRICT => ["%{$value}"],
+                };
 
-        // TODO: support dot-notated relationships
-        $builder->whereRaw(
-            sql: $sql,
-            bindings: $bindings,
+                $builder->whereRaw(
+                    sql: $sql,
+                    bindings: $bindings,
+                );
+            },
         );
     }
 
