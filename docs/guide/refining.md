@@ -160,7 +160,7 @@ This filter will use the provided column to find an exact match using a `where c
 
 ```php
 // ?filters[user_id]=1
-Filters\ExactFilter::make('user_id')
+Filters\ExactFilter::make('user_id');
 ```
 
 ### `TrashedFilter`
@@ -169,7 +169,7 @@ This filter will include or exclude soft-deleted records:
 
 ```php
 // ?filters[trashed]=only
-Filters\TrashedFilter::make()
+Filters\TrashedFilter::make();
 ```
 
 ### `EnumFilter`
@@ -178,7 +178,31 @@ This filter will use the provided column and enum class to find a match:
 
 ```php
 // ?filters[company]=apple
-Filters\EnumFilter::make('company', Company::class)
+Filters\EnumFilter::make('company', Company::class);
+```
+
+### `BooleanFilter`
+
+This filter will convert the request's value to a boolean value to perform a boolean `where` statement:
+
+```php
+// ?filters[is_active]=true
+// ?filters[is_active]=1
+// ?filters[is_active]=y
+Filters\BooleanFilter::make('is_active');
+```
+
+### `SelectFilter`
+
+This filter will perform a `where` statement on the value provided by the `options` array:
+
+```php
+// ?filters[os]=iphone -> `WHERE os = 'ios'`
+Filters\BooleanFilter::make('os', options: [
+  'iphone' => 'ios',
+  'ipad' => 'ipados',
+  'samsung' => 'android',
+]);
 ```
 
 ### `SimilarityFilter`
@@ -188,13 +212,13 @@ This filter will use the `LIKE` operator to find records depending on the specif
 
 ```php
 // WHERE full_name LIKE '%jon%'
-Filters\SimilarityFilter::make('full_name', mode: SimilarityFilter::LOOSE)
+Filters\SimilarityFilter::make('full_name', mode: SimilarityFilter::LOOSE);
 
 // WHERE full_name LIKE '%jon'
-Filters\SimilarityFilter::make('full_name', mode: SimilarityFilter::BEGINS_WITH_STRICT)
+Filters\SimilarityFilter::make('full_name', mode: SimilarityFilter::BEGINS_WITH_STRICT);
 
 // WHERE full_name LIKE 'doe%'
-Filters\SimilarityFilter::make('full_name', mode: SimilarityFilter::ENDS_WITH_STRICT)
+Filters\SimilarityFilter::make('full_name', mode: SimilarityFilter::ENDS_WITH_STRICT);
 ```
 
 ### `FieldSort`
@@ -203,7 +227,7 @@ This sort will sort the records by the specified field:
 
 ```php
 // ?sort=created_at
-Sorts\FieldSort::make('created_at')
+Sorts\FieldSort::make('created_at');
 ```
 
 ## Custom filters and sorts
