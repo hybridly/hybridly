@@ -1,6 +1,6 @@
 {
     "name": "@hybridly/vue",
-    "version": "0.4.2",
+    "version": "0.4.3",
     "description": "Vue adapter for Hybridly",
     "keywords": [
         "hybridly",
