@@ -30,6 +30,7 @@ a:has(code) {
 }
 
 .vp-doc .custom-block a {
+	color: var(--vp-c-text-1);
 	text-decoration: underline;
 	text-underline-offset: 3px;
 	text-decoration-color: var(--vp-c-text-1);
