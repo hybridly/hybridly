@@ -1,3 +1,7 @@
+---
+outline: 'deep'
+---
+
 # Refining
 
 ## Overview
@@ -141,6 +145,22 @@ const refine = useRefinements($props, 'refinements') // [!code focus]
 </template>
 ```
 
+## Querying nested relationships
+
+Filters have basic relationship filtering capabilities, which means you may use the dot-notation syntax to specify a property from a relationship.
+
+```php
+// ?filters[user]=jon
+Filters\ExactFilter::make('user.full_name', alias: 'user');
+```
+
+Note that it is recommended to specify an alias when filtering relationship properties, otherwise the filter name will have its `.` replaced by underscores.
+
+:::warning Sorts are not supported
+Note that the provided sorts do not support relationships. You will need to use a custom sort with a subquery to achieve a relationship sort.
+:::
+
+
 ## Using an alias
 
 It may not be desirable to expose the name of a database column to users. You may use the `alias` argument to specify a name that will identify a refiner:
@@ -152,7 +172,7 @@ Sorts\FieldSort::make('created_at', alias: 'date');
 
 In the example above, `date` is used to apply the sort instead of the column name `created_at`.
 
-## Available filters and sorts
+## Available filters
 
 ### `ExactFilter`
 
@@ -220,6 +240,8 @@ Filters\SimilarityFilter::make('full_name', mode: SimilarityFilter::BEGINS_WITH_
 // WHERE full_name LIKE 'doe%'
 Filters\SimilarityFilter::make('full_name', mode: SimilarityFilter::ENDS_WITH_STRICT);
 ```
+
+## Available sorts
 
 ### `FieldSort`
 
