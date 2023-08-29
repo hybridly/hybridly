@@ -90,36 +90,35 @@ export default defineConfig({
 					],
 				},
 				{
-					text: 'Core concepts',
-					collapsed: true,
-					items: [
-						{ text: 'Routing', link: '/guide/routing' },
-						{ text: 'Responses', link: '/guide/responses' },
-						{ text: 'Navigation', link: '/guide/navigation' },
-						{ text: 'Pages & layouts', link: '/guide/pages-and-layouts' },
-						{ text: 'Global properties', link: '/guide/global-properties' },
-						{ text: 'Partial reloads', link: '/guide/partial-reloads' },
-						{ text: 'Persistent properties', link: '/guide/persistent-properties' },
-						{ text: 'Forms', link: '/guide/forms' },
-						{ text: 'Dialogs', link: '/guide/dialogs' },
-						{ text: 'Refining', link: '/guide/refining' },
-						{ text: 'Hooks', link: '/guide/hooks' },
-					],
-				},
-				{
 					text: 'Essentials',
 					collapsed: true,
 					items: [
+						{ text: 'Pages & layouts', link: '/guide/pages-and-layouts' },
+						{ text: 'Routing', link: '/guide/routing' },
+						{ text: 'Responses', link: '/guide/responses' },
+						{ text: 'Navigation', link: '/guide/navigation' },
 						{ text: 'Validation', link: '/guide/validation' },
 						{ text: 'Authentication', link: '/guide/authentication' },
 						{ text: 'Authorization', link: '/guide/authorization' },
-						{ text: 'Title & meta', link: '/guide/title-and-meta' },
 						{ text: 'File uploads', link: '/guide/file-uploads' },
 						{ text: 'Flash notifications', link: '/guide/flash-notifications' },
 						{ text: 'Exception handling', link: '/guide/exception-handling' },
-						{ text: 'Progress indicator', link: '/guide/progress-indicator' },
 						{ text: 'Testing', link: '/guide/testing' },
 						{ text: 'Debugging', link: '/guide/debugging' },
+					],
+				},
+				{
+					text: 'Features',
+					collapsed: true,
+					items: [
+						{ text: 'Forms', link: '/guide/forms' },
+						{ text: 'Dialogs', link: '/guide/dialogs' },
+						{ text: 'Refining', link: '/guide/refining' },
+						{ text: 'Global properties', link: '/guide/global-properties' },
+						{ text: 'Persistent properties', link: '/guide/persistent-properties' },
+						{ text: 'Partial reloads', link: '/guide/partial-reloads' },
+						{ text: 'Progress indicator', link: '/guide/progress-indicator' },
+						{ text: 'Hooks', link: '/guide/hooks' },
 					],
 				},
 				{
@@ -134,6 +133,7 @@ export default defineConfig({
 					text: 'Extra topics',
 					collapsed: true,
 					items: [
+						{ text: 'Title & meta', link: '/guide/title-and-meta' },
 						{ text: 'Preserving URLs', link: '/guide/preserving-urls' },
 						{ text: 'Scroll management', link: '/guide/scroll-management' },
 						{ text: 'Precognition', link: '/guide/precognition' },
@@ -211,6 +211,13 @@ export default defineConfig({
 
 		footer: {
 			message: 'Made with <span class="i-mdi:cards-heart mx-1 inline-block text-pink-300"></span> by <a class="ml-1 underline" href="https://twitter.com/enzoinnocenzi">Enzo Innocenzi</a>',
+		},
+	},
+
+	markdown: {
+		theme: {
+			dark: 'material-theme-palenight',
+			light: 'github-light',
 		},
 	},
 

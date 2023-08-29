@@ -40,7 +40,7 @@ final class UserData extends Data
 
 ## Consuming user data
 
-Hybridly does not provide any specific tool to read user data, but you may simply use `useProperty` to get the `user` property. Extra DX points when [TypeScript is set up](./installation.md#typescript-support). 
+Hybridly does not provide any specific tool to read user data, but you may simply use `useProperty` to get the `user` property.
 
 Optionally, you could write a wrapper around it:
 

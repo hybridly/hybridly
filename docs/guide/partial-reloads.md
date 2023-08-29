@@ -6,11 +6,11 @@ Partial reloads are repeated requests to the same page which purpose is to updat
 
 As an example, consider a page that includes a list of users, as well as an option to filter the users by their company. On the first request to the page, both the `users` and `companies` properties are passed to the page component.
 
-However, on subsequent requests to the same page — maybe to filter the users —, you can request only the `users` property from the server, and not the `companies` one.
+However, on subsequent requests to the same page—maybe to filter the users—you can request only the `users` property from the server, and not the `companies` one.
 
 ## Making partial reloads
 
-Hybrid requests are "partial" when the `only` or `except` option is defined in the its options. 
+Hybrid requests are "partial" when the `only` or `except` property is defined in its options. 
 
 ```ts
 defineProps<{

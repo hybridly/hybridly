@@ -4,7 +4,7 @@
 
 Hybrid responses respect a protocol to which the front-end adapter must adhere. A response contains, among other things, the name of the page component and its properties.
 
-To send a response, use the `hybridly` function the same way you would use `view`:
+To send a response, use the [`hybridly`](../api/laravel/functions.md#hybridly) or the [`Hybridly\view`](../api/laravel/functions.md#view) functions the same way you would use `view`:
 
 ```php
 use App\Data\ChirpData;
@@ -31,9 +31,10 @@ In the example above, the corresponding single-file component would simply accep
 
 ```vue
 <script setup lang="ts">
-defineProps<{
+defineProps<{ // [!code focus:3]
   chirps: Paginator<App.Data.ChirpData>
 }>()
+</script>
 ```
 
 :::info Paginator
@@ -60,7 +61,7 @@ class UsersController extends Controller
     {
         $createUser->execute($data);
 
-        return to_route('users.index');
+        return to_route('users.index'); // Redirects to `index` above // [!code hl]
     }
 }
 ```
@@ -91,11 +92,11 @@ Aside from its obvious benefits in terms of separation of concerns, the class re
 In other terms, you may create a view-model that extends [Data](https://github.com/spatie/laravel-data) in order to get its typings for free:
 
 ```php
-// app/ViewModels/ChirpViewModel // [!code focus:2]
+// app/ViewModels/ChirpViewModel
 class ChirpViewModel extends Data
 {
     public function __construct(
-        public readonly ChirpData $chirp,   // [!code focus:4]
+        public readonly ChirpData $chirp,
         #[DataCollectionOf(ChirpData::class)]
         public readonly PaginatedDataCollection $chirps,
         public readonly string $previous,
@@ -104,7 +105,7 @@ class ChirpViewModel extends Data
 }
 ```
 
-A controller can use a data object in place of an array of properties:
+The `hybridly` function can use a data object (or any `Arrayable` object, for that matter) in place of an array of properties:
 
 ```php
 // app/Http/Controllers/ChirpsController // [!code focus]

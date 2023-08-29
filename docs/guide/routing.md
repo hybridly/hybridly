@@ -2,9 +2,9 @@
 
 ## Overview
 
-As opposed to single-page applications, routes do not need to be defined on the front-end. Vue Router is not needed — simply define your routes in `routes/*.php` like you would do with normal Laravel applications.
+As opposed to single-page applications, endpoints do not need to be redefined on the front-end. Vue Router is not needed — simply define your routes in `routes/*.php` like you would do with normal Laravel applications.
 
-The only catch is to return a <abbr title="A view that respects the Hybridly protocol">hybrid view</abbr> instead of a Blade view. This is done by using the `hybridly` function:
+The only catch is to return a <abbr title="A view that respects the Hybridly protocol">hybrid view</abbr> instead of a Blade view. This is done by using the [`hybridly`](../api/laravel/functions.md#hybridly) or [`Hybridly\view`](../api/laravel/functions.md#view) functions:
 
 ```php
 use App\Data\UserData;
@@ -26,7 +26,7 @@ Learn more about sending responses in the [their documentation](./responses.md).
 
 ## Generating URLs
 
-Since pages are written in single-file components, global Laravel functions like `route` are not available.
+Since pages are written in single-file components, global Laravel or PHP functions like `route` are not available.
 
 Instead, you may use Hybridly's [`route`](../api/utils/route) util. This function is typed and its typings are updated live as your `routes/*.php` files are saved.
 
@@ -45,11 +45,11 @@ route('index')
 route('users.show', { user: 1 })
 ```
 
-:::info Gotchas
-The `route` function is not reactive, in the sense that it returns a `string`, not a `Ref`.
+:::info Reactivity
+The `route` function is not reactive, in the sense that it returns a `string`, not a `Ref<string>`.
 :::
 
-## Configuration
+## Excluding or including routes
 
 By default, vendor routes are not made available to the front-end and will not appear when using the `route` util. 
 

@@ -7,7 +7,7 @@ Dialogs are components with their own URL and properties, which are rendered as 
 When navigating from a page to a dialog, its component will be mounted as a sibling to the current page component — but when navigated to directly via their URL, the base page's component and properties will be loaded first, so the dialog can be rendered on top of it.
 
 :::info Experimental
-This feature is new and experimental. Use with caution and feel free to report issues on our Discord server.
+This feature is experimental. Use with caution and feel free to report issues on our Discord server.
 :::
 
 ## Creating a dialog

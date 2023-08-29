@@ -107,7 +107,7 @@ defineLayout(main)
 You can optionally pass [layout properties](#persistent-layout-properties) as the second argument of `defineLayout`.
 
 
-:::info Named slots
+:::warning Named slots
 Persistent layouts also have their own drawbacks. Specifically, it is not possible to use named slots with them. Instead, use properties or basic single-file component layouts.
 :::
 
@@ -115,7 +115,7 @@ Persistent layouts also have their own drawbacks. Specifically, it is not possib
 
 Additional properties can be passed to persistent layouts on a per-page basis. When navigating away from a page, the properties will be reset. 
 
-You may use the `defineLayoutProperties` composable to define the layout properties:
+You may use the `defineLayoutProperties` util to define the layout properties:
 
 ```vue
 <!-- resources/views/pages/example.vue -->

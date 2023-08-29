@@ -21,9 +21,9 @@ return [
 ];
 ```
 
-The `output` option converts properties that are sent to single-file components. In the example above, properties can be sent to single-file components using any case, and single-file components will receive them as `camelCase`.
-
 The `input` option converts properties that are sent to Laravel, specifically partial properties. In the example above, partial properties can be referred to using any case, as long as they are using `snake_case` in PHP code.
+
+The `output` option converts properties that are sent to single-file components. In the example above, properties can be sent to single-file components using any case, and single-file components will receive them as `camelCase`.
 
 :::info Top-level properties only
 Note that this feature only applies to top-level properties. While it could be implemented for nested properties as well, this could create a lot of confusion and would interfere with generated TypeScript definitions.
