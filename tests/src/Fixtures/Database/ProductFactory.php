@@ -2,6 +2,7 @@
 
 namespace Hybridly\Tests\Fixtures\Database;
 
+use Hybridly\Tests\Fixtures\Vendor;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class ProductFactory extends Factory
@@ -12,7 +13,7 @@ class ProductFactory extends Factory
     {
         return [
             'name' => $this->faker->words(3, true),
-            'vendor' => $this->faker->company(),
+            'vendor' => $this->faker->randomElement(Vendor::cases()),
             'description' => $this->faker->realText(),
             'price' => $this->faker->numberBetween(1, 10000),
             'stock_count' => $this->faker->numberBetween(1, 1000),

@@ -172,6 +172,15 @@ This filter will include or exclude soft-deleted records:
 Filters\TrashedFilter::make()
 ```
 
+### `EnumFilter`
+
+This filter will use the provided column and enum class to find a match:
+
+```php
+// ?filters[company]=apple
+Filters\EnumFilter::make('company', Company::class)
+```
+
 ### `SimilarityFilter`
 
 This filter will use the `LIKE` operator to find records depending on the specified mode.
