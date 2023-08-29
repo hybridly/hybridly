@@ -10,8 +10,12 @@ a:has(code) {
 	padding: 4px 5px 3px 5px !important;
 }
 
+.vp-doc a {
+	text-decoration: none;
+}
+
 .vp-doc a > code {
-	color: var(--vp-c-text-code);
+	color: var(--vp-c-text-1);
 	padding: 4px 5px 5px 5px !important;
 	transition: color 0.15s, border 0.15s;
 	text-decoration: underline;
@@ -22,7 +26,7 @@ a:has(code) {
 .vp-doc .custom-block a {
 	text-decoration: underline;
 	text-underline-offset: 3px;
-	text-decoration-color: var(--vp-c-text-code);
+	text-decoration-color: var(--vp-c-text-1);
 	font-weight: 400;
 }
 
