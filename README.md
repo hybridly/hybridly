@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://hybridly.dev">
-    <img src=".github/assets/banner-dark.svg" />
+    <img src=".github/assets/banner.svg" />
   </a>
 </p>
 
