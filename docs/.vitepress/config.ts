@@ -82,8 +82,7 @@ export default defineConfig({
 					items: [
 						{ text: 'Introduction', link: '/guide/' },
 						{ text: 'Installation', link: '/guide/installation' },
-						{ text: 'Demonstration', link: '/guide/demonstration' },
-						{ text: 'TypeScript', link: '/guide/typescript' },
+						{ text: 'Example application', link: '/guide/demonstration' },
 						...(hasUpgradeGuide ? [
 							{ text: `Upgrade to ${cleanVersion}`, link: `/guide/upgrade/${cleanVersion}` },
 						] : []),
@@ -91,7 +90,7 @@ export default defineConfig({
 				},
 				{
 					text: 'Essentials',
-					collapsed: true,
+					collapsed: false,
 					items: [
 						{ text: 'Pages & layouts', link: '/guide/pages-and-layouts' },
 						{ text: 'Routing', link: '/guide/routing' },
@@ -109,7 +108,7 @@ export default defineConfig({
 				},
 				{
 					text: 'Features',
-					collapsed: true,
+					collapsed: false,
 					items: [
 						{ text: 'Forms', link: '/guide/forms' },
 						{ text: 'Dialogs', link: '/guide/dialogs' },
@@ -133,6 +132,7 @@ export default defineConfig({
 					text: 'Extra topics',
 					collapsed: true,
 					items: [
+						{ text: 'TypeScript', link: '/guide/typescript' },
 						{ text: 'Title & meta', link: '/guide/title-and-meta' },
 						{ text: 'Preserving URLs', link: '/guide/preserving-urls' },
 						{ text: 'Scroll management', link: '/guide/scroll-management' },

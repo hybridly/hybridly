@@ -302,6 +302,8 @@ open https://hybridly-app.test
 
 ## What's next?
 
-Hybridly has many features. You probably want to know how to [pass data from the server](../guide/responses.md) to the front-end or how to [navigate between pages](../guide/navigation.md).
+You may want to look into setting up [PHP to TypeScript transformation](../guide/typescript.md).
+
+To get started with building your application, you should read how to [pass data from the server](../guide/responses.md) to the front-end or how to [navigate between pages](../guide/navigation.md).
 
 Feel free to explore the whole documentation before committing to Hybridly. Have fun building your applications!
