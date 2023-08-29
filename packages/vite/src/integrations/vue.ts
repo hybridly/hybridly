@@ -19,7 +19,6 @@ function getVueOptions(options: ViteOptions): VueOptions {
 				},
 			},
 			script: {
-				// @ts-ignore
 				globalTypeFiles: [
 					path.resolve('.hybridly/php-types.d.ts'),
 				],
