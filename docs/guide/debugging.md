@@ -4,6 +4,12 @@
 
 Hybridly comes with a built-in Vue plugin that integrates with Vue Devtools. You may read more about it on the [dedicated documentation](./devtools.md).
 
+## Using the console
+
+Hybridly implements [debug](https://github.com/debug-js/debug), a lightweight debug utility that allows logging data.
+
+To enable logging, you may add the `debug:*` key/value pair to your application's local storage. You may also be more specific and chose to only log certain values instead of using `*`.
+
 ## In tests
 
 During tests, you may use the `hdd` macro on `TestResponse` instances.
