@@ -30,11 +30,13 @@ class Sort extends Components\Component implements RefinerContract
 
     public function refine(Refine $refiner, Builder $builder): void
     {
-        if (\is_null($this->direction = $refiner->getSortDirectionFromRequest($this->property, $this->alias) ?? $this->getDefaultDirection())) {
+        $this->direction = $refiner->getSortDirectionFromRequest($this->property, $this->alias);
+
+        if (\is_null($this->direction) && !$this->getDefaultDirection()) {
             return;
         }
 
-        $this->sort->__invoke($builder, $this->direction, $this->property);
+        $this->sort->__invoke($builder, $this->direction ?? $this->getDefaultDirection(), $this->property);
     }
 
     protected function getDefaultEvaluationParameters(): array
