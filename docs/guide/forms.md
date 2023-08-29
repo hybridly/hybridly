@@ -71,7 +71,7 @@ const edit = useForm({
 	}
 })
 
-edit.submitWithOptions({
+edit.submitWith({
 	url: route('chirps.update'),
 	method: 'PATCH',
 })

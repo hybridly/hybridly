@@ -252,6 +252,8 @@ export function useForm<
 		clearError,
 		setInitial,
 		hasDirty,
+		submitWith: submit,
+		/** @deprecated Use `submitWith` instead */
 		submitWithOptions: submit,
 		submit: () => submit(),
 		hasErrors: computed(() => Object.values(errors.value ?? {}).length > 0),

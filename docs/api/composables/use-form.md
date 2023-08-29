@@ -112,14 +112,14 @@ A function that submits the form. This function does not accept options because 
 </template>
 ```
 
-### `submitWithOptions`
+### `submitWith`
 
 - **Type**: `(options?: HybridRequestOptions) => Promise<NavigationResponse>`
 
 A function that submits the form with the given options. These will override the options defined in the form's initialization.
 
 ```ts
-form.submitWithOptions({ url: '/login' })
+form.submitWith({ url: '/login' })
 ```
 
 ### `hasErrors`
