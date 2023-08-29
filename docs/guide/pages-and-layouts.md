@@ -8,10 +8,10 @@ Serving a page consists of returning a [hybrid response](./responses.md) with th
 
 ## Pages
 
-Pages are basic single-file components that receive data from controller as their properties. You can access them like any other single-file component using `defineProps`.
+Pages are basic single-file components that can receive data from controllers as their properties. You can access these properties like any other single-file component using `defineProps`.
 
-```vue
-<!-- resources/views/pages/users/show.vue -->
+:::code-group
+```vue [resources/views/pages/users/show.vue]
 <script setup lang="ts">
 const $props = defineProps<{
   user: App.Data.User
@@ -29,15 +29,15 @@ useHead({
   </section>
 </template>
 ```
+:::
 
 The route and controller for the page above could look like the following:
 
-```php
-// routes/web.php
+:::code-group
+```php [web.php]
 Route::get('/users/{user}', ShowUserController::class)->name('users.show');
 ```
-```php
-// app/Http/Controllers/Users/ShowUserController.php
+```php [ShowUserController.php]
 use App\Data\UserData;
 use App\Models\User;
 
@@ -51,6 +51,7 @@ class ShowUserController
     }
 }
 ```
+:::
 
 ## Layouts
 
@@ -82,7 +83,7 @@ A persistent layout can be defined in two ways. You can use the `layout` attribu
 </template>
 ```
 
-In the example above, the `resources/views/layouts/main.vue` layout will be used. If the name of the layout is omitted, the `layouts/default.vue` will be used instead. So if you only have one layout, you can use the following:
+In the example above, the `resources/views/layouts/main.vue` layout will be used. If the name of the layout is omitted, `layouts/default.vue` will be used instead. So if you only have one layout, you can use the following:
 
 ```vue
 <template layout>
