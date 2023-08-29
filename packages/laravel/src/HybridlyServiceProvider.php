@@ -131,7 +131,7 @@ class HybridlyServiceProvider extends PackageServiceProvider
 
     protected function registerAbout(): void
     {
-        AboutCommand::add('hybridly', [
+        AboutCommand::add('hybridly', fn () => [
             'Version (composer)' => Version::getPrettyComposerVersion(),
             'Version (npm)' => Version::getPrettyNpmVersion(),
             'Eager view loading' => config('hybridly.architecture.eager_load_views') ? '<fg=yellow;options=bold>ENABLED</>' : 'OFF',
