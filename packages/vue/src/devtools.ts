@@ -85,7 +85,9 @@ export function setupDevtools(app: App) {
 
 		const listen = [
 			'start',
+			'ready',
 			'data',
+			'navigating',
 			'navigated',
 			'progress',
 			'error',
@@ -95,6 +97,8 @@ export function setupDevtools(app: App) {
 			'exception',
 			'fail',
 			'after',
+			'backForward',
+			'success',
 		] as const
 
 		registerHook('before', (options) => {
@@ -124,7 +128,7 @@ export function setupDevtools(app: App) {
 				if (event === 'after') {
 					setTimeout(() => {
 						triggerRef(state.context)
-						api.notifyComponentUpdate()
+						api.notifyComponentUpdate(app)
 					}, 100)
 				}
 			}, { once: true }))
