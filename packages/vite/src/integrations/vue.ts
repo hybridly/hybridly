@@ -17,12 +17,14 @@ function getVueOptions(options: ViteOptions): VueOptions {
 					base: null,
 					includeAbsolute: false,
 				},
+				...options.vue?.template,
 			},
 			script: {
 				globalTypeFiles: [
 					path.resolve('.hybridly/php-types.d.ts'),
 				],
 				defineModel: true,
+				...options.vue?.script,
 			},
 		},
 		options.vue ?? {},
