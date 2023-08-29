@@ -8,12 +8,10 @@ export default defineBuildConfig({
 	],
 	clean: true,
 	declaration: true,
-	externals: [
-		'vite',
-		'vue',
-		'@hybridly/progress-plugin',
-	],
 	rollup: {
 		emitCJS: true,
+		output: {
+			exports: 'named',
+		},
 	},
 })

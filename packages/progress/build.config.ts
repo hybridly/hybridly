@@ -6,11 +6,10 @@ export default defineBuildConfig({
 	],
 	clean: true,
 	declaration: true,
-	externals: [
-		'vite',
-		'debug',
-	],
 	rollup: {
 		emitCJS: true,
+		output: {
+			exports: 'named',
+		},
 	},
 })

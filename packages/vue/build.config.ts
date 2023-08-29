@@ -20,5 +20,8 @@ export default defineBuildConfig({
 	],
 	rollup: {
 		emitCJS: true,
+		output: {
+			exports: 'named',
+		},
 	},
 })
