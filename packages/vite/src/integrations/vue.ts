@@ -22,6 +22,7 @@ function getVueOptions(options: ViteOptions): VueOptions {
 				globalTypeFiles: [
 					path.resolve('.hybridly/php-types.d.ts'),
 				],
+				defineModel: true,
 			},
 		},
 		options.vue ?? {},
