@@ -14,7 +14,7 @@ function getRunOptions(options: ViteOptions): Runner[] {
 			pattern: [
 				'+(app|src)/**/*Data.php',
 				'+(app|src)/**/Enums/*.php',
-				'+(app|src)/**/Middlewrare/HandleHybridRequests.php',
+				'+(app|src)/**/Middleware/HandleHybridRequests.php',
 			],
 		},
 		{
