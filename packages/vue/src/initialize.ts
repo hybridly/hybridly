@@ -11,6 +11,7 @@ import { state } from './stores/state'
 import { devtools } from './devtools'
 import { dialogStore } from './stores/dialog'
 import { onMountedCallbacks } from './stores/mount'
+import { viewTransition } from './plugins/view-transition'
 
 /**
  * Initializes Hybridly's router and context.
@@ -123,11 +124,14 @@ function prepare(options: ResolvedInitializeOptions) {
 		return await resolveViewComponent(name, options)
 	}
 
+	options.plugins ??= []
+
 	if (options.progress !== false) {
-		options.plugins = [
-			progress(typeof options.progress === 'object' ? options.progress : {}),
-			...options.plugins ?? [],
-		]
+		options.plugins.push(progress(typeof options.progress === 'object' ? options.progress : {}))
+	}
+
+	if (options.viewTransition !== false) {
+		options.plugins.push(viewTransition())
 	}
 
 	return {
@@ -189,6 +193,11 @@ interface InitializeOptions {
 	plugins?: Plugin[]
 	/** Custom Axios instance. */
 	axios?: Axios
+	/**
+	 * Enables the View Transition API, if supported.
+	 * @see https://developer.mozilla.org/en-US/docs/Web/API/ViewTransition
+	 */
+	viewTransition?: boolean
 }
 
 interface SetupArguments {
