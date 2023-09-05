@@ -44,7 +44,6 @@
     "dependencies": {
         "@clickbar/dot-diver": "^1.0.1",
         "@hybridly/core": "workspace:*",
-        "@hybridly/progress-plugin": "workspace:*",
         "@hybridly/utils": "workspace:*",
         "@vue/devtools-api": "^6.5.0",
         "defu": "^6.1.2",

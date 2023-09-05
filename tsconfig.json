@@ -15,8 +15,7 @@
             "@hybridly/core": ["./packages/core/src/index.ts"],
             "@hybridly/vite": ["./packages/vite/src/index.ts"],
             "@hybridly/vue": ["./packages/vue/src/index.ts"],
-            "@hybridly/utils": ["./packages/utils/src/index.ts"],
-            "@hybridly/progress-plugin": ["./packages/progress/src/index.ts"]
+            "@hybridly/utils": ["./packages/utils/src/index.ts"]
         },
         "types": ["vite/client", "node"]
     },

@@ -14,9 +14,6 @@ importers:
       '@hybridly/core':
         specifier: workspace:*
         version: link:packages/core
-      '@hybridly/progress-plugin':
-        specifier: workspace:*
-        version: link:packages/progress
       '@hybridly/utils':
         specifier: workspace:*
         version: link:packages/utils
@@ -123,28 +120,12 @@ importers:
       '@hybridly/core':
         specifier: workspace:*
         version: link:../core
-      '@hybridly/progress-plugin':
-        specifier: workspace:*
-        version: link:../progress
       '@hybridly/vite':
         specifier: workspace:*
         version: link:../vite
       '@hybridly/vue':
         specifier: workspace:*
         version: link:../vue
-
-  packages/progress:
-    dependencies:
-      '@hybridly/core':
-        specifier: workspace:*
-        version: link:../core
-      nprogress:
-        specifier: ^0.2.0
-        version: 0.2.0
-    devDependencies:
-      '@types/nprogress':
-        specifier: ^0.2.0
-        version: 0.2.0
 
   packages/utils:
     dependencies:
@@ -215,9 +196,6 @@ importers:
       '@hybridly/core':
         specifier: workspace:*
         version: link:../core
-      '@hybridly/progress-plugin':
-        specifier: workspace:*
-        version: link:../progress
       '@hybridly/utils':
         specifier: workspace:*
         version: link:../utils

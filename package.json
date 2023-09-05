@@ -18,7 +18,6 @@
     "devDependencies": {
         "@fontsource-variable/rubik": "^5.0.10",
         "@hybridly/core": "workspace:*",
-        "@hybridly/progress-plugin": "workspace:*",
         "@hybridly/utils": "workspace:*",
         "@hybridly/vite": "workspace:*",
         "@hybridly/vue": "workspace:*",
