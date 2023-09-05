@@ -61,6 +61,11 @@ export interface NavigationOptions {
 	 * @internal This is an advanced property meant to be used internally.
 	 */
 	isBackForward?: boolean
+	/**
+	 * Defines whether this navigation is the first to happen after a direct page load.
+	 * @internal This is an advanced property meant to be used internally.
+	 */
+	isInitial?: boolean
 }
 
 export type Method = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE'

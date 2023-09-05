@@ -427,6 +427,7 @@ async function initializeRouter(): Promise<InternalRouterContext> {
 		})
 
 		await navigate({
+			isInitial: true,
 			preserveState: true,
 			replace: sameUrls(context.url, window.location.href),
 		})
