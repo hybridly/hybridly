@@ -344,6 +344,10 @@ export async function navigate(options: NavigationOptions) {
 		setHistoryState({ replace: shouldReplaceHistory })
 	}
 
+	context.adapter.executeOnMounted(() => {
+		runHooks('mounted', {}, context)
+	})
+
 	// Then, we swap the view.
 	const viewComponent = await context.adapter.resolveComponent(context.view.component)
 	debug.router(`Component [${context.view.component}] resolved to:`, viewComponent)
@@ -361,10 +365,6 @@ export async function navigate(options: NavigationOptions) {
 	}
 
 	await runHooks('navigated', {}, options, context)
-
-	context.adapter.executeOnMounted(() => {
-		runHooks('mounted', {}, context)
-	})
 }
 
 export async function performHybridRequest(targetUrl: URL, options: HybridRequestOptions, abortController?: AbortController): Promise<AxiosResponse> {
