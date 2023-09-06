@@ -53,7 +53,7 @@ class Factory implements HybridResponse
     /**
      * Sets the hybridly view data.
      */
-    public function view(string $component, array|Arrayable|DataObject $properties): static
+    public function view(string $component = null, array|Arrayable|DataObject $properties = []): static
     {
         if ($properties instanceof Arrayable || $properties instanceof DataObject) {
             $properties = $properties->toArray();
@@ -85,12 +85,8 @@ class Factory implements HybridResponse
      */
     public function properties(array|Arrayable|DataObject $properties): static
     {
-        if (!isset($this->view)) {
-            throw new \LogicException('The `properties` method requires a view to be defined. Call `view` or `component` before.');
-        }
-
         $this->view = new View(
-            component: $this->view->component,
+            component: $this->view?->component,
             properties: $properties,
         );
 
@@ -189,7 +185,9 @@ class Factory implements HybridResponse
 
         $route = $this->router->getRoutes()->match($request);
 
-        $request->headers->replace($originalRequest->headers->all());
+        /** @var array */
+        $originalHeaders = $originalRequest->headers->all();
+        $request->headers->replace($originalHeaders);
         $request->setJson($originalRequest->json());
         $request->setUserResolver(fn () => $originalRequest->getUserResolver());
         $request->setRouteResolver(fn () => $route);

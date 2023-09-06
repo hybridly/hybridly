@@ -18,7 +18,7 @@ if (!function_exists('hybridly')) {
         /** @var Hybridly */
         $hybridly = resolve(Hybridly::class);
 
-        if (!is_null($component)) {
+        if (!is_null($component) || !empty($properties)) {
             return $hybridly->view($component, $properties);
         }
 

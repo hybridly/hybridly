@@ -178,12 +178,12 @@ export interface PendingNavigation {
 /** A page or dialog component. */
 export interface View {
 	/** Name of the component to use. */
-	component: string
+	component?: string
 	/** Properties to apply to the component. */
 	properties: Properties
 }
 
-export interface Dialog extends View {
+export interface Dialog extends Required<View> {
 	/** URL that is the base background page when navigating to the dialog directly. */
 	baseUrl: string
 	/** URL to which the dialog should redirect when closed. */
