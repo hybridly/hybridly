@@ -4,7 +4,10 @@ outline: 'deep'
 
 # `useDialog`
 
-This util returns functions which control [dialogs](../../guide/dialogs.md).
+This composable returns a few functions that control dialogs.
+
+| Related | [Dialogs](../../guide/dialogs.md) |
+| ------- | --------------------------------- |
 
 ## Usage
 

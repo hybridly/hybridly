@@ -2,6 +2,9 @@
 
 This helper function may be used with a [`DataResource`](../../guide/authorization.md#using-data-resources) to determine its authorizations.
 
+| Related | [Authorization](../../guide/authorization.md) |
+| ------- | --------------------------------------------- |
+
 ## Usage
 
 ```ts

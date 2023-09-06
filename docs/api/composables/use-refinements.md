@@ -1,6 +1,13 @@
+---
+outline: deep
+---
+
 # `useRefinements`
 
 This composable is part of the refining feature. It takes a `Refinement` property as a parameter and exposes methods to refine a query using filters and sorts.
+
+| Related | [Refining](../../guide/refining.md) |
+| ------- | ----------------------------------- |
 
 ## Usage
 
@@ -109,13 +116,13 @@ The list of available filters. They are configured by the `Refine` object in the
 
 The list of available sorts. They are configured by the `Refine` object in the back-end.
 
-## `getFilter`
+### `getFilter`
 
 - Type: `(name: string): FilterRefinement|undefined`
 
 Gets a filter by name.
 
-## `getSort`
+### `getSort`
 
 - Type: `(name: string): SortRefinement|undefined`
 
@@ -127,7 +134,7 @@ Gets a sort by name.
 
 Binds the given filter to a ref. The second parameter, `options`, accepts an alternative `watch` function.
 
-#### Examples
+**Example**
 
 ```ts
 const commercial = refine.bindFilter<bool>('commercial')

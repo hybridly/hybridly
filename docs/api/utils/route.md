@@ -2,6 +2,9 @@
 
 This helper function generates a URL based on a route name and the provided arguments.
 
+| Related | [Routing](../../guide/routing.md), [`useRoute`](../composables/use-route.md) |
+| ------- | ---------------------------------------------------------------------------- |
+
 ## Usage
 
 ```ts

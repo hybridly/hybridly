@@ -6,6 +6,9 @@ outline: 'deep'
 
 This composable helps with defining and submiting forms.
 
+| Related | [Forms](../../guide/forms.md) |
+| ------- | ----------------------------- |
+
 ## Usage
 
 ```ts

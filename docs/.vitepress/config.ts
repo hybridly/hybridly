@@ -151,12 +151,14 @@ export default defineConfig({
 			'/api/': [
 				{
 					text: 'Components',
+					collapsed: false,
 					items: [
 						{ text: '&lt;RouterLink&gt;', link: '/api/components/router-link' },
 					],
 				},
 				{
 					text: 'Laravel',
+					collapsed: false,
 					items: [
 						{ text: 'Hybridly', link: '/api/laravel/hybridly' },
 						{ text: 'Functions', link: '/api/laravel/functions' },
@@ -166,6 +168,7 @@ export default defineConfig({
 				},
 				{
 					text: 'Router',
+					collapsed: false,
 					items: [
 						{ text: 'Options', link: '/api/router/options' },
 						{ text: 'Utils', link: '/api/router/utils' },
@@ -174,19 +177,16 @@ export default defineConfig({
 				},
 				{
 					text: 'Utils',
+					collapsed: false,
 					items: [
 						{ text: 'initializeHybridly', link: '/api/utils/initialize-hybridly' },
 						{ text: 'can', link: '/api/utils/can' },
 						{ text: 'route', link: '/api/utils/route' },
 						{ text: 'registerHook', link: '/api/utils/register-hook' },
-					],
-				},
-				{
-					text: 'Composables',
-					items: [
 						{ text: 'useForm', link: '/api/composables/use-form' },
 						{ text: 'useDialog', link: '/api/composables/use-dialog' },
 						{ text: 'useProperty', link: '/api/composables/use-property' },
+						{ text: 'setProperty', link: '/api/composables/set-property' },
 						{ text: 'useRefinements', link: '/api/composables/use-refinements' },
 						{ text: 'useRoute', link: '/api/composables/use-route' },
 						{ text: 'defineLayout', link: '/api/composables/define-layout' },
