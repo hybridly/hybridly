@@ -2,11 +2,7 @@
 
 ## Overview
 
-The official [Visual Studio Code extension](https://marketplace.visualstudio.com/items?itemName=innocenzi.vscode-hybridly), while still experimental, offers improved navigation support and auto-completion throughout Hybridly applications.
-
-:::info Customization
-The extension currently only supports the default and domain-based architecture. Custom paths specified in `initializeHybridly` or the Vite plugin configuration are not taken into account.
-:::
+The official [Visual Studio Code extension](https://marketplace.visualstudio.com/items?itemName=innocenzi.vscode-hybridly) offers an improved navigation support and auto-completion throughout Hybridly applications.
 
 ### Layout linking and auto-completion
 
