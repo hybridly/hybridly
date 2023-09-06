@@ -50,13 +50,13 @@ const features: Feature[] = [
 		url: '/guide/visual-studio-code',
 	},
 	{
-		icon: 'i-mdi:magnify',
+		icon: 'i-mdi:vuejs',
 		title: 'Vue DevTools',
 		description: 'Integrates with Vue DevTools for painless property inspection and debugging.',
 		url: '/guide/devtools',
 	},
 	{
-		icon: 'i-mdi:magnify',
+		icon: 'i-mdi:code-braces',
 		title: 'Made for developers',
 		description: 'Hybridly is packed with quality-of-life features that should drastically improve your developer experience.',
 		url: '/guide/comparison-with-inertia',
