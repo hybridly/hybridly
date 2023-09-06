@@ -24,6 +24,8 @@ class Factory implements HybridResponse
     protected View $dialogView;
     protected ?string $dialogBaseUrl = null;
 
+    public const RESPONSE_EVENT = 'hybridly.response';
+
     public function __construct(
         protected Hybridly $hybridly,
         protected Router $router,
@@ -132,7 +134,7 @@ class Factory implements HybridResponse
             $payload = $this->renderDialog($request, $payload);
         }
 
-        event('hybridly.response', [[
+        event(self::RESPONSE_EVENT, [[
             'payload' => $payload->toArray(),
             'request' => $request,
             'version' => $this->hybridly->getVersion(),
