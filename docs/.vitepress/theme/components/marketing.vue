@@ -70,17 +70,17 @@ const features: Feature[] = [
 			<!-- Hero -->
 			<div class="flex w-full flex-col items-center justify-between gap-x-40 px-6 lg:flex-row lg:items-start lg:px-0">
 				<!-- Left block -->
-				<section class="max-w-2xl grow">
+				<section class="max-w-2xl grow group [&>*]:ease-in-out [&>*]:transition [&>*]:duration-500">
 					<!-- Title -->
-					<h1 class="title font-title title-bg bg-clip-text text-center text-5xl font-medium uppercase text-transparent lg:text-left lg:text-8xl">
+					<h1 class="title font-title title-bg bg-clip-text text-center text-5xl font-medium uppercase text-transparent lg:text-left lg:text-8xl group-hover:-translate-x-12">
 						Hybridly
 					</h1>
 					<!-- Subtitle -->
-					<p class="mt-2 text-center text-2xl font-medium lg:text-left lg:text-3xl">
+					<p class="mt-2 text-center text-2xl font-medium lg:text-left lg:text-3xl group-hover:-translate-x-8">
 						Server-driven, client-rendered applications.
 					</p>
 					<!-- Description -->
-					<p class="mt-4 text-center text-lg font-medium opacity-60 lg:text-left lg:text-2xl">
+					<p class="mt-4 text-center text-lg font-medium opacity-60 lg:text-left lg:text-2xl group-hover:-translate-x-4">
 						Build single-page applications the classic way. No API, no route duplication, no front-end state. Fully server-driven.
 					</p>
 					<!-- Actions -->
@@ -106,8 +106,8 @@ const features: Feature[] = [
 				</section>
 
 				<!-- Logo block -->
-				<div class="lg:h-55 lg:w-55 h-30 w-30 relative order-first mb-20 flex shrink-0 items-center justify-center lg:order-last lg:mt-20 lg:mr-20">
-					<img class="absolute z-[1] h-full w-full logo" src="/logo.svg" />
+				<div class="group hover:scale-105 transition duration-300 lg:h-55 lg:w-55 h-30 w-30 relative order-first mb-20 flex shrink-0 items-center justify-center lg:order-last lg:mt-20 lg:mr-20">
+					<img class="group-hover:scale-85 transition duration-300 absolute z-[1] h-full w-full" src="/logo.svg" />
 					<div class="image-bg absolute -inset-5 rotate-45 opacity-40 dark:opacity-70" />
 				</div>
 			</div>
@@ -118,18 +118,16 @@ const features: Feature[] = [
 					<component
 						:is="feature.url ? 'a' : 'div'"
 						class="group bg-[--vp-c-bg-soft] relative flex flex-col justify-center gap-4 rounded-lg p-6 ring-2 ring-transparent hover:ring-[--vp-c-brand]"
-						:class="{
-							'transition duration-300 cursor-pointer hover:bg-[--vp-c-bg-mute]': feature.url
-						}"
+						:class="{ 'cursor-pointer hover:bg-[--vp-c-bg-mute]': feature.url }"
 						:href="feature.url"
 					>
 						<div class="h-18 w-18 absolute right-2 top-2 flex shrink-0 items-center justify-center rounded p-2">
 							<div :class="feature.icon" class="text-[--vp-c-text-2] h-full w-full opacity-0 transition duration-300 group-hover:opacity-5 dark:group-hover:opacity-5" />
 						</div>
 						<div>
-							<span class="font-semibold" v-text="feature.title" />
+							<span class="font-semibold inline-block group-hover:text-[--vp-c-text-2] transition duration-300" v-text="feature.title" />
 							<!-- eslint-disable-next-line vue/no-v-html -->
-							<p class="text-[--vp-c-text-2] mt-2 text-sm font-medium leading-relaxed" v-html="feature.description" />
+							<p class="text-[--vp-c-text-2] group-hover:text-[--vp-c-text-1] mt-2 text-sm font-medium leading-relaxed group-hover:translate-x-1 transition duration-300" v-html="feature.description" />
 						</div>
 					</component>
 				</template>
@@ -199,25 +197,6 @@ const features: Feature[] = [
 		background-position: 0% 50%;
 		border-radius: 75px;
 		transform: rotate(00deg);
-	}
-}
-
-.logo {
-	animation: logo-skew 15s ease-in-out infinite;
-}
-
-@keyframes logo-skew {
-	0% {
-		transform: skewX(0deg) skewY(0deg);
-	}
-	66% {
-		transform: skewX(5deg) skewY(5deg);
-	}
-	66% {
-		transform: skewX(-5deg) skewY(-5deg);
-	}
-	100% {
-		transform: skewX(0deg) skewY(0deg);
 	}
 }
 
