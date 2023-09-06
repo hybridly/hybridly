@@ -96,5 +96,6 @@ return (new PhpCsFixer\Config())
             'scope' => 'namespaced',
             'strict' => true,
         ],
+        'static_lambda' => false,
     ])
     ->setFinder($finder);
