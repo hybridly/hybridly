@@ -6,7 +6,7 @@ import { state } from '../stores/state'
 import { toReactive } from '../utils'
 
 /** Accesses all current properties. */
-export function useProperties<T extends object, Global extends GlobalHybridlyProperties>() {
+export function useProperties<T extends object, Global extends GlobalHybridlyProperties = GlobalHybridlyProperties>() {
 	return readonly(toReactive(computed(() => state.context.value?.view.properties as T & Global)))
 }
 
