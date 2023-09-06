@@ -8,6 +8,4 @@ It allows developers to create improved experiences for their users by introduci
 
 ## On the roadmap
 
-Precognition is not publicly released and its documentation is not published.
-
-We plan on supporting it after its release, notably by introducing first-party support for real-time validation, among other features if possible.
+We plan on supporting it , notably by introducing first-party support for real-time validation, among other features if possible.
