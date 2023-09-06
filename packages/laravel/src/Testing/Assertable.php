@@ -32,7 +32,7 @@ class Assertable extends AssertableJson
             PHPUnit::assertArrayHasKey('url', $payload);
             PHPUnit::assertArrayHasKey('version', $payload);
         } catch (AssertionFailedError) {
-            PHPUnit::fail(trim('Not a valid hybrid response. ' . $response->exception?->getMessage()));
+            PHPUnit::fail(sprintf('Not a valid hybrid response: %s', json_encode($payload ?? [], \JSON_PRETTY_PRINT)));
         }
 
         $instance = static::fromArray($payload);
