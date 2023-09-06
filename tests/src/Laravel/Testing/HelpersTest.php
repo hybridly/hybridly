@@ -1,8 +1,9 @@
 <?php
 
-use Hybridly\Hybridly;
-
 use function Hybridly\partial;
+
+use Hybridly\Support\Header;
+
 use function Hybridly\Testing\partial_headers;
 
 use Illuminate\Session\Middleware\StartSession;
@@ -14,25 +15,25 @@ test('the `partial_headers` helper generates headers for partial requests', func
     expect(partial_headers('foo.component', only: [
         'user.name',
     ]))->toBe([
-        Hybridly::PARTIAL_COMPONENT_HEADER => 'foo.component',
-        Hybridly::ONLY_DATA_HEADER => json_encode(['user.name']),
+        Header::PARTIAL_COMPONENT => 'foo.component',
+        Header::PARTIAL_ONLY => json_encode(['user.name']),
     ]);
 
     expect(partial_headers('foo.component', except: [
         'user.name',
     ]))->toBe([
-        Hybridly::PARTIAL_COMPONENT_HEADER => 'foo.component',
-        Hybridly::EXCEPT_DATA_HEADER => json_encode(['user.name']),
+        Header::PARTIAL_COMPONENT => 'foo.component',
+        Header::PARTIAL_EXCEPT => json_encode(['user.name']),
     ]);
 
     expect(partial_headers('foo.component'))->toBe([
-        Hybridly::PARTIAL_COMPONENT_HEADER => 'foo.component',
+        Header::PARTIAL_COMPONENT => 'foo.component',
     ]);
 
     expect(partial_headers('foo.component', except: ['foo'], only: ['bar']))->toBe([
-        Hybridly::PARTIAL_COMPONENT_HEADER => 'foo.component',
-        Hybridly::ONLY_DATA_HEADER => json_encode(['bar']),
-        Hybridly::EXCEPT_DATA_HEADER => json_encode(['foo']),
+        Header::PARTIAL_COMPONENT => 'foo.component',
+        Header::PARTIAL_ONLY => json_encode(['bar']),
+        Header::PARTIAL_EXCEPT => json_encode(['foo']),
     ]);
 });
 

@@ -1,6 +1,7 @@
 <?php
 
 use Hybridly\Hybridly;
+use Hybridly\Support\Header;
 use Hybridly\View\Factory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -26,7 +27,7 @@ test('external responses to hybridly requests', function () {
         ->toBeInstanceOf(Response::class)
         ->getStatusCode()->toBe(Response::HTTP_CONFLICT)
         ->headers->all()->toMatchArray([
-            Hybridly::EXTERNAL_HEADER => ['https://google.fr/'],
+            Header::EXTERNAL => ['https://google.fr/'],
         ]);
 });
 
@@ -39,7 +40,7 @@ test('external responses with redirect responses as input', function () {
         ->toBeInstanceOf(Response::class)
         ->getStatusCode()->toBe(Response::HTTP_CONFLICT)
         ->headers->all()->toMatchArray([
-            Hybridly::EXTERNAL_HEADER => ['https://google.fr/'],
+            Header::EXTERNAL => ['https://google.fr/'],
         ]);
 });
 

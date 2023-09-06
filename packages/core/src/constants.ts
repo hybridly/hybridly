@@ -6,7 +6,6 @@ export const ONLY_DATA_HEADER = `${HYBRIDLY_HEADER}-only-data`
 export const DIALOG_KEY_HEADER = `${HYBRIDLY_HEADER}-dialog-key`
 export const DIALOG_REDIRECT_HEADER = `${HYBRIDLY_HEADER}-dialog-redirect`
 export const EXCEPT_DATA_HEADER = `${HYBRIDLY_HEADER}-except-data`
-export const CONTEXT_HEADER = `${HYBRIDLY_HEADER}-context`
 export const VERSION_HEADER = `${HYBRIDLY_HEADER}-version`
 export const ERROR_BAG_HEADER = `${HYBRIDLY_HEADER}-error-bag`
 export const SCROLL_REGION_ATTRIBUTE = 'scroll-region'

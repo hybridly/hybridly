@@ -5,6 +5,7 @@ namespace Hybridly\View;
 use Hybridly\Contracts\HybridResponse;
 use Hybridly\Hybridly;
 use Hybridly\Support\DialogResolver;
+use Hybridly\Support\Header;
 use Hybridly\Support\PropertiesResolver;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Contracts\Support\Arrayable;
@@ -142,7 +143,7 @@ class Factory implements HybridResponse
             return new JsonResponse(
                 data: $payload->toArray(),
                 headers: [
-                    Hybridly::HYBRIDLY_HEADER => 'true',
+                    Header::HYBRID_REQUEST => 'true',
                 ],
             );
         }

@@ -2,7 +2,7 @@
 
 namespace Hybridly\Testing;
 
-use Hybridly\Hybridly;
+use Hybridly\Support\Header;
 
 if (!\function_exists('Hybridly\Testing\partial_headers')) {
     /**
@@ -17,9 +17,9 @@ if (!\function_exists('Hybridly\Testing\partial_headers')) {
     function partial_headers(string $component, array $only = null, array $except = null): array
     {
         return array_filter([
-            Hybridly::PARTIAL_COMPONENT_HEADER => $component,
-            Hybridly::ONLY_DATA_HEADER => !\is_null($only) ? json_encode($only) : null,
-            Hybridly::EXCEPT_DATA_HEADER => !\is_null($except) ? json_encode($except) : null,
+            Header::PARTIAL_COMPONENT => $component,
+            Header::PARTIAL_ONLY => !\is_null($only) ? json_encode($only) : null,
+            Header::PARTIAL_EXCEPT => !\is_null($except) ? json_encode($except) : null,
         ]);
     }
 }

@@ -5,6 +5,7 @@ namespace Hybridly\Http;
 use Closure;
 use Hybridly\Concerns;
 use Hybridly\Hybridly;
+use Hybridly\Support\Header;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Vite;
 use Symfony\Component\HttpFoundation\Response;
@@ -50,16 +51,16 @@ class Middleware
         // Browsers need the Vary header in order to properly cache the response
         // based on its content type. This is specifically important for the
         // hybridly protocol because an endpoint can send JSON and HTML.
-        $response->headers->set('Vary', Hybridly::HYBRIDLY_HEADER);
+        $response->headers->set('Vary', Header::HYBRID_REQUEST);
 
-        if (!$request->header(Hybridly::HYBRIDLY_HEADER)) {
+        if (!$request->header(Header::HYBRID_REQUEST)) {
             return $response;
         }
 
         // When handling GET requests, we need to check the version header received
         // from the client to determine if they match. If not, we trigger the version change
         // event.
-        if ($request->method() === 'GET' && $request->header(Hybridly::VERSION_HEADER) !== hybridly()->getVersion()) {
+        if ($request->method() === 'GET' && $request->header(Header::VERSION) !== hybridly()->getVersion()) {
             $response = $this->onVersionChange($request, $response);
         }
 
@@ -154,8 +155,8 @@ class Middleware
                     ->toArray();
             })
             ->pipe(function ($bags) use ($request) {
-                if ($bags->has('default') && $request->header(Hybridly::ERROR_BAG_HEADER)) {
-                    return [$request->header(Hybridly::ERROR_BAG_HEADER) => $bags->get('default')];
+                if ($bags->has('default') && $request->header(Header::ERROR_BAG)) {
+                    return [$request->header(Header::ERROR_BAG) => $bags->get('default')];
                 }
 
                 if ($bags->has('default')) {

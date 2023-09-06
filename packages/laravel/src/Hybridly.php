@@ -2,6 +2,7 @@
 
 namespace Hybridly;
 
+use Hybridly\Support\Header;
 use Hybridly\Support\Partial;
 use Hybridly\Support\VueViewFinder;
 use Hybridly\View\Factory;
@@ -24,16 +25,6 @@ final class Hybridly
     use Conditionable;
     use Macroable;
 
-    public const HYBRIDLY_HEADER = 'x-hybrid';
-    public const DIALOG_KEY_HEADER = 'x-hybrid-dialog-key';
-    public const DIALOG_REDIRECT_HEADER = 'x-hybrid-dialog-redirect';
-    public const EXTERNAL_HEADER = 'x-hybrid-external';
-    public const PARTIAL_COMPONENT_HEADER = 'x-hybrid-partial-component';
-    public const ONLY_DATA_HEADER = 'x-hybrid-only-data';
-    public const EXCEPT_DATA_HEADER = 'x-hybrid-except-data';
-    public const CONTEXT_HEADER = 'x-hybrid-context';
-    public const ERROR_BAG_HEADER = 'x-hybrid-error-bag';
-    public const VERSION_HEADER = 'x-hybrid-version';
     public const DEFAULT_ROOT_VIEW = 'root';
 
     public function __construct(
@@ -66,7 +57,7 @@ final class Hybridly
         if ($this->isHybrid()) {
             return new Response(
                 status: Response::HTTP_CONFLICT,
-                headers: [self::EXTERNAL_HEADER => $url],
+                headers: [Header::EXTERNAL => $url],
             );
         }
 
@@ -93,7 +84,7 @@ final class Hybridly
     {
         $request ??= request();
 
-        return $request->headers->has(self::HYBRIDLY_HEADER);
+        return $request->headers->has(Header::HYBRID_REQUEST);
     }
 
     /**
@@ -109,7 +100,7 @@ final class Hybridly
             return false;
         }
 
-        return $request->headers->has(self::PARTIAL_COMPONENT_HEADER);
+        return $request->headers->has(Header::PARTIAL_COMPONENT);
     }
 
     /**

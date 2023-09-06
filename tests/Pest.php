@@ -1,7 +1,7 @@
 <?php
 
-use Hybridly\Hybridly;
 use Hybridly\Refining\Refine;
+use Hybridly\Support\Header;
 use Hybridly\Tests\Fixtures\Database\Product;
 use Hybridly\Tests\TestCase;
 use Illuminate\Contracts\Database\Eloquent\Builder;
@@ -23,7 +23,7 @@ function mockRequest(string $url = '/', string $method = 'GET', bool $bind = fal
     }
 
     if ($hybridly) {
-        $request->headers->add([Hybridly::HYBRIDLY_HEADER => 'true']);
+        $request->headers->add([Header::HYBRID_REQUEST => 'true']);
     }
 
     if ($bind) {

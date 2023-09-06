@@ -2,7 +2,6 @@
 
 namespace Hybridly\Support;
 
-use Hybridly\Hybridly;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -18,7 +17,7 @@ final class PropertiesResolver
 
     public function resolve(string $component, array $properties, array $persisted): array
     {
-        $partial = $this->request->header(Hybridly::PARTIAL_COMPONENT_HEADER) === $component;
+        $partial = $this->request->header(Header::PARTIAL_COMPONENT) === $component;
 
         if (!$partial) {
             $properties = Arr::filterRecursive($properties, static fn ($property) => !($property instanceof Partial));
@@ -32,14 +31,14 @@ final class PropertiesResolver
         // The `only` and `except` headers contain json-encoded array data. We want to use them to
         // retrieve the properties whose paths they describe using dot-notation.
         // We only do that when the request is specifically for partial data though.
-        if ($partial && $this->request->hasHeader(Hybridly::ONLY_DATA_HEADER)) {
-            $only = array_filter(json_decode($this->request->header(Hybridly::ONLY_DATA_HEADER, default: ''), associative: true) ?? []);
+        if ($partial && $this->request->hasHeader(Header::PARTIAL_ONLY)) {
+            $only = array_filter(json_decode($this->request->header(Header::PARTIAL_ONLY, default: ''), associative: true) ?? []);
             $only = $this->convertPartialPropertiesCase($only);
             $properties = Arr::onlyDot($properties, array_merge($only, $persisted));
         }
 
-        if ($partial && $this->request->hasHeader(Hybridly::EXCEPT_DATA_HEADER)) {
-            $except = array_filter(json_decode($this->request->header(Hybridly::EXCEPT_DATA_HEADER, default: ''), associative: true) ?? []);
+        if ($partial && $this->request->hasHeader(Header::PARTIAL_EXCEPT)) {
+            $except = array_filter(json_decode($this->request->header(Header::PARTIAL_EXCEPT, default: ''), associative: true) ?? []);
             $except = $this->convertPartialPropertiesCase($except);
             $properties = Arr::exceptDot($properties, $except);
         }
