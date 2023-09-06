@@ -6,6 +6,7 @@ use Hybridly\Contracts\HybridResponse;
 use Hybridly\Hybridly;
 use Hybridly\Support\DialogResolver;
 use Hybridly\Support\Header;
+use Hybridly\Support\MissingViewComponentException;
 use Hybridly\Support\PropertiesResolver;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Contracts\Support\Arrayable;
@@ -136,6 +137,12 @@ class Factory implements HybridResponse
             'version' => $this->hybridly->getVersion(),
             'root_view' => $this->hybridly->getRootView(),
         ]]);
+
+        // If the component is missing and there is no page loaded,
+        // throw an exception because the front-end cannot handle that situation.
+        if (!$this->hybridly->isHybrid($request) && !$this->view->component) {
+            throw MissingViewComponentException::make();
+        }
 
         if ($this->hybridly->isHybrid($request)) {
             return new JsonResponse(
