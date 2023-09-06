@@ -9,21 +9,9 @@ interface Feature {
 const features: Feature[] = [
 	{
 		icon: 'i-mdi:language-typescript',
-		title: 'TypeScript support',
+		title: 'TypeScript ready',
 		description: "If it's typable, it's typed. Hybridly supports typing paginators, routes, authorizations and global properties.",
 		url: '/guide/typescript',
-	},
-	{
-		icon: 'i-mdi:web',
-		title: 'Routes',
-		description: 'Define your routes server-side like you\'re used to, Hybridly takes care of generating types for them.',
-		url: '/guide/routing',
-	},
-	{
-		icon: 'i-mdi:lock-outline',
-		title: 'Authorization',
-		description: 'Hybridly extends <a href="https://github.com/spatie/laravel-data">data objects</a> to provide an interface for generating typings for authorizations.',
-		url: '/guide/authorization',
 	},
 	{
 		icon: 'i-mdi:dock-window',
@@ -32,10 +20,16 @@ const features: Feature[] = [
 		url: '/guide/dialogs',
 	},
 	{
-		icon: 'i-mdi:magnify',
-		title: 'Vue DevTools',
-		description: 'Integrates with Vue DevTools for painless property inspection and debugging.',
-		url: '/guide/devtools',
+		icon: 'i-mdi:lock-outline',
+		title: 'Authorization',
+		description: 'Hybridly extends <a href="https://github.com/spatie/laravel-data">data objects</a> to provide an interface for generating typings for authorizations.',
+		url: '/guide/authorization',
+	},
+	{
+		icon: 'i-mdi:web',
+		title: 'Typed routes',
+		description: 'Define your routes server-side like you\'re used to, Hybridly takes care of generating types for them.',
+		url: '/guide/routing',
 	},
 	{
 		icon: 'i-heroicons:funnel',
@@ -43,12 +37,36 @@ const features: Feature[] = [
 		description: 'Filter and sort queries using the built-in refinement tools and build your UI around the provided composable.',
 		url: '/guide/refining',
 	},
+	{
+		icon: 'i-mdi:shape',
+		title: 'Flexible architecture',
+		description: "Whether you prefer Laravel's default architecture, modules, slices, or something custom, Hybridly supports it.",
+		url: '/guide/architecture',
+	},
+	{
+		icon: 'i-mdi:microsoft-visual-studio-code',
+		title: 'Visual Studio Code',
+		description: 'Auto-complete component names, and navigate between controllers, layouts and pages with a single click.',
+		url: '/guide/visual-studio-code',
+	},
+	{
+		icon: 'i-mdi:magnify',
+		title: 'Vue DevTools',
+		description: 'Integrates with Vue DevTools for painless property inspection and debugging.',
+		url: '/guide/devtools',
+	},
+	{
+		icon: 'i-mdi:magnify',
+		title: 'Made for developers',
+		description: 'Hybridly is packed with quality-of-life features that should drastically improve your developer experience.',
+		url: '/guide/comparison-with-inertia',
+	},
 ]
 </script>
 
 <template>
 	<client-only>
-		<section class="mx-auto mt-20 flex h-full w-full max-w-5xl flex-col lg:mt-40">
+		<section class="mx-auto mt-20 flex h-full w-full max-w-5xl flex-col lg:mt-40 relative">
 			<!-- Hero -->
 			<div class="flex w-full flex-col items-center justify-between gap-x-40 px-6 lg:flex-row lg:items-start lg:px-0">
 				<!-- Left block -->
@@ -67,7 +85,7 @@ const features: Feature[] = [
 					</p>
 					<!-- Actions -->
 					<div class="mt-10 flex flex-wrap justify-center gap-4 lg:justify-start">
-						<a class="px-4.5 group dark:bg-[var(--vp-c-brand-light)] dark:text-[var(--vp-c-bg)] dark:hover:bg-[var(--vp-c-brand-lighter)] dark:hover:text-[var(--vp-c-bg)] flex items-center rounded-full bg-[#FFEAEF] py-2.5 text-sm font-semibold text-[#DB7DA8] transition hover:bg-[#FFDBE3] hover:text-[#D6689B]" href="/guide/">
+						<a class="px-4.5 group dark:bg-[--vp-c-brand-light] dark:text-[--vp-c-bg] dark:hover:bg-[--vp-c-brand-lighter] dark:hover:text-[--vp-c-bg] flex items-center rounded-full bg-[#FFEAEF] py-2.5 font-semibold text-[#DB7DA8] transition hover:bg-[#FFDBE3] hover:text-[#D6689B]" href="/guide/">
 							Get started
 							<svg
 								class="ml-2 transition group-hover:translate-x-1"
@@ -82,14 +100,14 @@ const features: Feature[] = [
 								/>
 							</svg>
 						</a>
-						<a class="px-4.5 group border-[var(--vp-button-alt-border)] bg-[var(--vp-c-bg-soft)] text-[var(--vp-c-text-1)] hover:bg-[var(--vp-c-bg-mute)] flex items-center rounded-full border py-2 text-sm font-medium transition" href="/guide/demonstration">Demonstration</a>
-						<a class="px-4.5 group border-[var(--vp-button-alt-border)] bg-[var(--vp-c-bg-soft)] text-[var(--vp-c-text-1)] hover:bg-[var(--vp-c-bg-mute)] flex items-center rounded-full border py-2 text-sm font-medium transition" href="https://github.com/hybridly/hybridly">See on GitHub</a>
+						<a class="px-4.5 group border-[--vp-button-alt-border] bg-[--vp-c-bg-soft] text-[--vp-c-text-1] hover:bg-[--vp-c-bg-mute] flex items-center rounded-full border py-2 font-medium transition" href="/guide/demonstration">Demonstration</a>
+						<a class="px-4.5 group border-[--vp-button-alt-border] bg-[--vp-c-bg-soft] text-[--vp-c-text-1] hover:bg-[--vp-c-bg-mute] flex items-center rounded-full border py-2 font-medium transition" href="https://github.com/hybridly/hybridly">See on GitHub</a>
 					</div>
 				</section>
 
 				<!-- Logo block -->
 				<div class="lg:h-55 lg:w-55 h-30 w-30 relative order-first mb-20 flex shrink-0 items-center justify-center lg:order-last lg:mt-20 lg:mr-20">
-					<img class="absolute z-[1] h-full w-full" src="/logo.svg" />
+					<img class="absolute z-[1] h-full w-full logo" src="/logo.svg" />
 					<div class="image-bg absolute -inset-5 rotate-45 opacity-40 dark:opacity-70" />
 				</div>
 			</div>
@@ -99,19 +117,19 @@ const features: Feature[] = [
 				<template v-for="feature in features" :key="feature.title">
 					<component
 						:is="feature.url ? 'a' : 'div'"
-						class="group bg-[var(--vp-c-bg-soft)] relative flex flex-col justify-center gap-4 rounded-lg p-6"
+						class="group bg-[--vp-c-bg-soft] relative flex flex-col justify-center gap-4 rounded-lg p-6 ring-2 ring-transparent hover:ring-[--vp-c-brand]"
 						:class="{
-							'transition cursor-pointer hover:bg-[var(--vp-c-bg-mute)]': feature.url
+							'transition duration-300 cursor-pointer hover:bg-[--vp-c-bg-mute]': feature.url
 						}"
 						:href="feature.url"
 					>
-						<div class="h-25 w-25 absolute right-5 flex shrink-0 items-center justify-center rounded p-2">
-							<div :class="feature.icon" class="text-[var(--vp-c-text-2)] h-full w-full opacity-0 transition group-hover:opacity-5 dark:group-hover:opacity-10" />
+						<div class="h-18 w-18 absolute right-2 top-2 flex shrink-0 items-center justify-center rounded p-2">
+							<div :class="feature.icon" class="text-[--vp-c-text-2] h-full w-full opacity-0 transition duration-300 group-hover:opacity-5 dark:group-hover:opacity-5" />
 						</div>
 						<div>
 							<span class="font-semibold" v-text="feature.title" />
 							<!-- eslint-disable-next-line vue/no-v-html -->
-							<p class="text-[var(--vp-c-text-2)] mt-2 text-sm font-medium leading-relaxed" v-html="feature.description" />
+							<p class="text-[--vp-c-text-2] mt-2 text-sm font-medium leading-relaxed" v-html="feature.description" />
 						</div>
 					</component>
 				</template>
@@ -181,6 +199,25 @@ const features: Feature[] = [
 		background-position: 0% 50%;
 		border-radius: 75px;
 		transform: rotate(00deg);
+	}
+}
+
+.logo {
+	animation: logo-skew 15s ease-in-out infinite;
+}
+
+@keyframes logo-skew {
+	0% {
+		transform: skewX(0deg) skewY(0deg);
+	}
+	66% {
+		transform: skewX(5deg) skewY(5deg);
+	}
+	66% {
+		transform: skewX(-5deg) skewY(-5deg);
+	}
+	100% {
+		transform: skewX(0deg) skewY(0deg);
 	}
 }
 
