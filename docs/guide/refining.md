@@ -12,7 +12,7 @@ The refining process happens as follows:
 - The available filters and sorts are declared using a `Refine` instance
 - The `Refine` instance runs the query according to the current request
 - The query result and the refinements are shared to the view as properties
-- The view uses [`useRefinements`](../api/composables/use-refinements.md) to generate a user interface and apply sorts and filters
+- The view uses [`useRefinements`](../api/utils/use-refinements.md) to generate a user interface and apply sorts and filters
 
 :::info Experimental
 This feature has not been dogfed yet and is considered experimental. Its API may change at any time. Feel free to give feedback on our Discord server.
@@ -104,7 +104,7 @@ const refine = useRefinements($props, 'refinements') // [!code focus]
 
 ## Applying filters and sorts
 
-The [`useRefinements`](../api/composables/use-refinements.md) composable may be used to build a user interface that allows applying refiners.
+The [`useRefinements`](../api/utils/use-refinements.md) composable may be used to build a user interface that allows applying refiners.
 
 It provides methods that can be used to apply or reset filters and sorts, and it has properties that may enumerate available and current refiners.
 

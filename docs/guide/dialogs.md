@@ -104,7 +104,7 @@ defineProps<{
 
 For this example, the modal component is implemented as a Headless UI [`Dialog`](https://headlessui.com/vue/dialog) using the [`Transition`](https://headlessui.com/vue/transition) component to show and animate the dialog when it appears and when it closes. 
 
-Notice the call to [`unmount`](../api/composables/use-dialog.md#unmount), which is needed to remove the dialog from the DOM after it's closed and its animations have finished.
+Notice the call to [`unmount`](../api/utils/use-dialog.md#unmount), which is needed to remove the dialog from the DOM after it's closed and its animations have finished.
 
 ## Rendering a dialog
 
@@ -133,7 +133,7 @@ class ChirpController extends Controller
 
 Navigating away from a dialog will automatically close it. 
 
-In addition to the `close` function returned by [`useDialog`](../api/composables/use-dialog.md), it's possible to call `router.dialog.close()`. This function takes the same [options](../api/router/options.md) as any navigation.
+In addition to the `close` function returned by [`useDialog`](../api/utils/use-dialog.md), it's possible to call `router.dialog.close()`. This function takes the same [options](../api/router/options.md) as any navigation.
 
 ```vue
 <script setup lang="ts">

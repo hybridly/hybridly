@@ -21,13 +21,13 @@ The following is a non-exhaustive comparison table between Inertia and Hybridly'
 | Exclusion support for partials                  |            <span class="no">No</span>             |           [Yes](../api/router/options.md#except)           |
 | Dot notation support for partials               |            <span class="no">No</span>             |                            Yes                             |
 | Persistent layout                               |                        Yes                        |  [Yes](../guide/pages-and-layouts.md#persistent-layouts)   |
-| Persistent layout properties                    |            <span class="no">No</span>             |   [Yes](../api/composables/define-layout-properties.md)    |
+| Persistent layout properties                    |            <span class="no">No</span>             |   [Yes](../api/utils/define-layout-properties.md)    |
 | Vite integration                                |            <span class="no">No</span>             |              [Yes](../configuration/vite.md)               |
 | Auto-imports                                    |            <span class="no">No</span>             |        [Yes](../configuration/vite.md#auto-imports)        |
 | Icons support                                   |            <span class="no">No</span>             |           [Yes](../configuration/vite.md#icons)            |
 | `layout` support in templates                   |            <span class="no">No</span>             |            [Yes](../guide/pages-and-layouts.md)            |
 | Built-in `Paginator` types                      |            <span class="no">No</span>             |               [Yes](./responses.md#overview)               |
-| Built-in `form` util                            |                        Yes                        |           [Yes](../api/composables/use-form.md)            |
+| Built-in `form` util                            |                        Yes                        |           [Yes](../api/utils/use-form.md)            |
 | Built-in `route` util with TypeScript support   |            <span class="no">No</span>             |                [Yes](../api/utils/route.md)                |
 | Built-in `can` util with TypeScript support     |            <span class="no">No</span>             |                 [Yes](../api/utils/can.md)                 |
 | Built-in testing utils                          |                        Yes                        |              [Yes](../api/laravel/testing.md)              |
@@ -41,7 +41,7 @@ The following is a non-exhaustive comparison table between Inertia and Hybridly'
 | Global events support                           |                        Yes                        |                  [Yes](../guide/hooks.md)                  |
 | Internationalization support                    |            <span class="no">No</span>             |                  [Yes](../guide/i18n.md)                   |
 | Property case conversion support                |            <span class="no">No</span>             |             [Yes](../guide/case-conversion.md)             |
-| Exposed back-forward detection                  |            <span class="no">No</span>             |       [Yes](../api/composables/use-back-forward.md)        |
+| Exposed back-forward detection                  |            <span class="no">No</span>             |       [Yes](../api/utils/use-back-forward.md)        |
 | Framework-agnostic core                         |                        Yes                        |                            Yes                             |
 | Custom architecture support                     |            <span class="no">No</span>             |              [Yes](../guide/architecture.md)               |
 | Custom Axios instance support                   |            <span class="no">No</span>             |      [Yes](../api/utils/initialize-hybridly.md#axios)      |
