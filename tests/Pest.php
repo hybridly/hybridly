@@ -14,7 +14,7 @@ uses(TestCase::class)
     ->beforeEach(fn () => config()->set('hybridly.testing.ensure_pages_exist', false))
     ->in(__DIR__);
 
-function mockRequest(string $url = '/', string $method = 'GET', bool $bind = false, bool $hybridly = true, array $headers = []): Request
+function mock_request(string $url = '/', string $method = 'GET', bool $bind = false, bool $hybridly = true, array $headers = []): Request
 {
     $request = Request::create($url, $method);
 
@@ -33,7 +33,7 @@ function mockRequest(string $url = '/', string $method = 'GET', bool $bind = fal
     return $request;
 }
 
-function makeMockRequest(mixed $response, string $url = '/mock-url'): TestResponse
+function make_mock_request(mixed $response, string $url = '/mock-url'): TestResponse
 {
     app('router')->get($url, function () use ($response) {
         return $response;
@@ -42,9 +42,9 @@ function makeMockRequest(mixed $response, string $url = '/mock-url'): TestRespon
     return get($url);
 }
 
-function makeHybridMockRequest(string $component = 'test', mixed $properties = [], string $url = '/hybrid-mock-url'): TestResponse
+function make_hybrid_mock_request(string $component = 'test', mixed $properties = [], string $url = '/hybrid-mock-url'): TestResponse
 {
-    return makeMockRequest(
+    return make_mock_request(
         response: hybridly($component, $properties),
         url: $url,
     );
