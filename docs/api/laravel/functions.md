@@ -22,7 +22,7 @@ The functions live in the `\Hybridly` namespace and need to be imported before b
 
 ### `view`
 
-Renders a view with the given component and optional properties. The properties can be an array, an `Arrayable` or a [data object](http://localhost:5173/guide/typescript.html#data-objects).
+Renders a view with the given component and optional properties. The properties can be an array, an `Arrayable` or a [data object](../../guide/typescript#data-objects).
 
 > See also: [responses](../../guide/responses.md)
 
