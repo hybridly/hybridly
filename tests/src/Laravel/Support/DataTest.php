@@ -22,7 +22,7 @@ function resolve_properties(array $properties, array $headers = [], array $persi
         'request' => $request,
     ]);
 
-    return $resolver->resolve($component, $properties, $persisted);
+    return $resolver->resolve($component, $properties, $persisted)[0];
 }
 
 test('partial properties in data objects are ignored like normal partial properties', function () {

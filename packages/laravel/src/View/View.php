@@ -9,6 +9,7 @@ class View implements Arrayable
     public function __construct(
         public ?string $component,
         public array $properties,
+        public array $deferred = [],
     ) {
     }
 
@@ -17,6 +18,7 @@ class View implements Arrayable
         return [
             'component' => $this->component,
             'properties' => $this->properties,
+            'deferred' => $this->deferred,
         ];
     }
 }

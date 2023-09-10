@@ -65,6 +65,7 @@ test('hybridly responses to non-hybridly requests', function () {
             'properties' => [
                 'user' => 'Makise Kurisu',
             ],
+            'deferred' => [],
         ],
     ]);
 });
@@ -89,6 +90,7 @@ test('hybridly responses to hybridly requests', function () {
             'properties' => [
                 'user' => 'Makise Kurisu',
             ],
+            'deferred' => [],
         ],
     ]);
 });
@@ -116,6 +118,7 @@ test('properties can be added on-the-fly on the factory instance', function () {
                 'user' => 'Makise Kurisu',
                 'husband' => 'Okabe Rintarou',
             ],
+            'deferred' => [],
         ],
     ]);
 });
@@ -140,6 +143,7 @@ test('dialogs and their properties can be resolved', function () {
             'properties' => [
                 'foo' => 'bar',
             ],
+            'deferred' => [],
         ],
         'dialog' => [
             'component' => 'users.edit',
@@ -189,6 +193,7 @@ test('hybridly responses without a page component', function () {
             'properties' => [
                 'user' => 'Makise Kurisu',
             ],
+            'deferred' => [],
         ],
     ]);
 });
