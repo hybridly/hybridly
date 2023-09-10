@@ -1,9 +1,38 @@
 <?php
 
+use Hybridly\Support\CaseConverter;
+use Hybridly\Support\Deferred;
+use Hybridly\Support\Partial;
+use Hybridly\Support\PropertiesResolver;
+
 use function Hybridly\Testing\partial_headers;
 
 use Hybridly\View\Factory;
 use Illuminate\Contracts\Support\Arrayable;
+
+it('finds deferred properties', function () {
+    /** @var PropertiesResolver */
+    $resolver = resolve(PropertiesResolver::class, [
+        'request' => mock_request(headers: partial_headers(
+            component: 'users.edit',
+            only: ['user.full_name', 'user.email'],
+        )),
+        'caseConverter' => resolve(CaseConverter::class),
+    ]);
+
+    [$properties, $deferred] = $resolver->resolve('foo.bar', [
+        'normal' => 'yes',
+        'partial' => new Partial(fn () => 'partial'),
+        'deferred' => new Deferred(fn () => 'deferred'),
+        'nested' => [
+            'foo' => 'bar',
+            'deferred' => new Deferred(fn () => 'nested deferred'),
+        ],
+    ]);
+
+    expect($properties)->toBe(['normal' => 'yes', 'nested' => ['foo' => 'bar']]);
+    expect($deferred)->toBe(['deferred', 'nested.deferred']);
+});
 
 it('resolves functions', function () {
     $payload = resolve(Factory::class)
@@ -12,7 +41,7 @@ it('resolves functions', function () {
             'errors' => [
             ],
         ])
-        ->toResponse(mockRequest())
+        ->toResponse(mock_request())
         ->getData();
 
     expect($payload->view->component)->toBe('users.edit');
@@ -30,7 +59,7 @@ it('resolves callables', function () {
 
     $payload = resolve(Factory::class)
         ->view('users.edit', ['user' => $callable, 'type' => 'app'])
-        ->toResponse(mockRequest())
+        ->toResponse(mock_request())
         ->getData();
 
     expect($payload->view->component)->toBe('users.edit');
@@ -49,7 +78,7 @@ it('resolves arrayable properties', function () {
 
     $payload = resolve(Factory::class)
         ->view('users.edit', ['user' => $callable])
-        ->toResponse(mockRequest())
+        ->toResponse(mock_request())
         ->getData();
 
     expect($payload->view->component)->toBe('users.edit');
@@ -67,7 +96,7 @@ it('does not evaluate lazy properties when they are excluded', function () {
             },
             'email' => 'jon@example.org',
         ])
-        ->toResponse(mockRequest(headers: partial_headers(
+        ->toResponse(mock_request(headers: partial_headers(
             component: 'users.edit',
             only: ['email'],
         )))
@@ -82,10 +111,10 @@ it('does not evaluate lazy properties when they are excluded', function () {
 it('does not resolve partials by default', function () {
     $payload = resolve(Factory::class)
         ->view('users.edit', [
-            'full_name' => hybridly()->partial(fn () => 'Jon Doe'),
+            'full_name' => new Partial(fn () => 'Jon Doe'),
             'email' => 'jon@example.org',
         ])
-        ->toResponse(mockRequest())
+        ->toResponse(mock_request())
         ->getData();
 
     expect($payload->view->component)->toBe('users.edit');
@@ -97,11 +126,11 @@ it('does not resolve nested partials by default', function () {
     $payload = resolve(Factory::class)
         ->view('users.edit', [
             'user' => [
-                'full_name' => hybridly()->partial(fn () => 'Jon Doe'),
+                'full_name' => new Partial(fn () => 'Jon Doe'),
                 'email' => 'jon@doe.example',
             ],
         ])
-        ->toResponse(mockRequest())
+        ->toResponse(mock_request())
         ->getData();
 
     expect($payload->view->component)->toBe('users.edit');
@@ -112,10 +141,27 @@ it('does not resolve nested partials by default', function () {
 it('resolves partials', function () {
     $payload = resolve(Factory::class)
         ->view('users.edit', [
-            'full_name' => hybridly()->partial(fn () => 'Jon Doe'),
+            'full_name' => new Partial(fn () => 'Jon Doe'),
             'email' => 'jon@example.org',
         ])
-        ->toResponse(mockRequest(headers: partial_headers(
+        ->toResponse(mock_request(headers: partial_headers(
+            component: 'users.edit',
+            only: ['full_name', 'email'],
+        )))
+        ->getData();
+
+    expect($payload->view->component)->toBe('users.edit');
+    expect($payload->view->properties)->full_name->toBe('Jon Doe');
+    expect($payload->view->properties)->email->toBe('jon@example.org');
+});
+
+it('resolves deferred', function () {
+    $payload = resolve(Factory::class)
+        ->view('users.edit', [
+            'full_name' => new Deferred(fn () => 'Jon Doe'),
+            'email' => 'jon@example.org',
+        ])
+        ->toResponse(mock_request(headers: partial_headers(
             component: 'users.edit',
             only: ['full_name', 'email'],
         )))
@@ -130,11 +176,30 @@ it('resolves nested partials', function () {
     $payload = resolve(Factory::class)
         ->view('users.edit', [
             'user' => [
-                'full_name' => hybridly()->partial(fn () => 'Jon Doe'),
+                'full_name' => new Partial(fn () => 'Jon Doe'),
                 'email' => 'jon@example.org',
             ],
         ])
-        ->toResponse(mockRequest(headers: partial_headers(
+        ->toResponse(mock_request(headers: partial_headers(
+            component: 'users.edit',
+            only: ['user.full_name', 'user.email'],
+        )))
+        ->getData();
+
+    expect($payload->view->component)->toBe('users.edit');
+    expect($payload->view->properties->user)->full_name->toBe('Jon Doe');
+    expect($payload->view->properties->user)->email->toBe('jon@example.org');
+});
+
+it('resolves nested deferred', function () {
+    $payload = resolve(Factory::class)
+        ->view('users.edit', [
+            'user' => [
+                'full_name' => new Deferred(fn () => 'Jon Doe'),
+                'email' => 'jon@example.org',
+            ],
+        ])
+        ->toResponse(mock_request(headers: partial_headers(
             component: 'users.edit',
             only: ['user.full_name', 'user.email'],
         )))

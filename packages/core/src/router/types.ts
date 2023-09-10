@@ -181,6 +181,8 @@ export interface View {
 	component?: string
 	/** Properties to apply to the component. */
 	properties: Properties
+	/** Deferred properties for this view. */
+	deferred: string[]
 }
 
 export interface Dialog extends Required<View> {

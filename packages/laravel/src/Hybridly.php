@@ -2,6 +2,7 @@
 
 namespace Hybridly;
 
+use Hybridly\Support\Deferred;
 use Hybridly\Support\Header;
 use Hybridly\Support\Partial;
 use Hybridly\Support\VueViewFinder;
@@ -83,6 +84,17 @@ final class Hybridly
     public function partial(\Closure $callback): Partial
     {
         return new Partial($callback);
+    }
+
+    /**
+     * Creates a deferred property that will not be included in an initial loaded,
+     * but will automatically be loaded in a subsequent partial reload.
+     *
+     * @see https://hybridly.dev/api/laravel/hybridly.html#deferred
+     */
+    public function deferred(\Closure $callback): Deferred
+    {
+        return new Deferred($callback);
     }
 
     /**

@@ -335,6 +335,7 @@ export async function navigate(options: NavigationOptions) {
 			view: {
 				component: context.view.component,
 				properties: merge(context.view.properties, options.payload.view.properties),
+				deferred: context.view.deferred,
 			},
 			url: context.url,
 			version: options.payload.version,
@@ -360,6 +361,20 @@ export async function navigate(options: NavigationOptions) {
 	context.adapter.executeOnMounted(() => {
 		runHooks('mounted', {}, context)
 	})
+
+	// If there are deferred properties, we handle them
+	// by making a partial-reload after the page component has mounted
+	if (context.view.deferred?.length) {
+		debug.router('Request has deferred properties, queueing a partial reload:', context.view.deferred)
+		context.adapter.executeOnMounted(async() => {
+			await performHybridNavigation({
+				preserveScroll: true,
+				preserveState: true,
+				replace: true,
+				only: context.view.deferred,
+			})
+		})
+	}
 
 	// Then, we swap the view.
 	const viewComponent = !shouldPreserveView
@@ -473,6 +488,7 @@ export async function performLocalNavigation(targetUrl: UrlResolvable, options?:
 			view: {
 				component: options?.component ?? context.view.component,
 				properties: options?.properties ?? {},
+				deferred: [],
 			},
 		},
 	})

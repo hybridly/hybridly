@@ -166,13 +166,15 @@ class Factory implements HybridResponse
 
     protected function renderDialog(Request $request, Payload $payload)
     {
+        [$properties] = $this->resolveProperties($payload->dialog, $request);
+
         return new Payload(
             view: $this->getBaseView($payload->dialog->redirectUrl, $request),
             url: $payload->url,
             version: $payload->version,
             dialog: new Dialog(
                 component: $payload->dialog->component,
-                properties: $this->resolveProperties($payload->dialog, $request),
+                properties: $properties,
                 baseUrl: $payload->dialog->baseUrl,
                 redirectUrl: $payload->dialog->redirectUrl,
                 key: $payload->dialog->key,
@@ -241,6 +243,7 @@ class Factory implements HybridResponse
             view: new View(
                 component: $this->view->component,
                 properties: Arr::except($this->view->properties, array_keys($this->hybridly->shared())),
+                deferred: [],
             ),
         );
     }
@@ -250,9 +253,12 @@ class Factory implements HybridResponse
      */
     protected function resolveView(View $view, Request $request): View
     {
+        [$properties, $deferred] = $this->resolveProperties($view, $request);
+
         return new View(
             component: $view->component,
-            properties: $this->resolveProperties($view, $request),
+            properties: $properties,
+            deferred: $deferred,
         );
     }
 

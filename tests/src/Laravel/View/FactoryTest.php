@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 
 test('external responses to non-hybridly requests', function () {
-    mockRequest(hybridly: false, bind: true);
+    mock_request(hybridly: false, bind: true);
 
     expect(hybridly()->external('https://google.fr/'))
         ->toBeInstanceOf(RedirectResponse::class)
@@ -22,7 +22,7 @@ test('external responses to non-hybridly requests', function () {
 });
 
 test('external responses to hybridly requests', function () {
-    mockRequest(hybridly: true, bind: true);
+    mock_request(hybridly: true, bind: true);
 
     expect(hybridly()->external('https://google.fr/'))
         ->toBeInstanceOf(Response::class)
@@ -33,7 +33,7 @@ test('external responses to hybridly requests', function () {
 });
 
 test('external responses with redirect responses as input', function () {
-    mockRequest(hybridly: true, bind: true);
+    mock_request(hybridly: true, bind: true);
 
     $redirect = new RedirectResponse('https://google.fr/');
 
@@ -49,7 +49,7 @@ test('hybridly responses to non-hybridly requests', function () {
     hybridly()->setRootView(Hybridly::DEFAULT_ROOT_VIEW);
     hybridly()->setVersion('123');
 
-    $request = mockRequest(url: '/users/makise', hybridly: false, bind: true);
+    $request = mock_request(url: '/users/makise', hybridly: false, bind: true);
     $factory = hybridly('users.edit', ['user' => 'Makise Kurisu']);
     $response = $factory->toResponse($request);
     $payload = $response->getOriginalContent()->getData()['payload'];
@@ -65,6 +65,7 @@ test('hybridly responses to non-hybridly requests', function () {
             'properties' => [
                 'user' => 'Makise Kurisu',
             ],
+            'deferred' => [],
         ],
     ]);
 });
@@ -73,7 +74,7 @@ test('hybridly responses to hybridly requests', function () {
     hybridly()->setRootView(Hybridly::DEFAULT_ROOT_VIEW);
     hybridly()->setVersion('123');
 
-    $request = mockRequest(url: '/users/makise', hybridly: true, bind: true);
+    $request = mock_request(url: '/users/makise', hybridly: true, bind: true);
     $factory = hybridly('users.edit', ['user' => 'Makise Kurisu']);
     $response = $factory->toResponse($request);
     $payload = $response->getOriginalContent();
@@ -89,6 +90,7 @@ test('hybridly responses to hybridly requests', function () {
             'properties' => [
                 'user' => 'Makise Kurisu',
             ],
+            'deferred' => [],
         ],
     ]);
 });
@@ -97,7 +99,7 @@ test('properties can be added on-the-fly on the factory instance', function () {
     hybridly()->setRootView(Hybridly::DEFAULT_ROOT_VIEW);
     hybridly()->setVersion('123');
 
-    $request = mockRequest(url: '/users/makise', hybridly: true, bind: true);
+    $request = mock_request(url: '/users/makise', hybridly: true, bind: true);
     $factory = hybridly('users.edit', ['user' => 'Makise Kurisu'])
         ->with('husband', 'Okabe Rintarou');
 
@@ -116,6 +118,7 @@ test('properties can be added on-the-fly on the factory instance', function () {
                 'user' => 'Makise Kurisu',
                 'husband' => 'Okabe Rintarou',
             ],
+            'deferred' => [],
         ],
     ]);
 });
@@ -123,7 +126,7 @@ test('properties can be added on-the-fly on the factory instance', function () {
 test('dialogs and their properties can be resolved', function () {
     Route::get('/', fn () => hybridly('index', ['foo' => 'bar']))->name('index');
 
-    $request = mockRequest(url: '/users/makise', hybridly: true, bind: true);
+    $request = mock_request(url: '/users/makise', hybridly: true, bind: true);
     $factory = hybridly('users.edit', [
         'user' => 'Makise Kurisu',
         'email' => fn () => 'makise@gadgetlab.jp',
@@ -140,6 +143,7 @@ test('dialogs and their properties can be resolved', function () {
             'properties' => [
                 'foo' => 'bar',
             ],
+            'deferred' => [],
         ],
         'dialog' => [
             'component' => 'users.edit',
@@ -159,7 +163,7 @@ test('dialogs and their properties can be resolved', function () {
 test('the url resolver is used when constructing a response', function () {
     hybridly()->setUrlResolver(fn (Request $request) => 'https://customdomain.com' . $request->getRequestUri());
 
-    $request = mockRequest(url: '/users/makise', hybridly: true, bind: true);
+    $request = mock_request(url: '/users/makise', hybridly: true, bind: true);
     $payload = hybridly('foo.bar')
         ->toResponse($request)
         ->getOriginalContent();
@@ -173,7 +177,7 @@ test('hybridly responses without a page component', function () {
     hybridly()->setRootView(Hybridly::DEFAULT_ROOT_VIEW);
     hybridly()->setVersion('123');
 
-    $request = mockRequest(url: '/users/makise', hybridly: true, bind: true);
+    $request = mock_request(url: '/users/makise', hybridly: true, bind: true);
     $factory = hybridly(properties: ['user' => 'Makise Kurisu']);
     $response = $factory->toResponse($request);
     $payload = $response->getOriginalContent();
@@ -189,6 +193,7 @@ test('hybridly responses without a page component', function () {
             'properties' => [
                 'user' => 'Makise Kurisu',
             ],
+            'deferred' => [],
         ],
     ]);
 });
@@ -197,7 +202,7 @@ test('hybridly responses without a page component on initial load', function () 
     hybridly()->setRootView(Hybridly::DEFAULT_ROOT_VIEW);
     hybridly()->setVersion('123');
 
-    $request = mockRequest(url: '/users/makise', hybridly: false, bind: true);
+    $request = mock_request(url: '/users/makise', hybridly: false, bind: true);
     $factory = hybridly(properties: ['user' => 'Makise Kurisu']);
     $factory->toResponse($request);
 })->throws(MissingViewComponentException::class);

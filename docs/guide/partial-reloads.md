@@ -10,7 +10,7 @@ However, on subsequent requests to the same page—maybe to filter the users—y
 
 ## Making partial reloads
 
-Hybrid requests are "partial" when the `only` or `except` property is defined in its options. 
+Hybrid requests are "partial" when the [`only`](../api/router/options.md#only) or [`except`](../api/router/options.md#except) property is defined in its options. 
 
 ```ts
 defineProps<{
@@ -38,25 +38,59 @@ Note that there is no way to un-persist a persistent property.
 
 ## Partial-only properties
 
-It's often desirable to not evaluate a property until specifically needed — that is, included in a partial reload. To achieve this, you can use the `partial` method:
+It's often desirable to not evaluate a property until specifically needed—that is, included in a partial reload. To achieve this, you can use the [`partial`](../api/laravel/functions.md#partial) function:
 
 ```php
-hybridly()->share([
-  'filters' => hybridly()->partial(fn () => $filters)
+use function Hybridly\partial;
+
+return hybridly('foo', [
+  'filters' => partial(fn () => $filters)
 ]);
 ```
 
-:::info Alternative syntax
-It is also possible to instanciate a partial-only property by calling `\Hybridly\partial(...)` or `\Hybridly\Support\Partial::make(...)`.
-:::
+To fetch a partial-only property, use the [`only`](../api/router/options.md#only) option in a hybrid request:
+
+```ts
+router.reload({ only: ['filters'] })
+```
+
+## Deferred properties
+
+Sometimes, for performance reason, it may be desirable to load the page first, and then load other properties which would have slowed down the initial page load.
+
+You may use the [`deferred`](../api/laravel/functions.md#deferred) function to achieve this:
+
+```php
+use function Hybridly\deferred;
+
+return hybridly('foo', [
+	'slowProperty' => deferred(fn () => $fetchDataFromThirdParty())
+])
+```
+
+This is functionally the same as manually making a partial reload in the `onMounted` hook:
+
+```ts
+defineProps<{
+	slowProperty?: Data.ThirdPartyDataType
+}>()
+
+onMounted(() => {
+	router.reload({ only: ['slowProperty'] })
+})
+```
+
+Deferred properties are the exact same as [partial properties](#partial-only-properties), except they also trigger an automatic partial reload specifically for them after the page component has loaded.
 
 
 ## Lazy evaluation
 
-It is possible to delay the evaluation of a property by using a closure. This property will still be evaluated on first page load and subsequent hybrid requests, but only when the response is actually being sent.
+It is possible to delay the evaluation of a property by using a closure. 
+
+This property will still be evaluated on first page load and subsequent hybrid requests, but **only when the response is actually being sent**.
 
 ```php
-hybridly()->share([
-  'user' => fn () => auth()->user()
+return hybridly('foo', [
+  'user' => fn () => auth()->user(),
 ]);
 ```

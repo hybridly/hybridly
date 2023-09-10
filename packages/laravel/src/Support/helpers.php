@@ -2,6 +2,7 @@
 
 namespace Hybridly;
 
+use Hybridly\Support\Deferred;
 use Hybridly\Support\Partial;
 use Hybridly\View\Factory;
 use Illuminate\Contracts\Support\Arrayable;
@@ -67,6 +68,18 @@ if (!\function_exists('Hybridly\partial')) {
     function partial(\Closure $closure): Partial
     {
         return hybridly()->partial($closure);
+    }
+}
+
+if (!\function_exists('Hybridly\deferred')) {
+    /**
+     * Creates a deferred property that will automatically be loaded in a subsequent partial reload.
+     *
+     * @see https://hybridly.dev/api/laravel/functions.html#deferred
+     */
+    function deferred(\Closure $closure): Deferred
+    {
+        return hybridly()->deferred($closure);
     }
 }
 

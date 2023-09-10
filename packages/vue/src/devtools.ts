@@ -42,6 +42,12 @@ export function setupDevtools(app: App) {
 
 			payload.instanceData.state.push({
 				type: hybridlyStateType,
+				key: 'deferred',
+				value: state.context.value?.view.deferred,
+			})
+
+			payload.instanceData.state.push({
+				type: hybridlyStateType,
 				key: 'dialog',
 				value: state.context.value?.dialog,
 			})
