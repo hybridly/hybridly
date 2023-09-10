@@ -1,6 +1,8 @@
 # Hybridly
 
-`Hybridly\Hybridly` is a singleton instance that contains shortcuts for common actions. It can be accessed by dependency injection or by service location using the [`hybridly()` global function](./functions.md#hybridly).
+`Hybridly\Hybridly` is a singleton instance that contains convenience methods for common actions. It can be accessed by dependency injection or by service location using the [`hybridly()` global function](./functions.md#hybridly).
+
+Note that most of the methods here have an equivalent [namespaced function](./functions.md#namespaced-functions).
 
 ## `view`
 
@@ -76,6 +78,25 @@ Creates a property that will only get evaluated and included when specifically r
 return hybridly('booking.estimates.show', [
   'booking' => BookingData::from($booking)
   'estimates' => hybridly()->partial(function () { // [!code focus:3]
+    return SearchEstimates::run($booking);
+  }),
+]);
+```
+
+## `deferred`
+
+Creates a partial property that will automatically be loaded in a subsequent partial reload when the page loads.
+
+> See also: [`deferred`](./functions.md#deferred), [`partial`](./functions.md#partial)
+> 
+> See [deferred properties](../../guide/partial-reloads.md#deferred-properties) for more details.
+
+### Usage
+
+```php
+return hybridly('booking.estimates.show', [
+  'booking' => BookingData::from($booking)
+  'estimates' => hybridly()->deferred(function () { // [!code focus:3]
     return SearchEstimates::run($booking);
   }),
 ]);
