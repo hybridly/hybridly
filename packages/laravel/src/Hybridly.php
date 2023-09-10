@@ -43,6 +43,16 @@ final class Hybridly
     }
 
     /**
+     * Returns updated properties for the current view.
+     *
+     * @see https://hybridly.dev/api/laravel/hybridly.html#properties
+     */
+    public function properties(array|Arrayable|DataObject $properties): Factory
+    {
+        return resolve(Factory::class)->properties($properties);
+    }
+
+    /**
      * Generates a response for redirecting to an external website, or a non-hybrid page.
      * This can also be used to redirect to a hybrid page when it is not known whether the current request is hybrid or not.
      *

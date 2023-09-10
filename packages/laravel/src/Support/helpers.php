@@ -46,6 +46,18 @@ if (!\function_exists('Hybridly\view')) {
     }
 }
 
+if (!\function_exists('Hybridly\properties')) {
+    /**
+     * Returns properties for an existing view.
+     *
+     * @see https://hybridly.dev/api/laravel/functions.html#properties
+     */
+    function view(array|Arrayable|DataObject $properties): Factory
+    {
+        return resolve(Hybridly::class)->properties($properties);
+    }
+}
+
 if (!\function_exists('Hybridly\partial')) {
     /**
      * Creates a partial-only property.
