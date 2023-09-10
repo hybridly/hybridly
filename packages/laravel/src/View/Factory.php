@@ -56,13 +56,9 @@ class Factory implements HybridResponse
      */
     public function view(string $component = null, array|Arrayable|DataObject $properties = []): static
     {
-        if ($properties instanceof Arrayable || $properties instanceof DataObject) {
-            $properties = $properties->toArray();
-        }
-
         $this->view = new View(
             component: $component,
-            properties: $properties,
+            properties: $this->transformProperties($properties),
         );
 
         return $this;
@@ -88,7 +84,7 @@ class Factory implements HybridResponse
     {
         $this->view = new View(
             component: $this->view?->component,
-            properties: $properties,
+            properties: $this->transformProperties($properties),
         );
 
         return $this;
@@ -157,6 +153,15 @@ class Factory implements HybridResponse
             view: $this->hybridly->getRootView(),
             data: ['payload' => $payload->toArray()],
         );
+    }
+
+    protected function transformProperties(array|Arrayable|DataObject $properties): array
+    {
+        if ($properties instanceof Arrayable || $properties instanceof DataObject) {
+            $properties = $properties->toArray();
+        }
+
+        return $properties;
     }
 
     protected function renderDialog(Request $request, Payload $payload)
