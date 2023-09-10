@@ -52,7 +52,7 @@ if (!\function_exists('Hybridly\properties')) {
      *
      * @see https://hybridly.dev/api/laravel/functions.html#properties
      */
-    function view(array|Arrayable|DataObject $properties): Factory
+    function properties(array|Arrayable|DataObject $properties): Factory
     {
         return resolve(Hybridly::class)->properties($properties);
     }
