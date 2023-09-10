@@ -41,7 +41,10 @@ export async function initializeHybridly(options: InitializeOptions = {}) {
 				state.setContext(context)
 			},
 			onViewSwap: async(options) => {
-				state.setView(options.component)
+				if (options.component) {
+					state.setView(options.component)
+				}
+
 				state.setProperties(options.properties)
 
 				if (!options.preserveState && !options.dialog) {

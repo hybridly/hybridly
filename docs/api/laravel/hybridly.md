@@ -16,6 +16,20 @@ return hybridly('users.show', [
 ]);
 ```
 
+## `properties`
+
+Generates a `HybridResponse` with the given properties. The properties can be an array, an `Arrayable` or a data object.
+
+> See [responses](../../guide/responses.md#updating-properties) for more details.
+
+### Usage
+
+```php
+return hybridly()->properties([
+  'user' => UserData::from($user)
+]);
+```
+
 ## `base`
 
 Makes the view a [dialog](../../guide/dialogs.md) and defines its base page. It takes a route name and its parameters as its arguments.

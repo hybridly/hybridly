@@ -2,6 +2,7 @@
 
 use Hybridly\Hybridly;
 use Hybridly\Support\Header;
+use Hybridly\Support\MissingViewComponentException;
 use Hybridly\View\Factory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -167,3 +168,36 @@ test('the url resolver is used when constructing a response', function () {
         'url' => 'https://customdomain.com/users/makise',
     ]);
 });
+
+test('hybridly responses without a page component', function () {
+    hybridly()->setRootView(Hybridly::DEFAULT_ROOT_VIEW);
+    hybridly()->setVersion('123');
+
+    $request = mockRequest(url: '/users/makise', hybridly: true, bind: true);
+    $factory = hybridly(properties: ['user' => 'Makise Kurisu']);
+    $response = $factory->toResponse($request);
+    $payload = $response->getOriginalContent();
+
+    expect($factory)->toBeInstanceOf(Factory::class);
+    expect($response)->toBeInstanceOf(JsonResponse::class);
+    expect($payload)->toMatchArray([
+        'dialog' => null,
+        'version' => '123',
+        'url' => 'http://localhost/users/makise',
+        'view' => [
+            'component' => null,
+            'properties' => [
+                'user' => 'Makise Kurisu',
+            ],
+        ],
+    ]);
+});
+
+test('hybridly responses without a page component on initial load', function () {
+    hybridly()->setRootView(Hybridly::DEFAULT_ROOT_VIEW);
+    hybridly()->setVersion('123');
+
+    $request = mockRequest(url: '/users/makise', hybridly: false, bind: true);
+    $factory = hybridly(properties: ['user' => 'Makise Kurisu']);
+    $factory->toResponse($request);
+})->throws(MissingViewComponentException::class);

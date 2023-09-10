@@ -15,9 +15,11 @@ final class PropertiesResolver
     ) {
     }
 
-    public function resolve(string $component, array $properties, array $persisted): array
+    public function resolve(string $component = null, array $properties = [], array $persisted = []): array
     {
-        $partial = $this->request->header(Header::PARTIAL_COMPONENT) === $component;
+        $partial = \is_null($component)
+            ? $this->request->headers->has(Header::PARTIAL_COMPONENT)
+            : $this->request->header(Header::PARTIAL_COMPONENT) === $component;
 
         if (!$partial) {
             $properties = Arr::filterRecursive($properties, static fn ($property) => !($property instanceof Partial));

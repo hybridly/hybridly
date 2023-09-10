@@ -37,9 +37,19 @@ final class Hybridly
      *
      * @see https://hybridly.dev/api/laravel/hybridly.html#view
      */
-    public function view(string $component, array|Arrayable|DataObject $properties = []): Factory
+    public function view(string $component = null, array|Arrayable|DataObject $properties = []): Factory
     {
         return resolve(Factory::class)->view($component, $properties);
+    }
+
+    /**
+     * Returns updated properties for the current view.
+     *
+     * @see https://hybridly.dev/api/laravel/hybridly.html#properties
+     */
+    public function properties(array|Arrayable|DataObject $properties): Factory
+    {
+        return resolve(Factory::class)->properties($properties);
     }
 
     /**

@@ -41,6 +41,36 @@ defineProps<{ // [!code focus:3]
 Since paginators are so common, Hybridly provides typings for them. You don't need any setup, the `Paginator` type is global. When using paginators without a `meta` property, you may use `UnwrappedPaginator` instead.
 :::
 
+## Updating properties
+
+It is a common pattern to have a `POST` or `PUT` hybrid request that ends up redirecting back to the previous page, which essentially refreshes the properties of the page to avoid having stale data.
+
+```php
+public function store(UpdateUserRequest $request): HybridResponse
+{
+    User::update($request->validate());
+
+    return back();
+}
+```
+
+Such a redirection, though, implies an additional server round-trip and the re-execution of the server-side controller responsible for the view, which may slow down the response.
+
+Instead, you may return only properties from the `POST` or `PUT` controller:
+
+```php
+public function store(UpdateUserRequest $request): HybridResponse
+{
+    $user = User::update($request->validate());
+
+    return hybridly(properties: [
+        'user' => $user,
+    ]);
+}
+```
+
+In that situation, the returned properties will be merged with the current ones, similarly to what happens during a [partial reload](./partial-reloads.md).
+
 ## Internal redirects
 
 When making non-get hybrid requests, you may use redirects to a standard `GET` hybrid endpoint. Hybridly will follow the redirect and update the page accordingly.

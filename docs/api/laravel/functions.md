@@ -54,6 +54,18 @@ use function Hybridly\view;
 return view('user.show', $user);
 ```
 
+### `properties`
+
+Returns updated properties for an existing view. This is the same as calling [`hybridly()->properties()`](./hybridly.md#properties).
+
+```php
+use function Hybridly\properties;
+
+return properties([
+	'user' => $user,
+]);
+```
+
 ### `partial`
 
 Creates a [partial-only](../../guide/partial-reloads.md#partial-only-properties) property. This is the same as calling [`hybridly()->partial()`](./hybridly.md#partial).

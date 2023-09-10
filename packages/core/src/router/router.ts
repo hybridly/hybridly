@@ -312,6 +312,7 @@ export async function navigate(options: NavigationOptions) {
 	const shouldPreserveScroll = evaluateConditionalOption(options.preserveScroll)
 	const shouldReplaceHistory = evaluateConditionalOption(options.replace)
 	const shouldReplaceUrl = evaluateConditionalOption(options.preserveUrl)
+	const shouldPreserveView = !options.payload.view.component
 
 	// If the navigation was asking to preserve the current state, we also need to
 	// update the context's state from the history state.
@@ -327,13 +328,24 @@ export async function navigate(options: NavigationOptions) {
 		options.payload!.url = context.url
 	}
 
+	// If we didn't receive a component name,
+	// we don't swap views and we preserve the url.
+	const payload = shouldPreserveView
+		? {
+			view: {
+				component: context.view.component,
+				properties: merge(context.view.properties, options.payload.view.properties),
+			},
+			url: context.url,
+			version: options.payload.version,
+			dialog: context.dialog,
+		} satisfies HybridPayload
+		: options.payload
+
 	// We merge the new request into the current context. That will replace
 	// view, dialog, url and version, so the context is in sync with the
 	// navigation that took place.
-	setContext({
-		...options.payload,
-		memo: {},
-	})
+	setContext({ ...payload, memo: {} })
 
 	// History state must be updated to preserve the expected, native browser behavior.
 	// However, in some cases, we just want to swap the views without making an
@@ -344,13 +356,20 @@ export async function navigate(options: NavigationOptions) {
 		setHistoryState({ replace: shouldReplaceHistory })
 	}
 
+	// We register the `mounted` hook to be executed after the view swaps.
 	context.adapter.executeOnMounted(() => {
 		runHooks('mounted', {}, context)
 	})
 
 	// Then, we swap the view.
-	const viewComponent = await context.adapter.resolveComponent(context.view.component)
-	debug.router(`Component [${context.view.component}] resolved to:`, viewComponent)
+	const viewComponent = !shouldPreserveView
+		? await context.adapter.resolveComponent(context.view.component!)
+		: undefined
+
+	if (viewComponent) {
+		debug.router(`Component [${context.view.component}] resolved to:`, viewComponent)
+	}
+
 	await context.adapter.onViewSwap({
 		component: viewComponent,
 		dialog: context.dialog,
