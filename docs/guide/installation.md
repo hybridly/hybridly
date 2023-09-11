@@ -6,7 +6,7 @@ The simplest way to get started with Hybridly is to use the preset in a fresh La
 
 ## Preset
 
-The recommended way of installing Hybridly is to use the preset in a [**fresh Laravel project**](https://laravel.com/docs/installation). Run the following command in the root of your project:
+The recommended way of installing Hybridly is to use the preset in a [fresh Laravel project](https://laravel.com/docs/installation). Run the following command in the root of your project:
 
 :::code-group
 ```bash [npm]
@@ -23,7 +23,7 @@ yarn dlx @preset/cli apply hybridly/preset
 ```
 :::
 
-The preset automatically sets up [**Tailwind CSS**](https://tailwindcss.com) and [**Pest**](https://pestphp.com). You may add any of the following flags to the previous command to customize the preset:
+The preset automatically sets up [Tailwind CSS](https://tailwindcss.com) and [Pest](https://pestphp.com). You may add any of the following flags to the previous command to customize the preset:
 
 | Flag          | Description                                                                           |
 | ------------- | ------------------------------------------------------------------------------------- |
