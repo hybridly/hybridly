@@ -28,6 +28,8 @@ export interface ViteOptions {
 	overrideResolvers?: CustomResolvers
 	/** Whether to write shims. */
 	shims?: boolean
+	/** Enables or disable the kill-switch. */
+	killSwitch?: boolean
 }
 
 export interface LayoutOptions {
