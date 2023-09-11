@@ -81,7 +81,7 @@ ni hybridly vue axios -D
 pnpm i hybridly vue axios -D
 ```
 ```bash [bun]
-bin i hybridly vue axios -D
+bun i hybridly vue axios -D
 ```
 ```bash [npm]
 npm i hybridly vue axios -D
