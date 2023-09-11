@@ -11,7 +11,15 @@ a:has(code) {
 }
 
 .vp-doc a {
-	text-decoration: none;
+	color: var(--vp-c-text-1);
+	text-decoration: underline;
+	text-underline-offset: 4px;
+	text-decoration-color: var(--vp-c-code-underline);
+}
+
+.vp-doc strong {
+	color: var(--vp-c-text-1);
+	font-weight: 500;
 }
 
 .vp-doc a > code {
@@ -33,7 +41,7 @@ a:has(code) {
 	color: var(--vp-c-text-1);
 	text-decoration: underline;
 	text-underline-offset: 3px;
-	text-decoration-color: var(--vp-c-text-1);
+	text-decoration-color: var(--vp-c-code-underline);
 	font-weight: 400;
 }
 
@@ -43,7 +51,7 @@ a:has(code) {
 }
 
 .vp-doc .custom-block.info a {
-	text-decoration-color: var(--vp-custom-block-info-border);
+	text-decoration-color: var(--vp-c-code-underline);
 }
 
 hr {
@@ -82,4 +90,73 @@ footer p.message {
 
 .VPLink.link > svg.icon {
 	margin-left: 0.5rem;
+}
+
+/* Sidebar scrollbar */
+
+aside.VPSidebar {
+	scrollbar-width: thin;
+	scrollbar-color: var(--vp-c-scrollbar) transparent;
+}
+
+aside.VPSidebar::-webkit-scrollbar {
+	width: 10px;
+	height: 10px;
+}
+
+aside.VPSidebar::-webkit-scrollbar-track {
+	background: transparent;
+}
+
+aside.VPSidebar::-webkit-scrollbar-thumb {
+	border-radius: 100vh;
+	background: var(--vp-c-scrollbar) !important;
+	border: 3px solid var(--vp-c-scrollbar) !important;
+}
+
+/* Sidebar links */
+
+.VPSidebar .link {
+	position: relative;
+}
+
+.VPSidebar .link::after {
+	content: "";
+	position: absolute;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	width: 2.5px;
+	height: 20px;
+	background: var(--vp-c-brand);
+	transform: scaleY(0);
+	border-radius: 100px;
+	transition: all 250ms;
+	opacity: 0;
+}
+
+.VPSidebar .link.active::after {
+	transform: scaleY(1);
+	opacity: 1;
+}
+
+.VPSidebarGroup .items {
+	padding-left: 7px;
+	transition: all 300ms;
+}
+
+.VPSidebarGroup .items .link .link-text {
+	display: inline-block;
+	transition: all 300ms;
+}
+
+.VPSidebarGroup .items .link:not(.active):hover .link-text {
+	transform: translateX(2px);
+}
+
+/* Docs right sidebar */
+.VPDocAsideOutline > div.content .outline-title {
+	font-size: 15px !important;
+	position: relative;
+	top: -6px;
 }
