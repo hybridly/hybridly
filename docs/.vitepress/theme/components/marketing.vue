@@ -118,7 +118,7 @@ const features: Feature[] = [
 					<component
 						:is="feature.url ? 'a' : 'div'"
 						class="group bg-[--vp-c-bg-soft] relative flex flex-col justify-center gap-4 rounded-lg p-6 ring-2 ring-transparent hover:ring-[--vp-c-brand]"
-						:class="{ 'cursor-pointer hover:bg-[--vp-c-bg-mute]': feature.url }"
+						:class="{ 'cursor-pointer ': feature.url }"
 						:href="feature.url"
 					>
 						<div class="h-18 w-18 absolute right-2 top-2 flex shrink-0 items-center justify-center rounded p-2">
