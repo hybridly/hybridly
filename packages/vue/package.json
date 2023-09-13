@@ -52,7 +52,7 @@
         "qs": "^6.11.2"
     },
     "devDependencies": {
-        "@types/lodash": "^4.14.197",
+        "@types/lodash": "^4.14.198",
         "@types/lodash.clonedeep": "^4.5.7",
         "@types/lodash.isequal": "^4.5.6",
         "@types/nprogress": "^0.2.0",
