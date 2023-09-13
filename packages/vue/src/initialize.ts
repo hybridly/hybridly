@@ -42,6 +42,7 @@ export async function initializeHybridly(options: InitializeOptions = {}) {
 			},
 			onViewSwap: async(options) => {
 				if (options.component) {
+					onMountedCallbacks.push(() => options.onMounted?.({ isDialog: false }))
 					state.setView(options.component)
 				}
 
@@ -52,6 +53,7 @@ export async function initializeHybridly(options: InitializeOptions = {}) {
 				}
 
 				if (options.dialog) {
+					onMountedCallbacks.push(() => options.onMounted?.({ isDialog: true }))
 					dialogStore.setComponent(await resolve(options.dialog.component) as any)
 					dialogStore.setProperties(options.dialog.properties)
 					dialogStore.setKey(options.dialog.key)

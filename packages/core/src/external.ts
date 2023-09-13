@@ -59,8 +59,9 @@ export async function handleExternalNavigation(): Promise<void> {
 	})
 
 	await navigate({
-		preserveScroll: options.preserveScroll,
+		type: 'initial',
 		preserveState: true,
+		preserveScroll: options.preserveScroll,
 	})
 }
 

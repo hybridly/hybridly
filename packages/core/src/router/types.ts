@@ -1,6 +1,6 @@
 import type { RequestData } from '@hybridly/utils'
 import type { AxiosProgressEvent, AxiosResponse } from 'axios'
-import type { RequestHooks } from '../plugins/hooks'
+import type { MountedHookOptions, RequestHooks } from '../plugins/hooks'
 import type { CloseDialogOptions } from '../dialog'
 import type { RouteName, RouteParameters } from '../routing/types'
 import type { UrlResolvable, UrlTransformable } from '../url'
@@ -56,16 +56,23 @@ export interface NavigationOptions {
 	 * @internal This is an advanced property meant to be used internally.
 	 */
 	updateHistoryState?: boolean
+}
+
+export interface InternalNavigationOptions extends NavigationOptions {
 	/**
-	 * Defines whether this navigation is a back/forward navigation from the popstate event.
-	 * @internal This is an advanced property meant to be used internally.
+	 * Defines the kind of navigation being performed.
+	 * - initial: the initial page load's navigation
+	 * - server: a navigation initiated by a server round-trip
+	 * - local: a navigation initiated by `router.local`
+	 * - back-forward: a navigation initiated by the browser's `popstate` event
+	 * @internal
 	 */
-	isBackForward?: boolean
+	type: 'initial' | 'local' | 'back-forward' | 'server'
 	/**
-	 * Defines whether this navigation is the first to happen after a direct page load.
-	 * @internal This is an advanced property meant to be used internally.
+	 * Defines whether this navigation opens a dialog.
+	 * @internal
 	 */
-	isInitial?: boolean
+	hasDialog?: boolean
 }
 
 export type Method = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE'
@@ -218,6 +225,8 @@ export interface SwapOptions<T> {
 	preserveState?: boolean
 	/** Current dialog. */
 	dialog?: Dialog
+	/** On mounted callback. */
+	onMounted?: (options: MountedHookOptions) => void
 }
 
 export type ViewComponent = any

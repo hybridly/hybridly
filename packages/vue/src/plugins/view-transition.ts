@@ -9,8 +9,8 @@ export function viewTransition(): Plugin {
 
 	return {
 		name: 'view-transition',
-		navigating: async({ isInitial }) => {
-			if (isInitial) {
+		navigating: async({ type, hasDialog }) => {
+			if (type === 'initial' || hasDialog) {
 				return
 			}
 
@@ -21,6 +21,12 @@ export function viewTransition(): Plugin {
 			}))
 		},
 		mounted: () => {
+			domUpdated?.()
+			domUpdated = undefined
+		},
+		navigated: () => {
+			// Just in case the `mounted` hook couldn't be called,
+			// we clean up the promise to avoid a ~4s hang
 			domUpdated?.()
 			domUpdated = undefined
 		},

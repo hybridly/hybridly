@@ -1,7 +1,7 @@
 import type { AxiosResponse } from 'axios'
 import type { InternalRouterContext } from '../context'
 import { getRouterContext } from '../context'
-import type { NavigationOptions, HybridRequestOptions, Errors, Progress, HybridPayload } from '../router'
+import type { HybridRequestOptions, Errors, Progress, HybridPayload, InternalNavigationOptions } from '../router'
 import type { MaybePromise } from '../types'
 
 // #region requesthooks
@@ -83,21 +83,28 @@ export interface Hooks extends RequestHooks {
 	/**
 	 * Called when a component navigation is being made.
 	 */
-	navigating: (options: NavigationOptions, context: InternalRouterContext) => MaybePromise<any>
+	navigating: (options: InternalNavigationOptions, context: InternalRouterContext) => MaybePromise<any>
 
 	/**
 	 * Called when a component has been navigated to.
 	 */
-	navigated: (options: NavigationOptions, context: InternalRouterContext) => MaybePromise<any>
+	navigated: (options: InternalNavigationOptions, context: InternalRouterContext) => MaybePromise<any>
 
 	/**
 	 * Called when a component has been navigated to and was mounted by the adapter.
 	 */
-	mounted: (context: InternalRouterContext) => MaybePromise<any>
+	mounted: (options: InternalNavigationOptions & MountedHookOptions, context: InternalRouterContext) => MaybePromise<any>
 }
 // #endregion hooks
 
-interface HookOptions {
+export interface MountedHookOptions {
+	/**
+	 * Whether the component being mounted is a dialog.
+	 */
+	isDialog: boolean
+}
+
+export interface HookOptions {
 	/** Executes the hook only once. */
 	once?: boolean
 }

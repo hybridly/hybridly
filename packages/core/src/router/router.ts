@@ -13,7 +13,7 @@ import { generateRouteFromName, getRouteDefinition } from '../routing/route'
 import { closeDialog } from '../dialog'
 import { currentRouteMatches, getCurrentRouteName } from '../routing/current'
 import { setHistoryState, isBackForwardNavigation, handleBackForwardNavigation, registerEventListeners, getHistoryMemo, remember } from './history'
-import type { ConditionalNavigationOption, Errors, ComponentNavigationOptions, NavigationOptions, Router, HybridRequestOptions, HybridPayload, NavigationResponse, Method } from './types'
+import type { ConditionalNavigationOption, Errors, ComponentNavigationOptions, Router, HybridRequestOptions, HybridPayload, NavigationResponse, Method, InternalNavigationOptions } from './types'
 import { discardPreloadedRequest, getPreloadedRequest, performPreloadRequest } from './preload'
 
 /**
@@ -189,6 +189,7 @@ export async function performHybridNavigation(options: HybridRequestOptions): Pr
 		// If everything was according to the plan, we can make our navigation and
 		// update the context. Underlying adapters get the updated data.
 		await navigate({
+			type: 'server',
 			payload: {
 				...payload,
 				url: fillHash(targetUrl, payload.url),
@@ -293,10 +294,14 @@ export function isHybridResponse(response: AxiosResponse): boolean {
  * Makes an internal navigation that swaps the view and updates the context.
  * @internal This function is meant to be used internally.
  */
-export async function navigate(options: NavigationOptions) {
+export async function navigate(options: InternalNavigationOptions) {
 	const context = getRouterContext()
-	debug.router('Making an internal navigation:', { context, options })
 
+	// Since there is no other way to know prior to the navigation actually being made,
+	// we mutate `options` here to add whether there is a dialog or not.
+	options.hasDialog ??= !!options.payload?.dialog
+
+	debug.router('Making an internal navigation:', { context, options })
 	await runHooks('navigating', {}, options, context)
 
 	// If no request was given, we use the current context instead.
@@ -357,11 +362,6 @@ export async function navigate(options: NavigationOptions) {
 		setHistoryState({ replace: shouldReplaceHistory })
 	}
 
-	// We register the `mounted` hook to be executed after the view swaps.
-	context.adapter.executeOnMounted(() => {
-		runHooks('mounted', {}, context)
-	})
-
 	// If there are deferred properties, we handle them
 	// by making a partial-reload after the page component has mounted
 	if (context.view.deferred?.length) {
@@ -390,9 +390,10 @@ export async function navigate(options: NavigationOptions) {
 		dialog: context.dialog,
 		properties: options.payload?.view?.properties,
 		preserveState: shouldPreserveState,
+		onMounted: (hookOptions) => runHooks('mounted', {}, { ...options, ...hookOptions }, context),
 	})
 
-	if (options.isBackForward) {
+	if (options.type === 'back-forward') {
 		restoreScrollPositions()
 	} else if (!shouldPreserveScroll) {
 		resetScrollPositions()
@@ -461,7 +462,7 @@ async function initializeRouter(): Promise<InternalRouterContext> {
 		})
 
 		await navigate({
-			isInitial: true,
+			type: 'initial',
 			preserveState: true,
 			replace: sameUrls(context.url, window.location.href),
 		})
@@ -481,6 +482,7 @@ export async function performLocalNavigation(targetUrl: UrlResolvable, options?:
 
 	return await navigate({
 		...options,
+		type: 'local',
 		payload: {
 			version: context.version,
 			dialog: options?.dialog === false ? undefined : (options?.dialog ?? context.dialog),

@@ -22,8 +22,8 @@ This may be useful for requirements for which plugins could be overkill.
 
 ```ts
 <script setup lang="ts">
-registerHook('navigated', ({ isBackForward }) => { // [!code focus:5]
-  if (isBackForward) {
+registerHook('navigated', ({ type }) => { // [!code focus:5]
+  if (type === 'back-forward') {
     router.reload()
   }
 })

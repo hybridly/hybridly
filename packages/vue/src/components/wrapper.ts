@@ -1,5 +1,6 @@
 /* eslint-disable vue/order-in-components */
 import { debug } from '@hybridly/utils'
+import type { ComponentOptions } from 'vue'
 import { toRaw, defineComponent, h, nextTick } from 'vue'
 import { dialogStore } from '../stores/dialog'
 import { onMountedCallbacks } from '../stores/mount'
@@ -40,23 +41,31 @@ export const wrapper = defineComponent({
 			]
 		}
 
-		function renderView() {
-			debug.adapter('vue:render:view', 'Rendering view.')
-			state.view.value!.inheritAttrs = !!state.view.value!.inheritAttrs
+		// Overrides the `mounted` hook of the view component,
+		// so we can pop the mounted callback from outside.
+		function hijackOnMounted(component: ComponentOptions | undefined, type: 'view' | 'dialog') {
+			if (!component) {
+				return
+			}
 
-			// Overrides the `mounted` hook of the view component,
-			// so we can pop the mounted callback from outside.
-			const actual = state.view.value?.mounted
-			state.view.value!.mounted = () => {
+			const actual = component?.mounted
+			component.mounted = () => {
 				actual?.()
 				nextTick(() => {
-					debug.adapter('vue:render:view', 'Calling mounted callbacks.')
+					debug.adapter(`vue:render:${type}`, 'Calling mounted callbacks.')
 
 					while (onMountedCallbacks.length) {
 						onMountedCallbacks.shift()?.()
 					}
 				})
 			}
+		}
+
+		function renderView() {
+			debug.adapter('vue:render:view', 'Rendering view.')
+			state.view.value!.inheritAttrs = !!state.view.value!.inheritAttrs
+
+			hijackOnMounted(state.view.value, 'view')
 
 			return h(state.view.value!, {
 				...state.properties.value,
@@ -67,6 +76,8 @@ export const wrapper = defineComponent({
 		function renderDialog() {
 			if (dialogStore.state.component.value && dialogStore.state.properties.value) {
 				debug.adapter('vue:render:dialog', 'Rendering dialog.')
+
+				hijackOnMounted(dialogStore.state.component.value, 'dialog')
 
 				return h(dialogStore.state.component.value!, {
 					...dialogStore.state.properties.value,

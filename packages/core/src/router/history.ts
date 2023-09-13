@@ -79,6 +79,7 @@ export async function registerEventListeners() {
 			debug.history('There is no state. Adding hash if any and restoring scroll positions.')
 
 			return await navigate({
+				type: 'initial',
 				payload: {
 					...context,
 					url: makeUrl(context.url, { hash: window.location.hash }).toString(),
@@ -92,11 +93,11 @@ export async function registerEventListeners() {
 		// If the history entry has been tempered with, we want
 		// to use it. We swap the components accordingly.
 		await navigate({
+			type: 'back-forward',
 			payload: state,
 			preserveScroll: true,
 			preserveState: !!getInternalRouterContext().dialog || !!state.dialog,
 			updateHistoryState: false,
-			isBackForward: true,
 		})
 	})
 
@@ -130,6 +131,7 @@ export async function handleBackForwardNavigation(): Promise<void> {
 	}
 
 	await navigate({
+		type: 'back-forward',
 		payload: {
 			...state satisfies HybridPayload,
 			version: context.version,
@@ -137,7 +139,6 @@ export async function handleBackForwardNavigation(): Promise<void> {
 		preserveScroll: true,
 		preserveState: false,
 		updateHistoryState: false,
-		isBackForward: true,
 	})
 }
 
