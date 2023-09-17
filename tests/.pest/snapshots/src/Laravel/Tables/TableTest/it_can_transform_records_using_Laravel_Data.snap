@@ -10,12 +10,12 @@
             "filters": "filters"
         }
     },
-    "records": {
-        "data": [
-            {
-                "name": "AirPods"
-            }
-        ],
+    "records": [
+        {
+            "name": "AirPods"
+        }
+    ],
+    "paginator": {
         "links": [
             {
                 "url": null,
@@ -56,6 +56,7 @@
             "metadata": []
         }
     ],
+    "endpoint": "hybridly.action.invoke",
     "inlineActions": [],
     "bulkActions": [],
     "scope": null
