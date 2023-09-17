@@ -10,10 +10,13 @@ use Hybridly\Http\Controller;
 use Hybridly\Support\Data\PartialLazy;
 use Hybridly\Support\RayDumper;
 use Hybridly\Support\Version;
+use Hybridly\Tables\Actions\Http\InvokedActionController;
 use Hybridly\Testing\TestResponseMacros;
+use Illuminate\Contracts\Foundation\CachesRoutes;
 use Illuminate\Foundation\Console\AboutCommand;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Router;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Testing\TestResponse;
 use Illuminate\View\Compilers\BladeCompiler;
 use Illuminate\View\Factory;
@@ -45,6 +48,11 @@ class HybridlyServiceProvider extends PackageServiceProvider
         $this->callAfterResolving('view', function (Factory $view): void {
             $view->addLocation($this->getRootPath('application'));
         });
+    }
+
+    public function bootingPackage(): void
+    {
+        $this->registerActionsEndpoint();
     }
 
     public function packageBooted(): void
@@ -141,6 +149,19 @@ class HybridlyServiceProvider extends PackageServiceProvider
                 default => 'classic Laravel'
             },
         ]);
+    }
+
+    protected function registerActionsEndpoint(): void
+    {
+        if (config('hybridly.tables.enable_actions') === false) {
+            return;
+        }
+
+        if (!($this->app instanceof CachesRoutes && $this->app->routesAreCached())) {
+            Route::post(config('hybridly.tables.actions_endpoint'), InvokedActionController::class)
+                ->middleware(config('hybridly.tables.actions_endpoint_middleware', []))
+                ->name(config('hybridly.tables.actions_endpoint_name'));
+        }
     }
 
     private function getRootPath(...$segments): string

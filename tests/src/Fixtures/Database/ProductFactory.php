@@ -21,4 +21,19 @@ class ProductFactory extends Factory
             'published_at' => $this->faker->dateTimeBetween('-1 year', 'now'),
         ];
     }
+
+    public static function createImmutable(): Product
+    {
+        return self::new()->create([
+            'name' => 'AirPods',
+            'vendor' => Vendor::Apple,
+            'description' => 'Nice headphones tbh',
+            'price' => 250,
+            'stock_count' => 42,
+            'is_active' => true,
+            'published_at' => '2021-01-01 00:00:00',
+            'created_at' => '2021-01-01 00:00:00',
+            'updated_at' => '2021-01-01 00:00:00',
+        ]);
+    }
 }

@@ -57,6 +57,22 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Tables
+    |--------------------------------------------------------------------------
+    | The `tables` option defines the endpoint that will be used to
+    | invoke table actions, as well as the name of the route that
+    | will be used to generate the endpoint URL.
+    |
+    | See: https://hybridly.dev/guide/tables.html
+    */
+    'tables' => [
+        'enable_actions' => true,
+        'actions_endpoint' => 'invoke',
+        'actions_endpoint_name' => 'hybridly.action.invoke',
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | i18n
     |--------------------------------------------------------------------------
     | You can chose where the generated internationalization JSON file

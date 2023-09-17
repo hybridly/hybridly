@@ -11,6 +11,8 @@ export const HybridlyImports = {
 		'useProperty',
 		'setProperty',
 		'useRefinements',
+		'useTable',
+		'useBulkSelect',
 		'useProperties',
 		'useBackForward',
 		'useContext',

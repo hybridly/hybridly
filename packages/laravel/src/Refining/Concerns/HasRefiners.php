@@ -4,6 +4,7 @@ namespace Hybridly\Refining\Concerns;
 
 use Hybridly\Refining\Contracts\Refiner;
 use Hybridly\Refining\Refine;
+use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
 
 /** @mixin Refine */
@@ -15,6 +16,10 @@ trait HasRefiners
 
     public function addRefiners(iterable $refiners): static
     {
+        if ($refiners instanceof Arrayable) {
+            $refiners = $refiners->toArray();
+        }
+
         $this->refiners = array_merge($this->refiners, $refiners);
 
         return $this;

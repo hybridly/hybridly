@@ -13,11 +13,11 @@ abstract class DataResource extends Data implements DataResourceContract
     use Concerns\CanAppendAuthorizations;
     use Concerns\HasModel;
 
+    public Lazy|array $authorization;
+
     protected static string $collectionClass = DataResourceCollection::class;
     protected static string $paginatedCollectionClass = PaginatedDataResourceCollection::class;
     protected static string $cursorPaginatedCollectionClass = CursorPaginatedDataResourceCollection::class;
-
-    public Lazy|array $authorization;
 
     /**
      * Authorizations to type for this data resource.
@@ -61,38 +61,15 @@ abstract class DataResource extends Data implements DataResourceContract
                     throw new \ArgumentCountError(
                         previous: $previous,
                         message: sprintf(
-                            'Could not find authorization for action `%s` on model `%s`. %s',
+                            'Could not allow action `%s` on model `%s`. %s',
                             $action,
-                            $model::class,
+                            \is_string($model) ? $model : $model::class,
                             $previous->getMessage(),
                         ),
                     );
                 }
             })
             ->toArray();
-    }
-
-    protected function resolveModel(): Model|string|null
-    {
-        $this->model ??= static::resolveModelClass();
-
-        if (!$this->model instanceof Model && !class_exists($this->model)) {
-            return null;
-        }
-
-        return $this->model;
-    }
-
-    protected static function resolveModelClass(): ?string
-    {
-        return static::$model ?? value(static::$modelClassResolver ?? function (): string|null {
-            $modelClass = str(class_basename(static::class))
-                ->replaceMatches('/Data$/', '')
-                ->prepend('Models\\')
-                ->prepend(app()->getNamespace());
-
-            return class_exists($modelClass) ? $modelClass : null;
-        }, static::class);
     }
 
     /**
@@ -139,5 +116,28 @@ abstract class DataResource extends Data implements DataResourceContract
         $this->authorization = Lazy::create(fn () => $this->getAuthorizationArray())->defaultIncluded();
 
         return parent::transform($transformValues, $wrapExecutionType, $mapPropertyNames);
+    }
+
+    protected function resolveModel(): Model|string|null
+    {
+        $this->model ??= static::resolveModelClass();
+
+        if (!$this->model instanceof Model && !class_exists($this->model)) {
+            return null;
+        }
+
+        return $this->model;
+    }
+
+    protected static function resolveModelClass(): ?string
+    {
+        return static::$model ?? value(static::$modelClassResolver ?? function (): string|null {
+            $modelClass = str(class_basename(static::class))
+                ->replaceMatches('/Data$/', '')
+                ->prepend('Models\\')
+                ->prepend(app()->getNamespace());
+
+            return class_exists($modelClass) ? $modelClass : null;
+        }, static::class);
     }
 }
