@@ -3,7 +3,7 @@ import { route, router } from 'hybridly'
 import { toReactive } from '../utils'
 import type { BulkSelection } from './bulk-select'
 import { useBulkSelect } from './bulk-select'
-import type { SortDirection, ToggleSortOptions } from './refinements'
+import type { AvailableHybridRequestOptions, SortDirection, ToggleSortOptions } from './refinements'
 import { useRefinements } from './refinements'
 
 declare global {
@@ -162,6 +162,14 @@ export function useTable<
 			toggleSort: (options?: ToggleSortOptions) => refinements.toggleSort(column.name as string, options),
 			/** Checks whether the column is being sorted. */
 			isSorting: (direction?: SortDirection) => refinements.isSorting(column.name as string, direction),
+			/** Applies the filer for this column. */
+			applyFilter: (value: any, options?: AvailableHybridRequestOptions) => refinements.applyFilter(column.name as string, value, options),
+			/** Clears the filter for this column. */
+			clearFilter: (options?: ToggleSortOptions) => refinements.clearFilter(column.name as string, options),
+			/** Checks whether the column is sortable. */
+			isSortable: refinements.sorts.find((sort) => sort.name === column.name),
+			/** Checks whether the column is filterable. */
+			isFilterable: refinements.filters.find((filters) => filters.name === column.name),
 		}))),
 		/** List of records for this page. */
 		records: computed(() => table.value.records.map((record) => ({
