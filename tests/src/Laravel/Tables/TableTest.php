@@ -44,8 +44,8 @@ it('can execute inline actions', function () {
     post(config('hybridly.tables.actions_endpoint'), [
         'type' => 'action:inline',
         'action' => 'say_my_name',
-        'id' => BasicProductsTableWithActions::class,
-        'record' => $product->id,
+        'tableId' => BasicProductsTableWithActions::class,
+        'recordId' => $product->id,
     ])->assertRedirect();
 
     expect(BasicProductsTableWithActions::$name)->toBe($product->name);
@@ -64,7 +64,7 @@ it('can execute bulk actions with all records', function () {
     post(config('hybridly.tables.actions_endpoint'), [
         'type' => 'action:bulk',
         'action' => 'say_our_names',
-        'id' => BasicProductsTableWithActions::class,
+        'tableId' => BasicProductsTableWithActions::class,
         'all' => true,
         'only' => [],
         'except' => [],
@@ -86,7 +86,7 @@ it('can execute bulk actions with selected records', function (array $recordIds,
     post(config('hybridly.tables.actions_endpoint'), [
         'type' => 'action:bulk',
         'action' => 'say_our_names',
-        'id' => BasicProductsTableWithActions::class,
+        'tableId' => BasicProductsTableWithActions::class,
         'all' => false,
         'only' => $recordIds,
         'except' => [],
@@ -112,7 +112,7 @@ it('can execute bulk actions with excluded records', function (array $recordIds,
     post(config('hybridly.tables.actions_endpoint'), [
         'type' => 'action:bulk',
         'action' => 'say_our_names',
-        'id' => BasicProductsTableWithActions::class,
+        'tableId' => BasicProductsTableWithActions::class,
         'all' => true,
         'only' => [],
         'except' => $recordIds,
