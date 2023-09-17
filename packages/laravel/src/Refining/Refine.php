@@ -80,11 +80,12 @@ class Refine extends Components\Component
         return $this->forwardDecoratedCallTo($this->getBuilderInstance(), $name, $arguments);
     }
 
-    protected function getDefaultEvaluationParameters(): array
+    protected function resolveDefaultClosureDependencyForEvaluationByType(string $parameterType): array
     {
-        return [
-            'refine' => $this,
-        ];
+        return match ($parameterType) {
+            self::class => [$this],
+            default => []
+        };
     }
 
     public function getSorts(): array

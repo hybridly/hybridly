@@ -30,12 +30,18 @@ class CallbackFilter implements FilterContract
 
     public function __invoke(Builder $builder, mixed $value, string $property): void
     {
-        $this->evaluate($this->classOrCallback, [
-            'builder' => $builder,
-            'value' => $value,
-            'property' => $property,
-            ...$this->parameters,
-        ]);
+        $this->evaluate(
+            value: $this->classOrCallback,
+            named: [
+                'builder' => $builder,
+                'value' => $value,
+                'property' => $property,
+                ...$this->parameters,
+            ],
+            typed: [
+                Builder::class => $builder,
+            ],
+        );
     }
 
     /**

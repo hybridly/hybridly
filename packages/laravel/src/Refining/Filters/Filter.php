@@ -38,11 +38,17 @@ class Filter extends Components\Component implements RefinerContract
         }
 
         try {
-            $this->evaluate($this->filter, [
-                'builder' => $builder,
-                'value' => $this->value,
-                'property' => $this->property,
-            ]);
+            $this->evaluate(
+                value: $this->filter,
+                named: [
+                    'builder' => $builder,
+                    'value' => $this->value,
+                    'property' => $this->property,
+                ],
+                typed: [
+                    Builder::class => $builder,
+                ],
+            );
         } catch (\TypeError $th) {
             if (str_contains($th->getMessage(), 'Argument #2 ($')) {
                 throw ValidationException::withMessages([
@@ -54,14 +60,23 @@ class Filter extends Components\Component implements RefinerContract
         }
     }
 
-    protected function getDefaultEvaluationParameters(): array
+    protected function resolveDefaultClosureDependencyForEvaluationByType(string $parameterType): array
     {
-        return [
-            'filter' => $this->filter,
-            'value' => $this->value,
-            'property' => $this->property,
-            'alias' => $this->alias,
-        ];
+        return match ($parameterType) {
+            FilterContract::class => [$this->filter],
+            default => []
+        };
+    }
+
+    protected function resolveDefaultClosureDependencyForEvaluationByName(string $parameterName): array
+    {
+        return match ($parameterName) {
+            'filter' => [$this->filter],
+            'value' => [$this->value],
+            'property' => [$this->property],
+            'alias' => [$this->alias],
+            default => []
+        };
     }
 
     public function isActive(): bool

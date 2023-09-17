@@ -21,12 +21,18 @@ class CallbackSort implements SortContract
 
     public function __invoke(Builder $builder, string $direction, string $property): void
     {
-        $this->evaluate($this->classOrCallback, [
-            'builder' => $builder,
-            'direction' => $direction,
-            'property' => $property,
-            ...$this->parameters,
-        ]);
+        $this->evaluate(
+            value: $this->classOrCallback,
+            named: [
+                'builder' => $builder,
+                'direction' => $direction,
+                'property' => $property,
+                ...$this->parameters,
+            ],
+            typed: [
+                Builder::class => $builder,
+            ],
+        );
     }
 
     /**

@@ -82,3 +82,28 @@ it('filters according to the given callback', function () {
         ->first()->name->toBe('AirPods (2nd generation)')
         ->count()->toBe(2);
 });
+
+it('injects parameters by type and by name', function () {
+    ProductFactory::new()->count(10)->create();
+    ProductFactory::new()->count(4)->sequence(
+        ['name' => 'AirPods (2nd generation)'],
+        ['name' => 'AirPods (3rd generation)'],
+        ['name' => 'AirPods Pro (2nd generation)'],
+        ['name' => 'AirPods Max'],
+    )->create();
+
+    $filters = mock_refiner(
+        query: ['filters' => ['airpods_gen' => 2]],
+        refiners: [
+            CallbackFilter::make('airpods_gen', fn (Builder $qb, int $value) => match ($value) {
+                2 => $qb->where('name', 'like', '%(2nd generation)'),
+                3 => $qb->where('name', 'like', '%(3rd generation)'),
+                default => null
+            }),
+        ],
+    );
+
+    expect($filters)
+        ->first()->name->toBe('AirPods (2nd generation)')
+        ->count()->toBe(2);
+});

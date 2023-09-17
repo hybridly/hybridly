@@ -39,14 +39,23 @@ class Sort extends Components\Component implements RefinerContract
         $this->sort->__invoke($builder, $this->direction ?? $this->getDefaultDirection(), $this->property);
     }
 
-    protected function getDefaultEvaluationParameters(): array
+    protected function resolveDefaultClosureDependencyForEvaluationByType(string $parameterType): array
     {
-        return [
-            'sort' => $this->sort,
-            'direction' => $this->direction,
-            'property' => $this->property,
-            'alias' => $this->alias,
-        ];
+        return match ($parameterType) {
+            SortContract::class => [$this->sort],
+            default => []
+        };
+    }
+
+    protected function resolveDefaultClosureDependencyForEvaluationByName(string $parameterName): array
+    {
+        return match ($parameterName) {
+            'sort' => [$this->sort],
+            'direction' => [$this->direction],
+            'property' => [$this->property],
+            'alias' => [$this->alias],
+            default => []
+        };
     }
 
     public function isActive(): bool

@@ -55,12 +55,18 @@ trait HasRefiners
             return $sorts->first(fn (string $sort) => ltrim($sort, '-') === $property);
         };
 
-        $sort = $this->evaluate($callback, [
-            'request' => $this->getRequest(),
-            'scope' => $this->formatScope($this->getSortsKey()),
-            'property' => $property,
-            'alias' => $alias,
-        ]);
+        $sort = $this->evaluate(
+            value: $callback,
+            named: [
+                'request' => $this->getRequest(),
+                'scope' => $this->formatScope($this->getSortsKey()),
+                'property' => $property,
+                'alias' => $alias,
+            ],
+            typed: [
+                Request::class => $this->getRequest(),
+            ],
+        );
 
         // If we didn't get a sort value, there is no sort.
         if (!$sort) {
