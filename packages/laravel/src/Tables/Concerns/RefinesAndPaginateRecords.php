@@ -82,12 +82,13 @@ trait RefinesAndPaginateRecords
         $includeOriginalRecordId = config('hybridly.tables.enable_actions') && $columnsWithTransforms->contains(static fn (BaseColumn $column) => $column->getName() === $keyName);
         $columnNames = $columns->map(static fn (BaseColumn $column) => $column->getName());
         $result = $paginatedRecords->through(static fn (Model $record) => [
-            // If the record's key is modified, ensure we actually
-            // return it for identification using actions
+            // If actions are enabled but the record's key is not included in the
+            // columns or is transformed, ensure we still return it because
+            // it is needed to identify records when performing actions
             ...($includeOriginalRecordId ? ['__hybridId' => $record->getKey()] : []),
 
-            // Then, we actually include all record attributes that actually
-            // have a column, applying transforms on the way if necessary.
+            // Then, we actually include all record attributes that have
+            // a column, applying transforms on the way if necessary.
             ...array_filter(
                 array: [
                     ...$record->toArray(),
