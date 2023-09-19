@@ -1,0 +1,33 @@
+<?php
+
+namespace {{ namespace }};
+
+use {{ namespacedModel }};
+use Hybridly\Refining\Sorts;
+use Hybridly\Tables\Actions;
+use Hybridly\Tables\Columns;
+use Hybridly\Tables\Table;
+
+final class {{ class }} extends Table
+{
+    protected string $model = {{ model }}::class;
+
+    protected function defineColumns(): array
+    {
+        return [
+            Columns\TextColumn::make('id')->label('#'),
+        ];
+    }
+
+    protected function defineRefinements(): array
+    {
+        return [
+            Sorts\FieldSort::make('id'),
+        ];
+    }
+
+    protected function defineActions(): array
+    {
+        return [];
+    }
+}

@@ -5,6 +5,7 @@ namespace Hybridly;
 use Hybridly\Commands\GenerateGlobalTypesCommand;
 use Hybridly\Commands\I18nCommand;
 use Hybridly\Commands\InstallCommand;
+use Hybridly\Commands\MakeTableCommand;
 use Hybridly\Commands\PrintConfigurationCommand;
 use Hybridly\Http\Controller;
 use Hybridly\Support\Data\PartialLazy;
@@ -33,6 +34,7 @@ class HybridlyServiceProvider extends PackageServiceProvider
             ->hasCommand(InstallCommand::class)
             ->hasCommand(I18nCommand::class)
             ->hasCommand(PrintConfigurationCommand::class)
+            ->hasCommand(MakeTableCommand::class)
             ->hasCommand(GenerateGlobalTypesCommand::class);
     }
 

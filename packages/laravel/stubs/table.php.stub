@@ -1,0 +1,27 @@
+<?php
+
+namespace {{ namespace }};
+
+use Hybridly\Refining\Sorts;
+use Hybridly\Tables\Actions;
+use Hybridly\Tables\Columns;
+use Hybridly\Tables\Table;
+use Illuminate\Support\Collection;
+
+final class {{ class }} extends Table
+{
+    protected function defineColumns(): array
+    {
+        return [];
+    }
+
+    protected function defineRefinements(): array
+    {
+        return [];
+    }
+
+    protected function defineActions(): array
+    {
+        return [];
+    }
+}
