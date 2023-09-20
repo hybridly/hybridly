@@ -56,7 +56,7 @@ The following is a non-exhaustive comparison table between Inertia and Hybridly'
   1. Support through third-party package using <a href="https://github.com/lepikhinb/momentum-modal">Momentum</a> <br />
   2. Unofficial extension by <a href="https://twitter.com/nicolashedger">Nicolas Hedger</a> <br />
   3. Support through Laravel Data <br />
-  4. <a href="https://github.com/vueuse/head"><code>@vueuse/head</code></a> is recommended instead <br />
+  4. <a href="https://unhead.unjs.io/"><code>@unhead/vue</code></a> is recommended instead <br />
 </div>
 
 <style>

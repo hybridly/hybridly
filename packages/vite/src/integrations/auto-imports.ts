@@ -36,6 +36,18 @@ function getAutoImportsOptions(options: ViteOptions, config: DynamicConfiguratio
 	}
 
 	const presets = ['@vueuse/core', '@vueuse/head', 'vue-i18n'] as const
+	const custom = {
+		'@unhead/vue': [
+			'useHead',
+			'useSeoMeta',
+		],
+		'@innocenzi/utils': [
+			'match',
+			'invoke',
+			'batchInvoke',
+			'asyncInvoke',
+		],
+	}
 
 	return merge<AutoImportOptions>(
 		{
@@ -50,6 +62,7 @@ function getAutoImportsOptions(options: ViteOptions, config: DynamicConfiguratio
 				'vue',
 				'vue/macros',
 				...presets.filter((pkg) => isPackageInstalled(pkg)),
+				...Object.entries(custom).filter(([pkg]) => isPackageInstalled(pkg)).map(([pkg, imports]) => ({ [pkg]: imports })),
 				HybridlyImports,
 			],
 		},

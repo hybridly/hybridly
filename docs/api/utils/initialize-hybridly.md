@@ -25,7 +25,7 @@ This can be used to register additionnal Vue plugins, directives or components.
 
 ```ts
 import { createApp } from 'vue'
-import { createHead } from '@vueuse/head'
+import { createHead } from '@unhead/vue'
 import { autoAnimatePlugin as autoAnimate } from '@formkit/auto-animate/vue'
 import { initializeHybridly } from 'virtual:hybridly/setup'
 

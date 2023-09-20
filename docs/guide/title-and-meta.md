@@ -2,14 +2,14 @@
 
 ## Overview
 
-Hybridly doesn't ship with any tool to manage the `title` or other `meta` tags of your pages. Instead, we recommend using [`@vueuse/head`](https://github.com/vueuse/head). It is simple of use and supports SSR.
+Hybridly doesn't ship with any tool to manage the `title` or other `meta` tags of your pages. Instead, we recommend using [`@unhead/vue`](https://unhead.unjs.io/). It is simple of use and supports SSR.
 
 ## Installation
 
-Add `@vueuse/head` to your dependencies:
+Add `@unhead/vue` to your dependencies:
 
 ```bash
-npm i -D @vueuse/head
+npm i -D @unhead/vue
 ```
 
 In `main.ts`, import `createHead` and register its return value as a plugin.
@@ -17,7 +17,7 @@ In `main.ts`, import `createHead` and register its return value as a plugin.
 ```ts
 import { createApp } from 'vue'
 import { initializeHybridly } from 'virtual:hybridly/config'
-import { createHead } from '@vueuse/head' // [!code hl]
+import { createHead } from '@unhead/vue' // [!code hl]
 
 initializeHybridly({
   enhanceVue: (vue) => {
@@ -63,4 +63,4 @@ useHead({
 ```
 :::
 
-For more information regarding the functionalities of `@vueuse/head`, refer to [its documentation](https://github.com/vueuse/head).
+For more information regarding the functionalities of `@unhead/vue`, refer to [its documentation](https://unhead.unjs.io/usage/composables/use-head).
