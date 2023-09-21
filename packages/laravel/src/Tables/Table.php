@@ -26,7 +26,7 @@ abstract class Table extends Components\Component
             'refinements' => $this->getRefinements(),
             'records' => $this->getRecords(),
             'paginator' => $this->getPaginatorMeta(),
-            'columns' => $this->getTableColumns()->all(),
+            'columns' => $this->getTableColumns()->values(),
             'endpoint' => config('hybridly.tables.actions_endpoint_name'),
             'inlineActions' => $this->getInlineActions()->values(),
             'bulkActions' => $this->getBulkActions()->values(),

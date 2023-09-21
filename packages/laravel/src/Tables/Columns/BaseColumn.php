@@ -52,7 +52,6 @@ abstract class BaseColumn extends Component
             'name' => $this->getName(),
             'type' => $this->getType(),
             'label' => $this->getLabel(),
-            'hidden' => $this->isHidden(),
             'metadata' => $this->getMetadata(),
         ];
     }
