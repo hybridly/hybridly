@@ -77,7 +77,6 @@
             "name": "name",
             "type": "text",
             "label": "Name",
-            "hidden": false,
             "metadata": []
         }
     ],
