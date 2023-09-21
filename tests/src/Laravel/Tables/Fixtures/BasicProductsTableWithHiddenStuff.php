@@ -15,7 +15,7 @@ class BasicProductsTableWithHiddenStuff extends Table
 {
     protected string $model = Product::class;
 
-    public function defineRefinements(): array
+    public function defineRefiners(): array
     {
         return [
             FieldSort::make('name')->hidden(),

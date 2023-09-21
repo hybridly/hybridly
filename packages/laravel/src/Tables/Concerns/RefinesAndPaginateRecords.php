@@ -18,7 +18,7 @@ trait RefinesAndPaginateRecords
     private mixed $cachedRecords = null;
     private mixed $cachedRefiners = null;
 
-    protected function defineRefinements(): array
+    protected function defineRefiners(): array
     {
         return [];
     }
@@ -65,7 +65,7 @@ trait RefinesAndPaginateRecords
 
     public function getRefiners(): Collection
     {
-        return $this->cachedRefinements ??= collect($this->defineRefinements())
+        return $this->cachedRefinements ??= collect($this->defineRefiners())
             ->filter(static fn (Refiner $refiner): bool => !$refiner->isHidden());
     }
 

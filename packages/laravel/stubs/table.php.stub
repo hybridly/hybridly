@@ -15,7 +15,7 @@ final class {{ class }} extends Table
         return [];
     }
 
-    protected function defineRefinements(): array
+    protected function defineRefiners(): array
     {
         return [];
     }

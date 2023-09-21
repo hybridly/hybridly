@@ -16,7 +16,7 @@ class BasicScopedProductsTable extends Table
     protected string $model = Product::class;
     protected string $scope = 'custom-scope';
 
-    public function defineRefinements(): array
+    public function defineRefiners(): array
     {
         return [
             FieldSort::make('name'),

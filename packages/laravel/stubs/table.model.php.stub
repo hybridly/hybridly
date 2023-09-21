@@ -19,7 +19,7 @@ final class {{ class }} extends Table
         ];
     }
 
-    protected function defineRefinements(): array
+    protected function defineRefiners(): array
     {
         return [
             Sorts\FieldSort::make('id'),
