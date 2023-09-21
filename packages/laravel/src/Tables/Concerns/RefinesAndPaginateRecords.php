@@ -5,6 +5,8 @@ namespace Hybridly\Tables\Concerns;
 use Hybridly\Refining\Contracts\Refiner;
 use Hybridly\Refining\Refine;
 use Hybridly\Tables\Columns\BaseColumn;
+use Illuminate\Contracts\Pagination\CursorPaginator;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -23,7 +25,7 @@ trait RefinesAndPaginateRecords
         return [];
     }
 
-    protected function getPaginatedRecords(): array
+    private function getPaginatedRecords(): array
     {
         return $this->cachedRecords ??= $this->transformPaginatedRecords()->toArray();
     }
@@ -40,20 +42,22 @@ trait RefinesAndPaginateRecords
         // Wraps pagination data if necessary
         if (!\array_key_exists('meta', $pagination)) {
             return [
-                'links' => $pagination['links'],
-                'meta' => [
-                    'current_page' => $pagination['current_page'],
-                    'first_page_url' => $pagination['first_page_url'],
-                    'from' => $pagination['from'],
-                    'last_page' => $pagination['last_page'],
-                    'last_page_url' => $pagination['last_page_url'],
-                    'next_page_url' => $pagination['next_page_url'],
-                    'path' => $pagination['path'],
-                    'per_page' => $pagination['per_page'],
-                    'prev_page_url' => $pagination['prev_page_url'],
-                    'to' => $pagination['to'],
-                    'total' => $pagination['total'],
-                ],
+                'links' => $pagination['links'] ?? [],
+                'meta' => array_filter([
+                    'current_page' => $pagination['current_page'] ?? null,
+                    'first_page_url' => $pagination['first_page_url'] ?? null,
+                    'from' => $pagination['from'] ?? null,
+                    'last_page' => $pagination['last_page'] ?? null,
+                    'last_page_url' => $pagination['last_page_url'] ?? null,
+                    'next_page_url' => $pagination['next_page_url'] ?? null,
+                    'path' => $pagination['path'] ?? null,
+                    'per_page' => $pagination['per_page'] ?? null,
+                    'prev_page_url' => $pagination['prev_page_url'] ?? null,
+                    'to' => $pagination['to'] ?? null,
+                    'total' => $pagination['total'] ?? null,
+                    'prev_cursor' => $pagination['prev_cursor'] ?? null,
+                    'next_cursor' => $pagination['next_cursor'] ?? null,
+                ]),
             ];
         }
 
@@ -69,7 +73,7 @@ trait RefinesAndPaginateRecords
             ->filter(static fn (Refiner $refiner): bool => !$refiner->isHidden());
     }
 
-    protected function transformPaginatedRecords(): Paginator|DataCollectable
+    private function transformPaginatedRecords(): Paginator|CursorPaginator|DataCollectable
     {
         $paginatedRecords = $this->paginateRecords($this->getRefinedQuery());
 
@@ -112,7 +116,7 @@ trait RefinesAndPaginateRecords
         return $this->transformRecords($result);
     }
 
-    protected function transformRecords(Paginator $paginator): Paginator|DataCollectable
+    protected function transformRecords(Paginator|CursorPaginator $paginator): Paginator|CursorPaginator|DataCollectable
     {
         if (isset($this->data) && is_a($this->data, Data::class, allow_string: true)) {
             return $this->data::collection($paginator);
@@ -121,14 +125,41 @@ trait RefinesAndPaginateRecords
         return $paginator;
     }
 
-    protected function paginateRecords(Builder $query): Paginator
+    /**
+     * Determines how the query will be paginated.
+     */
+    protected function paginateRecords(Builder $query): Paginator|CursorPaginator
     {
-        return $query->paginate(
-            pageName: $this->formatScope('page'),
-            perPage: $this->getRecordsPerPage(),
-        )->withQueryString();
+        $paginator = match ($this->getPaginatorType()) {
+            LengthAwarePaginator::class => $query->paginate(
+                perPage: $this->getRecordsPerPage(),
+                pageName: $this->formatScope('page'),
+            ),
+            Paginator::class => $query->simplePaginate(
+                perPage: $this->getRecordsPerPage(),
+                pageName: $this->formatScope('page'),
+            ),
+            CursorPaginator::class => $query->cursorPaginate(
+                perPage: $this->getRecordsPerPage(),
+                cursorName: $this->formatScope('cursor'),
+            ),
+            default => throw new \Exception("Invalid paginator type [{$this->getPaginatorType()}]"),
+        };
+
+        return $paginator->withQueryString();
     }
 
+    /**
+     * Defines the kind of pagination that will be used for this table.
+     */
+    protected function getPaginatorType(): string
+    {
+        return $this->paginatorType ?? LengthAwarePaginator::class;
+    }
+
+    /**
+     * Defines the amount of records per page for this table.
+     */
     protected function getRecordsPerPage(): int
     {
         return $this->recordsPerPage ?? 10;

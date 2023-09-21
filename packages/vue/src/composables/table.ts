@@ -7,7 +7,10 @@ import type { AvailableHybridRequestOptions, SortDirection, ToggleSortOptions } 
 import { useRefinements } from './refinements'
 
 declare global {
-	interface Table<T extends Record<string, any> = any> {
+	interface Table<
+		T extends Record<string, any> = any,
+		PaginatorKind extends 'cursor' | 'length-aware' | 'simple' = 'cursor',
+	> {
 		id: string
 		keyName: string
 		scope?: string
@@ -15,7 +18,7 @@ declare global {
 		inlineActions: InlineAction[]
 		bulkActions: BulkAction[]
 		records: T[]
-		paginator: Exclude<Paginator<T>, 'data'>
+		paginator: Exclude<PaginatorKind extends 'cursor' ? CursorPaginator<T> : (PaginatorKind extends 'simple' ? SimplePaginator<T> : Paginator<T>), 'data'>
 		refinements: Refinements
 		endpoint: string
 	}
@@ -64,11 +67,11 @@ export type RecordIdentifier = string | number
  * Provides utilities for working with tables.
  */
 export function useTable<
-	RecordType extends(Props[PropsKey] extends Table<infer RecordType> ? RecordType : never),
-	TableType extends(Props[PropsKey] extends Table<RecordType> ? Table<RecordType> : never),
-	Props extends object,
+	RecordType extends(Props[PropsKey] extends Table<infer RecordType, any> ? RecordType : never),
+	PaginatorKindName extends (Props[PropsKey] extends Table<RecordType, infer PaginatorKind> ? PaginatorKind : never),
+	TableType extends (Props[PropsKey] extends Table<RecordType, PaginatorKindName> ? Table<RecordType, PaginatorKindName> : never),
+	Props extends Record<string, unknown>,
 	PropsKey extends keyof Props,
-	ColumnType extends keyof RecordType
 >(props: Props, key: PropsKey) {
 	const table = computed(() => props[key] as TableType)
 	const bulk = useBulkSelect<RecordIdentifier>()
