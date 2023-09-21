@@ -44,6 +44,7 @@ trait HasModel
         return str(static::class)
             ->classBasename()
             ->beforeLast('Table')
+            ->singular()
             ->prepend('\\App\\Models\\')
             ->toString();
     }
