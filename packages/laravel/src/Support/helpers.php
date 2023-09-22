@@ -3,6 +3,7 @@
 namespace Hybridly;
 
 use Hybridly\Support\Deferred;
+use Hybridly\Support\Header;
 use Hybridly\Support\Partial;
 use Hybridly\View\Factory;
 use Illuminate\Contracts\Support\Arrayable;
@@ -19,7 +20,9 @@ if (!\function_exists('Hybridly\is_hybrid')) {
      */
     function is_hybrid(Request $request = null): bool
     {
-        return hybridly()->isHybrid($request);
+        $request ??= request();
+
+        return $request->headers->has(Header::HYBRID_REQUEST);
     }
 }
 
@@ -31,7 +34,13 @@ if (!\function_exists('Hybridly\is_partial')) {
      */
     function is_partial(Request $request = null): bool
     {
-        return hybridly()->isPartial($request);
+        $request ??= request();
+
+        if (!is_hybrid($request)) {
+            return false;
+        }
+
+        return $request->headers->has(Header::PARTIAL_COMPONENT);
     }
 }
 
@@ -43,7 +52,7 @@ if (!\function_exists('Hybridly\view')) {
      */
     function view(string $component = null, array|Arrayable|DataObject $properties = []): Factory
     {
-        return resolve(Hybridly::class)->view($component, $properties);
+        return resolve(Factory::class)->view($component, $properties);
     }
 }
 
@@ -55,7 +64,7 @@ if (!\function_exists('Hybridly\properties')) {
      */
     function properties(array|Arrayable|DataObject $properties): Factory
     {
-        return resolve(Hybridly::class)->properties($properties);
+        return resolve(Factory::class)->properties($properties);
     }
 }
 
@@ -65,32 +74,45 @@ if (!\function_exists('Hybridly\partial')) {
      *
      * @see https://hybridly.dev/api/laravel/functions.html#partial
      */
-    function partial(\Closure $closure): Partial
+    function partial(\Closure $callback): Partial
     {
-        return hybridly()->partial($closure);
+        return new Partial($callback);
     }
 }
 
 if (!\function_exists('Hybridly\deferred')) {
     /**
-     * Creates a deferred property that will automatically be loaded in a subsequent partial reload.
+     * Creates a deferred property that will not be included in an initial load,
+     * but will automatically be loaded in a subsequent partial reload.
      *
      * @see https://hybridly.dev/api/laravel/functions.html#deferred
      */
-    function deferred(\Closure $closure): Deferred
+    function deferred(\Closure $callback): Deferred
     {
-        return hybridly()->deferred($closure);
+        return new Deferred($callback);
     }
 }
 
 if (!\function_exists('Hybridly\to_external_url')) {
     /**
-     * Redirects to the given external URL.
+     * Generates a response for redirecting to an external website, or a non-hybrid page.
+     * This can also be used to redirect to a hybrid page when it is not known whether the current request is hybrid or not.
      *
      * @see https://hybridly.dev/api/laravel/functions.html#to-external-url
      */
     function to_external_url(string|RedirectResponse $url): Response
     {
-        return hybridly()->external($url);
+        if ($url instanceof RedirectResponse) {
+            $url = $url->getTargetUrl();
+        }
+
+        if (is_hybrid()) {
+            return new Response(
+                status: Response::HTTP_CONFLICT,
+                headers: [Header::EXTERNAL => $url],
+            );
+        }
+
+        return new RedirectResponse($url);
     }
 }

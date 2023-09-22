@@ -1,6 +1,9 @@
 <?php
 
 use Hybridly\Hybridly;
+
+use function Hybridly\view;
+
 use Hybridly\View\Factory;
 use Illuminate\Contracts\Support\Arrayable;
 use Spatie\LaravelData\Contracts\DataObject;
@@ -15,13 +18,10 @@ if (!function_exists('hybridly')) {
      */
     function hybridly(string $component = null, array|Arrayable|DataObject $properties = []): Hybridly|Factory
     {
-        /** @var Hybridly */
-        $hybridly = resolve(Hybridly::class);
-
         if (!is_null($component) || !empty($properties)) {
-            return $hybridly->view($component, $properties);
+            return view($component, $properties);
         }
 
-        return $hybridly;
+        return resolve(Hybridly::class);
     }
 }
