@@ -152,7 +152,13 @@ export async function performHybridNavigation(options: HybridRequestOptions): Pr
 		await runHooks('start', options.hooks, context)
 		debug.router('Making request with axios.')
 		const response = await performHybridRequest(targetUrl, options, abortController)
-		await runHooks('data', options.hooks, response, context)
+		const result = await runHooks('data', options.hooks, response, context)
+
+		// If one of the `data` hook decided to cancel the,
+		// response we stop processing it and return early.
+		if (result === false) {
+			return { response }
+		}
 
 		// An external response is a hybrid response that wants a full page
 		// load to a requested URL. It may be the same URL, in which
