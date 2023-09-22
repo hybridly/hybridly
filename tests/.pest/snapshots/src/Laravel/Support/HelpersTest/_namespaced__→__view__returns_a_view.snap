@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+</head>
+<body>
+		<div id="root" class="" data-payload="{&quot;view&quot;:{&quot;component&quot;:&quot;users.index&quot;,&quot;properties&quot;:{&quot;foo&quot;:&quot;bar&quot;},&quot;deferred&quot;:[]},&quot;dialog&quot;:null,&quot;url&quot;:&quot;http:\/\/localhost&quot;,&quot;version&quot;:null}"></div>
+</body>
+</html>
