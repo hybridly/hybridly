@@ -1,5 +1,6 @@
 import { computed, ref } from 'vue'
 
+// #region bulk-selection
 export interface BulkSelection<T = any> {
 	/** Whether all records are selected. */
 	all: boolean
@@ -8,6 +9,7 @@ export interface BulkSelection<T = any> {
 	/** Excluded records. */
 	except: Set<T>
 }
+// #endregion bulk-selection
 
 export function useBulkSelect<T = any>() {
 	const selection = ref<BulkSelection<T>>({

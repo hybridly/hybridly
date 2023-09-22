@@ -279,6 +279,35 @@ BulkAction::make('delete')
     ->action(fn (Builder $query) => $query->delete())
 ```
 
+### Selecting records
+
+The `useTable` function returns utilities to select records. The selected records are scoped to the `useTable` call, so all bulk actions will use them.
+
+To let users select records, you may use [form input binding](https://vuejs.org/guide/essentials/forms.html#checkbox) on [`selection.only`](../api/utils/use-table.md#selection):
+
+```vue-html
+<tr v-for="{ key, value, actions } in users.records" :key="key">
+	<td>
+		<input
+			v-model="users.selection.only" // [!code hl]
+			:value="key" // [!code hl]
+			type="checkbox"
+		/>
+	</td>
+	<!-- ... -->
+</tr>
+```
+
+### Automatically de-selecting records
+
+By default, executing a bulk-action will de-select all records. You may change this behavior by calling the `keepSelected` method on an action:
+
+```php
+BulkAction::make('archive')
+	->keepSelected()
+	->action(fn (Collection $records) => $records->each->archive()),
+```
+
 ### Hiding actions
 
 Like columns, actions may be hidden depending on a specific condition.

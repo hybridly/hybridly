@@ -216,6 +216,16 @@ Gets the value of the record for the specified column.
 
 The following functions and properties are used to deal with selecting records.
 
+### `selection`
+
+The `selection` objects represents the records that are selected. It uses the following interface:
+
+<<< @/../packages/vue/src/composables/bulk-select.ts#bulk-selection
+
+When selecting _all_ records, instead of adding all possible record identifiers in a set, the `all` boolean will be set to `true`. In this situation, records may be de-selected by being added to `except`.
+
+This is all done _automaticaly_ by the helpers bellow.
+
 ### `selectAll`
 
 - Type: `Function`
