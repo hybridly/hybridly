@@ -19,15 +19,6 @@ class CallbackFilter implements FilterContract
         }
     }
 
-    public function getType(): string
-    {
-        if ($this->classOrCallback instanceof FilterContract) {
-            return $this->classOrCallback->getType();
-        }
-
-        return 'callback';
-    }
-
     public function __invoke(Builder $builder, mixed $value, string $property): void
     {
         $this->evaluate(
@@ -42,6 +33,15 @@ class CallbackFilter implements FilterContract
                 Builder::class => $builder,
             ],
         );
+    }
+
+    public function getType(): string
+    {
+        if ($this->classOrCallback instanceof FilterContract) {
+            return $this->classOrCallback->getType();
+        }
+
+        return 'callback';
     }
 
     /**

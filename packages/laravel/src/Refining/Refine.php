@@ -27,6 +27,15 @@ class Refine extends Components\Component
         $this->setRequest($request);
     }
 
+    public function __call($name, $arguments)
+    {
+        // Applies refiners at the last possible moment, when the
+        // underlying builder instance is called and the query is ran.
+        $this->applyRefiners();
+
+        return $this->forwardDecoratedCallTo($this->getBuilderInstance(), $name, $arguments);
+    }
+
     /**
      * Refines the given model.
      */
@@ -71,23 +80,6 @@ class Refine extends Components\Component
         return $this->addRefiners($refiners);
     }
 
-    public function __call($name, $arguments)
-    {
-        // Applies refiners at the last possible moment, when the
-        // underlying builder instance is called and the query is ran.
-        $this->applyRefiners();
-
-        return $this->forwardDecoratedCallTo($this->getBuilderInstance(), $name, $arguments);
-    }
-
-    protected function resolveDefaultClosureDependencyForEvaluationByType(string $parameterType): array
-    {
-        return match ($parameterType) {
-            self::class => [$this],
-            default => []
-        };
-    }
-
     public function getSorts(): array
     {
         return collect($this->getRefiners())
@@ -115,5 +107,13 @@ class Refine extends Components\Component
                 'filters' => $this->formatScope($this->getFiltersKey()),
             ],
         ];
+    }
+
+    protected function resolveDefaultClosureDependencyForEvaluationByType(string $parameterType): array
+    {
+        return match ($parameterType) {
+            self::class => [$this],
+            default => []
+        };
     }
 }

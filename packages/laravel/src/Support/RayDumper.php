@@ -16,6 +16,16 @@ final class RayDumper
         $this->registerListener();
     }
 
+    public function showHybridRequests(bool $show = true): void
+    {
+        $this->showHybridRequests = $show;
+    }
+
+    public function stopShowingHybridRequests(): void
+    {
+        $this->showHybridRequests = false;
+    }
+
     private function registerListener(): void
     {
         $this->dispatcher->listen('hybridly.response', function (array $response) {
@@ -30,15 +40,5 @@ final class RayDumper
                 'Root view' => $response['root_view'],
             ], 'Hybrid response');
         });
-    }
-
-    public function showHybridRequests(bool $show = true): void
-    {
-        $this->showHybridRequests = $show;
-    }
-
-    public function stopShowingHybridRequests(): void
-    {
-        $this->showHybridRequests = false;
     }
 }

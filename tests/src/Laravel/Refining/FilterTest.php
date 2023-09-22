@@ -13,14 +13,14 @@ beforeEach(function () {
 
     $this->filter = new class () implements ContractsFilter
     {
-        public function getType(): string
-        {
-            return 'callback';
-        }
-
         public function __invoke(Builder $builder, mixed $value, string $property): void
         {
             $builder->where($property, '=', $value);
+        }
+
+        public function getType(): string
+        {
+            return 'callback';
         }
     };
 });

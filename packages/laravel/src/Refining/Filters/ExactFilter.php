@@ -14,11 +14,6 @@ class ExactFilter implements FilterContract
     {
     }
 
-    public function getType(): string
-    {
-        return 'exact';
-    }
-
     public function __invoke(Builder $builder, mixed $value, string $property): void
     {
         $this->applyRelationConstraint(
@@ -30,6 +25,11 @@ class ExactFilter implements FilterContract
                 value: $value,
             ),
         );
+    }
+
+    public function getType(): string
+    {
+        return 'exact';
     }
 
     /**

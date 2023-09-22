@@ -7,11 +7,6 @@ use Illuminate\Contracts\Database\Eloquent\Builder;
 
 class TrashedFilter implements FilterContract
 {
-    public function getType(): string
-    {
-        return 'trashed';
-    }
-
     private function __construct()
     {
     }
@@ -23,6 +18,11 @@ class TrashedFilter implements FilterContract
             'only' => $builder->onlyTrashed(),
             default => $builder->withoutTrashed(),
         };
+    }
+
+    public function getType(): string
+    {
+        return 'trashed';
     }
 
     /**

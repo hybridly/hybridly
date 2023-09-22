@@ -6,12 +6,11 @@ use Hybridly\Support\Header;
 use Hybridly\Support\MissingViewComponentException;
 use Hybridly\Support\Partial;
 use Hybridly\View\Factory;
-
-use function Hybridly\{deferred, dialog, is_hybrid, is_partial, partial, properties, to_external_url, view};
-
 use Illuminate\Support\Facades\Route;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
+
+use function Hybridly\{deferred, dialog, is_hybrid, is_partial, partial, properties, to_external_url, view};
 
 describe('namespaced', function () {
     beforeEach(function () {

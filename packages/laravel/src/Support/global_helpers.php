@@ -1,12 +1,11 @@
 <?php
 
 use Hybridly\Hybridly;
-
-use function Hybridly\view;
-
 use Hybridly\View\Factory;
 use Illuminate\Contracts\Support\Arrayable;
 use Spatie\LaravelData\Contracts\DataObject;
+
+use function Hybridly\view;
 
 if (!function_exists('hybridly')) {
     /**

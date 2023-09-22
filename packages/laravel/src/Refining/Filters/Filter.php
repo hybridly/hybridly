@@ -60,25 +60,6 @@ class Filter extends Components\Component implements RefinerContract
         }
     }
 
-    protected function resolveDefaultClosureDependencyForEvaluationByType(string $parameterType): array
-    {
-        return match ($parameterType) {
-            FilterContract::class => [$this->filter],
-            default => []
-        };
-    }
-
-    protected function resolveDefaultClosureDependencyForEvaluationByName(string $parameterName): array
-    {
-        return match ($parameterName) {
-            'filter' => [$this->filter],
-            'value' => [$this->value],
-            'property' => [$this->property],
-            'alias' => [$this->alias],
-            default => []
-        };
-    }
-
     public function isActive(): bool
     {
         return !\is_null($this->value);
@@ -96,5 +77,24 @@ class Filter extends Components\Component implements RefinerContract
             'value' => $this->value,
             'default' => $this->defaultValue,
         ];
+    }
+
+    protected function resolveDefaultClosureDependencyForEvaluationByType(string $parameterType): array
+    {
+        return match ($parameterType) {
+            FilterContract::class => [$this->filter],
+            default => []
+        };
+    }
+
+    protected function resolveDefaultClosureDependencyForEvaluationByName(string $parameterName): array
+    {
+        return match ($parameterName) {
+            'filter' => [$this->filter],
+            'value' => [$this->value],
+            'property' => [$this->property],
+            'alias' => [$this->alias],
+            default => []
+        };
     }
 }

@@ -49,13 +49,13 @@ trait HasModel
             ->toString();
     }
 
-    protected function defineQuery(): Builder
-    {
-        return $this->getModel()->query();
-    }
-
     public function getKeyName(): string
     {
         return $this->getModel()->getKeyName();
+    }
+
+    protected function defineQuery(): Builder
+    {
+        return $this->getModel()->query();
     }
 }

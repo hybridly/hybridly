@@ -26,14 +26,6 @@ trait HasRefiners
     }
 
     /**
-     * @return array<Refiner>
-     */
-    protected function getRefiners(): array
-    {
-        return $this->refiners;
-    }
-
-    /**
      * Applies refiner. Automatically called when accessing the underlying query.
      */
     public function applyRefiners(): static
@@ -105,5 +97,13 @@ trait HasRefiners
             'property' => $property,
             'alias' => $alias,
         ]);
+    }
+
+    /**
+     * @return array<Refiner>
+     */
+    protected function getRefiners(): array
+    {
+        return $this->refiners;
     }
 }

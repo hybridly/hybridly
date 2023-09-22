@@ -66,6 +66,21 @@ final class RouteExtractor implements JsonSerializable, Arrayable
         return $routes;
     }
 
+    public function jsonSerialize(): mixed
+    {
+        return $this->toJson();
+    }
+
+    public function toJson()
+    {
+        return json_encode($this->toArray());
+    }
+
+    public function toArray()
+    {
+        return $this->getRouteCollection();
+    }
+
     /**
      * Resolves route model bindings.
      * @see https://github.com/tighten/ziggy/blob/main/src/Ziggy.php#L162
@@ -144,20 +159,5 @@ final class RouteExtractor implements JsonSerializable, Arrayable
         return method_exists(app('url'), 'getDefaultParameters')
             ? app('url')->getDefaultParameters()
             : [];
-    }
-
-    public function jsonSerialize(): mixed
-    {
-        return $this->toJson();
-    }
-
-    public function toJson()
-    {
-        return json_encode($this->toArray());
-    }
-
-    public function toArray()
-    {
-        return $this->getRouteCollection();
     }
 }

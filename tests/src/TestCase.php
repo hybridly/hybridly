@@ -13,6 +13,13 @@ class TestCase extends Orchestra
 {
     use LazilyRefreshDatabase;
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        View::addLocation(__DIR__ . '/stubs');
+    }
+
     protected function getPackageProviders($app)
     {
         return [
@@ -20,13 +27,6 @@ class TestCase extends Orchestra
             LaravelDataServiceProvider::class,
             RayServiceProvider::class,
         ];
-    }
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        View::addLocation(__DIR__ . '/stubs');
     }
 
     protected function defineDatabaseMigrations(): void

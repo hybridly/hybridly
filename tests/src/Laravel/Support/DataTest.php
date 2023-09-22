@@ -1,12 +1,11 @@
 <?php
 
 use Hybridly\Support\PropertiesResolver;
-
-use function Hybridly\Testing\partial_headers;
-
 use Hybridly\Tests\Fixtures\Data\DataObjectWithLazyProperty;
 use Illuminate\Http\Request;
 use Spatie\LaravelData\Lazy;
+
+use function Hybridly\Testing\partial_headers;
 
 function resolve_properties(array $properties, array $headers = [], array $persisted = [], bool $partial = false, array $only = null, array $except = null): array
 {

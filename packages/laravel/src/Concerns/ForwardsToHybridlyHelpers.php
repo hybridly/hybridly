@@ -2,24 +2,22 @@
 
 namespace Hybridly\Concerns;
 
-use function Hybridly\deferred;
-use function Hybridly\is_hybrid;
-use function Hybridly\is_partial;
-use function Hybridly\partial;
-use function Hybridly\properties;
-
 use Hybridly\Support\Deferred;
 use Hybridly\Support\Partial;
-
-use function Hybridly\to_external_url;
-use function Hybridly\view;
-
 use Hybridly\View\Factory;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
 use Spatie\LaravelData\Contracts\DataObject;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
+
+use function Hybridly\deferred;
+use function Hybridly\is_hybrid;
+use function Hybridly\is_partial;
+use function Hybridly\partial;
+use function Hybridly\properties;
+use function Hybridly\to_external_url;
+use function Hybridly\view;
 
 trait ForwardsToHybridlyHelpers
 {

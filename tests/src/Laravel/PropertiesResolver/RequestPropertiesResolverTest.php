@@ -4,11 +4,10 @@ use Hybridly\Support\CaseConverter;
 use Hybridly\Support\Deferred;
 use Hybridly\Support\Partial;
 use Hybridly\Support\PropertiesResolver;
-
-use function Hybridly\Testing\partial_headers;
-
 use Hybridly\View\Factory;
 use Illuminate\Contracts\Support\Arrayable;
+
+use function Hybridly\Testing\partial_headers;
 
 it('finds deferred properties', function () {
     /** @var PropertiesResolver */

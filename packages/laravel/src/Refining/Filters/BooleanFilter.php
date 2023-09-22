@@ -15,11 +15,6 @@ class BooleanFilter implements FilterContract
     ) {
     }
 
-    public function getType(): string
-    {
-        return 'boolean';
-    }
-
     public function __invoke(Builder $builder, mixed $value, string $property): void
     {
         $value = match (strtolower($value)) {
@@ -41,6 +36,11 @@ class BooleanFilter implements FilterContract
                 value: $value,
             ),
         );
+    }
+
+    public function getType(): string
+    {
+        return 'boolean';
     }
 
     /**

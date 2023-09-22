@@ -14,11 +14,6 @@ class SimilarityFilter implements FilterContract
     public const BEGINS_WITH_STRICT = 'begins_with_strict';
     public const ENDS_WITH_STRICT = 'ends_with_strict';
 
-    public function getType(): string
-    {
-        return "similar:{$this->mode}";
-    }
-
     private function __construct(protected string $mode)
     {
         if (!\in_array($mode, [self::LOOSE, self::BEGINS_WITH_STRICT, self::ENDS_WITH_STRICT], true)) {
@@ -50,6 +45,11 @@ class SimilarityFilter implements FilterContract
                 );
             },
         );
+    }
+
+    public function getType(): string
+    {
+        return "similar:{$this->mode}";
     }
 
     /**

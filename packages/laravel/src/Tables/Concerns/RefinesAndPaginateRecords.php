@@ -20,14 +20,15 @@ trait RefinesAndPaginateRecords
     private mixed $cachedRecords = null;
     private mixed $cachedRefiners = null;
 
+    public function getRefiners(): Collection
+    {
+        return $this->cachedRefinements ??= collect($this->defineRefiners())
+            ->filter(static fn (Refiner $refiner): bool => !$refiner->isHidden());
+    }
+
     protected function defineRefiners(): array
     {
         return [];
-    }
-
-    private function getPaginatedRecords(): array
-    {
-        return $this->cachedRecords ??= $this->transformPaginatedRecords()->toArray();
     }
 
     protected function getRecords(): array
@@ -65,55 +66,6 @@ trait RefinesAndPaginateRecords
             'links' => $pagination['links'],
             'meta' => $pagination['meta'],
         ];
-    }
-
-    public function getRefiners(): Collection
-    {
-        return $this->cachedRefinements ??= collect($this->defineRefiners())
-            ->filter(static fn (Refiner $refiner): bool => !$refiner->isHidden());
-    }
-
-    private function transformPaginatedRecords(): Paginator|CursorPaginator|DataCollectable
-    {
-        $paginatedRecords = $this->paginateRecords($this->getRefinedQuery());
-
-        /** @var Collection<BaseColumn> */
-        $columns = $this->getTableColumns();
-
-        $columnsWithTransforms = $columns->filter(static fn (BaseColumn $column) => $column->canTransformValue());
-        $keyName = $this->getKeyName();
-        $modelClass = $this->getModelClass();
-        $includeOriginalRecordId = config('hybridly.tables.enable_actions') !== false && $columnsWithTransforms->contains(static fn (BaseColumn $column) => $column->getName() === $keyName);
-        $columnNames = $columns->map(static fn (BaseColumn $column) => $column->getName());
-        $result = $paginatedRecords->through(static fn (Model $record) => [
-            // If actions are enabled but the record's key is not included in the
-            // columns or is transformed, ensure we still return it because
-            // it is needed to identify records when performing actions
-            ...($includeOriginalRecordId ? ['__hybridId' => $record->getKey()] : []),
-
-            // Then, we actually include all record attributes that have
-            // a column, applying transforms on the way if necessary.
-            ...array_filter(
-                array: [
-                    ...$record->toArray(),
-                    ...$columnsWithTransforms->mapWithKeys(static fn (BaseColumn $column) => [
-                        $column->getName() => !$column->canTransformValue() ? data_get($record, $column->getName()) : $column->getTransformedValue(
-                            named: [
-                                'column' => $column,
-                                'record' => $record,
-                            ],
-                            typed: [
-                                $modelClass => $record,
-                            ],
-                        ),
-                    ]),
-                ],
-                callback: fn (string $key) => \in_array($key, [...$columnNames->toArray(), $keyName], true),
-                mode: \ARRAY_FILTER_USE_KEY,
-            ),
-        ]);
-
-        return $this->transformRecords($result);
     }
 
     protected function transformRecords(Paginator|CursorPaginator $paginator): Paginator|CursorPaginator|DataCollectable
@@ -191,5 +143,53 @@ trait RefinesAndPaginateRecords
     protected function getRefinements(): array
     {
         return $this->getRefineInstance()->refinements();
+    }
+
+    private function getPaginatedRecords(): array
+    {
+        return $this->cachedRecords ??= $this->transformPaginatedRecords()->toArray();
+    }
+
+    private function transformPaginatedRecords(): Paginator|CursorPaginator|DataCollectable
+    {
+        $paginatedRecords = $this->paginateRecords($this->getRefinedQuery());
+
+        /** @var Collection<BaseColumn> */
+        $columns = $this->getTableColumns();
+
+        $columnsWithTransforms = $columns->filter(static fn (BaseColumn $column) => $column->canTransformValue());
+        $keyName = $this->getKeyName();
+        $modelClass = $this->getModelClass();
+        $includeOriginalRecordId = config('hybridly.tables.enable_actions') !== false && $columnsWithTransforms->contains(static fn (BaseColumn $column) => $column->getName() === $keyName);
+        $columnNames = $columns->map(static fn (BaseColumn $column) => $column->getName());
+        $result = $paginatedRecords->through(static fn (Model $record) => [
+            // If actions are enabled but the record's key is not included in the
+            // columns or is transformed, ensure we still return it because
+            // it is needed to identify records when performing actions
+            ...($includeOriginalRecordId ? ['__hybridId' => $record->getKey()] : []),
+
+            // Then, we actually include all record attributes that have
+            // a column, applying transforms on the way if necessary.
+            ...array_filter(
+                array: [
+                    ...$record->toArray(),
+                    ...$columnsWithTransforms->mapWithKeys(static fn (BaseColumn $column) => [
+                        $column->getName() => !$column->canTransformValue() ? data_get($record, $column->getName()) : $column->getTransformedValue(
+                            named: [
+                                'column' => $column,
+                                'record' => $record,
+                            ],
+                            typed: [
+                                $modelClass => $record,
+                            ],
+                        ),
+                    ]),
+                ],
+                callback: fn (string $key) => \in_array($key, [...$columnNames->toArray(), $keyName], true),
+                mode: \ARRAY_FILTER_USE_KEY,
+            ),
+        ]);
+
+        return $this->transformRecords($result);
     }
 }

@@ -28,6 +28,15 @@ abstract class BaseAction extends Component
         return $static;
     }
 
+    public function jsonSerialize(): mixed
+    {
+        return [
+            'name' => $this->getName(),
+            'label' => $this->getLabel(),
+            'metadata' => $this->getMetadata(),
+        ];
+    }
+
     protected function resolveDefaultClosureDependencyForEvaluationByName(string $parameterName): array
     {
         return match ($parameterName) {
@@ -42,14 +51,5 @@ abstract class BaseAction extends Component
             static::class => [$this],
             default => []
         };
-    }
-
-    public function jsonSerialize(): mixed
-    {
-        return [
-            'name' => $this->getName(),
-            'label' => $this->getLabel(),
-            'metadata' => $this->getMetadata(),
-        ];
     }
 }

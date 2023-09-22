@@ -1,14 +1,11 @@
 <?php
 
-use function Hybridly\partial;
-
 use Hybridly\Support\Header;
-
-use function Hybridly\Testing\partial_headers;
-
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Support\Facades\Route;
 
+use function Hybridly\partial;
+use function Hybridly\Testing\partial_headers;
 use function Pest\Laravel\get;
 
 test('the `partial_headers` helper generates headers for partial requests', function () {

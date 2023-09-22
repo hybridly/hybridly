@@ -6,6 +6,13 @@ trait Configurable
 {
     protected static array $configurations = [];
 
+    /**
+     * Configures this component.
+     */
+    protected function setUp(): void
+    {
+    }
+
     public static function configureUsing(\Closure $callback)
     {
         static::$configurations[static::class] ??= [];
@@ -27,12 +34,5 @@ trait Configurable
         }
 
         return $this;
-    }
-
-    /**
-     * Configures this component.
-     */
-    protected function setUp(): void
-    {
     }
 }

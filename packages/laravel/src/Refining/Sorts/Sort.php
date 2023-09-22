@@ -39,38 +39,9 @@ class Sort extends Components\Component implements RefinerContract
         $this->sort->__invoke($builder, $this->direction ?? $this->getDefaultDirection(), $this->property);
     }
 
-    protected function resolveDefaultClosureDependencyForEvaluationByType(string $parameterType): array
-    {
-        return match ($parameterType) {
-            SortContract::class => [$this->sort],
-            default => []
-        };
-    }
-
-    protected function resolveDefaultClosureDependencyForEvaluationByName(string $parameterName): array
-    {
-        return match ($parameterName) {
-            'sort' => [$this->sort],
-            'direction' => [$this->direction],
-            'property' => [$this->property],
-            'alias' => [$this->alias],
-            default => []
-        };
-    }
-
     public function isActive(): bool
     {
         return !\is_null($this->direction);
-    }
-
-    protected function getDescendingValue(): string
-    {
-        return "-{$this->getName()}";
-    }
-
-    protected function getAscendingValue(): string
-    {
-        return $this->getName();
     }
 
     public function jsonSerialize(): mixed
@@ -91,5 +62,34 @@ class Sort extends Components\Component implements RefinerContract
                 default => $this->getAscendingValue(),
             },
         ];
+    }
+
+    protected function resolveDefaultClosureDependencyForEvaluationByType(string $parameterType): array
+    {
+        return match ($parameterType) {
+            SortContract::class => [$this->sort],
+            default => []
+        };
+    }
+
+    protected function resolveDefaultClosureDependencyForEvaluationByName(string $parameterName): array
+    {
+        return match ($parameterName) {
+            'sort' => [$this->sort],
+            'direction' => [$this->direction],
+            'property' => [$this->property],
+            'alias' => [$this->alias],
+            default => []
+        };
+    }
+
+    protected function getDescendingValue(): string
+    {
+        return "-{$this->getName()}";
+    }
+
+    protected function getAscendingValue(): string
+    {
+        return $this->getName();
     }
 }

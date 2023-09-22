@@ -16,11 +16,6 @@ class SelectFilter implements FilterContract
     ) {
     }
 
-    public function getType(): string
-    {
-        return 'select';
-    }
-
     public function __invoke(Builder $builder, mixed $value, string $property): void
     {
         $options = array_is_list($this->options)
@@ -44,6 +39,11 @@ class SelectFilter implements FilterContract
                 value: $value,
             ),
         );
+    }
+
+    public function getType(): string
+    {
+        return 'select';
     }
 
     public static function make(string $property, array $options, string $operator = '=', ?string $alias = null): Filter

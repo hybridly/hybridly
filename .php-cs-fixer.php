@@ -13,6 +13,7 @@ $finder = Symfony\Component\Finder\Finder::create()
     ->ignoreVCS(true);
 
 return (new PhpCsFixer\Config())
+    ->setRiskyAllowed(true)
     ->setRules([
         '@PSR12' => true,
         '@PHP82Migration' => true,
@@ -27,8 +28,15 @@ return (new PhpCsFixer\Config())
         'types_spaces' => true,
         'ternary_operator_spaces' => true,
         'array_syntax' => ['syntax' => 'short'],
-        'ordered_imports' => ['sort_algorithm' => 'alpha'],
-        // 'ordered_class_elements' => ['sort_algorithm' => 'alpha'],
+        'ordered_imports' => [
+            'sort_algorithm' => 'alpha',
+            'imports_order' => [
+                'class',
+                'function',
+                'const',
+            ],
+        ],
+        'ordered_class_elements' => true,
         'no_trailing_whitespace_in_string' => false,
         'no_unused_imports' => true,
         'no_useless_else' => true,
