@@ -6,9 +6,9 @@ outline: 'deep'
 
 ## Overview
 
-Hybridly provides a way to describe tables on the back-end and manipulate them through the [`useTable`](../api/utils/use-table.md) util.
+Hybridly provides a way to describe tables on the back-end and manipulate them through the [`useTable`](../api/utils/use-table.md) util on the front-end.
 
-Tables provide the ability to easily execute actions on one or multiple rows, to filter or sort them using [refinements](./refining.md), with pagination support, [Data](https://spatie.be/docs/laravel-data/v3/introduction) integration, all of that will full control over the user interface.
+Tables provide the ability to execute actions on one or multiple records, to filter and sort them using [refinements](./refining.md), have [Data](https://spatie.be/docs/laravel-data/v3/introduction) integration, support pagination, scoping, and let you have full control over the user interface.
 
 :::info Experimental
 This feature has not been dogfed yet and is considered experimental. Its API may change at any time. Feel free to give feedback on our Discord server.
@@ -77,6 +77,58 @@ const users = useTable($props, 'users') // [!code focus]
 :::tip User interface
 The user interface is completely up to you, no component is provided. You may refer to the [`useTable`](../api/utils/use-table.md) documentation to see which utilities are available to work with tables.
 :::
+
+### Multiple tables
+
+It is possible to work with multiple tables in the same view, but for filters and pagination to work, they need to be scoped.
+
+This can be done by specifying the `$scope` class property:
+
+:::code-group
+```php [UsersTable.php]
+use App\Models\User;
+use Hybridly\Tables\Table;
+
+final class UsersTable extends Table
+{
+    protected string $model = User::class;
+    protected string $scope = 'users';
+
+    // ...
+}
+```
+```php [ProjectsTable.php]
+use App\Models\Project;
+use Hybridly\Tables\Table;
+
+final class ProjectsTable extends Table
+{
+    protected string $model = Project::class;
+    protected string $scope = 'projects';
+
+    // ...
+}
+```
+```php [Controller.php]
+use function Hytbridly\view;
+
+return view('dashboard', [
+	'users' => UsersTable::make(),
+	'projects' => ProjectsTable::make(),
+]);
+```
+```ts [dashboard.vue]
+const $props = defineProps<{
+	users: Table<App.Data.UserData>
+	projects: Table<App.Data.ProjectData>
+}>()
+
+const users = useTable($props, 'users')
+const projects = useTable($props, 'projects')
+``` 
+:::
+
+When scoping tables, refining records and pagination will automatically work through the utilities provided by [`useTable`](../api/utils/use-table.md).
 
 ## Working with columns
 
