@@ -112,6 +112,17 @@ hybridly()->external('https://google.com');
 
 This method can also be used when dealing with potentially non-hybrid request. In such cases, a normal `RedirectResponse` will be returned instead.
 
+## File downloads
+
+Download responses using a `Content-Disposition` header are supported.
+
+You may use any of the usual utilities for creating downloads, such as [`download`](https://laravel.com/docs/master/responses#file-downloads), [`streamDownload`](https://laravel.com/docs/master/responses#streamed-downloads), or [`Storage::download`](https://laravel.com/docs/10.x/filesystem#downloading-files). 
+
+```php
+return response()->download($invoice->file_path, 'invoice.pdf');
+```
+
+However, [in-browser file responses](https://laravel.com/docs/master/responses#file-responses) are not supported, as there is no way for Hybridly to differentiate it from a normal response.
 
 ## The view-model pattern
 

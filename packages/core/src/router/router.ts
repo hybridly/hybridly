@@ -12,6 +12,7 @@ import { runHooks } from '../plugins'
 import { generateRouteFromName, getRouteDefinition } from '../routing/route'
 import { closeDialog } from '../dialog'
 import { currentRouteMatches, getCurrentRouteName } from '../routing/current'
+import { handleDownloadResponse, isDownloadResponse } from '../download'
 import { setHistoryState, isBackForwardNavigation, handleBackForwardNavigation, registerEventListeners, getHistoryMemo, remember } from './history'
 import type { ConditionalNavigationOption, Errors, ComponentNavigationOptions, Router, HybridRequestOptions, HybridPayload, NavigationResponse, Method, InternalNavigationOptions } from './types'
 import { discardPreloadedRequest, getPreloadedRequest, performPreloadRequest } from './preload'
@@ -162,6 +163,13 @@ export async function performHybridNavigation(options: HybridRequestOptions): Pr
 				url: fillHash(targetUrl, response.headers[EXTERNAL_NAVIGATION_HEADER]!),
 				preserveScroll: options.preserveScroll === true,
 			})
+
+			return { response }
+		}
+
+		if (isDownloadResponse(response)) {
+			debug.router('The response returns a file to download.')
+			await handleDownloadResponse(response)
 
 			return { response }
 		}
