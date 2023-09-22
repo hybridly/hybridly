@@ -98,10 +98,10 @@ return [
     |--------------------------------------------------------------------------
     | Testing
     |--------------------------------------------------------------------------
-    | When `ensure_pages_exist` is enabled, Hybridly will ensure that pages
+    | When `ensure_views_exist` is enabled, Hybridly will ensure that views
     | actually exist on the disk when hybrid testing utilities are used.
     */
     'testing' => [
-        'ensure_pages_exist' => true,
+        'ensure_views_exist' => true,
     ],
 ];

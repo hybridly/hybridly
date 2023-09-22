@@ -55,7 +55,7 @@ trait HandlesHybridExceptions
     }
 
     /**
-     * Returns a hybrid page that renders the exception.
+     * Returns a hybrid view that renders the exception.
      */
     protected function renderHybridResponse(Response $response, Request $request, \Throwable $e): HybridResponse
     {

@@ -52,7 +52,7 @@ trait HasViewFinder
     }
 
     /**
-     * Loads a namespaced module and its pages, layouts and components.
+     * Loads a namespaced module and its views, layouts and components.
      *
      * @see https://hybridly.dev/api/laravel/hybridly.html#loadmodulefrom
      */
@@ -63,13 +63,13 @@ trait HasViewFinder
         }
 
         $namespace ??= str($directory)->basename()->kebab();
-        $pagesDirectory = config('hybridly.architecture.pages_directory', 'pages');
+        $viewsDirectory = config('hybridly.architecture.views_directory', 'views');
         $layoutsDirectory = config('hybridly.architecture.layouts_directory', 'layouts');
         $componentsDirectory = config('hybridly.architecture.components_directory', 'components');
 
         $this->getViewFinder()->loadDirectory($directory);
 
-        rescue(fn () => $this->getViewFinder()->loadViewsFrom($directory . '/' . $pagesDirectory, $namespace), report: false);
+        rescue(fn () => $this->getViewFinder()->loadViewsFrom($directory . '/' . $viewsDirectory, $namespace), report: false);
         rescue(fn () => $this->getViewFinder()->loadLayoutsFrom($directory . '/' . $layoutsDirectory, $namespace), report: false);
         rescue(fn () => $this->getViewFinder()->loadComponentsFrom($directory . '/' . $componentsDirectory, $namespace), report: false);
 

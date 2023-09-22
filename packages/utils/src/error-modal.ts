@@ -37,29 +37,13 @@ class Modal {
 		`, id)
 	}
 
-	static forPageComponent(component: string, id: string) {
+	static forViewComponent(component: string, id: string) {
 		return new Modal(`
 			<style>${style()}</style>
 			<div class="h-full text-center flex">
 				<div class="m-auto">
 					<div class="text-5xl font-thin">Error</div>
-					<div class="opacity-30 text-lg font-thin m-1">The specified page component does not exist.</div>
-					<div class="m-2 flex justify-center text-xl opacity-30 underline underline-dotted">${component}</div>
-				</div>
-			</div>
-		`, id)
-	}
-
-	static domainsDisabled(component: string, id: string) {
-		return new Modal(`
-			<style>${style()}</style>
-			<div class="h-full text-center flex">
-				<div class="m-auto">
-					<div class="text-5xl font-thin">Error</div>
-					<div class="opacity-30 text-lg font-thin m-1">
-						A domain-based page component was specificed, but domains are disabled. <br />
-						Set <code>domains</code> to <code>true</code> in <a class="underline underline-dotted" href="https://hybridly.dev/configuration/architecture.html#domains"><code>hybridly.config.ts</code></a>.
-					</div>
+					<div class="opacity-30 text-lg font-thin m-1">The specified view component does not exist.</div>
 					<div class="m-2 flex justify-center text-xl opacity-30 underline underline-dotted">${component}</div>
 				</div>
 			</div>
@@ -169,12 +153,8 @@ export function showResponseErrorModal(response: string): Modal {
 	return Modal.fromException(response, 'non-hybrid-response')
 }
 
-export function showPageComponentErrorModal(response: string): Modal {
-	return Modal.forPageComponent(response, `page-component-${response}`)
-}
-
-export function showDomainsDisabledErrorModal(response: string): Modal {
-	return Modal.domainsDisabled(response, `domains-disabled-${response}`)
+export function showViewComponentErrorModal(response: string): Modal {
+	return Modal.forViewComponent(response, `view-component-${response}`)
 }
 
 function htmlStyle() {

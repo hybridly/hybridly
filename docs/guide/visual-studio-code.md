@@ -26,10 +26,10 @@ When using Laravel or Hybridly's `route` functions, the route name will be linki
 
 ### Component linking and auto-completion
 
-When rendering a page with the `hybridly` function, the page name will be linkified to its corresponding single-file component.
+When rendering a view with the `hybridly` function, the view component name will be linkified to its corresponding single-file component.
 
 <img
   src="../assets/vscode-component.jpg"
-  alt="Linkified page components"
+  alt="Linkified view components"
   class="rounded-lg shadow-lg mt-8"
 />

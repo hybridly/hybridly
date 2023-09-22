@@ -34,7 +34,7 @@ return hybridly()->properties([
 
 ## `base`
 
-Makes the view a [dialog](../../guide/dialogs.md) and defines its base page. It takes a route name and its parameters as its arguments.
+Makes the view a [dialog](../../guide/dialogs.md) and defines its base view. It takes a route name and its parameters as its arguments.
 
 > See [dialogs](../../guide/dialogs.md) for more details.
 
@@ -50,9 +50,9 @@ return hybridly()
 
 ## `external`
   
-Generates a response for redirecting to an external website, or a non-hybrid page. 
+Generates a response for redirecting to an external website, or a non-hybrid view. 
 
-This can also be used to redirect to a hybrid page when it is not known whether the current request is hybrid or not.
+This can also be used to redirect to a hybrid view when it is not known whether the current request is hybrid or not.
 
 > See also: [`to_external_url`](./functions.md#to-external-url)
 > 
@@ -134,7 +134,7 @@ if (hybridly()->isPartial()) {
 
 > See also: [architecture](../../guide/architecture.md#custom)
 
-Loads pages, layouts and components from the given directory. They must be located in the `pages`, `layouts` and `components` directories, respectively.
+Loads views, layouts and components from the given directory. They must be located in the `views`, `layouts` and `components` directories, respectively.
 
 ### Usage
 
@@ -152,7 +152,7 @@ public function boot(Hybridly $hybridly): void
 
 > See also: [architecture](../../guide/architecture.md#custom)
 
-Loads pages, layouts and components from the subdirectories of the given directory.
+Loads views, layouts and components from the subdirectories of the given directory.
 
 ### Usage
 
@@ -175,7 +175,7 @@ Recursively loads Vue files in the given directory and registers them as views f
 public function boot(Hybridly $hybridly): void
 {
     $hybridly->loadViewsFrom(
-      directory: __DIR__.'/pages',
+      directory: __DIR__.'/views',
       namespace: 'billing',
     );
 }

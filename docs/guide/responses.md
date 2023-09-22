@@ -2,7 +2,7 @@
 
 ## Overview
 
-Hybrid responses respect a protocol to which the front-end adapter must adhere. A response contains, among other things, the name of the page component and its properties.
+Hybrid responses respect a protocol to which the front-end adapter must adhere. A response contains, among other things, the name of the view component and its properties.
 
 To send a response, use the [`hybridly`](../api/laravel/functions.md#hybridly) or the [`Hybridly\view`](../api/laravel/functions.md#view) functions the same way you would use `view`:
 

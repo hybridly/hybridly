@@ -4,7 +4,7 @@
 
 Partial reloads are repeated requests to the same page which purpose is to update or fetch specific properties, but not all of them. 
 
-As an example, consider a page that includes a list of users, as well as an option to filter the users by their company. On the first request to the page, both the `users` and `companies` properties are passed to the page component.
+As an example, consider a page that includes a list of users, as well as an option to filter the users by their company. On the first request to the page, both the `users` and `companies` properties are passed to the view component.
 
 However, on subsequent requests to the same page—maybe to filter the users—you can request only the `users` property from the server, and not the `companies` one.
 
@@ -80,7 +80,7 @@ onMounted(() => {
 })
 ```
 
-Deferred properties are the exact same as [partial properties](#partial-only-properties), except they also trigger an automatic partial reload specifically for them after the page component has loaded.
+Deferred properties are the exact same as [partial properties](#partial-only-properties), except they also trigger an automatic partial reload specifically for them after the view component has loaded.
 
 
 ## Lazy evaluation

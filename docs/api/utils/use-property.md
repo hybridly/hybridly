@@ -24,9 +24,9 @@ useHead({
 })
 ```
 
-### Accessing page properties
+### Accessing view properties
 
-While `useProperty` is primarily made for accessing typed, global properties, you may provide a custom generic type to opt-out of global type-checking if you need to access page-specific properties.
+While `useProperty` is primarily made for accessing typed, global properties, you may provide a custom generic type to opt-out of global type-checking if you need to access view-specific properties.
 
 ```ts
 const posts = useProperty<App.Data.Post[]>('posts')

@@ -26,7 +26,7 @@ Learn more about sending responses in the [their documentation](./responses.md).
 
 ## Generating URLs
 
-Since pages are written in single-file components, global Laravel or PHP functions like `route` are not available.
+Since views are written in single-file components, global Laravel or PHP functions like `route` are not available.
 
 Instead, you may use Hybridly's [`route`](../api/utils/route) util. This function is typed and its typings are updated live as your `routes/*.php` files are saved.
 

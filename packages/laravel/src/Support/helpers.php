@@ -109,8 +109,8 @@ if (!\function_exists('Hybridly\deferred')) {
 
 if (!\function_exists('Hybridly\to_external_url')) {
     /**
-     * Generates a response for redirecting to an external website, or a non-hybrid page.
-     * This can also be used to redirect to a hybrid page when it is not known whether the current request is hybrid or not.
+     * Generates a response for redirecting to an external website, or a non-hybrid view.
+     * This can also be used to redirect to a hybrid view when it is not known whether the current request is hybrid or not.
      *
      * @see https://hybridly.dev/api/laravel/functions.html#to-external-url
      */

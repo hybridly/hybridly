@@ -137,7 +137,7 @@ class TestResponseMacros
     {
         return function (string $view): TestResponse {
             /** @var TestResponse $this */
-            Assertable::fromTestResponse($this)->view($view);
+            Assertable::fromTestResponse($this)->assertViewComponent($view);
 
             return $this;
         };
@@ -150,7 +150,7 @@ class TestResponseMacros
     {
         return function (array $properties = null, string $view = null, string $baseUrl = null, string $redirectUrl = null): TestResponse {
             /** @var TestResponse $this */
-            Assertable::fromTestResponse($this)->dialog($properties, $view, $baseUrl, $redirectUrl);
+            Assertable::fromTestResponse($this)->assertDialog($properties, $view, $baseUrl, $redirectUrl);
 
             return $this;
         };
@@ -163,7 +163,7 @@ class TestResponseMacros
     {
         return function (string $version): TestResponse {
             /** @var TestResponse $this */
-            Assertable::fromTestResponse($this)->version($version);
+            Assertable::fromTestResponse($this)->assertHybridVersion($version);
 
             return $this;
         };
@@ -176,7 +176,7 @@ class TestResponseMacros
     {
         return function (string $url): TestResponse {
             /** @var TestResponse $this */
-            Assertable::fromTestResponse($this)->url($url);
+            Assertable::fromTestResponse($this)->assertViewUrl($url);
 
             return $this;
         };

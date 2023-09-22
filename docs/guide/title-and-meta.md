@@ -2,7 +2,7 @@
 
 ## Overview
 
-Hybridly doesn't ship with any tool to manage the `title` or other `meta` tags of your pages. Instead, we recommend using [`@unhead/vue`](https://unhead.unjs.io/). It is simple of use and supports SSR.
+Hybridly doesn't ship with any tool to manage the `title` or other `meta` tags of your views. Instead, we recommend using [`@unhead/vue`](https://unhead.unjs.io/). It is simple of use and supports SSR.
 
 ## Installation
 
@@ -34,7 +34,7 @@ initializeHybridly({
 
 The latest `useHead` call is persisted, which means you may override `titleTemplate` on a layout. 
 
-Page titles may be defined using the `title` property in page components.
+Page titles may be defined using the `title` property in view components.
 
 :::code-group
 ```vue [layouts/default.vue]
@@ -58,7 +58,7 @@ useHead({
 </script>
 
 <template layout="default">
-  <!-- Page component -->
+  <!-- view component -->
 </template>
 ```
 :::

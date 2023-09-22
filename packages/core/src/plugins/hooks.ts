@@ -71,7 +71,7 @@ export interface Hooks extends RequestHooks {
 	initialized: (context: InternalRouterContext) => MaybePromise<any>
 
 	/**
-	 * Called after Hybridly's initial page load.
+	 * Called after Hybridly's initial load.
 	 */
 	ready: (context: InternalRouterContext) => MaybePromise<any>
 

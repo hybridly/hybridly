@@ -10,9 +10,9 @@ In other words, Laravel's exception handling keeps working as expected, and the 
 
 In production, it's necessary to extend the exception handler so it returns a valid hybrid response even when an exception has been thrown.
 
-Usually, this consists of returning an `error` page component with the exception's details.
+Usually, this consists of returning an `error` view component with the exception's details.
 
-Hybridly makes this fairly simple by providing a `HandlesHybridExceptions` trait. When adding this trait to the exception handler, the `renderHybridResponse` method should be overriden to return the `error` page component.
+Hybridly makes this fairly simple by providing a `HandlesHybridExceptions` trait. When adding this trait to the exception handler, the `renderHybridResponse` method should be overriden to return the `error` view component.
 
 ```php
 namespace App\Exceptions;
@@ -34,7 +34,7 @@ class Handler extends ExceptionHandler
     ];
 
     /**
-     * Returns a hybrid page that renders the exception.
+     * Returns a hybrid view that renders the exception.
      */
     protected function renderHybridResponse(Response $response, Request $request, \Throwable $e): HybridResponse
     {
@@ -86,7 +86,7 @@ class Handler extends ExceptionHandler
     protected $skipEnvironments = ['test'];
 
     /**
-     * Returns a hybrid page that renders the exception.
+     * Returns a hybrid view that renders the exception.
      */
     protected function renderHybridResponse(Response $response, Request $request, \Throwable $e): HybridResponse
     {

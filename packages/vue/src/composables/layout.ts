@@ -3,7 +3,7 @@ import { state } from '../stores/state'
 export type Layout = any
 
 /**
- * Sets the persistent layout for this page.
+ * Sets the persistent layout for this view.
  */
 export function defineLayout<T extends Record<string, K>, K = any>(layout: Layout, properties?: T): void
 export function defineLayout(layouts: Layout[]): void

@@ -191,7 +191,7 @@ export function useTable<
 			/** Checks whether the column is filterable. */
 			isFilterable: refinements.filters.find((filters) => filters.name === column.name),
 		}))),
-		/** List of records for this page. */
+		/** List of records for this table. */
 		records: computed(() => table.value.records.map((record) => ({
 			/** The actual record. */
 			record,

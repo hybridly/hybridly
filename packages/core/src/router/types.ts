@@ -23,7 +23,7 @@ export interface ComponentNavigationOptions {
 	replace?: ConditionalNavigationOption<boolean>
 	/** Whether to preserve the current scrollbar position. */
 	preserveScroll?: ConditionalNavigationOption<boolean>
-	/** Whether to preserve the current page component state. */
+	/** Whether to preserve the current view component state. */
 	preserveState?: ConditionalNavigationOption<boolean>
 }
 
@@ -35,9 +35,9 @@ export interface NavigationOptions {
 	 * one. This affects the browser's "back" and "forward" features.
 	 */
 	replace?: ConditionalNavigationOption<boolean>
-	/** Whether to preserve the scrollbars positions on the page. */
+	/** Whether to preserve the scrollbars positions on the view. */
 	preserveScroll?: ConditionalNavigationOption<boolean>
-	/** Whether to preserve the current page component's state. */
+	/** Whether to preserve the current view component's state. */
 	preserveState?: ConditionalNavigationOption<boolean>
 	/** Whether to preserve the current URL. */
 	preserveUrl?: ConditionalNavigationOption<boolean>
@@ -61,7 +61,7 @@ export interface NavigationOptions {
 export interface InternalNavigationOptions extends NavigationOptions {
 	/**
 	 * Defines the kind of navigation being performed.
-	 * - initial: the initial page load's navigation
+	 * - initial: the initial load's navigation
 	 * - server: a navigation initiated by a server round-trip
 	 * - local: a navigation initiated by `router.local`
 	 * - back-forward: a navigation initiated by the browser's `popstate` event
@@ -182,7 +182,7 @@ export interface PendingNavigation {
 |--------------------------------------------------------------------------
 */
 
-/** A page or dialog component. */
+/** A view or dialog component. */
 export interface View {
 	/** Name of the component to use. */
 	component?: string
@@ -193,7 +193,7 @@ export interface View {
 }
 
 export interface Dialog extends Required<View> {
-	/** URL that is the base background page when navigating to the dialog directly. */
+	/** URL that is the base background view when navigating to the dialog directly. */
 	baseUrl: string
 	/** URL to which the dialog should redirect when closed. */
 	redirectUrl: string

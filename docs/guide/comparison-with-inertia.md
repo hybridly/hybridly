@@ -24,12 +24,12 @@ The following is a non-exhaustive comparison table between Inertia and Hybridly'
 | Dot notation support for partial properties     |            <span class="no">No</span>             |                            Yes                             |
 | Infinite scrolling support                      |            <span class="no">No</span>             |        [Yes](../api/router/options.md#preserveurl)         |
 | Custom architecture support                     |            <span class="no">No</span>             |              [Yes](../guide/architecture.md)               |
-| Persistent layout                               |                        Yes                        |  [Yes](../guide/pages-and-layouts.md#persistent-layouts)   |
+| Persistent layout                               |                        Yes                        |       [Yes](views-and-layouts.md#persistent-layouts)       |
 | Persistent layout properties                    |            <span class="no">No</span>             |      [Yes](../api/utils/define-layout-properties.md)       |
 | Vite integration                                |            <span class="no">No</span>             |              [Yes](../configuration/vite.md)               |
 | Auto-imports                                    |            <span class="no">No</span>             |        [Yes](../configuration/vite.md#auto-imports)        |
 | Icons support                                   |            <span class="no">No</span>             |           [Yes](../configuration/vite.md#icons)            |
-| `layout` support in templates                   |            <span class="no">No</span>             |            [Yes](../guide/pages-and-layouts.md)            |
+| `layout` support in templates                   |            <span class="no">No</span>             |                [Yes](views-and-layouts.md)                 |
 | Built-in `form` util                            |                        Yes                        |              [Yes](../api/utils/use-form.md)               |
 | Built-in `route` util with TypeScript support   |            <span class="no">No</span>             |                [Yes](../api/utils/route.md)                |
 | Built-in `can` util with TypeScript support     |            <span class="no">No</span>             |                 [Yes](../api/utils/can.md)                 |

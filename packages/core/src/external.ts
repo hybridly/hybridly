@@ -42,7 +42,7 @@ export function isExternalResponse(response: AxiosResponse): boolean {
 }
 
 /**
- * Performs the internal navigation when an external navigation to a hybrid page has been made.
+ * Performs the internal navigation when an external navigation to a hybrid view has been made.
  * This method is meant to be called on router creation.
  */
 export async function handleExternalNavigation(): Promise<void> {
