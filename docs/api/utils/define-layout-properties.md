@@ -1,6 +1,6 @@
 # `defineLayoutProperties`
 
-This function can be used to define the [properties](../../guide/pages-and-layouts.md#persistent-layout-properties) of the currently-defined persistent layout.
+This function can be used to define the [properties](../../guide/views-and-layouts.md#persistent-layout-properties) of the currently-defined persistent layout.
 
 | Related                                           | [`defineLayout`](./define-layout.md)                  |
 | ------------------------------------------------- | ----------------------------------------------------- |
@@ -11,7 +11,7 @@ This function can be used to define the [properties](../../guide/pages-and-layou
 `defineLayoutProperties` accepts a single argument, an object that contains the layout properties. This function cannot be typed automatically.
 
 :::code-group
-```vue [pages/index.vue]
+```vue [views/index.vue]
 <script setup lang="ts">
 defineLayoutProperties({ // [!code focus:3]
   fluid: true

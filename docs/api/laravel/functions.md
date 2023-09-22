@@ -86,7 +86,7 @@ return view('user.show', [
 
 ### `to_external_url`
 
-Redirects to a non-hybrid page or an external domain.
+Redirects to a non-hybrid view or an external domain.
 
 > See also: [external redirects](../../guide/responses.md#external-redirects).
 
@@ -134,7 +134,7 @@ Otherwise, it is an alias of [`hybridly()->view()`](./hybridly.md#view).
 
 ### `partial_headers`
 
-Generates headers for testing partial requests. The first parameter is the page component name, and the second and third parameters are an array of `only` and `except` properties, respectively.
+Generates headers for testing partial requests. The first parameter is the view component name, and the second and third parameters are an array of `only` and `except` properties, respectively.
 
 > See also: [partial reloads](../../guide/partial-reloads.md)
 

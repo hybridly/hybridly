@@ -127,7 +127,7 @@ class Middleware
     }
 
     /**
-     * Sets the root template that's loaded on the first page load.
+     * Sets the root template that's loaded on the initial page load.
      */
     public function rootView(Request $request): \Closure|string
     {

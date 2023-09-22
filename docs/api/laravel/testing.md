@@ -38,9 +38,9 @@ This method asserts that the given hybrid property is missing in the response. I
 
 ### `assertHybridView`
 
-This method asserts that the page component of the hybrid response is equal to the given value. Additionally, if `hybridly.testing.ensure_pages_exist` is set to `true`, which it is by default, it will ensure that the page component exists.
+This method asserts that the view component of the hybrid response is equal to the given value. Additionally, if `hybridly.testing.ensure_views_exist` is set to `true`, which it is by default, it will ensure that the view component exists.
 
-To ensure the page component's existence, the paths defined in `hybridly.testing.page_paths` will be used.
+To ensure the view component's existence, the paths defined in `hybridly.testing.view_paths` will be used.
 
 ### `assertHybridVersion`
 

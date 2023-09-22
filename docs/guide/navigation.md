@@ -40,7 +40,7 @@ Learn more about the functions and options available in their [API documentation
 
 ## Preloading requests
 
-Preloading pages will perform the usual underlying AJAX request, but instead of following-up with the navigation, Hybridly will cache the request result until the navigation is actually required.
+Preloading views will perform the usual underlying AJAX request, but instead of following-up with the navigation, Hybridly will cache the request result until the navigation is actually required.
 
 This results in a smoother, snappy user experience that may make your application more enjoyable to use.
 

@@ -1,17 +1,17 @@
-# Pages and layouts
+# Views and layouts
 
 ## Overview
 
-With Hybridly, a page in your application consists of a regular <a href="https://vuejs.org/guide/scaling-up/sfc.html">single-file component</a>.
+With Hybridly, a view in your application consists of a regular <a href="https://vuejs.org/guide/scaling-up/sfc.html">single-file component</a>.
 
-Serving a page consists of returning a [hybrid response](./responses.md) with the component name and optional properties.
+Serving a view consists of returning a [hybrid response](./responses.md) with the component name and optional properties.
 
-## Pages
+## Views
 
-Pages are basic single-file components that can receive data from controllers as their properties. You can access these properties like any other single-file component using `defineProps`.
+Views are basic single-file components that can receive data from controllers as their properties. You can access these properties like any other single-file component using `defineProps`.
 
 :::code-group
-```vue [resources/views/pages/users/show.vue]
+```vue [resources/views/views/users/show.vue]
 <script setup lang="ts">
 const $props = defineProps<{
   user: App.Data.User
@@ -31,7 +31,7 @@ useHead({
 ```
 :::
 
-The route and controller for the page above could look like the following:
+The route and controller for the view above could look like the following:
 
 :::code-group
 ```php [web.php]
@@ -55,7 +55,7 @@ class ShowUserController
 
 ## Layouts
 
-A page layout can be a basic single-file component as well. You can simply wrap your page's content in the layout component, like you would do in a basic Vue project.
+A view layout can be a basic single-file component as well. You can simply wrap your view's content in the layout component, like you would do in a basic Vue project.
 
 ```vue
 <script setup lang="ts">
@@ -69,13 +69,13 @@ import MainLayout from '@/views/layouts/main.vue'
 </template>
 ```
 
-However, this technique has a drawback: when navigating between pages, the layout will be destroyed and re-mounted. This means you cannot have persistent state in it.
+However, this technique has a drawback: when navigating between views, the layout will be destroyed and re-mounted. This means you cannot have persistent state in it.
 
 ## Persistent layouts
 
-Persistent layouts are components that will not get destroyed upon navigation. Their state will be persisted when changing pages.
+Persistent layouts are components that will not get destroyed upon navigation. Their state will be persisted when changing views.
 
-A persistent layout can be defined in two ways. You can use the `layout` attribute on the `template` element of the page component:
+A persistent layout can be defined in two ways. You can use the `layout` attribute on the `template` element of the view component:
 
 ```vue
 <template layout="main">
@@ -114,12 +114,12 @@ Persistent layouts also have their own drawbacks. Specifically, it is not possib
 
 ## Persistent layout properties
 
-Additional properties can be passed to persistent layouts on a per-page basis. When navigating away from a page, the properties will be reset. 
+Additional properties can be passed to persistent layouts on a per-view basis. When navigating away from a view, the properties will be reset. 
 
 You may use the `defineLayoutProperties` util to define the layout properties:
 
 ```vue
-<!-- resources/views/pages/example.vue -->
+<!-- resources/views/views/example.vue -->
 <script setup lang="ts">
 defineLayoutProperties({
 	fluid: true,

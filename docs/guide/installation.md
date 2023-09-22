@@ -171,7 +171,7 @@ That middleware is, by default, located in `app/Http/Middleware/HandleHybridRequ
 
 ### Create `root.blade.php`
 
-Hybridly needs a `root.blade.php` file that will be loaded on the first page render. The name and path are configurable, but it's a good default.
+Hybridly needs a `root.blade.php` file that will be loaded on the initial page load. The name and path are configurable, but it's a good default.
 
 Proceed to delete `resources/views`, and create `resources/application/root.blade.php`. It needs to contain the `@hybridly` directive and to load assets.
 
@@ -265,9 +265,9 @@ Your project needs a `tsconfig.json` file to understand objects such as `import.
 
 The [TypeScript documentation](https://www.typescriptlang.org/tsconfig) is a good place to understand the configuration options that are available in this file.
 
-### Create a page component
+### Create a view component
 
-It's almost done. We just need a page component and a route to serve it. Create a `resources/pages/index.vue` file. A page component is a standard Vue component, except it's now a page component.
+It's almost done. We just need a view component and a route to serve it. Create a `resources/views/index.vue` file. A view component is a standard Vue component, except it's now a view component.
 
 ```vue
 <script setup lang="ts">
@@ -283,7 +283,7 @@ It's almost done. We just need a page component and a route to serve it. Create 
 
 ### Create a route
 
-In `routes/web.php`, you can now instruct a route to load your new page component. You just need to give its name to the `hybridly` function.
+In `routes/web.php`, you can now instruct a route to load your new view component. You just need to give its name to the `hybridly` function.
 
 ```php
 Route::get('/', function () {
@@ -304,6 +304,6 @@ open https://hybridly-app.test
 
 You may want to look into setting up [PHP to TypeScript transformation](../guide/typescript.md).
 
-To get started with building your application, you should read how to [pass data from the server](../guide/responses.md) to the front-end or how to [navigate between pages](../guide/navigation.md).
+To get started with building your application, you should read how to [pass data from the server](../guide/responses.md) to the front-end or how to [navigate between views](../guide/navigation.md).
 
 Feel free to explore the whole documentation before committing to Hybridly. Have fun building your applications!

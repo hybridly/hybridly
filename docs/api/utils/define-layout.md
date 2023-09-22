@@ -1,6 +1,6 @@
 # `defineLayout`
 
-This function can be used to define the current [persistent layout](../../guide/pages-and-layouts.md#persistent-layouts), and, optionally, its properties.
+This function can be used to define the current [persistent layout](../../guide/views-and-layouts.md#persistent-layouts), and, optionally, its properties.
 
 | Related                                           | [`defineLayoutProperties`](./define-layout-properties.md) |
 | ------------------------------------------------- | --------------------------------------------------------- |

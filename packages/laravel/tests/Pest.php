@@ -11,7 +11,7 @@ use Illuminate\Testing\TestResponse;
 use function Pest\Laravel\get;
 
 uses(TestCase::class)
-    ->beforeEach(fn () => config()->set('hybridly.testing.ensure_pages_exist', false))
+    ->beforeEach(fn () => config()->set('hybridly.testing.ensure_views_exist', false))
     ->in(__DIR__);
 
 function mock_request(string $url = '/', string $method = 'GET', bool $bind = false, bool $hybridly = true, array $headers = []): Request

@@ -45,7 +45,7 @@ const login = useForm({ // [!code focus:8]
 ```
 
 :::info Hybrid responses
-Note that no arbitrary data can be returned from a hybrid request. Instead, you should redirect back to a page — which can totally be the same page the request comes from.
+Note that no arbitrary data can be returned from a hybrid request. Instead, you should redirect back to a page—which can totally be the same page the request comes from.
 :::
 
 ## Form options

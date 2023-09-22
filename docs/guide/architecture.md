@@ -21,7 +21,7 @@ resources/
 │   └── root.blade.php
 ├── layouts/
 │   └── default.vue
-├── pages/
+├── views/
 │   ├── index.vue
 │   └── security/
 │       ├── register.vue
@@ -30,7 +30,7 @@ resources/
 └── composables/
 ```
 
-- Page components are located in `resources/pages` and may be nested.
+- view components are located in `resources/views` and may be nested.
 - Layout components are located in `resources/layouts`.
 - Util functions and composables are auto-imported.
 - The base Blade template is located at `resources/application/root.blade.php`.
@@ -43,7 +43,7 @@ You may use the predefined modular architecture using the `architecture.preset` 
 
 When the `architecture.preset` option is set to `modules`, directories in `resources/domains` will be considered as modules. 
 
-Pages and layouts will be loaded from the `pages` and `layouts` subdirectories, while TypeScript files will be auto-imported from `utils` and `composables`.
+Views and layouts will be loaded from the `views` and `layouts` subdirectories, while TypeScript files will be auto-imported from `utils` and `composables`.
 
 ```
 resources/
@@ -54,7 +54,7 @@ resources/
     └── security/
         ├── layouts/
         │   └── default.vue
-        ├── pages/
+        ├── views/
         │   ├── login.vue
         │   └── register.vue
         ├── utils/
@@ -91,7 +91,7 @@ src/
     │   └── ProcessPayment.php
     ├── Models/
     │   └── Invoice.php
-    ├── pages/  // [!code hl:8]
+    ├── views/  // [!code hl:8]
     │   ├── index.vue
     │   └── invoices/
     │       ├── index.vue

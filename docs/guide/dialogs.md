@@ -2,9 +2,9 @@
 
 ## Overview
 
-Dialogs are components with their own URL and properties, which are rendered as siblings to page components.
+Dialogs are components with their own URL and properties, which are rendered as siblings to view components.
 
-When navigating from a page to a dialog, its component will be mounted as a sibling to the current page component — but when navigated to directly via their URL, the base page's component and properties will be loaded first, so the dialog can be rendered on top of it.
+When navigating from a view to a dialog, its component will be mounted as a sibling to the current view component—but when navigated to directly via their URL, the base view component and properties will be loaded first, so the dialog can be rendered on top of it.
 
 :::info Experimental
 This feature has not been dogfed yet and is considered experimental. Its API may change at any time. Feel free to give feedback on our Discord server.
@@ -15,7 +15,7 @@ This feature has not been dogfed yet and is considered experimental. Its API may
 Dialogs may be anything you want — most commonly, they will be modals or slideovers. The following component is an example of a dialog component which is shown as a modal. 
 
 :::code-group
-```vue [pages/chirps/edit.vue]
+```vue [views/chirps/edit.vue]
 <script setup lang="ts">
 defineProps<{
   chirp: App.Data.ChirpData
@@ -108,9 +108,9 @@ Notice the call to [`unmount`](../api/utils/use-dialog.md#unmount), which is nee
 
 ## Rendering a dialog
 
-Dialogs are rendered the same as normal page components, but need a base page which can be defined by calling the [`base`](../api/laravel/hybridly.md#base) method on the view factory.
+Dialogs are rendered the same as normal view components, but need a base view which can be defined by calling the [`base`](../api/laravel/hybridly.md#base) method on the view factory.
 
-The `base` method takes the name of a route and its parameters are arguments. When the dialog is accessed directly via its URL, this route will be used to determine which background page should be used.
+The `base` method takes the name of a route and its parameters are arguments. When the dialog is accessed directly via its URL, this route will be used to determine which background view should be used.
 
 ```php
 use App\Data\ChirpData;

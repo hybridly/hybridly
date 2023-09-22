@@ -92,7 +92,7 @@ export default defineConfig({
 					text: 'Essentials',
 					collapsed: false,
 					items: [
-						{ text: 'Pages & layouts', link: '/guide/pages-and-layouts' },
+						{ text: 'Views & layouts', link: '/guide/views-and-layouts' },
 						{ text: 'Routing', link: '/guide/routing' },
 						{ text: 'Responses', link: '/guide/responses' },
 						{ text: 'Navigation', link: '/guide/navigation' },

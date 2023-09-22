@@ -46,18 +46,18 @@ class Assertable extends AssertableJson
         return $instance;
     }
 
-    public function view(string $value = null, $shouldExist = null): self
+    public function assertViewComponent(string $value = null, bool $shouldExist = null): self
     {
-        PHPUnit::assertSame($value, $this->view, 'Unexpected Hybridly page view.');
+        PHPUnit::assertSame($value, $this->view, 'Unexpected hybrid view component.');
 
-        if ($shouldExist || (\is_null($shouldExist) && config('hybridly.testing.ensure_pages_exist', true))) {
-            $this->ensurePageExists($value);
+        if ($shouldExist || (\is_null($shouldExist) && config('hybridly.testing.ensure_views_exist', true))) {
+            $this->ensureViewExists($value);
         }
 
         return $this;
     }
 
-    public function dialog(array $properties = null, string $view = null, string $baseUrl = null, string $redirectUrl = null): self
+    public function assertDialog(array $properties = null, string $view = null, string $baseUrl = null, string $redirectUrl = null): self
     {
         PHPUnit::assertNotNull($this->dialog, 'There is no dialog.');
 
@@ -72,8 +72,8 @@ class Assertable extends AssertableJson
         if ($view) {
             PHPUnit::assertSame($view, $this->dialog['component'], 'Unexpected dialog view component.');
 
-            if (config('hybridly.testing.ensure_pages_exist', true)) {
-                $this->ensurePageExists($view);
+            if (config('hybridly.testing.ensure_views_exist', true)) {
+                $this->ensureViewExists($view);
             }
         }
 
@@ -84,14 +84,14 @@ class Assertable extends AssertableJson
         return $this;
     }
 
-    public function url(string $value): self
+    public function assertViewUrl(string $value): self
     {
-        PHPUnit::assertSame($value, $this->url, 'Unexpected Hybridly page url.');
+        PHPUnit::assertSame($value, $this->url, 'Unexpected Hybridly view URL.');
 
         return $this;
     }
 
-    public function version(string $value): self
+    public function assertHybridVersion(string $value): self
     {
         PHPUnit::assertSame($value, $this->version, 'Unexpected Hybridly asset version.');
 
@@ -194,7 +194,7 @@ class Assertable extends AssertableJson
         return $this->getPayload();
     }
 
-    protected function ensurePageExists(string $identifier): void
+    protected function ensureViewExists(string $identifier): void
     {
         try {
             resolve(Hybridly::class)->getViewFinder()->hasView($identifier);

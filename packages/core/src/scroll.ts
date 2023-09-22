@@ -3,7 +3,7 @@ import { SCROLL_REGION_ATTRIBUTE } from './constants'
 import { getRouterContext, setContext } from './context'
 import { setHistoryState } from './router/history'
 
-/** Saves the current page's scrollbar positions into the history state. */
+/** Saves the current view's scrollbar positions into the history state. */
 export function saveScrollPositions(): void {
 	const regions = getScrollRegions()
 	debug.scroll('Saving scroll positions of:', regions.map((el) => ({ el, scroll: { top: el.scrollTop, left: el.scrollLeft } })))
@@ -29,7 +29,7 @@ export function getScrollRegions(): Element[] {
 }
 
 /**
- * Resets the current page's scrollbars positions to the top, and save them
+ * Resets the current view's scrollbars positions to the top, and save them
  * in the history state.
  */
 export function resetScrollPositions(): void {

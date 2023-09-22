@@ -173,7 +173,7 @@ test('the url resolver is used when constructing a response', function () {
     ]);
 });
 
-test('hybridly responses without a page component', function () {
+test('hybridly responses without a view component', function () {
     hybridly()->setRootView(Hybridly::DEFAULT_ROOT_VIEW);
     hybridly()->setVersion('123');
 
@@ -198,7 +198,7 @@ test('hybridly responses without a page component', function () {
     ]);
 });
 
-test('hybridly responses without a page component on initial load', function () {
+test('hybridly responses without a view component on initial load', function () {
     hybridly()->setRootView(Hybridly::DEFAULT_ROOT_VIEW);
     hybridly()->setVersion('123');
 

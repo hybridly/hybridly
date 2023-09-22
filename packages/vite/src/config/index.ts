@@ -58,10 +58,10 @@ export default (options: ViteOptions, config: DynamicConfiguration): Plugin => {
 				// Force-reload the server when the routing or components change
 				if (/.*\.vue$/.test(file)) {
 					const updatedConfig = await loadConfiguration(options)
-					const pagesOrLayoutsChanged = didPagesOrLayoutsChange(updatedConfig, config)
+					const viewsOrLayoutsChanged = didViewsOrLayoutsChange(updatedConfig, config)
 
-					if (pagesOrLayoutsChanged) {
-						return await forceRestart('Page or layout changed')
+					if (viewsOrLayoutsChanged) {
+						return await forceRestart('View or layout changed')
 					}
 				}
 			}
@@ -89,7 +89,7 @@ export default (options: ViteOptions, config: DynamicConfiguration): Plugin => {
 	}
 }
 
-function didPagesOrLayoutsChange(updatedConfig: DynamicConfiguration, previousConfig?: DynamicConfiguration) {
+function didViewsOrLayoutsChange(updatedConfig: DynamicConfiguration, previousConfig?: DynamicConfiguration) {
 	if (!previousConfig) {
 		return false
 	}

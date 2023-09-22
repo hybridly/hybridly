@@ -377,7 +377,7 @@ export async function navigate(options: InternalNavigationOptions) {
 	}
 
 	// If there are deferred properties, we handle them
-	// by making a partial-reload after the page component has mounted
+	// by making a partial-reload after the view component has mounted
 	if (context.view.deferred?.length) {
 		debug.router('Request has deferred properties, queueing a partial reload:', context.view.deferred)
 		context.adapter.executeOnMounted(async() => {
@@ -467,7 +467,7 @@ async function initializeRouter(): Promise<InternalRouterContext> {
 	} else if (isExternalNavigation()) {
 		handleExternalNavigation()
 	} else {
-		debug.router('Handling the initial page navigation.')
+		debug.router('Handling the initial navigation.')
 
 		// If we navigated to somewhere with a hash, we need to update the context
 		// to add said hash because it was initialized without it.

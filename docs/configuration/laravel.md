@@ -82,9 +82,9 @@ This directory is used by the `@` import alias and for some of the integrations,
 
 ## Eager-loading views
 
-By default, Hybridly will eager-load page components, which means that users will have to load all views at once when accessing the application.
+By default, Hybridly will eager-load view components, which means that users will have to load all views at once when accessing the application.
 
-This is a good default, but if your application has a lot of pages, you may need to disable eager-loading, so views can be lazy-loaded as needed by your users.
+This is a good default, but if your application has a lot of views, you may need to disable eager-loading, so views can be lazy-loaded as needed by your users.
 
 To do that, simply set `architecture.eager_load_views` to `false`.
 

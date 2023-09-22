@@ -9,8 +9,8 @@ use function Pest\Laravel\get;
 test('the `assertHybrid` method runs its callback', function () {
     $success = false;
 
-    make_hybrid_mock_request()->assertHybrid(function (Assertable $page) use (&$success) {
-        expect($page)->toBeInstanceOf(Assertable::class);
+    make_hybrid_mock_request()->assertHybrid(function (Assertable $view) use (&$success) {
+        expect($view)->toBeInstanceOf(Assertable::class);
         $success = true;
     });
 
@@ -18,14 +18,14 @@ test('the `assertHybrid` method runs its callback', function () {
 });
 
 test('the `assertHybridDialog` method asserts dialog view component & base url & properties', function () {
-    Route::get('/test/page', fn () => hybridly('test.page'))->name('test.page');
-    Route::get('/test/dialog', fn () => hybridly('test.dialog', ['foo' => 'bar'])->base('test.page'))->name('test.dialog');
+    Route::get('/test/view', fn () => hybridly('test.view'))->name('test.view');
+    Route::get('/test/dialog', fn () => hybridly('test.dialog', ['foo' => 'bar'])->base('test.view'))->name('test.dialog');
 
     get('/test/dialog')
-        ->assertHybridView('test.page')
+        ->assertHybridView('test.view')
         ->assertHybridUrl('http://localhost/test/dialog')
         ->assertHybridDialog(
-            baseUrl: 'http://localhost/test/page',
+            baseUrl: 'http://localhost/test/view',
             view: 'test.dialog',
             properties: [
                 'foo' => 'bar',
@@ -137,12 +137,12 @@ test('the `assertHybrid` method returns a `TestResponse` instance', function () 
 test('the `getHybridPayload` method returns the payload of the hybrid response', function () {
     $response = make_hybrid_mock_request(properties: ['bar' => 'baz']);
 
-    tap($response->getHybridPayload(), function (array $page) {
-        expect($page['view']['component'])->toBe('test');
-        expect($page['view']['properties'])->toBe(['bar' => 'baz']);
-        expect($page['dialog'])->toBeNull();
-        expect($page['url'])->toBe(config('app.url') . '/hybrid-mock-url');
-        expect($page['version'])->toBeNull();
+    tap($response->getHybridPayload(), function (array $view) {
+        expect($view['view']['component'])->toBe('test');
+        expect($view['view']['properties'])->toBe(['bar' => 'baz']);
+        expect($view['dialog'])->toBeNull();
+        expect($view['url'])->toBe(config('app.url') . '/hybrid-mock-url');
+        expect($view['version'])->toBeNull();
     });
 });
 

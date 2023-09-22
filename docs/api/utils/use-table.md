@@ -22,7 +22,7 @@ function useTable<
 )
 ```
 
-`useTable` accepts the page's `$props` object as its first parameter and the name of the `Table` object's property as the second. As its optional third parameter, it accepts a list of [request options](../router/options.md).
+`useTable` accepts the view's `$props` object as its first parameter and the name of the `Table` object's property as the second. As its optional third parameter, it accepts a list of [request options](../router/options.md).
 
 ## Example
 

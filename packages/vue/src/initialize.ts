@@ -2,7 +2,7 @@ import type { App, DefineComponent, Plugin as VuePlugin } from 'vue'
 import { createApp, h } from 'vue'
 import type { DynamicConfiguration, Plugin, RouterContext, RouterContextOptions, RoutingConfiguration } from '@hybridly/core'
 import { createRouter } from '@hybridly/core'
-import { showPageComponentErrorModal, debug, random } from '@hybridly/utils'
+import { showViewComponentErrorModal, debug, random } from '@hybridly/utils'
 import type { Axios } from 'axios'
 import { type ProgressOptions, progress } from './plugins/progress'
 import { wrapper } from './components/wrapper'
@@ -157,8 +157,8 @@ async function resolveViewComponent(name: string, options: ResolvedInitializeOpt
 		.find((path) => result ? path.endsWith(result?.path) : false)
 
 	if (!result || !path) {
-		console.warn(`Page component [${name}] not found. Available components: `, options.components.views.map(({ identifier }) => identifier))
-		showPageComponentErrorModal(name)
+		console.warn(`View component [${name}] not found. Available components: `, options.components.views.map(({ identifier }) => identifier))
+		showViewComponentErrorModal(name)
 		return
 	}
 

@@ -52,7 +52,7 @@ const features: Feature[] = [
 	{
 		icon: 'i-mdi:microsoft-visual-studio-code',
 		title: 'Visual Studio Code',
-		description: 'Auto-complete component names, and navigate between controllers, layouts and pages with a single click.',
+		description: 'Auto-complete component names, and navigate between controllers, layouts and views with a single click.',
 		url: '/guide/visual-studio-code',
 	},
 	{
