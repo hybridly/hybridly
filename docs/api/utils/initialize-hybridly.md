@@ -39,21 +39,28 @@ initializeHybridly({
 ## `cleanup`
 
 - **Type**: `bool`
-- **Required**: false
+- **Default**: `true`
 
 Defines whether to remove the `data-payload` attribute from the generated element. Note that this is not a security measure, but an aesthetic (and quite useless) one.
 
 ## `devtools`
 
 - **Type**: `bool`
-- **Required**: false
+- **Default**: `true`
 
 Defines whether to register the Vue DevTools plugin when initializing Hybridly.
+
+## `viewTransitions`
+
+- **Type**: `bool`
+- **Default**: `true`
+
+Defines whether [view transitions](https://developer.mozilla.org/en-US/docs/Web/API/View_Transitions_API#the_view_transition_process) are enabled. Currently, they are only supported on Chromium-based browsers and Hybridly provides no fallback.
 
 ## `responseErrorModals`
 
 - **Type**: `bool`
-- **Required**: false
+- **Default**: `true` in development, `false` otherwise
 
 Defines whether to display an error modal when a hybrid request receives an invalid response. By default, this is `true` only in development.
 
