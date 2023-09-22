@@ -2,7 +2,7 @@
 
 `Hybridly\Hybridly` is a singleton instance that contains convenience methods for common actions. It can be accessed by dependency injection or by service location using the [`hybridly()` global function](./functions.md#hybridly).
 
-Note that most of the methods here have an equivalent [namespaced function](./functions.md#namespaced-functions).
+Note that most of the methods here are shortcuts to [namespaced function](./functions.md#namespaced-functions).
 
 ## `view`
 
@@ -13,7 +13,7 @@ Generates a `HybridResponse` with the given component and optional properties. T
 ### Usage
 
 ```php
-return hybridly('users.show', [
+return hybridly()->view('users.show', [
   'user' => UserData::from($user)
 ]);
 ```

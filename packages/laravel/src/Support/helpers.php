@@ -56,6 +56,20 @@ if (!\function_exists('Hybridly\view')) {
     }
 }
 
+if (!\function_exists('Hybridly\dialog')) {
+    /**
+     * Returns a dialog with the given properties and base view.
+     *
+     * @see https://hybridly.dev/api/laravel/functions.html#dialog
+     */
+    function dialog(string $component = null, array|Arrayable|DataObject $properties, string $base): Factory
+    {
+        return resolve(Factory::class)
+            ->view($component, $properties)
+            ->base($base);
+    }
+}
+
 if (!\function_exists('Hybridly\properties')) {
     /**
      * Returns properties for an existing view.
