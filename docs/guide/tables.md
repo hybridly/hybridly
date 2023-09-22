@@ -8,7 +8,7 @@ outline: 'deep'
 
 Hybridly provides a way to describe tables on the back-end and manipulate them through the [`useTable`](../api/utils/use-table.md) util on the front-end.
 
-Tables provide the ability to execute actions on one or multiple records, to filter and sort them using [refinements](./refining.md), have [Data](https://spatie.be/docs/laravel-data/v3/introduction) integration, support pagination, scoping, and let you have full control over the user interface.
+Tables provide the ability to execute actions on one or multiple records, to filter and sort them using [refinements](./refining.md), have [data objects](#using-data-objects) integration, support pagination, scoping, and let you have full control over the user interface.
 
 :::info Experimental
 This feature has not been dogfed yet and is considered experimental. Its API may change at any time. Feel free to give feedback on our Discord server.
@@ -418,7 +418,7 @@ In this case, the action endpoint will not be registered.
 
 ### Using data objects
 
-Tables integrate well with [Data](https://spatie.be/docs/laravel-data/v3/introduction). By specifying the `$data` class property, the records will be a paginated collection of that data object instead of being a classic Laravel paginator:
+Tables integrate well with [`laravel-data`](https://spatie.be/docs/laravel-data/v3/introduction). By specifying the `$data` class property, the records will be a paginated collection of that data object instead of being a classic Laravel paginator:
 
 ```php
 use App\Models\User;

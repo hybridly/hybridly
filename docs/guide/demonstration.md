@@ -4,7 +4,7 @@
 
 Blue Bird, a real-world application, showcases how to use Hybridly. 
 
-It's a Twitter-like social network built with best practices in mind. [Data](https://github.com/spatie/laravel-data) and [TypeScript Transformer](https://github.com/spatie/laravel-typescript-transformer) are used to provide TypeScript definitions.
+It's a Twitter-like social network built with best practices in mind. [`laravel-data`](https://github.com/spatie/laravel-data) and [TypeScript Transformer](https://github.com/spatie/laravel-typescript-transformer) are used to provide TypeScript definitions.
 
 You can find the source code on [GitHub](https://github.com/hybridly/demo).
 

@@ -25,7 +25,7 @@ Similar to the `<a>` tag, accepts the hyperlink to navigate to. If this doesn't 
 
 - **Type**: boolean
 
-When set to `true`, disables the custom click handler. This must be used when navigating to external websites or non-hybrid pages — otherwise, a hybrid request will be made and will result into an error.
+When set to `true`, disables the custom click handler. This must be used when navigating to external websites or non-hybrid views — otherwise, a hybrid request will be made and will result into an error.
 
 ### Usage
 

@@ -4,7 +4,7 @@
 
 Hybridly aims to provide typings whenever it's possible. While the core and the front-end adapters of Hybridly are written with TypeScript and always provide definitions, code from the back-end must still be transformed to types in order to benefit from autocompletion while staying [DRY](https://en.wikipedia.org/wiki/Don%27t_repeat_yourself).
 
-This could be a real challenge — fortunately, there are existing solutions to transform PHP classes and enums to TypeScript types and interfaces. Specifically, Hybridly integrates well with [Data](https://github.com/spatie/laravel-data) and [TypeScript Transformer](https://github.com/spatie/laravel-typescript-transformer).
+This could be a real challenge — fortunately, there are existing solutions to transform PHP classes and enums to TypeScript types and interfaces. Specifically, Hybridly integrates well with [`laravel-data`](https://github.com/spatie/laravel-data) and [TypeScript Transformer](https://github.com/spatie/laravel-typescript-transformer).
 
 :::info Using the preset?
 Note that if you scaffolded an application using the [provided preset](./installation.md#preset), you don't need to take the installation steps described in this page.
@@ -14,7 +14,7 @@ However, it's still interesting knowing why they are needed.
 
 ## Data objects
 
-[Data](https://github.com/spatie/laravel-data) provides an interface to create rich data objects that can be used in various ways — for instance, it can replace [form requests](https://laravel.com/docs/9.x/validation#form-request-validation) or [resources](https://laravel.com/docs/9.x/eloquent-resources).
+[`laravel-data`](https://github.com/spatie/laravel-data) provides an interface to create rich data objects that can be used in various ways — for instance, it can replace [form requests](https://laravel.com/docs/9.x/validation#form-request-validation) or [resources](https://laravel.com/docs/9.x/eloquent-resources).
 
 But most importantly, it allows us to generate TypeScript interfaces through the [TypeScript Transformer](https://github.com/spatie/laravel-typescript-transformer) package.
 
