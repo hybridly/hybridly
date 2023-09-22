@@ -13,6 +13,7 @@ use Hybridly\Tables\Exceptions\InvalidActionException;
 use Hybridly\Tables\Exceptions\InvalidActionTypeException;
 use Hybridly\Tables\Exceptions\InvalidTableException;
 use Hybridly\Tables\Table;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;

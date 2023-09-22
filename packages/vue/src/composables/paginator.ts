@@ -43,17 +43,17 @@ interface CursorPaginatorMeta {
 	per_page: number
 	previous_cursor: string
 	next_cursor: string
-	next_page_url: string
-	previous_page_url: string
+	next_page_url?: string
+	previous_page_url?: string
 }
 
 interface SimplePaginatorMeta {
 	path: string
 	per_page: number
 	current_page: number
-	next_page_url: string
+	next_page_url?: string
 	first_page_url: string
-	prev_page_url: string
+	prev_page_url?: string
 	from: number
 	to: number
 }
@@ -69,8 +69,8 @@ interface PaginatorMeta {
 	last_page: number
 	first_page_url: string
 	last_page_url: string
-	next_page_url: string | undefined
-	prev_page_url: string | undefined
+	next_page_url?: string
+	prev_page_url?: string
 }
 
 export {}

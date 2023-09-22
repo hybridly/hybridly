@@ -284,11 +284,35 @@ export function useRefinements<
 		/**
 		 * Available filters.
 		 */
-		filters: toReactive(refinements.value.filters),
+		filters: toReactive(refinements.value.filters.map((filter) => ({
+			...filter,
+			/**
+			 * Applies this filter.
+			 */
+			apply: (value: any, options?: AvailableHybridRequestOptions) => applyFilter(filter.name, value, options),
+			/**
+			 * Clears this filter.
+			 */
+			clear: (options?: AvailableHybridRequestOptions) => clearFilter(filter.name, options),
+		}))),
 		/**
 		 * Available sorts.
 		 */
-		sorts: toReactive(refinements.value.sorts),
+		sorts: toReactive(refinements.value.sorts.map((sort) => ({
+			...sort,
+			/**
+			 * Toggles this sort.
+			 */
+			toggle: (options?: ToggleSortOptions) => toggleSort(sort.name, options),
+			/**
+			 * Checks if this sort is active.
+			 */
+			isSorting: (direction?: SortDirection) => isSorting(sort.name, direction),
+			/**
+			 * Clears this sort.
+			 */
+			clear: (options?: AvailableHybridRequestOptions) => clearSorts(options),
+		}))),
 		/**
 		 * Gets a filter by name.
 		 */

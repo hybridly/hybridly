@@ -1,7 +1,6 @@
 import { computed, reactive } from 'vue'
 import { route, router } from 'hybridly'
 import { toReactive } from '../utils'
-import type { BulkSelection } from './bulk-select'
 import { useBulkSelect } from './bulk-select'
 import type { AvailableHybridRequestOptions, SortDirection, ToggleSortOptions } from './refinements'
 import { useRefinements } from './refinements'
@@ -9,7 +8,7 @@ import { useRefinements } from './refinements'
 declare global {
 	interface Table<
 		T extends Record<string, any> = any,
-		PaginatorKind extends 'cursor' | 'length-aware' | 'simple' = 'cursor',
+		PaginatorKind extends 'cursor' | 'length-aware' | 'simple' = 'length-aware',
 	> {
 		id: string
 		keyName: string
@@ -29,14 +28,13 @@ export interface Column<T extends object = never> {
 	name: keyof T
 	/** The label of this column. */
 	label: string
-	/** Whether this column is hidden. */
-	hidden: boolean
 	/** The type of this column. */
 	type: string
 	/** Custom metadata for this column. */
 	metadata: any
 }
 
+// #region action
 export interface Action {
 	/** The name of this action. */
 	name: string
@@ -47,6 +45,7 @@ export interface Action {
 	/** Custom metadata for this action. */
 	metadata: any
 }
+// #endregion action
 
 export interface BulkAction extends Action {
 	/** Should deselect all records after action. */
@@ -72,10 +71,10 @@ export function useTable<
 	TableType extends (Props[PropsKey] extends Table<RecordType, PaginatorKindName> ? Table<RecordType, PaginatorKindName> : never),
 	Props extends Record<string, unknown>,
 	PropsKey extends keyof Props,
->(props: Props, key: PropsKey) {
+>(props: Props, key: PropsKey, defaultOptions: AvailableHybridRequestOptions = {}) {
 	const table = computed(() => props[key] as TableType)
 	const bulk = useBulkSelect<RecordIdentifier>()
-	const refinements = useRefinements(toReactive(table) as any, 'refinements')
+	const refinements = useRefinements(toReactive(table) as any, 'refinements', defaultOptions)
 
 	/**
 	 * Gets the actual identifier for a record.
@@ -92,17 +91,21 @@ export function useTable<
 		return Reflect.get(record, table.value.keyName) as any
 	}
 
+	function getActionName(action: Action | string): string {
+		return typeof action === 'string' ? action : action.name
+	}
+
 	/**
 	 * Executes the given inline action by name.
 	 */
-	async function executeInlineAction(actionName: string, record: RecordType | RecordIdentifier) {
+	async function executeInlineAction(action: Action | string, record: RecordType | RecordIdentifier) {
 		return await router.navigate({
 			method: 'post',
 			url: route(table.value.endpoint),
 			preserveState: true,
 			data: {
 				type: 'action:inline',
-				action: actionName,
+				action: getActionName(action),
 				tableId: table.value.id,
 				recordId: getRecordKey(record),
 			},
@@ -112,7 +115,9 @@ export function useTable<
 	/**
 	 * Executes the given bulk action for the given records.
 	 */
-	async function executeBulkAction(actionName: string, selection: BulkSelection, options?: BulkActionOptions) {
+	async function executeBulkAction(action: Action | string, options?: BulkActionOptions) {
+		const actionName = getActionName(action)
+
 		return await router.navigate({
 			method: 'post',
 			url: route(table.value.endpoint),
@@ -121,9 +126,9 @@ export function useTable<
 				type: 'action:bulk',
 				action: actionName,
 				tableId: table.value.id,
-				all: selection.all,
-				only: [...selection.only],
-				except: [...selection.except],
+				all: bulk.selection.value.all,
+				only: [...bulk.selection.value.only],
+				except: [...bulk.selection.value.except],
 			},
 			hooks: {
 				after: () => {
@@ -146,18 +151,30 @@ export function useTable<
 		allSelected: bulk.allSelected,
 		/** The current record selection. */
 		selection: bulk.selection,
+		/** Toggles selection for the given record. */
+		toggle: (record: RecordType) => bulk.toggle(getRecordKey(record)),
+		/** Selects selection for the given record. */
+		select: (record: RecordType) => bulk.select(getRecordKey(record)),
+		/** Deselects selection for the given record. */
+		deselect: (record: RecordType) => bulk.deselect(getRecordKey(record)),
+
 		/** List of inline actions for this table. */
-		inlineActions: computed(() => table.value.inlineActions),
+		inlineActions: computed(() => table.value.inlineActions.map((action) => ({
+			/** Executes the action. */
+			execute: (record: RecordType | RecordIdentifier) => executeInlineAction(action.name, record),
+			...action,
+		}))),
 		/** List of bulk actions for this table. */
 		bulkActions: computed(() => table.value.bulkActions.map((action) => ({
 			/** Executes the action. */
-			execute: (options?: BulkActionOptions) => executeBulkAction(action.name, bulk.selection.value, options),
+			execute: (options?: BulkActionOptions) => executeBulkAction(action.name, options),
 			...action,
 		}))),
 		/** Executes the given inline action for the given record. */
 		executeInlineAction,
 		/** Executes the given bulk action. */
-		executeBulkAction: (action: string, options?: BulkActionOptions) => executeBulkAction(action, bulk.selection.value, options),
+		executeBulkAction,
+
 		/** List of columns for this table. */
 		columns: computed(() => table.value.columns.map((column) => ({
 			...column,
@@ -168,7 +185,7 @@ export function useTable<
 			/** Applies the filer for this column. */
 			applyFilter: (value: any, options?: AvailableHybridRequestOptions) => refinements.applyFilter(column.name as string, value, options),
 			/** Clears the filter for this column. */
-			clearFilter: (options?: ToggleSortOptions) => refinements.clearFilter(column.name as string, options),
+			clearFilter: (options?: AvailableHybridRequestOptions) => refinements.clearFilter(column.name as string, options),
 			/** Checks whether the column is sortable. */
 			isSortable: refinements.sorts.find((sort) => sort.name === column.name),
 			/** Checks whether the column is filterable. */
@@ -181,9 +198,13 @@ export function useTable<
 			/** The key of the record. Use this instead of `id`. */
 			key: getRecordKey(record),
 			/** Executes the given inline action. */
-			execute: (actionName: string) => executeInlineAction(actionName, getRecordKey(record)),
+			execute: (action: string | InlineAction) => executeInlineAction(getActionName(action), getRecordKey(record)),
 			/** Gets the available inline actions. */
-			actions: table.value.inlineActions,
+			actions: table.value.inlineActions.map((action) => ({
+				...action,
+				/** Executes the action. */
+				execute: () => executeInlineAction(action.name, getRecordKey(record)),
+			})),
 			/** Selects this record. */
 			select: () => bulk.select(getRecordKey(record)),
 			/** Deselects this record. */
@@ -192,6 +213,8 @@ export function useTable<
 			toggle: (force?: boolean) => bulk.toggle(getRecordKey(record), force),
 			/** Checks whether this record is selected. */
 			selected: bulk.selected(getRecordKey(record)),
+			/** Gets the value of the record for the specified column. */
+			value: (column: string | Column<RecordType>) => record[typeof column === 'string' ? column : column.name],
 		}))),
 		/**
 		 * Paginated meta and links.

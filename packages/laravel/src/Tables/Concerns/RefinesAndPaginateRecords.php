@@ -83,7 +83,7 @@ trait RefinesAndPaginateRecords
         $columnsWithTransforms = $columns->filter(static fn (BaseColumn $column) => $column->canTransformValue());
         $keyName = $this->getKeyName();
         $modelClass = $this->getModelClass();
-        $includeOriginalRecordId = config('hybridly.tables.enable_actions') && $columnsWithTransforms->contains(static fn (BaseColumn $column) => $column->getName() === $keyName);
+        $includeOriginalRecordId = config('hybridly.tables.enable_actions') !== false && $columnsWithTransforms->contains(static fn (BaseColumn $column) => $column->getName() === $keyName);
         $columnNames = $columns->map(static fn (BaseColumn $column) => $column->getName());
         $result = $paginatedRecords->through(static fn (Model $record) => [
             // If actions are enabled but the record's key is not included in the
