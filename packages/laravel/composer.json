@@ -38,6 +38,9 @@
         ]
     },
     "autoload-dev": {
+        "psr-4": {
+            "Hybridly\\Tests\\": "tests"
+        },
         "files": [
             "src/Testing/helpers.php"
         ]

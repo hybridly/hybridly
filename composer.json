@@ -11,9 +11,9 @@
         "php": "~8.1.0 || ~8.2.0 || ~8.3.0",
         "composer-runtime-api": "^2.1",
         "illuminate/contracts": "^9.0|^10.0",
+        "laravel/prompts": "^0.1.7",
         "spatie/laravel-package-tools": "^1.15.0",
-        "spatie/php-structure-discoverer": "^1.1.1",
-        "laravel/prompts": "^0.1.7"
+        "spatie/php-structure-discoverer": "^1.1.1"
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^3.16.0",
@@ -40,9 +40,7 @@
         "psr-4": {
             "Hybridly\\": [
                 "packages/laravel/src"
-            ],
-            "Hybridly\\Tests\\": "tests/src",
-            "Hybridly\\Tests\\Database\\Factories\\": "tests/database/factories"
+            ]
         }
     },
     "autoload-dev": {
@@ -52,17 +50,18 @@
         "psr-4": {
             "Build\\": [
                 "build"
-            ]
+            ],
+            "Hybridly\\Tests\\": "packages/laravel/tests"
         }
     },
     "extra": {
         "laravel": {
-            "providers": [
-                "Hybridly\\HybridlyServiceProvider"
-            ],
             "aliases": {
                 "Hybridly": "Hybridly\\Facades\\Hybridly"
-            }
+            },
+            "providers": [
+                "Hybridly\\HybridlyServiceProvider"
+            ]
         }
     },
     "config": {
@@ -80,8 +79,8 @@
         "lint": "vendor/bin/php-cs-fixer fix --dry-run --config=.php-cs-fixer.php --allow-risky=yes",
         "lint:fix": "vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.php --allow-risky=yes",
         "analyze": "vendor/bin/phpstan analyse",
-        "test": "pest",
-        "xray": "vendor/bin/x-ray ./tests ./packages/laravel --snippets --github --no-progress",
+        "test": "pest --test-directory=packages/laravel/tests",
+        "xray": "vendor/bin/x-ray ./packages/laravel --snippets --github --no-progress",
         "ci": [
             "@monorepo:validate",
             "@lint",
