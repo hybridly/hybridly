@@ -6,7 +6,7 @@ Single-page applications, because of their nature, do not benefit from the brows
 
 To solve this, a progress indicator is required. Hybridly comes with one by default, but you can disable it and implement your own.
 
-## Built-in indicator
+## Using the built-in indicator
 
 By default, a progress indicator is shown when a request takes longer than 250 milliseconds to finish.
 
@@ -24,10 +24,10 @@ initializeHybridly({
 ```
 
 :::info Credits where due
-The underlying progress indicator uses [nprogress](https://ricostacruz.com/nprogress/). The original implementation comes from [`@inertiajs/progress`](https://github.com/inertiajs/progress).
+The underlying progress indicator uses [nprogress](https://ricostacruz.com/nprogress/). The original implementation is inspired from [`@inertiajs/progress`](https://github.com/inertiajs/progress).
 :::
 
-## Custom indicator
+## Using a custom indicator
 
 Under the hood, the built-in progress indicator is actually a [plugin](./plugins.md). It hooks into the `start`, `progress`, `error`, `fail` and `after` [lifecycle events](./hooks.md).
 
