@@ -4,7 +4,7 @@
 
 Hybridly has a built-in mechanism for forcing a full page reload when assets are updated. 
 
-Without an asset reloading mechanism,a user could be on an outdated page that could behave unexpectedly and potentially crash after a deploy.
+Without an asset reloading mechanism, a user could be on an outdated page that could behave unexpectedly and potentially crash after a deploy.
 
 This mechanism works by sending a version hash back-and-forth between the front-end and back-end adapters. When the hash mismatches, Hybridly will respond with an external redirection, effectively causing a full page reload.
 
@@ -14,11 +14,11 @@ Hybridly has sensible defaults for controlling the version. It looks for a manif
 
 This logic can be extended or overriden by extending the `version` method of the middleware.
 
-Additionally, calling `hybridly()->setVersion($version)` will override the version for the next version — this can be used to forcefully invalidate the next response.
+Additionally, calling `hybridly()->setVersion($version)` will override the version for the next version—this can be used to forcefully invalidate the next response.
 
 
 ## Cache busting
 
 Cache-busting is a technique for invalidating cache in browsers. Without it, browsers could use a cached asset for as long as its time-to-live is valid.
 
-Hybridly does not enforce cache-busting by itself — but Vite does by default. If you manually overwrote Rollup's `chunkFileNames`, make sure you keep the hash or use a differnet cache-busting strategy.
+Hybridly does not enforce cache-busting by itself—but Vite does by default. If you manually overwrote Rollup's `chunkFileNames`, make sure you keep the hash or use a differnet cache-busting strategy.
