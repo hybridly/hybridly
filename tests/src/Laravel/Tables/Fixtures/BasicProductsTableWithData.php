@@ -5,6 +5,7 @@ namespace Hybridly\Tests\Laravel\Tables\Fixtures;
 use Hybridly\Tables\Columns\TextColumn;
 use Hybridly\Tables\Table;
 use Hybridly\Tests\Fixtures\Database\Product;
+use Illuminate\Contracts\Pagination\CursorPaginator;
 use Illuminate\Contracts\Pagination\Paginator;
 use Spatie\LaravelData\Contracts\DataCollectable;
 
@@ -19,7 +20,7 @@ class BasicProductsTableWithData extends Table
         ];
     }
 
-    public function transformRecords(Paginator $paginator): DataCollectable
+    public function transformRecords(Paginator|CursorPaginator $paginator): DataCollectable
     {
         /** @var DataCollectable */
         $records = ProductNameData::collection($paginator);
