@@ -13,6 +13,8 @@ export const RouterLink = defineComponent({
 		return (props: typeof _) => {
 			let data = props.data ?? {}
 			const preloads = props.preload ?? false
+			const preserveScroll = props.preserveScroll
+			const preserveState = props.preserveState
 			const url = makeUrl(props.href ?? '')
 			const method: Method = props.method?.toUpperCase() as Method ?? 'GET'
 			const as = typeof props.as === 'object'
@@ -61,6 +63,8 @@ export const RouterLink = defineComponent({
 
 				router.preload(url, {
 					data,
+					preserveScroll,
+					preserveState,
 					...props.options,
 				})
 			}
@@ -138,6 +142,14 @@ export const RouterLink = defineComponent({
 		preload: {
 			type: [Boolean, String] as PropType<boolean | 'hover' | 'mount'>,
 			default: false,
+		},
+		preserveScroll: {
+			type: Boolean,
+			default: undefined,
+		},
+		preserveState: {
+			type: Boolean,
+			default: undefined,
 		},
 	},
 })
