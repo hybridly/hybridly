@@ -58,7 +58,7 @@ This method asserts that the property at the given path is equal to the given va
 
 This method asserts that the given dialog exists, in addition to being able to asserts the correctness of its view component, its properties and its base URL.
 
-#### Usage
+**Usage**
 
 ```php
 get('/users/create')
@@ -80,7 +80,7 @@ This method accepts a callback that gets an `Hybridly\Testing\Assertable` instan
 
 `Assertable` extends [`Illuminate\Testing\Fluent\AssertableJson`](https://laravel.com/docs/9.x/http-tests#fluent-json-testing) and is initialized with the hybrid response's payload.
 
-#### Usage
+**Usage**
 
 ```php
 use Hybridly\Testing\Assertable;
