@@ -48,7 +48,7 @@ This results in a smoother, snappy user experience that may make your applicatio
 
 `<router-link>` supports the [`preload` attribute](../api/components/router-link.md#preload), which will preload the corresponding URL when the link component is hovered or mounted, depending on its value.
 
-```html
+```vue-html
 <!-- Preloads when the link is hovered -->
 <router-link href="/" preload>Home</router-link>
 

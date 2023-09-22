@@ -4,15 +4,15 @@ import type { Ref } from 'vue'
 import { computed, ref, watch } from 'vue'
 import { toReactive } from '../utils'
 
-type SortDirection = 'asc' | 'desc'
+export type SortDirection = 'asc' | 'desc'
 
-type AvailableHybridRequestOptions = Omit<HybridRequestOptions, 'url' | 'data'>
+export type AvailableHybridRequestOptions = Omit<HybridRequestOptions, 'url' | 'data'>
 
-interface ToggleSortOptions extends AvailableHybridRequestOptions {
+export interface ToggleSortOptions extends AvailableHybridRequestOptions {
 	direction?: SortDirection
 }
 
-interface BindFilterOptions<T> extends AvailableHybridRequestOptions {
+export interface BindFilterOptions<T> extends AvailableHybridRequestOptions {
 	transformValue?: (value?: T) => any
 	/** If specified, this callback will watch the ref and apply  */
 	watch?: (ref: Ref<T>, cb: any) => void
@@ -225,9 +225,9 @@ export function useRefinements<
 		return refinements.value.filters.filter(({ is_active }) => is_active)
 	}
 
-	function isSorting(name?: string): boolean {
+	function isSorting(name?: string, direction?: SortDirection): boolean {
 		if (name) {
-			return currentSorts().some((sort) => sort.name === name)
+			return currentSorts().some((sort) => sort.name === name && (direction ? sort.direction === direction : true))
 		}
 
 		return currentSorts().length !== 0
@@ -284,11 +284,35 @@ export function useRefinements<
 		/**
 		 * Available filters.
 		 */
-		filters: toReactive(refinements.value.filters),
+		filters: toReactive(refinements.value.filters.map((filter) => ({
+			...filter,
+			/**
+			 * Applies this filter.
+			 */
+			apply: (value: any, options?: AvailableHybridRequestOptions) => applyFilter(filter.name, value, options),
+			/**
+			 * Clears this filter.
+			 */
+			clear: (options?: AvailableHybridRequestOptions) => clearFilter(filter.name, options),
+		}))),
 		/**
 		 * Available sorts.
 		 */
-		sorts: toReactive(refinements.value.sorts),
+		sorts: toReactive(refinements.value.sorts.map((sort) => ({
+			...sort,
+			/**
+			 * Toggles this sort.
+			 */
+			toggle: (options?: ToggleSortOptions) => toggleSort(sort.name, options),
+			/**
+			 * Checks if this sort is active.
+			 */
+			isSorting: (direction?: SortDirection) => isSorting(sort.name, direction),
+			/**
+			 * Clears this sort.
+			 */
+			clear: (options?: AvailableHybridRequestOptions) => clearSorts(options),
+		}))),
 		/**
 		 * Gets a filter by name.
 		 */

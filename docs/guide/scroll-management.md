@@ -20,7 +20,7 @@ For instance, you may want to toggle a user setting after a click on a button by
 
 You may optionally define elements which scroll positions should be kept track of. This is done by applying the `scroll-region` attribute to an element.
 
-```html
+```vue-html
 <div class="overflow-y-auto" scroll-region>
   <!-- ... -->
 </div>

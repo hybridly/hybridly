@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use Pest\Expectation;
 
 beforeEach(function () {
+    config(['hybridly.router.exclude' => [config('hybridly.tables.actions_endpoint')]]);
     app()->setBasePath(str_replace('/vendor/orchestra/testbench-core/laravel', '', app()->basePath()));
 });
 
@@ -31,7 +32,7 @@ test('routes can be filtered out', function () {
     Route::get('/filtered-route', fn () => response())->name('filtered-route');
     Route::get('/ok', fn () => response())->name('ok');
 
-    config(['hybridly.router.exclude' => 'filtered*']);
+    config()->push('hybridly.router.exclude', 'filtered*');
 
     expect(app(RouteExtractor::class)->getRoutes())
         ->toHaveCount(1)

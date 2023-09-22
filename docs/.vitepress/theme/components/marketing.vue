@@ -38,6 +38,12 @@ const features: Feature[] = [
 		url: '/guide/refining',
 	},
 	{
+		icon: 'i-mdi:table-large',
+		title: 'Tables',
+		description: 'Build datatables with full control over their appearance, including inline and bulk actions, filtering, sorting and more.',
+		url: '/guide/tables',
+	},
+	{
 		icon: 'i-mdi:shape',
 		title: 'Flexible architecture',
 		description: "Whether you prefer Laravel's default architecture, modules, slices, or something custom, Hybridly supports it.",
@@ -55,12 +61,12 @@ const features: Feature[] = [
 		description: 'Integrates with Vue DevTools for painless property inspection and debugging.',
 		url: '/guide/devtools',
 	},
-	{
-		icon: 'i-mdi:code-braces',
-		title: 'Made for developers',
-		description: 'Hybridly is packed with quality-of-life features that should drastically improve your developer experience.',
-		url: '/guide/comparison-with-inertia',
-	},
+	// {
+	// 	icon: 'i-mdi:code-braces',
+	// 	title: 'Made for developers',
+	// 	description: 'Hybridly is packed with quality-of-life features that should drastically improve your developer experience.',
+	// 	url: '/guide/comparison-with-inertia',
+	// },
 ]
 </script>
 

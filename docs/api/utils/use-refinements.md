@@ -14,7 +14,7 @@ This composable is part of the refining feature. It takes a `Refinement` propert
 ```ts
 function useRefinements<
   Properties extends object,
-  RefinementsKey extends keyog Properties
+  RefinementsKey extends keyof Properties
 >(
   properties: Properties,
   refinementsKey: RefinementsKey,
@@ -147,4 +147,4 @@ const search = refine.bindFilter<string>('search', {
 
 The following are relevant interfaces used by `useRefinements` and its return value.
 
-<<< @/../packages/vue/src/composables/refine.ts#interfaces
+<<< @/../packages/vue/src/composables/refinements.ts#interfaces
