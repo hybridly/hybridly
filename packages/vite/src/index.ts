@@ -9,6 +9,7 @@ import { getVueComponentsOptions, vueComponents, HybridlyResolver } from './inte
 import { getIconsOptions, icons } from './integrations/icons'
 import { getVueOptions, vue } from './integrations/vue'
 import { loadConfiguration } from './config/load'
+import { killSwitch } from './kill-switch'
 
 export default async function plugin(options: ViteOptions = {}) {
 	const config = await loadConfiguration(options)
@@ -22,19 +23,7 @@ export default async function plugin(options: ViteOptions = {}) {
 		options.autoImports !== false && autoimport(getAutoImportsOptions(options, config)),
 		options.icons !== false && icons(getIconsOptions(options, config)),
 		options.vue !== false && vue(getVueOptions(options)),
-		options.killSwitch !== false && {
-			// This plugin forces the process to exit, because it may
-			// hang in low-memory environments like CI or production
-			name: 'hybridly:build:kill-switch',
-			buildEnd: (error: any) => {
-				if (error) {
-					console.error('Error when bundling')
-					console.error(error)
-					process.exit(1)
-				}
-			},
-			closeBundle: () => process.exit(0),
-		},
+		options.killSwitch !== false && killSwitch(),
 	]
 }
 
