@@ -18,40 +18,27 @@ class SelectFilter extends BaseFilter
         $this->type('select');
     }
 
-    public static function make(string $property, ?string $alias = null): static
+    public static function make(string $property, ?string $alias = null, \Closure|array $options = []): static
     {
         $static = resolve(static::class, [
             'property' => $property,
             'alias' => $alias,
         ]);
 
-        return $static->configure();
+        return $static
+            ->options($options)
+            ->configure();
     }
 
     public function apply(Builder $builder, mixed $value, string $property): void
     {
-        $options = $this->getOptions();
-        $options = array_is_list($options)
-            ? $options
-            : array_keys($options);
+        if ($this->isMultiple()) {
+            $this->applyMultipleSelectQuery($builder, $value, $property);
 
-        if (!\in_array($value, $options, strict: false)) {
             return;
         }
 
-        $value = array_is_list($options)
-            ? $value
-            : $options[$value] ?? null;
-
-        $this->applyRelationConstraint(
-            builder: $builder,
-            property: $property,
-            callback: fn (Builder $builder, string $column) => $builder->where(
-                column: $builder->qualifyColumn($column),
-                operator: $this->getOperator(),
-                value: $value,
-            ),
-        );
+        $this->applySingleSelectQuery($builder, $value, $property);
     }
 
     /**
@@ -79,11 +66,66 @@ class SelectFilter extends BaseFilter
     /**
      * Defines whether multiple choices can be selected.
      */
-    public function multiple(\Closure|bool $condition): static
+    public function multiple(\Closure|bool $condition = true): static
     {
         $this->isMultiple = $condition;
 
         return $this;
+    }
+
+    protected function applyMultipleSelectQuery(Builder $builder, mixed $value, string $property): void
+    {
+        $options = $this->getOptions();
+        $value = explode(',', $value);
+
+        $allowedOptions = array_is_list($options)
+            ? $options
+            : array_keys($options);
+
+        if (empty(array_intersect($value, $allowedOptions))) {
+            return;
+        }
+
+        if (!array_is_list($options)) {
+            $value = collect($value)
+                ->map(fn ($v) => $options[$v] ?? null)
+                ->filter();
+        }
+
+        $this->applyRelationConstraint(
+            builder: $builder,
+            property: $property,
+            callback: fn (Builder $builder, string $column) => $builder->whereIn(
+                column: $builder->qualifyColumn($column),
+                values: $value,
+            ),
+        );
+    }
+
+    protected function applySingleSelectQuery(Builder $builder, mixed $value, string $property): void
+    {
+        $options = $this->getOptions();
+        $allowedOptions = array_is_list($options)
+            ? $options
+            : array_keys($options);
+
+        if (!\in_array($value, $allowedOptions, strict: false)) {
+            return;
+        }
+
+        $value = array_is_list($options)
+            ? $value
+            : $options[$value] ?? null;
+
+        $this->applyRelationConstraint(
+            builder: $builder,
+            property: $property,
+            callback: fn (Builder $builder, string $column) => $builder->where(
+                column: $builder->qualifyColumn($column),
+                operator: $this->getOperator(),
+                value: $value,
+            ),
+        );
     }
 
     protected function getOptions(): array
