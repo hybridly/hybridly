@@ -11,10 +11,10 @@ class TrashedFilter extends BaseFilter
         $this->type('trashed');
     }
 
-    public static function make(string $alias = 'trashed'): static
+    public static function make(string $name = 'trashed'): static
     {
         $static = resolve(static::class, [
-            'property' => $alias,
+            'property' => $name,
         ]);
 
         return $static->configure();

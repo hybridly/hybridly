@@ -11,9 +11,9 @@ class CallbackSort extends BaseSort
 
     protected string|object $invokableClassOrClosure;
 
-    public static function make(string $alias, string|object $callback): static
+    public static function make(string $name, string|object $callback): static
     {
-        $static = resolve(static::class, ['property' => $alias]);
+        $static = resolve(static::class, ['property' => $name]);
         $static->sort($callback);
 
         return $static->configure();
