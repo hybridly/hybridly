@@ -3,31 +3,30 @@
 namespace Hybridly\Refining\Sorts;
 
 use Hybridly\Components\Concerns\EvaluatesClosures;
-use Hybridly\Refining\Contracts\Sort as SortContract;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 
-class CallbackSort implements SortContract
+class CallbackSort extends BaseSort
 {
     use EvaluatesClosures;
 
-    private function __construct(
-        protected null|SortContract|\Closure $classOrCallback,
-        protected array $parameters = [],
-    ) {
-        if (\is_string($classOrCallback)) {
-            $this->classOrCallback = resolve($this->classOrCallback);
-        }
+    protected string|object $invokableClassOrClosure;
+
+    public static function make(string $alias, string|object $callback): static
+    {
+        $static = resolve(static::class, ['property' => $alias]);
+        $static->sort($callback);
+
+        return $static->configure();
     }
 
-    public function __invoke(Builder $builder, string $direction, string $property): void
+    public function apply(Builder $builder, string $direction, string $property): void
     {
         $this->evaluate(
-            value: $this->classOrCallback,
+            value: $this->getSort(),
             named: [
                 'builder' => $builder,
                 'direction' => $direction,
                 'property' => $property,
-                ...$this->parameters,
             ],
             typed: [
                 Builder::class => $builder,
@@ -36,14 +35,21 @@ class CallbackSort implements SortContract
     }
 
     /**
-     * Sorts using the specified query.
+     * Defines the callback or the invokable class that will sort the query.
      */
-    public static function make(string $name, \Closure $callback, array $parameters = []): Sort
+    public function sort(string|object $sort): static
     {
-        return new Sort(
-            sort: new static($callback, $parameters),
-            property: $name,
-            alias: null,
-        );
+        $this->invokableClassOrClosure = $sort;
+
+        return $this;
+    }
+
+    public function getSort(): object
+    {
+        if (\is_string($this->invokableClassOrClosure) && class_exists($this->invokableClassOrClosure)) {
+            return resolve($this->invokableClassOrClosure);
+        }
+
+        return $this->invokableClassOrClosure;
     }
 }

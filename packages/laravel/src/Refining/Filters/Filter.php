@@ -2,99 +2,146 @@
 
 namespace Hybridly\Refining\Filters;
 
-use Hybridly\Components;
-use Hybridly\Refining\Contracts\Filter as FilterContract;
-use Hybridly\Refining\Contracts\Refiner as RefinerContract;
-use Hybridly\Refining\Refine;
+use Hybridly\Refining\Concerns\SupportsRelationConstraints;
 use Illuminate\Contracts\Database\Eloquent\Builder;
-use Illuminate\Validation\ValidationException;
 
-class Filter extends Components\Component implements RefinerContract
+class Filter extends BaseFilter
 {
-    use Components\Concerns\HasLabel;
-    use Components\Concerns\HasMetadata;
-    use Components\Concerns\HasName;
-    use Components\Concerns\IsHideable;
-    use Concerns\HasDefaultValue;
-    use Concerns\HasType;
+    use SupportsRelationConstraints;
 
-    protected mixed $value = null;
+    public const EXACT = 'exact';
+    public const LOOSE = 'loose';
+    public const BEGINS_WITH_STRICT = 'begins_with_strict';
+    public const ENDS_WITH_STRICT = 'ends_with_strict';
 
-    public function __construct(
-        protected FilterContract $filter,
-        protected string $property,
-        protected ?string $alias = null,
-    ) {
-        $this->name(str($alias ?? $property)->replace('.', '_'));
-        $this->label(str($this->getName())->headline()->lower()->ucfirst());
-        $this->type($filter->getType());
-        $this->setUp();
+    protected string|\Closure $mode = self::EXACT;
+    protected null|string|\Closure $enum = null;
+    protected string|\Closure $operator = '=';
+
+    public static function make(string $property, ?string $alias = null): static
+    {
+        $static = resolve(static::class, [
+            'property' => $property,
+            'alias' => $alias,
+        ]);
+
+        return $static->configure();
     }
 
-    public function refine(Refine $refiner, Builder $builder): void
+    public function apply(Builder $builder, mixed $value, string $property): void
     {
-        if (!$this->value = $refiner->getFilterValueFromRequest($this->property, $this->alias) ?? $this->getDefaultValue()) {
-            return;
+        if (($enumClass = $this->getEnumClass()) && !$value instanceof \BackedEnum) {
+            $value = $enumClass::tryFrom($value);
         }
 
-        try {
-            $this->evaluate(
-                value: $this->filter,
-                named: [
-                    'builder' => $builder,
-                    'value' => $this->value,
-                    'property' => $this->property,
-                ],
-                typed: [
-                    Builder::class => $builder,
-                ],
-            );
-        } catch (\TypeError $th) {
-            if (str_contains($th->getMessage(), 'Argument #2 ($')) {
-                throw ValidationException::withMessages([
-                    $this->property => 'This filter is invalid.',
-                ]);
-            }
-        } catch (\Throwable $th) {
-            throw $th;
+        $this->applyRelationConstraint(
+            builder: $builder,
+            property: $property,
+            callback: function (Builder $builder, string $column) use ($value) {
+                if ($this->getMode() === self::EXACT) {
+                    return $builder->where(
+                        column: $builder->qualifyColumn($column),
+                        operator: '=',
+                        value: $value,
+                    );
+                }
+
+                $sql = match ($this->getMode()) {
+                    self::LOOSE => "LOWER({$column}) LIKE ?",
+                    self::BEGINS_WITH_STRICT => "{$column} LIKE ?",
+                    self::ENDS_WITH_STRICT => "{$column} LIKE ?",
+                };
+
+                $bindings = match ($this->getMode()) {
+                    self::LOOSE => ['%' . mb_strtolower($value, 'UTF8') . '%'],
+                    self::BEGINS_WITH_STRICT => ["{$value}%"],
+                    self::ENDS_WITH_STRICT => ["%{$value}"],
+                };
+
+                $builder->whereRaw(
+                    sql: $sql,
+                    bindings: $bindings,
+                );
+            },
+        );
+    }
+
+    public function operator(string|\Closure $operator): static
+    {
+        $this->operator = $operator;
+
+        return $this;
+    }
+
+    public function mode(string|\Closure $mode): static
+    {
+        $this->mode = $mode;
+
+        return $this;
+    }
+
+    public function enum(string $enum): static
+    {
+        $this->enum = $enum;
+
+        return $this;
+    }
+
+    public function exact(): static
+    {
+        $this->mode = static::EXACT;
+
+        return $this;
+    }
+
+    public function loose(): static
+    {
+        $this->mode = static::LOOSE;
+
+        return $this;
+    }
+
+    public function beingsWithStrict(): static
+    {
+        $this->mode = static::BEGINS_WITH_STRICT;
+
+        return $this;
+    }
+
+    public function endsWithStrict(): static
+    {
+        $this->mode = static::ENDS_WITH_STRICT;
+
+        return $this;
+    }
+
+    public function getEnumClass(): ?string
+    {
+        return $this->evaluate($this->enum);
+    }
+
+    public function getOperator(): string
+    {
+        return $this->evaluate($this->operator);
+    }
+
+    public function getMode(): string
+    {
+        $mode = $this->evaluate($this->mode);
+
+        if (!\in_array($mode, [self::LOOSE, self::BEGINS_WITH_STRICT, self::ENDS_WITH_STRICT, self::EXACT], true)) {
+            throw new \InvalidArgumentException("Invalid similarity mode [{$mode}] provided.");
         }
+
+        return $mode;
     }
 
-    public function isActive(): bool
+    public function getType(): string
     {
-        return !\is_null($this->value);
-    }
+        if ($this->getMode() === self::EXACT) {
+            return 'exact';
+        }
 
-    public function jsonSerialize(): mixed
-    {
-        return [
-            'name' => $this->getName(),
-            'hidden' => $this->isHidden(),
-            'label' => $this->getLabel(),
-            'type' => $this->getType(),
-            'metadata' => $this->getMetadata(),
-            'is_active' => $this->isActive(),
-            'value' => $this->value,
-            'default' => $this->defaultValue,
-        ];
-    }
-
-    protected function resolveDefaultClosureDependencyForEvaluationByType(string $parameterType): array
-    {
-        return match ($parameterType) {
-            FilterContract::class => [$this->filter],
-            default => []
-        };
-    }
-
-    protected function resolveDefaultClosureDependencyForEvaluationByName(string $parameterName): array
-    {
-        return match ($parameterName) {
-            'filter' => [$this->filter],
-            'value' => [$this->value],
-            'property' => [$this->property],
-            'alias' => [$this->alias],
-            default => []
-        };
+        return "similar:{$this->getMode()}";
     }
 }

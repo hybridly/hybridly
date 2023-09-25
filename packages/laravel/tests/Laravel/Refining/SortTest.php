@@ -1,6 +1,6 @@
 <?php
 
-use Hybridly\Refining\Sorts\FieldSort;
+use Hybridly\Refining\Sorts\BaseSort;
 use Hybridly\Refining\Sorts\Sort;
 use Hybridly\Tests\Fixtures\Database\ProductFactory;
 
@@ -11,14 +11,12 @@ beforeEach(function () {
 });
 
 it('can be serialized', function () {
-    $sort = FieldSort::make('created_at')
-        ->metadata([
-            'foo' => 'bar',
-        ])
+    $sort = Sort::make('created_at')
+        ->metadata(['foo' => 'bar'])
         ->label('Creation date');
 
     expect($sort)
-        ->toBeInstanceOf(Sort::class)
+        ->toBeInstanceOf(BaseSort::class)
         ->jsonSerialize()->toBe([
             'name' => 'created_at',
             'hidden' => false,
@@ -36,8 +34,8 @@ it('can be serialized', function () {
 });
 
 it('uses its alias as name when serialized', function () {
-    expect(FieldSort::make('created_at', alias: 'date'))
-        ->toBeInstanceOf(Sort::class)
+    expect(Sort::make('created_at', alias: 'date'))
+        ->toBeInstanceOf(BaseSort::class)
         ->jsonSerialize()->toBe([
             'name' => 'date',
             'hidden' => false,
@@ -55,7 +53,7 @@ it('uses its alias as name when serialized', function () {
 test('sorts can ascending, descending, or unspecified', function (?string $sort, array $expectedOrder) {
     $sorts = mock_refiner(
         query: array_filter(['sort' => $sort]),
-        refiners: [FieldSort::make('published_at')],
+        refiners: [Sort::make('published_at')],
     );
 
     expect($sorts->pluck('name')->toArray())->toEqual($expectedOrder);
@@ -68,7 +66,7 @@ test('sorts can ascending, descending, or unspecified', function (?string $sort,
 test('sorts use the alias when defined', function (?string $sort, array $expectedOrder) {
     $sorts = mock_refiner(
         query: array_filter(['sort' => $sort]),
-        refiners: [FieldSort::make('published_at', alias: 'date')],
+        refiners: [Sort::make('published_at', alias: 'date')],
     );
 
     expect($sorts->pluck('name')->toArray())->toEqual($expectedOrder);
@@ -83,7 +81,7 @@ test('sorts use the alias when defined', function (?string $sort, array $expecte
 test('serialization takes current state into account', function () {
     $sorts = mock_refiner(
         query: array_filter(['sort' => '-date']),
-        refiners: [FieldSort::make('published_at', alias: 'date')],
+        refiners: [Sort::make('published_at', alias: 'date')],
         apply: true,
     );
 
@@ -106,7 +104,7 @@ test('sorts key is globally configurable', function () {
     $sorts = mock_refiner(
         query: ['product-sorts' => '-name'],
         refiners: [
-            FieldSort::make('name'),
+            Sort::make('name'),
         ],
     );
 
@@ -119,7 +117,7 @@ test('sorts key is locally configurable', function () {
     $sorts = mock_refiner(
         query: ['product-sorts' => '-name'],
         refiners: [
-            FieldSort::make('name'),
+            Sort::make('name'),
         ],
     )->sortsKey('product-sorts');
 
@@ -132,7 +130,7 @@ test('sorts keys respect the scope', function () {
     $sorts = mock_refiner(
         query: ['products-sorting' => '-name'],
         refiners: [
-            FieldSort::make('name'),
+            Sort::make('name'),
         ],
     )->scope('products')->sortsKey('sorting');
 
@@ -145,7 +143,7 @@ test('`next` toggles between possible sorts', function (?string $query, ?string 
     $sorts = mock_refiner(
         query: ['sort' => $query],
         refiners: [
-            FieldSort::make('name'),
+            Sort::make('name'),
         ],
         apply: true,
     );

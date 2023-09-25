@@ -3,42 +3,71 @@
 namespace Hybridly\Refining\Filters;
 
 use Hybridly\Refining\Concerns\SupportsRelationConstraints;
-use Hybridly\Refining\Contracts\Filter as FilterContract;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 
-class SelectFilter implements FilterContract
+class SelectFilter extends BaseFilter
 {
     use SupportsRelationConstraints;
 
-    private function __construct(
-        protected array $options,
-        protected string $operator,
-    ) {
+    protected \Closure|string $operator = '=';
+    protected \Closure|array $options = [];
+
+    public static function make(string $property, ?string $alias = null): static
+    {
+        $static = resolve(static::class, [
+            'property' => $property,
+            'alias' => $alias,
+        ]);
+
+        return $static->configure();
     }
 
-    public function __invoke(Builder $builder, mixed $value, string $property): void
+    public function apply(Builder $builder, mixed $value, string $property): void
     {
-        $options = array_is_list($this->options)
-            ? $this->options
-            : array_keys($this->options);
+        $options = $this->getOptions();
+        $options = array_is_list($options)
+            ? $options
+            : array_keys($options);
 
         if (!\in_array($value, $options, strict: false)) {
             return;
         }
 
-        $value = array_is_list($this->options)
+        $value = array_is_list($options)
             ? $value
-            : $this->options[$value] ?? null;
+            : $options[$value] ?? null;
 
         $this->applyRelationConstraint(
             builder: $builder,
             property: $property,
             callback: fn (Builder $builder, string $column) => $builder->where(
                 column: $builder->qualifyColumn($column),
-                operator: $this->operator,
+                operator: $this->getOperator(),
                 value: $value,
             ),
         );
+    }
+
+    /**
+     * Defines the operator used for the filter.
+     *
+     * @default `=`
+     */
+    public function operator(\Closure|string $operator): static
+    {
+        $this->operator = $operator ?? '=';
+
+        return $this;
+    }
+
+    /**
+     * Defines the options for this filter.
+     */
+    public function options(\Closure|array $options): static
+    {
+        $this->options = $options;
+
+        return $this;
     }
 
     public function getType(): string
@@ -46,14 +75,13 @@ class SelectFilter implements FilterContract
         return 'select';
     }
 
-    public static function make(string $property, array $options, string $operator = '=', ?string $alias = null): Filter
+    public function getOptions(): array
     {
-        return (new Filter(
-            filter: new static($options, $operator),
-            property: $property,
-            alias: $alias,
-        ))->metadata([
-            'options' => $options,
-        ]);
+        return $this->evaluate($this->options);
+    }
+
+    public function getOperator(): string
+    {
+        return $this->evaluate($this->operator);
     }
 }

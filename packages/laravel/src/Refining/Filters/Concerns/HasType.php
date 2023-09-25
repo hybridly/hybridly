@@ -13,7 +13,7 @@ trait HasType
         return $this;
     }
 
-    public function getType()
+    public function getType(): string
     {
         return $this->type;
     }
