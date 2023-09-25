@@ -1,12 +1,7 @@
 <?php
 
 use Hybridly\Refining\Filters\SelectFilter;
-use Hybridly\Tests\Fixtures\Database\ProductFactory;
-
-beforeEach(function () {
-    ProductFactory::new()->create(['name' => 'AirPods Pro']);
-    ProductFactory::new()->create(['name' => 'Macbook Pro M1']);
-});
+use Hybridly\Tests\Fixtures\Vendor;
 
 test('the `where` statement uses the value from the given key', function (?string $phone, ?string $os) {
     $filters = mock_refiner(
@@ -101,4 +96,28 @@ it('supports checking against multiple values when options are a list', function
     );
 
     expect($filters->toRawSql())->toBe('select * from "products" where "products"."os" in (\'ios\', \'ipados\') and "products"."deleted_at" is null');
+});
+
+it('supports using an enum as options', function () {
+    $filters = mock_refiner(
+        query: ['filters' => ['vendor' => 'microsoft']],
+        refiners: [
+            SelectFilter::make('vendor', options: Vendor::class),
+        ],
+    );
+
+    expect($filters->toRawSql())->toBe('select * from "products" where "products"."vendor" = \'microsoft\' and "products"."deleted_at" is null');
+});
+
+it('supports checking against multiple values when options is an enum', function () {
+    $filters = mock_refiner(
+        query: ['filters' => ['vendor' => 'microsoft,apple']],
+        refiners: [
+            SelectFilter::make('vendor')
+                ->multiple()
+                ->options(Vendor::class),
+        ],
+    );
+
+    expect($filters->toRawSql())->toBe('select * from "products" where "products"."vendor" in (\'microsoft\', \'apple\') and "products"."deleted_at" is null');
 });

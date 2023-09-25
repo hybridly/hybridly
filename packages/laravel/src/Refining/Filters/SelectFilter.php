@@ -2,6 +2,7 @@
 
 namespace Hybridly\Refining\Filters;
 
+use BackedEnum;
 use Hybridly\Refining\Concerns\SupportsRelationConstraints;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 
@@ -10,7 +11,7 @@ class SelectFilter extends BaseFilter
     use SupportsRelationConstraints;
 
     protected \Closure|string $operator = '=';
-    protected \Closure|array $options = [];
+    protected \Closure|string|array $options = [];
     protected null|\Closure|bool $isMultiple = false;
 
     protected function setUp(): void
@@ -18,7 +19,7 @@ class SelectFilter extends BaseFilter
         $this->type('select');
     }
 
-    public static function make(string $property, ?string $alias = null, \Closure|array $options = []): static
+    public static function make(string $property, ?string $alias = null, \Closure|string|array $options = []): static
     {
         $static = resolve(static::class, [
             'property' => $property,
@@ -32,13 +33,25 @@ class SelectFilter extends BaseFilter
 
     public function apply(Builder $builder, mixed $value, string $property): void
     {
-        if ($this->isMultiple()) {
-            $this->applyMultipleSelectQuery($builder, $value, $property);
+        $options = $this->evaluate($this->options);
+
+        if (\is_string($options) && is_a($options, BackedEnum::class, allow_string: true)) {
+            $options = array_map(fn (\BackedEnum $enum) => $enum->value, $options::cases());
+        } elseif (\is_string($options)) {
+            throw new \InvalidArgumentException("The options for the [{$property}] filter must be either an array or a backed enum.");
+        }
+
+        $allowedOptions = array_is_list($options)
+            ? $options
+            : array_keys($options);
+
+        if ($this->evaluate($this->isMultiple)) {
+            $this->applyMultipleSelectQuery($builder, $value, $property, $options, $allowedOptions);
 
             return;
         }
 
-        $this->applySingleSelectQuery($builder, $value, $property);
+        $this->applySingleSelectQuery($builder, $value, $property, $options, $allowedOptions);
     }
 
     /**
@@ -56,7 +69,7 @@ class SelectFilter extends BaseFilter
     /**
      * Defines the options for this filter.
      */
-    public function options(\Closure|array $options): static
+    public function options(\Closure|string|array $options): static
     {
         $this->options = $options;
 
@@ -73,14 +86,9 @@ class SelectFilter extends BaseFilter
         return $this;
     }
 
-    protected function applyMultipleSelectQuery(Builder $builder, mixed $value, string $property): void
+    protected function applyMultipleSelectQuery(Builder $builder, mixed $value, string $property, array $options, array $allowedOptions): void
     {
-        $options = $this->getOptions();
-        $value = explode(',', $value);
-
-        $allowedOptions = array_is_list($options)
-            ? $options
-            : array_keys($options);
+        $value = array_map(fn ($s) => trim($s), explode(',', $value));
 
         if (empty(array_intersect($value, $allowedOptions))) {
             return;
@@ -102,13 +110,8 @@ class SelectFilter extends BaseFilter
         );
     }
 
-    protected function applySingleSelectQuery(Builder $builder, mixed $value, string $property): void
+    protected function applySingleSelectQuery(Builder $builder, mixed $value, string $property, array $options, array $allowedOptions): void
     {
-        $options = $this->getOptions();
-        $allowedOptions = array_is_list($options)
-            ? $options
-            : array_keys($options);
-
         if (!\in_array($value, $allowedOptions, strict: false)) {
             return;
         }
@@ -122,24 +125,9 @@ class SelectFilter extends BaseFilter
             property: $property,
             callback: fn (Builder $builder, string $column) => $builder->where(
                 column: $builder->qualifyColumn($column),
-                operator: $this->getOperator(),
+                operator: $this->evaluate($this->operator),
                 value: $value,
             ),
         );
-    }
-
-    protected function getOptions(): array
-    {
-        return $this->evaluate($this->options);
-    }
-
-    protected function getOperator(): string
-    {
-        return $this->evaluate($this->operator);
-    }
-
-    protected function isMultiple(): bool
-    {
-        return $this->evaluate($this->isMultiple);
     }
 }
