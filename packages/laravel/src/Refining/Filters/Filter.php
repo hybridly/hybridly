@@ -18,6 +18,17 @@ class Filter extends BaseFilter
     protected null|string|\Closure $enum = null;
     protected string|\Closure $operator = '=';
 
+    protected function setUp(): void
+    {
+        $this->type(function () {
+            if ($this->getMode() === self::EXACT) {
+                return 'exact';
+            }
+
+            return "similar:{$this->getMode()}";
+        });
+    }
+
     public static function make(string $property, ?string $alias = null): static
     {
         $static = resolve(static::class, [
@@ -134,14 +145,5 @@ class Filter extends BaseFilter
         }
 
         return $mode;
-    }
-
-    public function getType(): string
-    {
-        if ($this->getMode() === self::EXACT) {
-            return 'exact';
-        }
-
-        return "similar:{$this->getMode()}";
     }
 }

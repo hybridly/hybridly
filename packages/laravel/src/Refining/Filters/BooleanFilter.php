@@ -9,6 +9,11 @@ class BooleanFilter extends BaseFilter
 {
     use SupportsRelationConstraints;
 
+    protected function setUp(): void
+    {
+        $this->type('boolean');
+    }
+
     public static function make(string $property, ?string $alias = null): static
     {
         $static = resolve(static::class, [
@@ -36,10 +41,5 @@ class BooleanFilter extends BaseFilter
                 value: $value,
             ),
         );
-    }
-
-    public function getType(): string
-    {
-        return 'boolean';
     }
 }

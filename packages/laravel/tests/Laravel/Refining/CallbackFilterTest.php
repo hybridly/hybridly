@@ -89,7 +89,7 @@ it('injects parameters by type and by name', function () {
         ->count()->toBe(2);
 });
 
-it('accepts invokable classes', function () {
+it('accepts invokable classes by fqcn', function () {
     ProductFactory::new()->create(['name' => 'AirPods']);
     ProductFactory::new()->create(['name' => 'AirPods Pro']);
     ProductFactory::new()->create(['name' => 'Macbook Pro M1']);
@@ -104,4 +104,32 @@ it('accepts invokable classes', function () {
     expect($filters)
         ->first()->name->toBe('AirPods Pro')
         ->count()->toBe(1);
+});
+
+it('uses the type of the invokable class', function () {
+    $filter = CallbackFilter::make('name', new class ()
+    {
+        public function __invoke(Builder $builder, mixed $value): void
+        {
+            $builder->where('name', '=', $value);
+        }
+
+        public function getType(): string
+        {
+            return 'custom';
+        }
+    });
+
+    expect($filter)
+        ->toBeInstanceOf(BaseFilter::class)
+        ->jsonSerialize()->toBe([
+            'name' => 'name',
+            'hidden' => false,
+            'label' => 'Name',
+            'type' => 'custom',
+            'metadata' => [],
+            'is_active' => false,
+            'value' => null,
+            'default' => null,
+        ]);
 });

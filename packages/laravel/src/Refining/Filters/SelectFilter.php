@@ -11,6 +11,12 @@ class SelectFilter extends BaseFilter
 
     protected \Closure|string $operator = '=';
     protected \Closure|array $options = [];
+    protected null|\Closure|bool $isMultiple = false;
+
+    protected function setUp(): void
+    {
+        $this->type('select');
+    }
 
     public static function make(string $property, ?string $alias = null): static
     {
@@ -70,18 +76,28 @@ class SelectFilter extends BaseFilter
         return $this;
     }
 
-    public function getType(): string
+    /**
+     * Defines whether multiple choices can be selected.
+     */
+    public function multiple(\Closure|bool $condition): static
     {
-        return 'select';
+        $this->isMultiple = $condition;
+
+        return $this;
     }
 
-    public function getOptions(): array
+    protected function getOptions(): array
     {
         return $this->evaluate($this->options);
     }
 
-    public function getOperator(): string
+    protected function getOperator(): string
     {
         return $this->evaluate($this->operator);
+    }
+
+    protected function isMultiple(): bool
+    {
+        return $this->evaluate($this->isMultiple);
     }
 }

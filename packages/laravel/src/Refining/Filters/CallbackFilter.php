@@ -11,6 +11,19 @@ class CallbackFilter extends BaseFilter
 
     protected string|object $invokableClassOrClosure;
 
+    protected function setUp(): void
+    {
+        $this->type(function () {
+            $filter = $this->getFilter();
+
+            if (\is_object($filter) && method_exists($filter, 'getType')) {
+                return $this->evaluate($filter->getType(...));
+            }
+
+            return 'callback';
+        });
+    }
+
     public static function make(string $alias, string|object $callback): static
     {
         $static = resolve(static::class, ['property' => $alias]);
@@ -46,16 +59,7 @@ class CallbackFilter extends BaseFilter
         return $this;
     }
 
-    public function getType(): string
-    {
-        // if (method_exists($invokableClassOrClosure = $this->getFilter(), 'getType')) {
-        //     return $invokableClassOrClosure->getType();
-        // }
-
-        return 'callback';
-    }
-
-    public function getFilter(): object
+    protected function getFilter(): object
     {
         if (\is_string($this->invokableClassOrClosure) && class_exists($this->invokableClassOrClosure)) {
             return resolve($this->invokableClassOrClosure);

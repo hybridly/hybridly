@@ -27,7 +27,7 @@ abstract class BaseFilter extends Components\Component implements Refiner, Filte
     ) {
         $this->name(str($alias ?? $property)->replace('.', '_'));
         $this->label(str($this->getName())->headline()->lower()->ucfirst());
-        $this->type($this->getType());
+        $this->type('filter');
         $this->setUp();
     }
 

@@ -6,6 +6,11 @@ use Illuminate\Contracts\Database\Eloquent\Builder;
 
 class TrashedFilter extends BaseFilter
 {
+    protected function setUp(): void
+    {
+        $this->type('trashed');
+    }
+
     public static function make(string $alias = 'trashed'): static
     {
         $static = resolve(static::class, [
@@ -22,10 +27,5 @@ class TrashedFilter extends BaseFilter
             'only' => $builder->onlyTrashed(),
             default => $builder->withoutTrashed(),
         };
-    }
-
-    public function getType(): string
-    {
-        return 'trashed';
     }
 }

@@ -4,17 +4,17 @@ namespace Hybridly\Refining\Filters\Concerns;
 
 trait HasType
 {
-    protected ?string $type = null;
+    protected null|string|\Closure $type = null;
 
-    public function type(string $type): static
+    public function type(string|\Closure $type): static
     {
         $this->type = $type;
 
         return $this;
     }
 
-    public function getType(): string
+    public function getType(): ?string
     {
-        return $this->type;
+        return $this->evaluate($this->type);
     }
 }
