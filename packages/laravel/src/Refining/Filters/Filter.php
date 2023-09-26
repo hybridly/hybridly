@@ -43,24 +43,34 @@ class Filter extends BaseFilter
     {
         if (($enumClass = $this->getEnumClass()) && !$value instanceof \BackedEnum) {
             $value = $enumClass::tryFrom($value);
+
+            if (!$value) {
+                return;
+            }
         }
 
         $this->applyRelationConstraint(
             builder: $builder,
             property: $property,
-            callback: function (Builder $builder, string $column) use ($value) {
+            callback: function (Builder $builder, string $column) use ($value, $property) {
                 if ($this->getMode() === self::EXACT) {
                     return $builder->where(
                         column: $builder->qualifyColumn($column),
-                        operator: '=',
+                        operator: $this->getOperator(),
                         value: $value,
                     );
                 }
 
+                $operator = match (strtolower($operator = $this->getOperator())) {
+                    '=', 'like' => 'LIKE',
+                    'not like' => 'NOT LIKE',
+                    default => throw new \InvalidArgumentException("Invalid operator [{$operator}] provided for [{$property}] filter.")
+                };
+
                 $sql = match ($this->getMode()) {
-                    self::LOOSE => "LOWER({$column}) LIKE ?",
-                    self::BEGINS_WITH_STRICT => "{$column} LIKE ?",
-                    self::ENDS_WITH_STRICT => "{$column} LIKE ?",
+                    self::LOOSE => "LOWER({$column}) {$operator} ?",
+                    self::BEGINS_WITH_STRICT => "{$column} {$operator} ?",
+                    self::ENDS_WITH_STRICT => "{$column} {$operator} ?",
                 };
 
                 $bindings = match ($this->getMode()) {

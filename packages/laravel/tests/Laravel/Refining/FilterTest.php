@@ -34,6 +34,20 @@ it('can be serialized', function () {
         ]);
 });
 
+test('in `exact` mode, it can use a different operator', function () {
+    $filters = mock_refiner(
+        query: ['filters' => ['name' => 'AirPods']],
+        refiners: [
+            Filter::make('name')->operator('!='),
+        ],
+    );
+
+    expect($filters->get())->sequence(
+        fn (Expectation $product) => $product->name->toBe('AirPods Pro'),
+        fn (Expectation $product) => $product->name->toBe('Macbook Pro M1'),
+    )->count()->toBe(2);
+});
+
 test('in `begins_with_strict` mode, it only includes records that begin with the specified value', function () {
     $filters = mock_refiner(
         query: ['filters' => ['name' => 'Macbook']],
@@ -74,26 +88,42 @@ test('in `loose` mode, it only includes records that match the specified value',
     )->count()->toBe(2);
 });
 
+test('in non-`strict` mode, it can use a `NOT LIKE` operator', function () {
+    $filters = mock_refiner(
+        query: ['filters' => ['name' => 'airpods']],
+        refiners: [
+            Filter::make('name')
+                ->operator('NOT LIKE')
+                ->loose(),
+        ],
+    );
+
+    expect($filters->get())
+        ->first()->name->toBe('Macbook Pro M1')
+        ->count()->toBe(1);
+});
+
 it('supports filtering with enums', function () {
     Product::query()->truncate();
 
-    ProductFactory::new()->create([
-        'vendor' => Vendor::Apple,
-    ]);
-
-    ProductFactory::new()->create([
-        'vendor' => Vendor::Microsoft,
-    ]);
+    ProductFactory::new()->create(['vendor' => Vendor::Apple]);
+    ProductFactory::new()->create(['vendor' => Vendor::Microsoft]);
 
     $filters = mock_refiner(
         query: ['filters' => ['vendor' => Vendor::Microsoft->value]],
-        refiners: [
-            Filter::make('vendor')->enum(Vendor::class),
-        ],
+        refiners: [Filter::make('vendor')->enum(Vendor::class)],
         apply: true,
     );
 
     expect($filters)
         ->first()->vendor->toBe(Vendor::Microsoft)
         ->count()->toBe(1);
+
+    $filters = mock_refiner(
+        query: ['filters' => ['vendor' => 'foobar']],
+        refiners: [Filter::make('vendor')->enum(Vendor::class)],
+        apply: true,
+    );
+
+    expect($filters)->count()->toBe(2);
 });
