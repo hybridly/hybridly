@@ -22,7 +22,7 @@ final class {{ class }} extends Table
     protected function defineRefiners(): array
     {
         return [
-            Sorts\FieldSort::make('id'),
+            Sorts\Sort::make('id'),
         ];
     }
 
