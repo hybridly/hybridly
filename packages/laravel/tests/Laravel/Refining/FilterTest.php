@@ -1,195 +1,129 @@
 <?php
 
-use Hybridly\Refining\Contracts\Filter as ContractsFilter;
-use Hybridly\Refining\Filters\ExactFilter;
+use Hybridly\Refining\Filters\BaseFilter;
 use Hybridly\Refining\Filters\Filter;
+use Hybridly\Tests\Fixtures\Database\Product;
 use Hybridly\Tests\Fixtures\Database\ProductFactory;
-use Illuminate\Contracts\Database\Eloquent\Builder;
+use Hybridly\Tests\Fixtures\Vendor;
+use Pest\Expectation;
 
 beforeEach(function () {
     ProductFactory::new()->create(['name' => 'AirPods']);
     ProductFactory::new()->create(['name' => 'AirPods Pro']);
     ProductFactory::new()->create(['name' => 'Macbook Pro M1']);
-
-    $this->filter = new class () implements ContractsFilter
-    {
-        public function __invoke(Builder $builder, mixed $value, string $property): void
-        {
-            $builder->where($property, '=', $value);
-        }
-
-        public function getType(): string
-        {
-            return 'callback';
-        }
-    };
 });
 
-test('filters can have a default value', function () {
-    $filters = mock_refiner(
-        refiners: [
-            (new Filter(
-                filter: $this->filter,
-                property: 'name',
-                alias: null,
-            ))->default('AirPods Pro'),
-        ],
-    );
-
-    expect($filters)
-        ->first()->name->toBe('AirPods Pro')
-        ->count()->toBe(1);
-});
-
-test('filters are applied using their property', function () {
-    $filters = mock_refiner(
-        query: ['filters' => ['name' => 'AirPods Pro']],
-        refiners: [
-            new Filter(
-                filter: $this->filter,
-                property: 'name',
-                alias: null,
-            ),
-        ],
-    );
-
-    expect($filters)
-        ->first()->name->toBe('AirPods Pro')
-        ->count()->toBe(1);
-});
-
-test('filters are not applied when their property is used but an alias is defined', function () {
-    $filters = mock_refiner(
-        query: ['filters' => ['name' => 'AirPods Pro']],
-        refiners: [
-            new Filter(
-                filter: $this->filter,
-                property: 'name',
-                alias: 'product',
-            ),
-        ],
-    );
-
-    expect($filters)->count()->toBe(3);
-});
-
-test('filters use the alias when defined', function () {
-    $filters = mock_refiner(
-        query: ['filters' => ['product' => 'AirPods Pro']],
-        refiners: [
-            new Filter(
-                filter: $this->filter,
-                property: 'name',
-                alias: 'product',
-            ),
-        ],
-    );
-
-    expect($filters)->count()->toBe(1);
-});
-
-test('filters can be serialized', function () {
-    $filter = new Filter(
-        filter: $this->filter,
-        property: 'airpods_gen',
-        alias: null,
-    );
+it('can be serialized', function () {
+    $filter = Filter::make('name')->beingsWithStrict()
+        ->metadata(['foo' => 'bar'])
+        ->label('Product name');
 
     expect($filter)
-        ->toBeInstanceOf(Filter::class)
+        ->toBeInstanceOf(BaseFilter::class)
         ->jsonSerialize()->toBe([
-            'name' => 'airpods_gen',
+            'name' => 'name',
             'hidden' => false,
-            'label' => 'Airpods gen',
-            'type' => 'callback',
-            'metadata' => [],
+            'label' => 'Product name',
+            'type' => 'similar:begins_with_strict',
+            'metadata' => [
+                'foo' => 'bar',
+            ],
             'is_active' => false,
             'value' => null,
             'default' => null,
         ]);
 });
 
-test('filters use their alias as name when defined', function () {
-    $filter = new Filter(
-        filter: $this->filter,
-        property: 'generation',
-        alias: 'airpods_generation',
+test('in `exact` mode, it can use a different operator', function () {
+    $filters = mock_refiner(
+        query: ['filters' => ['name' => 'AirPods']],
+        refiners: [
+            Filter::make('name')->operator('!='),
+        ],
     );
 
-    expect($filter)
-        ->toBeInstanceOf(Filter::class)
-        ->jsonSerialize()->toBe([
-            'name' => 'airpods_generation',
-            'hidden' => false,
-            'label' => 'Airpods generation',
-            'type' => 'callback',
-            'metadata' => [],
-            'is_active' => false,
-            'value' => null,
-            'default' => null,
-        ]);
+    expect($filters->get())->sequence(
+        fn (Expectation $product) => $product->name->toBe('AirPods Pro'),
+        fn (Expectation $product) => $product->name->toBe('Macbook Pro M1'),
+    )->count()->toBe(2);
 });
 
-test('serialization takes current state into account', function () {
+test('in `begins_with_strict` mode, it only includes records that begin with the specified value', function () {
     $filters = mock_refiner(
-        query: ['filters' => ['product' => 'AirPods Pro']],
+        query: ['filters' => ['name' => 'Macbook']],
         refiners: [
-            new Filter(
-                filter: $this->filter,
-                property: 'name',
-                alias: 'product',
-            ),
+            Filter::make('name')->beingsWithStrict(),
         ],
+    );
+
+    expect($filters)
+        ->first()->name->toBe('Macbook Pro M1')
+        ->count()->toBe(1);
+});
+
+test('in `ends_with_strict` mode, it only includes records that end with the specified value', function () {
+    $filters = mock_refiner(
+        query: ['filters' => ['name' => 'M1']],
+        refiners: [
+            Filter::make('name')->endsWithStrict(),
+        ],
+    );
+
+    expect($filters)
+        ->first()->name->toBe('Macbook Pro M1')
+        ->count()->toBe(1);
+});
+
+test('in `loose` mode, it only includes records that match the specified value', function () {
+    $filters = mock_refiner(
+        query: ['filters' => ['name' => 'airpods']],
+        refiners: [
+            Filter::make('name')->loose(),
+        ],
+    );
+
+    expect($filters->get())->sequence(
+        fn (Expectation $product) => $product->name->toBe('AirPods'),
+        fn (Expectation $product) => $product->name->toBe('AirPods Pro'),
+    )->count()->toBe(2);
+});
+
+test('in non-`strict` mode, it can use a `NOT LIKE` operator', function () {
+    $filters = mock_refiner(
+        query: ['filters' => ['name' => 'airpods']],
+        refiners: [
+            Filter::make('name')
+                ->operator('NOT LIKE')
+                ->loose(),
+        ],
+    );
+
+    expect($filters->get())
+        ->first()->name->toBe('Macbook Pro M1')
+        ->count()->toBe(1);
+});
+
+it('supports filtering with enums', function () {
+    Product::query()->truncate();
+
+    ProductFactory::new()->create(['vendor' => Vendor::Apple]);
+    ProductFactory::new()->create(['vendor' => Vendor::Microsoft]);
+
+    $filters = mock_refiner(
+        query: ['filters' => ['vendor' => Vendor::Microsoft->value]],
+        refiners: [Filter::make('vendor')->enum(Vendor::class)],
         apply: true,
     );
 
-    expect(data_get(json_decode(json_encode($filters)), 'filters.0'))->toMatchArray([
-        'name' => 'product',
-        'label' => 'Product',
-        'type' => 'callback',
-        'metadata' => [],
-        'is_active' => true,
-        'value' => 'AirPods Pro',
-    ]);
-});
-
-test('filters key is globally configurable', function () {
-    config(['hybridly.refining.filters_key' => 'product-filters']);
+    expect($filters)
+        ->first()->vendor->toBe(Vendor::Microsoft)
+        ->count()->toBe(1);
 
     $filters = mock_refiner(
-        query: ['product-filters' => ['name' => 'AirPods Pro']],
-        refiners: [
-            ExactFilter::make('name'),
-        ],
+        query: ['filters' => ['vendor' => 'foobar']],
+        refiners: [Filter::make('vendor')->enum(Vendor::class)],
+        apply: true,
     );
 
-    expect($filters)
-        ->first()->name->toBe('AirPods Pro')
-        ->count()->toBe(1);
-});
-
-test('filters key is locally configurable', function () {
-    $filters = mock_refiner(
-        query: ['product-filters' => ['name' => 'AirPods Pro']],
-        refiners: [
-            ExactFilter::make('name'),
-        ],
-    )->filtersKey('product-filters');
-
-    expect($filters)
-        ->first()->name->toBe('AirPods Pro')
-        ->count()->toBe(1);
-});
-
-test('filters key respects the scope', function () {
-    $filters = mock_refiner(
-        query: ['products-filtering' => ['name' => 'AirPods Pro']],
-        refiners: [
-            ExactFilter::make('name'),
-        ],
-    )->scope('products')->filtersKey('filtering');
-
-    expect($filters)
-        ->first()->name->toBe('AirPods Pro')
-        ->count()->toBe(1);
+    expect($filters)->count()->toBe(2);
 });

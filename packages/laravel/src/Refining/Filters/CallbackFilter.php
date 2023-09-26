@@ -3,31 +3,45 @@
 namespace Hybridly\Refining\Filters;
 
 use Hybridly\Components\Concerns\EvaluatesClosures;
-use Hybridly\Refining\Contracts\Filter as FilterContract;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 
-class CallbackFilter implements FilterContract
+class CallbackFilter extends BaseFilter
 {
     use EvaluatesClosures;
 
-    private function __construct(
-        protected null|FilterContract|\Closure $classOrCallback,
-        protected array $parameters = [],
-    ) {
-        if (\is_string($classOrCallback)) {
-            $this->classOrCallback = resolve($this->classOrCallback);
-        }
+    protected string|object $invokableClassOrClosure;
+
+    protected function setUp(): void
+    {
+        $this->type(function () {
+            $filter = $this->getFilter();
+
+            if (\is_object($filter) && method_exists($filter, 'getType')) {
+                return $this->evaluate($filter->getType(...));
+            }
+
+            return 'callback';
+        });
     }
 
-    public function __invoke(Builder $builder, mixed $value, string $property): void
+    public static function make(string $name, string|object $callback): static
     {
+        $static = resolve(static::class, ['property' => $name]);
+        $static->filter($callback);
+
+        return $static->configure();
+    }
+
+    public function apply(Builder $builder, mixed $value, string $property): void
+    {
+        // TODO: Get the typehinted type of `$value` in the closure,
+        // and attempt to cast our `$value` to the target type
         $this->evaluate(
-            value: $this->classOrCallback,
+            value: $this->getFilter(),
             named: [
                 'builder' => $builder,
                 'value' => $value,
                 'property' => $property,
-                ...$this->parameters,
             ],
             typed: [
                 Builder::class => $builder,
@@ -35,27 +49,22 @@ class CallbackFilter implements FilterContract
         );
     }
 
-    public function getType(): string
+    /**
+     * Defines the callback or the invokable class that will filter the query.
+     */
+    public function filter(string|object $filter): static
     {
-        if ($this->classOrCallback instanceof FilterContract) {
-            return $this->classOrCallback->getType();
-        }
+        $this->invokableClassOrClosure = $filter;
 
-        return 'callback';
+        return $this;
     }
 
-    /**
-     * Creates a filter that uses a callback or invokable class to filter records.
-     */
-    public static function make(string $property, string|\Closure $callback, array $parameters = [], ?string $alias = null): Filter
+    protected function getFilter(): object
     {
-        return new Filter(
-            filter: new static(
-                classOrCallback: $callback,
-                parameters: $parameters,
-            ),
-            property: $property,
-            alias: $alias,
-        );
+        if (\is_string($this->invokableClassOrClosure) && class_exists($this->invokableClassOrClosure)) {
+            return resolve($this->invokableClassOrClosure);
+        }
+
+        return $this->invokableClassOrClosure;
     }
 }

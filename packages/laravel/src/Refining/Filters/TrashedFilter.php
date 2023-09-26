@@ -2,38 +2,30 @@
 
 namespace Hybridly\Refining\Filters;
 
-use Hybridly\Refining\Contracts\Filter as FilterContract;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 
-class TrashedFilter implements FilterContract
+class TrashedFilter extends BaseFilter
 {
-    private function __construct()
+    protected function setUp(): void
     {
+        $this->type('trashed');
     }
 
-    public function __invoke(Builder $builder, mixed $value, string $property): void
+    public static function make(string $name = 'trashed'): static
+    {
+        $static = resolve(static::class, [
+            'property' => $name,
+        ]);
+
+        return $static->configure();
+    }
+
+    public function apply(Builder $builder, mixed $value, string $property): void
     {
         match ($value) {
             'with' => $builder->withTrashed(),
             'only' => $builder->onlyTrashed(),
             default => $builder->withoutTrashed(),
         };
-    }
-
-    public function getType(): string
-    {
-        return 'trashed';
-    }
-
-    /**
-     * Creates a filter that configures whether trashed records should be queried.
-     */
-    public static function make(string $name = 'trashed', ?string $alias = null): Filter
-    {
-        return new Filter(
-            filter: new static(),
-            property: $name,
-            alias: $alias,
-        );
     }
 }

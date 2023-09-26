@@ -1,7 +1,7 @@
 <?php
 
 use Carbon\CarbonInterface;
-use Hybridly\Refining\Filters\Filter;
+use Hybridly\Refining\Filters\BaseFilter;
 use Hybridly\Refining\Filters\TrashedFilter;
 use Hybridly\Tests\Fixtures\Database\ProductFactory;
 
@@ -11,7 +11,7 @@ it('can be serialized', function () {
     ])->label('Show deleted');
 
     expect($filter)
-        ->toBeInstanceOf(Filter::class)
+        ->toBeInstanceOf(BaseFilter::class)
         ->jsonSerialize()->toBe([
             'name' => 'deleted',
             'hidden' => false,
