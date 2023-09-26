@@ -47,9 +47,9 @@ trait ForwardsToHybridlyHelpers
      *
      * @see https://hybridly.dev/api/laravel/hybridly.html#external
      */
-    public function external(string|RedirectResponse $url): Response
+    public function external(string|RedirectResponse $url, array $headers = []): Response
     {
-        return to_external_url($url);
+        return to_external_url($url, $headers);
     }
 
     /**
