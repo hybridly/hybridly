@@ -154,7 +154,9 @@ Filters have basic relationship filtering capabilities, which means you may use 
 Filters\ExactFilter::make('user.full_name', alias: 'user');
 ```
 
-Note that it is recommended to specify an alias when filtering relationship properties, otherwise the filter name will have its `.` replaced by underscores.
+It is recommended to specify an alias when filtering relationship properties, otherwise the filter name will have its `.` replaced by underscores. 
+
+Note that filters using relationship use `whereHas` under the hood, which might not be the best option performance-wise.
 
 :::warning Sorts are not supported
 Note that the provided sorts do not support relationships. You will need to use a custom sort with a subquery to achieve a relationship sort.
