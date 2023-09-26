@@ -151,7 +151,7 @@ Filters have basic relationship filtering capabilities, which means you may use 
 
 ```php
 // ?filters[user]=jon
-Filters\ExactFilter::make('user.full_name', alias: 'user');
+Filters\Filter::make('user.full_name', alias: 'user');
 ```
 
 It is recommended to specify an alias when filtering relationship properties, otherwise the filter name will have its `.` replaced by underscores. 
@@ -226,10 +226,10 @@ You may call the `enum` method to specify a backed enum class that will validate
 
 ```php
 // ?filters[company]=apple   ->  Filter applies
-Filters\EnumFilter::make('company')->enum(Company::class);
+Filters\Filter::make('company')->enum(Company::class);
 
 // ?filters[company]=foobar  ->  Filter will not apply
-Filters\EnumFilter::make('company')->enum(Company::class);
+Filters\Filter::make('company')->enum(Company::class);
 ```
 
 ### `SelectFilter`
