@@ -28,15 +28,20 @@ final class Version
     public static function isLatestVersion(): bool
     {
         return version_compare(
-            version1: InstalledVersions::getVersion('hybridly/laravel'),
-            version2: static::getLatestVersion(),
-            operator: '<=',
+            version1: str(InstalledVersions::getVersion('hybridly/laravel'))->take(5),
+            version2: str(static::getLatestVersion())->after('v'),
+            operator: '==',
         );
+    }
+
+    public static function getComposerVersion(): string
+    {
+        return str(InstalledVersions::getPrettyVersion('hybridly/laravel'))->after('v');
     }
 
     public static function getPrettyComposerVersion(): string
     {
-        return static::formatVersion(InstalledVersions::getPrettyVersion('hybridly/laravel'));
+        return static::formatVersion(static::getComposerVersion());
     }
 
     public static function getNpmVersion(): ?string
@@ -52,13 +57,7 @@ final class Version
 
     public static function getPrettyNpmVersion(): string
     {
-        ['version' => $version] = rescue(
-            callback: fn () => File::json(base_path('node_modules/hybridly/package.json')),
-            rescue: ['version' => null],
-            report: false,
-        );
-
-        return static::formatVersion($version);
+        return static::formatVersion(static::getNpmVersion());
     }
 
     private static function formatVersion(?string $version): string
