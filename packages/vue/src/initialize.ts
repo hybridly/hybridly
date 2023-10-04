@@ -1,6 +1,6 @@
 import type { App, DefineComponent, Plugin as VuePlugin } from 'vue'
 import { createApp, h } from 'vue'
-import type { DynamicConfiguration, Plugin, RouterContext, RouterContextOptions, RoutingConfiguration } from '@hybridly/core'
+import type { DynamicConfiguration, Plugin, RouterContext, RouterContextOptions } from '@hybridly/core'
 import { createRouter } from '@hybridly/core'
 import { showViewComponentErrorModal, debug, random } from '@hybridly/utils'
 import type { Axios } from 'axios'
@@ -65,16 +65,6 @@ export async function initializeHybridly(options: InitializeOptions = {}) {
 		},
 		payload,
 	}))
-
-	if (typeof window !== 'undefined') {
-		window.addEventListener<any>('hybridly:routing', (event: CustomEvent<RoutingConfiguration>) => {
-			state.context.value?.adapter.updateRoutingConfiguration(event.detail)
-		})
-
-		// Instantly dispatches the event we just registered a
-		// listener for in order to trigger its side-effects
-		window.dispatchEvent(new CustomEvent('hybridly:routing', { detail: window?.hybridly?.routing }))
-	}
 
 	const render = () => h(wrapper as any)
 
