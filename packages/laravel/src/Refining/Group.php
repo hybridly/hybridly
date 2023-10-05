@@ -60,10 +60,12 @@ class Group implements Refiner
     {
         $refine::setGroup($this->refiners, $this->options);
 
-        /** @var Refiner $refiner */
-        foreach ($this->refiners as $refiner) {
-            $refiner->refine($refine, $builder);
-        }
+        $builder->where(function (Builder $group) use ($refine) {
+            foreach ($this->refiners as $refiner) {
+                /** @var Refiner $refiner */
+                $refiner->refine($refine, $group);
+            }
+        });
 
         $refine::clearGroup();
     }
