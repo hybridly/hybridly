@@ -60,7 +60,6 @@ it('makes a grouped subquery per group', function () {
     ProductFactory::new()->create(['name' => 'Earbuds', 'description' => 'They are not better than the AirPods.', 'price' => 200]);
     ProductFactory::new()->create(['name' => 'Galaxy S23', 'description' => 'Nice photos.', 'price' => 1000]);
 
-    ray()->showQueries();
     $refine = mock_refiner(
         query: array_filter(['filters' => ['query' => 'AirPods']]),
         refiners: [
