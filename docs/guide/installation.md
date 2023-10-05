@@ -87,7 +87,7 @@ bun i hybridly vue axios -D
 npm i hybridly vue axios -D
 ```
 ```bash [yarn]
-yarn i hybridly vue axios -D
+yarn add hybridly vue axios -D
 ```
 :::
 
