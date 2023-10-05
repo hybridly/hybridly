@@ -22,9 +22,7 @@ import { createHead } from '@unhead/vue' // [!code hl]
 initializeHybridly({
   enhanceVue: (vue) => {
     const head = createHead()
-
     head.push({titleTemplate: (title) => title ? `${title} - Blue Bird` : 'Blue Bird'})
-
     vue.use(head)
   }
 })
