@@ -25,7 +25,7 @@ abstract class BaseSort extends Components\Component implements Refiner, Sort
     ) {
         $this->name($alias ?? $property);
         $this->label(str($this->getName())->headline()->lower()->ucfirst());
-        $this->setUp();
+        $this->configure();
     }
 
     public function refine(Refine $refiner, Builder $builder): void

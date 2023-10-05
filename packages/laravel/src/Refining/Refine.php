@@ -18,6 +18,7 @@ class Refine extends Components\Component
     use Components\Concerns\HasScope;
     use Concerns\ConfiguresKeys;
     use Concerns\HasBuilderInstance;
+    use Concerns\HasGroup;
     use Concerns\HasRefiners;
     use Concerns\HasRequest;
     use ForwardsCalls;
@@ -83,6 +84,7 @@ class Refine extends Components\Component
     public function getSorts(): array
     {
         return collect($this->getRefiners())
+            ->flatMap(fn (Refiner $refiner) => $refiner instanceof Group ? $refiner->getRefiners() : [$refiner])
             ->filter(fn (Refiner $refiner) => $refiner instanceof Sort)
             ->values()
             ->toArray();
@@ -91,6 +93,7 @@ class Refine extends Components\Component
     public function getFilters(): array
     {
         return collect($this->getRefiners())
+            ->flatMap(fn (Refiner $refiner) => $refiner instanceof Group ? $refiner->getRefiners() : [$refiner])
             ->filter(fn (Refiner $refiner) => $refiner instanceof BaseFilter)
             ->values()
             ->toArray();

@@ -1,0 +1,43 @@
+{
+    "sorts": [
+        {
+            "name": "date",
+            "hidden": false,
+            "label": "Date",
+            "metadata": [],
+            "is_active": false,
+            "direction": null,
+            "default": null,
+            "desc": "-date",
+            "asc": "date",
+            "next": "date"
+        }
+    ],
+    "filters": [
+        {
+            "name": "name",
+            "hidden": false,
+            "label": "Name",
+            "type": "exact",
+            "metadata": [],
+            "is_active": false,
+            "value": null,
+            "default": null
+        },
+        {
+            "name": "description",
+            "hidden": false,
+            "label": "Description",
+            "type": "exact",
+            "metadata": [],
+            "is_active": false,
+            "value": null,
+            "default": null
+        }
+    ],
+    "scope": null,
+    "keys": {
+        "sorts": "sort",
+        "filters": "filters"
+    }
+}

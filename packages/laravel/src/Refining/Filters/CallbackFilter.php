@@ -29,7 +29,7 @@ class CallbackFilter extends BaseFilter
         $static = resolve(static::class, ['property' => $name]);
         $static->filter($callback);
 
-        return $static->configure();
+        return $static;
     }
 
     public function apply(Builder $builder, mixed $value, string $property): void

@@ -1,6 +1,7 @@
 <?php
 
 use Hybridly\Refining\Filters\Filter;
+use Hybridly\Refining\Group;
 use Hybridly\Refining\Sorts\Sort;
 use Hybridly\Tests\Fixtures\Database\ProductFactory;
 
@@ -74,4 +75,19 @@ test('the refine instance can be serialized', function () {
             'filters' => 'products-filters',
         ],
     ]);
+});
+
+it('serializes flattened filters and sorts when grouping', function () {
+    $refiner = mock_refiner(
+        query: ['filters' => ['name' => 'AirPods']],
+        refiners: [
+            Sort::make('created_at', alias: 'date'),
+            Group::make()->refiners([
+                Filter::make('name'),
+                Filter::make('description'),
+            ])->booleanMode('or'),
+        ],
+    );
+
+    expect($refiner->jsonSerialize())->toMatchSnapshot();
 });

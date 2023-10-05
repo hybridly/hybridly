@@ -28,7 +28,7 @@ abstract class BaseFilter extends Components\Component implements Refiner, Filte
         $this->name(str($alias ?? $property)->replace('.', '_'));
         $this->label(str($this->getName())->headline()->lower()->ucfirst());
         $this->type('filter');
-        $this->setUp();
+        $this->configure();
     }
 
     public function refine(Refine $refiner, Builder $builder): void
@@ -67,6 +67,11 @@ abstract class BaseFilter extends Components\Component implements Refiner, Filte
             'value' => $this->value,
             'default' => $this->defaultValue,
         ];
+    }
+
+    protected function getQueryBoolean(): string
+    {
+        return Refine::getGroupOption('boolean', default: 'and');
     }
 
     protected function resolveDefaultClosureDependencyForEvaluationByType(string $parameterType): array

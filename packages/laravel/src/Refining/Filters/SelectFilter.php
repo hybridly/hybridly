@@ -26,9 +26,7 @@ class SelectFilter extends BaseFilter
             'alias' => $alias,
         ]);
 
-        return $static
-            ->options($options)
-            ->configure();
+        return $static->options($options);
     }
 
     public function apply(Builder $builder, mixed $value, string $property): void
@@ -106,6 +104,7 @@ class SelectFilter extends BaseFilter
             callback: fn (Builder $builder, string $column) => $builder->whereIn(
                 column: $builder->qualifyColumn($column),
                 values: $value,
+                boolean: $this->getQueryBoolean(),
             ),
         );
     }
@@ -127,6 +126,7 @@ class SelectFilter extends BaseFilter
                 column: $builder->qualifyColumn($column),
                 operator: $this->evaluate($this->operator),
                 value: $value,
+                boolean: $this->getQueryBoolean(),
             ),
         );
     }

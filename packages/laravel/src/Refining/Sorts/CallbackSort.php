@@ -16,7 +16,7 @@ class CallbackSort extends BaseSort
         $static = resolve(static::class, ['property' => $name]);
         $static->sort($callback);
 
-        return $static->configure();
+        return $static;
     }
 
     public function apply(Builder $builder, string $direction, string $property): void

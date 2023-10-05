@@ -16,12 +16,10 @@ class BooleanFilter extends BaseFilter
 
     public static function make(string $property, ?string $alias = null): static
     {
-        $static = resolve(static::class, [
+        return resolve(static::class, [
             'property' => $property,
             'alias' => $alias,
         ]);
-
-        return $static->configure();
     }
 
     public function apply(Builder $builder, mixed $value, string $property): void
@@ -39,6 +37,7 @@ class BooleanFilter extends BaseFilter
                 column: $builder->qualifyColumn($column),
                 operator: '=',
                 value: $value,
+                boolean: $this->getQueryBoolean(),
             ),
         );
     }

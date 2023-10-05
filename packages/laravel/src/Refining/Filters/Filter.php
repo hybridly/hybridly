@@ -31,12 +31,10 @@ class Filter extends BaseFilter
 
     public static function make(string $property, ?string $alias = null): static
     {
-        $static = resolve(static::class, [
+        return resolve(static::class, [
             'property' => $property,
             'alias' => $alias,
         ]);
-
-        return $static->configure();
     }
 
     public function apply(Builder $builder, mixed $value, string $property): void
@@ -58,6 +56,7 @@ class Filter extends BaseFilter
                         column: $builder->qualifyColumn($column),
                         operator: $this->getOperator(),
                         value: $value,
+                        boolean: $this->getQueryBoolean(),
                     );
                 }
 
@@ -82,6 +81,7 @@ class Filter extends BaseFilter
                 $builder->whereRaw(
                     sql: $sql,
                     bindings: $bindings,
+                    boolean: $this->getQueryBoolean(),
                 );
             },
         );

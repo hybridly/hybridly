@@ -13,11 +13,9 @@ class TrashedFilter extends BaseFilter
 
     public static function make(string $name = 'trashed'): static
     {
-        $static = resolve(static::class, [
+        return resolve(static::class, [
             'property' => $name,
         ]);
-
-        return $static->configure();
     }
 
     public function apply(Builder $builder, mixed $value, string $property): void
