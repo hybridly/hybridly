@@ -3,25 +3,30 @@
 namespace Hybridly\Refining\Filters;
 
 use Hybridly\Refining\Concerns\SupportsRelationConstraints;
-use Hybridly\Refining\Contracts\Filter as FilterContract;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 
-class BooleanFilter implements FilterContract
+class BooleanFilter extends BaseFilter
 {
     use SupportsRelationConstraints;
 
-    private function __construct(
-        protected string $operator,
-    ) {
+    protected function setUp(): void
+    {
+        $this->type('boolean');
     }
 
-    public function __invoke(Builder $builder, mixed $value, string $property): void
+    public static function make(string $property, ?string $alias = null): static
     {
-        $value = match (strtolower($value)) {
-            'true', '1', 'yes', 'y' => true,
-            'false', '0', 'no', 'n' => false,
-            default => null,
-        };
+        $static = resolve(static::class, [
+            'property' => $property,
+            'alias' => $alias,
+        ]);
+
+        return $static->configure();
+    }
+
+    public function apply(Builder $builder, mixed $value, string $property): void
+    {
+        $value = filter_var($value, \FILTER_VALIDATE_BOOLEAN, \FILTER_NULL_ON_FAILURE);
 
         if (\is_null($value)) {
             return;
@@ -32,26 +37,9 @@ class BooleanFilter implements FilterContract
             property: $property,
             callback: fn (Builder $builder, string $column) => $builder->where(
                 column: $builder->qualifyColumn($column),
-                operator: $this->operator,
+                operator: '=',
                 value: $value,
             ),
-        );
-    }
-
-    public function getType(): string
-    {
-        return 'boolean';
-    }
-
-    /**
-     * Creates a filter that checks the specified property against a boolean property.
-     */
-    public static function make(string $property, string $operator = '=', ?string $alias = null): Filter
-    {
-        return new Filter(
-            filter: new static($operator),
-            property: $property,
-            alias: $alias,
         );
     }
 }

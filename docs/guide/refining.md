@@ -62,7 +62,7 @@ use Hybridly\Refining\{Sorts, Filters}; // [!code focus]
 use Hybridly\Refining\Refine;
 
 $chirps = Refine::model(Chirp::class)->with([ // [!code focus:4]
-    Sorts\FieldSort::make(property: 'created_at', alias: 'date'),
+    Sorts\Sort::make(property: 'created_at', alias: 'date'),
     Filters\TrashedFilter::make(name: 'trashed'),
 ]);
 ```
@@ -80,7 +80,7 @@ public function index()
     $this->authorize('viewAny', Chirp::class);
 
     $chirps = Refine::model(Chirp::class)->with([ // [!code focus:4]
-        Sorts\FieldSort::make('created_at', alias: 'date'),
+        Sorts\Sort::make('created_at', alias: 'date'),
         Filters\TrashedFilter::make(),
     ])->forHomePage();
 
@@ -128,13 +128,13 @@ const refine = useRefinements($props, 'refinements') // [!code focus]
     <template v-if="filter.name === 'body'">
       <input
         type="text"
-        @change="(e) => refine.applyFilter(filter.name, e.target.value)"
+        @change="filter.apply($event.target.value)"
       />
     </template>
 
     <!-- Shows a `select` input for the "trashed" filter -->
     <template v-if="filter.type === 'trashed'">
-      <select @change="(e) => refine.applyFilter(filter.name, e.target.value)">
+      <select @change="filter.apply($event.target.value)">
         <option value="with" :selected="filter.value === 'with'">All</option>
         <option value="only" :selected="filter.value === 'only'">Trashed</option>
         <option value="" :selected="!filter.value">Not trashed</option>
@@ -151,10 +151,12 @@ Filters have basic relationship filtering capabilities, which means you may use 
 
 ```php
 // ?filters[user]=jon
-Filters\ExactFilter::make('user.full_name', alias: 'user');
+Filters\Filter::make('user.full_name', alias: 'user');
 ```
 
-Note that it is recommended to specify an alias when filtering relationship properties, otherwise the filter name will have its `.` replaced by underscores.
+It is recommended to specify an alias when filtering relationship properties, otherwise the filter name will have its `.` replaced by underscores. 
+
+Note that filters using relationship use `whereHas` under the hood, which might not be the best option performance-wise.
 
 :::warning Sorts are not supported
 Note that the provided sorts do not support relationships. You will need to use a custom sort with a subquery to achieve a relationship sort.
@@ -167,20 +169,108 @@ It may not be desirable to expose the name of a database column to users. You ma
 
 ```php
 // ?sort=date
-Sorts\FieldSort::make('created_at', alias: 'date');
+Sorts\Sort::make('created_at', alias: 'date');
 ```
 
-In the example above, `date` is used to apply the sort instead of the column name `created_at`.
+In the example above, `date` is used to apply the sort instead of the column name `created_at`. 
+
+Note that certain refiners, like `TrashedFilter` or `CallbackFilter`, cannot have an alias as they don't use the specified property in their query.
 
 ## Available filters
 
-### `ExactFilter`
+### `Filter`
 
-This filter will use the provided column to find an exact match using a `where column = ?` statement:
+This filter will use the provided column to find a match using a `WHERE column = ?` or a `WHERE column LIKE ?` statement.
+
+#### Strict comparisons
+
+By default, `Filter` will do a strict comparison using a `WHERE column ?` statement:
 
 ```php
-// ?filters[user_id]=1
-Filters\ExactFilter::make('user_id');
+// ?filters[user_id]=1  ->  WHERE user_id = 1
+Filters\Filter::make('user_id');
+```
+
+#### Loose comparisons
+
+You may call the `loose`, `beingsWithStrict` or `endsWithStrict` methods to specify which kind of comparison the filter should use.
+
+```php
+// ?filters[full_name]=Jon  ->  WHERE full_name LIKE %jon%
+Filters\Filter::make('full_name')->loose();
+
+// ?filters[full_name]=Jon  ->  WHERE full_name LIKE Jon%
+Filters\Filter::make('full_name')->beingsWithStrict();
+
+// ?filters[full_name]=Doe  ->  WHERE full_name LIKE %Doe
+Filters\Filter::make('full_name')->endsWithStrict();
+```
+
+#### Using another operator
+
+You may change the operator by specifying it through the `operator` method:
+
+```php
+// ?filters[full_name]=Jon  ->  WHERE full_name NOT LIKE %jon%
+Filters\Filter::make('full_name')
+	->operator('NOT LIKE')
+	->loose();
+
+// ?filters[user_id]=1      ->  WHERE user_id != 1
+Filters\Filter::make('user_id')->operator('!=');
+```
+
+#### Using an enum
+
+You may call the `enum` method to specify a backed enum class that will validate the property. If the property doesn't match one of the enum values, the filter will not apply.
+
+```php
+// ?filters[company]=apple   ->  Filter applies
+Filters\Filter::make('company')->enum(Company::class);
+
+// ?filters[company]=foobar  ->  Filter will not apply
+Filters\Filter::make('company')->enum(Company::class);
+```
+
+### `SelectFilter`
+
+This filter will perform a `where` statement on the value provided by the `options` array. If the value is not found in the provided list, the filter will not apply.
+
+#### Key-value options
+
+If the options provided are a list of key-value pairs, the key represents the query parameter name, and the value for the column name:
+
+```php
+// ?filters[os]=iphone -> `WHERE os = 'ios'`
+Filters\SelectFilter::make('os', options: [
+  'iphone' => 'ios',
+  'ipad' => 'ipados',
+  'samsung' => 'android',
+]);
+```
+
+#### List options
+
+If the option array is a list, the key will be used for both the query parameter and the column name:
+
+```php
+// ?filters[os]=ios -> `WHERE os = 'ios'`
+Filters\SelectFilter::make('os', options: [
+  'ios',
+  'ipados',
+  'android',
+]);
+```
+
+#### Enum options
+
+Alternatively, you may provided a backed enum as the options.
+
+```php
+use App\Enums\OperatingSystem;
+
+// ?filters[os]=ios -> `WHERE os = 'ios'`
+Filters\SelectFilter::make('os', OperatingSystem::class);
 ```
 
 ### `TrashedFilter`
@@ -190,15 +280,6 @@ This filter will include or exclude soft-deleted records:
 ```php
 // ?filters[trashed]=only
 Filters\TrashedFilter::make();
-```
-
-### `EnumFilter`
-
-This filter will use the provided column and enum class to find a match:
-
-```php
-// ?filters[company]=apple
-Filters\EnumFilter::make('company', Company::class);
 ```
 
 ### `BooleanFilter`
@@ -212,44 +293,15 @@ This filter will convert the request's value to a boolean value to perform a boo
 Filters\BooleanFilter::make('is_active');
 ```
 
-### `SelectFilter`
-
-This filter will perform a `where` statement on the value provided by the `options` array:
-
-```php
-// ?filters[os]=iphone -> `WHERE os = 'ios'`
-Filters\BooleanFilter::make('os', options: [
-  'iphone' => 'ios',
-  'ipad' => 'ipados',
-  'samsung' => 'android',
-]);
-```
-
-### `SimilarityFilter`
-
-This filter will use the `LIKE` operator to find records depending on the specified mode.
-
-
-```php
-// WHERE full_name LIKE '%jon%'
-Filters\SimilarityFilter::make('full_name', mode: SimilarityFilter::LOOSE);
-
-// WHERE full_name LIKE '%jon'
-Filters\SimilarityFilter::make('full_name', mode: SimilarityFilter::BEGINS_WITH_STRICT);
-
-// WHERE full_name LIKE 'doe%'
-Filters\SimilarityFilter::make('full_name', mode: SimilarityFilter::ENDS_WITH_STRICT);
-```
-
 ## Available sorts
 
-### `FieldSort`
+### `Sort`
 
 This sort will sort the records by the specified field:
 
 ```php
 // ?sort=created_at
-Sorts\FieldSort::make('created_at');
+Sorts\Sort::make('created_at');
 ```
 
 ## Custom filters and sorts
@@ -259,38 +311,29 @@ The provided filters are relatively basic and will not suit every situation, not
 You may use the provided `CallbackFilter` to implement your own filter using a closure or an invokable class:
 
 ```php
-Refine::model(Chirp::class)->with([
-    Filters\CallbackFilter::make('own_chirps', OwnChirpsFilter::class),
-    Filters\CallbackFilter::make('own_chirps', function (Builder $builder, mixed $value, string $property) {
-        $builder->where('author_id', auth()->id());
-    }),
-]);
+// Invokable class
+CallbackFilter::make('own_chirps', OwnChirpsFilter::class);
+
+// Callback function
+CallbackFilter::make(
+	name: 'own_chirps',
+	callback: function (Builder $builder, mixed $value, string $property) {
+			$builder->where('author_id', auth()->id());
+	}
+);
 ```
 
 Similary, the `CallbackSort` class can be used to implement a custom sort:
 
 ```php
-Refine::model(Chirp::class)->with([
-    Sorts\CallbackSort::make('date', DateSort::class),
-    Sorts\CallbackSort::make('date', function (Builder $builder, string $direction, string $property) {
-        $builder->orderBy('created_at', $direction);
-    }),
-]);
-```
+// Invokable class
+CallbackSort::make('date', DateSort::class);
 
-Additionally, you may pass any custom parameter to the callbacks or invokable classes:
-
-```php
-Refine::model(Chirp::class)->with([
-    Sorts\CallbackSort::make(
-        name: 'date',
-        callback: function (Builder $builder, string $direction, string $foo) {
-            // $foo = 'bar'
-            $builder->orderBy('created_at', $direction);
-        },
-        parameters: [
-          'foo' => 'bar'
-        ]
-      ),
-]);
+// Callback function
+CallbackSort::make(
+	name: 'date',
+	callback: function (Builder $builder, string $direction, string $property) {
+			$builder->orderBy('created_at', $direction);
+	}
+);
 ```

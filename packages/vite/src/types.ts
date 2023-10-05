@@ -30,6 +30,8 @@ export interface ViteOptions {
 	shims?: boolean
 	/** Enables or disable the kill-switch. */
 	killSwitch?: boolean
+	/** Extra `tsconfig.json` options. */
+	tsconfig?: TsConfigOptions
 }
 
 export interface LayoutOptions {
@@ -37,4 +39,13 @@ export interface LayoutOptions {
 	templateRegExp?: RegExp
 	/** Name of the layout used when no argument is provided to `layout`. */
 	defaultLayoutName?: string
+}
+
+export interface TsConfigOptions {
+	/** Defines types to add to `tsconfig.json`. */
+	types?: string[]
+	/** Defines paths to include with `tsconfig.json`. */
+	include?: string[]
+	/** Defines paths to exclude with `tsconfig.json`. */
+	exclude?: string[]
 }

@@ -1,40 +1,43 @@
 <?php
 
-use Hybridly\Refining\Filters\SimilarityFilter;
-use Hybridly\Refining\Sorts\FieldSort;
+use Hybridly\Refining\Filters\Filter;
 use Hybridly\Refining\Sorts\Sort;
 use Hybridly\Tests\Fixtures\Database\ProductFactory;
 
 beforeEach(function () {
-    ProductFactory::new()->create(['name' => 'AirPods']);
-    ProductFactory::new()->create(['name' => 'AirPods Pro']);
-    ProductFactory::new()->create(['name' => 'Macbook Pro M1']);
+    ProductFactory::new()->create(['name' => 'AirPods', 'published_at' => '2020-01-01']);
+    ProductFactory::new()->create(['name' => 'AirPods Pro', 'published_at' => '2020-01-02']);
+    ProductFactory::new()->create(['name' => 'Macbook Pro M1', 'published_at' => '2020-01-03']);
 });
 
 test('refiners should execute only once', function () {
     $refine = mock_refiner(
         query: array_filter(['sort' => '-date']),
         refiners: [
-            new Sort(
-                sort: $fieldSort = Mockery::spy(FieldSort::class),
-                property: 'published_at',
-                alias: 'date',
-            ),
+            $refiner = Mockery::spy(Sort::make('published_at', alias: 'date')),
         ],
     );
 
-    $fieldSort->shouldNotHaveReceived('__invoke');
+    $refiner->shouldNotHaveReceived('refine');
     $refine->applyRefiners();
-    $fieldSort->shouldHaveReceived('__invoke')->once();
+    $refiner->shouldHaveReceived('refine')->once();
     $refine->applyRefiners();
-    $fieldSort->shouldHaveReceived('__invoke')->once();
+    $refiner->shouldHaveReceived('refine')->once();
+
+    Mockery::close();
+
+    expect($refine->get()->map->name)->toMatchArray([
+        'Macbook Pro M1',
+        'AirPods Pro',
+        'AirPods',
+    ]);
 });
 
 test('the refine instance can be serialized', function () {
     $refine = mock_refiner(
         refiners: [
-            FieldSort::make('created_at', alias: 'date'),
-            SimilarityFilter::make('name'),
+            Sort::make('created_at', alias: 'date'),
+            Filter::make('name')->loose(),
         ],
     )->scope('products');
 

@@ -8,6 +8,7 @@ The following is a non-exhaustive comparison table between Inertia and Hybridly'
 | ----------------------------------------------- | :-----------------------------------------------: | :--------------------------------------------------------: |
 | Dialogs                                         | <span class="planned">Planned <sup>1</sup></span> |                 [Yes](../guide/dialogs.md)                 |
 | Refining                                        |            <span class="no">No</span>             |                [Yes](../guide/refining.md)                 |
+| Tables                                          |            <span class="no">No</span>             |                 [Yes](../guide/tables.md)                  |
 | Preloading                                      |            <span class="no">No</span>             |     [Yes](../guide/navigation.md#preloading-requests)      |
 | Vue DevTools integration                        |            <span class="no">No</span>             |                    [Yes](./devtools.md)                    |
 | Visual Studio Code extension                    |                 Yes <sup>2</sup>                  |               [Yes](./visual-studio-code.md)               |

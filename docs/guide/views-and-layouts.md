@@ -11,7 +11,7 @@ Serving a view consists of returning a [hybrid response](./responses.md) with th
 Views are basic single-file components that can receive data from controllers as their properties. You can access these properties like any other single-file component using `defineProps`.
 
 :::code-group
-```vue [resources/views/views/users/show.vue]
+```vue [resources/views/users/show.vue]
 <script setup lang="ts">
 const $props = defineProps<{
   user: App.Data.User

@@ -21,6 +21,18 @@ test('external responses to non-hybridly requests', function () {
         ]);
 });
 
+test('external responses to non-hybridly requests with custom headers', function () {
+    mock_request(hybridly: false, bind: true);
+
+    expect(hybridly()->external('https://google.fr/', ['X-Robots-Tag' => 'noindex, nofollow']))
+        ->toBeInstanceOf(RedirectResponse::class)
+        ->getStatusCode()->toBe(Response::HTTP_FOUND)
+        ->headers->all()->toMatchArray([
+            'location' => ['https://google.fr/'],
+            'x-robots-tag' => ['noindex, nofollow'],
+        ]);
+});
+
 test('external responses to hybridly requests', function () {
     mock_request(hybridly: true, bind: true);
 
@@ -29,6 +41,18 @@ test('external responses to hybridly requests', function () {
         ->getStatusCode()->toBe(Response::HTTP_CONFLICT)
         ->headers->all()->toMatchArray([
             Header::EXTERNAL => ['https://google.fr/'],
+        ]);
+});
+
+test('external responses to hybridly requests with custom headers', function () {
+    mock_request(hybridly: true, bind: true);
+
+    expect(hybridly()->external('https://google.fr/', ['X-Robots-Tag' => 'noindex, nofollow']))
+        ->toBeInstanceOf(Response::class)
+        ->getStatusCode()->toBe(Response::HTTP_CONFLICT)
+        ->headers->all()->toMatchArray([
+            Header::EXTERNAL => ['https://google.fr/'],
+            'x-robots-tag' => ['noindex, nofollow'],
         ]);
 });
 

@@ -62,7 +62,7 @@ if (!\function_exists('Hybridly\dialog')) {
      *
      * @see https://hybridly.dev/api/laravel/functions.html#dialog
      */
-    function dialog(string $component = null, array|Arrayable|DataObject $properties, string $base): Factory
+    function dialog(string $component = null, array|Arrayable|DataObject $properties = [], string $base = ''): Factory
     {
         return resolve(Factory::class)
             ->view($component, $properties)
@@ -114,7 +114,7 @@ if (!\function_exists('Hybridly\to_external_url')) {
      *
      * @see https://hybridly.dev/api/laravel/functions.html#to-external-url
      */
-    function to_external_url(string|RedirectResponse $url): Response
+    function to_external_url(string|RedirectResponse $url, array $headers = []): Response
     {
         if ($url instanceof RedirectResponse) {
             $url = $url->getTargetUrl();
@@ -123,10 +123,13 @@ if (!\function_exists('Hybridly\to_external_url')) {
         if (is_hybrid()) {
             return new Response(
                 status: Response::HTTP_CONFLICT,
-                headers: [Header::EXTERNAL => $url],
+                headers: [...$headers, Header::EXTERNAL => $url],
             );
         }
 
-        return new RedirectResponse($url);
+        return new RedirectResponse(
+            url: $url,
+            headers: $headers,
+        );
     }
 }

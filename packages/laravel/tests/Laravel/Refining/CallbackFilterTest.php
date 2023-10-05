@@ -1,20 +1,21 @@
 <?php
 
+use Hybridly\Refining\Filters\BaseFilter;
 use Hybridly\Refining\Filters\CallbackFilter;
-use Hybridly\Refining\Filters\Filter;
 use Hybridly\Tests\Fixtures\Database\ProductFactory;
+use Hybridly\Tests\Fixtures\Filters\InvokableClassFilter;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Validation\ValidationException;
 
 it('can be serialized', function () {
     $filter = CallbackFilter::make('airpods_gen', function (Builder $builder, mixed $value) {
-        return $builder->where('generation', $value);
+        $builder->where('generation', $value);
     })->metadata([
         'foo' => 'bar',
     ]);
 
     expect($filter)
-        ->toBeInstanceOf(Filter::class)
+        ->toBeInstanceOf(BaseFilter::class)
         ->jsonSerialize()->toBe([
             'name' => 'airpods_gen',
             'hidden' => false,
@@ -27,26 +28,6 @@ it('can be serialized', function () {
             'value' => null,
             'default' => null,
         ]);
-});
-
-it('accepts custom parameters', function () {
-    ProductFactory::new()->count(10)->create();
-    ProductFactory::new()->create([
-        'name' => 'Black AirPods',
-    ]);
-
-    $airpods = mock_refiner(
-        query: ['filters' => ['airpods_gen' => 'AirPods']],
-        refiners: [
-            CallbackFilter::make('airpods_gen', function (Builder $builder, mixed $value, string $fallback) {
-                $builder
-                    ->where('name', $value)
-                    ->orWhere('name', $fallback);
-            }, ['fallback' => 'Black AirPods']),
-        ],
-    )->get();
-
-    expect($airpods->first())->name->toBe('Black AirPods');
 });
 
 it('throws a validation exception when the type of the received value cannot be cast to the type of the expected one', function () {
@@ -106,4 +87,49 @@ it('injects parameters by type and by name', function () {
     expect($filters)
         ->first()->name->toBe('AirPods (2nd generation)')
         ->count()->toBe(2);
+});
+
+it('accepts invokable classes by fqcn', function () {
+    ProductFactory::new()->create(['name' => 'AirPods']);
+    ProductFactory::new()->create(['name' => 'AirPods Pro']);
+    ProductFactory::new()->create(['name' => 'Macbook Pro M1']);
+
+    $filters = mock_refiner(
+        query: ['filters' => ['name' => 'AirPods Pro']],
+        refiners: [
+            CallbackFilter::make('name', InvokableClassFilter::class),
+        ],
+    );
+
+    expect($filters)
+        ->first()->name->toBe('AirPods Pro')
+        ->count()->toBe(1);
+});
+
+it('uses the type of the invokable class', function () {
+    $filter = CallbackFilter::make('name', new class ()
+    {
+        public function __invoke(Builder $builder, mixed $value): void
+        {
+            $builder->where('name', '=', $value);
+        }
+
+        public function getType(): string
+        {
+            return 'custom';
+        }
+    });
+
+    expect($filter)
+        ->toBeInstanceOf(BaseFilter::class)
+        ->jsonSerialize()->toBe([
+            'name' => 'name',
+            'hidden' => false,
+            'label' => 'Name',
+            'type' => 'custom',
+            'metadata' => [],
+            'is_active' => false,
+            'value' => null,
+            'default' => null,
+        ]);
 });

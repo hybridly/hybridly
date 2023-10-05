@@ -16,14 +16,6 @@ trait EvaluatesClosures
 {
     protected string $evaluationIdentifier;
 
-    /**
-     * @template T
-     *
-     * @param  T | callable(): T  $value
-     * @param  array<string, mixed>  $named
-     * @param  array<string, mixed>  $typed
-     * @return T
-     */
     public function evaluate(mixed $value, array $named = [], array $typed = []): mixed
     {
         if (\is_object($value) && method_exists($value, '__invoke')) {

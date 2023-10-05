@@ -28,7 +28,7 @@ declare global {
 		/**
 		 * The type of this filter.
 		 */
-		type: 'trashed' | 'callback' | 'exact' | 'similarity:loose' | 'similarity:begins_with_strict' | 'similarity:ends_with_strict' | string
+		type: 'trashed' | 'callback' | 'exact' | 'similar:loose' | 'similar:begins_with_strict' | 'similar:ends_with_strict' | string
 		/**
 		 * The label of the filter.
 		 */

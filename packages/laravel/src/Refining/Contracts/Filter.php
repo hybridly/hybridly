@@ -2,10 +2,12 @@
 
 namespace Hybridly\Refining\Contracts;
 
+use Illuminate\Contracts\Database\Eloquent\Builder;
+
 interface Filter
 {
     /**
-     * Gets the type of the filter. Used by the front-end.
+     * Applies the filter onto the builder.
      */
-    public function getType(): string;
+    public function apply(Builder $builder, mixed $value, string $property): void;
 }

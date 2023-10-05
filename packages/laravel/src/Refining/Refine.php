@@ -4,7 +4,7 @@ namespace Hybridly\Refining;
 
 use Hybridly\Components;
 use Hybridly\Refining\Contracts\Refiner;
-use Hybridly\Refining\Filters\Filter;
+use Hybridly\Refining\Filters\BaseFilter;
 use Hybridly\Refining\Sorts\Sort;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -91,7 +91,7 @@ class Refine extends Components\Component
     public function getFilters(): array
     {
         return collect($this->getRefiners())
-            ->filter(fn (Refiner $refiner) => $refiner instanceof Filter)
+            ->filter(fn (Refiner $refiner) => $refiner instanceof BaseFilter)
             ->values()
             ->toArray();
     }

@@ -21,9 +21,9 @@ import { createHead } from '@unhead/vue' // [!code hl]
 
 initializeHybridly({
   enhanceVue: (vue) => {
-    vue.use(createHead({ // [!code hl:3]
-			titleTemplate: (title) => title ? `${title} - Blue Bird` : 'Blue Bird',
-		})) 
+    const head = createHead()
+    head.push({titleTemplate: (title) => title ? `${title} - Blue Bird` : 'Blue Bird'})
+    vue.use(head)
   }
 })
 ```
@@ -32,7 +32,7 @@ initializeHybridly({
 
 ## Usage
 
-The latest `useHead` call is persisted, which means you may override `titleTemplate` on a layout. 
+The latest `useHead` call is persisted, which means you may override `titleTemplate` on a layout.
 
 Page titles may be defined using the `title` property in view components.
 

@@ -129,12 +129,10 @@ export async function performHybridNavigation(options: HybridRequestOptions): Pr
 		// saved, so we can restore them later.
 		saveScrollPositions()
 
-		// If the URL has transformation options, apply them before using the URL.
-		if (options.url && options.transformUrl) {
-			options.url = makeUrl(options.url, options.transformUrl)
-		}
-
-		const targetUrl = makeUrl(options.url ?? context.url)
+		// Define the target URL by taking the URL given in the navigation
+		// option or the current URL (stored in `context`), and apply
+		// optional transforms specified in `options.transformUrl`.
+		const targetUrl = makeUrl(options.url ?? context.url, options.transformUrl)
 		const abortController = new AbortController()
 
 		// A navigation is being made, we need to add it to the context so it

@@ -24,6 +24,7 @@ export function generateTsConfig(options: ViteOptions, config: DynamicConfigurat
 				'vite/client',
 				'hybridly/client',
 				...(options.icons !== false ? ['unplugin-icons/types/vue'] : []),
+				...(options.tsconfig?.types ?? []),
 			],
 			baseUrl: '..',
 			paths: {
@@ -50,11 +51,13 @@ export function generateTsConfig(options: ViteOptions, config: DynamicConfigurat
 			'./routes.d.ts',
 			'./components.d.ts',
 			'./auto-imports.d.ts',
+			...(options.tsconfig?.include ?? []),
 		],
 		exclude: [
 			'../public/**/*',
 			'../node_modules',
 			'../vendor',
+			...(options.tsconfig?.exclude ?? []),
 		],
 	}
 

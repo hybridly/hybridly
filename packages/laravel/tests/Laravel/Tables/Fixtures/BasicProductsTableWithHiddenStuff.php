@@ -2,8 +2,8 @@
 
 namespace Hybridly\Tests\Laravel\Tables\Fixtures;
 
-use Hybridly\Refining\Filters\ExactFilter;
-use Hybridly\Refining\Sorts\FieldSort;
+use Hybridly\Refining\Filters\Filter;
+use Hybridly\Refining\Sorts\Sort;
 use Hybridly\Tables\Actions\BulkAction;
 use Hybridly\Tables\Actions\InlineAction;
 use Hybridly\Tables\Columns\TextColumn;
@@ -18,8 +18,8 @@ class BasicProductsTableWithHiddenStuff extends Table
     public function defineRefiners(): array
     {
         return [
-            FieldSort::make('name')->hidden(),
-            ExactFilter::make('name')->hidden(),
+            Sort::make('name')->hidden(),
+            Filter::make('name')->hidden(),
         ];
     }
 

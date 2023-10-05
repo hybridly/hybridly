@@ -242,8 +242,8 @@ use Hybridly\Refining\{Filters, Sorts}; // [!code focus]
 protected function defineRefiners(): array  // [!code focus:7]
 {
 		return [
-				Sorts\FieldSort::make('id'),
-				Filters\SimilarityFilter::make('full_name'),
+				Sorts\Sort::make('id'),
+				Filters\Filter::make('full_name'),
 		];
 }
 ```
@@ -252,7 +252,7 @@ protected function defineRefiners(): array  // [!code focus:7]
 
 The refining utilities returned by [`useTable`](../api/utils/use-table.md) are the same as the ones returned by [`useRefinements`](../api/utils/use-refinements.md).
 
-For instance, you may generate the user interface for a [similarity filter](./refining.md#similarityfilter) using the following:
+For instance, you may generate the user interface for a [similarity filter](./refining.md#loose-comparisons) using the following:
 
 ```vue-html
 <!-- Loop through existing filters -->
