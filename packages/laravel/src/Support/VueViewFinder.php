@@ -161,7 +161,7 @@ final class VueViewFinder
                 continue;
             }
 
-            $path = $directory . \DIRECTORY_SEPARATOR . $file;
+            $path = $directory . '/' . $file;
 
             if (is_dir($path)) {
                 $files = array_merge($files, $this->findVueFiles($path, $baseDirectory, $namespace));
@@ -169,16 +169,14 @@ final class VueViewFinder
                 if (str($path)->endsWith($this->extensions)) {
                     $files[] = [
                         'namespace' => $namespace,
-                        'path' => str_replace(base_path(\DIRECTORY_SEPARATOR), '', $path),
+                        'path' => str($path)->replaceStart(base_path(), '')->ltrim('/\\')->toString(),
                         'identifier' => $this->getIdentifier($path, $baseDirectory, $namespace),
                     ];
                 }
             }
         }
 
-        return collect($files)
-            ->map(fn ($file) => str_replace(['/', '\\'], '/', $file))
-            ->toArray();
+        return $files;
     }
 
     /**
