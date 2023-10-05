@@ -10,7 +10,7 @@ trait SupportsRelationConstraints
     protected function applyRelationConstraint(Builder $builder, string $property, \Closure $callback): void
     {
         if (!str_contains($property, '.')) {
-            $callback($builder, $property);
+            $callback($builder, $property, false);
 
             return;
         }
@@ -21,9 +21,13 @@ trait SupportsRelationConstraints
                 $parts->last(),
             ]);
 
-        $builder->whereHas($relation, function (Builder $builder) use ($property, $callback) {
+        $method = $this->getQueryBoolean() === 'or'
+            ? 'orWhereHas'
+            : 'whereHas';
+
+        $builder->{$method}($relation, function (Builder $builder) use ($property, $callback) {
             if (!str_contains($property, '.')) {
-                $callback($builder, $property);
+                $callback($builder, $property, true);
             } else {
                 $this->applyRelationConstraint($builder, $property, $callback);
             }

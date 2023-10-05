@@ -50,13 +50,13 @@ class Filter extends BaseFilter
         $this->applyRelationConstraint(
             builder: $builder,
             property: $property,
-            callback: function (Builder $builder, string $column) use ($value, $property) {
+            callback: function (Builder $builder, string $column, bool $isRelation) use ($value, $property) {
                 if ($this->getMode() === self::EXACT) {
                     return $builder->where(
                         column: $builder->qualifyColumn($column),
                         operator: $this->getOperator(),
                         value: $value,
-                        boolean: $this->getQueryBoolean(),
+                        boolean: $isRelation ? 'and' : $this->getQueryBoolean(),
                     );
                 }
 
@@ -81,7 +81,7 @@ class Filter extends BaseFilter
                 $builder->whereRaw(
                     sql: $sql,
                     bindings: $bindings,
-                    boolean: $this->getQueryBoolean(),
+                    boolean: $isRelation ? 'and' : $this->getQueryBoolean(),
                 );
             },
         );
