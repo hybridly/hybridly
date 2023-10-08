@@ -103,10 +103,6 @@ export default defineConfig({
 	plugins: [
 		hybridly({
 			laravel: {
-				input: [
-                    'resources/css/app.css',
-                    'resources/application/main.ts',
-                ]
 				detectTls: true
 			}
 		}),
@@ -213,12 +209,12 @@ At this point, your `package.json` should look like the following:
 				"build": "vite build"
 		},
 		"devDependencies": {
-				"axios": "^1.5.1",
-				"hybridly": "^0.5.2",
+				"axios": "^1.3.0",
+				"hybridly": "0.0.1-alpha.21",
 				"lodash": "^4.17.19",
-				"postcss": "^8.4.31",
-				"vite": "^4.4.11",
-				"vue": "^3.3.4"
+				"postcss": "^8.1.14",
+				"vite": "^4.1.2",
+				"vue": "^3.2.41"
 		}
 }
 ```
@@ -233,10 +229,6 @@ export default defineConfig({
 	plugins: [
 		hybridly({
 			laravel: {
-				input: [
-                    'resources/css/app.css',
-                    'resources/application/main.ts',
-                ]
 				detectTls: true
 			}
 		}),
