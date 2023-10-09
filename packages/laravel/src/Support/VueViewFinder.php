@@ -74,13 +74,13 @@ final class VueViewFinder
      */
     public function loadDirectory(string $directory): static
     {
-        $directory = realpath($directory);
+        $realpth = realpath($directory);
 
-        if ($directory === false) {
+        if ($realpth === false) {
             throw new Exception("Directory [{$directory}] does not exist.");
         }
 
-        $this->loadedDirectories[] = $this->normalizeDirectory($directory);
+        $this->loadedDirectories[] = $this->normalizeDirectory($realpth);
 
         return $this;
     }
