@@ -20,6 +20,14 @@ test('the current url can be matched to routes', () => {
 	expect(currentRouteMatches('chirp.show', { chirp: 2 })).toBe(false)
 })
 
+test('an exact route does not match a different route', () => {
+	location.href = route('baz')
+	expect(currentRouteMatches('baz.nested')).toBe(false)
+
+	location.href = route('baz.nested')
+	expect(currentRouteMatches('baz')).toBe(false)
+})
+
 test('the current url can be matched to route patterns', () => {
 	location.href = route('chirp.show', { chirp: 1 })
 	expect(currentRouteMatches('index')).toBe(false)

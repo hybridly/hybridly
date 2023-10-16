@@ -5,6 +5,22 @@
         "bar": "baz"
     },
     "routes": {
+        "baz": {
+            "domain": null,
+            "method": ["GET", "HEAD"],
+            "uri": "baz",
+            "name": "baz",
+            "bindings": [],
+            "wheres": []
+        },
+        "baz.nested": {
+            "domain": null,
+            "method": ["GET", "HEAD"],
+            "uri": "baz/nested",
+            "name": "baz.nested",
+            "bindings": [],
+            "wheres": []
+        },
         "foo": {
             "domain": null,
             "method": ["GET", "HEAD"],
