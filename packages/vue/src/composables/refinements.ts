@@ -16,6 +16,16 @@ export interface BindFilterOptions<T> extends AvailableHybridRequestOptions {
 	transformValue?: (value?: T) => any
 	/** If specified, this callback will watch the ref and apply  */
 	watch?: (ref: Ref<T>, cb: any) => void
+	/**
+	 * The debounce time in milliseconds for updating this filter.
+	 * @default 250ms
+	 */
+	debounce?: number
+	/**
+	 * The debounce time in milliseconds for updating the ref.
+	 * @default 250ms
+	 */
+	syncDebounce?: number
 }
 
 declare global {
@@ -263,15 +273,30 @@ export function useRefinements<
 	}
 
 	function bindFilter<T = any>(name: string, options: BindFilterOptions<T> = {}) {
+		const debounce = options.debounce ?? 250
+		const refDebounce = options.syncDebounce ?? 250
 		const transform = options?.transformValue ?? ((value) => value)
 		const watchFn = options?.watch ?? watch
-		const _ref = ref(transform(refinements.value.filters.find((f) => f.name === name)?.value))
+		const getFilterValue = () => transform(refinements.value.filters.find((f) => f.name === name)?.value)
+		const _ref = ref(getFilterValue())
+		let _filterTimeout: ReturnType<typeof setTimeout>
+		let _refTimeout: ReturnType<typeof setTimeout>
 
+		// We watch refinements instead of using the `success` hook to handle
+		// situations where the filter value is updated through another request
 		watch(() => refinements.value.filters.find((f) => f.name === name), (filter) => {
-			_ref.value = transform(filter?.value)
+			clearTimeout(_refTimeout)
+			_refTimeout = setTimeout(() => _ref.value = transform(filter?.value), refDebounce)
 		}, { deep: true })
 
-		watchFn(_ref, (value: T) => applyFilter(name, transform(value), options))
+		watchFn(_ref, (value: T) => {
+			clearTimeout(_refTimeout)
+			clearTimeout(_filterTimeout)
+			_filterTimeout = setTimeout(() => {
+				clearTimeout(_refTimeout)
+				applyFilter(name, transform(value), options)
+			}, debounce)
+		})
 
 		return _ref as Ref<T>
 	}
