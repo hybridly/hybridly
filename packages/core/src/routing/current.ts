@@ -25,9 +25,7 @@ export function currentRouteMatches<T extends RouteName>(name: T, parameters?: R
 	// We escape all dots and replace all stars with a regex that matches any character sequence to build the regex
 	const namePattern = `^${name.replaceAll('.', '\\.').replaceAll('*', '.*')}$`
 	const possibleRoutes = Object.values(getRouting().routes)
-		.filter((x) => {
-			return x.method.includes('GET') && RegExp(namePattern).test(x.name)
-		})
+		.filter((x) => x.method.includes('GET') && RegExp(namePattern).test(x.name))
 		.map((x) => x.name)
 	const currentUrl = getCurrentUrl()
 
