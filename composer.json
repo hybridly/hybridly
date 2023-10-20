@@ -35,23 +35,21 @@
     "autoload": {
         "files": [
             "packages/laravel/src/Support/global_helpers.php",
-            "packages/laravel/src/Support/helpers.php"
+            "packages/laravel/src/Support/helpers.php",
+            "packages/laravel/src/Testing/helpers.php"
         ],
         "psr-4": {
             "Hybridly\\": [
                 "packages/laravel/src"
-            ]
+            ],
+            "Hybridly\\Tests\\": "packages/laravel/tests"
         }
     },
     "autoload-dev": {
-        "files": [
-            "packages/laravel/src/Testing/helpers.php"
-        ],
         "psr-4": {
             "Build\\": [
                 "build"
-            ],
-            "Hybridly\\Tests\\": "packages/laravel/tests"
+            ]
         }
     },
     "extra": {
