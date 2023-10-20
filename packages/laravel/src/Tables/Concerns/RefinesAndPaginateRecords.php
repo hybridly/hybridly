@@ -26,14 +26,14 @@ trait RefinesAndPaginateRecords
             ->filter(static fn (Refiner $refiner): bool => !$refiner->isHidden());
     }
 
+    public function getRecords(): array
+    {
+        return data_get($this->getPaginatedRecords(), 'data', []);
+    }
+
     protected function defineRefiners(): array
     {
         return [];
-    }
-
-    protected function getRecords(): array
-    {
-        return data_get($this->getPaginatedRecords(), 'data', []);
     }
 
     protected function getPaginatorMeta(): array

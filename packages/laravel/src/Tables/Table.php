@@ -13,9 +13,9 @@ abstract class Table extends Components\Component
     use Concerns\HasModel;
     use Concerns\RefinesAndPaginateRecords;
 
-    public static function make(): static
+    public static function make(array $parameters = []): static
     {
-        return resolve(static::class);
+        return resolve(static::class, $parameters);
     }
 
     public function jsonSerialize(): mixed

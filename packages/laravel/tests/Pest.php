@@ -14,9 +14,13 @@ uses(TestCase::class)
     ->beforeEach(fn () => config()->set('hybridly.testing.ensure_views_exist', false))
     ->in(__DIR__);
 
-function mock_request(string $url = '/', string $method = 'GET', bool $bind = false, bool $hybridly = true, array $headers = []): Request
+function mock_request(string $url = '/', string $method = 'GET', bool $bind = false, bool $hybridly = true, array $headers = [], array $query = []): Request
 {
     $request = Request::create($url, $method);
+
+    if ($query) {
+        $request->query->add($query);
+    }
 
     if ($headers) {
         $request->headers->add($headers);

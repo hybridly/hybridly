@@ -2,11 +2,15 @@
 
 use Hybridly\Tables\Table;
 use Hybridly\Tests\Fixtures\Database\ProductFactory;
+use Hybridly\Tests\Fixtures\Vendor;
 use Hybridly\Tests\Laravel\Tables\Fixtures\BasicProductsTable;
 use Hybridly\Tests\Laravel\Tables\Fixtures\BasicProductsTableWithActions;
 use Hybridly\Tests\Laravel\Tables\Fixtures\BasicProductsTableWithData;
 use Hybridly\Tests\Laravel\Tables\Fixtures\BasicProductsTableWithHiddenStuff;
 use Hybridly\Tests\Laravel\Tables\Fixtures\BasicScopedProductsTable;
+use Hybridly\Tests\Laravel\Tables\Fixtures\BasicTableWithConstructor;
+use Hybridly\Tests\Laravel\Tables\Fixtures\BasicTableWithDependencyInjection;
+use Hybridly\Tests\Laravel\Tables\Fixtures\BasicTableWithDependencyInjectionAndArguments;
 
 use function Pest\Laravel\post;
 
@@ -124,3 +128,60 @@ it('can execute bulk actions with excluded records', function (array $recordIds,
     [[2, 3], ['Product 1']],
     [[1, 3], ['Product 2']],
 ]);
+
+it('supports dependency injection on the constructor', function () {
+    ProductFactory::new()->create(['name' => 'Product 1', 'vendor' => Vendor::Apple]);
+    ProductFactory::new()->create(['name' => 'Product 2', 'vendor' => Vendor::Microsoft]);
+
+    mock_request(bind: true, query: [
+        'vendor' => 'microsoft',
+    ]);
+
+    $table = BasicTableWithDependencyInjection::make();
+
+    expect($table->getRecords())
+        ->toHaveCount(1)
+        ->sequence(fn ($expect) => $expect->name->toBe('Product 2'));
+});
+
+it('supports custom arguments on the constructor', function () {
+    ProductFactory::new()->create(['name' => 'Product 1', 'vendor' => Vendor::Apple]);
+    ProductFactory::new()->create(['name' => 'Product 2', 'vendor' => Vendor::Microsoft]);
+
+    $table = new BasicTableWithConstructor(Vendor::Microsoft);
+
+    expect($table->getRecords())
+        ->toHaveCount(1)
+        ->sequence(fn ($expect) => $expect->name->toBe('Product 2'));
+});
+
+it('supports custom arguments on `make`', function () {
+    ProductFactory::new()->create(['name' => 'Product 1', 'vendor' => Vendor::Apple]);
+    ProductFactory::new()->create(['name' => 'Product 2', 'vendor' => Vendor::Microsoft]);
+
+    $table = BasicTableWithConstructor::make([
+        'vendor' => Vendor::Microsoft,
+    ]);
+
+    expect($table->getRecords())
+        ->toHaveCount(1)
+        ->sequence(fn ($expect) => $expect->name->toBe('Product 2'));
+});
+
+it('supports dependency injection and custom arguments on `make`', function () {
+    ProductFactory::new()->create(['name' => 'Product 1', 'vendor' => Vendor::Apple]);
+    ProductFactory::new()->create(['name' => 'Product foo', 'vendor' => Vendor::Microsoft]);
+    ProductFactory::new()->create(['name' => 'Product bar', 'vendor' => Vendor::Microsoft]);
+
+    mock_request(bind: true, query: [
+        'vendor' => 'microsoft',
+    ]);
+
+    $table = BasicTableWithDependencyInjectionAndArguments::make([
+        'contains' => 'bar',
+    ]);
+
+    expect($table->getRecords())
+        ->toHaveCount(1)
+        ->sequence(fn ($expect) => $expect->name->toBe('Product bar'));
+});
