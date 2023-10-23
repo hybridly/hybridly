@@ -46,10 +46,14 @@
         }
     },
     "autoload-dev": {
+        "files": [
+            "packages/laravel/src/Testing/helpers.php"
+        ],
         "psr-4": {
             "Build\\": [
                 "build"
-            ]
+            ],
+            "Hybridly\\Tests\\": "packages/laravel/tests"
         }
     },
     "extra": {
