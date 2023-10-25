@@ -42,9 +42,9 @@
     "dependencies": {
         "@hybridly/utils": "workspace:*",
         "qs": "^6.11.2",
-        "superjson": "^1.13.1"
+        "superjson": "^1.13.3"
     },
     "devDependencies": {
-        "defu": "^6.1.2"
+        "defu": "^6.1.3"
     }
 }
