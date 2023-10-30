@@ -5,7 +5,7 @@ namespace Hybridly\Refining;
 use Hybridly\Components;
 use Hybridly\Refining\Contracts\Refiner;
 use Hybridly\Refining\Filters\BaseFilter;
-use Hybridly\Refining\Sorts\Sort;
+use Hybridly\Refining\Sorts\BaseSort;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
@@ -85,7 +85,7 @@ class Refine extends Components\Component
     {
         return collect($this->getRefiners())
             ->flatMap(fn (Refiner $refiner) => $refiner instanceof Group ? $refiner->getRefiners() : [$refiner])
-            ->filter(fn (Refiner $refiner) => $refiner instanceof Sort)
+            ->filter(fn (Refiner $refiner) => $refiner instanceof BaseSort)
             ->values()
             ->toArray();
     }
