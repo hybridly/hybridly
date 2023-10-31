@@ -24,6 +24,7 @@ export const HybridlyImports = {
 		'defineLayoutProperties',
 		'registerHook',
 		'useRoute',
+		'useQueryParameters',
 	],
 	'hybridly': [
 		'router',
