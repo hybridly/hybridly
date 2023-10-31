@@ -2,6 +2,7 @@ import type { HybridRequestOptions } from '@hybridly/core'
 import { router } from '@hybridly/core'
 import type { Ref } from 'vue'
 import { computed, ref, watch } from 'vue'
+import type { FormDataConvertible } from '@hybridly/utils'
 import { toReactive } from '../utils'
 
 export type SortDirection = 'asc' | 'desc'
@@ -10,6 +11,8 @@ export type AvailableHybridRequestOptions = Omit<HybridRequestOptions, 'url' | '
 
 export interface ToggleSortOptions extends AvailableHybridRequestOptions {
 	direction?: SortDirection
+	/** Additional sort data, only applied when sorting. */
+	sortData?: { [key: string]: FormDataConvertible }
 }
 
 export interface BindFilterOptions<T> extends AvailableHybridRequestOptions {
@@ -263,11 +266,16 @@ export function useRefinements<
 			? sort[options?.direction]
 			: sort.next
 
+		const sortData = next
+			? options?.sortData ?? {}
+			: Object.fromEntries(Object.entries(options?.sortData ?? {}).map(([key, _]) => [key, undefined]))
+
 		return await router.reload({
 			...defaultOptions,
 			...options,
 			data: {
 				[sortsKey.value]: next || undefined,
+				...sortData,
 			},
 		})
 	}
