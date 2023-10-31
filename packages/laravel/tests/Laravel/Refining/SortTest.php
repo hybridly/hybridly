@@ -154,3 +154,19 @@ test('`next` toggles between possible sorts', function (?string $query, ?string 
     ['name', '-name'],
     ['-name', null],
 ]);
+
+test('direction cycle can be inverted', function (?string $query, ?string $next) {
+    $sorts = mock_refiner(
+        query: ['sort' => $query],
+        refiners: [
+            Sort::make('name')->invertDirectionCycle(),
+        ],
+        apply: true,
+    );
+
+    expect($sorts->getSorts()[0]->jsonSerialize()['next'])->toBe($next);
+})->with([
+    [null, '-name'],
+    ['name', null],
+    ['-name', 'name'],
+]);

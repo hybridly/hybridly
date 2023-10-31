@@ -18,6 +18,7 @@ abstract class BaseSort extends Components\Component implements Refiner, Sort
     use Concerns\HasDefault;
 
     protected null|string $direction = null;
+    protected \Closure|bool $isDirectionCycleInverted = false;
 
     public function __construct(
         protected string $property,
@@ -56,12 +57,18 @@ abstract class BaseSort extends Components\Component implements Refiner, Sort
             'default' => $this->getDefaultDirection(),
             'desc' => $this->getDescendingValue(),
             'asc' => $this->getAscendingValue(),
-            'next' => match ($this->direction) {
-                'desc' => null,
-                'asc' => $this->getDescendingValue(),
-                default => $this->getAscendingValue(),
-            },
+            'next' => $this->getNextDirection(),
         ];
+    }
+
+    /**
+     * Inverts the direction cycle. By default, the order is `asc`, `desc`, then default.
+     */
+    public function invertDirectionCycle(bool|\Closure $invert = true): self
+    {
+        $this->isDirectionCycleInverted = $invert;
+
+        return $this;
     }
 
     protected function resolveDefaultClosureDependencyForEvaluationByType(string $parameterType): array
@@ -82,6 +89,28 @@ abstract class BaseSort extends Components\Component implements Refiner, Sort
             'alias' => [$this->alias],
             default => []
         };
+    }
+
+    protected function getNextDirection(): ?string
+    {
+        if ($this->isDirectionCycleInverted()) {
+            return match ($this->direction) {
+                'desc' => $this->getAscendingValue(),
+                'asc' => null,
+                default => $this->getDescendingValue(),
+            };
+        }
+
+        return match ($this->direction) {
+            'desc' => null,
+            'asc' => $this->getDescendingValue(),
+            default => $this->getAscendingValue(),
+        };
+    }
+
+    protected function isDirectionCycleInverted(): bool
+    {
+        return $this->evaluate($this->isDirectionCycleInverted);
     }
 
     protected function getDescendingValue(): string
