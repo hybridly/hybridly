@@ -82,13 +82,13 @@ importers:
         version: 2.0.0(typescript@5.2.2)
       unocss:
         specifier: ^0.56.5
-        version: 0.56.5(postcss@8.4.27)(rollup@3.29.4)(vite@4.5.0)
+        version: 0.56.5(postcss@8.4.31)(rollup@3.29.4)(vite@4.5.0)
       vite:
         specifier: ^4.5.0
         version: 4.5.0(@types/node@20.8.8)
       vitepress:
         specifier: 1.0.0-rc.20
-        version: 1.0.0-rc.20(@types/node@20.8.8)(axios@1.5.1)(postcss@8.4.27)(search-insights@2.7.0)(typescript@5.2.2)
+        version: 1.0.0-rc.20(@types/node@20.8.8)(axios@1.5.1)(postcss@8.4.31)(search-insights@2.7.0)(typescript@5.2.2)
       vitest:
         specifier: ^0.34.6
         version: 0.34.6(@vitest/ui@0.34.6)(happy-dom@12.9.1)
@@ -159,6 +159,9 @@ importers:
       local-pkg:
         specifier: ^0.4.3
         version: 0.4.3
+      magic-string:
+        specifier: ^0.30.5
+        version: 0.30.5
       throttle-debounce:
         specifier: ^5.0.0
         version: 5.0.0
@@ -1640,7 +1643,7 @@ packages:
       colorette: 2.0.20
       consola: 3.2.3
       fast-glob: 3.3.1
-      magic-string: 0.30.3
+      magic-string: 0.30.5
       pathe: 1.1.1
       perfect-debounce: 1.0.0
     transitivePeerDependencies:
@@ -1673,7 +1676,7 @@ packages:
       sirv: 2.0.3
     dev: true
 
-  /@unocss/postcss@0.56.5(postcss@8.4.27):
+  /@unocss/postcss@0.56.5(postcss@8.4.31):
     resolution: {integrity: sha512-oDY1vCdrCQZx/oxDkq3z77a0RoO+WVQT090oDZzLFO/cPWH3elSOHwnoJU/KzrpJLbUFpyTQKZ/k3VbBaEdGTA==}
     engines: {node: '>=14'}
     peerDependencies:
@@ -1684,8 +1687,8 @@ packages:
       '@unocss/rule-utils': 0.56.5
       css-tree: 2.3.1
       fast-glob: 3.3.1
-      magic-string: 0.30.3
-      postcss: 8.4.27
+      magic-string: 0.30.5
+      postcss: 8.4.31
     dev: true
 
   /@unocss/preset-attributify@0.56.5:
@@ -1810,7 +1813,7 @@ packages:
       '@unocss/transformer-directives': 0.56.5
       chokidar: 3.5.3
       fast-glob: 3.3.1
-      magic-string: 0.30.3
+      magic-string: 0.30.5
       vite: 4.5.0(@types/node@20.8.8)
     transitivePeerDependencies:
       - rollup
@@ -1846,7 +1849,7 @@ packages:
   /@vitest/snapshot@0.34.6:
     resolution: {integrity: sha512-B3OZqYn6k4VaN011D+ve+AA4whM4QkcwcrwaKwAbyyvS/NB1hCWjFIBQxAQQSQir9/RtyAAGuq+4RJmbn2dH4w==}
     dependencies:
-      magic-string: 0.30.3
+      magic-string: 0.30.5
       pathe: 1.1.1
       pretty-format: 29.6.1
     dev: true
@@ -4174,19 +4177,6 @@ packages:
       '@jridgewell/sourcemap-codec': 1.4.15
     dev: true
 
-  /magic-string@0.30.1:
-    resolution: {integrity: sha512-mbVKXPmS0z0G4XqFDCTllmDQ6coZzn94aMlb0o/A4HEHJCKcanlDZwYJgwnkmgD3jyWhUgj9VsPrfd972yPffA==}
-    engines: {node: '>=12'}
-    dependencies:
-      '@jridgewell/sourcemap-codec': 1.4.15
-    dev: false
-
-  /magic-string@0.30.3:
-    resolution: {integrity: sha512-B7xGbll2fG/VjP+SWg4sX3JynwIU0mjoTc6MPpKNuIvftk6u6vqhDnk1R80b8C2GBR6ywqy+1DcKBrevBg+bmw==}
-    engines: {node: '>=12'}
-    dependencies:
-      '@jridgewell/sourcemap-codec': 1.4.15
-
   /magic-string@0.30.5:
     resolution: {integrity: sha512-7xlpfBaQaP/T6Vh8MO/EqXSW5En6INHEvEXQiuff7Gku0PWjU3uf6w/j9o7O+SpB5fOAkrI5HeoNgwjEO0pFsA==}
     engines: {node: '>=12'}
@@ -4928,7 +4918,7 @@ packages:
       rollup: ^3.25.0
       typescript: ^4.5 || ^5.0
     dependencies:
-      magic-string: 0.30.3
+      magic-string: 0.30.5
       rollup: 3.29.4
       typescript: 5.2.2
     optionalDependencies:
@@ -5484,7 +5474,7 @@ packages:
       globby: 13.2.2
       hookable: 5.5.3
       jiti: 1.19.3
-      magic-string: 0.30.3
+      magic-string: 0.30.5
       mkdist: 1.3.0(typescript@5.2.2)
       mlly: 1.4.0
       pathe: 1.1.1
@@ -5519,7 +5509,7 @@ packages:
       escape-string-regexp: 5.0.0
       fast-glob: 3.3.1
       local-pkg: 0.4.3
-      magic-string: 0.30.1
+      magic-string: 0.30.5
       mlly: 1.4.0
       pathe: 1.1.1
       pkg-types: 1.0.3
@@ -5535,7 +5525,7 @@ packages:
     engines: {node: '>= 10.0.0'}
     dev: true
 
-  /unocss@0.56.5(postcss@8.4.27)(rollup@3.29.4)(vite@4.5.0):
+  /unocss@0.56.5(postcss@8.4.31)(rollup@3.29.4)(vite@4.5.0):
     resolution: {integrity: sha512-tO+9St4CntSjHpLXZqBo0/etS06MtvFF1NEny/qFJCL9sCopWwmDKuzW6/LIb4wfqZLdMpVFoEACMNv8nP849A==}
     engines: {node: '>=14'}
     peerDependencies:
@@ -5551,7 +5541,7 @@ packages:
       '@unocss/cli': 0.56.5(rollup@3.29.4)
       '@unocss/core': 0.56.5
       '@unocss/extractor-arbitrary-variants': 0.56.5
-      '@unocss/postcss': 0.56.5(postcss@8.4.27)
+      '@unocss/postcss': 0.56.5(postcss@8.4.31)
       '@unocss/preset-attributify': 0.56.5
       '@unocss/preset-icons': 0.56.5
       '@unocss/preset-mini': 0.56.5
@@ -5590,7 +5580,7 @@ packages:
       '@rollup/pluginutils': 5.0.2(rollup@3.29.4)
       fast-glob: 3.3.1
       local-pkg: 0.4.3
-      magic-string: 0.30.1
+      magic-string: 0.30.5
       minimatch: 9.0.3
       unimport: 3.0.14(rollup@3.29.4)
       unplugin: 1.3.2
@@ -5648,7 +5638,7 @@ packages:
       debug: 4.3.4
       fast-glob: 3.3.1
       local-pkg: 0.4.3
-      magic-string: 0.30.3
+      magic-string: 0.30.5
       minimatch: 9.0.3
       resolve: 1.22.2
       unplugin: 1.4.0
@@ -5817,7 +5807,7 @@ packages:
     optionalDependencies:
       fsevents: 2.3.3
 
-  /vitepress@1.0.0-rc.20(@types/node@20.8.8)(axios@1.5.1)(postcss@8.4.27)(search-insights@2.7.0)(typescript@5.2.2):
+  /vitepress@1.0.0-rc.20(@types/node@20.8.8)(axios@1.5.1)(postcss@8.4.31)(search-insights@2.7.0)(typescript@5.2.2):
     resolution: {integrity: sha512-CykMUJ8JLxLcGWek0ew3wln4RYbsOd1+0YzXITTpajggpynm2S331TNkJVOkHrMRc6GYe3y4pS40GfgcW0ZwAw==}
     hasBin: true
     peerDependencies:
@@ -5838,7 +5828,7 @@ packages:
       focus-trap: 7.5.2
       mark.js: 8.11.1
       minisearch: 6.1.0
-      postcss: 8.4.27
+      postcss: 8.4.31
       shiki: 0.14.5
       vite: 4.5.0(@types/node@20.8.8)
       vue: 3.3.7(typescript@5.2.2)
@@ -5917,7 +5907,7 @@ packages:
       debug: 4.3.4
       happy-dom: 12.9.1
       local-pkg: 0.4.3
-      magic-string: 0.30.3
+      magic-string: 0.30.5
       pathe: 1.1.1
       picocolors: 1.0.0
       std-env: 3.3.3

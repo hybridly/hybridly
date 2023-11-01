@@ -1,5 +1,6 @@
 import type { Plugin } from 'vite'
 import type { DynamicConfiguration } from '@hybridly/core'
+import MagicString from 'magic-string'
 import { LAYOUT_PLUGIN_NAME } from '../constants'
 import type { ViteOptions } from '../types'
 import { debug } from '../utils'
@@ -23,7 +24,8 @@ export default (options: ViteOptions, config: DynamicConfiguration): Plugin => {
 				return
 			}
 
-			return code.replace(templateRegExp, (_, layoutName) => {
+			const source = new MagicString(code)
+			const updatedCode = source.replace(templateRegExp, (_, layoutName) => {
 				const isTypeScript = TYPESCRIPT_REGEX.test(code)
 				const layouts: string[] = layoutName?.toString()?.replaceAll(' ', '').split(',') ?? [defaultLayoutName]
 				const importName = (i: number) => `__hybridly_layout_${i}`
@@ -47,6 +49,11 @@ export default (options: ViteOptions, config: DynamicConfiguration): Plugin => {
 					<template>
 				`
 			})
+
+			return {
+				map: updatedCode.generateMap(),
+				code: updatedCode.toString(),
+			}
 		},
 	}
 }
