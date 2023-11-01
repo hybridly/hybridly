@@ -38,7 +38,7 @@ function getAutoImportsOptions(options: ViteOptions, config: DynamicConfiguratio
 		return
 	}
 
-	const presets = ['@vueuse/core', '@vueuse/head', 'vue-i18n'] as const
+	const presets = ['@vueuse/core', 'vue-i18n'] as const
 	const custom = {
 		'@unhead/vue': [
 			'useHead',
