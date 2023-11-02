@@ -56,7 +56,7 @@ trait HasViewFinder
      *
      * @see https://hybridly.dev/api/laravel/hybridly.html#loadmodulefrom
      */
-    public function loadModuleFrom(string $directory, ?string $namespace = null): static
+    public function loadModuleFrom(string $directory, null|string|array $namespace = null): static
     {
         if ($this->getViewFinder()->isDirectoryLoaded($directory)) {
             return $this;

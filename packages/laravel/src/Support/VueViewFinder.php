@@ -33,7 +33,7 @@ final class VueViewFinder
     /**
      * Loads view files from the given directory and associates them to the given namespace.
      */
-    public function loadViewsFrom(string $directory, ?string $namespace = null): static
+    public function loadViewsFrom(string $directory, null|string|array $namespace = null): static
     {
         $this->views = array_merge($this->views, $this->loadVueFilesFrom(
             directory: $directory,
@@ -46,7 +46,7 @@ final class VueViewFinder
     /**
      * Loads layout files from the given directory and associates them to the given namespace.
      */
-    public function loadLayoutsFrom(string $directory, ?string $namespace = null): static
+    public function loadLayoutsFrom(string $directory, null|string|array $namespace = null): static
     {
         $this->layouts = array_merge($this->layouts, $this->loadVueFilesFrom(
             directory: $directory,
@@ -59,7 +59,7 @@ final class VueViewFinder
     /**
      * Loads component files from the given directory and associates them to the given namespace.
      */
-    public function loadComponentsFrom(string $directory, ?string $namespace = null): static
+    public function loadComponentsFrom(string $directory, null|string|array $namespace = null): static
     {
         $this->components = array_merge($this->components, $this->loadVueFilesFrom(
             directory: $directory,
@@ -138,14 +138,17 @@ final class VueViewFinder
     /**
      * @return array<{path: string, identifier: string}>
      */
-    protected function loadVueFilesFrom(string $directory, ?string $namespace = null): array
+    protected function loadVueFilesFrom(string $directory, null|string|array $namespace = null): array
     {
         $this->loadDirectory($directory);
+
+        $namespace = \is_array($namespace) ? implode('-', $namespace) : $namespace;
+        $namespace = str($namespace ?? 'default')->basename()->kebab();
 
         return $this->findVueFiles(
             directory: $directory,
             baseDirectory: $directory,
-            namespace: $namespace ?? 'default',
+            namespace: $namespace,
         );
     }
 
