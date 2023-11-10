@@ -1,5 +1,5 @@
 import makeDebugger from 'debug'
-import { isPackageExists } from 'local-pkg'
+import { importModule, isPackageExists, resolveModule } from 'local-pkg'
 import { LAYOUT_PLUGIN_NAME, CONFIG_PLUGIN_NAME } from './constants'
 
 export const debug = {
@@ -9,6 +9,16 @@ export const debug = {
 
 export function isPackageInstalled(name: string, paths: string[] = [process.cwd()]) {
 	return isPackageExists(name, { paths })
+}
+
+export function importPackage(name: string, paths: string[] = [process.cwd()]) {
+	const mod = resolveModule(name, { paths })
+	if (!mod) {
+		console.warn(`Could not resolve package [${name}]`)
+		return
+	}
+
+	return importModule(mod)
 }
 
 export function toKebabCase(key: string) {

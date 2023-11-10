@@ -19,7 +19,7 @@ export default async function plugin(options: ViteOptions = {}) {
 		layout(options, config),
 		options.laravel !== false && laravel(getLaravelOptions(options, config)),
 		options.run !== false && run(getRunOptions(options)),
-		options.vueComponents !== false && vueComponents(getVueComponentsOptions(options, config)),
+		options.vueComponents !== false && vueComponents(await getVueComponentsOptions(options, config)),
 		options.autoImports !== false && autoimport(getAutoImportsOptions(options, config)),
 		options.icons !== false && icons(getIconsOptions(options, config)),
 		options.vue !== false && vue(getVueOptions(options)),
