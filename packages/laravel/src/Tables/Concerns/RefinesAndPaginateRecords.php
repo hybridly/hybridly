@@ -2,7 +2,8 @@
 
 namespace Hybridly\Tables\Concerns;
 
-use Hybridly\Refining\Contracts\Refiner;
+use Hybridly\Components\Concerns\IsHideable;
+use Hybridly\Refining\Group;
 use Hybridly\Refining\Refine;
 use Hybridly\Tables\Columns\BaseColumn;
 use Illuminate\Contracts\Pagination\CursorPaginator;
@@ -22,8 +23,27 @@ trait RefinesAndPaginateRecords
 
     public function getRefiners(): Collection
     {
-        return $this->cachedRefinements ??= collect($this->defineRefiners())
-            ->filter(static fn (Refiner $refiner): bool => !$refiner->isHidden());
+        if (!isset($this->cachedRefinements)) {
+            $is_not_hidden = static fn($refiner): bool => \in_array(
+                IsHideable::class,
+                class_uses_recursive($refiner),
+                true
+                ) && !$refiner->isHidden();
+
+            $this->cachedRefinements = collect($this->defineRefiners())
+                ->filter(function ($refiner) use ($is_not_hidden): bool {
+                if ($refiner instanceof Group) {
+                    $refiner->refiners(collect($refiner->getRefiners())
+                        ->filter($is_not_hidden)->all());
+
+                    return true;
+                }
+
+                return $is_not_hidden($refiner);
+            });
+        }
+
+        return $this->cachedRefinements;
     }
 
     public function getRecords(): array
