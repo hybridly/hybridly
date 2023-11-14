@@ -9,6 +9,8 @@ use Illuminate\Contracts\Database\Eloquent\Builder;
 class Group implements Refiner
 {
     use Components\Concerns\Configurable;
+    use Components\Concerns\EvaluatesClosures;
+    use Components\Concerns\IsHideable;
 
     public function __construct(
         protected array $refiners = [],
