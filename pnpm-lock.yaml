@@ -162,6 +162,9 @@ importers:
       magic-string:
         specifier: ^0.30.5
         version: 0.30.5
+      picocolors:
+        specifier: ^1.0.0
+        version: 1.0.0
       throttle-debounce:
         specifier: ^5.0.0
         version: 5.0.0
