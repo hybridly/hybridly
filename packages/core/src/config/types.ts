@@ -1,6 +1,12 @@
 import type { RoutingConfiguration } from '../routing'
 
 export interface DynamicConfiguration {
+	versions: {
+		composer: string
+		npm: string
+		latest: string
+		is_latest: boolean
+	}
 	architecture: {
 		root: string
 	}

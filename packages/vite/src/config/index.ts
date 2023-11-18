@@ -1,6 +1,7 @@
 import path from 'node:path'
-import type { Plugin } from 'vite'
+import { type Plugin } from 'vite'
 import type { DynamicConfiguration } from '@hybridly/core'
+import colors from 'picocolors'
 import { CONFIG_PLUGIN_NAME, CONFIG_VIRTUAL_MODULE_ID, RESOLVED_CONFIG_VIRTUAL_MODULE_ID } from '../constants'
 import type { ViteOptions } from '../types'
 import { generateRouteDefinitionFile, generateLaravelIdeaHelper, generateTsConfig } from '../typegen'
@@ -69,6 +70,36 @@ export default (options: ViteOptions, config: DynamicConfiguration): Plugin => {
 			server.watcher.on('add', handleFileChange)
 			server.watcher.on('change', handleFileChange)
 			server.watcher.on('unlink', handleFileChange)
+
+			server.httpServer?.once('listening', () => {
+				if (!config.versions) {
+					return
+				}
+
+				let registered = `${colors.bold(config.components.views.length)} ${colors.dim('views')}, `
+				registered += `${colors.bold(config.components.components.length)} ${colors.dim('components')}, `
+				registered += `${colors.bold(config.components.layouts.length)} ${colors.dim('layouts')}, `
+				registered += `${colors.bold(config.components.directories.length)} ${colors.dim('directories')}`
+
+				const eagerLoading = config.components.eager ? colors.dim('enabled') : colors.dim('disabled')
+				const latest = config.versions.is_latest ? '' : `${colors.yellow(colors.bold(config.versions.latest))} ${colors.yellow('available')}`
+
+				let version = `${colors.yellow(`v${config.versions.composer}`)} ${colors.dim('(composer)')}, `
+				version += `${colors.yellow(`v${config.versions.npm}`)} ${colors.dim('(npm)')}`
+				version += ` — ${colors.yellow('this may lead to undefined behavior')}`
+
+				setTimeout(() => {
+					server.config.logger.info(`\n  ${colors.magenta(`${colors.bold('HYBRIDLY')} v${config.versions.composer}`)}  ${latest}`)
+					server.config.logger.info('')
+					server.config.logger.info(`  ${colors.green('➜')}  ${colors.bold('URL')}: ${colors.cyan(config.routing.url)}`)
+					server.config.logger.info(`  ${colors.green('➜')}  ${colors.bold('Registered')}: ${registered}`)
+					server.config.logger.info(`  ${colors.green('➜')}  ${colors.bold('Eager loading')}: ${eagerLoading}`)
+
+					if (config.versions.composer !== config.versions.npm) {
+						server.config.logger.info(`  ${colors.yellow('➜')}  ${colors.bold('Version mismatch')}: ${version}`)
+					}
+				}, 120)
+			})
 		},
 		resolveId(id) {
 			if (id === CONFIG_VIRTUAL_MODULE_ID) {

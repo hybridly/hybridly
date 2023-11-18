@@ -4,6 +4,7 @@ namespace Hybridly\Commands;
 
 use Hybridly\Hybridly;
 use Hybridly\Support\RouteExtractor;
+use Hybridly\Support\Version;
 use Illuminate\Console\Command;
 
 class PrintConfigurationCommand extends Command
@@ -22,6 +23,12 @@ class PrintConfigurationCommand extends Command
     public function handle(): int
     {
         $configuration = [
+            'versions' => [
+                'composer' => Version::getComposerVersion(),
+                'npm' => Version::getNpmVersion(),
+                'is_latest' => Version::isLatestVersion(),
+                'latest' => Version::getLatestVersion(),
+            ],
             'architecture' => [
                 'root' => config('hybridly.architecture.root', 'resources'),
             ],
