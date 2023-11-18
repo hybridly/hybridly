@@ -2,8 +2,9 @@
 
 namespace Hybridly\Tables\Concerns;
 
-use Hybridly\Components\Concerns\IsHideable;
-use Hybridly\Refining\Group;
+use Exception;
+use Hybridly\Components\Contracts\Hideable;
+use Hybridly\Refining\Contracts\Group;
 use Hybridly\Refining\Refine;
 use Hybridly\Tables\Columns\BaseColumn;
 use Illuminate\Contracts\Pagination\CursorPaginator;
@@ -15,26 +16,25 @@ use Illuminate\Support\Collection;
 use Spatie\LaravelData\Contracts\DataCollectable;
 use Spatie\LaravelData\Data;
 
+use function array_key_exists;
+use function in_array;
+
+use const ARRAY_FILTER_USE_KEY;
+
 trait RefinesAndPaginateRecords
 {
     private null|Refine $refine = null;
     private mixed $cachedRecords = null;
-    private mixed $cachedRefiners = null;
+    private Collection | null $cachedRefiners = null;
 
     public function getRefiners(): Collection
     {
-        if (!isset($this->cachedRefinements)) {
-            $is_not_hidden = static fn($refiner): bool => \in_array(
-                IsHideable::class,
-                class_uses_recursive($refiner),
-                true
-                ) && !$refiner->isHidden();
+        if (!isset($this->cachedRefiners)) {
+            $is_not_hidden = static fn($refiner): bool => $refiner instanceof Hideable && !$refiner->isHidden();
 
-            $this->cachedRefinements = collect($this->defineRefiners())
-                ->filter(function ($refiner) use ($is_not_hidden): bool {
+            $this->cachedRefiners = collect($this->defineRefiners())->filter(function ($refiner) use ($is_not_hidden): bool {
                 if ($refiner instanceof Group) {
-                    $refiner->refiners(collect($refiner->getRefiners())
-                        ->filter($is_not_hidden)->all());
+                    $refiner->refiners(collect($refiner->getRefiners())->filter($is_not_hidden)->all());
 
                     return true;
                 }
@@ -43,7 +43,7 @@ trait RefinesAndPaginateRecords
             });
         }
 
-        return $this->cachedRefinements;
+        return $this->cachedRefiners;
     }
 
     public function getRecords(): array
@@ -61,7 +61,7 @@ trait RefinesAndPaginateRecords
         $pagination = $this->getPaginatedRecords();
 
         // Wraps pagination data if necessary
-        if (!\array_key_exists('meta', $pagination)) {
+        if (!array_key_exists('meta', $pagination)) {
             return [
                 'links' => $pagination['links'] ?? [],
                 'meta' => array_filter([
@@ -115,7 +115,7 @@ trait RefinesAndPaginateRecords
                 perPage: $this->getRecordsPerPage(),
                 cursorName: $this->formatScope('cursor'),
             ),
-            default => throw new \Exception("Invalid paginator type [{$this->getPaginatorType()}]"),
+            default => throw new Exception("Invalid paginator type [{$this->getPaginatorType()}]"),
         };
 
         return $paginator->withQueryString();
@@ -205,8 +205,8 @@ trait RefinesAndPaginateRecords
                         ),
                     ]),
                 ],
-                callback: fn (string $key) => \in_array($key, [...$columnNames->toArray(), $keyName], true),
-                mode: \ARRAY_FILTER_USE_KEY,
+                callback: fn (string $key) => in_array($key, [...$columnNames->toArray(), $keyName], true),
+                mode: ARRAY_FILTER_USE_KEY,
             ),
         ]);
 

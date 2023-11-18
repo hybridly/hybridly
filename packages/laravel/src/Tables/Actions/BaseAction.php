@@ -3,16 +3,20 @@
 namespace Hybridly\Tables\Actions;
 
 use Hybridly\Components\Component;
-use Hybridly\Components\Concerns;
-use Hybridly\Tables\Actions;
+use Hybridly\Components\Concerns\HasLabel;
+use Hybridly\Components\Concerns\HasMetadata;
+use Hybridly\Components\Concerns\HasName;
+use Hybridly\Components\Concerns\IsHideable;
+use Hybridly\Components\Contracts\Hideable;
+use Hybridly\Tables\Actions\Concerns\HasActionCallback;
 
-abstract class BaseAction extends Component
+abstract class BaseAction extends Component implements Hideable
 {
-    use Actions\Concerns\HasActionCallback;
-    use Concerns\HasLabel;
-    use Concerns\HasMetadata;
-    use Concerns\HasName;
-    use Concerns\IsHideable;
+    use HasActionCallback;
+    use HasLabel;
+    use HasMetadata;
+    use HasName;
+    use IsHideable;
 
     final public function __construct(string $name)
     {

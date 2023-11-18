@@ -2,20 +2,25 @@
 
 namespace Hybridly\Refining\Sorts;
 
-use Hybridly\Components;
+use Hybridly\Components\Component;
+use Hybridly\Components\Concerns\HasLabel;
+use Hybridly\Components\Concerns\HasMetadata;
+use Hybridly\Components\Concerns\HasName;
+use Hybridly\Components\Concerns\IsHideable;
+use Hybridly\Components\Contracts\Hideable;
 use Hybridly\Refining\Contracts\Refiner;
 use Hybridly\Refining\Contracts\Sort;
 use Hybridly\Refining\Refine;
+use Hybridly\Refining\Sorts\Concerns\HasDefault;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 
-abstract class BaseSort extends Components\Component implements Refiner, Sort
+abstract class BaseSort extends Component implements Hideable, Refiner, Sort
 {
-    use Components\Concerns\Configurable;
-    use Components\Concerns\HasLabel;
-    use Components\Concerns\HasMetadata;
-    use Components\Concerns\HasName;
-    use Components\Concerns\IsHideable;
-    use Concerns\HasDefault;
+    use HasLabel;
+    use HasMetadata;
+    use HasName;
+    use IsHideable;
+    use HasDefault;
 
     protected null|string $direction = null;
     protected \Closure|bool $isDirectionCycleInverted = false;

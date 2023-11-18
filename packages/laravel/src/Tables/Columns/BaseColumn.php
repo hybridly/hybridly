@@ -3,17 +3,22 @@
 namespace Hybridly\Tables\Columns;
 
 use Hybridly\Components\Component;
-use Hybridly\Components\Concerns;
-use Hybridly\Tables\Columns;
+use Hybridly\Components\Concerns\HasLabel;
+use Hybridly\Components\Concerns\HasMetadata;
+use Hybridly\Components\Concerns\HasName;
+use Hybridly\Components\Concerns\IsHideable;
+use Hybridly\Components\Contracts\Hideable;
+use Hybridly\Refining\Filters\Concerns\HasType;
+use Hybridly\Tables\Columns\Concerns\CanTransformValue;
 
-abstract class BaseColumn extends Component
+abstract class BaseColumn extends Component implements Hideable
 {
-    use Columns\Concerns\CanTransformValue;
-    use Concerns\HasLabel;
-    use Concerns\HasMetadata;
-    use Concerns\HasName;
-    use Concerns\HasType;
-    use Concerns\IsHideable;
+    use CanTransformValue;
+    use HasLabel;
+    use HasMetadata;
+    use HasName;
+    use HasType;
+    use IsHideable;
 
     final public function __construct(string $name)
     {

@@ -51,7 +51,7 @@ return [
     | See: https://hybridly.dev/guide/refining.html
     */
     'refining' => [
-        'sorts_key' => 'sort',
+        'sorts_key' => 'sorts',
         'filters_key' => 'filters',
     ],
 

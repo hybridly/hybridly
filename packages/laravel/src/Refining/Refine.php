@@ -3,6 +3,7 @@
 namespace Hybridly\Refining;
 
 use Hybridly\Components;
+use Hybridly\Refining\Contracts\Group;
 use Hybridly\Refining\Contracts\Refiner;
 use Hybridly\Refining\Filters\BaseFilter;
 use Hybridly\Refining\Sorts\BaseSort;
@@ -84,8 +85,8 @@ class Refine extends Components\Component
     public function getSorts(): array
     {
         return collect($this->getRefiners())
-            ->flatMap(fn (Refiner $refiner) => $refiner instanceof Group ? $refiner->getRefiners() : [$refiner])
-            ->filter(fn (Refiner $refiner) => $refiner instanceof BaseSort)
+            ->flatMap(static fn(Refiner | Group $refiner): array => $refiner instanceof Group ? $refiner->getRefiners() : [$refiner])
+            ->filter(static fn(Refiner $refiner): bool => $refiner instanceof BaseSort)
             ->values()
             ->toArray();
     }
@@ -93,8 +94,8 @@ class Refine extends Components\Component
     public function getFilters(): array
     {
         return collect($this->getRefiners())
-            ->flatMap(fn (Refiner $refiner) => $refiner instanceof Group ? $refiner->getRefiners() : [$refiner])
-            ->filter(fn (Refiner $refiner) => $refiner instanceof BaseFilter)
+            ->flatMap(static fn(Refiner | Group $refiner): array => $refiner instanceof Group ? $refiner->getRefiners() : [$refiner])
+            ->filter(static fn(Refiner $refiner): bool => $refiner instanceof BaseFilter)
             ->values()
             ->toArray();
     }
@@ -102,13 +103,14 @@ class Refine extends Components\Component
     public function jsonSerialize(): array
     {
         return [
-            'sorts' => $this->getSorts(),
             'filters' => $this->getFilters(),
-            'scope' => $this->formatScope(),
             'keys' => [
-                'sorts' => $this->formatScope($this->getSortsKey()),
                 'filters' => $this->formatScope($this->getFiltersKey()),
+                'sorts' => $this->formatScope($this->getSortsKey())
             ],
+            'multi_sorting' => $this->multiSorting,
+            'scope' => $this->formatScope(),
+            'sorts' => $this->getSorts()
         ];
     }
 

@@ -137,6 +137,10 @@ declare global {
 			 */
 			filters: string
 		}
+		/**
+		 * Is the refiner multi sorting?
+		 */
+		multi_sorting: boolean
 	}
 // #endregion interfaces
 }
@@ -230,6 +234,18 @@ export function useRefinements<
 		})
 	}
 
+	async function clearSort(sort: string, options: AvailableHybridRequestOptions = {}) {
+		return await router.reload({
+			...defaultOptions,
+			...options,
+			data: {
+				[sortsKey.value]: {
+					[sort]: undefined,
+				},
+			},
+		})
+	}
+
 	function currentSorts(): Array<SortRefinement> {
 		return refinements.value.sorts.filter(({ is_active }) => is_active)
 	}
@@ -255,6 +271,7 @@ export function useRefinements<
 	}
 
 	async function toggleSort(name: string, options?: ToggleSortOptions) {
+		let data: Record<string, undefined> = {}
 		const sort = getSort(name)
 
 		if (!sort) {
@@ -270,11 +287,30 @@ export function useRefinements<
 			? options?.sortData ?? {}
 			: Object.fromEntries(Object.entries(options?.sortData ?? {}).map(([key, _]) => [key, undefined]))
 
+		if (!refinements.value.multi_sorting) {
+			const keys: string[] = refinements.value.sorts.map(({ name }: { name: string }) => name)
+			const index: number = keys.indexOf(name)
+
+			if (index > -1) {
+				keys.splice(index, 1)
+			}
+
+			if (keys.length > 0) {
+				data = keys.reduce((obj: Record<string, undefined>, item: string) => {
+					obj[item] = undefined
+					return obj
+				}, {})
+			}
+		}
+
 		return await router.reload({
 			...defaultOptions,
 			...options,
 			data: {
-				[sortsKey.value]: next || undefined,
+				[sortsKey.value]: {
+					...data,
+					[name]: next || undefined,
+				},
 				...sortData,
 			},
 		})

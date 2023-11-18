@@ -2,22 +2,28 @@
 
 namespace Hybridly\Refining\Filters;
 
-use Hybridly\Components;
+use Hybridly\Components\Component;
+use Hybridly\Components\Concerns\HasLabel;
+use Hybridly\Components\Concerns\HasMetadata;
+use Hybridly\Components\Concerns\HasName;
+use Hybridly\Components\Concerns\IsHideable;
+use Hybridly\Components\Contracts\Hideable;
 use Hybridly\Refining\Contracts\Filter;
 use Hybridly\Refining\Contracts\Refiner;
+use Hybridly\Refining\Filters\Concerns\HasDefaultValue;
+use Hybridly\Refining\Filters\Concerns\HasType;
 use Hybridly\Refining\Refine;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Validation\ValidationException;
 
-abstract class BaseFilter extends Components\Component implements Refiner, Filter
+abstract class BaseFilter extends Component implements Hideable, Refiner, Filter
 {
-    use Components\Concerns\Configurable;
-    use Components\Concerns\HasLabel;
-    use Components\Concerns\HasMetadata;
-    use Components\Concerns\HasName;
-    use Components\Concerns\IsHideable;
-    use Concerns\HasDefaultValue;
-    use Concerns\HasType;
+    use HasLabel;
+    use HasMetadata;
+    use HasName;
+    use IsHideable;
+    use HasDefaultValue;
+    use HasType;
 
     protected mixed $value = null;
 
