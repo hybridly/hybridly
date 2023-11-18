@@ -50,6 +50,7 @@
         "laravel-vite-plugin": "^0.8.1",
         "local-pkg": "^0.4.3",
         "magic-string": "^0.30.5",
+        "picocolors": "^1.0.0",
         "throttle-debounce": "^5.0.0",
         "unplugin-auto-import": "^0.16.6",
         "unplugin-icons": "^0.17.1",

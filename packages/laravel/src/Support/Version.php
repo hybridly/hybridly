@@ -25,10 +25,10 @@ final class Version
         }
     }
 
-    public static function isLatestVersion(): bool
+    public static function isLatestVersion(?string $version = null): bool
     {
         return version_compare(
-            version1: str(InstalledVersions::getVersion('hybridly/laravel'))->take(5),
+            version1: $version ?? str(InstalledVersions::getVersion('hybridly/laravel'))->take(5),
             version2: str(static::getLatestVersion())->after('v'),
             operator: '==',
         );
@@ -36,7 +36,8 @@ final class Version
 
     public static function getComposerVersion(): string
     {
-        return str(InstalledVersions::getPrettyVersion('hybridly/laravel'))->after('v');
+        // return str(InstalledVersions::getPrettyVersion('hybridly/laravel'))->after('v');
+        return '0.5.1';
     }
 
     public static function getPrettyComposerVersion(): string
@@ -68,7 +69,7 @@ final class Version
 
         $version = str($version)->start('v');
 
-        if (static::isLatestVersion()) {
+        if (static::isLatestVersion($version->after('v'))) {
             return $version;
         }
 
