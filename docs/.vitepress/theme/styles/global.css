@@ -91,19 +91,6 @@ footer p.message {
 	align-items: center;
 }
 
-.VPLink.link {
-	display: flex;
-	align-items: center;
-}
-
-.VPLink.link > p.text {
-	flex-grow: 0;
-}
-
-.VPLink.link > svg.icon {
-	margin-left: 0.5rem;
-}
-
 /* Sidebar scrollbar */
 
 aside.VPSidebar {
@@ -124,51 +111,4 @@ aside.VPSidebar::-webkit-scrollbar-thumb {
 	border-radius: 100vh;
 	background: var(--vp-c-scrollbar) !important;
 	border: 3px solid var(--vp-c-scrollbar) !important;
-}
-
-/* Sidebar links */
-
-.VPSidebar .link {
-	position: relative;
-}
-
-.VPSidebar .link::after {
-	content: "";
-	position: absolute;
-	right: 0;
-	top: 0;
-	bottom: 0;
-	width: 2.5px;
-	height: 20px;
-	background: var(--vp-c-brand);
-	transform: scaleY(0);
-	border-radius: 100px;
-	transition: all 250ms;
-	opacity: 0;
-}
-
-.VPSidebar .link.active::after {
-	transform: scaleY(1);
-	opacity: 1;
-}
-
-.VPSidebarGroup .items {
-	padding-left: 7px;
-	transition: all 300ms;
-}
-
-.VPSidebarGroup .items .link .link-text {
-	display: inline-block;
-	transition: all 300ms;
-}
-
-.VPSidebarGroup .items .link:not(.active):hover .link-text {
-	transform: translateX(2px);
-}
-
-/* Docs right sidebar */
-.VPDocAsideOutline > div.content .outline-title {
-	font-size: 15px !important;
-	position: relative;
-	top: -6px;
 }
