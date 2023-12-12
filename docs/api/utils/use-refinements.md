@@ -41,12 +41,37 @@ The object returned by `useRefinements` contains a few functions and properties 
 
 All of the functions below accept additional [request options](../router/options.md) as their last parameter.
 
+### `sorts`
+
+- Type: see the [sorts array](#the-sorts-array).
+
+The list of available sorts. They are configured by the `Refine` object in the back-end.
+
+### `filters`
+
+- Type: see the [filters array](#the-filters-array).
+
+The list of available filters. They are configured by the `Refine` object in the back-end.
+
+### `bindFilter`
+
+- Type: `<T>(name: string, options?: BindOptions) => Ref<T>`
+
+Binds the given filter to a ref. The second parameter, `options`, accepts an alternative `watch` function and a `debounce` property that defaults to 250 milliseconds.
+
+**Example**
+
+```ts
+const commercial = refine.bindFilter<bool>('commercial')
+const search = refine.bindFilter<string>('search')
+```
+
 ### `toggleSort`
 
 - Type: `Function`
 - Parameters: `sortName: string`
 
-Toggles the specified sort. `ToggleSortOptions` is the same as `HybridRequestOptions` with an additional `direction` property, which should be `asc` or `desc`. If specified, the sort will be applied as such.
+Toggles the specified sort. `ToggleSortOptions` is the same as `HybridRequestOptions` with an additional `direction` property, which must be undefined, `asc` or `desc`. If specified, the sort will be applied as such.
 
 ### `applyFilter`
 
@@ -54,6 +79,12 @@ Toggles the specified sort. `ToggleSortOptions` is the same as `HybridRequestOpt
 - Parameters: `filter: string`, `value: any`
 
 Applies the specified value to the specified filter.
+
+### `isFiltering`
+
+- Type: `Function`
+
+Determines whether the specified filter is active.
 
 ### `clearFilter`
 
@@ -68,29 +99,28 @@ Clears the specified filter.
 
 Clears all active filters.
 
+### `isSorting`
+
+- Type: `Function`
+
+Toggles the specified sort. The second parameter accepts a `direction` property that specifies the direction of the sort. 
+
+Additionnally, the `sortData` property can be used to define additionnal properties that will be added to the request only when the sort is active.
+
+```ts
+// ?sort=foo&type=bar
+await refine.toggleSort('foo', {
+	sortData: {
+		type: 'bar',
+	},
+})
+```
+
 ### `clearSorts`
 
 - Type: `Function`
 
 Clears all active sorts.
-
-### `reset`
-
-- Type: `Function`
-
-Resets all filters and sorts.
-
-### `isSorting`
-
-- Type: `ComputedRef<boolean>`
-
-Specifies whether there is an active sort.
-
-### `isFiltering`
-
-- Type: `ComputedRef<boolean>`
-
-Specifies whether there is an active filter.
 
 ### `currentSorts`
 
@@ -104,44 +134,39 @@ The list of currently active sorts.
 
 The list of currently active filters.
 
-### `filters`
-
-- Type: [`Array<FilterRefinement>`](#interfaces)
-
-The list of available filters. They are configured by the `Refine` object in the back-end.
-
-### `sorts`
-
-- Type: [`Array<SortRefinement>`](#interfaces)
-
-The list of available sorts. They are configured by the `Refine` object in the back-end.
-
 ### `getFilter`
 
 - Type: `(name: string): FilterRefinement|undefined`
 
-Gets a filter by name.
+Gets a filter object by name.
 
 ### `getSort`
 
 - Type: `(name: string): SortRefinement|undefined`
 
-Gets a sort by name.
+Gets a sort object by name.
 
-### `bindFilter`
+### `reset`
 
-- Type: `<T>(name: string, options?: BindOptions) => Ref<T>`
+- Type: `Function`
 
-Binds the given filter to a ref. The second parameter, `options`, accepts an alternative `watch` function.
+Resets all filters and sorts.
 
-**Example**
+## The `sorts` array
 
-```ts
-const commercial = refine.bindFilter<bool>('commercial')
-const search = refine.bindFilter<string>('search', {
-	watch: (ref, cb) => watchDebounced(ref, cb, { debounce: 200 }),
-})
-```
+This array contains an entry for each available sort. 
+
+Each entry extends [`SortRefinement`](#interfaces) and adds the `toggle`, `isSorting` and `clear` methods. 
+
+These methods are shorthands to [`toggleSort`](#togglesort), [`isSorting`](#issorting) and [`clearSort`](#clearsort) respectively, without the need for the sort name parameter.
+
+## The `filters` array
+
+This array contains an entry for each available filter. 
+
+Each entry extends [`FilterRefinement`](#interfaces) and adds the `apply` and `clear` methods. 
+
+These methods are shorthands to [`applyFilter`](#applyfilter) and [`clearFilter`](#clearfilter) respectively, without the need for the filter name parameter.
 
 ## Interfaces
 
