@@ -33,3 +33,15 @@ When rendering a view with the `hybridly` function, the view component name will
   alt="Linkified view components"
   class="rounded-lg shadow-lg mt-8"
 />
+
+### Additionnal features
+
+In addition to Hybridly-specific features, the Code extension also integrates with Pest, avoiding the need for the [Better Pest](https://github.com/m1guelpf/better-pest) extension, and adds support for scaffolding classes or updating namespaces.
+
+By default, you may:
+- Run the current test by pressing `F6`
+- Run tests in the current file by pressing `F7`
+- Run all tests by pressing `F8`
+- Run the previous test by pressing `F9`
+- Generate a class in an empty file by running the `Generate class` command
+  - If the file is not empty, the command will update the namespace instead for quick refactoring
