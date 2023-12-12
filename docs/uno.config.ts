@@ -9,6 +9,9 @@ export default defineConfig({
 			autoInstall: true,
 		}),
 	],
+	shortcuts: {
+		preface: 'mt-4 text-lg opacity-60',
+	},
 	theme: {
 		fontFamily: {
 			title: '"Rubik Variable", var(--vp-font-family-base)',

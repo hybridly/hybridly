@@ -1,4 +1,8 @@
-# What is Hybridly?
+# Introduction
+
+<div class="preface">
+Hybridly's purpose is to drastically improve the productivity and the developer experience of writing interactive applications using Laravel and Vue.
+</div>
 
 ## Overview
 

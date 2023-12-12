@@ -66,6 +66,10 @@ hr {
 	margin-top: 5rem !important;
 }
 
+.vp-doc .preface + h2 {
+	margin-top: 4rem !important;
+}
+
 .vp-doc h3 {
 	margin-top: 3rem !important;
 }
