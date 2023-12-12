@@ -1,59 +1,57 @@
 {
-    "private": true,
-    "version": "0.5.7",
-    "type": "module",
-    "scripts": {
-        "release": "bumpp package.json packages/*/package.json --all --execute \"tsx build/bump-php-packages.ts\" --commit \"release: v\"",
-        "build": "pnpm -r build",
-        "test": "vitest --run",
-        "test:all": "pnpm run test && composer test",
-        "lint": "eslint \"**/*.{ts,vue,mjs,json}\"",
-        "lint:fix": "eslint \"**/*.{ts,vue,mjs,json}\" --fix",
-        "docs:dev": "vitepress dev docs",
-        "docs:build": "vitepress build docs",
-        "docs:serve": "vitepress serve docs",
-        "ci": "pnpm run lint && pnpm run build && pnpm run test"
-    },
-    "packageManager": "pnpm@8.9.2",
-    "devDependencies": {
-        "@fontsource-variable/rubik": "^5.0.19",
-        "@hybridly/core": "workspace:*",
-        "@hybridly/utils": "workspace:*",
-        "@hybridly/vite": "workspace:*",
-        "@hybridly/vue": "workspace:*",
-        "@innocenzi/eslint-config": "^0.21.0",
-        "@types/debug": "^4.1.10",
-        "@types/node": "^20.8.8",
-        "@types/qs": "^6.9.9",
-        "@types/throttle-debounce": "^5.0.1",
-        "@vitest/ui": "^0.34.6",
-        "axios": "^1.5.1",
-        "bumpp": "^9.2.0",
-        "eslint": "^8.52.0",
-        "happy-dom": "^12.9.1",
-        "hybridly": "workspace:*",
-        "msw": "^1.3.2",
-        "shiki": "^0.14.5",
-        "shiki-processor": "^0.1.3",
-        "tailwindcss": "^3.3.5",
-        "tsx": "^3.14.0",
-        "type-fest": "^4.6.0",
-        "typescript": "^5.2.2",
-        "unbuild": "^2.0.0",
-        "unocss": "^0.56.5",
-        "vite": "^4.5.0",
-        "vitepress": "1.0.0-rc.20",
-        "vitest": "^0.34.6",
-        "vue": "^3.3.7"
-    },
-    "pnpm": {
-        "peerDependencyRules": {
-            "ignoreMissing": [
-                "@algolia/client-search",
-                "react",
-                "react-dom",
-                "@types/react"
-            ]
-        }
+  "private": true,
+  "version": "0.5.7",
+  "type": "module",
+  "scripts": {
+    "release": "bumpp package.json packages/*/package.json --all --execute \"tsx build/bump-php-packages.ts\" --commit \"release: v\"",
+    "build": "pnpm -r build",
+    "test": "vitest --run",
+    "test:all": "pnpm run test && composer test",
+    "lint": "eslint \"**/*.{ts,vue,mjs,json}\"",
+    "lint:fix": "eslint \"**/*.{ts,vue,mjs,json}\" --fix",
+    "docs:dev": "vitepress dev docs",
+    "docs:build": "vitepress build docs",
+    "docs:serve": "vitepress serve docs",
+    "ci": "pnpm run lint && pnpm run build && pnpm run test"
+  },
+  "packageManager": "pnpm@8.12.0",
+  "devDependencies": {
+    "@fontsource-variable/rubik": "^5.0.20",
+    "@hybridly/core": "workspace:*",
+    "@hybridly/utils": "workspace:*",
+    "@hybridly/vite": "workspace:*",
+    "@hybridly/vue": "workspace:*",
+    "@innocenzi/eslint-config": "^0.21.2",
+    "@types/debug": "^4.1.12",
+    "@types/node": "^20.10.4",
+    "@types/qs": "^6.9.10",
+    "@types/throttle-debounce": "^5.0.2",
+    "@vitest/ui": "^0.34.7",
+    "axios": "^1.6.2",
+    "bumpp": "^9.2.1",
+    "eslint": "^8.55.0",
+    "happy-dom": "^12.10.3",
+    "hybridly": "workspace:*",
+    "msw": "^1.3.2",
+    "tailwindcss": "^3.3.6",
+    "tsx": "^3.14.0",
+    "type-fest": "^4.8.3",
+    "typescript": "^5.3.3",
+    "unbuild": "^2.0.0",
+    "unocss": "^0.58.0",
+    "vite": "^4.5.1",
+    "vitepress": "1.0.0-rc.31",
+    "vitest": "^0.34.6",
+    "vue": "^3.3.11"
+  },
+  "pnpm": {
+    "peerDependencyRules": {
+      "ignoreMissing": [
+        "@algolia/client-search",
+        "react",
+        "react-dom",
+        "@types/react"
+      ]
     }
+  }
 }
