@@ -210,10 +210,10 @@ At this point, your `package.json` should look like the following:
 		},
 		"devDependencies": {
 				"axios": "^1.3.0",
-				"hybridly": "0.0.1-alpha.21",
+				"hybridly": "0.5.7",
 				"lodash": "^4.17.19",
 				"postcss": "^8.1.14",
-				"vite": "^4.1.2",
+				"vite": "^5.0.8",
 				"vue": "^3.2.41"
 		}
 }

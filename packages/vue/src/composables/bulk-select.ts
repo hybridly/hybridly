@@ -1,3 +1,4 @@
+import type { Ref } from 'vue'
 import { computed, ref } from 'vue'
 
 // #region bulk-selection
@@ -16,7 +17,7 @@ export function useBulkSelect<T = any>() {
 		all: false,
 		only: new Set(),
 		except: new Set(),
-	})
+	}) as Ref<BulkSelection<T>>
 
 	/**
 	 * Selects all records.

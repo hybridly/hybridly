@@ -1,4 +1,5 @@
 import baseMerge from 'deepmerge'
+// @ts-expect-error due to moduleresolution
 import { isPlainObject } from 'is-plain-object'
 export { default as clone } from 'lodash.clonedeep'
 

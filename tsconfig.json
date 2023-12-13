@@ -1,9 +1,9 @@
 {
     "compilerOptions": {
         "target": "es2017",
-        "module": "esnext",
+        "module": "ESNext",
         "lib": ["esnext", "dom", "dom.iterable"],
-        "moduleResolution": "node",
+        "moduleResolution": "Bundler",
         "esModuleInterop": true,
         "strict": true,
         "strictNullChecks": true,

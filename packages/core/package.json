@@ -6,10 +6,6 @@
     "hybridly",
     "inertiajs"
   ],
-  "homepage": "https://github.com/hybridly/hybridly#readme",
-  "bugs": {
-    "url": "https://github.com/hybridly/hybridly/issues"
-  },
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -17,6 +13,11 @@
   },
   "funding": "https://github.com/sponsors/innocenzi",
   "author": "Enzo Innocenzi <enzo@innocenzi.dev>",
+  "type": "module",
+  "homepage": "https://github.com/hybridly/hybridly#readme",
+  "bugs": {
+    "url": "https://github.com/hybridly/hybridly/issues"
+  },
   "sideEffects": false,
   "files": [
     "dist",
@@ -37,12 +38,12 @@
     "stub": "unbuild --stub"
   },
   "peerDependencies": {
-    "axios": "^1"
+    "axios": "^1.6.2"
   },
   "dependencies": {
     "@hybridly/utils": "workspace:*",
     "qs": "^6.11.2",
-    "superjson": "^1.13.3"
+    "superjson": "^2.2.1"
   },
   "devDependencies": {
     "defu": "^6.1.3"

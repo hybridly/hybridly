@@ -1,9 +1,8 @@
-import laravel from 'laravel-vite-plugin'
+import laravel from './laravel'
 import initialize from './config'
 import layout from './layout'
 import type { ViteOptions } from './types'
 import { getRunOptions, run } from './integrations/run'
-import { getLaravelOptions } from './integrations/laravel'
 import { getAutoImportsOptions, autoimport, HybridlyImports } from './integrations/auto-imports'
 import { getVueComponentsOptions, vueComponents, HybridlyResolver } from './integrations/vue-components'
 import { getIconsOptions, icons } from './integrations/icons'
@@ -17,7 +16,7 @@ export default async function plugin(options: ViteOptions = {}) {
 	return [
 		initialize(options, config),
 		layout(options, config),
-		options.laravel !== false && laravel(getLaravelOptions(options, config)),
+		laravel(options, config),
 		options.run !== false && run(getRunOptions(options)),
 		options.vueComponents !== false && vueComponents(await getVueComponentsOptions(options, config)),
 		options.autoImports !== false && autoimport(getAutoImportsOptions(options, config)),

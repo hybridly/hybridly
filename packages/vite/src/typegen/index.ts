@@ -9,7 +9,7 @@ export function generateTsConfig(options: ViteOptions, config: DynamicConfigurat
 		compilerOptions: {
 			target: 'esnext',
 			module: 'esnext',
-			moduleResolution: 'node',
+			moduleResolution: 'bundler',
 			strict: true,
 			jsx: 'preserve',
 			sourceMap: true,

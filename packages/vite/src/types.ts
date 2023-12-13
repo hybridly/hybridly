@@ -1,6 +1,5 @@
 import type { AutoImportOptions } from './integrations/auto-imports'
 import type { CustomIconOptions, IconsOptions } from './integrations/icons'
-import type { LaravelOptions } from './integrations/laravel'
 import type { Runner } from './integrations/run'
 import type { VueOptions } from './integrations/vue'
 import type { CustomComponentsOptions, CustomResolvers } from './integrations/vue-components'
@@ -12,8 +11,6 @@ export interface ViteOptions {
 	layout?: LayoutOptions
 	/** Options for `@vitejs/plugin-vue`. */
 	vue?: false | VueOptions
-	/** Options for `laravel-vite-plugin`. Set to `false` to disable. */
-	laravel?: false | Partial<LaravelOptions>
 	/** Options for `vite-plugin-run`. Set to `false` to disable. */
 	run?: false | Runner[]
 	/** Options for `unplugin-auto-import`. Set to `false` to disable. */

@@ -6,29 +6,6 @@ The Vite plugin, in addition to providing Hybridly-specific features, wraps a fe
 
 These plugins are provided with a good default configuration, but are still individually configurable.
 
-## Laravel
-
-`laravel-vite-plugin`, the official Vite plugin for Laravel, is included and its `input` option is configured to `<root>/application/main.ts`.
-
-To customize this, use the `laravel` option:
-
-```ts
-import { defineConfig } from 'vite'
-import hybridly from 'hybridly/vite'
-
-export default defineConfig({
-	plugins: [
-		hybridly({ // [!code focus:5]
-			laravel: {
-				detectTls: true,
-			},
-		}),
-	],
-})
-```
-
-The plugin can be disabled by setting `laravel` to `false`.
-
 ## Vue
 
 `@vitejs/plugin-vue`, the official Vue 3 plugin, is included by default. It can be disabled or configured by setting the `vue` option:
