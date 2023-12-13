@@ -1,45 +1,45 @@
 {
-    "name": "@hybridly/utils",
-    "version": "0.5.7",
-    "description": "Utils used in Hybridly packages",
-    "keywords": [
-        "hybridly"
-    ],
-    "homepage": "https://github.com/hybridly/hybridly/tree/main/packages/config#readme",
-    "bugs": {
-        "url": "https://github.com/hybridly/hybridly/issues"
-    },
-    "license": "MIT",
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/hybridly/hybridly.git",
-        "directory": "packages/utils"
-    },
-    "funding": "https://github.com/sponsors/innocenzi",
-    "author": "Enzo Innocenzi <enzo@innocenzi.dev>",
-    "sideEffects": false,
-    "files": [
-        "dist",
-        "*.d.ts"
-    ],
-    "exports": {
-        ".": {
-            "require": "./dist/index.cjs",
-            "import": "./dist/index.mjs",
-            "types": "./dist/index.d.ts"
-        }
-    },
-    "main": "dist/index.cjs",
-    "module": "dist/index.mjs",
-    "types": "dist/index.d.ts",
-    "scripts": {
-        "build": "unbuild",
-        "stub": "unbuild --stub"
-    },
-    "dependencies": {
-        "debug": "^4.3.4",
-        "deepmerge": "^4.3.1",
-        "is-plain-object": "^5.0.0",
-        "lodash.clonedeep": "^4.5.0"
+  "name": "@hybridly/utils",
+  "version": "0.5.7",
+  "description": "Utils used in Hybridly packages",
+  "keywords": [
+    "hybridly"
+  ],
+  "homepage": "https://github.com/hybridly/hybridly/tree/main/packages/config#readme",
+  "bugs": {
+    "url": "https://github.com/hybridly/hybridly/issues"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hybridly/hybridly.git",
+    "directory": "packages/utils"
+  },
+  "funding": "https://github.com/sponsors/innocenzi",
+  "author": "Enzo Innocenzi <enzo@innocenzi.dev>",
+  "sideEffects": false,
+  "files": [
+    "dist",
+    "*.d.ts"
+  ],
+  "exports": {
+    ".": {
+      "require": "./dist/index.cjs",
+      "import": "./dist/index.mjs",
+      "types": "./dist/index.d.ts"
     }
+  },
+  "main": "dist/index.cjs",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "unbuild",
+    "stub": "unbuild --stub"
+  },
+  "dependencies": {
+    "debug": "^4.3.4",
+    "deepmerge": "^4.3.1",
+    "is-plain-object": "^5.0.0",
+    "lodash.clonedeep": "^4.5.0"
+  }
 }
