@@ -64,6 +64,10 @@ hr {
 
 .vp-doc h2 {
 	margin-top: 5rem !important;
+	display: inline-flex;
+	align-items: center;
+	gap: 0.5rem;
+	width: 100%;
 }
 
 .vp-doc .preface + h2 {
