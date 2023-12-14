@@ -119,7 +119,7 @@ class Middleware
             return md5_file($manifest);
         }
 
-        if (file_exists($manifest = public_path('mix-manifest.json'))) {
+        if (file_exists($manifest = public_path('build/.vite/manifest.json'))) {
             return md5_file($manifest);
         }
 
