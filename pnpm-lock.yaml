@@ -135,6 +135,10 @@ importers:
       lodash.clonedeep:
         specifier: ^4.5.0
         version: 4.5.0
+    devDependencies:
+      '@types/lodash.clonedeep':
+        specifier: ^4.5.9
+        version: 4.5.9
 
   packages/vite:
     dependencies:
@@ -1993,6 +1997,12 @@ packages:
 
   /@types/linkify-it@3.0.3:
     resolution: {integrity: sha512-pTjcqY9E4nOI55Wgpz7eiI8+LzdYnw3qxXCfHyBDdPbYvbyLgWLJGh8EdPvqawwMK1Uo1794AUkkR38Fr0g+2g==}
+    dev: true
+
+  /@types/lodash.clonedeep@4.5.9:
+    resolution: {integrity: sha512-19429mWC+FyaAhOLzsS8kZUsI+/GmBAQ0HFiCPsKGU+7pBXOQWhyrY6xNNDwUSX8SMZMJvuFVMF9O5dQOlQK9Q==}
+    dependencies:
+      '@types/lodash': 4.14.202
     dev: true
 
   /@types/lodash.isequal@4.5.8:
