@@ -55,8 +55,6 @@ export function generateTsConfig(options: ViteOptions, config: DynamicConfigurat
 		],
 		exclude: [
 			'../public/**/*',
-			'../node_modules',
-			'../vendor',
 			...(options.tsconfig?.exclude ?? []),
 		],
 	}
