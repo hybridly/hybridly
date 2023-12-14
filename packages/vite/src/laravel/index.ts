@@ -43,7 +43,7 @@ export default function laravel(options: ViteOptions, hybridlyConfig: DynamicCon
 				base: userConfig.base ?? (command === 'build' ? base : ''),
 				publicDir: userConfig.publicDir ?? false,
 				build: {
-					manifest: userConfig.build?.manifest ?? !ssr,
+					manifest: ssr === true ? false : (userConfig.build?.manifest ?? 'manifest.json'),
 					outDir: userConfig.build?.outDir ?? path.join(publicDirectory, buildDirectory),
 					rollupOptions: {
 						input: resolveInput(config, hybridlyConfig, ssr),
