@@ -52,6 +52,21 @@ trait HasViewFinder
     }
 
     /**
+     * Loads a namespaced module and its views, layouts and components, in the current directory.
+     *
+     * @see https://hybridly.dev/api/laravel/hybridly.html#loadmodule
+     */
+    public function loadModule(null|string|array $namespace = null): static
+    {
+        $trace = debug_backtrace(
+            options: \DEBUG_BACKTRACE_IGNORE_ARGS,
+            limit: 1,
+        );
+
+        return $this->loadModuleFrom(\dirname($trace[0]['file']), $namespace);
+    }
+
+    /**
      * Loads a namespaced module and its views, layouts and components.
      *
      * @see https://hybridly.dev/api/laravel/hybridly.html#loadmodulefrom
