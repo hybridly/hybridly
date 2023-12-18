@@ -193,14 +193,14 @@ Filters\Filter::make('user_id');
 
 #### Loose comparisons
 
-You may call the `loose`, `beingsWithStrict` or `endsWithStrict` methods to specify which kind of comparison the filter should use.
+You may call the `loose`, `beginsWithStrict` or `endsWithStrict` methods to specify which kind of comparison the filter should use.
 
 ```php
 // ?filters[full_name]=Jon  ->  WHERE full_name LIKE %jon%
 Filters\Filter::make('full_name')->loose();
 
 // ?filters[full_name]=Jon  ->  WHERE full_name LIKE Jon%
-Filters\Filter::make('full_name')->beingsWithStrict();
+Filters\Filter::make('full_name')->beginsWithStrict();
 
 // ?filters[full_name]=Doe  ->  WHERE full_name LIKE %Doe
 Filters\Filter::make('full_name')->endsWithStrict();
