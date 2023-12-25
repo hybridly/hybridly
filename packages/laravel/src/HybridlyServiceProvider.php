@@ -15,6 +15,7 @@ use Hybridly\Tables\Actions\Http\InvokedActionController;
 use Hybridly\Testing\TestResponseMacros;
 use Illuminate\Contracts\Foundation\CachesRoutes;
 use Illuminate\Foundation\Console\AboutCommand;
+use Illuminate\Foundation\Vite;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Route;
@@ -40,6 +41,7 @@ class HybridlyServiceProvider extends PackageServiceProvider
 
     public function registeringPackage(): void
     {
+        $this->overrideViteDirective();
         $this->registerBindings();
         $this->registerDirectives();
         $this->registerMacros();
@@ -94,6 +96,23 @@ class HybridlyServiceProvider extends PackageServiceProvider
     protected function registerBindings(): void
     {
         $this->app->singleton(Hybridly::class);
+    }
+
+    /**
+     * Overrides the Vite directive to avoid having to specify the entrypoint in different places.
+     * Still allows overriding it.
+     */
+    protected function overrideViteDirective(): void
+    {
+        $this->app->afterResolving('blade.compiler', function (BladeCompiler $compiler) {
+            $compiler->directive('vite', function ($expression = null) {
+                return sprintf(
+                    '<?php echo app(%s::class)(%s); ?>',
+                    Vite::class,
+                    $expression ?: '"' . config('hybridly.architecture.application', 'resources/application/main.ts') . '"',
+                );
+            });
+        });
     }
 
     protected function registerDirectives(): void

@@ -37,6 +37,7 @@ return [
     'architecture' => [
         'preset' => 'default',
         'root' => 'resources',
+        'application' => 'resources/application/main.ts',
         'eager_load_views' => true,
     ],
 

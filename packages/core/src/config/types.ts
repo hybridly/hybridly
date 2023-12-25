@@ -9,6 +9,7 @@ export interface DynamicConfiguration {
 	}
 	architecture: {
 		root: string
+		application: string
 	}
 	components: {
 		eager?: boolean

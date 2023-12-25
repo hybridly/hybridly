@@ -29,8 +29,10 @@ class PrintConfigurationCommand extends Command
                 'is_latest' => Version::isLatestVersion(),
                 'latest' => Version::getLatestVersion(),
             ],
+            // TODO: singleton config object
             'architecture' => [
                 'root' => config('hybridly.architecture.root', 'resources'),
+                'application' => config('hybridly.architecture.application', 'resources/application/main.ts'),
             ],
             'components' => [
                 'eager' => (bool) config('hybridly.architecture.eager_load_views', true),

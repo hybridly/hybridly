@@ -48,3 +48,23 @@ it('renders encoded payload in the data-payload attribute', function () {
         <div id="root" class="" data-payload="{&quot;view&quot;:{&quot;component&quot;:&quot;users.edit&quot;,&quot;properties&quot;:{&quot;user&quot;:&quot;Makise Kurisu&quot;},&quot;deferred&quot;:[]},&quot;url&quot;:&quot;https:\/\/localhost\/&quot;,&quot;version&quot;:&quot;abc123&quot;,&quot;dialog&quot;:null}"></div>
     HTML));
 });
+
+it('generates a call to `Vite::class` with the default configuration when there is no parameters', function () {
+    expect(test()->directives['vite']())
+        ->toBe('<?php echo app(Illuminate\Foundation\Vite::class)("resources/application/main.ts"); ?>');
+});
+
+it('generates a call to `Vite::class` with the specified single-argument string configuration if provided', function () {
+    expect(test()->directives['vite']('"resources/main.ts"'))
+        ->toBe('<?php echo app(Illuminate\Foundation\Vite::class)("resources/main.ts"); ?>');
+});
+
+it('generates a call to `Vite::class` with the specified single-argument array configuration if provided', function () {
+    expect(test()->directives['vite']('["resources/main.ts", "resources/tailwind.css"]'))
+        ->toBe('<?php echo app(Illuminate\Foundation\Vite::class)(["resources/main.ts", "resources/tailwind.css"]); ?>');
+});
+
+it('generates a call to `Vite::class` with the specified arguments if provided', function () {
+    expect(test()->directives['vite']('["resources/main.ts", "resources/tailwind.css"], "public/build"'))
+        ->toBe('<?php echo app(Illuminate\Foundation\Vite::class)(["resources/main.ts", "resources/tailwind.css"], "public/build"); ?>');
+});
