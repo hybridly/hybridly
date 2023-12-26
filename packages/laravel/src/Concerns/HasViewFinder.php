@@ -12,7 +12,7 @@ trait HasViewFinder
      *
      * @see https://hybridly.dev/api/laravel/hybridly.html#loadviewsfrom
      */
-    public function loadViewsFrom(string $directory, ?string $namespace = null): static
+    public function loadViewsFrom(string $directory, null|string|array $namespace = null): static
     {
         $this->finder->loadViewsFrom($directory, $namespace);
 
@@ -24,7 +24,7 @@ trait HasViewFinder
      *
      * @see https://hybridly.dev/api/laravel/hybridly.html#loadlayoutsfrom
      */
-    public function loadLayoutsFrom(string $directory, ?string $namespace = null): static
+    public function loadLayoutsFrom(string $directory, null|string|array $namespace = null): static
     {
         $this->finder->loadLayoutsFrom($directory, $namespace);
 
@@ -36,7 +36,7 @@ trait HasViewFinder
      *
      * @see https://hybridly.dev/api/laravel/hybridly.html#loadcomponentsfrom
      */
-    public function loadComponentsFrom(string $directory, ?string $namespace = null): static
+    public function loadComponentsFrom(string $directory, null|string|array $namespace = null): static
     {
         $this->finder->loadComponentsFrom($directory, $namespace);
 
