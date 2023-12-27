@@ -63,10 +63,7 @@ export default function laravel(options: ViteOptions, hybridlyConfig: DynamicCon
 							...serverConfig.hmr,
 							...(userConfig.server?.hmr === true ? {} : userConfig.server?.hmr),
 						},
-						https: typeof userConfig.server?.https !== 'undefined' ? userConfig.server.https : {
-							...serverConfig.https,
-							...(userConfig.server?.https === true ? {} : userConfig.server?.https),
-						},
+						https: userConfig.server?.https ?? serverConfig.https,
 					} : undefined),
 				},
 			}
