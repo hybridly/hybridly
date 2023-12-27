@@ -16,7 +16,7 @@ export default async function plugin(options: ViteOptions = {}) {
 	return [
 		initialize(options, config),
 		layout(options, config),
-		laravel(options, config),
+		options.laravel !== false && laravel(options, config),
 		options.run !== false && run(getRunOptions(options)),
 		options.vueComponents !== false && vueComponents(await getVueComponentsOptions(options, config)),
 		options.autoImports !== false && autoimport(getAutoImportsOptions(options, config)),
