@@ -36,8 +36,7 @@ final class Version
 
     public static function getComposerVersion(): string
     {
-        // return str(InstalledVersions::getPrettyVersion('hybridly/laravel'))->after('v');
-        return '0.5.1';
+        return str(InstalledVersions::getPrettyVersion('hybridly/laravel'))->after('v');
     }
 
     public static function getPrettyComposerVersion(): string
