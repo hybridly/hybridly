@@ -3,21 +3,31 @@
 use Hybridly\Support\VueViewFinder;
 use Illuminate\Support\Facades\File;
 
-function with_view_component(string $targetPath, \Closure $assertion): void
+function with_view_components(array|string $targetPaths, \Closure $assertion): void
 {
-    $path = str(resource_path())
-        ->finish('/')
-        ->append($targetPath)
-        ->toString();
+    File::cleanDirectory(resource_path());
 
-    File::makeDirectory(dirname($path), recursive: true, force: true);
-    File::copy(__DIR__ . '/../../stubs/view.vue', $path);
+    $paths = collect($targetPaths)->map(function (string $path) {
+        return str(resource_path())
+            ->finish('/')
+            ->append($path)
+            ->toString();
+    });
+
+    foreach ($paths as $path) {
+        File::makeDirectory(dirname($path), recursive: true, force: true);
+        File::copy(__DIR__ . '/../../stubs/view.vue', $path);
+    }
+
     $assertion();
-    File::cleanDirectory(dirname($path));
+
+    foreach ($paths as $path) {
+        File::cleanDirectory(dirname($path));
+    }
 }
 
 test('`hasView` determines if a view is registered', function (string $target, string $namespace, string $expectedIdentifier) {
-    with_view_component($target, function () use ($namespace, $expectedIdentifier) {
+    with_view_components($target, function () use ($namespace, $expectedIdentifier) {
         /** @var VueViewFinder */
         $viewFinder = resolve(VueViewFinder::class);
         $viewFinder->loadViewsFrom(
@@ -36,7 +46,7 @@ test('`hasView` determines if a view is registered', function (string $target, s
 ]);
 
 test('namespaces can be defined as an array and will be converted to kebab case', function () {
-    with_view_component('views/my-view.vue', function () {
+    with_view_components('views/my-view.vue', function () {
         /** @var VueViewFinder */
         $viewFinder = resolve(VueViewFinder::class);
         $viewFinder->loadViewsFrom(
@@ -45,5 +55,83 @@ test('namespaces can be defined as an array and will be converted to kebab case'
         );
 
         expect($viewFinder->hasView('foo-bar::my-view'))->toBeTrue();
+    });
+});
+
+test('loading a module recursively only the root `components` and `layouts` directories, but loads all views', function () {
+    with_view_components([
+        'view1.vue',
+        'components/component1.vue',
+        'layouts/layout1.vue',
+        // level 1
+        'subdirectory/view2.vue',
+        'subdirectory/components/component2.vue',
+        'subdirectory/layouts/layout2.vue',
+        // level 2
+        'subdirectory/again/view3.vue',
+        'subdirectory/again/components/component3.vue',
+    ], function () {
+        /** @var VueViewFinder */
+        $viewFinder = resolve(VueViewFinder::class);
+        $viewFinder->loadModuleFrom(
+            directory: resource_path(),
+            namespace: 'foo',
+            recursive: true,
+        );
+
+        expect($viewFinder->getViews())->toBe([
+            ['namespace' => 'foo', 'path' => 'resources/subdirectory/again/view3.vue', 'identifier' => 'foo::subdirectory.again.view3'],
+            ['namespace' => 'foo', 'path' => 'resources/subdirectory/view2.vue', 'identifier' => 'foo::subdirectory.view2'],
+            ['namespace' => 'foo', 'path' => 'resources/view1.vue', 'identifier' => 'foo::view1'],
+        ]);
+
+        expect($viewFinder->getComponents())->toBe([
+            ['namespace' => 'foo', 'path' => 'resources/components/component1.vue', 'identifier' => 'foo::component1'],
+        ]);
+
+        expect($viewFinder->getLayouts())->toBe([
+            ['namespace' => 'foo', 'path' => 'resources/layouts/layout1.vue', 'identifier' => 'foo::layout1'],
+        ]);
+    });
+});
+
+test('loading a module non-recursively only loads the root `views`, `components` and `layouts` directories', function () {
+    with_view_components([
+        // root
+        'ignored-view.vue',
+        // module
+        'views/view1.vue',
+        'views/subdirectory/view2.vue',
+        'components/component1.vue',
+        'components/subdirectory/component2.vue',
+        'layouts/layout1.vue',
+        'layouts/subdirectory/layout2.vue',
+        // level 1 - ignored
+        'foo/views/view3.vue',
+        'foo/components/component3.vue',
+        'foo/layouts/layout3.vue',
+    ], function () {
+        /** @var VueViewFinder */
+        $viewFinder = resolve(VueViewFinder::class);
+        $viewFinder->loadModuleFrom(
+            directory: resource_path(),
+            namespace: 'foo',
+            recursive: false,
+        );
+
+        expect($viewFinder->getViews())->toBe([
+            ['namespace' => 'foo', 'path' => 'resources/views/subdirectory/view2.vue', 'identifier' => 'foo::subdirectory.view2'],
+            ['namespace' => 'foo', 'path' => 'resources/views/view1.vue', 'identifier' => 'foo::view1'],
+        ]);
+
+        expect($viewFinder->getComponents())->toBe([
+            ['namespace' => 'foo', 'path' => 'resources/components/component1.vue', 'identifier' => 'foo::component1'],
+            ['namespace' => 'foo', 'path' => 'resources/components/subdirectory/component2.vue', 'identifier' => 'foo::subdirectory.component2'],
+        ]);
+
+        expect($viewFinder->getLayouts())->toBe([
+            ['namespace' => 'foo', 'path' => 'resources/layouts/layout1.vue', 'identifier' => 'foo::layout1'],
+            ['namespace' => 'foo', 'path' => 'resources/layouts/subdirectory/layout2.vue', 'identifier' => 'foo::subdirectory.layout2'],
+        ]);
     });
 });

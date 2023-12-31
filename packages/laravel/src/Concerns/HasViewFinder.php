@@ -56,14 +56,16 @@ trait HasViewFinder
      *
      * @see https://hybridly.dev/api/laravel/hybridly.html#loadmodule
      */
-    public function loadModule(null|string|array $namespace = null): static
+    public function loadModule(null|string|array $namespace = null, bool $recursive = true): static
     {
         $trace = debug_backtrace(
             options: \DEBUG_BACKTRACE_IGNORE_ARGS,
             limit: 1,
         );
 
-        return $this->loadModuleFrom(\dirname($trace[0]['file']), $namespace);
+        $this->getViewFinder()->loadModuleFrom(\dirname($trace[0]['file']), $namespace, $recursive);
+
+        return $this;
     }
 
     /**
@@ -71,22 +73,9 @@ trait HasViewFinder
      *
      * @see https://hybridly.dev/api/laravel/hybridly.html#loadmodulefrom
      */
-    public function loadModuleFrom(string $directory, null|string|array $namespace = null): static
+    public function loadModuleFrom(string $directory, null|string|array $namespace = null, bool $recursive = false): static
     {
-        if ($this->getViewFinder()->isDirectoryLoaded($directory)) {
-            return $this;
-        }
-
-        $namespace ??= str($directory)->basename()->kebab();
-        $viewsDirectory = config('hybridly.architecture.views_directory', 'views');
-        $layoutsDirectory = config('hybridly.architecture.layouts_directory', 'layouts');
-        $componentsDirectory = config('hybridly.architecture.components_directory', 'components');
-
-        $this->getViewFinder()->loadDirectory($directory);
-
-        rescue(fn () => $this->getViewFinder()->loadViewsFrom($directory . '/' . $viewsDirectory, $namespace), report: false);
-        rescue(fn () => $this->getViewFinder()->loadLayoutsFrom($directory . '/' . $layoutsDirectory, $namespace), report: false);
-        rescue(fn () => $this->getViewFinder()->loadComponentsFrom($directory . '/' . $componentsDirectory, $namespace), report: false);
+        $this->getViewFinder()->loadModuleFrom($directory, $namespace, $recursive);
 
         return $this;
     }
@@ -96,17 +85,10 @@ trait HasViewFinder
      *
      * @see https://hybridly.dev/api/laravel/hybridly.html#loadmodulesfrom
      */
-    public function loadModulesFrom(string $directory): void
+    public function loadModulesFrom(string $directory): static
     {
-        foreach (scandir($directory) as $namespace) {
-            if (\in_array($namespace, ['.', '..'], true)) {
-                continue;
-            }
+        $this->getViewFinder()->loadModulesFrom($directory);
 
-            $this->loadModuleFrom(
-                directory: $directory . '/' . $namespace,
-                namespace: $namespace,
-            );
-        }
+        return $this;
     }
 }

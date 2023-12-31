@@ -134,7 +134,9 @@ if (hybridly()->isPartial()) {
 
 > See also: [architecture](../../guide/architecture.md#custom)
 
-Loads views, layouts and components from the current directory. They must be located in the `views`, `layouts` and `components` directories, respectively.
+Loads views, layouts and components from the current directory. 
+
+The layouts and components must be located in the `layouts` and `components` directories, respectively. Views are loaded recursively by default.
 
 ### Usage
 
@@ -143,6 +145,12 @@ public function boot(Hybridly $hybridly): void
 {
     $hybridly->loadModule(namespace: 'billing');
 }
+```
+
+You may set the `recursive` argument to `false` to only load views in the `views` directory.
+
+```php
+$hybridly->loadModule(namespace: 'billing', recursive: false);
 ```
 
 ## `loadModuleFrom`
