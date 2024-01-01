@@ -46,7 +46,7 @@
     "@clickbar/dot-diver": "^1.0.4",
     "@hybridly/core": "workspace:*",
     "@hybridly/utils": "workspace:*",
-    "@vue/devtools-api": "^7.0.2",
+    "@vue/devtools-api": "^6.5.1",
     "defu": "^6.1.3",
     "lodash.isequal": "^4.5.0",
     "nprogress": "^0.2.0",
