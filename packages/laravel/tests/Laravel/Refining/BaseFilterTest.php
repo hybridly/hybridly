@@ -3,6 +3,7 @@
 use Hybridly\Refining\Filters\BaseFilter;
 use Hybridly\Refining\Filters\CallbackFilter;
 use Hybridly\Refining\Filters\Filter;
+use Hybridly\Support\Configuration\Configuration;
 use Hybridly\Tests\Fixtures\Database\ProductFactory;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 
@@ -122,7 +123,7 @@ test('serialization takes current state into account', function () {
 });
 
 test('filters key is globally configurable', function () {
-    config(['hybridly.refining.filters_key' => 'product-filters']);
+    Configuration::get()->refining->filtersKey = 'product-filters';
 
     $filters = mock_refiner(
         query: ['product-filters' => ['name' => 'AirPods Pro']],

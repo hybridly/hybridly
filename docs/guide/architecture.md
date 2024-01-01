@@ -6,13 +6,13 @@ outline: 'deep'
 
 ## Overview
 
-Properly architecturing an application can be difficult. Hybridly supports any kind of architecture, but provides two presets that will work for most applications.
+By default, Hybridly will load views, layouts and components from the `views`, `layouts` and `components` directories in `resources`.
 
-The default one is a single-level structure, and the second one is a module-based architecture.
+This behavior is suitable for most applications, but Hybridly supports any kind of architecture.
 
-## Single-level
+## Default architecture
 
-By default, Hybridly uses the following structure:
+By default, Hybridly uses the following file structure:
 
 ```
 resources/
@@ -30,42 +30,59 @@ resources/
 └── composables/
 ```
 
-- view components are located in `resources/views` and may be nested.
+- View components are located in `resources/views` and may be nested.
 - Layout components are located in `resources/layouts`.
-- Util functions and composables are auto-imported.
+- Utility functions and composables (`*.ts`) are auto-imported.
 - The base Blade template is located at `resources/application/root.blade.php`.
 
-This convention is generally good, but you may use a domain-based or completely custom architecture if your application needs that.
+This convention is generally good, but you may use a module-based or completely custom architecture if your application needs that.
 
-## Modular
+## Other architectures
 
-You may use the predefined modular architecture using the `architecture.preset` option, or you may manually register modules as you see fit. 
+If the default architecture isn't suited for your application, you may disable it by setting the `architecture.load_default_module` configuration option to `false` in `config/hybridly.php`.
 
-When the `architecture.preset` option is set to `modules`, directories in `resources/domains` will be considered as modules. 
+Instead, you may use a modular architecture, or a a completely custom one.
 
-Views and layouts will be loaded from the `views` and `layouts` subdirectories, while TypeScript files will be auto-imported from `utils` and `composables`.
+### Modular
 
+When using a modular architecture, views and layouts will be loaded from the `views` and `layouts` subdirectories, while TypeScript files will be auto-imported from `utils` and `composables`. Components will also be auto-imported using hyphens.
+
+You may use the `loadModulesFrom` method to load modules in `resources/domains` or any other directory of your choice:
+
+:::code-group
+```php [AppServiceProvider.php]
+final class AppServiceProvider extends ServiceProvider
+{
+    public function boot(Hybridly $hybridly): void
+    {
+        $hybridly->loadModulesFrom(base_path('resources/domains'));
+    }
+}
 ```
+``` [Example architecture]
 resources/
 ├── applications/
 │   ├── main.ts
 │   └── root.blade.ts
-└── domains/
-    └── security/
+└── domains/ // [!code hl]
+    └── authentication/
         ├── layouts/
         │   └── default.vue
         ├── views/
         │   ├── login.vue
         │   └── register.vue
+        ├── components/
+        │   ├── login-container.vue
+        │   └── login-button.vue
         ├── utils/
         └── composables/
 ```
+:::
 
-Note that you may change the name of the `domains` directory by updating the `architecture.domains_directory` setting.
 
-## Custom
+### Custom
 
-If the above presets do not work well for your application, you may set `architecture.preset` to `false` and manually register views, layouts, components, or modules using the provided API.
+If you need more flexibility, you may load views, layouts, components or modules using the more advanced architecture API.
 
 Generally, this is done in the `boot` method of a service provider:
 
@@ -121,4 +138,46 @@ public function boot(Hybridly $hybridly): void
 }
 ```
 
-You can read about the available methods in the [API documentation](../api/laravel/hybridly.md#loadmodulefrom).
+You can read about the available methods in the [API documentation](../api/laravel/hybridly.md#loadmodule).
+
+## Namespaces
+
+When loading modules using `loadModulesFrom` or `loadModuleFrom`, the views, layouts and components will be namespaced.
+
+Views and layouts can be referred to using the `module-name::path.to.view` syntax. 
+
+Components may be auto-imported by concatenating the module name and the component name with hyphens.
+
+&nbsp;
+
+:::code-group
+```php [Views]
+return hybridly('authentication::login');
+```
+```html [Layouts and components]
+<template layout="authentication::default">
+	<!-- ... -->
+	<authentication-login-container>
+		<!-- ... -->
+	</authentication-login-container>
+</template>
+```
+``` [Example architecture]
+resources/
+├── applications/
+│   ├── main.ts
+│   └── root.blade.ts
+└── domains/
+    └── authentication/
+        ├── layouts/
+        │   └── default.vue // [!code hl]
+        ├── views/
+        │   ├── login.vue // [!code hl]
+        │   └── register.vue
+        ├── components/
+        │   ├── login-container.vue // [!code hl]
+        │   └── login-button.vue
+        ├── utils/
+        └── composables/
+```
+:::

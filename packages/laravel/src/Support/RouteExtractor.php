@@ -2,8 +2,10 @@
 
 namespace Hybridly\Support;
 
+use Hybridly\Support\Configuration\Configuration;
 use Illuminate\Contracts\Routing\UrlRoutable;
 use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Routing\Route;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Reflector;
@@ -15,6 +17,7 @@ final class RouteExtractor implements JsonSerializable, Arrayable
 {
     public function __construct(
         private readonly Router $router,
+        private readonly Configuration $configuration,
     ) {
     }
 
@@ -45,7 +48,7 @@ final class RouteExtractor implements JsonSerializable, Arrayable
                     return false;
                 }
 
-                if (str($route->uri())->is(config('hybridly.router.exclude', []))) {
+                if (str($route->uri())->is($this->configuration->router->excludedRoutes)) {
                     return false;
                 }
 
@@ -127,7 +130,7 @@ final class RouteExtractor implements JsonSerializable, Arrayable
         }
 
         $allowedVendors = [
-            ...config('hybridly.router.allowed_vendors', []),
+            ...$this->configuration->router->allowedVendors,
             'hybridly/laravel',
         ];
 

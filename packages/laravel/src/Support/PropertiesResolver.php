@@ -2,6 +2,8 @@
 
 namespace Hybridly\Support;
 
+use Hybridly\Support\Configuration\Configuration;
+use Hybridly\Support\Configuration\Properties;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -139,18 +141,18 @@ final class PropertiesResolver
 
     protected function convertPartialPropertiesCase(array $array): array
     {
-        return match (config('hybridly.force_case.input')) {
-            'camel' => collect($array)->map(fn ($property) => (string) str()->camel($property))->toArray(),
-            'snake' => collect($array)->map(fn ($property) => (string) str()->snake($property))->toArray(),
+        return match (Configuration::get()->properties->forceInputCase) {
+            Properties::CAMEL => collect($array)->map(fn ($property) => (string) str()->camel($property))->toArray(),
+            Properties::SNAKE => collect($array)->map(fn ($property) => (string) str()->snake($property))->toArray(),
             default => $array,
         };
     }
 
     protected function convertOutputCase(array $array): array
     {
-        return match (config('hybridly.force_case.output')) {
-            'snake' => $this->caseConverter->convert($array, 'snake'),
-            'camel' => $this->caseConverter->convert($array, 'camel'),
+        return match (Configuration::get()->properties->forceOutputCase) {
+            Properties::SNAKE => $this->caseConverter->convert($array, 'snake'),
+            Properties::CAMEL => $this->caseConverter->convert($array, 'camel'),
             default => $array
         };
     }

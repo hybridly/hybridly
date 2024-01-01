@@ -2,6 +2,8 @@
 
 namespace Hybridly\Refining\Concerns;
 
+use Hybridly\Support\Configuration\Configuration;
+
 trait ConfiguresKeys
 {
     protected null|\Closure|string $sortsKey;
@@ -32,7 +34,7 @@ trait ConfiguresKeys
      */
     public function getSortsKey(): string
     {
-        return $this->evaluate($this->sortsKey ?? config('hybridly.refining.sorts_key'));
+        return $this->evaluate($this->sortsKey ?? Configuration::get()->refining->sortsKey);
     }
 
     /**
@@ -40,6 +42,6 @@ trait ConfiguresKeys
      */
     public function getFiltersKey(): string
     {
-        return $this->evaluate($this->filtersKey ?? config('hybridly.refining.filters_key'));
+        return $this->evaluate($this->filtersKey ?? Configuration::get()->refining->filtersKey);
     }
 }

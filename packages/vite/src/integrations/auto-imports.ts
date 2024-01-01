@@ -57,8 +57,8 @@ function getAutoImportsOptions(options: ViteOptions, config: DynamicConfiguratio
 			vueTemplate: true,
 			dts: '.hybridly/auto-imports.d.ts',
 			dirs: [
-				`${config.architecture.root}/utils`,
-				`${config.architecture.root}/composables`,
+				`${config.architecture.root_directory}/utils`,
+				`${config.architecture.root_directory}/composables`,
 				...config.components.directories.map((directory) => `${directory}/**/*.ts`),
 			],
 			imports: [

@@ -2,6 +2,7 @@
 
 namespace Hybridly\Commands;
 
+use Hybridly\Support\Configuration\Configuration;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
@@ -112,7 +113,7 @@ class I18nCommand extends Command
      */
     protected function getLocalesPath(): string
     {
-        return \dirname(str_replace('/', \DIRECTORY_SEPARATOR, config('hybridly.i18n.locales_path', base_path('.hybridly/i18n.json'))));
+        return \dirname(str_replace('/', \DIRECTORY_SEPARATOR, Configuration::get()->internationalization->localesPath));
     }
 
     /**
@@ -122,7 +123,7 @@ class I18nCommand extends Command
     {
         // Could be improved by loading both the
         // Laravel-provided langs and custom ones.
-        $langPath = config('hybridly.i18n.lang_path', lang_path());
+        $langPath = Configuration::get()->internationalization->langPath;
 
         if (!File::isDirectory($langPath)) {
             return base_path('vendor/laravel/framework/src/Illuminate/Translation/lang');
@@ -139,8 +140,8 @@ class I18nCommand extends Command
         return implode(\DIRECTORY_SEPARATOR, [
             $this->getLocalesPath(),
             $locale
-                ? str_replace('{locale}', $locale, config('hybridly.i18n.file_name_template'))
-                : config('hybridly.i18n.file_name', 'locales.json'),
+                ? str_replace('{locale}', $locale, Configuration::get()->internationalization->fileNameTemplate)
+                : Configuration::get()->internationalization->fileName,
         ]);
     }
 

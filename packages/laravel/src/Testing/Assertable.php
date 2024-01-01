@@ -3,6 +3,7 @@
 namespace Hybridly\Testing;
 
 use Hybridly\Hybridly;
+use Hybridly\Support\Configuration\Configuration;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Illuminate\Testing\TestResponse;
 use InvalidArgumentException;
@@ -50,7 +51,7 @@ class Assertable extends AssertableJson
     {
         PHPUnit::assertSame($value, $this->view, 'Unexpected hybrid view component.');
 
-        if ($shouldExist || (\is_null($shouldExist) && config('hybridly.testing.ensure_views_exist', true))) {
+        if ($shouldExist || (\is_null($shouldExist) && Configuration::get()->testing->ensureViewsExist)) {
             $this->ensureViewExists($value);
         }
 
@@ -72,7 +73,7 @@ class Assertable extends AssertableJson
         if ($view) {
             PHPUnit::assertSame($view, $this->dialog['component'], 'Unexpected dialog view component.');
 
-            if (config('hybridly.testing.ensure_views_exist', true)) {
+            if (Configuration::get()->testing->ensureViewsExist) {
                 $this->ensureViewExists($view);
             }
         }

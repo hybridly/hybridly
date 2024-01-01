@@ -1,6 +1,6 @@
 <?php
 
-use Hybridly\Hybridly;
+use Hybridly\Support\Configuration\Architecture;
 
 return [
     /*
@@ -28,17 +28,20 @@ return [
     |--------------------------------------------------------------------------
     | Architecture
     |--------------------------------------------------------------------------
-    | Hybridly has presets for a default, one-level architecture, as well
-    | as a module-based architecture. Optionally, you may disable the
-    | presets altogether and define your own architecture.
+    | Hybridly has a flexible architecture implementation. By default,
+    | views, layouts and components in the `resources` directory
+    | will be used, but you may change this behavior below.
     |
     | See: https://hybridly.dev/guide/architecture.html
     */
     'architecture' => [
-        'preset' => 'default',
-        'root' => 'resources',
-        'application' => 'resources/application/main.ts',
+        'load_default_module' => true,
         'eager_load_views' => true,
+        'root_directory' => 'resources',
+        'application_directory' => 'application',
+        'application_main' => Architecture::APPLICATION_MAIN,
+        'root_view' => Architecture::ROOT_VIEW,
+        'extensions' => ['vue', 'tsx'],
     ],
 
     /*
@@ -61,8 +64,8 @@ return [
     | Tables
     |--------------------------------------------------------------------------
     | The `tables` option defines the endpoint that will be used to
-    | invoke table actions, as well as the name of the route that
-    | will be used to generate the endpoint URL.
+    | invoke table actions, as well as the name of the route
+    | that will be used to generate the endpoint URL.
     |
     | See: https://hybridly.dev/guide/tables.html
     */
@@ -70,30 +73,8 @@ return [
         'enable_actions' => true,
         'actions_endpoint' => 'invoke',
         'actions_endpoint_name' => 'hybridly.action.invoke',
+        'actions_endpoint_middleware' => [],
     ],
-
-    /*
-    |--------------------------------------------------------------------------
-    | i18n
-    |--------------------------------------------------------------------------
-    | You can chose where the generated internationalization JSON file
-    | will be written to using this option. To generate that file,
-    | you may use the `i18n:generate` artisan command.
-    */
-    'i18n' => [
-        'file_name_template' => '{locale}.json',
-        'file_name' => 'locales.json',
-    ],
-
-    /*
-    |--------------------------------------------------------------------------
-    | Root view
-    |--------------------------------------------------------------------------
-    | By default, Hybridly expects to find a `root.blade.php` template in
-    | `resources/application`. This option allows you to define an
-    | alternative root template.
-    */
-    'root_view' => Hybridly::DEFAULT_ROOT_VIEW,
 
     /*
     |--------------------------------------------------------------------------

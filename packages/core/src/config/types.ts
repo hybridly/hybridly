@@ -8,8 +8,9 @@ export interface DynamicConfiguration {
 		is_latest: boolean
 	}
 	architecture: {
-		root: string
-		application: string
+		root_directory: string
+		components_directory: string
+		application_main_path: string
 	}
 	components: {
 		eager?: boolean

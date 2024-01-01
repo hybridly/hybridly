@@ -19,7 +19,7 @@ export default (options: ViteOptions, config: DynamicConfiguration): Plugin => {
 			return {
 				resolve: {
 					alias: {
-						'@': path.join(process.cwd(), config.architecture.root),
+						'@': path.join(process.cwd(), config.architecture.root_directory),
 						'#': path.join(process.cwd(), '.hybridly'),
 						'~': path.join(process.cwd()),
 					},

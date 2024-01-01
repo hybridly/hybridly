@@ -178,8 +178,7 @@ function resolveInput(userConfig: UserConfig, hybridlyConfig: DynamicConfigurati
 	// }
 
 	return userConfig.build?.rollupOptions?.input
-		?? hybridlyConfig.architecture.application
-		?? `${hybridlyConfig.architecture.root}/application/main.ts`
+		?? hybridlyConfig.architecture.application_main_path
 }
 
 /**

@@ -147,7 +147,7 @@ public function boot(Hybridly $hybridly): void
 }
 ```
 
-You may set the `recursive` argument to `false` to only load views in the `views` directory.
+You may set the `recursive` argument to `false` to only load views in the `views` directory instead of all the views in the current directory.
 
 ```php
 $hybridly->loadModule(namespace: 'billing', recursive: false);

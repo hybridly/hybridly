@@ -5,6 +5,7 @@ namespace Hybridly\Http;
 use Closure;
 use Hybridly\Concerns;
 use Hybridly\Hybridly;
+use Hybridly\Support\Configuration\Configuration;
 use Hybridly\Support\Header;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Vite;
@@ -131,7 +132,7 @@ class Middleware
      */
     public function rootView(Request $request): \Closure|string
     {
-        return config('hybridly.root_view');
+        return Configuration::get()->architecture->rootView;
     }
 
     /**

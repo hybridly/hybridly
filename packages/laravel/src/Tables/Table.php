@@ -3,6 +3,7 @@
 namespace Hybridly\Tables;
 
 use Hybridly\Components;
+use Hybridly\Support\Configuration\Configuration;
 
 abstract class Table extends Components\Component
 {
@@ -27,7 +28,7 @@ abstract class Table extends Components\Component
             'records' => $this->getRecords(),
             'paginator' => $this->getPaginatorMeta(),
             'columns' => $this->getTableColumns()->values(),
-            'endpoint' => config('hybridly.tables.actions_endpoint_name'),
+            'endpoint' => Configuration::get()->tables->actionsEndpointName,
             'inlineActions' => $this->getInlineActions()->values(),
             'bulkActions' => $this->getBulkActions()->values(),
             'scope' => $this->formatScope(),

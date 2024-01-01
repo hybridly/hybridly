@@ -18,8 +18,6 @@ final class Hybridly
     use Conditionable;
     use Macroable;
 
-    public const DEFAULT_ROOT_VIEW = 'root';
-
     public function __construct(
         private readonly VueViewFinder $finder,
     ) {

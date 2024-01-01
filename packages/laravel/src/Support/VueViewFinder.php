@@ -3,6 +3,7 @@
 namespace Hybridly\Support;
 
 use Exception;
+use Hybridly\Support\Configuration\Configuration;
 
 final class VueViewFinder
 {
@@ -24,11 +25,11 @@ final class VueViewFinder
     protected array $extensions = [];
 
     public function __construct(
-        private readonly \Illuminate\Config\Repository $config,
+        private readonly Configuration $configuration,
     ) {
         $this->extensions = array_map(
             callback: fn (string $extension) => ".{$extension}",
-            array: $config->get('hybridly.architecture.extensions', ['vue', 'tsx']),
+            array: $configuration->architecture->extensions,
         );
     }
 
@@ -44,8 +45,8 @@ final class VueViewFinder
             namespace: $namespace,
             depth: $depth,
             filter: fn (string $file) => !\in_array($file, [
-                $this->getLayoutsDirectory(),
-                $this->getComponentsDirectory(),
+                $this->configuration->architecture->layoutsDirectory,
+                $this->configuration->architecture->componentsDirectory,
             ], strict: true),
         ));
 
@@ -111,9 +112,9 @@ final class VueViewFinder
 
         $this->loadDirectory($directory);
 
-        rescue(fn () => $this->loadViewsFrom($recursive ? $directory : ($directory . '/' . $this->getViewsDirectory()), $namespace), report: false);
-        rescue(fn () => $this->loadLayoutsFrom($directory . '/' . $this->getLayoutsDirectory(), $namespace), report: false);
-        rescue(fn () => $this->loadComponentsFrom($directory . '/' . $this->getComponentsDirectory(), $namespace), report: false);
+        rescue(fn () => $this->loadViewsFrom($recursive ? $directory : ($directory . '/' . $this->configuration->architecture->viewsDirectory), $namespace), report: false);
+        rescue(fn () => $this->loadLayoutsFrom($directory . '/' . $this->configuration->architecture->layoutsDirectory, $namespace), report: false);
+        rescue(fn () => $this->loadComponentsFrom($directory . '/' . $this->configuration->architecture->componentsDirectory, $namespace), report: false);
 
         return $this;
     }
@@ -121,7 +122,7 @@ final class VueViewFinder
     /**
      * Loads all modules in the given directory.
      */
-    public function loadModulesFrom(string $directory): void
+    public function loadModulesFrom(string $directory, bool $recursive): void
     {
         foreach (scandir($directory) as $namespace) {
             if (\in_array($namespace, ['.', '..'], true)) {
@@ -131,6 +132,7 @@ final class VueViewFinder
             $this->loadModuleFrom(
                 directory: $directory . '/' . $namespace,
                 namespace: $namespace,
+                recursive: $recursive,
             );
         }
     }
@@ -245,20 +247,5 @@ final class VueViewFinder
     protected function normalizeDirectory(string $directory): string
     {
         return str_replace(base_path('/'), '', $directory);
-    }
-
-    protected function getLayoutsDirectory(): string
-    {
-        return config('hybridly.architecture.layouts_directory', 'layouts');
-    }
-
-    protected function getViewsDirectory(): string
-    {
-        return config('hybridly.architecture.views_directory', 'views');
-    }
-
-    protected function getComponentsDirectory(): string
-    {
-        return config('hybridly.architecture.components_directory', 'components');
     }
 }

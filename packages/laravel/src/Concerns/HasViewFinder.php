@@ -85,9 +85,9 @@ trait HasViewFinder
      *
      * @see https://hybridly.dev/api/laravel/hybridly.html#loadmodulesfrom
      */
-    public function loadModulesFrom(string $directory): static
+    public function loadModulesFrom(string $directory, bool $recursive = false): static
     {
-        $this->getViewFinder()->loadModulesFrom($directory);
+        $this->getViewFinder()->loadModulesFrom($directory, $recursive);
 
         return $this;
     }

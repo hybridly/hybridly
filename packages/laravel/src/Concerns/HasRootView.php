@@ -2,11 +2,11 @@
 
 namespace Hybridly\Concerns;
 
-use Hybridly\Hybridly;
+use Hybridly\Support\Configuration\Configuration;
 
 trait HasRootView
 {
-    protected \Closure|string $rootView = Hybridly::DEFAULT_ROOT_VIEW;
+    protected null|\Closure|string $rootView = null;
 
     /**
      * Sets the root view for the next response.
@@ -26,6 +26,8 @@ trait HasRootView
         $rootView = $this->rootView instanceof \Closure
             ? app()->call($this->rootView)
             : $this->rootView;
+
+        $rootView ??= Configuration::get()->architecture->rootView;
 
         return (string) $rootView;
     }

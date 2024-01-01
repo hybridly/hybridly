@@ -40,7 +40,7 @@ async function getVueComponentsOptions(options: ViteOptions, config: DynamicConf
 	return merge<VueComponentsOptions>(
 		{
 			dirs: [
-				`./${config.architecture.root}/components`,
+				`./${config.architecture.root_directory}/${config.architecture.components_directory}`,
 			],
 			directoryAsNamespace: true,
 			dts: '.hybridly/components.d.ts',

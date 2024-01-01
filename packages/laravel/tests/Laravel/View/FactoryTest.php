@@ -1,6 +1,6 @@
 <?php
 
-use Hybridly\Hybridly;
+use Hybridly\Support\Configuration\Architecture;
 use Hybridly\Support\Header;
 use Hybridly\Support\MissingViewComponentException;
 use Hybridly\View\Factory;
@@ -70,7 +70,7 @@ test('external responses with redirect responses as input', function () {
 });
 
 test('hybridly responses to non-hybridly requests', function () {
-    hybridly()->setRootView(Hybridly::DEFAULT_ROOT_VIEW);
+    hybridly()->setRootView(Architecture::ROOT_VIEW);
     hybridly()->setVersion('123');
 
     $request = mock_request(url: '/users/makise', hybridly: false, bind: true);
@@ -95,7 +95,7 @@ test('hybridly responses to non-hybridly requests', function () {
 });
 
 test('hybridly responses to hybridly requests', function () {
-    hybridly()->setRootView(Hybridly::DEFAULT_ROOT_VIEW);
+    hybridly()->setRootView(Architecture::ROOT_VIEW);
     hybridly()->setVersion('123');
 
     $request = mock_request(url: '/users/makise', hybridly: true, bind: true);
@@ -120,7 +120,7 @@ test('hybridly responses to hybridly requests', function () {
 });
 
 test('properties can be added on-the-fly on the factory instance', function () {
-    hybridly()->setRootView(Hybridly::DEFAULT_ROOT_VIEW);
+    hybridly()->setRootView(Architecture::ROOT_VIEW);
     hybridly()->setVersion('123');
 
     $request = mock_request(url: '/users/makise', hybridly: true, bind: true);
@@ -198,7 +198,7 @@ test('the url resolver is used when constructing a response', function () {
 });
 
 test('hybridly responses without a view component', function () {
-    hybridly()->setRootView(Hybridly::DEFAULT_ROOT_VIEW);
+    hybridly()->setRootView(Architecture::ROOT_VIEW);
     hybridly()->setVersion('123');
 
     $request = mock_request(url: '/users/makise', hybridly: true, bind: true);
@@ -223,7 +223,7 @@ test('hybridly responses without a view component', function () {
 });
 
 test('hybridly responses without a view component on initial load', function () {
-    hybridly()->setRootView(Hybridly::DEFAULT_ROOT_VIEW);
+    hybridly()->setRootView(Architecture::ROOT_VIEW);
     hybridly()->setVersion('123');
 
     $request = mock_request(url: '/users/makise', hybridly: false, bind: true);

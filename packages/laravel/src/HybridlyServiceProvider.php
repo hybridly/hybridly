@@ -8,6 +8,7 @@ use Hybridly\Commands\InstallCommand;
 use Hybridly\Commands\MakeTableCommand;
 use Hybridly\Commands\PrintConfigurationCommand;
 use Hybridly\Http\Controller;
+use Hybridly\Support\Configuration\Configuration;
 use Hybridly\Support\Data\PartialLazy;
 use Hybridly\Support\RayDumper;
 use Hybridly\Support\Version;
@@ -41,17 +42,12 @@ class HybridlyServiceProvider extends PackageServiceProvider
 
     public function registeringPackage(): void
     {
-        $this->overrideViteDirective();
         $this->registerBindings();
         $this->registerDirectives();
         $this->registerMacros();
         $this->registerTestingMacros();
         $this->registerArchitecture();
         $this->registerAbout();
-
-        $this->callAfterResolving('view', function (Factory $view): void {
-            $view->addLocation($this->getRootPath('application'));
-        });
     }
 
     public function bootingPackage(): void
@@ -83,40 +79,29 @@ class HybridlyServiceProvider extends PackageServiceProvider
 
     protected function registerArchitecture(): void
     {
-        $preset = config('hybridly.architecture.preset', 'default');
-        $domainsDirectory = config('hybridly.architecture.domains_directory', 'domains');
+        // Registers the application directory so the root view can be loaded
+        $this->callAfterResolving('view', function (Factory $view): void {
+            $view->addLocation(base_path(\dirname($this->getConfiguration()->architecture->getApplicationMainPath())));
+        });
 
-        match ($preset) {
-            'default' => $this->app->make(Hybridly::class)->loadModuleFrom($this->getRootPath(), 'default'),
-            'modules' => $this->app->make(Hybridly::class)->loadModulesFrom($this->getRootPath($domainsDirectory)),
-            default => null
-        };
+        // Loads the default module if enabled
+        if (Configuration::get()->architecture->loadDefaultModule) {
+            $this->app->make(Hybridly::class)->loadModuleFrom(
+                directory: base_path($this->getConfiguration()->architecture->rootDirectory),
+                namespace: 'default',
+            );
+        }
     }
 
     protected function registerBindings(): void
     {
         $this->app->singleton(Hybridly::class);
-    }
-
-    /**
-     * Overrides the Vite directive to avoid having to specify the entrypoint in different places.
-     * Still allows overriding it.
-     */
-    protected function overrideViteDirective(): void
-    {
-        $this->app->afterResolving('blade.compiler', function (BladeCompiler $compiler) {
-            $compiler->directive('vite', function ($expression = null) {
-                return sprintf(
-                    '<?php echo app(%s::class)(%s); ?>',
-                    Vite::class,
-                    $expression ?: '"' . config('hybridly.architecture.application', 'resources/application/main.ts') . '"',
-                );
-            });
-        });
+        $this->app->singleton(Configuration::class, fn ($app) => Configuration::fromArray($app['config']['hybridly'] ?? []));
     }
 
     protected function registerDirectives(): void
     {
+        // Registers @hybridly
         $this->callAfterResolving('blade.compiler', function (BladeCompiler $blade) {
             $blade->directive('hybridly', function ($expression = '') {
                 $options = str($expression)
@@ -137,12 +122,25 @@ class HybridlyServiceProvider extends PackageServiceProvider
                 return implode(' ', array_map('trim', explode("\n", $template)));
             });
         });
+
+        // Overrides @vite so we don't have to specify the path to the
+        // application entry point in multiple files
+        $this->app->afterResolving('blade.compiler', function (BladeCompiler $compiler) {
+            $compiler->directive('vite', fn (?string $expression = null) => sprintf(
+                '<?php echo app(%s::class)(%s); ?>',
+                Vite::class,
+                $expression ?: '"' . $this->getConfiguration()->architecture->getApplicationMainPath() . '"',
+            ));
+        });
     }
 
     protected function registerMacros(): void
     {
-        /** Checks if the request is hybridly. */
-        Request::macro('isHybrid', fn () => hybridly()->isHybrid());
+        /** Checks if the request is hybrid. */
+        Request::macro('isHybrid', fn () => is_hybrid());
+
+        /** Checks if the request is partial. */
+        Request::macro('isPartial', fn () => is_partial());
 
         /** Serves a hybrid route. */
         Router::macro('hybridly', function (string $uri, string $component, array $properties = []) {
@@ -163,33 +161,32 @@ class HybridlyServiceProvider extends PackageServiceProvider
         AboutCommand::add('Hybridly', fn () => [
             'Version (composer)' => Version::getPrettyComposerVersion(),
             'Version (npm)' => Version::getPrettyNpmVersion(),
-            'Eager view loading' => config('hybridly.architecture.eager_load_views') ? '<fg=yellow;options=bold>ENABLED</>' : 'OFF',
-            'Root' => $this->getRootPath(),
-            'Architecture' => match (config('hybridly.architecture.preset', 'default')) {
-                'modules' => 'module-based',
-                default => 'classic Laravel'
-            },
+            'Application main' => $this->getConfiguration()->architecture->getApplicationMainPath(),
+            'Extensions' => implode(', ', $this->getConfiguration()->architecture->extensions),
+            'Eager view loading' => $this->getConfiguration()->architecture->eagerLoadViews
+                ? '<fg=yellow;options=bold>ENABLED</>'
+                : '<fg=yellow;options=bold>DISABLED</>',
+            'Architecture' => $this->getConfiguration()->architecture->loadDefaultModule
+                ? '<fg=green;options=bold>DEFAULT</>'
+                : '<fg=blue;options=bold>CUSTOM</>',
         ]);
     }
 
     protected function registerActionsEndpoint(): void
     {
-        if (config('hybridly.tables.enable_actions') === false) {
+        if (!$this->getConfiguration()->tables->enableActions) {
             return;
         }
 
         if (!($this->app instanceof CachesRoutes && $this->app->routesAreCached())) {
-            Route::post(config('hybridly.tables.actions_endpoint'), InvokedActionController::class)
-                ->middleware(config('hybridly.tables.actions_endpoint_middleware', []))
-                ->name(config('hybridly.tables.actions_endpoint_name'));
+            Route::post($this->getConfiguration()->tables->actionsEndpoint, InvokedActionController::class)
+                ->middleware($this->getConfiguration()->tables->actionsEndpointMiddleware)
+                ->name($this->getConfiguration()->tables->actionsEndpointName);
         }
     }
 
-    private function getRootPath(...$segments): string
+    private function getConfiguration(): Configuration
     {
-        return base_path(implode(\DIRECTORY_SEPARATOR, [
-            config('hybridly.architecture.root', 'resources'),
-            ...$segments ?? [],
-        ]));
+        return $this->app->make(Configuration::class);
     }
 }

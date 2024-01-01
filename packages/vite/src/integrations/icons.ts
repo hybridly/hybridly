@@ -23,7 +23,7 @@ function getIconsOptions(options: ViteOptions, config: DynamicConfiguration): Ic
 
 	const customIconDirectoryName = resolved?.icons ?? 'icons'
 	const customCollections = Object.fromEntries(resolved?.collections?.map((collection) => [
-		collection, FileSystemIconLoader(`./${config.architecture.root}/${customIconDirectoryName}/${collection}`),
+		collection, FileSystemIconLoader(`./${config.architecture.root_directory}/${customIconDirectoryName}/${collection}`),
 	]) ?? [])
 
 	return {

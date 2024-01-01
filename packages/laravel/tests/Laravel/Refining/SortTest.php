@@ -2,6 +2,7 @@
 
 use Hybridly\Refining\Sorts\BaseSort;
 use Hybridly\Refining\Sorts\Sort;
+use Hybridly\Support\Configuration\Configuration;
 use Hybridly\Tests\Fixtures\Database\ProductFactory;
 
 beforeEach(function () {
@@ -99,7 +100,7 @@ test('serialization takes current state into account', function () {
 });
 
 test('sorts key is globally configurable', function () {
-    config(['hybridly.refining.sorts_key' => 'product-sorts']);
+    Configuration::get()->refining->sortsKey = 'product-sorts';
 
     $sorts = mock_refiner(
         query: ['product-sorts' => '-name'],
