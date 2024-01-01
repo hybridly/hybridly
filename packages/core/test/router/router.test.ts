@@ -1,4 +1,4 @@
-import { beforeEach, expect, it, vi } from 'vitest'
+import { beforeEach, it, vi } from 'vitest'
 import { performHybridNavigation, router } from '../../src/router/router'
 import { getRouterContext, registerHook } from '../../src'
 import { fakeRouterContext, fakePayload, mockUrl } from '../utils'
@@ -12,7 +12,7 @@ beforeEach(() => {
 	})
 })
 
-it('performs hybridly navigations', async() => {
+it('performs hybridly navigations', async({ expect }) => {
 	mockUrl('http://localhost.test/navigation', {
 		json: fakePayload({
 			url: 'https://localhost.test/navigation',
@@ -33,7 +33,7 @@ it('performs hybridly navigations', async() => {
 	expect(getRouterContext()).toMatchSnapshot('context after navigation')
 })
 
-it('performs external navigations', async() => {
+it('performs external navigations', async({ expect }) => {
 	router.external('http://localhost.test/navigation', {
 		owo: 'uwu',
 		uwu: {
@@ -44,14 +44,14 @@ it('performs external navigations', async() => {
 	expect(document.location.href).toBe('http://localhost.test/navigation?owo=uwu&uwu[foo]=bar')
 })
 
-it('supports global "before" event cancellation', async() => {
+it('supports global "before" event cancellation', async({ expect }) => {
 	const options = { url: 'http://localhost.test/navigation' }
 	registerHook('before', () => false)
 
 	expect((await performHybridNavigation(options)).error?.type).toBe('NavigationCancelledError')
 })
 
-it('supports scoped "before" event cancellation', async() => {
+it('supports scoped "before" event cancellation', async({ expect }) => {
 	const options = {
 		url: 'http://localhost.test/navigation',
 		hooks: { before: () => false },
