@@ -28,7 +28,7 @@ final class Version
     public static function isLatestVersion(?string $version = null): bool
     {
         return version_compare(
-            version1: $version ?? str(InstalledVersions::getVersion('hybridly/laravel'))->take(5),
+            version1: $version ?? self::getComposerVersion(),
             version2: str(static::getLatestVersion())->after('v'),
             operator: '==',
         );
@@ -36,7 +36,7 @@ final class Version
 
     public static function getComposerVersion(): string
     {
-        return str(InstalledVersions::getPrettyVersion('hybridly/laravel'))->after('v');
+        return str(InstalledVersions::getPrettyVersion('hybridly/laravel'))->when->startsWith('v')->after('v');
     }
 
     public static function getPrettyComposerVersion(): string
