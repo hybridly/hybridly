@@ -1,6 +1,6 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`performs hybridly navigations > context after navigation 1`] = `
+exports[`performs hybrid navigations > context after navigation 1`] = `
 {
   "adapter": {
     "resolveComponent": [Function],
@@ -39,4 +39,4 @@ exports[`performs hybridly navigations > context after navigation 1`] = `
 }
 `;
 
-exports[`performs hybridly navigations > navigation response 1`] = `undefined`;
+exports[`performs hybrid navigations > navigation response 1`] = `undefined`;

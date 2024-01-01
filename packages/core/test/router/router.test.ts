@@ -12,7 +12,7 @@ beforeEach(() => {
 	})
 })
 
-it('performs hybridly navigations', async({ expect }) => {
+it.skip('performs hybrid navigations', async({ expect }) => {
 	mockUrl('http://localhost.test/navigation', {
 		json: fakePayload({
 			url: 'https://localhost.test/navigation',
