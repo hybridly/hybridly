@@ -31,6 +31,8 @@ export interface ViteOptions {
 	killSwitch?: boolean
 	/** Extra `tsconfig.json` options. */
 	tsconfig?: TsConfigOptions
+	/** Warns when displaying local builds. */
+	warnOnLocalBuilds?: boolean
 }
 
 export interface LayoutOptions {

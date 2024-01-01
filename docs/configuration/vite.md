@@ -174,3 +174,26 @@ import pc12 from '~icons/aircraft/pc12'  // [!code focus]
 	<i-aircraft-pc12 class="w-10" /> // [!code focus]
 </template>
 ```
+
+## Warn on local builds
+
+When working on Vite-powered applications using Laravel, the development server generally has to be started, but some people prefer not running it until actually needed.
+
+This may create confusion when forgetting about it and updating front-end-related code, because changes will not appear in the browser until the server is started.
+
+To help with this, this plugin displays a discreet warning at the bottom of the screen when the application has been built locally (eg. when `APP_ENV` is `local`).
+
+You may disable this warning by setting `warnOnLocalBuilds` to `false`.
+
+```ts
+import { defineConfig } from 'vite'
+import hybridly from 'hybridly/vite'
+
+export default defineConfig({
+	plugins: [
+		hybridly({  // [!code focus:3]
+			warnOnLocalBuilds: false,
+		}),
+	],
+})
+```

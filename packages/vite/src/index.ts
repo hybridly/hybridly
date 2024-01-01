@@ -9,6 +9,7 @@ import { getIconsOptions, icons } from './integrations/icons'
 import { getVueOptions, vue } from './integrations/vue'
 import { loadConfiguration } from './config/load'
 import { killSwitch } from './kill-switch'
+import { warnOnLocalBuilds } from './local-build'
 
 export default async function plugin(options: ViteOptions = {}) {
 	const config = await loadConfiguration(options)
@@ -23,6 +24,7 @@ export default async function plugin(options: ViteOptions = {}) {
 		options.icons !== false && icons(getIconsOptions(options, config)),
 		options.vue !== false && vue(getVueOptions(options)),
 		options.killSwitch !== false && killSwitch(),
+		options.warnOnLocalBuilds !== false && warnOnLocalBuilds(),
 	]
 }
 
