@@ -24,19 +24,4 @@ final class Hybridly
         private readonly VueViewFinder $finder,
     ) {
     }
-
-    /**
-     * Flashes data to the session.
-     * @deprecated
-     */
-    public function flash(array|string $key, mixed $value = null): static
-    {
-        $key = \is_array($key) ? $key : [$key => $value];
-
-        foreach ($key as $k => $v) {
-            session()->flash($k, $v);
-        }
-
-        return $this;
-    }
 }
