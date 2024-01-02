@@ -97,7 +97,7 @@ export default function laravel(options: ViteOptions, hybridlyConfig: DynamicCon
 					registered += `${colors.bold(hybridlyConfig.components.layouts.length)} ${colors.dim('layouts')}, `
 					registered += `${colors.bold(hybridlyConfig.components.directories.length)} ${colors.dim('directories')}`
 
-					const latest = hybridlyConfig.versions.is_latest ? '' : colors.dim(`(${colors.yellow(`v${hybridlyConfig.versions.latest} is available`)})`)
+					const latest = hybridlyConfig.versions.is_latest ? '' : colors.dim(`(${colors.yellow(`${hybridlyConfig.versions.latest} is available`)})`)
 
 					let version = `${colors.yellow(`v${hybridlyConfig.versions.composer}`)} ${colors.dim('(composer)')}, `
 					version += `${colors.yellow(`v${hybridlyConfig.versions.npm}`)} ${colors.dim('(npm)')}`
