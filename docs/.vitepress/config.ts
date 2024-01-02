@@ -13,9 +13,11 @@ const discord = 'https://discord.gg/uZ8eC7kRFV'
 const github = 'https://github.com/hybridly/hybridly'
 
 const { version } = JSON.parse(readFileSync(resolve('package.json'), { encoding: 'utf-8' }))
+const majorVersion = String(version).replace(/\.\d+$/, '.0')
 const cleanVersion = String(version).replace(/\.\d+$/, '.x')
 const branch = execSync('echo $BRANCH | grep . || git rev-parse --abbrev-ref HEAD')
-const hasUpgradeGuide = existsSync(resolve(`./docs/guide/upgrade/${cleanVersion}.md`))
+const hasReleaseNotes = existsSync(resolve(`./docs/releases/v${majorVersion}.md`))
+const hasUpgradeGuide = existsSync(resolve(`./docs/guide/upgrade/v${cleanVersion}.md`))
 
 export default defineConfig({
 	title,
@@ -48,11 +50,23 @@ export default defineConfig({
 			{
 				text: 'Resources',
 				items: [
-					{ text: `v${version}`, link: `${github}/releases/tag/v${version}` },
-					{ text: 'Repository', link: `${github}` },
-					{ text: 'Demonstration', link: 'https://github.com/hybridly/demo' },
-					{ text: 'Preset', link: 'https://github.com/hybridly/preset' },
-					{ text: 'Discord', link: discord },
+					{
+						text: `v${version}`,
+						items: [
+							...(hasReleaseNotes ? [{ text: 'Release notes', link: `/releases/v${majorVersion}.md` }] : []),
+							...(hasUpgradeGuide ? [{ text: `Upgrade to v${cleanVersion}`, link: `/guide/upgrade/v${cleanVersion}.md` }] : []),
+							{ text: 'GitHub', link: `${github}/releases/tag/v${version}` },
+						],
+					},
+					{
+						text: 'Useful links',
+						items: [
+							{ text: 'Discord', link: discord },
+							{ text: 'Repository', link: `${github}` },
+							{ text: 'Demonstration', link: 'https://github.com/hybridly/demo' },
+							{ text: 'Preset', link: 'https://github.com/hybridly/preset' },
+						],
+					},
 				],
 			},
 		],
@@ -83,9 +97,6 @@ export default defineConfig({
 						{ text: 'Introduction', link: '/guide/' },
 						{ text: 'Installation', link: '/guide/installation' },
 						{ text: 'Example application', link: '/guide/demonstration' },
-						...(hasUpgradeGuide ? [
-							{ text: `Upgrade to ${cleanVersion}`, link: `/guide/upgrade/${cleanVersion}` },
-						] : []),
 					],
 				},
 				{
