@@ -21,7 +21,7 @@ final class Version
 
             return static::$latestVersion = $response['tag_name'];
         } catch (\Throwable) {
-            return 'unknown';
+            return static::getComposerVersion();
         }
     }
 
