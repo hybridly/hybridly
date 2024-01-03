@@ -18,7 +18,7 @@
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^3.45",
         "guzzlehttp/promises": "^2.0",
-        "nunomaduro/collision": "^8.0",
+        "nunomaduro/collision": "^7.9",
         "larastan/larastan": "^2.6",
         "orchestra/testbench": "^7.10.1|^8.5.1",
         "pestphp/pest": "^2.30",
