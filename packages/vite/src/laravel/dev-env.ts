@@ -18,11 +18,11 @@ export function determineDevelopmentEnvironmentConfigPath(): string {
 /**
  * Resolves the Herd or Valet host for the current directory.
  */
-export function resolveDevelopmentEnvironmentHost(configPath: string): string {
+export function resolveDevelopmentEnvironmentHost(configPath: string): string | undefined {
 	const configFile = path.resolve(configPath, 'config.json')
 
 	if (!fs.existsSync(configFile)) {
-		throw new Error(`Unable to find the configuration file [${configFile}]. You will need to manually specify the host in the \`detectTls\` configuration option.`)
+		return
 	}
 
 	const config: { tld: string } = JSON.parse(fs.readFileSync(configFile, 'utf-8'))
@@ -40,6 +40,10 @@ export function resolveDevelopmentEnvironmentServerConfig(): {
 } | undefined {
 	const configPath = determineDevelopmentEnvironmentConfigPath()
 	const host = resolveDevelopmentEnvironmentHost(configPath)
+
+	if (!host) {
+		return
+	}
 
 	const keyPath = path.resolve(configPath, 'Certificates', `${host}.key`)
 	const certPath = path.resolve(configPath, 'Certificates', `${host}.crt`)

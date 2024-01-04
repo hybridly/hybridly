@@ -32,7 +32,6 @@ export default function laravel(options: ViteOptions, hybridlyConfig: DynamicCon
 			const assetUrl = env.ASSET_URL ?? ''
 			const base = `${assetUrl + (!assetUrl.endsWith('/') ? '/' : '') + buildDirectory}/`
 
-			// TODO
 			const serverConfig = command === 'serve'
 				? (resolveEnvironmentServerConfig(env) ?? resolveDevelopmentEnvironmentServerConfig())
 				: undefined
