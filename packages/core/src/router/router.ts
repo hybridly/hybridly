@@ -258,7 +258,7 @@ export async function performHybridNavigation(options: HybridRequestOptions): Pr
 				await runHooks('abort', options.hooks, context)
 			},
 			NotAHybridResponseError: async() => {
-				debug.router('The request was not hybridly.')
+				debug.router('The response was not hybrid.')
 				console.error(error)
 				await runHooks('invalid', options.hooks, error, context)
 				if (context.responseErrorModals) {
