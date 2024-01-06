@@ -6,7 +6,7 @@ import type { ViteOptions } from '../types'
 import { debug } from '../utils'
 
 const TEMPLATE_LAYOUT_REGEX = /<template +layout(?: *= *['"]((?:[\w\/\-_,:](?:,\ )?)+)['"] *)?>/
-const TYPESCRIPT_REGEX = /lang=['"]ts['"]/
+const LANG_REGEX = /lang=['"](\w+)['"]/
 
 export default (options: ViteOptions, config: DynamicConfiguration): Plugin => {
 	const defaultLayoutName = options?.layout?.defaultLayoutName?.replace('.vue', '') ?? 'default'
@@ -26,7 +26,7 @@ export default (options: ViteOptions, config: DynamicConfiguration): Plugin => {
 
 			const source = new MagicString(code)
 			const updatedCode = source.replace(templateRegExp, (_, layoutName) => {
-				const isTypeScript = TYPESCRIPT_REGEX.test(code)
+				const [hasLang, lang] = code.match(LANG_REGEX) ?? []
 				const layouts: string[] = layoutName?.toString()?.replaceAll(' ', '').split(',') ?? [defaultLayoutName]
 				const importName = (i: number) => `__hybridly_layout_${i}`
 				const exports = layouts.map((_, i) => importName(i))
@@ -42,7 +42,7 @@ export default (options: ViteOptions, config: DynamicConfiguration): Plugin => {
 				})
 
 				return `
-					<script${isTypeScript ? ' lang="ts"' : ''}>
+					<script${hasLang ? ` lang="${lang}"` : ''}>
 					${imports}
 					export default { layout: [${exports.join(', ')}] }
 					</script>
