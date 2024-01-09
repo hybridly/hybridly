@@ -95,15 +95,14 @@ export const wrapper = defineComponent({
 
 			const view = renderView()
 
-			if (state.viewLayout.value) {
-				state.view.value.layout = state.viewLayout.value
-				// Maybe we need that back, but it's causing a fast re-render that blocks animations
-				// state.viewLayout.value = undefined
+			if (state.viewLayout) {
+				state.view.value!.layout = state.viewLayout
+				state.viewLayout = undefined
 			}
 
-			if (state.viewLayoutProperties.value) {
-				state.view.value.layoutProperties = state.viewLayoutProperties.value
-				state.viewLayoutProperties.value = undefined
+			if (state.viewLayoutProperties) {
+				state.view.value!.layoutProperties = state.viewLayoutProperties
+				state.viewLayoutProperties = undefined
 			}
 
 			if (state.view.value.layout) {

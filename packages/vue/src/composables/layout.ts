@@ -10,8 +10,7 @@ export function defineLayout(layouts: Layout[]): void
 export function defineLayout(...args: any[]): void {
 	const layouts = args[0] as Layout | Layout[]
 	const properties = args[1] as any | undefined
-	state.setViewLayout(layouts)
-	state.setViewLayoutProperties(properties)
+	state.setViewLayout(layouts, properties)
 }
 
 /**
