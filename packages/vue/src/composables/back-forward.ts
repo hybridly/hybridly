@@ -4,7 +4,14 @@ import { state } from '../stores/state'
 
 type BackForwardCallback = (context: RouterContext) => void
 
-export function useBackForward() {
+interface UseBackForwardOptions {
+	/**
+	 * Calls `reloadOnBackForward` immediately.
+	 */
+	reload: boolean | HybridRequestOptions
+}
+
+export function useBackForward(options?: UseBackForwardOptions) {
 	const callbacks: BackForwardCallback[] = []
 
 	// On navigation events, if the navigation is a back/forward
@@ -28,6 +35,10 @@ export function useBackForward() {
 	 */
 	function reloadOnBackForward(options?: HybridRequestOptions) {
 		onBackForward(() => router.reload(options))
+	}
+
+	if (options?.reload) {
+		reloadOnBackForward(options.reload === true ? undefined : options.reload)
 	}
 
 	return {

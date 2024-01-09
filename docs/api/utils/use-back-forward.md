@@ -7,7 +7,14 @@ A back-forward navigation is a navigation that uses the "back" or "forward" brow
 ## Usage
 
 ```ts
-function useBackForward(): {
+interface UseBackForwardOptions {
+	/**
+	 * Calls `reloadOnBackForward` immediately.
+	 */
+	reload: boolean | HybridRequestOptions
+}
+
+function useBackForward(options?: UseBackForwardOptions): {
   onBackForward: (fn: BackForwardCallback) => void
   reloadOnBackForward: (options: HybridRequestOptions) => void
 }
@@ -21,15 +28,15 @@ The following example reloads the page when a back or forward browser navigation
 
 ```vue
 <script setup lang="ts">
-const { reloadOnBackForward } = useBackForward() // [!code focus]
+useBackForward({ // [!code focus:5]
+	reload: {
+		only: ['users']
+	}
+})
 
 defineProps<{
   users: Paginator<App.Data.UserData>
 }>()
-
-reloadOnBackForward({  // [!code focus:3]
-  only: ['users']
-})
 </script>
 ```
 
