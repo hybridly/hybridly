@@ -65,9 +65,14 @@ hr {
 .vp-doc h2 {
 	margin-top: 5rem !important;
 	display: inline-flex;
-	align-items: center;
+	align-items: baseline;
 	gap: 0.5rem;
 	width: 100%;
+}
+
+.vp-doc h2 > .VPBadge {
+	flex-grow: 1;
+	flex-shrink: 0;
 }
 
 .vp-doc .preface + h2 {
