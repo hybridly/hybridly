@@ -24,7 +24,7 @@ export const wrapper = defineComponent({
 						layout.inheritAttrs = !!layout.inheritAttrs
 
 						return h(layout, {
-							...(state.view.value?.layoutProperties ?? {}),
+							...(state.view.value?.properties ?? {}),
 							...state.properties.value,
 						}, () => child)
 					})
@@ -34,7 +34,7 @@ export const wrapper = defineComponent({
 
 			return [
 				h(state.view.value?.layout, {
-					...(state.view.value?.layoutProperties ?? {}),
+					...(state.view.value?.properties ?? {}),
 					...state.properties.value,
 				}, () => view),
 				renderDialog(),
@@ -94,16 +94,6 @@ export const wrapper = defineComponent({
 			debug.adapter('vue:render:wrapper', 'Rendering wrapper component.', a.map(toRaw))
 
 			const view = renderView()
-
-			if (state.viewLayout) {
-				state.view.value!.layout = state.viewLayout
-				state.viewLayout = undefined
-			}
-
-			if (state.viewLayoutProperties) {
-				state.view.value!.layoutProperties = state.viewLayoutProperties
-				state.viewLayoutProperties = undefined
-			}
 
 			if (state.view.value.layout) {
 				return renderLayout(view)

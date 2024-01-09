@@ -91,13 +91,15 @@ In the example above, the `resources/views/layouts/main.vue` layout will be used
 </template>
 ```
 
-The other way to define a persistent layout is to use the `defineLayout` composable:
+The other way to define a persistent layout is to use the `defineOptions` function:
 
 ```vue
 <script setup lang="ts">
 import main from '@/views/layouts/main.vue'
 
-defineLayout(main)
+defineOptions({
+	layout: main
+})
 </script>
 
 <template>
@@ -105,7 +107,16 @@ defineLayout(main)
 </template>
 ```
 
-You can optionally pass [layout properties](#persistent-layout-properties) as the second argument of `defineLayout`.
+You can also pass [layout properties](#persistent-layout-properties) to the `properties` object:
+
+```ts
+defineOptions({
+	layout: main,
+	properties: {
+		fullscreen: false,
+	}
+})
+```
 
 
 :::warning Named slots
@@ -116,13 +127,15 @@ Persistent layouts also have their own drawbacks. Specifically, it is not possib
 
 Additional properties can be passed to persistent layouts on a per-view basis. When navigating away from a view, the properties will be reset. 
 
-You may use the `defineLayoutProperties` util to define the layout properties:
+You may use the `defineOptions` macro to define the layout properties:
 
 ```vue
 <!-- resources/views/views/example.vue -->
 <script setup lang="ts">
-defineLayoutProperties({
-	fluid: true,
+defineOptions({
+	properties: {
+		fluid: true,
+	}
 })
 </script>
 

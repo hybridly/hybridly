@@ -203,8 +203,6 @@ export default defineConfig({
 						{ text: 'useBackForward', link: '/api/utils/use-back-forward' },
 						{ text: 'useHistoryState', link: '/api/utils/use-history-state' },
 						{ text: 'useQueryParameters', link: '/api/utils/use-query-parameters' },
-						{ text: 'defineLayoutProperties', link: '/api/utils/define-layout-properties' },
-						{ text: 'defineLayout', link: '/api/utils/define-layout' },
 						{ text: 'useRoute', link: '/api/utils/use-route' },
 						{ text: 'useProperties', link: '/api/utils/use-properties' },
 						{ text: 'registerHook', link: '/api/utils/register-hook' },

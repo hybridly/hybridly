@@ -20,8 +20,6 @@ export const HybridlyImports = {
 		'useDialog',
 		'useHistoryState',
 		'usePaginator',
-		'defineLayout',
-		'defineLayoutProperties',
 		'registerHook',
 		'useRoute',
 		'useQueryParameters',
