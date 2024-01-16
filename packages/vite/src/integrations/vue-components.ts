@@ -1,19 +1,14 @@
 import vueComponents from 'unplugin-vue-components/vite'
-import { HeadlessUiResolver } from 'unplugin-vue-components/resolvers'
 import iconsResolver from 'unplugin-icons/resolver'
 import type { ComponentResolver } from 'unplugin-vue-components/types'
 import { merge } from '@hybridly/utils'
 import type { DynamicConfiguration } from '@hybridly/core'
 import type { ViteOptions } from '../types'
-import { importPackage, isPackageInstalled, toKebabCase } from '../utils'
+import { toKebabCase } from '../utils'
 
 type VueComponentsOptions = Parameters<typeof vueComponents>[0] & {
 	/** Name of the Link component. */
 	linkName?: string
-	/** Custom prefix for Headless UI components. */
-	headlessUiPrefix?: string
-	/** Custom prefix for Radix components. */
-	radixPrefix?: string
 }
 
 export type CustomResolvers = ComponentResolver | ComponentResolver[]
@@ -34,9 +29,6 @@ async function getVueComponentsOptions(options: ViteOptions, config: DynamicConf
 			: [options.overrideResolvers]
 		: false
 
-	const hasHeadlessUI = isPackageInstalled('@headlessui/vue')
-	const hasRadix = isPackageInstalled('radix-vue')
-
 	return merge<VueComponentsOptions>(
 		{
 			dirs: [
@@ -46,8 +38,6 @@ async function getVueComponentsOptions(options: ViteOptions, config: DynamicConf
 			dts: '.hybridly/components.d.ts',
 			resolvers: overrideResolvers || [
 				...(hasIcons ? [iconsResolver({ customCollections })] : []),
-				...(hasHeadlessUI ? [HeadlessUiResolver({ prefix: options?.vueComponents?.headlessUiPrefix ?? 'Headless' })] : []),
-				...(hasRadix ? [await RadixResolver(options?.vueComponents?.radixPrefix)] : []),
 				ProvidedComponentListResolver(config),
 				HybridlyResolver(options.vueComponents?.linkName),
 			],
@@ -55,11 +45,6 @@ async function getVueComponentsOptions(options: ViteOptions, config: DynamicConf
 		options.vueComponents ?? {},
 		{ overwriteArray: false },
 	)
-}
-
-export async function RadixResolver(prefix: string = 'Radix') {
-	const radix = await importPackage('radix-vue/resolver')
-	return radix.default({ prefix })
 }
 
 export function HybridlyResolver(linkName: string = 'RouterLink') {
