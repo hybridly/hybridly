@@ -44,6 +44,18 @@ trait HasViewFinder
     }
 
     /**
+     * Auto-import TypeScript files from the given directory.
+     *
+     * @see https://hybridly.dev/api/laravel/hybridly.html#loadtypescriptfilesfrom
+     */
+    public function loadTypeScriptFilesFrom(string $directory, bool $deep = false): static
+    {
+        $this->finder->loadTypeScriptFilesFrom($directory, $deep);
+
+        return $this;
+    }
+
+    /**
      * Gets the view finder.
      */
     public function getViewFinder(): VueViewFinder
@@ -56,14 +68,28 @@ trait HasViewFinder
      *
      * @see https://hybridly.dev/api/laravel/hybridly.html#loadmodule
      */
-    public function loadModule(null|string|array $namespace = null, bool $recursive = true): static
-    {
+    public function loadModule(
+        null|string|array $namespace = null,
+        bool $deep = true,
+        bool $loadViews = true,
+        bool $loadLayouts = true,
+        bool $loadComponents = true,
+        bool $loadTypeScript = true,
+    ): static {
         $trace = debug_backtrace(
             options: \DEBUG_BACKTRACE_IGNORE_ARGS,
             limit: 1,
         );
 
-        $this->getViewFinder()->loadModuleFrom(\dirname($trace[0]['file']), $namespace, $recursive);
+        $this->getViewFinder()->loadModuleFrom(
+            directory: \dirname($trace[0]['file']),
+            namespace: $namespace,
+            deep: $deep,
+            loadViews: $loadViews,
+            loadLayouts: $loadLayouts,
+            loadComponents: $loadComponents,
+            loadTypeScript: $loadTypeScript,
+        );
 
         return $this;
     }
@@ -73,9 +99,24 @@ trait HasViewFinder
      *
      * @see https://hybridly.dev/api/laravel/hybridly.html#loadmodulefrom
      */
-    public function loadModuleFrom(string $directory, null|string|array $namespace = null, bool $recursive = false): static
-    {
-        $this->getViewFinder()->loadModuleFrom($directory, $namespace, $recursive);
+    public function loadModuleFrom(
+        string $directory,
+        null|string|array $namespace = null,
+        bool $deep = false,
+        bool $loadViews = true,
+        bool $loadLayouts = true,
+        bool $loadComponents = true,
+        bool $loadTypeScript = true,
+    ): static {
+        $this->getViewFinder()->loadModuleFrom(
+            directory: $directory,
+            namespace: $namespace,
+            deep: $deep,
+            loadViews: $loadViews,
+            loadLayouts: $loadLayouts,
+            loadComponents: $loadComponents,
+            loadTypeScript: $loadTypeScript,
+        );
 
         return $this;
     }
@@ -85,9 +126,9 @@ trait HasViewFinder
      *
      * @see https://hybridly.dev/api/laravel/hybridly.html#loadmodulesfrom
      */
-    public function loadModulesFrom(string $directory, bool $recursive = false): static
+    public function loadModulesFrom(string $directory, bool $deep = false): static
     {
-        $this->getViewFinder()->loadModulesFrom($directory, $recursive);
+        $this->getViewFinder()->loadModulesFrom($directory, $deep);
 
         return $this;
     }

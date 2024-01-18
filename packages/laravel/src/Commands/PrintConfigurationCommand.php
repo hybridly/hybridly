@@ -37,10 +37,10 @@ class PrintConfigurationCommand extends Command
             ],
             'components' => [
                 'eager' => Configuration::get()->architecture->eagerLoadViews,
-                'directories' => $this->hybridly->getViewFinder()->getLoadedDirectories(),
                 'layouts' => $this->hybridly->getViewFinder()->getLayouts(),
                 'views' => $this->hybridly->getViewFinder()->getViews(),
                 'components' => $this->hybridly->getViewFinder()->getComponents(),
+                'files' => $this->hybridly->getViewFinder()->getTypeScriptDirectories(),
             ],
             'routing' => $this->routeExtractor->toArray(),
         ];

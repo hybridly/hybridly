@@ -57,7 +57,7 @@ function getAutoImportsOptions(options: ViteOptions, config: DynamicConfiguratio
 			dirs: [
 				`${config.architecture.root_directory}/utils`,
 				`${config.architecture.root_directory}/composables`,
-				...config.components.directories.map((directory) => `${directory}/**/*.ts`),
+				...config.components.files,
 			],
 			imports: options.autoImportsMap ?? [
 				'vue',

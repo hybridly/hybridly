@@ -2,7 +2,6 @@
 
 namespace Hybridly\Support;
 
-use Exception;
 use Hybridly\Support\Configuration\Configuration;
 
 final class VueViewFinder
@@ -19,7 +18,7 @@ final class VueViewFinder
     protected array $components = [];
 
     /** @var string[] */
-    protected array $loadedDirectories = [];
+    protected array $loadedTypeScriptDirectories = [];
 
     /** @var string[] */
     protected array $extensions = [];
@@ -38,7 +37,6 @@ final class VueViewFinder
      */
     public function loadViewsFrom(string $directory, null|string|array $namespace = null, ?int $depth = null): static
     {
-        $this->loadDirectory($directory);
         $this->views = array_merge($this->views, $this->findVueFiles(
             directory: $directory,
             baseDirectory: $directory,
@@ -58,7 +56,6 @@ final class VueViewFinder
      */
     public function loadLayoutsFrom(string $directory, null|string|array $namespace = null): static
     {
-        $this->loadDirectory($directory);
         $this->layouts = array_merge($this->layouts, $this->findVueFiles(
             directory: $directory,
             baseDirectory: $directory,
@@ -73,7 +70,6 @@ final class VueViewFinder
      */
     public function loadComponentsFrom(string $directory, null|string|array $namespace = null): static
     {
-        $this->loadDirectory($directory);
         $this->components = array_merge($this->components, $this->findVueFiles(
             directory: $directory,
             baseDirectory: $directory,
@@ -84,17 +80,16 @@ final class VueViewFinder
     }
 
     /**
-     * Loads the given directory.
+     * Auto-import TypeScript files from the given directory.
      */
-    public function loadDirectory(string $directory): static
+    public function loadTypeScriptFilesFrom(string $directory, bool $deep = false): static
     {
-        $realpth = realpath($directory);
-
-        if ($realpth === false) {
-            throw new Exception("Directory [{$directory}] does not exist.");
-        }
-
-        $this->loadedDirectories[] = $this->normalizeDirectory($realpth);
+        $this->loadedTypeScriptDirectories = [
+            ...$this->loadedTypeScriptDirectories,
+            $deep
+                ? str($directory)->finish('/**/*.ts')->toString()
+                : str($directory)->finish('/*.ts')->toString(),
+        ];
 
         return $this;
     }
@@ -102,19 +97,32 @@ final class VueViewFinder
     /**
      * Loads a namespaced module and its views, layouts and components.
      */
-    public function loadModuleFrom(string $directory, null|string|array $namespace, bool $recursive): static
-    {
-        if ($this->isDirectoryLoaded($directory)) {
-            return $this;
-        }
-
+    public function loadModuleFrom(
+        string $directory,
+        null|string|array $namespace,
+        bool $deep,
+        bool $loadViews = true,
+        bool $loadLayouts = true,
+        bool $loadComponents = true,
+        bool $loadTypeScript = true,
+    ): static {
         $namespace ??= str($directory)->basename()->kebab();
 
-        $this->loadDirectory($directory);
+        if ($loadTypeScript) {
+            rescue(fn () => $this->loadTypeScriptFilesFrom($directory, $deep), report: false);
+        }
 
-        rescue(fn () => $this->loadViewsFrom($recursive ? $directory : ($directory . '/' . $this->configuration->architecture->viewsDirectory), $namespace), report: false);
-        rescue(fn () => $this->loadLayoutsFrom($directory . '/' . $this->configuration->architecture->layoutsDirectory, $namespace), report: false);
-        rescue(fn () => $this->loadComponentsFrom($directory . '/' . $this->configuration->architecture->componentsDirectory, $namespace), report: false);
+        if ($loadViews) {
+            rescue(fn () => $this->loadViewsFrom($deep ? $directory : ($directory . '/' . $this->configuration->architecture->viewsDirectory), $namespace), report: false);
+        }
+
+        if ($loadLayouts) {
+            rescue(fn () => $this->loadLayoutsFrom($directory . '/' . $this->configuration->architecture->layoutsDirectory, $namespace), report: false);
+        }
+
+        if ($loadComponents) {
+            rescue(fn () => $this->loadComponentsFrom($directory . '/' . $this->configuration->architecture->componentsDirectory, $namespace), report: false);
+        }
 
         return $this;
     }
@@ -122,7 +130,7 @@ final class VueViewFinder
     /**
      * Loads all modules in the given directory.
      */
-    public function loadModulesFrom(string $directory, bool $recursive): void
+    public function loadModulesFrom(string $directory, bool $deep): void
     {
         foreach (scandir($directory) as $namespace) {
             if (\in_array($namespace, ['.', '..'], true)) {
@@ -132,14 +140,9 @@ final class VueViewFinder
             $this->loadModuleFrom(
                 directory: $directory . '/' . $namespace,
                 namespace: $namespace,
-                recursive: $recursive,
+                deep: $deep,
             );
         }
-    }
-
-    public function isDirectoryLoaded(string $directory): bool
-    {
-        return \array_key_exists($this->normalizeDirectory($directory), $this->loadedDirectories);
     }
 
     /**
@@ -182,9 +185,14 @@ final class VueViewFinder
         return $this->components;
     }
 
-    public function getLoadedDirectories(): array
+    /**
+     * Gets directories from which TypeScript files should be loaded.
+     *
+     * @return string[]
+     */
+    public function getTypeScriptDirectories(): array
     {
-        return $this->loadedDirectories;
+        return $this->loadedTypeScriptDirectories;
     }
 
     /**
@@ -243,10 +251,5 @@ final class VueViewFinder
             ->when($namespace !== 'default')
             ->prepend("{$namespace}::")
             ->lower();
-    }
-
-    protected function normalizeDirectory(string $directory): string
-    {
-        return str_replace(base_path('/'), '', $directory);
     }
 }

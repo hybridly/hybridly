@@ -14,7 +14,7 @@ export interface DynamicConfiguration {
 	}
 	components: {
 		eager?: boolean
-		directories: string[]
+		files: string[]
 		views: Component[]
 		layouts: Component[]
 		components: Component[]
