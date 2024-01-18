@@ -136,7 +136,7 @@ if (hybridly()->isPartial()) {
 
 Loads views, layouts and components from the current directory. 
 
-The layouts and components must be located in the `layouts` and `components` directories, respectively. Views are loaded recursively by default.
+The layouts and components must be located in the `layouts` and `components` directories, respectively. Views are loaded deeply by default.
 
 ### Usage
 
@@ -147,10 +147,10 @@ public function boot(Hybridly $hybridly): void
 }
 ```
 
-You may set the `recursive` argument to `false` to only load views in the `views` directory instead of all the views in the current directory.
+You may set the `deep` argument to `false` to only load views in the `views` directory instead of all the views in the current directory.
 
 ```php
-$hybridly->loadModule(namespace: 'billing', recursive: false);
+$hybridly->loadModule(namespace: 'billing', deep: false);
 ```
 
 ## `loadModuleFrom`
@@ -167,6 +167,23 @@ public function boot(Hybridly $hybridly): void
     $hybridly->loadModuleFrom(
       directory: __DIR__,
       namespace: 'billing'
+    );
+}
+```
+
+You may specify which components of a module will be loaded by setting `false` to the corresponding arguments:
+
+```php
+public function boot(Hybridly $hybridly): void
+{
+    $hybridly->loadModuleFrom(
+      directory: __DIR__,
+      namespace: 'billing',
+      deep: true,
+      loadViews: true,
+      loadLayouts: true,
+      loadComponents: true,
+      loadTypeScript: true,
     );
 }
 ```
@@ -190,7 +207,7 @@ public function boot(Hybridly $hybridly): void
 
 > See also: [architecture](../../guide/architecture.md#custom)
 
-Recursively loads Vue files in the given directory and registers them as views for the given namespace (or no namespace if left empty).
+Deeply loads Vue files in the given directory and registers them as views for the given namespace (or no namespace if left empty).
 
 ### Usage
 
@@ -222,7 +239,6 @@ public function boot(Hybridly $hybridly): void
 }
 ```
 
-
 ## `loadComponentsFrom`
 
 > See also: [architecture](../../guide/architecture.md#custom)
@@ -245,3 +261,22 @@ public function boot(Hybridly $hybridly): void
 ```
 
 Using the example above, the component `src/Billing/components/invoice/item.vue` can be auto-imported as `<billing-invoice-item />`.
+
+
+## `loadTypeScriptFilesFrom`
+
+> See also: [architecture](../../guide/architecture.md#custom)
+
+Specifies a directory that will be used to register auto-imports of TypeScript files. If the `deep` argument is set to `true`, nested TypeScript files will also be registered.
+
+### Usage
+
+```php
+public function boot(Hybridly $hybridly): void
+{
+    $hybridly->loadTypeScriptFilesFrom(
+      directory: __DIR__.'/utils',
+      deep: false,
+    );
+}
+```
