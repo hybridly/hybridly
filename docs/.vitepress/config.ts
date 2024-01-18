@@ -21,6 +21,7 @@ const hasUpgradeGuide = existsSync(resolve(`./docs/guide/upgrade/v${cleanVersion
 
 export default defineConfig({
 	title,
+	titleTemplate: `:title — ${title}`,
 	description,
 
 	head: [
