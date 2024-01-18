@@ -241,7 +241,8 @@ final class VueViewFinder
             ->replace(['/', '\\'], '.')
             ->replace($this->extensions, '')
             ->when($namespace !== 'default')
-            ->prepend("{$namespace}::");
+            ->prepend("{$namespace}::")
+            ->lower();
     }
 
     protected function normalizeDirectory(string $directory): string
