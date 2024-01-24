@@ -39,7 +39,7 @@ async function getVueComponentsOptions(options: ViteOptions, config: DynamicConf
 			resolvers: overrideResolvers || [
 				...(hasIcons ? [iconsResolver({ customCollections })] : []),
 				ProvidedComponentListResolver(config),
-				HybridlyResolver(options.vueComponents?.linkName),
+				HybridlyResolver(options, config),
 			],
 		},
 		options.vueComponents ?? {},
@@ -47,7 +47,14 @@ async function getVueComponentsOptions(options: ViteOptions, config: DynamicConf
 	)
 }
 
-export function HybridlyResolver(linkName: string = 'RouterLink') {
+export function HybridlyResolver(options: ViteOptions, config: DynamicConfiguration): ComponentResolver[] {
+	return [
+		HybridlyLinkResolver(options?.vueComponents === false ? undefined : options?.vueComponents?.linkName),
+		ProvidedComponentListResolver(config),
+	]
+}
+
+export function HybridlyLinkResolver(linkName: string = 'RouterLink'): ComponentResolver {
 	return {
 		type: 'component' as const,
 		resolve: (name: string) => {
