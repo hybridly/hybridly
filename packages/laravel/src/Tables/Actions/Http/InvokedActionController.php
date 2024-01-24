@@ -70,8 +70,8 @@ final class InvokedActionController
          */
         [$table, $action] = $this->resolveAction($data);
 
-        $model = $table->getModelClass();
-        $record = $model::findOrFail($data->recordId);
+        $modelClass = $table->getModelClass();
+        $record = $action->resolveModel($modelClass, $data);
         $result = $table->evaluate(
             value: $action->getAction(),
             named: [
