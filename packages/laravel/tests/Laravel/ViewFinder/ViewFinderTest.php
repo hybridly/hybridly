@@ -76,7 +76,7 @@ test('loading a module recursively only the root `components` and `layouts` dire
         $viewFinder->loadModuleFrom(
             directory: resource_path(),
             namespace: 'foo',
-            recursive: true,
+            deep: true,
         );
 
         expect($viewFinder->getViews())->toBe([
@@ -116,7 +116,7 @@ test('loading a module non-recursively only loads the root `views`, `components`
         $viewFinder->loadModuleFrom(
             directory: resource_path(),
             namespace: 'foo',
-            recursive: false,
+            deep: false,
         );
 
         expect($viewFinder->getViews())->toBe([
