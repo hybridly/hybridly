@@ -71,7 +71,7 @@ it('can execute a conditionally hidden inline actions', function () {
         'recordId' => $product->id,
     ])->assertRedirect();
 
-    expect(BasicProductsTableWithActions::$name)->toBe($product->name);
+    expect(BasicProductsTableWithConditionallyHiddenStuff::$name)->toBe($product->name);
 });
 
 it('can execute bulk actions with all records', function () {

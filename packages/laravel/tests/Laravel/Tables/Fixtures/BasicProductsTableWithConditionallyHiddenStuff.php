@@ -13,6 +13,9 @@ use Illuminate\Support\Collection;
 
 class BasicProductsTableWithConditionallyHiddenStuff extends Table
 {
+    public static ?string $name = null;
+    public static ?array $names = [];
+
     protected string $model = Product::class;
 
     public function defineRefiners(): array
@@ -26,8 +29,12 @@ class BasicProductsTableWithConditionallyHiddenStuff extends Table
     public function defineActions(): array
     {
         return [
-            BulkAction::make('say_our_names')->action(fn (Collection $records) => $records->each(fn (Product $record) => $record->name))->hidden(!auth()->check()),
-            InlineAction::make('say_my_name')->action(fn (Product $record) => $record->name)->hidden(!auth()->check()),
+            BulkAction::make('say_our_names')
+                ->action(fn (Collection $records) => $records->each(fn (Product $record) => self::$names[] = $record->name))
+                ->hidden(!auth()->check()),
+            InlineAction::make('say_my_name')
+                ->action(fn (Product $record) => self::$name = $record->name)
+                ->hidden(!auth()->check()),
         ];
     }
 
