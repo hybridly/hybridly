@@ -8,6 +8,7 @@ use Hybridly\Tests\Laravel\Tables\Fixtures\BasicProductsTableWithActions;
 use Hybridly\Tests\Laravel\Tables\Fixtures\BasicProductsTableWithConditionallyHiddenStuff;
 use Hybridly\Tests\Laravel\Tables\Fixtures\BasicProductsTableWithData;
 use Hybridly\Tests\Laravel\Tables\Fixtures\BasicProductsTableWithHiddenStuff;
+use Hybridly\Tests\Laravel\Tables\Fixtures\BasicProductsTableWithSoftDeleteAction;
 use Hybridly\Tests\Laravel\Tables\Fixtures\BasicScopedProductsTable;
 use Hybridly\Tests\Laravel\Tables\Fixtures\BasicTableWithConstructor;
 use Hybridly\Tests\Laravel\Tables\Fixtures\BasicTableWithDependencyInjection;
@@ -54,6 +55,23 @@ it('can execute inline actions', function () {
     ])->assertRedirect();
 
     expect(BasicProductsTableWithActions::$name)->toBe($product->name);
+});
+
+it('can execute inline action for soft deleted records', function () {
+    Table::encodeIdUsing(static fn () => BasicProductsTableWithSoftDeleteAction::class);
+    Table::decodeIdUsing(static fn () => BasicProductsTableWithSoftDeleteAction::class);
+
+    $product = ProductFactory::createImmutable();
+    $product->delete();
+
+    post(config('hybridly.tables.actions_endpoint'), [
+        'type' => 'action:inline',
+        'action' => 'say_my_name',
+        'tableId' => BasicProductsTableWithSoftDeleteAction::class,
+        'recordId' => $product->id,
+    ])->assertRedirect();
+
+    expect(BasicProductsTableWithSoftDeleteAction::$name)->toBe($product->name);
 });
 
 it('can execute a conditionally hidden inline actions', function () {
