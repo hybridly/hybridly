@@ -6,8 +6,6 @@ import type { VueOptions } from './integrations/vue'
 import type { CustomComponentsOptions, CustomResolvers } from './integrations/vue-components'
 
 export interface ViteOptions {
-	/** Path to the PHP executable. */
-	php?: string
 	/** Disables the Laravel integration. Useful if you prefer to use the official one. */
 	laravel?: false
 	/** Options for the layout plugin. */

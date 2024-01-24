@@ -1,3 +1,4 @@
+import type { DynamicConfiguration } from '@hybridly/core'
 import laravel from './laravel'
 import initialize from './config'
 import layout from './layout'
@@ -11,20 +12,25 @@ import { loadConfiguration } from './config/load'
 import { killSwitch } from './kill-switch'
 import { warnOnLocalBuilds } from './local-build'
 
-export default async function plugin(options: ViteOptions = {}) {
-	const config = await loadConfiguration(options)
+type Options = ViteOptions | ((config: DynamicConfiguration) => (ViteOptions | Promise<ViteOptions>))
+
+export default async function plugin(options: Options = {}) {
+	const config = await loadConfiguration()
+	const resolvedOptions = typeof options === 'function'
+		? await options(config)
+		: options
 
 	return [
-		initialize(options, config),
-		layout(options, config),
-		options.laravel !== false && laravel(options, config),
-		options.run !== false && run(getRunOptions(options)),
-		options.vueComponents !== false && vueComponents(await getVueComponentsOptions(options, config)),
-		options.autoImports !== false && autoimport(getAutoImportsOptions(options, config)),
-		options.icons !== false && icons(getIconsOptions(options, config)),
-		options.vue !== false && vue(getVueOptions(options)),
-		options.killSwitch !== false && killSwitch(),
-		options.warnOnLocalBuilds !== false && warnOnLocalBuilds(),
+		initialize(resolvedOptions, config),
+		layout(resolvedOptions, config),
+		resolvedOptions.laravel !== false && laravel(resolvedOptions, config),
+		resolvedOptions.run !== false && run(getRunOptions(resolvedOptions)),
+		resolvedOptions.vueComponents !== false && vueComponents(await getVueComponentsOptions(resolvedOptions, config)),
+		resolvedOptions.autoImports !== false && autoimport(getAutoImportsOptions(resolvedOptions, config)),
+		resolvedOptions.icons !== false && icons(getIconsOptions(resolvedOptions, config)),
+		resolvedOptions.vue !== false && vue(getVueOptions(resolvedOptions)),
+		resolvedOptions.killSwitch !== false && killSwitch(),
+		resolvedOptions.warnOnLocalBuilds !== false && warnOnLocalBuilds(),
 	]
 }
 
