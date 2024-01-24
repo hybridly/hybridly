@@ -11,20 +11,21 @@ trait HasActions
 {
     protected mixed $cachedActions = null;
 
-    public function getActions(): Collection
+    public function getActions(bool $showHidden = false): Collection
     {
         return $this->cachedActions ??= collect($this->defineActions())
+            ->when(!$showHidden)
             ->filter(static fn (BaseAction $action): bool => !$action->isHidden());
     }
 
-    public function getInlineActions(): Collection
+    public function getInlineActions(bool $showHidden = false): Collection
     {
-        return $this->getActions()->filter(static fn (BaseAction $action): bool => $action instanceof InlineAction);
+        return $this->getActions($showHidden)->filter(static fn (BaseAction $action): bool => $action instanceof InlineAction);
     }
 
-    public function getBulkActions(): Collection
+    public function getBulkActions(bool $showHidden = false): Collection
     {
-        return $this->getActions()->filter(static fn (BaseAction $action): bool => $action instanceof BulkAction);
+        return $this->getActions($showHidden)->filter(static fn (BaseAction $action): bool => $action instanceof BulkAction);
     }
 
     protected function defineActions(): array
