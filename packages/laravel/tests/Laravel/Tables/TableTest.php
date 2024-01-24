@@ -5,6 +5,7 @@ use Hybridly\Tests\Fixtures\Database\ProductFactory;
 use Hybridly\Tests\Fixtures\Vendor;
 use Hybridly\Tests\Laravel\Tables\Fixtures\BasicProductsTable;
 use Hybridly\Tests\Laravel\Tables\Fixtures\BasicProductsTableWithActions;
+use Hybridly\Tests\Laravel\Tables\Fixtures\BasicProductsTableWithConditionallyHiddenStuff;
 use Hybridly\Tests\Laravel\Tables\Fixtures\BasicProductsTableWithData;
 use Hybridly\Tests\Laravel\Tables\Fixtures\BasicProductsTableWithHiddenStuff;
 use Hybridly\Tests\Laravel\Tables\Fixtures\BasicScopedProductsTable;
@@ -53,6 +54,24 @@ it('can execute inline actions', function () {
     ])->assertRedirect();
 
     expect(BasicProductsTableWithActions::$name)->toBe($product->name);
+});
+
+it('can execute a conditionally hidden inline actions', function () {
+    Table::encodeIdUsing(static fn () => BasicProductsTableWithConditionallyHiddenStuff::class);
+    Table::decodeIdUsing(static fn () => BasicProductsTableWithConditionallyHiddenStuff::class);
+
+    $product = ProductFactory::createImmutable();
+
+    $this->withoutExceptionHandling();
+
+    post(config('hybridly.tables.actions_endpoint'), [
+        'type' => 'action:inline',
+        'action' => 'say_my_name',
+        'tableId' => BasicProductsTableWithConditionallyHiddenStuff::class,
+        'recordId' => $product->id,
+    ])->assertRedirect();
+
+    expect(BasicProductsTableWithConditionallyHiddenStuff::$name)->toBe($product->name);
 });
 
 it('can execute bulk actions with all records', function () {

@@ -51,8 +51,8 @@ final class InvokedActionController
         }
 
         $actions = match ($data::class) {
-            InlineActionData::class => $table->getInlineActions(),
-            BulkActionData::class => $table->getBulkActions(),
+            InlineActionData::class => $table->getInlineActions(showHidden: true),
+            BulkActionData::class => $table->getBulkActions(showHidden: true),
         };
 
         if (!$action = $actions->first(fn (BaseAction $action) => $action->getName() === $data->action)) {
