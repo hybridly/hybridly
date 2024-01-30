@@ -207,7 +207,7 @@ export default defineConfig({
 						{ text: 'useRoute', link: '/api/utils/use-route' },
 						{ text: 'useProperties', link: '/api/utils/use-properties' },
 						{ text: 'registerHook', link: '/api/utils/register-hook' },
-						{ text: 'useContext', link: '/api/utils/use-context' },
+						{ text: 'getRouterContext', link: '/api/utils/get-router-context' },
 					],
 				},
 			],

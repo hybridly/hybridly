@@ -1,6 +1,6 @@
-# `useContext`
+# `getRouterContext`
 
-This composable returns `ComputedRef` of the entire context of the current Hybridly instance. 
+This function returns the context of the current Hybridly instance. It is **not** reactive. 
 
 It is meant as an escape-hatch for advanced use cases, and not for your typical application.
 
@@ -30,5 +30,5 @@ interface RouterContext {
 	hooks: Partial<Record<keyof Hooks, Array<Function>>>
 }
 
-function useContext(): RouterContext
+function getRouterContext(): RouterContext
 ```

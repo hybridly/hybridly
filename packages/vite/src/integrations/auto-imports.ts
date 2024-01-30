@@ -28,6 +28,7 @@ export const HybridlyImports = {
 		'router',
 		'route',
 		'can',
+		'getRouterContext',
 	],
 }
 
