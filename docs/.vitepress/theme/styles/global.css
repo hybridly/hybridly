@@ -64,15 +64,11 @@ hr {
 
 .vp-doc h2 {
 	margin-top: 5rem !important;
-	display: inline-flex;
-	align-items: baseline;
-	gap: 0.5rem;
-	width: 100%;
+	line-height: 2.25rem !important;
 }
 
 .vp-doc h2 > .VPBadge {
-	flex-grow: 1;
-	flex-shrink: 0;
+	vertical-align: middle !important;
 }
 
 .vp-doc .preface + h2 {
