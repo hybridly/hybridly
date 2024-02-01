@@ -232,7 +232,7 @@ export function useForm<
 	}
 
 	watch([fields, processing, errors], () => {
-		isDirty.value = !isEqual(toRaw(loaded), toRaw(fields))
+		isDirty.value = !isEqual(toRaw(initial), toRaw(fields))
 
 		if (shouldRemember) {
 			router.history.remember(historyKey, {
