@@ -75,6 +75,7 @@ export async function initializeHybridly(options: InitializeOptions = {}) {
 			render,
 			hybridly: devtools,
 			props: { context: state.context.value! },
+			payload,
 		})
 	}
 
@@ -207,4 +208,6 @@ interface SetupArguments {
 	hybridly: VuePlugin
 	/** Renders the wrapper. */
 	render: () => ReturnType<typeof h>
+	/** Initial payload. */
+	payload: Record<string, any>
 }

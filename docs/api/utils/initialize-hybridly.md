@@ -105,6 +105,7 @@ Defines a callback that overrides how the Vue application will be created. It ac
 - `wrapper`: the wrapper component responsible for Hybridly to work
 - `render`: the render function that should be passed to `createApp`
 - `hybridly`: the Vue plugin that sets up Vue DevTools
+- `payload`: an object representing the initial payload
 
 By default, `setup` is optional because the Vue application is created under the hood. It can be enhanced through [`enhanceVue`](#enhancevue).
 
