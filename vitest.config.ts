@@ -12,7 +12,6 @@ export default defineConfig({
 			'hybridly': alias('./packages/hybridly/src/'),
 			'@hybridly/core': alias('./packages/core/src/'),
 			'@hybridly/vite': alias('./packages/vite/src/'),
-			'@hybridly/vue': alias('./packages/vue/src/'),
 		},
 	},
 	test: {
