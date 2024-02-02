@@ -3,9 +3,8 @@
 exports[`performs hybrid navigations > context after navigation 1`] = `
 {
   "adapter": {
+    "onViewSwap": [Function],
     "resolveComponent": [Function],
-    "swapDialog": [Function],
-    "swapView": [Function],
     "updateRoutingConfiguration": [Function],
   },
   "axios": [Function],

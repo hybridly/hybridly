@@ -3,9 +3,8 @@
 exports[`creates a valid router context > context 1`] = `
 {
   "adapter": {
+    "onViewSwap": [Function],
     "resolveComponent": [Function],
-    "swapDialog": [Function],
-    "swapView": [Function],
     "updateRoutingConfiguration": [Function],
   },
   "axios": [Function],
@@ -34,9 +33,8 @@ exports[`creates a valid router context > context 1`] = `
 exports[`updates the context > base context 1`] = `
 {
   "adapter": {
+    "onViewSwap": [Function],
     "resolveComponent": [Function],
-    "swapDialog": [Function],
-    "swapView": [Function],
     "updateRoutingConfiguration": [Function],
   },
   "axios": [Function],
@@ -63,9 +61,8 @@ exports[`updates the context > base context 1`] = `
 exports[`updates the context > updated context 1`] = `
 {
   "adapter": {
+    "onViewSwap": [Function],
     "resolveComponent": [Function],
-    "swapDialog": [Function],
-    "swapView": [Function],
     "updateRoutingConfiguration": [Function],
   },
   "axios": [Function],
@@ -92,9 +89,8 @@ exports[`updates the context > updated context 1`] = `
 exports[`updates the context > updated context with dialog 1`] = `
 {
   "adapter": {
+    "onViewSwap": [Function],
     "resolveComponent": [Function],
-    "swapDialog": [Function],
-    "swapView": [Function],
     "updateRoutingConfiguration": [Function],
   },
   "axios": [Function],
@@ -130,9 +126,8 @@ exports[`updates the context > updated context with dialog 1`] = `
 exports[`updates the context > updated context with no dialog 1`] = `
 {
   "adapter": {
+    "onViewSwap": [Function],
     "resolveComponent": [Function],
-    "swapDialog": [Function],
-    "swapView": [Function],
     "updateRoutingConfiguration": [Function],
   },
   "axios": [Function],

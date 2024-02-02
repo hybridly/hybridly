@@ -1,19 +1,14 @@
-import { beforeEach, it, vi } from 'vitest'
+import { beforeEach, it } from 'vitest'
 import { performHybridNavigation, router } from '../../src/router/router'
 import { getRouterContext, registerHook } from '../../src'
-import { fakeRouterContext, fakePayload, mockUrl } from '../utils'
+import { fakeRouterContext, fakePayload, mockSuccessfulUrl } from '../utils'
 
 beforeEach(() => {
 	fakeRouterContext()
-	vi.stubGlobal('console', {
-		warn: vi.fn(),
-		error: vi.fn(),
-		log: vi.fn(),
-	})
 })
 
-it.skip('performs hybrid navigations', async({ expect }) => {
-	mockUrl('http://localhost.test/navigation', {
+it('performs hybrid navigations', async({ expect }) => {
+	mockSuccessfulUrl({
 		json: fakePayload({
 			url: 'https://localhost.test/navigation',
 			view: {
