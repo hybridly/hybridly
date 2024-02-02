@@ -2,23 +2,26 @@ import { beforeEach, it } from 'vitest'
 import { performHybridNavigation, router } from '../../src/router/router'
 import { getRouterContext, registerHook } from '../../src'
 import { fakeRouterContext, fakePayload, mockSuccessfulUrl } from '../utils'
+import { server } from '../server'
 
 beforeEach(() => {
 	fakeRouterContext()
 })
 
 it('performs hybrid navigations', async({ expect }) => {
-	mockSuccessfulUrl({
-		json: fakePayload({
-			url: 'https://localhost.test/navigation',
-			view: {
-				component: 'target.view',
-				properties: {
-					foo: 'bar',
+	server.resetHandlers(
+		mockSuccessfulUrl({
+			json: fakePayload({
+				url: 'https://localhost.test/navigation',
+				view: {
+					component: 'target.view',
+					properties: {
+						foo: 'bar',
+					},
 				},
-			},
+			}),
 		}),
-	})
+	)
 
 	const { response } = await performHybridNavigation({
 		url: 'http://localhost.test/navigation',
