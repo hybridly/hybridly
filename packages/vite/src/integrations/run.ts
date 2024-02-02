@@ -7,10 +7,12 @@ function getRunOptions(options: ViteOptions): Runner[] {
 		return []
 	}
 
+	const php = process.env.PHP_EXECUTABLE_PATH ?? 'php'
+
 	return [
 		{
 			name: 'Generate TypeScript types',
-			run: ['php', 'artisan', 'hybridly:types'],
+			run: [php, 'artisan', 'hybridly:types'],
 			pattern: [
 				'+(app|src)/**/*Data.php',
 				'+(app|src)/**/Enums/*.php',
@@ -19,7 +21,7 @@ function getRunOptions(options: ViteOptions): Runner[] {
 		},
 		{
 			name: 'Generate i18n',
-			run: ['php', 'artisan', 'hybridly:i18n'],
+			run: [php, 'artisan', 'hybridly:i18n'],
 			pattern: 'lang/**/*.php',
 		},
 		...options.run ?? [],
