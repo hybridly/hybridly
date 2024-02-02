@@ -2,9 +2,7 @@ import { beforeEach, it } from 'vitest'
 import { performHybridNavigation, router } from '../../src/router/router'
 import { getRouterContext, registerHook } from '../../src'
 import { fakeRouterContext, fakePayload, mockSuccessfulUrl } from '../utils'
-import { createServer } from '../server'
-
-const server = createServer()
+import { server } from '../server'
 
 beforeEach(async() => {
 	await fakeRouterContext()

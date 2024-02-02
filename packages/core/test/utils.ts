@@ -1,11 +1,12 @@
 import defu from 'defu'
 import type { PartialDeep } from 'type-fest'
 import type { HttpResponseInit, RequestHandler } from 'msw'
-import { HttpResponse, http } from 'msw'
+import { HttpResponse } from 'msw'
 import type { RouterContext, RouterContextOptions } from '../src/context'
 import { HYBRIDLY_HEADER } from '../src/constants'
 import { initializeContext } from '../src/context'
 import type { HybridPayload } from '../src/router'
+import { http } from './server'
 
 export const noop = () => ({} as any)
 export const returnsArgs = (...args: any) => args

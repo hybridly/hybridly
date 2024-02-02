@@ -2,9 +2,7 @@ import { beforeEach, it } from 'vitest'
 import { useForm } from '@hybridly/vue'
 import { nextTick } from 'vue'
 import { fakeRouterContext, mockSuccessfulUrl, mockInvalidUrl } from '../../core/test/utils'
-import { createServer } from '../../core/test/server'
-
-const server = createServer()
+import { server } from '../../core/test/server'
 
 beforeEach(async() => {
 	await fakeRouterContext()

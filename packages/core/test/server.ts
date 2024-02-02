@@ -1,16 +1,8 @@
 import { setupServer } from 'msw/node'
-import { afterAll, beforeAll } from 'vitest'
+import { http } from 'msw'
 
-export function createServer() {
-	const server = setupServer()
+const server = setupServer()
 
-	beforeAll(() => {
-		server.listen({ onUnhandledRequest: 'error' })
-	})
+server.listen({ onUnhandledRequest: 'error' })
 
-	afterAll(() => {
-		server.close()
-	})
-
-	return server
-}
+export { server, http }
