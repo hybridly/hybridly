@@ -2,8 +2,8 @@ import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vites
 import { createSerializer, setHistoryState } from '../../src/router/history'
 import { fakeRouterContext, makeRouterContextOptions, returnsArgs } from '../utils'
 
-beforeEach(() => {
-	fakeRouterContext()
+beforeEach(async() => {
+	await fakeRouterContext()
 })
 
 describe('setHistoryState', () => {

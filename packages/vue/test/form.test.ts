@@ -2,10 +2,12 @@ import { beforeEach, it } from 'vitest'
 import { useForm } from '@hybridly/vue'
 import { nextTick } from 'vue'
 import { fakeRouterContext, mockSuccessfulUrl, mockInvalidUrl } from '../../core/test/utils'
-import { server } from '../../core/test/server'
+import { createServer } from '../../core/test/server'
 
-beforeEach(() => {
-	fakeRouterContext()
+const server = createServer()
+
+beforeEach(async() => {
+	await fakeRouterContext()
 })
 
 it('it resets dirty state after successful form submission', async({ expect }) => {

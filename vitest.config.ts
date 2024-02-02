@@ -22,8 +22,5 @@ export default defineConfig({
 		unstubGlobals: true,
 		environment: 'happy-dom',
 		threads: false,
-		setupFiles: [
-			alias('./packages/core/test/setup.ts'),
-		],
 	},
 })
