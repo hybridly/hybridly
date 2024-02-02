@@ -65,6 +65,9 @@ jobs:
       - name: Install Node dependencies
         run: pnpm install
 
+      - name: Vitest version
+        run: cat node_modules/vitest/package.json
+
       - name: CI scripts
         env:
           PHP_CS_FIXER_IGNORE_ENV: true
