@@ -10,7 +10,7 @@ beforeEach(async() => {
 
 it('performs hybrid navigations', async({ expect }) => {
 	server.resetHandlers(
-		mockSuccessfulUrl({
+		mockSuccessfulUrl('http://localhost.test/navigation', 'get', {
 			json: fakePayload({
 				url: 'https://localhost.test/navigation',
 				view: {

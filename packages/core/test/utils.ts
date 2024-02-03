@@ -37,8 +37,8 @@ export async function fakeRouterContext(options: PartialDeep<RouterContextOption
 }
 
 /** Mocks a request using MSW. */
-export function mockSuccessfulUrl(options: Partial<MockOptions> = {}): RequestHandler {
-	return mockUrl({
+export function mockSuccessfulUrl(url: string, method: keyof typeof http, options: Partial<MockOptions> = {}): RequestHandler {
+	return mockUrl(url, method, {
 		status: 200,
 		json: fakePayload(),
 		...options,
@@ -46,8 +46,8 @@ export function mockSuccessfulUrl(options: Partial<MockOptions> = {}): RequestHa
 }
 
 /** Mocks a request using MSW. */
-export function mockInvalidUrl(options: Partial<MockOptions> = {}): RequestHandler {
-	return mockUrl({
+export function mockInvalidUrl(url: string, method: keyof typeof http, options: Partial<MockOptions> = {}): RequestHandler {
+	return mockUrl(url, method, {
 		status: 422,
 		json: {
 			view: {
@@ -63,14 +63,14 @@ export function mockInvalidUrl(options: Partial<MockOptions> = {}): RequestHandl
 }
 
 /** Mocks a request using MSW. */
-export function mockUrl(options: Partial<MockOptions> = {}): RequestHandler {
+export function mockUrl(url: string, method: keyof typeof http, options: Partial<MockOptions> = {}): RequestHandler {
 	const resolved: MockOptions = defu(options, {
 		status: 200,
 		headers: { [HYBRIDLY_HEADER]: 'true' },
 		json: fakePayload(),
 	})
 
-	return http.all('*', () => {
+	return http[method](url, () => {
 		const init: HttpResponseInit = {
 			status: resolved.status,
 			headers: resolved.headers !== false

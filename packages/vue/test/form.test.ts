@@ -10,7 +10,7 @@ beforeEach(async() => {
 
 it('it resets dirty state after successful form submission', async({ expect }) => {
 	// Given
-	server.resetHandlers(mockSuccessfulUrl())
+	server.resetHandlers(mockSuccessfulUrl('http://localhost.test/navigation', 'post'))
 
 	const form = useForm({
 		url: 'http://localhost.test/navigation',
@@ -34,7 +34,7 @@ it('it resets dirty state after successful form submission', async({ expect }) =
 
 it('it does not reset dirty state after failed form submission', async({ expect }) => {
 	// Given
-	server.resetHandlers(mockInvalidUrl())
+	server.resetHandlers(mockInvalidUrl('http://localhost.test/navigation', 'post'))
 
 	const form = useForm({
 		url: 'http://localhost.test/navigation',
