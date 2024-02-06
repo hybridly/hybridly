@@ -45,6 +45,10 @@
     "vue": "^3.4.3"
   },
   "pnpm": {
+    "overrides": {
+      "vitest": "0.34.6",
+      "@vitest/ui": "0.34.6"
+    },
     "peerDependencyRules": {
       "ignoreMissing": [
         "@algolia/client-search",
