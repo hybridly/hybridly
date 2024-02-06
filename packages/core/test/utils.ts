@@ -1,6 +1,6 @@
 import defu from 'defu'
 import type { PartialDeep } from 'type-fest'
-import type { HttpResponseInit } from 'msw'
+import type { HttpResponseInit, RequestHandler } from 'msw'
 import { HttpResponse } from 'msw'
 import type { RouterContext, RouterContextOptions } from '../src/context'
 import { HYBRIDLY_HEADER } from '../src/constants'
@@ -27,8 +27,7 @@ export function makeRouterContextOptions(options: PartialDeep<RouterContextOptio
 		payload: fakePayload(),
 		adapter: {
 			resolveComponent: noop,
-			swapDialog: noop,
-			swapView: noop,
+			onViewSwap: noop,
 		},
 	})
 }
@@ -38,14 +37,40 @@ export async function fakeRouterContext(options: PartialDeep<RouterContextOption
 }
 
 /** Mocks a request using MSW. */
-export function mockUrl(url: string, options: Partial<MockOptions> = {}) {
+export function mockSuccessfulUrl(url: string, method: keyof typeof http, options: Partial<MockOptions> = {}): RequestHandler {
+	return mockUrl(url, method, {
+		status: 200,
+		json: fakePayload(),
+		...options,
+	})
+}
+
+/** Mocks a request using MSW. */
+export function mockInvalidUrl(url: string, method: keyof typeof http, options: Partial<MockOptions> = {}): RequestHandler {
+	return mockUrl(url, method, {
+		status: 422,
+		json: {
+			view: {
+				properties: {
+					errors: {
+						foo: 'Invalid foo value',
+					},
+				},
+			},
+		},
+		...options,
+	})
+}
+
+/** Mocks a request using MSW. */
+export function mockUrl(url: string, method: keyof typeof http, options: Partial<MockOptions> = {}): RequestHandler {
 	const resolved: MockOptions = defu(options, {
 		status: 200,
 		headers: { [HYBRIDLY_HEADER]: 'true' },
 		json: fakePayload(),
 	})
 
-	http.get(url, () => {
+	return http[method](url, () => {
 		const init: HttpResponseInit = {
 			status: resolved.status,
 			headers: resolved.headers !== false

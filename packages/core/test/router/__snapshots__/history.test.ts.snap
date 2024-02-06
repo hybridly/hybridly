@@ -1,13 +1,13 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`serializer > serializes and unserializes complex objects 1`] = `"{"json":{"set":[1,2,3,"string",{"foo":"bar"}],"foo":"bar","nested":{"foo":"bar","set":["a","b",1,2,3,"c"]},"nestedTwice":{"foo":{"set":[1,2,3,"soleil"]}},"empty":null,"map":[["a","test1"],["b","test2"]]},"meta":{"values":{"set":["set"],"nested.set":["set"],"nestedTwice.foo.set":["set"],"empty":["undefined"],"map":["map"]}}}"`;
+exports[`serializer > serializes and unserializes complex objects 1`] = `"{\\"json\\":{\\"set\\":[1,2,3,\\"string\\",{\\"foo\\":\\"bar\\"}],\\"foo\\":\\"bar\\",\\"nested\\":{\\"foo\\":\\"bar\\",\\"set\\":[\\"a\\",\\"b\\",1,2,3,\\"c\\"]},\\"nestedTwice\\":{\\"foo\\":{\\"set\\":[1,2,3,\\"soleil\\"]}},\\"empty\\":null,\\"map\\":[[\\"a\\",\\"test1\\"],[\\"b\\",\\"test2\\"]]},\\"meta\\":{\\"values\\":{\\"set\\":[\\"set\\"],\\"nested.set\\":[\\"set\\"],\\"nestedTwice.foo.set\\":[\\"set\\"],\\"empty\\":[\\"undefined\\"],\\"map\\":[\\"map\\"]}}}"`;
 
 exports[`setHistoryState > pushes the context into the history > context 1`] = `
 [
   {
     "type": "return",
     "value": [
-      "{"json":{"url":"https://localhost/","version":"abc123","view":{"component":"default.view","properties":{}},"dialog":null,"scrollRegions":[],"memo":{}},"meta":{"values":{"dialog":["undefined"]}}}",
+      "{\\"json\\":{\\"url\\":\\"https://localhost/\\",\\"version\\":\\"abc123\\",\\"view\\":{\\"component\\":\\"default.view\\",\\"properties\\":{}},\\"dialog\\":null,\\"scrollRegions\\":[],\\"memo\\":{}},\\"meta\\":{\\"values\\":{\\"dialog\\":[\\"undefined\\"]}}}",
       "",
       "https://localhost/",
     ],
@@ -20,7 +20,7 @@ exports[`setHistoryState > replaces the context in the current history state > c
   {
     "type": "return",
     "value": [
-      "{"json":{"url":"https://localhost/","version":"abc123","view":{"component":"default.view","properties":{}},"dialog":null,"scrollRegions":[],"memo":{}},"meta":{"values":{"dialog":["undefined"]}}}",
+      "{\\"json\\":{\\"url\\":\\"https://localhost/\\",\\"version\\":\\"abc123\\",\\"view\\":{\\"component\\":\\"default.view\\",\\"properties\\":{}},\\"dialog\\":null,\\"scrollRegions\\":[],\\"memo\\":{}},\\"meta\\":{\\"values\\":{\\"dialog\\":[\\"undefined\\"]}}}",
       "",
       "https://localhost/",
     ],
