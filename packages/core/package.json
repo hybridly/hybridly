@@ -38,7 +38,7 @@
     "stub": "unbuild --stub"
   },
   "peerDependencies": {
-    "axios": "^1.6.2"
+    "axios": "^1.6.7"
   },
   "dependencies": {
     "@hybridly/utils": "workspace:*",
