@@ -82,6 +82,10 @@ onMounted(() => {
 
 Deferred properties are the exact same as [partial properties](#partial-only-properties), except they also trigger an automatic partial reload specifically for them after the view component has loaded.
 
+:::warning Reloading
+Note that using [`router.reload()`](../api/router/utils.md#reload) will clear deferred properties from the page component state. To avoid this behavior, you may simulate a partial reload using `router.reload({ except: [] })`.
+:::
+
 
 ## Lazy evaluation
 
