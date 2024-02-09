@@ -1,4 +1,4 @@
-import { registerHook } from 'hybridly'
+import { registerHook } from '@hybridly/core'
 import { reactive } from 'vue'
 
 /**

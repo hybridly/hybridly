@@ -1,5 +1,5 @@
 import { computed, reactive } from 'vue'
-import { route, router } from 'hybridly'
+import { route, router } from '@hybridly/core'
 import { toReactive } from '../utils'
 import { useBulkSelect } from './bulk-select'
 import type { AvailableHybridRequestOptions, SortDirection, ToggleSortOptions } from './refinements'

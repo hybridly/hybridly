@@ -1,7 +1,7 @@
 import type { MaybeRefOrGetter } from 'vue'
 import { readonly, ref, toValue } from 'vue'
-import type { RouteName, RouteParameters } from 'hybridly'
-import { router } from 'hybridly'
+import type { RouteName, RouteParameters } from '@hybridly/core'
+import { router } from '@hybridly/core'
 import { registerHook } from './register-hook'
 
 export function useRoute() {

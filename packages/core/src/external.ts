@@ -1,7 +1,7 @@
 import type { AxiosResponse } from 'axios'
 import qs from 'qs'
 import { debug } from '@hybridly/utils'
-import type { HybridRequestOptions } from 'hybridly'
+import type { HybridRequestOptions } from './router/types'
 import { EXTERNAL_NAVIGATION_HEADER, STORAGE_EXTERNAL_KEY } from './constants'
 import { getRouterContext, setContext } from './context'
 import { navigate } from './router/router'

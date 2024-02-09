@@ -1,4 +1,4 @@
-import { router } from 'hybridly'
+import { router } from '@hybridly/core'
 import { computed } from 'vue'
 import { dialogStore } from '../stores/dialog'
 import { state } from '../stores/state'
