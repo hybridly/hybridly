@@ -76,6 +76,7 @@ export default defineConfig({
 `unplugin-vue-components` is included to support auto-importing of Vue components.
 
 Currently, Hybridly auto-imports the following:
+- Headless UI and Radix components, if the corresponding packages are installed
 - All components specified by your [current architecture](../guide/architecture.md)
 - Components in `resources/components`
 - The [Link](../api/components/router-link.md) component

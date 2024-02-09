@@ -1,14 +1,19 @@
 import vueComponents from 'unplugin-vue-components/vite'
+import { HeadlessUiResolver } from 'unplugin-vue-components/resolvers'
 import iconsResolver from 'unplugin-icons/resolver'
 import type { ComponentResolver } from 'unplugin-vue-components/types'
 import { merge } from '@hybridly/utils'
 import type { DynamicConfiguration } from '@hybridly/core'
 import type { ViteOptions } from '../types'
-import { toKebabCase } from '../utils'
+import { importPackage, isPackageInstalled, toKebabCase } from '../utils'
 
 type VueComponentsOptions = Parameters<typeof vueComponents>[0] & {
 	/** Name of the Link component. */
 	linkName?: string
+	/** Specify the prefix for the Headless UI integration, or disable it. */
+	headlessUiPrefix?: string | false
+	/** Specify the prefix for the Radix integration, or disable it. */
+	radixPrefix?: string | false
 }
 
 export type CustomResolvers = ComponentResolver | ComponentResolver[]
@@ -29,6 +34,9 @@ async function getVueComponentsOptions(options: ViteOptions, config: DynamicConf
 			: [options.overrideResolvers]
 		: false
 
+	const shouldImportHeadlessUi = isPackageInstalled('@headlessui/vue') && options.vueComponents?.headlessUiPrefix !== false
+	const shouldImportRadix = isPackageInstalled('radix-vue') && options.vueComponents?.radixPrefix !== false
+
 	return merge<VueComponentsOptions>(
 		{
 			dirs: [
@@ -38,6 +46,8 @@ async function getVueComponentsOptions(options: ViteOptions, config: DynamicConf
 			dts: '.hybridly/components.d.ts',
 			resolvers: overrideResolvers || [
 				...(hasIcons ? [iconsResolver({ customCollections })] : []),
+				...(shouldImportHeadlessUi ? [HeadlessUiResolver({ prefix: options?.vueComponents?.headlessUiPrefix || 'Headless' })] : []),
+				...(shouldImportRadix ? [await RadixResolver(options?.vueComponents?.radixPrefix || 'Radix')] : []),
 				ProvidedComponentListResolver(config),
 				HybridlyResolver(options, config),
 			],
@@ -45,6 +55,11 @@ async function getVueComponentsOptions(options: ViteOptions, config: DynamicConf
 		options.vueComponents ?? {},
 		{ overwriteArray: false },
 	)
+}
+
+export async function RadixResolver(prefix: string) {
+	const radix = await importPackage('radix-vue/resolver')
+	return radix.default({ prefix })
 }
 
 export function HybridlyResolver(options: ViteOptions, config: DynamicConfiguration): ComponentResolver[] {
