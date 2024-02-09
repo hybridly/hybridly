@@ -2,10 +2,15 @@
 
 namespace Hybridly\Tests\Laravel\Tables\Fixtures;
 
-use Spatie\LaravelData\Data;
+use Hybridly\Support\Data\DataResource;
 
-class ProductNameData extends Data
+class ProductNameData extends DataResource
 {
+    protected static array $authorizations = [
+        'returns-true',
+        'returns-false',
+    ];
+
     public function __construct(
         public readonly string $name,
     ) {

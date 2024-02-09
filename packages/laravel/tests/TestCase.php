@@ -3,6 +3,7 @@
 namespace Hybridly\Tests;
 
 use Hybridly\HybridlyServiceProvider;
+use Hybridly\Tests\Fixtures\Providers\TestingServiceProvider;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
 use Illuminate\Support\Facades\View;
 use Orchestra\Testbench\TestCase as Orchestra;
@@ -23,6 +24,7 @@ class TestCase extends Orchestra
     protected function getPackageProviders($app)
     {
         return [
+            TestingServiceProvider::class,
             HybridlyServiceProvider::class,
             LaravelDataServiceProvider::class,
             RayServiceProvider::class,
