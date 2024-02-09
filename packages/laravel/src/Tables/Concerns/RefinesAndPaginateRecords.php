@@ -168,8 +168,9 @@ trait RefinesAndPaginateRecords
         $modelClass = $this->getModelClass();
         $includeOriginalRecordId = Configuration::get()->tables->enableActions && $columnsWithTransforms->contains(static fn (BaseColumn $column) => $column->getName() === $keyName);
         $columnNames = $columns->map(static fn (BaseColumn $column) => $column->getName());
+        $columnsToInclude = [...$columnNames->toArray(), $keyName, '__hybridId', 'authorization'];
 
-        return $paginatedRecords->through(function (Model $model) use ($includeOriginalRecordId, $columnsWithTransforms, $modelClass, $columnNames, $keyName) {
+        return $paginatedRecords->through(function (Model $model) use ($includeOriginalRecordId, $columnsWithTransforms, $modelClass, $columnNames, $keyName, $columnsToInclude) {
             $record = $this->getRecordFromModel($model);
 
             // If actions are enabled but the record's key is not included in the
@@ -194,7 +195,7 @@ trait RefinesAndPaginateRecords
                         ),
                     ]),
                 ],
-                callback: fn (string $key) => \in_array($key, [...$columnNames->toArray(), $keyName], true),
+                callback: fn (string $key) => \in_array($key, $columnsToInclude, true),
                 mode: \ARRAY_FILTER_USE_KEY,
             );
         });
