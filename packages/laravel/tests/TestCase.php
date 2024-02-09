@@ -2,6 +2,7 @@
 
 namespace Hybridly\Tests;
 
+use Carbon\Carbon;
 use Hybridly\HybridlyServiceProvider;
 use Hybridly\Tests\Fixtures\Providers\TestingServiceProvider;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
@@ -18,6 +19,7 @@ class TestCase extends Orchestra
     {
         parent::setUp();
 
+        Carbon::setTestNow(now());
         View::addLocation(__DIR__ . '/stubs');
     }
 

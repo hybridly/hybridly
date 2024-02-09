@@ -42,16 +42,7 @@ it('includes authorization on records when using Laravel Data', function () {
     Auth::login(UserFactory::new()->create());
     ProductFactory::createImmutable();
 
-    $table = BasicProductsTableWithData::make();
-    expect($table->getRecords())->toBe([
-        [
-            'name' => 'AirPods',
-            'authorization' => [
-                'returns-true' => true,
-                'returns-false' => false,
-            ],
-        ],
-    ]);
+    expect(BasicProductsTableWithData::make())->toMatchSnapshot();
 });
 
 it('hides hidden refinements, columns and actions in serialization', function () {

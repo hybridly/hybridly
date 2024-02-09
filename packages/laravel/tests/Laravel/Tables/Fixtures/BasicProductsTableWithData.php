@@ -15,6 +15,7 @@ class BasicProductsTableWithData extends Table
     {
         return [
             TextColumn::make('name'),
+            TextColumn::make('created_at'),
         ];
     }
 }
