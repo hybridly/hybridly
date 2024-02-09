@@ -145,10 +145,15 @@ trait RefinesAndPaginateRecords
     protected function getRecordFromModel(Model $model): array|Data
     {
         if (isset($this->data) && is_a($this->data, Data::class, allow_string: true)) {
-            return $this->data::from($model)->toArray();
+            return $this->resolveDataRecord($model)->toArray();
         }
 
         return $model->toArray();
+    }
+
+    protected function resolveDataRecord(Model $model): Data
+    {
+        return $this->data::from($model);
     }
 
     private function getPaginatedRecords(): array
