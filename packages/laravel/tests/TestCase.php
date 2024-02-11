@@ -2,7 +2,9 @@
 
 namespace Hybridly\Tests;
 
+use Carbon\Carbon;
 use Hybridly\HybridlyServiceProvider;
+use Hybridly\Tests\Fixtures\Providers\TestingServiceProvider;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
 use Illuminate\Support\Facades\View;
 use Orchestra\Testbench\TestCase as Orchestra;
@@ -17,12 +19,14 @@ class TestCase extends Orchestra
     {
         parent::setUp();
 
+        Carbon::setTestNow(now());
         View::addLocation(__DIR__ . '/stubs');
     }
 
     protected function getPackageProviders($app)
     {
         return [
+            TestingServiceProvider::class,
             HybridlyServiceProvider::class,
             LaravelDataServiceProvider::class,
             RayServiceProvider::class,

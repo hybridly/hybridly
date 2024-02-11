@@ -2,6 +2,7 @@
 
 use Hybridly\Tables\Table;
 use Hybridly\Tests\Fixtures\Database\ProductFactory;
+use Hybridly\Tests\Fixtures\Database\UserFactory;
 use Hybridly\Tests\Fixtures\Vendor;
 use Hybridly\Tests\Laravel\Tables\Fixtures\BasicProductsTable;
 use Hybridly\Tests\Laravel\Tables\Fixtures\BasicProductsTableWithActions;
@@ -13,6 +14,7 @@ use Hybridly\Tests\Laravel\Tables\Fixtures\BasicScopedProductsTable;
 use Hybridly\Tests\Laravel\Tables\Fixtures\BasicTableWithConstructor;
 use Hybridly\Tests\Laravel\Tables\Fixtures\BasicTableWithDependencyInjection;
 use Hybridly\Tests\Laravel\Tables\Fixtures\BasicTableWithDependencyInjectionAndArguments;
+use Illuminate\Support\Facades\Auth;
 
 use function Pest\Laravel\post;
 
@@ -33,6 +35,13 @@ it('serializes a basic scoped table', function () {
 
 it('can transform records using Laravel Data', function () {
     ProductFactory::createImmutable();
+    expect(BasicProductsTableWithData::make())->toMatchSnapshot();
+});
+
+it('includes authorization on records when using Laravel Data', function () {
+    Auth::login(UserFactory::new()->create());
+    ProductFactory::createImmutable();
+
     expect(BasicProductsTableWithData::make())->toMatchSnapshot();
 });
 

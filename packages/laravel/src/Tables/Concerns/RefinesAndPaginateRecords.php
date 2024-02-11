@@ -71,10 +71,6 @@ trait RefinesAndPaginateRecords
 
     protected function transformRecords(Paginator|CursorPaginator $paginator): Paginator|CursorPaginator|DataCollectable
     {
-        if (isset($this->data) && is_a($this->data, Data::class, allow_string: true)) {
-            return $this->data::collection($paginator);
-        }
-
         return $paginator;
     }
 
@@ -146,6 +142,20 @@ trait RefinesAndPaginateRecords
         return $this->getRefineInstance()->refinements();
     }
 
+    protected function getRecordFromModel(Model $model): array|Data
+    {
+        if (isset($this->data) && is_a($this->data, Data::class, allow_string: true)) {
+            return $this->resolveDataRecord($model)->toArray();
+        }
+
+        return $model->toArray();
+    }
+
+    protected function resolveDataRecord(Model $model): Data
+    {
+        return $this->data::from($model);
+    }
+
     private function getPaginatedRecords(): array
     {
         return $this->cachedRecords ??= $this->transformPaginatedRecords()->toArray();
@@ -163,17 +173,21 @@ trait RefinesAndPaginateRecords
         $modelClass = $this->getModelClass();
         $includeOriginalRecordId = Configuration::get()->tables->enableActions && $columnsWithTransforms->contains(static fn (BaseColumn $column) => $column->getName() === $keyName);
         $columnNames = $columns->map(static fn (BaseColumn $column) => $column->getName());
-        $result = $paginatedRecords->through(static fn (Model $record) => [
+        $columnsToInclude = [...$columnNames->toArray(), $keyName, '__hybridId', 'authorization'];
+
+        return $paginatedRecords->through(function (Model $model) use ($includeOriginalRecordId, $columnsWithTransforms, $modelClass, $columnNames, $keyName, $columnsToInclude) {
+            $record = $this->getRecordFromModel($model);
+
             // If actions are enabled but the record's key is not included in the
             // columns or is transformed, ensure we still return it because
             // it is needed to identify records when performing actions
-            ...($includeOriginalRecordId ? ['__hybridId' => $record->getKey()] : []),
+            if ($includeOriginalRecordId) {
+                $record['__hybridId'] = $model->getKey();
+            }
 
-            // Then, we actually include all record attributes that have
-            // a column, applying transforms on the way if necessary.
-            ...array_filter(
+            return array_filter(
                 array: [
-                    ...$record->toArray(),
+                    ...$record,
                     ...$columnsWithTransforms->mapWithKeys(static fn (BaseColumn $column) => [
                         $column->getName() => !$column->canTransformValue() ? data_get($record, $column->getName()) : $column->getTransformedValue(
                             named: [
@@ -181,16 +195,14 @@ trait RefinesAndPaginateRecords
                                 'record' => $record,
                             ],
                             typed: [
-                                $modelClass => $record,
+                                $modelClass => $model,
                             ],
                         ),
                     ]),
                 ],
-                callback: fn (string $key) => \in_array($key, [...$columnNames->toArray(), $keyName], true),
+                callback: fn (string $key) => \in_array($key, $columnsToInclude, true),
                 mode: \ARRAY_FILTER_USE_KEY,
-            ),
-        ]);
-
-        return $this->transformRecords($result);
+            );
+        });
     }
 }

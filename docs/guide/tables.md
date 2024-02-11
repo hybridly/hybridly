@@ -440,6 +440,28 @@ const $props = defineProps<{
 }>()
 ```
 
+You also have the ability to customize the `Data` record's resolution logic. For example, if you need to exclude authorizations (on the root record or nested records) when rendering a table:
+
+```php
+use App\Models\User;
+use App\Data\UserData;
+use Hybridly\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
+use Spatie\LaravelData\Data;
+
+
+final class UsersTable extends Table
+{
+    protected string $model = User::class;
+		protected string $data = UserData::class;
+
+    protected function resolveDataRecord(Model $model): Data
+    {
+        return $this->data::from($model)->exclude('authorization', 'nested.authorization');
+    }
+}
+```
+
 ### Hooking into the paginator
 
 In certain scenarios, you may want to hook into the paginator to manually transform the records. 
