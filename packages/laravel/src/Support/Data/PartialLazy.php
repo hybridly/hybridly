@@ -5,6 +5,8 @@ namespace Hybridly\Support\Data;
 use Hybridly\Support\Partial;
 use Spatie\LaravelData\Support\Lazy\ConditionalLazy;
 
+use function Hybridly\partial;
+
 class PartialLazy extends ConditionalLazy
 {
     public function __construct(
@@ -15,6 +17,6 @@ class PartialLazy extends ConditionalLazy
 
     public function resolve(): Partial
     {
-        return hybridly()->partial($this->value);
+        return partial($this->value);
     }
 }
