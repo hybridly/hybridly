@@ -78,6 +78,16 @@ export function generateLaravelIdeaHelper(config: DynamicConfiguration) {
 					},
 				],
 			},
+			{
+				complete: 'routeName',
+				condition: [
+					{
+						classFqn: ['Hybridly\\Hybridly'],
+						methodNames: ['base'],
+						parameters: [1],
+					},
+				],
+			},
 		],
 	}
 
