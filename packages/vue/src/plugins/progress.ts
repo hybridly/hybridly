@@ -16,20 +16,18 @@ export function progress(options?: Partial<ProgressOptions>) {
 	let timeout: ReturnType<typeof setTimeout>
 
 	function startProgress() {
+		nprogress.done()
+		nprogress.remove()
 		nprogress.start()
 	}
 
 	function finishProgress() {
 		if (nprogress.isStarted()) {
 			nprogress.done(true)
+			setTimeout(() => nprogress.remove(), 1000)
 		}
-	}
 
-	function cancelProgress() {
-		if (nprogress.isStarted()) {
-			nprogress.done(true)
-			nprogress.remove()
-		}
+		clearTimeout(timeout)
 	}
 
 	return definePlugin({
@@ -46,20 +44,14 @@ export function progress(options?: Partial<ProgressOptions>) {
 			}
 
 			clearTimeout(timeout)
-			timeout = setTimeout(() => {
-				finishProgress()
-				startProgress()
-			}, resolved.delay)
+			timeout = setTimeout(() => startProgress(), resolved.delay)
 		},
 		progress: (progress) => {
 			if (nprogress.isStarted() && progress.percentage) {
 				nprogress.set(Math.max(nprogress.status!, progress.percentage / 100 * 0.9))
 			}
 		},
-		success: () => finishProgress(),
-		error: () => cancelProgress(),
-		fail: () => cancelProgress(),
-		after: () => clearTimeout(timeout),
+		after: () => finishProgress(),
 	})
 }
 
