@@ -7,7 +7,7 @@ export function isDownloadResponse(response: AxiosResponse): boolean {
 
 /** Handles a download. */
 export async function handleDownloadResponse(response: AxiosResponse) {
-	const blob = new Blob([response.data], { type: 'application/octet-stream' })
+	const blob = new Blob([response.data], { type: response.headers['content-type'] })
 	const urlObject = window.webkitURL || window.URL
 	const link = document.createElement('a')
 	link.style.display = 'none'

@@ -1,10 +1,12 @@
 import { debug } from '@hybridly/utils'
+import type { Axios } from 'axios'
 import axios from 'axios'
 import { createSerializer } from '../router/history'
 import { makeUrl } from '../url'
 import type { HybridPayload } from '../router'
 import { updateRoutingConfiguration } from '../routing'
 import { runHooks } from '../plugins'
+import { isDownloadResponse } from '../download'
 import type { RouterContext, InternalRouterContext, RouterContextOptions, SetContextOptions } from './types'
 
 const state = {
@@ -40,7 +42,7 @@ export async function initializeContext(options: RouterContextOptions): Promise<
 		},
 		scrollRegions: [],
 		plugins: options.plugins ?? [],
-		axios: options.axios ?? axios.create(),
+		axios: registerAxios(options.axios ?? axios.create()),
 		routing: options.routing,
 		preloadCache: new Map(),
 		hooks: {},
@@ -50,6 +52,31 @@ export async function initializeContext(options: RouterContextOptions): Promise<
 	await runHooks('initialized', {}, state.context)
 
 	return getInternalRouterContext()
+}
+
+/**
+ * Registers an interceptor that assumes `arraybuffer`
+ * responses and converts responses to JSON or text.
+ */
+export function registerAxios(axios: Axios) {
+	axios.interceptors.response.use(
+		(response) => {
+			if (!isDownloadResponse(response)) {
+				const text = new TextDecoder().decode(response.data)
+
+				try {
+					response.data = JSON.parse(text)
+				} catch {
+					response.data = text
+				}
+			}
+
+			return response
+		},
+		(error) => Promise.reject(error),
+	)
+
+	return axios
 }
 
 /**

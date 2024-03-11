@@ -446,6 +446,7 @@ export async function performHybridRequest(targetUrl: URL, options: HybridReques
 			'X-Requested-With': 'XMLHttpRequest',
 			'Accept': 'text/html, application/xhtml+xml',
 		},
+		responseType: 'arraybuffer',
 		validateStatus: () => true,
 		onUploadProgress: async(event: AxiosProgressEvent) => {
 			await runHooks('progress', options.hooks, {
