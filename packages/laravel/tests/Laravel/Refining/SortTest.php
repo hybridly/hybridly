@@ -6,9 +6,9 @@ use Hybridly\Support\Configuration\Configuration;
 use Hybridly\Tests\Fixtures\Database\ProductFactory;
 
 beforeEach(function () {
-    ProductFactory::new()->create(['name' => 'AirPods', 'published_at' => now()->setYear('2016')]);
-    ProductFactory::new()->create(['name' => 'AirPods Pro', 'published_at' => now()->setYear('2022')]);
-    ProductFactory::new()->create(['name' => 'Macbook Pro M1', 'published_at' => now()->setYear('2020')]);
+    ProductFactory::new()->create(['name' => 'AirPods', 'published_at' => now()->setYear(2016)]);
+    ProductFactory::new()->create(['name' => 'AirPods Pro', 'published_at' => now()->setYear(2022)]);
+    ProductFactory::new()->create(['name' => 'Macbook Pro M1', 'published_at' => now()->setYear(2020)]);
 });
 
 it('can be serialized', function () {

@@ -6,9 +6,9 @@ use Hybridly\Tests\Fixtures\Sorts\InvokableClassSort;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 
 beforeEach(function () {
-    ProductFactory::new()->create(['name' => 'AirPods', 'published_at' => now()->setYear('2016')]);
-    ProductFactory::new()->create(['name' => 'AirPods Pro', 'published_at' => now()->setYear('2022')]);
-    ProductFactory::new()->create(['name' => 'Macbook Pro M1', 'published_at' => now()->setYear('2020')]);
+    ProductFactory::new()->create(['name' => 'AirPods', 'published_at' => now()->setYear(2016)]);
+    ProductFactory::new()->create(['name' => 'AirPods Pro', 'published_at' => now()->setYear(2022)]);
+    ProductFactory::new()->create(['name' => 'Macbook Pro M1', 'published_at' => now()->setYear(2020)]);
 });
 
 test('sorts according to the given callback', function () {
