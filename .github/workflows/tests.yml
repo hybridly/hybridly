@@ -26,11 +26,10 @@ jobs:
         include:
           - laravel: 10.*
             testbench: 8.*
+            collision: 7.*
           - laravel: 11.*
             testbench: 9.*
-        exclude:
-          - laravel: 11.*
-            php: 8.1
+            collision: 8.*
 
     name: P${{ matrix.php }} - L${{ matrix.laravel }} - N${{ matrix.node-version }} - ${{ matrix.os }}
 
@@ -65,7 +64,7 @@ jobs:
       - name: Install PHP dependencies
         run: |
           composer install --no-interaction
-          composer require "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" --no-interaction --no-progress --with-all-dependencies
+          composer require "nunomaduro/collision:${{ matrix.collision }}" "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" --no-interaction --no-progress --with-all-dependencies
 
       - name: Install Node dependencies
         run: pnpm install
