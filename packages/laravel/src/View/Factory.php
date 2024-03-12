@@ -16,7 +16,7 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Route;
-use Spatie\LaravelData\Contracts\DataObject;
+use Spatie\LaravelData\Contracts\TransformableData;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class Factory implements HybridResponse
@@ -54,7 +54,7 @@ class Factory implements HybridResponse
     /**
      * Sets the hybridly view data.
      */
-    public function view(string $component = null, array|Arrayable|DataObject $properties = []): static
+    public function view(string $component = null, array|Arrayable|TransformableData $properties = []): static
     {
         $this->view = new View(
             component: $component,
@@ -80,7 +80,7 @@ class Factory implements HybridResponse
     /**
      * Sets the view properties.
      */
-    public function properties(array|Arrayable|DataObject $properties): static
+    public function properties(array|Arrayable|TransformableData $properties): static
     {
         $this->view = new View(
             component: $this->view?->component,
@@ -155,9 +155,9 @@ class Factory implements HybridResponse
         );
     }
 
-    protected function transformProperties(array|Arrayable|DataObject $properties): array
+    protected function transformProperties(array|Arrayable|TransformableData $properties): array
     {
-        if ($properties instanceof Arrayable || $properties instanceof DataObject) {
+        if ($properties instanceof Arrayable || $properties instanceof TransformableData) {
             $properties = $properties->toArray();
         }
 
