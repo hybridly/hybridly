@@ -42,7 +42,7 @@ final class VueViewFinder
             baseDirectory: $directory,
             namespace: $namespace,
             depth: $depth,
-            filter: fn (string $file) => !\in_array($file, [
+            filter: fn (string $file) => !\in_array($file, $this->configuration->architecture->excludedViewsDirectories, true) && !\in_array($file, [
                 $this->configuration->architecture->layoutsDirectory,
                 $this->configuration->architecture->componentsDirectory,
             ], strict: true),
