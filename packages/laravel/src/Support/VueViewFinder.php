@@ -243,13 +243,17 @@ final class VueViewFinder
      */
     protected function getIdentifier(string $path, string $baseDirectory, string $namespace): string
     {
-        return str($path)
-            ->after($baseDirectory)
-            ->ltrim('/\\')
-            ->replace(['/', '\\'], '.')
-            ->replace($this->extensions, '')
+        return str(
+            str($path)
+                ->after($baseDirectory)
+                ->ltrim('/\\')
+                ->replace(['/', '\\'], '.')
+                ->replace($this->extensions, '')
+                ->explode('.')
+                ->map(fn (string $str) => str($str)->kebab())
+                ->join('.'),
+        )
             ->when($namespace !== 'default')
-            ->prepend("{$namespace}::")
-            ->lower();
+            ->prepend("{$namespace}::");
     }
 }
