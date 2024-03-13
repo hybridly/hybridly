@@ -1,7 +1,8 @@
+import path from 'node:path'
 import { merge } from '@hybridly/utils'
 import autoimport from 'unplugin-auto-import/vite'
 import type { DynamicConfiguration } from '@hybridly/core'
-import type { ViteOptions } from '../types'
+import type { ResolvedOptions } from '../types'
 import { isPackageInstalled } from '../utils'
 
 type AutoImportOptions = Parameters<typeof autoimport>[0]
@@ -32,7 +33,7 @@ export const HybridlyImports = {
 	],
 }
 
-function getAutoImportsOptions(options: ViteOptions, config: DynamicConfiguration): AutoImportOptions {
+function getAutoImportsOptions(options: ResolvedOptions, config: DynamicConfiguration): AutoImportOptions {
 	if (options.autoImports === false) {
 		return
 	}
@@ -54,10 +55,11 @@ function getAutoImportsOptions(options: ViteOptions, config: DynamicConfiguratio
 	return merge<AutoImportOptions>(
 		{
 			vueTemplate: true,
-			dts: '.hybridly/auto-imports.d.ts',
+			dts: path.resolve(options.laravelPath, '.hybridly/auto-imports.d.ts'),
 			dirs: [
-				`${config.architecture.root_directory}/utils`,
-				`${config.architecture.root_directory}/composables`,
+				// TODO do we even need to use root_directory anymore, since we can use basePath
+				path.resolve(options.laravelPath, config.architecture.root_directory, 'utils'),
+				path.resolve(options.laravelPath, config.architecture.root_directory, 'composables'),
 				...config.components.files,
 			],
 			imports: options.autoImportsMap ?? [

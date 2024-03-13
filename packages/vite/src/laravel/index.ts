@@ -6,21 +6,21 @@ import type { Plugin, UserConfig, ResolvedConfig } from 'vite'
 import { loadEnv } from 'vite'
 import type { DynamicConfiguration } from '@hybridly/core'
 import type { InputOption } from 'rollup'
-import type { ViteOptions } from '../types'
+import type { ResolvedOptions } from '../types'
 import { isIpv6 } from './utils'
 import { resolveDevelopmentEnvironmentServerConfig, resolveEnvironmentServerConfig } from './dev-env'
 
 type DevServerUrl = `${'http' | 'https'}://${string}:${number}`
 let exitHandlersBound = false
 
-export default function laravel(options: ViteOptions, hybridlyConfig: DynamicConfiguration): Plugin {
+export default function laravel(options: ResolvedOptions, hybridlyConfig: DynamicConfiguration): Plugin {
 	let viteDevServerUrl: DevServerUrl
 	let resolvedConfig: ResolvedConfig
 	let userConfig: UserConfig
 
 	const publicDirectory = 'public'
 	const buildDirectory = 'build'
-	const hotFile = path.join(publicDirectory, 'hot')
+	const hotFile = path.join(options.laravelPath, publicDirectory, 'hot')
 
 	return {
 		name: 'hybridly:laravel',
@@ -43,7 +43,8 @@ export default function laravel(options: ViteOptions, hybridlyConfig: DynamicCon
 				publicDir: userConfig.publicDir ?? false,
 				build: {
 					manifest: ssr === true ? false : (userConfig.build?.manifest ?? 'manifest.json'),
-					outDir: userConfig.build?.outDir ?? path.join(publicDirectory, buildDirectory),
+					outDir: userConfig.build?.outDir ?? path.join(options.laravelPath, publicDirectory, buildDirectory),
+					emptyOutDir: options.laravelPath !== process.cwd(),
 					rollupOptions: {
 						input: resolveInput(config, hybridlyConfig, ssr),
 					},

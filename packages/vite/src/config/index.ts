@@ -2,14 +2,14 @@ import path from 'node:path'
 import { type Plugin } from 'vite'
 import type { DynamicConfiguration } from '@hybridly/core'
 import { CONFIG_PLUGIN_NAME, CONFIG_VIRTUAL_MODULE_ID, RESOLVED_CONFIG_VIRTUAL_MODULE_ID } from '../constants'
-import type { ViteOptions } from '../types'
+import type { ResolvedOptions } from '../types'
 import { generateRouteDefinitionFile, generateLaravelIdeaHelper, generateTsConfig } from '../typegen'
 import { loadConfiguration } from './load'
 import { getClientCode } from './client'
 
-export default (options: ViteOptions, config: DynamicConfiguration): Plugin => {
+export default (options: ResolvedOptions, config: DynamicConfiguration): Plugin => {
 	generateTsConfig(options, config)
-	generateLaravelIdeaHelper(config)
+	generateLaravelIdeaHelper(options, config)
 	generateRouteDefinitionFile(options, config)
 
 	return {
@@ -19,11 +19,12 @@ export default (options: ViteOptions, config: DynamicConfiguration): Plugin => {
 			return {
 				resolve: {
 					alias: {
-						'@': path.join(process.cwd(), config.architecture.root_directory),
-						'#': path.join(process.cwd(), '.hybridly'),
-						'~': path.join(process.cwd()),
+						'@': path.resolve(options.laravelPath, config.architecture.root_directory),
+						'#': path.resolve(options.laravelPath, '.hybridly'),
+						'~': options.basePath,
 					},
 				},
+				envDir: options.laravelPath,
 			}
 		},
 		configureServer(server) {
@@ -51,13 +52,15 @@ export default (options: ViteOptions, config: DynamicConfiguration): Plugin => {
 
 				// When routing changes, write route definitions
 				// to the disk and force-reload the dev server
-				if (/routes\/.*\.php/.test(file) || /routes\.php/.test(file)) {
+				// Check for controller changes as well to support spatie/laravel-route-attributes
+				// TODO make this configurable
+				if (/routes\/.*\.php$/.test(file) || /app\/Http\/Controllers\/.*\.php$/.test(file) || /routes\.php$/.test(file)) {
 					return await forceRestart('Routing changed')
 				}
 
 				// Force-reload the server when the routing or components change
 				if (/.*\.vue$/.test(file)) {
-					const updatedConfig = await loadConfiguration(options)
+					const updatedConfig = await loadConfiguration(options.laravelPath, options.basePath)
 					const viewsOrLayoutsChanged = didViewsOrLayoutsChange(updatedConfig, config)
 
 					if (viewsOrLayoutsChanged) {
@@ -66,6 +69,13 @@ export default (options: ViteOptions, config: DynamicConfiguration): Plugin => {
 				}
 			}
 
+			if (options.laravelPath !== process.cwd()) {
+				server.watcher.add([
+					path.resolve(options.laravelPath, 'config/hybridly.php'),
+					path.resolve(options.laravelPath, 'routes'),
+					path.resolve(options.laravelPath, 'app', 'Http'),
+				])
+			}
 			server.watcher.on('add', handleFileChange)
 			server.watcher.on('change', handleFileChange)
 			server.watcher.on('unlink', handleFileChange)

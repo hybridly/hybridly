@@ -23,6 +23,8 @@ final class VueViewFinder
     /** @var string[] */
     protected array $extensions = [];
 
+    protected string $basePath;
+
     public function __construct(
         private readonly Configuration $configuration,
     ) {
@@ -30,6 +32,7 @@ final class VueViewFinder
             callback: fn (string $extension) => ".{$extension}",
             array: $configuration->architecture->extensions,
         );
+        $this->basePath = base_path();
     }
 
     /**
@@ -37,7 +40,7 @@ final class VueViewFinder
      */
     public function loadViewsFrom(string $directory, null|string|array $namespace = null, ?int $depth = null): static
     {
-        $this->views = array_merge($this->views, $this->findVueFiles(
+        $this->views[] = fn () => $this->findVueFiles(
             directory: $directory,
             baseDirectory: $directory,
             namespace: $namespace,
@@ -46,7 +49,7 @@ final class VueViewFinder
                 $this->configuration->architecture->layoutsDirectory,
                 $this->configuration->architecture->componentsDirectory,
             ]), strict: true),
-        ));
+        );
 
         return $this;
     }
@@ -56,11 +59,11 @@ final class VueViewFinder
      */
     public function loadLayoutsFrom(string $directory, null|string|array $namespace = null): static
     {
-        $this->layouts = array_merge($this->layouts, $this->findVueFiles(
+        $this->layouts[] = fn () => $this->findVueFiles(
             directory: $directory,
             baseDirectory: $directory,
             namespace: $namespace,
-        ));
+        );
 
         return $this;
     }
@@ -70,11 +73,11 @@ final class VueViewFinder
      */
     public function loadComponentsFrom(string $directory, null|string|array $namespace = null): static
     {
-        $this->components = array_merge($this->components, $this->findVueFiles(
+        $this->components[] = fn () => $this->findVueFiles(
             directory: $directory,
             baseDirectory: $directory,
             namespace: $namespace,
-        ));
+        );
 
         return $this;
     }
@@ -145,6 +148,11 @@ final class VueViewFinder
         }
     }
 
+    public function setBasePath(string $basePath): void
+    {
+        $this->basePath = $basePath;
+    }
+
     /**
      * Gets namespaced view files.
      *
@@ -152,7 +160,7 @@ final class VueViewFinder
      */
     public function getViews(): array
     {
-        return $this->views;
+        return collect($this->views)->flatMap('call_user_func')->all();
     }
 
     /**
@@ -160,7 +168,7 @@ final class VueViewFinder
      */
     public function hasView(string $identifier): bool
     {
-        return collect($this->views)->contains(function (array $view) use ($identifier) {
+        return collect($this->getViews())->contains(function (array $view) use ($identifier) {
             return $view['identifier'] === $identifier;
         });
     }
@@ -172,7 +180,7 @@ final class VueViewFinder
      */
     public function getLayouts(): array
     {
-        return $this->layouts;
+        return collect($this->layouts)->flatMap('call_user_func')->all();
     }
 
     /**
@@ -182,7 +190,7 @@ final class VueViewFinder
      */
     public function getComponents(): array
     {
-        return $this->components;
+        return collect($this->components)->flatMap('call_user_func')->all();
     }
 
     /**
@@ -228,7 +236,7 @@ final class VueViewFinder
                 if (str($path)->endsWith($this->extensions)) {
                     $files[] = [
                         'namespace' => $namespace,
-                        'path' => str($path)->replaceStart(base_path(), '')->ltrim('/\\')->toString(),
+                        'path' => str($path)->replaceStart($this->basePath, '')->ltrim('/\\')->toString(),
                         'identifier' => $this->getIdentifier($path, $baseDirectory, $namespace),
                     ];
                 }
