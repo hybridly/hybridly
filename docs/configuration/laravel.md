@@ -20,7 +20,7 @@ In most cases, this is not an issue, but in some situations you may want to rest
 
 ### Excluding routes
 
-You may add filters to `router.excludes`. These filters are matched against the final URI, and support wildcards:
+You may add filters to `router.exclude`. These filters are matched against the final URI, and support wildcards:
 
 ```php
 'router' => [
