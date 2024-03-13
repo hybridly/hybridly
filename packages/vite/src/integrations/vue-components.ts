@@ -1,10 +1,11 @@
+import path from 'node:path'
 import vueComponents from 'unplugin-vue-components/vite'
 import { HeadlessUiResolver } from 'unplugin-vue-components/resolvers'
 import iconsResolver from 'unplugin-icons/resolver'
 import type { ComponentResolver } from 'unplugin-vue-components/types'
 import { merge } from '@hybridly/utils'
 import type { DynamicConfiguration } from '@hybridly/core'
-import type { ViteOptions } from '../types'
+import type { ResolvedOptions, ViteOptions } from '../types'
 import { importPackage, isPackageInstalled, toKebabCase } from '../utils'
 
 type VueComponentsOptions = Parameters<typeof vueComponents>[0] & {
@@ -19,7 +20,7 @@ type VueComponentsOptions = Parameters<typeof vueComponents>[0] & {
 export type CustomResolvers = ComponentResolver | ComponentResolver[]
 export type CustomComponentsOptions = VueComponentsOptions
 
-async function getVueComponentsOptions(options: ViteOptions, config: DynamicConfiguration): Promise<VueComponentsOptions> {
+async function getVueComponentsOptions(options: ResolvedOptions, config: DynamicConfiguration): Promise<VueComponentsOptions> {
 	if (options.vueComponents === false) {
 		return {}
 	}
@@ -40,10 +41,10 @@ async function getVueComponentsOptions(options: ViteOptions, config: DynamicConf
 	return merge<VueComponentsOptions>(
 		{
 			dirs: [
-				`./${config.architecture.root_directory}/${config.architecture.components_directory}`,
+				path.resolve(options.laravelPath, config.architecture.root_directory, config.architecture.components_directory),
 			],
 			directoryAsNamespace: true,
-			dts: '.hybridly/components.d.ts',
+			dts: path.resolve(options.laravelPath, '.hybridly/components.d.ts'),
 			resolvers: overrideResolvers || [
 				...(hasIcons ? [iconsResolver({ customCollections })] : []),
 				...(shouldImportHeadlessUi ? [HeadlessUiResolver({ prefix: options?.vueComponents?.headlessUiPrefix || 'Headless' })] : []),

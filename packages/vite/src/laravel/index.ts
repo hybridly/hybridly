@@ -6,7 +6,7 @@ import type { Plugin, ResolvedConfig, UserConfig } from 'vite'
 import { loadEnv } from 'vite'
 import type { DynamicConfiguration } from '@hybridly/core'
 import type { InputOption } from 'rollup'
-import type { ViteOptions } from '../types'
+import type { ResolvedOptions } from '../types'
 import { determineDevEnvironment } from '../config/env'
 import { isIpv6 } from './utils'
 import { resolveDevelopmentEnvironmentServerConfig, resolveEnvironmentServerConfig } from './dev-env'
@@ -14,14 +14,14 @@ import { resolveDevelopmentEnvironmentServerConfig, resolveEnvironmentServerConf
 type DevServerUrl = `${'http' | 'https'}://${string}:${number}`
 let exitHandlersBound = false
 
-export default function laravel(options: ViteOptions, hybridlyConfig: DynamicConfiguration): Plugin {
+export default function laravel(options: ResolvedOptions, hybridlyConfig: DynamicConfiguration): Plugin {
 	let viteDevServerUrl: DevServerUrl
 	let resolvedConfig: ResolvedConfig
 	let userConfig: UserConfig
 
 	const publicDirectory = 'public'
 	const buildDirectory = 'build'
-	const hotFile = path.join(publicDirectory, 'hot')
+	const hotFile = path.join(options.laravelPath, publicDirectory, 'hot')
 
 	return {
 		name: 'hybridly:laravel',
@@ -43,10 +43,11 @@ export default function laravel(options: ViteOptions, hybridlyConfig: DynamicCon
 				base: userConfig.base ?? (command === 'build' ? base : ''),
 				publicDir: userConfig.publicDir ?? false,
 				build: {
-					manifest: ssr === true ? false : (userConfig.build?.manifest ?? 'manifest.json'),
-					outDir: userConfig.build?.outDir ?? path.join(publicDirectory, buildDirectory),
+					manifest: ssr ? false : (userConfig.build?.manifest ?? 'manifest.json'),
+					outDir: userConfig.build?.outDir ?? path.join(options.laravelPath, publicDirectory, buildDirectory),
+					emptyOutDir: true,
 					rollupOptions: {
-						input: resolveInput(config, hybridlyConfig, ssr),
+						input: resolveInput(config, hybridlyConfig, options, ssr),
 					},
 					assetsInlineLimit: userConfig.build?.assetsInlineLimit ?? 0,
 				},
@@ -190,14 +191,14 @@ function ensureCommandShouldRunInEnvironment(command: 'build' | 'serve', env: Re
 /**
  * Resolves input files.
  */
-function resolveInput(userConfig: UserConfig, hybridlyConfig: DynamicConfiguration, _ssr: boolean): InputOption | string | undefined {
+function resolveInput(userConfig: UserConfig, hybridlyConfig: DynamicConfiguration, options: ResolvedOptions, _ssr: boolean): InputOption | string | undefined {
 	// TODO: SSR support
 	// if (_ssr) {
 	// 	return config.ssr
 	// }
 
 	return userConfig.build?.rollupOptions?.input
-		?? hybridlyConfig.architecture.application_main_path
+		?? path.resolve(options.laravelPath, hybridlyConfig.architecture.application_main_path)
 }
 
 /**

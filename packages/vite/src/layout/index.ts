@@ -2,13 +2,13 @@ import type { Plugin } from 'vite'
 import type { DynamicConfiguration } from '@hybridly/core'
 import MagicString from 'magic-string'
 import { LAYOUT_PLUGIN_NAME } from '../constants'
-import type { ViteOptions } from '../types'
+import type { ResolvedOptions } from '../types'
 import { debug } from '../utils'
 
-const TEMPLATE_LAYOUT_REGEX = /<template +layout(?: *= *['"]((?:[\w\/\-_,:](?:,\ )?)+)['"] *)?>/
+const TEMPLATE_LAYOUT_REGEX = /<template +layout(?: *= *['"]((?:[\w\/\-_,:](?:, )?)+)['"] *)?>/
 const LANG_REGEX = /lang=['"](\w+)['"]/
 
-export default (options: ViteOptions, config: DynamicConfiguration): Plugin => {
+export default (options: ResolvedOptions, config: DynamicConfiguration): Plugin => {
 	const defaultLayoutName = options?.layout?.defaultLayoutName?.replace('.vue', '') ?? 'default'
 	const templateRegExp = options?.layout?.templateRegExp ?? TEMPLATE_LAYOUT_REGEX
 
