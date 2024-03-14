@@ -42,8 +42,7 @@ return [
         'application_main' => Architecture::APPLICATION_MAIN,
         'root_view' => Architecture::ROOT_VIEW,
         'extensions' => ['vue', 'tsx'],
-        // Don't load vue files as views if they are under the following directories
-        'excluded_views_directories' => ['Components'],
+        'excluded_views_directories' => [],
     ],
 
     /*
