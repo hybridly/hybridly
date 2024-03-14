@@ -10,7 +10,7 @@ use Illuminate\Console\Command;
 
 class PrintConfigurationCommand extends Command
 {
-    protected $signature = 'hybridly:config {--pretty} {buildPath?}';
+    protected $signature = 'hybridly:config {--pretty} {basePath?}';
     protected $description = 'Prints the internal Hybridly configuration.';
     protected $hidden = true;
 
@@ -23,9 +23,9 @@ class PrintConfigurationCommand extends Command
 
     public function handle(): int
     {
-        $buildPath = $this->argument('buildPath');
-        if (!empty($buildPath)) {
-            $this->hybridly->getViewFinder()->setBasePath(str_starts_with($buildPath, \DIRECTORY_SEPARATOR) ? $buildPath : base_path($buildPath));
+        $basePath = $this->argument('basePath');
+        if (!empty($basePath)) {
+            $this->hybridly->getViewFinder()->setBasePath(str_starts_with($basePath, \DIRECTORY_SEPARATOR) ? $basePath : base_path($basePath));
         }
         $configuration = [
             'versions' => [

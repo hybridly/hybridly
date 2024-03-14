@@ -3,7 +3,7 @@ import type { DynamicConfiguration } from '@hybridly/core'
 import laravel from './laravel'
 import initialize from './config'
 import layout from './layout'
-import type { ViteOptions } from './types'
+import type { PathOptions, ViteOptions } from './types'
 import { getRunOptions, run } from './integrations/run'
 import { getAutoImportsOptions, autoimport, HybridlyImports } from './integrations/auto-imports'
 import { getVueComponentsOptions, vueComponents, HybridlyResolver, HybridlyLinkResolver, ProvidedComponentListResolver } from './integrations/vue-components'
@@ -15,9 +15,9 @@ import { warnOnLocalBuilds } from './local-build'
 
 type Options = ViteOptions | ((config: DynamicConfiguration) => (ViteOptions | Promise<ViteOptions>))
 
-export default async function plugin(options: Options = {}, laravelPath = process.cwd(), basePath = process.cwd()) {
-	laravelPath = path.resolve(laravelPath)
-	basePath = path.resolve(basePath)
+export default async function plugin(options: Options = {}, pathOptions: PathOptions = {}) {
+	const laravelPath = path.resolve(pathOptions.laravelPath || '')
+	const basePath = path.resolve(pathOptions.laravelPath || '')
 	const config = await loadConfiguration(laravelPath, basePath)
 	const calledOptions = typeof options === 'function'
 		? await options(config)

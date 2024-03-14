@@ -69,7 +69,7 @@ export default (options: ResolvedOptions, config: DynamicConfiguration): Plugin 
 				}
 			}
 
-			if (options.laravelPath !== process.cwd()) {
+			if (options.laravelPath !== options.basePath) {
 				server.watcher.add([
 					path.resolve(options.laravelPath, 'config/hybridly.php'),
 					path.resolve(options.laravelPath, 'routes'),

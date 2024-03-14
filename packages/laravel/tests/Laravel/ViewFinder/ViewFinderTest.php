@@ -83,14 +83,44 @@ test('loading a module recursively only the root `components` and `layouts` dire
             ['namespace' => 'foo', 'path' => 'resources/subdirectory/again/view3.vue', 'identifier' => 'foo::subdirectory.again.view3'],
             ['namespace' => 'foo', 'path' => 'resources/subdirectory/view2.vue', 'identifier' => 'foo::subdirectory.view2'],
             ['namespace' => 'foo', 'path' => 'resources/view1.vue', 'identifier' => 'foo::view1'],
-        ]);
-
-        expect($viewFinder->getComponents())->toBe([
+        ])->and($viewFinder->getComponents())->toBe([
             ['namespace' => 'foo', 'path' => 'resources/components/component1.vue', 'identifier' => 'foo::component1'],
-        ]);
-
-        expect($viewFinder->getLayouts())->toBe([
+        ])->and($viewFinder->getLayouts())->toBe([
             ['namespace' => 'foo', 'path' => 'resources/layouts/layout1.vue', 'identifier' => 'foo::layout1'],
+        ]);
+    });
+});
+
+test('changing the base path', function () {
+    with_view_components([
+        'view1.vue',
+        'components/component1.vue',
+        'layouts/layout1.vue',
+        // level 1
+        'subdirectory/view2.vue',
+        'subdirectory/components/component2.vue',
+        'subdirectory/layouts/layout2.vue',
+        // level 2
+        'subdirectory/again/view3.vue',
+        'subdirectory/again/components/component3.vue',
+    ], function () {
+        /** @var VueViewFinder */
+        $viewFinder = resolve(VueViewFinder::class);
+        $viewFinder->loadModuleFrom(
+            directory: resource_path(),
+            namespace: 'foo',
+            deep: true,
+        );
+        $viewFinder->setBasePath(base_path('resources'));
+
+        expect($viewFinder->getViews())->toBe([
+            ['namespace' => 'foo', 'path' => 'subdirectory/again/view3.vue', 'identifier' => 'foo::subdirectory.again.view3'],
+            ['namespace' => 'foo', 'path' => 'subdirectory/view2.vue', 'identifier' => 'foo::subdirectory.view2'],
+            ['namespace' => 'foo', 'path' => 'view1.vue', 'identifier' => 'foo::view1'],
+        ])->and($viewFinder->getComponents())->toBe([
+            ['namespace' => 'foo', 'path' => 'components/component1.vue', 'identifier' => 'foo::component1'],
+        ])->and($viewFinder->getLayouts())->toBe([
+            ['namespace' => 'foo', 'path' => 'layouts/layout1.vue', 'identifier' => 'foo::layout1'],
         ]);
     });
 });
