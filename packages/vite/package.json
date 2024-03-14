@@ -21,6 +21,10 @@
   "bugs": {
     "url": "https://github.com/hybridly/hybridly/issues"
   },
+  "publishConfig": {
+    "provenance": true,
+    "access": "public"
+  },
   "sideEffects": false,
   "files": [
     "dist",
