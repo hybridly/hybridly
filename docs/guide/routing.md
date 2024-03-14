@@ -66,7 +66,7 @@ return [
 ];
 ```
 
-Additionally, you may exclude specific routes by adding patterns to the `router.exclude` key.
+Additionally, you may exclude specific routes by adding patterns to the `router.exclude` key. These filters are matched against **the final URI**, and support wildcards.
 
 ```php
 return [
