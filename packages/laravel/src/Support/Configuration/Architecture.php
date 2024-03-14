@@ -21,6 +21,7 @@ final class Architecture
         public readonly string $viewsDirectory,
         public readonly string $layoutsDirectory,
         public readonly string $componentsDirectory,
+        public readonly array $excludedViewsDirectories,
     ) {
     }
 
@@ -37,6 +38,7 @@ final class Architecture
             viewsDirectory: $config['views_directory'] ?? 'views',
             layoutsDirectory: $config['layouts_directory'] ?? 'layouts',
             componentsDirectory: $config['components_directory'] ?? 'components',
+            excludedViewsDirectories: $config['excluded_views_directories'] ?? [],
         );
     }
 

@@ -42,6 +42,7 @@ return [
         'application_main' => Architecture::APPLICATION_MAIN,
         'root_view' => Architecture::ROOT_VIEW,
         'extensions' => ['vue', 'tsx'],
+        'excluded_views_directories' => [],
     ],
 
     /*
