@@ -20,6 +20,10 @@
   },
   "funding": "https://github.com/sponsors/innocenzi",
   "author": "Enzo Innocenzi <enzo@innocenzi.dev>",
+  "publishConfig": {
+    "provenance": true,
+    "access": "public"
+  },
   "sideEffects": false,
   "type": "module",
   "files": [
