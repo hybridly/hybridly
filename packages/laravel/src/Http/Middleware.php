@@ -108,7 +108,7 @@ class Middleware
             return resolve($vite)->getHash();
         }
 
-        if (class_exists(Illuminate\Foundation\Vite::class)) {
+        if (class_exists(\Illuminate\Foundation\Vite::class)) {
             return Vite::manifestHash();
         }
 
