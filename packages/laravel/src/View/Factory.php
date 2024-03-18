@@ -4,10 +4,8 @@ namespace Hybridly\View;
 
 use Hybridly\Contracts\HybridResponse;
 use Hybridly\Hybridly;
-use Hybridly\Support\DialogResolver;
 use Hybridly\Support\Header;
 use Hybridly\Support\MissingViewComponentException;
-use Hybridly\Support\PropertiesResolver;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\JsonResponse;
