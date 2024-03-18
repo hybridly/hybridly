@@ -3,9 +3,9 @@
 namespace Hybridly\View;
 
 use Hybridly\Contracts\HybridResponse;
+use Hybridly\Exceptions\MissingViewComponentException;
 use Hybridly\Hybridly;
 use Hybridly\Support\Header;
-use Hybridly\Support\MissingViewComponentException;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\JsonResponse;

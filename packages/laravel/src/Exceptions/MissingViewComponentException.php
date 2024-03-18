@@ -1,6 +1,6 @@
 <?php
 
-namespace Hybridly\Support;
+namespace Hybridly\Exceptions;
 
 use Exception;
 

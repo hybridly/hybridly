@@ -3,7 +3,7 @@
 use Hybridly\Hybridly;
 use Hybridly\Support\Deferred;
 use Hybridly\Support\Header;
-use Hybridly\Support\MissingViewComponentException;
+use Hybridly\Exceptions\MissingViewComponentException;
 use Hybridly\Support\Partial;
 use Hybridly\View\Factory;
 use Illuminate\Support\Facades\Route;

@@ -2,7 +2,7 @@
 
 use Hybridly\Support\Configuration\Architecture;
 use Hybridly\Support\Header;
-use Hybridly\Support\MissingViewComponentException;
+use Hybridly\Exceptions\MissingViewComponentException;
 use Hybridly\View\Factory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
