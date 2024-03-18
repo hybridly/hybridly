@@ -3,8 +3,8 @@
 use Hybridly\Support\CaseConverter;
 use Hybridly\Support\Deferred;
 use Hybridly\Support\Partial;
-use Hybridly\View\PropertiesResolver;
 use Hybridly\View\Factory;
+use Hybridly\View\PropertiesResolver;
 use Illuminate\Contracts\Support\Arrayable;
 
 use function Hybridly\Testing\partial_headers;
