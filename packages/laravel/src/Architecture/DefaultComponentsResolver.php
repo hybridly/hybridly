@@ -1,10 +1,10 @@
 <?php
 
-namespace Hybridly\Support;
+namespace Hybridly\Architecture;
 
 use Hybridly\Support\Configuration\Configuration;
 
-final class VueViewFinder
+final class DefaultComponentsResolver implements ComponentsResolver
 {
     protected const DEFAULT_DEPTH = 20;
 
@@ -23,18 +23,25 @@ final class VueViewFinder
     /** @var string[] */
     protected array $extensions = [];
 
+    protected IdentifierGenerator $identifierGenerator;
+
     public function __construct(
         private readonly Configuration $configuration,
     ) {
+        $this->identifierGenerator = new KebabCaseIdentifierGenerator();
         $this->extensions = array_map(
             callback: fn (string $extension) => ".{$extension}",
             array: $configuration->architecture->extensions,
         );
     }
 
-    /**
-     * Loads view files from the given directory and associates them to the given namespace.
-     */
+    public function setIdentifierGenerator(IdentifierGenerator $identifierGenerator): static
+    {
+        $this->identifierGenerator = $identifierGenerator;
+
+        return $this;
+    }
+
     public function loadViewsFrom(string $directory, null|string|array $namespace = null, ?int $depth = null): static
     {
         $this->views = array_merge($this->views, $this->findVueFiles(
@@ -51,9 +58,6 @@ final class VueViewFinder
         return $this;
     }
 
-    /**
-     * Loads layout files from the given directory and associates them to the given namespace.
-     */
     public function loadLayoutsFrom(string $directory, null|string|array $namespace = null): static
     {
         $this->layouts = array_merge($this->layouts, $this->findVueFiles(
@@ -65,9 +69,6 @@ final class VueViewFinder
         return $this;
     }
 
-    /**
-     * Loads component files from the given directory and associates them to the given namespace.
-     */
     public function loadComponentsFrom(string $directory, null|string|array $namespace = null): static
     {
         $this->components = array_merge($this->components, $this->findVueFiles(
@@ -79,9 +80,6 @@ final class VueViewFinder
         return $this;
     }
 
-    /**
-     * Auto-import TypeScript files from the given directory.
-     */
     public function loadTypeScriptFilesFrom(string $directory, bool $deep = false): static
     {
         $this->loadedTypeScriptDirectories = [
@@ -94,13 +92,10 @@ final class VueViewFinder
         return $this;
     }
 
-    /**
-     * Loads a namespaced module and its views, layouts and components.
-     */
     public function loadModuleFrom(
         string $directory,
         null|string|array $namespace,
-        bool $deep,
+        bool $deep = false,
         bool $loadViews = true,
         bool $loadLayouts = true,
         bool $loadComponents = true,
@@ -127,9 +122,6 @@ final class VueViewFinder
         return $this;
     }
 
-    /**
-     * Loads all modules in the given directory.
-     */
     public function loadModulesFrom(string $directory, bool $deep): void
     {
         foreach (scandir($directory) as $namespace) {
@@ -145,19 +137,11 @@ final class VueViewFinder
         }
     }
 
-    /**
-     * Gets namespaced view files.
-     *
-     * @return array<{path: string, identifier: string}>
-     */
     public function getViews(): array
     {
         return $this->views;
     }
 
-    /**
-     * Determines whether the given identifier is registered as a view.
-     */
     public function hasView(string $identifier): bool
     {
         return collect($this->views)->contains(function (array $view) use ($identifier) {
@@ -165,31 +149,21 @@ final class VueViewFinder
         });
     }
 
-    /**
-     * Gets namespaced layouts files.
-     *
-     * @return array<{path: string, identifier: string}>
-     */
     public function getLayouts(): array
     {
         return $this->layouts;
     }
 
-    /**
-     * Gets namespaced layouts files.
-     *
-     * @return array<{path: string, identifier: string}>
-     */
     public function getComponents(): array
     {
         return $this->components;
     }
 
-    /**
-     * Gets directories from which TypeScript files should be loaded.
-     *
-     * @return string[]
-     */
+    public function getExtensions(): array
+    {
+        return $this->extensions;
+    }
+
     public function getTypeScriptDirectories(): array
     {
         return $this->loadedTypeScriptDirectories;
@@ -225,35 +199,16 @@ final class VueViewFinder
             if (is_dir($path)) {
                 $files = array_merge($files, $this->findVueFiles($path, $baseDirectory, $namespace, $depth - 1, $filter));
             } else {
-                if (str($path)->endsWith($this->extensions)) {
+                if (str($path)->endsWith($this->getExtensions())) {
                     $files[] = [
                         'namespace' => $namespace,
                         'path' => str($path)->replaceStart(base_path(), '')->ltrim('/\\')->toString(),
-                        'identifier' => $this->getIdentifier($path, $baseDirectory, $namespace),
+                        'identifier' => $this->identifierGenerator->generate($this, $path, $baseDirectory, $namespace),
                     ];
                 }
             }
         }
 
         return $files;
-    }
-
-    /**
-     * An identifier is a dot-notated path from the base directory to the Vue file.
-     */
-    protected function getIdentifier(string $path, string $baseDirectory, string $namespace): string
-    {
-        return str(
-            str($path)
-                ->after($baseDirectory)
-                ->ltrim('/\\')
-                ->replace(['/', '\\'], '.')
-                ->replace($this->extensions, '')
-                ->explode('.')
-                ->map(fn (string $str) => str($str)->kebab())
-                ->join('.'),
-        )
-            ->when($namespace !== 'default')
-            ->prepend("{$namespace}::");
     }
 }
