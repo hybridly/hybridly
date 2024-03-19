@@ -1,6 +1,6 @@
 {
   "private": true,
-  "version": "0.7.1",
+  "version": "0.7.2",
   "type": "module",
   "scripts": {
     "release": "bumpp package.json packages/*/package.json --all --execute \"tsx build/bump-php-packages.ts\" --commit \"release: v\"",
