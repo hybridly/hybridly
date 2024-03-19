@@ -135,3 +135,26 @@ test('loading a module non-recursively only loads the root `views`, `components`
         ]);
     });
 });
+
+test('identifiers are kebab-cased', function (string $view, string $identifier) {
+    with_view_components($view, function () use ($view, $identifier) {
+        /** @var VueViewFinder */
+        $viewFinder = resolve(VueViewFinder::class);
+        $viewFinder->loadModuleFrom(
+            directory: resource_path(),
+            namespace: 'foo',
+            deep: true,
+        );
+
+        expect($viewFinder->getViews())->toBe([
+            ['namespace' => 'foo', 'path' => "resources/{$view}", 'identifier' => $identifier],
+        ]);
+    });
+})->with([
+    ['MyPascalCaseView.vue', 'foo::my-pascal-case-view'],
+    ['my-kebab-case-view.vue', 'foo::my-kebab-case-view'],
+    ['Views/MyPascalCaseView.vue', 'foo::views.my-pascal-case-view'],
+    ['Views/my-kebab-case-view.vue', 'foo::views.my-kebab-case-view'],
+    ['views/MyPascalCaseView.vue', 'foo::views.my-pascal-case-view'],
+    ['views/my-kebab-case-view.vue', 'foo::views.my-kebab-case-view'],
+]);
