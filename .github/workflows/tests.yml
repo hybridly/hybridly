@@ -19,10 +19,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node-version: [18.x]
+        node-version: ["18.x", "20.x"]
         os: [ubuntu-latest]
         php: [8.2, 8.3]
-        laravel: ['10.*', '11.*']
+        laravel: ["10.*", "11.*"]
         include:
           - laravel: 10.*
             testbench: 8.*
@@ -35,10 +35,10 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Install pnpm
-        uses: pnpm/action-setup@v2.2.4
+        uses: pnpm/action-setup@v3
         with:
           version: latest
 
@@ -50,7 +50,7 @@ jobs:
           coverage: none
 
       - name: Setup Node ${{ matrix.node-version }}
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
           registry-url: https://registry.npmjs.org/
