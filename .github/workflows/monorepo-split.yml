@@ -15,7 +15,7 @@ jobs:
           - laravel
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - id: previous-tag
         uses: "WyriHaximus/github-action-get-previous-tag@master"
       - name: Split of ${{ matrix.package }}
