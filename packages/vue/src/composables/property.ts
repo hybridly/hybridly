@@ -20,8 +20,14 @@ export function useProperty<
 	path: [Override] extends [never]
 		? P
 		: string,
-): ComputedRef<ReturnType> {
-	return computed(() => getByPath(state.context.value?.view.properties as GlobalHybridlyProperties, path) as ReturnType)
+): ComputedRef<ReturnType | undefined> {
+	return computed(() => {
+		try {
+			return getByPath(state.context.value?.view.properties as GlobalHybridlyProperties, path) as ReturnType
+		} catch {
+			return undefined
+		}
+	})
 }
 
 /**
