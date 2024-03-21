@@ -197,3 +197,28 @@ export default defineConfig({
 	],
 })
 ```
+
+## PHP executable path
+
+If your PHP executable is not `php`, you may configure the path used by Hybridly by updating the `PHP_EXECUTABLE_PATH`.
+
+This variable can be configured in your `.env`, or before starting Vite:
+
+:::code-group
+```dotenv [.env]
+PHP_EXECUTABLE_PATH=/custom/path/to/php
+```
+
+```bash [shell]
+PHP_EXECUTABLE_PATH="custom/path/to/php" npm run dev
+```
+
+```json [package.json]
+{
+	"scripts": {
+		"dev": "PHP_EXECUTABLE_PATH=custom/path/to/php vite",
+		"build": "PHP_EXECUTABLE_PATH=custom/path/to/php vite build"
+	},
+}
+```
+:::
