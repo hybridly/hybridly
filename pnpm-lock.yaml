@@ -196,8 +196,8 @@ importers:
   packages/vue:
     dependencies:
       '@clickbar/dot-diver':
-        specifier: ^1.0.4
-        version: 1.0.4
+        specifier: ^1.0.5
+        version: 1.0.5
       '@hybridly/core':
         specifier: workspace:*
         version: link:../core
@@ -916,8 +916,8 @@ packages:
       statuses: 2.0.1
     dev: true
 
-  /@clickbar/dot-diver@1.0.4:
-    resolution: {integrity: sha512-93D4DWoFdsWobcxGgOgisRbvIsGf0slmuT/mwXu4REisDe4aIyIgSsjuDqPATEbNph+ugTpJmAAlDChDagLHgg==}
+  /@clickbar/dot-diver@1.0.5:
+    resolution: {integrity: sha512-3vZhf4mWl51N0Cj2dD+ieXttPKqfOISDJcKsf1NX9J9ZK7+oM/mLuWxt9IObmxuVcInUE1CdusXRxnnt9jI62g==}
     dev: false
 
   /@docsearch/css@3.5.2:

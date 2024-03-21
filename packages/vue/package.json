@@ -47,7 +47,7 @@
     "vue": "^3.2.45"
   },
   "dependencies": {
-    "@clickbar/dot-diver": "^1.0.4",
+    "@clickbar/dot-diver": "^1.0.5",
     "@hybridly/core": "workspace:*",
     "@hybridly/utils": "workspace:*",
     "@vue/devtools-api": "^6.6.1",
