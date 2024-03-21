@@ -91,7 +91,7 @@ useForm({
 	hooks: {
 		start: () => console.log('The request has started.'),
 		fail: () => console.log('The request has failed.'),
-		finish: () => console.log('The request has finished.'),
+		after: () => console.log('The request has finished.'),
 	}
 })
 ```
