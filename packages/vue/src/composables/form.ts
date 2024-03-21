@@ -127,6 +127,7 @@ export function useForm<
 			: fields
 
 		const preserveState = optionsOverrides?.preserveState ?? options.preserveState
+		const hooks = { ...options?.hooks, ...optionsOverrides?.hooks }
 
 		return router.navigate({
 			...options,
@@ -144,22 +145,22 @@ export function useForm<
 					recentlySuccessful.value = false
 					clearTimeout(timeoutIds.recentlySuccessful!)
 					clearTimeout(timeoutIds.recentlyFailed!)
-					return options.hooks?.before?.(navigation, context)
+					return hooks.before?.(navigation, context)
 				},
 				start: (context) => {
 					processing.value = true
-					return options.hooks?.start?.(context)
+					return hooks.start?.(context)
 				},
 				progress: (incoming, context) => {
 					progress.value = incoming
-					return options.hooks?.progress?.(incoming, context)
+					return hooks.progress?.(incoming, context)
 				},
 				error: (incoming, context) => {
 					setErrors(incoming)
 					failed.value = true
 					recentlyFailed.value = true
 					timeoutIds.recentlyFailed = setTimeout(() => recentlyFailed.value = false, options?.timeout ?? 5000)
-					return options.hooks?.error?.(incoming, context)
+					return hooks.error?.(incoming, context)
 				},
 				success: (payload, context) => {
 					clearErrors()
@@ -172,12 +173,12 @@ export function useForm<
 					successful.value = true
 					recentlySuccessful.value = true
 					timeoutIds.recentlySuccessful = setTimeout(() => recentlySuccessful.value = false, options?.timeout ?? 5000)
-					return options.hooks?.success?.(payload, context)
+					return hooks.success?.(payload, context)
 				},
 				after: (context) => {
 					progress.value = undefined
 					processing.value = false
-					return options.hooks?.after?.(context)
+					return hooks.after?.(context)
 				},
 			},
 		})
