@@ -200,7 +200,7 @@ export default defineConfig({
 
 ## Setting the php executable path
 
-To set the path to the php executable the `PHP_EXECUTABLE_PATH` environment variable to your custom path.
+To set the path to the php executable you have to set the `PHP_EXECUTABLE_PATH` environment variable to your custom path.
 
 You can set the environment variable by placing `PHP_EXECUTABLE_PATH=custom/path/to/php` before the `vite` command in the dev and build script.
 
