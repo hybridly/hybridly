@@ -56,6 +56,17 @@ it('includes authorization on records when using Laravel Data with fromModel cre
     expect($result[0])->toHaveKey('authorization');
 });
 
+it('excludes authorization on records when specified', function () {
+    Auth::login(UserFactory::new()->create());
+    ProductFactory::createImmutable();
+
+    $result = BasicProductsTableWithDataUsingFromModel::make()
+        ->withoutResolvingAuthorizations()
+        ->getRecords();
+
+    expect($result[0])->not->toHaveKey('authorization');
+});
+
 it('hides hidden refinements, columns and actions in serialization', function () {
     ProductFactory::createImmutable();
     expect(BasicProductsTableWithHiddenStuff::make())->toMatchSnapshot();

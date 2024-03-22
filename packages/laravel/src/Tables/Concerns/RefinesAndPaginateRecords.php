@@ -5,6 +5,7 @@ namespace Hybridly\Tables\Concerns;
 use Hybridly\Refining\Contracts\Refiner;
 use Hybridly\Refining\Refine;
 use Hybridly\Support\Configuration\Configuration;
+use Hybridly\Support\Data\AuthorizationArrayResolver;
 use Hybridly\Tables\Columns\BaseColumn;
 use Illuminate\Contracts\Pagination\CursorPaginator;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
@@ -12,7 +13,7 @@ use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
-use Spatie\LaravelData\Contracts\DataCollectable;
+use Spatie\LaravelData\Contracts\BaseDataCollectable;
 use Spatie\LaravelData\Data;
 
 trait RefinesAndPaginateRecords
@@ -30,6 +31,16 @@ trait RefinesAndPaginateRecords
     public function getRecords(): array
     {
         return data_get($this->getPaginatedRecords(), 'data', []);
+    }
+
+    /**
+     * Disables authorization resolving.
+     */
+    public function withoutResolvingAuthorizations(): static
+    {
+        $this->resolvesAuthorizations = false;
+
+        return $this;
     }
 
     protected function defineRefiners(): array
@@ -69,7 +80,7 @@ trait RefinesAndPaginateRecords
         ];
     }
 
-    protected function transformRecords(Paginator|CursorPaginator $paginator): Paginator|CursorPaginator|DataCollectable
+    protected function transformRecords(Paginator|CursorPaginator $paginator): Paginator|CursorPaginator|BaseDataCollectable
     {
         return $paginator;
     }
@@ -145,7 +156,15 @@ trait RefinesAndPaginateRecords
     protected function getRecordFromModel(Model $model): array|Data
     {
         if (isset($this->data) && is_a($this->data, Data::class, allow_string: true)) {
-            return $this->resolveDataRecord($model)->toArray();
+            $record = $this->resolveDataRecord($model);
+
+            if ($this->resolvesAuthorizations()) {
+                $record->additional([
+                    'authorization' => fn () => resolve(AuthorizationArrayResolver::class)->resolve($model, $this->data),
+                ]);
+            }
+
+            return $record->toArray();
         }
 
         return $model->toArray();
@@ -156,12 +175,20 @@ trait RefinesAndPaginateRecords
         return $this->data::from($model);
     }
 
+    /**
+     * Determines whether authorizations should be resolved.
+     */
+    protected function resolvesAuthorizations(): bool
+    {
+        return $this->resolvesAuthorizations ?? true;
+    }
+
     private function getPaginatedRecords(): array
     {
         return $this->cachedRecords ??= $this->transformPaginatedRecords()->toArray();
     }
 
-    private function transformPaginatedRecords(): Paginator|CursorPaginator|DataCollectable
+    private function transformPaginatedRecords(): Paginator|CursorPaginator|BaseDataCollectable
     {
         $paginatedRecords = $this->paginateRecords($this->getRefinedQuery());
 
