@@ -17,8 +17,7 @@ class InstallCommand extends GeneratorCommand
     {
         parent::handle();
 
-        $this->installMiddlewareAfter(
-            'SubstituteBindings::class',
+        $this->installMiddleware(
             sprintf('\\%s\\%s::class', $this->getDefaultNamespace(trim($this->rootNamespace(), '\\')), $this->argument('name')),
         );
 
@@ -30,26 +29,22 @@ class InstallCommand extends GeneratorCommand
         return __DIR__ . '/../../stubs/middleware.php.stub';
     }
 
-    protected function installMiddlewareAfter($after, $name, $group = 'web')
+    protected function installMiddleware(string $name, string $group = 'web'): void
     {
-        $httpKernel = file_get_contents(app_path('Http/Kernel.php'));
+        $app = file_get_contents(base_path('bootstrap/app.php'));
 
-        $middlewareGroups = str($httpKernel)->betweenFirst('$middlewareGroups = [', '];');
-        $middlewareGroup = str($middlewareGroups)->betweenFirst("'{$group}' => [", '],');
-
-        if (!str_contains($middlewareGroup, $name)) {
-            $modifiedMiddlewareGroup = str_replace(
-                $after . ',',
-                $after . ',' . \PHP_EOL . '            ' . $name . ',',
-                $middlewareGroup,
-            );
-
-            file_put_contents(app_path('Http/Kernel.php'), str_replace(
-                $middlewareGroups,
-                str_replace($middlewareGroup, $modifiedMiddlewareGroup, $middlewareGroups),
-                $httpKernel,
-            ));
+        if (str_contains($app, $name)) {
+            return;
         }
+
+        file_put_contents(base_path('bootstrap/app.php'), str_replace(
+            "->withMiddleware(function (Middleware \$middleware) {\n",
+            <<<PHP
+            ->withMiddleware(function (Middleware \$middleware) {
+                    \$middleware->appendToGroup('web', [App\\Http\\Middleware\\HandleHybridRequests::class]);
+            PHP,
+            $app,
+        ));
     }
 
     protected function getDefaultNamespace($rootNamespace): string
