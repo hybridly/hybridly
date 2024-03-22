@@ -127,3 +127,43 @@ public function show(Chirp $chirp)
     ]);
 }
 ```
+
+## Using custom creation methods
+
+When using a [custom `from` method](https://spatie.be/docs/laravel-data/v4/as-a-data-transfer-object/creating-a-data-object), the pipeline that resolves authorizations will not be used.
+
+Because of this, you will have to manually call the static `resolveAuthorizationArray` method when instanciating your data object:
+
+```php
+final class ChirpData extends DataResource
+{
+    public static array $authorizations = [  // [!code hl:6]
+		    'comment',
+		    'like',
+		    'unlike',
+		    'delete'
+		];
+    
+    public function __construct(
+        public readonly string $body,
+    ) {
+    }
+
+    public static function fromModel(Chirp $chirp): static
+    {
+        return self::factory()
+            ->withoutMagicalCreation()
+            ->from([
+                'body' => $chirp->body,
+                'authorization' => static::resolveAuthorizationArray($chirp),  // [!code hl]
+            ]);
+    }
+}
+```
+
+You may wrap the authorization array in a `Lazy` property if needed:
+
+```php
+Lazy::create(fn () => static::resolveAuthorizationArray($chirp))
+	->defaultIncluded();
+```
