@@ -118,6 +118,13 @@ export function useTable<
 	async function executeBulkAction(action: Action | string, options?: BulkActionOptions) {
 		const actionName = getActionName(action)
 
+		const filterParameters = refinements.currentFilters().reduce((carry, filter) => {
+			return {
+				...carry,
+				[filter.name]: filter.value,
+			}
+		}, {})
+
 		return await router.navigate({
 			method: 'post',
 			url: route(table.value.endpoint),
@@ -129,6 +136,7 @@ export function useTable<
 				all: bulk.selection.value.all,
 				only: [...bulk.selection.value.only],
 				except: [...bulk.selection.value.except],
+				[refinements.filtersKey.value]: filterParameters,
 			},
 			hooks: {
 				after: () => {
