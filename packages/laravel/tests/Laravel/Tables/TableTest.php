@@ -8,6 +8,7 @@ use Hybridly\Tests\Laravel\Tables\Fixtures\BasicProductsTable;
 use Hybridly\Tests\Laravel\Tables\Fixtures\BasicProductsTableWithActions;
 use Hybridly\Tests\Laravel\Tables\Fixtures\BasicProductsTableWithConditionallyHiddenStuff;
 use Hybridly\Tests\Laravel\Tables\Fixtures\BasicProductsTableWithData;
+use Hybridly\Tests\Laravel\Tables\Fixtures\BasicProductsTableWithDataUsingFromModel;
 use Hybridly\Tests\Laravel\Tables\Fixtures\BasicProductsTableWithHiddenStuff;
 use Hybridly\Tests\Laravel\Tables\Fixtures\BasicProductsTableWithSoftDeleteAction;
 use Hybridly\Tests\Laravel\Tables\Fixtures\BasicScopedProductsTable;
@@ -42,7 +43,17 @@ it('includes authorization on records when using Laravel Data', function () {
     Auth::login(UserFactory::new()->create());
     ProductFactory::createImmutable();
 
-    expect(BasicProductsTableWithData::make())->toMatchSnapshot();
+    $result = BasicProductsTableWithData::make();
+    expect($result)->toMatchSnapshot();
+    expect($result->getRecords()[0])->toHaveKey('authorization');
+});
+
+it('includes authorization on records when using Laravel Data with fromModel creation method', function () {
+    Auth::login(UserFactory::new()->create());
+    ProductFactory::createImmutable();
+
+    $result = BasicProductsTableWithDataUsingFromModel::make()->getRecords();
+    expect($result[0])->toHaveKey('authorization');
 });
 
 it('hides hidden refinements, columns and actions in serialization', function () {
