@@ -89,9 +89,17 @@ class GenerateGlobalTypesCommand extends Command
     protected function writeTypes(): bool
     {
         if (class_exists(TypeScriptTransformCommand::class)) {
-            Artisan::call(TypeScriptTransformCommand::class, [
+            $exit = Artisan::call(TypeScriptTransformCommand::class, [
                 '--output' => '../.hybridly/php-types.d.ts',
             ]);
+            if ($exit !== 0) {
+                $this->components->error(sprintf(
+                    'Error generating PHP types: %s',
+                    Artisan::output(),
+                ));
+
+                return false;
+            }
         }
 
         $definitions = rescue(fn () => $this->getTypeDefinitions(), rescue: false, report: false);
