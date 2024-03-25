@@ -5,7 +5,7 @@ namespace Hybridly\Tests;
 use Carbon\Carbon;
 use Hybridly\HybridlyServiceProvider;
 use Hybridly\Tests\Fixtures\Providers\TestingServiceProvider;
-use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\View;
 use Orchestra\Testbench\TestCase as Orchestra;
 use Spatie\LaravelData\LaravelDataServiceProvider;
@@ -13,7 +13,7 @@ use Spatie\LaravelRay\RayServiceProvider;
 
 class TestCase extends Orchestra
 {
-    use LazilyRefreshDatabase;
+    use RefreshDatabase;
 
     protected function setUp(): void
     {
