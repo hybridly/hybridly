@@ -103,7 +103,7 @@ final class InvokedActionController
         $key = $table->getKeyName();
 
         /** @var \Illuminate\Database\Eloquent\Builder */
-        $query = $model::query();
+        $query = $table->getRefinedQuery();
         $query = match (true) {
             $data->all === true => $query->whereNotIn($key, $data->except),
             default => $query->whereIn($key, $data->only)

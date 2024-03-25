@@ -347,6 +347,10 @@ export function useRefinements<
 			clear: (options?: AvailableHybridRequestOptions) => clearSorts(options),
 		}))),
 		/**
+		 * The key for the filters.
+		 */
+		filtersKey,
+		/**
 		 * Gets a filter by name.
 		 */
 		getFilter,

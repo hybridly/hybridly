@@ -33,6 +33,11 @@ trait RefinesAndPaginateRecords
         return data_get($this->getPaginatedRecords(), 'data', []);
     }
 
+    public function getRefinedQuery(): Builder
+    {
+        return $this->getRefineInstance()->getBuilderInstance();
+    }
+
     /**
      * Disables authorization resolving.
      */
@@ -141,11 +146,6 @@ trait RefinesAndPaginateRecords
         }
 
         return $this->refine->applyRefiners();
-    }
-
-    protected function getRefinedQuery(): Builder
-    {
-        return $this->getRefineInstance()->getBuilderInstance();
     }
 
     protected function getRefinements(): array
