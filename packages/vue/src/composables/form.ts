@@ -110,7 +110,7 @@ export function useForm<
 		}
 
 		keys.forEach((key) => {
-			delete fields[key]
+			delete (fields as any)[key]
 		})
 	}
 
