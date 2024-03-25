@@ -1,11 +1,13 @@
 <?php
 
 use Hybridly\Tables\Table;
+use Hybridly\Tests\Fixtures\Database\Product;
 use Hybridly\Tests\Fixtures\Database\ProductFactory;
 use Hybridly\Tests\Fixtures\Database\UserFactory;
 use Hybridly\Tests\Fixtures\Vendor;
 use Hybridly\Tests\Laravel\Tables\Fixtures\BasicProductsTable;
 use Hybridly\Tests\Laravel\Tables\Fixtures\BasicProductsTableWithActions;
+use Hybridly\Tests\Laravel\Tables\Fixtures\BasicProductsTableWithActionsAndFilters;
 use Hybridly\Tests\Laravel\Tables\Fixtures\BasicProductsTableWithConditionallyHiddenStuff;
 use Hybridly\Tests\Laravel\Tables\Fixtures\BasicProductsTableWithData;
 use Hybridly\Tests\Laravel\Tables\Fixtures\BasicProductsTableWithDataUsingFromModel;
@@ -16,6 +18,7 @@ use Hybridly\Tests\Laravel\Tables\Fixtures\BasicTableWithConstructor;
 use Hybridly\Tests\Laravel\Tables\Fixtures\BasicTableWithDependencyInjection;
 use Hybridly\Tests\Laravel\Tables\Fixtures\BasicTableWithDependencyInjectionAndArguments;
 use Illuminate\Support\Facades\Auth;
+use Pest\Expectation;
 
 use function Pest\Laravel\post;
 
@@ -143,6 +146,35 @@ it('can execute bulk actions with all records', function () {
     ])->assertRedirect();
 
     expect(BasicProductsTableWithActions::$names)->toBe(['Product 1', 'Product 2', 'Product 3']);
+});
+
+it('takes filters into account when executing bulk actions', function () {
+    Table::encodeIdUsing(static fn () => BasicProductsTableWithActionsAndFilters::class);
+    Table::decodeIdUsing(static fn () => BasicProductsTableWithActionsAndFilters::class);
+
+    ProductFactory::new()->create(['id' => 1, 'vendor' => Vendor::Apple, 'is_active' => true]);
+    ProductFactory::new()->create(['id' => 2, 'vendor' => Vendor::Microsoft, 'is_active' => true]);
+    ProductFactory::new()->create(['id' => 3, 'vendor' => Vendor::Apple, 'is_active' => true]);
+
+    post(config('hybridly.tables.actions_endpoint'), [
+        'type' => 'action:bulk',
+        'action' => 'deactivate',
+        'tableId' => BasicProductsTableWithActionsAndFilters::class,
+        'all' => true,
+        'only' => [],
+        'except' => [],
+        'filters' => [
+            'vendor' => Vendor::Microsoft->value,
+        ],
+    ])->assertRedirect();
+
+    expect(Product::find(2))->is_active->toBe(false);
+    expect(Product::where('is_active', true)->get())
+        ->toHaveCount(2)
+        ->sequence(
+            fn (Expectation $expect) => $expect->id->toBe(1),
+            fn (Expectation $expect) => $expect->id->toBe(3),
+        );
 });
 
 it('can execute bulk actions with selected records', function (array $recordIds, array $expectedNames) {
