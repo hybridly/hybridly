@@ -57,6 +57,7 @@ it('includes authorization on records when using Laravel Data with fromModel cre
 
     $result = BasicProductsTableWithDataUsingFromModel::make()->getRecords();
     expect($result[0])->toHaveKey('authorization');
+    expect($result[0]['authorization']['returns-true'])->toBeTrue();
 });
 
 it('excludes authorization on records when specified', function () {
