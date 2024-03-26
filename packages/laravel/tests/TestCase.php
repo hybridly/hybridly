@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\View;
 use Orchestra\Testbench\TestCase as Orchestra;
 use Spatie\LaravelData\LaravelDataServiceProvider;
 use Spatie\LaravelRay\RayServiceProvider;
+use Spatie\LaravelTypeScriptTransformer\TypeScriptTransformerServiceProvider;
 
 class TestCase extends Orchestra
 {
@@ -29,6 +30,7 @@ class TestCase extends Orchestra
             TestingServiceProvider::class,
             HybridlyServiceProvider::class,
             LaravelDataServiceProvider::class,
+            TypeScriptTransformerServiceProvider::class,
             RayServiceProvider::class,
         ];
     }
