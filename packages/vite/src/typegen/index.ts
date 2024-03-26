@@ -47,7 +47,7 @@ export function generateTsConfig(options: ViteOptions, config: DynamicConfigurat
 			'../app/**/*',
 			'../src/**/*',
 			'./php-types.d.ts',
-			'./global-types.d.ts',
+			'./global-properties.d.ts',
 			'./routes.d.ts',
 			'./components.d.ts',
 			'./auto-imports.d.ts',
