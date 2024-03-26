@@ -2,33 +2,110 @@
 
 namespace Hybridly\Commands;
 
+use Hybridly\Exceptions\CouldNotFindMiddlewareException;
+use Hybridly\Support\Configuration\Configuration;
+use Hybridly\Support\Configuration\TypeScript;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\File;
 use ReflectionMethod;
-use Spatie\LaravelData\Contracts\DataObject;
-use Spatie\LaravelTypeScriptTransformer\Commands\TypeScriptTransformCommand;
+use Spatie\LaravelData\Contracts\BaseData;
 use Spatie\StructureDiscoverer\Discover;
+use Spatie\TypeScriptTransformer\Structures\TransformedType;
+use Spatie\TypeScriptTransformer\TypeScriptTransformer;
+use Spatie\TypeScriptTransformer\TypeScriptTransformerConfig;
 
 class GenerateGlobalTypesCommand extends Command
 {
+    protected const PHP_TYPES_PATH = '.hybridly/php-types.d.ts';
+    protected const GLOBAL_PROPERTIES_PATH = '.hybridly/global-properties.d.ts';
+
     protected $signature = 'hybridly:types';
     protected $description = 'Generates the global types definitions for the front-end.';
     protected $hidden = true;
 
-    public function handle(): int
+    protected int $exitCode = self::SUCCESS;
+
+    public function handle(TypeScriptTransformerConfig $typeScriptTransformerConfig, Configuration $hybridlyConfiguration): int
     {
-        return $this->writeTypes()
-            ? self::SUCCESS
-            : self::FAILURE;
+        $this->writePhpTypes($typeScriptTransformerConfig);
+        $this->writeGlobalPropertiesInterface($hybridlyConfiguration->typescript);
+
+        return $this->exitCode;
     }
 
-    protected function getTypeDefinitions(): ?string
+    /**
+     * Converts PHP types to TypeScript types.
+     */
+    protected function writePhpTypes(TypeScriptTransformerConfig $config): void
     {
-        $directories = array_filter([
-            base_path('app'),
-            base_path('src'),
-        ], fn (string $directory) => File::isDirectory($directory));
+        if (!class_exists(TypeScriptTransformer::class)) {
+            return;
+        }
+
+        $config->outputFile(base_path(self::PHP_TYPES_PATH));
+
+        try {
+            $collection = (new TypeScriptTransformer($config))->transform();
+        } catch (\Exception $exception) {
+            $this->components->error($exception->getMessage());
+            $this->exitCode = self::FAILURE;
+
+            return;
+        }
+
+        if ($this->output->isVerbose()) {
+            $this->table(
+                ['PHP class', 'TypeScript entity'],
+                collect($collection)->map(fn (TransformedType $type, string $class) => [
+                    $class,
+                    $type->getTypeScriptName(),
+                ]),
+            );
+        }
+
+        $this->components->info(sprintf(
+            '%s PHP types written to <comment>%s</comment>.',
+            $collection->count(),
+            self::PHP_TYPES_PATH,
+        ));
+    }
+
+    /**
+     * Writes the global properties interface.
+     */
+    protected function writeGlobalPropertiesInterface(TypeScript $config): void
+    {
+        try {
+            $namespace = $this->getGlobalPropertiesNamespace($config);
+        } catch (\Exception $exception) {
+            $this->components->error($exception->getMessage());
+            $this->exitCode = self::FAILURE;
+        }
+
+        $namespace ??= null;
+
+        File::put(
+            base_path(self::GLOBAL_PROPERTIES_PATH),
+            $this->getGlobalHybridPropertiesInterface($config, $namespace),
+        );
+
+        $message = $namespace
+            ? sprintf('Interface <comment>%s</comment>', $namespace)
+            : 'Empty interface';
+
+        $this->components->info(sprintf(
+            '%s written to <comment>%s</comment>.',
+            $message,
+            self::GLOBAL_PROPERTIES_PATH,
+        ));
+    }
+
+    /**
+     * Extracts the namespace of the global properties data class used in the Hybridly middleware.
+     */
+    protected function getGlobalPropertiesNamespace(TypeScript $config): ?string
+    {
+        $directories = array_filter($config->basePaths, fn (string $directory) => File::isDirectory($directory));
 
         [$class] = Discover::in(...$directories)
             ->ignoreFiles(base_path('vendor'))
@@ -36,10 +113,10 @@ class GenerateGlobalTypesCommand extends Command
             ->ignoreFiles(base_path('resources'))
             ->classes()
             ->extending(\Hybridly\Http\Middleware::class)
-            ->get();
+            ->get() + [null];
 
         if (!$class) {
-            return null;
+            throw CouldNotFindMiddlewareException::create();
         }
 
         $methods = (new \ReflectionClass($class))->getMethods(\ReflectionMethod::IS_PUBLIC);
@@ -59,61 +136,35 @@ class GenerateGlobalTypesCommand extends Command
             return null;
         }
 
-        if (!class_implements($data, DataObject::class)) {
+        if (!class_implements($data, BaseData::class)) {
             return null;
         }
 
-        $namespace = str_replace('\\', '.', $data);
-
-        return $this->getGlobalHybridPropertiesInterface($namespace);
+        return $data;
     }
 
-    protected function getGlobalHybridPropertiesInterface(?string $namespace = null): string
+    /**
+     * Gets the global properties interface code.
+     */
+    protected function getGlobalHybridPropertiesInterface(TypeScript $config, ?string $namespace = null): string
     {
+        if ($config->namespaceTransformer && class_exists($config->namespaceTransformer)) {
+            $transformer = resolve($config->namespaceTransformer);
+            $namespace = $transformer->__invoke($namespace);
+        }
+
         if ($namespace) {
-            return <<<TYPESCRIPT
+            return <<<JS
+                /* eslint-disable */
+                /* prettier-ignore */
+                interface GlobalHybridlyProperties extends {$namespace} {}
+            JS;
+        }
+
+        return <<<JS
             /* eslint-disable */
             /* prettier-ignore */
-            interface GlobalHybridlyProperties extends {$namespace} {
-            }
-            TYPESCRIPT;
-        }
-
-        return <<<TYPESCRIPT
-        /* eslint-disable */
-        /* prettier-ignore */
-        type GlobalHybridlyProperties = never
-        TYPESCRIPT;
-    }
-
-    protected function writeTypes(): bool
-    {
-        if (class_exists(TypeScriptTransformCommand::class)) {
-            Artisan::call(TypeScriptTransformCommand::class, [
-                '--output' => '../.hybridly/php-types.d.ts',
-            ]);
-        }
-
-        $definitions = rescue(fn () => $this->getTypeDefinitions(), rescue: false, report: false);
-        $result = (bool) File::put(
-            $path = base_path('.hybridly/global-types.d.ts'),
-            $definitions ?? $this->getGlobalHybridPropertiesInterface(),
-        );
-
-        if ($result) {
-            $this->writeSuccess($path);
-        }
-
-        return $result;
-    }
-
-    protected function writeSuccess(string $path): void
-    {
-        $this->components->info(
-            sprintf(
-                'Types written to <comment>%s</comment>.',
-                $path,
-            ),
-        );
+            type GlobalHybridlyProperties = never;
+        JS;
     }
 }
