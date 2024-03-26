@@ -63,6 +63,17 @@ it('excludes authorization on records when specified', function () {
     Auth::login(UserFactory::new()->create());
     ProductFactory::createImmutable();
 
+    $result = BasicProductsTableWithData::make()
+        ->withoutResolvingAuthorizations()
+        ->getRecords();
+
+    expect($result[0])->not->toHaveKey('authorization');
+});
+
+it('excludes authorization when specified on records using fromModel creation method', function () {
+    Auth::login(UserFactory::new()->create());
+    ProductFactory::createImmutable();
+
     $result = BasicProductsTableWithDataUsingFromModel::make()
         ->withoutResolvingAuthorizations()
         ->getRecords();
