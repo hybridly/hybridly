@@ -36,6 +36,10 @@ class GenerateGlobalTypesCommand extends Command
      */
     protected function writePhpTypes(TypeScriptTransformerConfig $config): void
     {
+        if (!class_exists(TypeScriptTransformer::class)) {
+            return;
+        }
+
         $config->outputFile(base_path(self::PHP_TYPES_PATH));
 
         try {
