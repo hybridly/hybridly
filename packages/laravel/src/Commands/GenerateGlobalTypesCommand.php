@@ -3,6 +3,8 @@
 namespace Hybridly\Commands;
 
 use Hybridly\Exceptions\CouldNotFindMiddlewareException;
+use Hybridly\Support\Configuration\Configuration;
+use Hybridly\Support\Configuration\TypeScript;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
 use ReflectionMethod;
@@ -23,10 +25,10 @@ class GenerateGlobalTypesCommand extends Command
 
     protected int $exitCode = self::SUCCESS;
 
-    public function handle(TypeScriptTransformerConfig $typeScriptTransformerConfig): int
+    public function handle(TypeScriptTransformerConfig $typeScriptTransformerConfig, Configuration $hybridlyConfiguration): int
     {
         $this->writePhpTypes($typeScriptTransformerConfig);
-        $this->writeGlobalPropertiesInterface();
+        $this->writeGlobalPropertiesInterface($hybridlyConfiguration->typescript);
 
         return $this->exitCode;
     }
@@ -71,10 +73,10 @@ class GenerateGlobalTypesCommand extends Command
     /**
      * Writes the global properties interface.
      */
-    protected function writeGlobalPropertiesInterface(): void
+    protected function writeGlobalPropertiesInterface(TypeScript $config): void
     {
         try {
-            $namespace = $this->getGlobalPropertiesNamespace();
+            $namespace = $this->getGlobalPropertiesNamespace($config);
         } catch (\Exception $exception) {
             $this->components->error($exception->getMessage());
             $this->exitCode = self::FAILURE;
@@ -84,7 +86,7 @@ class GenerateGlobalTypesCommand extends Command
 
         File::put(
             base_path(self::GLOBAL_PROPERTIES_PATH),
-            $this->getGlobalHybridPropertiesInterface($namespace),
+            $this->getGlobalHybridPropertiesInterface($config, $namespace),
         );
 
         $message = $namespace
@@ -101,12 +103,9 @@ class GenerateGlobalTypesCommand extends Command
     /**
      * Extracts the namespace of the global properties data class used in the Hybridly middleware.
      */
-    protected function getGlobalPropertiesNamespace(): ?string
+    protected function getGlobalPropertiesNamespace(TypeScript $config): ?string
     {
-        $directories = array_filter([
-            base_path('app'),
-            base_path('src'),
-        ], fn (string $directory) => File::isDirectory($directory));
+        $directories = array_filter($config->basePaths, fn (string $directory) => File::isDirectory($directory));
 
         [$class] = Discover::in(...$directories)
             ->ignoreFiles(base_path('vendor'))
@@ -147,11 +146,14 @@ class GenerateGlobalTypesCommand extends Command
     /**
      * Gets the global properties interface code.
      */
-    protected function getGlobalHybridPropertiesInterface(?string $namespace = null): string
+    protected function getGlobalHybridPropertiesInterface(TypeScript $config, ?string $namespace = null): string
     {
-        if ($namespace) {
-            $namespace = str_replace('\\', '.', $namespace);
+        if ($config->namespaceTransformer && class_exists($config->namespaceTransformer)) {
+            $transformer = resolve($config->namespaceTransformer);
+            $namespace = $transformer->__invoke($namespace);
+        }
 
+        if ($namespace) {
             return <<<JS
                 /* eslint-disable */
                 /* prettier-ignore */
