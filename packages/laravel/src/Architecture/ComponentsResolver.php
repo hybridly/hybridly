@@ -83,6 +83,11 @@ interface ComponentsResolver
     public function getExtensions(): array;
 
     /**
+     * Unload the specified components.
+     */
+    public function unload(bool $views = true, bool $layouts = true, bool $components = true, bool $typeScriptDirectories = true): static;
+
+    /**
      * Overrides the identifier generator implementation.
      */
     public function setIdentifierGenerator(IdentifierGenerator $identifierGenerator): static;

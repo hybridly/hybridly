@@ -3,6 +3,11 @@
 use Hybridly\Architecture\ComponentsResolver;
 use Illuminate\Support\Facades\File;
 
+beforeEach(function () {/** @var ComponentsResolver */
+    $components = resolve(ComponentsResolver::class);
+    $components->unload();
+});
+
 function with_view_components(array|string $targetPaths, \Closure $assertion): void
 {
     File::cleanDirectory(resource_path());

@@ -3,7 +3,7 @@
 namespace Hybridly;
 
 use Hybridly\Architecture\ComponentsResolver;
-use Hybridly\Architecture\DefaultComponentsResolver;
+use Hybridly\Architecture\LazyComponentsResolver;
 use Hybridly\Commands\GenerateGlobalTypesCommand;
 use Hybridly\Commands\I18nCommand;
 use Hybridly\Commands\InstallCommand;
@@ -99,7 +99,7 @@ class HybridlyServiceProvider extends PackageServiceProvider
     protected function registerBindings(): void
     {
         $this->app->singleton(Configuration::class, fn (Application $app) => Configuration::fromArray($app['config']['hybridly'] ?? []));
-        $this->app->singleton(ComponentsResolver::class, fn (Application $app) => new DefaultComponentsResolver($app[Configuration::class]));
+        $this->app->singleton(ComponentsResolver::class, fn (Application $app) => new LazyComponentsResolver($app[Configuration::class]));
         $this->app->singleton(Hybridly::class);
     }
 

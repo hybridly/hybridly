@@ -4,7 +4,7 @@ namespace Hybridly\Architecture;
 
 use Hybridly\Support\Configuration\Configuration;
 
-final class DefaultComponentsResolver implements ComponentsResolver
+class LazyComponentsResolver implements ComponentsResolver
 {
     protected const DEFAULT_DEPTH = 20;
 
@@ -44,7 +44,7 @@ final class DefaultComponentsResolver implements ComponentsResolver
 
     public function loadViewsFrom(string $directory, null|string|array $namespace = null, ?int $depth = null): static
     {
-        $this->views = array_merge($this->views, $this->findVueFiles(
+        $this->views[] = fn () => $this->findVueFiles(
             directory: $directory,
             baseDirectory: $directory,
             namespace: $namespace,
@@ -53,41 +53,38 @@ final class DefaultComponentsResolver implements ComponentsResolver
                 $this->configuration->architecture->layoutsDirectory,
                 $this->configuration->architecture->componentsDirectory,
             ]), strict: true),
-        ));
+        );
 
         return $this;
     }
 
     public function loadLayoutsFrom(string $directory, null|string|array $namespace = null): static
     {
-        $this->layouts = array_merge($this->layouts, $this->findVueFiles(
+        $this->layouts[] = fn () => $this->findVueFiles(
             directory: $directory,
             baseDirectory: $directory,
             namespace: $namespace,
-        ));
+        );
 
         return $this;
     }
 
     public function loadComponentsFrom(string $directory, null|string|array $namespace = null): static
     {
-        $this->components = array_merge($this->components, $this->findVueFiles(
+        $this->components[] = fn () => $this->findVueFiles(
             directory: $directory,
             baseDirectory: $directory,
             namespace: $namespace,
-        ));
+        );
 
         return $this;
     }
 
     public function loadTypeScriptFilesFrom(string $directory, bool $deep = false): static
     {
-        $this->loadedTypeScriptDirectories = [
-            ...$this->loadedTypeScriptDirectories,
-            $deep
-                ? str($directory)->finish('/**/*.ts')->toString()
-                : str($directory)->finish('/*.ts')->toString(),
-        ];
+        $this->loadedTypeScriptDirectories[] = fn () => $deep
+            ? str($directory)->finish('/**/*.ts')->toString()
+            : str($directory)->finish('/*.ts')->toString();
 
         return $this;
     }
@@ -104,19 +101,19 @@ final class DefaultComponentsResolver implements ComponentsResolver
         $namespace ??= str($directory)->basename()->kebab();
 
         if ($loadTypeScript) {
-            rescue(fn () => $this->loadTypeScriptFilesFrom($directory, $deep), report: false);
+            $this->loadTypeScriptFilesFrom($directory, $deep);
         }
 
         if ($loadViews) {
-            rescue(fn () => $this->loadViewsFrom($deep ? $directory : ($directory . '/' . $this->configuration->architecture->viewsDirectory), $namespace), report: false);
+            $this->loadViewsFrom($deep ? $directory : ($directory . '/' . $this->configuration->architecture->viewsDirectory), $namespace);
         }
 
         if ($loadLayouts) {
-            rescue(fn () => $this->loadLayoutsFrom($directory . '/' . $this->configuration->architecture->layoutsDirectory, $namespace), report: false);
+            $this->loadLayoutsFrom($directory . '/' . $this->configuration->architecture->layoutsDirectory, $namespace);
         }
 
         if ($loadComponents) {
-            rescue(fn () => $this->loadComponentsFrom($directory . '/' . $this->configuration->architecture->componentsDirectory, $namespace), report: false);
+            $this->loadComponentsFrom($directory . '/' . $this->configuration->architecture->componentsDirectory, $namespace);
         }
 
         return $this;
@@ -124,8 +121,12 @@ final class DefaultComponentsResolver implements ComponentsResolver
 
     public function loadModulesFrom(string $directory, bool $deep): void
     {
+        if (!is_dir($directory)) {
+            return;
+        }
+
         foreach (scandir($directory) as $namespace) {
-            if (\in_array($namespace, ['.', '..'], true)) {
+            if (\in_array($namespace, ['.', '..'], strict: true)) {
                 continue;
             }
 
@@ -139,24 +140,22 @@ final class DefaultComponentsResolver implements ComponentsResolver
 
     public function getViews(): array
     {
-        return $this->views;
-    }
-
-    public function hasView(string $identifier): bool
-    {
-        return collect($this->views)->contains(function (array $view) use ($identifier) {
-            return $view['identifier'] === $identifier;
-        });
+        return $this->evaluateCollection($this->views);
     }
 
     public function getLayouts(): array
     {
-        return $this->layouts;
+        return $this->evaluateCollection($this->layouts);
     }
 
     public function getComponents(): array
     {
-        return $this->components;
+        return $this->evaluateCollection($this->components);
+    }
+
+    public function getTypeScriptDirectories(): array
+    {
+        return $this->evaluateCollection($this->loadedTypeScriptDirectories);
     }
 
     public function getExtensions(): array
@@ -164,9 +163,32 @@ final class DefaultComponentsResolver implements ComponentsResolver
         return $this->extensions;
     }
 
-    public function getTypeScriptDirectories(): array
+    public function hasView(string $identifier): bool
     {
-        return $this->loadedTypeScriptDirectories;
+        return collect($this->getViews())->contains(function (array $view) use ($identifier) {
+            return $view['identifier'] === $identifier;
+        });
+    }
+
+    public function unload(bool $views = true, bool $layouts = true, bool $components = true, bool $typeScriptDirectories = true): static
+    {
+        if ($views) {
+            $this->views = [];
+        }
+
+        if ($layouts) {
+            $this->layouts = [];
+        }
+
+        if ($components) {
+            $this->components = [];
+        }
+
+        if ($typeScriptDirectories) {
+            $this->loadedTypeScriptDirectories = [];
+        }
+
+        return $this;
     }
 
     /**
@@ -184,6 +206,10 @@ final class DefaultComponentsResolver implements ComponentsResolver
         $namespace = str($namespace ?? 'default')->basename()->kebab()->toString();
         $filter ??= fn () => true;
         $files = [];
+
+        if (!is_dir($directory)) {
+            return [];
+        }
 
         foreach (scandir($directory) as $file) {
             if (\in_array($file, ['.', '..'], true)) {
@@ -210,5 +236,13 @@ final class DefaultComponentsResolver implements ComponentsResolver
         }
 
         return $files;
+    }
+
+    protected function evaluateCollection(array $collection): array
+    {
+        return collect($collection)
+            ->flatMap('call_user_func')
+            ->unique('identifier')
+            ->all();
     }
 }
