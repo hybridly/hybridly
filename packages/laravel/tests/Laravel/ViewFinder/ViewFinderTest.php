@@ -138,15 +138,15 @@ test('loading a module non-recursively only loads the root `views`, `components`
 
 test('identifiers are kebab-cased', function (string $view, string $identifier) {
     with_view_components($view, function () use ($view, $identifier) {
-        /** @var VueViewFinder */
-        $viewFinder = resolve(VueViewFinder::class);
-        $viewFinder->loadModuleFrom(
+        /** @var ComponentsResolver */
+        $components = resolve(ComponentsResolver::class);
+        $components->loadModuleFrom(
             directory: resource_path(),
             namespace: 'foo',
             deep: true,
         );
 
-        expect($viewFinder->getViews())->toBe([
+        expect($components->getViews())->toBe([
             ['namespace' => 'foo', 'path' => "resources/{$view}", 'identifier' => $identifier],
         ]);
     });
