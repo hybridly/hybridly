@@ -5,6 +5,7 @@ namespace Hybridly\Tests\Laravel\Tables\Fixtures;
 use Carbon\CarbonInterface;
 use Hybridly\Support\Data\DataResource;
 use Hybridly\Tests\Fixtures\Database\Product;
+use Spatie\LaravelData\Lazy;
 
 class ProductNameDataUsingFromModel extends DataResource
 {
@@ -21,9 +22,12 @@ class ProductNameDataUsingFromModel extends DataResource
 
     public static function fromModel(Product $product): static
     {
-        return new static(
-            name: $product->name,
-            created_at: $product->created_at,
-        );
+        return static::factory()
+            ->withoutMagicalCreation()
+            ->from([
+                'name' => $product->name,
+                'created_at' => $product->created_at,
+                'authorization' => Lazy::create(fn () => static::resolveAuthorizationArray($product))->defaultIncluded(),
+            ]);
     }
 }
