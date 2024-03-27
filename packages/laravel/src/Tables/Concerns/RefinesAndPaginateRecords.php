@@ -5,7 +5,6 @@ namespace Hybridly\Tables\Concerns;
 use Hybridly\Refining\Contracts\Refiner;
 use Hybridly\Refining\Refine;
 use Hybridly\Support\Configuration\Configuration;
-use Hybridly\Support\Data\AuthorizationArrayResolver;
 use Hybridly\Tables\Columns\BaseColumn;
 use Illuminate\Contracts\Pagination\CursorPaginator;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
@@ -158,10 +157,8 @@ trait RefinesAndPaginateRecords
         if (isset($this->data) && is_a($this->data, Data::class, allow_string: true)) {
             $record = $this->resolveDataRecord($model);
 
-            if ($this->resolvesAuthorizations()) {
-                $record->additional([
-                    'authorization' => fn () => resolve(AuthorizationArrayResolver::class)->resolve($model, $this->data),
-                ]);
+            if (!$this->resolvesAuthorizations()) {
+                $record->excludePermanently('authorization');
             }
 
             return $record->toArray();
