@@ -42,7 +42,7 @@ it('can transform records using Laravel Data', function () {
     expect(BasicProductsTableWithData::make())->toMatchSnapshot();
 });
 
-it('includes authorization on records when using Laravel Data', function () {
+it('includes authorization on records by default', function () {
     Auth::login(UserFactory::new()->create());
     ProductFactory::createImmutable();
 
@@ -51,13 +51,14 @@ it('includes authorization on records when using Laravel Data', function () {
     expect($result->getRecords()[0])->toHaveKey('authorization');
 });
 
-it('includes authorization on records when using Laravel Data with fromModel creation method', function () {
+it('includes authorization on records using custom `fromModel` by default', function () {
     Auth::login(UserFactory::new()->create());
     ProductFactory::createImmutable();
 
     $result = BasicProductsTableWithDataUsingFromModel::make()->getRecords();
     expect($result[0])->toHaveKey('authorization');
     expect($result[0]['authorization']['returns-true'])->toBeTrue();
+    expect($result[0]['authorization']['returns-false'])->toBeFalse();
 });
 
 it('excludes authorization on records when specified', function () {
@@ -71,7 +72,7 @@ it('excludes authorization on records when specified', function () {
     expect($result[0])->not->toHaveKey('authorization');
 });
 
-it('excludes authorization when specified on records using fromModel creation method', function () {
+it('excludes authorization on records using custom `fromModel` when specified', function () {
     Auth::login(UserFactory::new()->create());
     ProductFactory::createImmutable();
 

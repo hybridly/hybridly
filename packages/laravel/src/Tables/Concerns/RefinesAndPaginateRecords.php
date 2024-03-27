@@ -162,6 +162,8 @@ trait RefinesAndPaginateRecords
                 $record->additional([
                     'authorization' => fn () => resolve(AuthorizationArrayResolver::class)->resolve($model, $this->data),
                 ]);
+            } else {
+                $record->excludePermanently('authorization');
             }
 
             return $record->toArray();
