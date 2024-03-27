@@ -10,7 +10,7 @@ use Illuminate\Console\Command;
 
 class PrintConfigurationCommand extends Command
 {
-    protected $signature = 'hybridly:config {--pretty}';
+    protected $signature = 'hybridly:config {--pretty=false}';
     protected $description = 'Prints the internal Hybridly configuration.';
     protected $hidden = true;
 
@@ -37,19 +37,28 @@ class PrintConfigurationCommand extends Command
             ],
             'components' => [
                 'eager' => Configuration::get()->architecture->eagerLoadViews,
-                'layouts' => $this->hybridly->getViewFinder()->getLayouts(),
-                'views' => $this->hybridly->getViewFinder()->getViews(),
-                'components' => $this->hybridly->getViewFinder()->getComponents(),
-                'files' => $this->hybridly->getViewFinder()->getTypeScriptDirectories(),
+                'layouts' => $this->hybridly->getLayouts(),
+                'views' => $this->hybridly->getViews(),
+                'components' => $this->hybridly->getComponents(),
+                'files' => $this->hybridly->getTypeScriptDirectories(),
             ],
             'routing' => $this->routeExtractor->toArray(),
         ];
 
-        $flags = $this->option('pretty')
-            ? \JSON_PRETTY_PRINT | \JSON_UNESCAPED_SLASHES
-            : 0;
+        // We do a lil bit of h4cking around the `pretty` option
+        // to affect what is returned in the configuration
+        if ($pretty = ($only = $this->option('pretty')) !== 'false') {
+            if (!\in_array($only, ['true', 'false', null], strict: true)) {
+                $configuration = data_get($configuration, $only);
+            }
 
-        echo json_encode($configuration, $flags);
+            $pretty = true;
+        }
+
+        $this->output->write(json_encode(
+            value: $configuration,
+            flags: $pretty ? \JSON_PRETTY_PRINT | \JSON_UNESCAPED_SLASHES : 0,
+        ));
 
         return self::SUCCESS;
     }

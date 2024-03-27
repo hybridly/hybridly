@@ -1,9 +1,14 @@
 <?php
 
-namespace Hybridly\Support;
+namespace Hybridly\View;
 
+use Hybridly\Support\Arr;
+use Hybridly\Support\CaseConverter;
 use Hybridly\Support\Configuration\Configuration;
 use Hybridly\Support\Configuration\Properties;
+use Hybridly\Support\Deferred;
+use Hybridly\Support\Header;
+use Hybridly\Support\Partial;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;

@@ -1,7 +1,12 @@
 <?php
 
-use Hybridly\Support\VueViewFinder;
+use Hybridly\Architecture\ComponentsResolver;
 use Illuminate\Support\Facades\File;
+
+beforeEach(function () {/** @var ComponentsResolver */
+    $components = resolve(ComponentsResolver::class);
+    $components->unload();
+});
 
 function with_view_components(array|string $targetPaths, \Closure $assertion): void
 {
@@ -28,14 +33,14 @@ function with_view_components(array|string $targetPaths, \Closure $assertion): v
 
 test('`hasView` determines if a view is registered', function (string $target, string $namespace, string $expectedIdentifier) {
     with_view_components($target, function () use ($namespace, $expectedIdentifier) {
-        /** @var VueViewFinder */
-        $viewFinder = resolve(VueViewFinder::class);
-        $viewFinder->loadViewsFrom(
+        /** @var ComponentsResolver */
+        $components = resolve(ComponentsResolver::class);
+        $components->loadViewsFrom(
             directory: resource_path('views'),
             namespace: $namespace,
         );
 
-        expect($viewFinder->hasView($expectedIdentifier))->toBeTrue();
+        expect($components->hasView($expectedIdentifier))->toBeTrue();
     });
 })->with([
     ['views/my-view.tsx', 'default', 'my-view'],
@@ -47,14 +52,14 @@ test('`hasView` determines if a view is registered', function (string $target, s
 
 test('namespaces can be defined as an array and will be converted to kebab case', function () {
     with_view_components('views/my-view.vue', function () {
-        /** @var VueViewFinder */
-        $viewFinder = resolve(VueViewFinder::class);
-        $viewFinder->loadViewsFrom(
+        /** @var ComponentsResolver */
+        $components = resolve(ComponentsResolver::class);
+        $components->loadViewsFrom(
             directory: resource_path('views'),
             namespace: ['foo', 'bar'],
         );
 
-        expect($viewFinder->hasView('foo-bar::my-view'))->toBeTrue();
+        expect($components->hasView('foo-bar::my-view'))->toBeTrue();
     });
 });
 
@@ -71,25 +76,25 @@ test('loading a module recursively only the root `components` and `layouts` dire
         'subdirectory/again/view3.vue',
         'subdirectory/again/components/component3.vue',
     ], function () {
-        /** @var VueViewFinder */
-        $viewFinder = resolve(VueViewFinder::class);
-        $viewFinder->loadModuleFrom(
+        /** @var ComponentsResolver */
+        $components = resolve(ComponentsResolver::class);
+        $components->loadModuleFrom(
             directory: resource_path(),
             namespace: 'foo',
             deep: true,
         );
 
-        expect($viewFinder->getViews())->toBe([
+        expect($components->getViews())->toBe([
             ['namespace' => 'foo', 'path' => 'resources/subdirectory/again/view3.vue', 'identifier' => 'foo::subdirectory.again.view3'],
             ['namespace' => 'foo', 'path' => 'resources/subdirectory/view2.vue', 'identifier' => 'foo::subdirectory.view2'],
             ['namespace' => 'foo', 'path' => 'resources/view1.vue', 'identifier' => 'foo::view1'],
         ]);
 
-        expect($viewFinder->getComponents())->toBe([
+        expect($components->getComponents())->toBe([
             ['namespace' => 'foo', 'path' => 'resources/components/component1.vue', 'identifier' => 'foo::component1'],
         ]);
 
-        expect($viewFinder->getLayouts())->toBe([
+        expect($components->getLayouts())->toBe([
             ['namespace' => 'foo', 'path' => 'resources/layouts/layout1.vue', 'identifier' => 'foo::layout1'],
         ]);
     });
@@ -111,25 +116,25 @@ test('loading a module non-recursively only loads the root `views`, `components`
         'foo/components/component3.vue',
         'foo/layouts/layout3.vue',
     ], function () {
-        /** @var VueViewFinder */
-        $viewFinder = resolve(VueViewFinder::class);
-        $viewFinder->loadModuleFrom(
+        /** @var ComponentsResolver */
+        $components = resolve(ComponentsResolver::class);
+        $components->loadModuleFrom(
             directory: resource_path(),
             namespace: 'foo',
             deep: false,
         );
 
-        expect($viewFinder->getViews())->toBe([
+        expect($components->getViews())->toBe([
             ['namespace' => 'foo', 'path' => 'resources/views/subdirectory/view2.vue', 'identifier' => 'foo::subdirectory.view2'],
             ['namespace' => 'foo', 'path' => 'resources/views/view1.vue', 'identifier' => 'foo::view1'],
         ]);
 
-        expect($viewFinder->getComponents())->toBe([
+        expect($components->getComponents())->toBe([
             ['namespace' => 'foo', 'path' => 'resources/components/component1.vue', 'identifier' => 'foo::component1'],
             ['namespace' => 'foo', 'path' => 'resources/components/subdirectory/component2.vue', 'identifier' => 'foo::subdirectory.component2'],
         ]);
 
-        expect($viewFinder->getLayouts())->toBe([
+        expect($components->getLayouts())->toBe([
             ['namespace' => 'foo', 'path' => 'resources/layouts/layout1.vue', 'identifier' => 'foo::layout1'],
             ['namespace' => 'foo', 'path' => 'resources/layouts/subdirectory/layout2.vue', 'identifier' => 'foo::subdirectory.layout2'],
         ]);
@@ -138,15 +143,15 @@ test('loading a module non-recursively only loads the root `views`, `components`
 
 test('identifiers are kebab-cased', function (string $view, string $identifier) {
     with_view_components($view, function () use ($view, $identifier) {
-        /** @var VueViewFinder */
-        $viewFinder = resolve(VueViewFinder::class);
-        $viewFinder->loadModuleFrom(
+        /** @var ComponentsResolver */
+        $components = resolve(ComponentsResolver::class);
+        $components->loadModuleFrom(
             directory: resource_path(),
             namespace: 'foo',
             deep: true,
         );
 
-        expect($viewFinder->getViews())->toBe([
+        expect($components->getViews())->toBe([
             ['namespace' => 'foo', 'path' => "resources/{$view}", 'identifier' => $identifier],
         ]);
     });

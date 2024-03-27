@@ -198,7 +198,7 @@ class Assertable extends AssertableJson
     protected function ensureViewExists(string $identifier): void
     {
         try {
-            resolve(Hybridly::class)->getViewFinder()->hasView($identifier);
+            resolve(Hybridly::class)->hasView($identifier);
         } catch (InvalidArgumentException) {
             PHPUnit::fail(sprintf('Hybridly view [%s] is not registered.', $identifier));
         }
