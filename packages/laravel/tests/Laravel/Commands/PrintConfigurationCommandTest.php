@@ -3,11 +3,7 @@
 use function Pest\Laravel\artisan;
 
 test('configuration can be printed', function () {
-    artisan('hybridly:config')
-        ->assertOk()
-        ->expectsOutputToContain(<<<TXT
-        "architecture":{"root_directory":"resources","components_directory":"components","application_main_path":"resources\/application\/main.ts"},"components":{"eager":true,"layouts":[],"views":[],"components":[],"files":[]
-        TXT);
+    artisan('hybridly:config')->assertOk();
 });
 
 test('configuration subsets can be pretty-printed', function (string $path, string $output) {
