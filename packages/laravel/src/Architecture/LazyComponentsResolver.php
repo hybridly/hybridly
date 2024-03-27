@@ -82,9 +82,9 @@ class LazyComponentsResolver implements ComponentsResolver
 
     public function loadTypeScriptFilesFrom(string $directory, bool $deep = false): static
     {
-        $this->loadedTypeScriptDirectories[] = fn () => $deep
-            ? str($directory)->finish('/**/*.ts')->toString()
-            : str($directory)->finish('/*.ts')->toString();
+        $this->loadedTypeScriptDirectories[] = $deep
+            ? fn () => str($directory)->finish('/**/*.ts')->toString()
+            : fn () => str($directory)->finish('/*.ts')->toString();
 
         return $this;
     }
@@ -140,22 +140,22 @@ class LazyComponentsResolver implements ComponentsResolver
 
     public function getViews(): array
     {
-        return $this->evaluateCollection($this->views);
+        return $this->evaluateComponentCollection($this->views);
     }
 
     public function getLayouts(): array
     {
-        return $this->evaluateCollection($this->layouts);
+        return $this->evaluateComponentCollection($this->layouts);
     }
 
     public function getComponents(): array
     {
-        return $this->evaluateCollection($this->components);
+        return $this->evaluateComponentCollection($this->components);
     }
 
     public function getTypeScriptDirectories(): array
     {
-        return $this->evaluateCollection($this->loadedTypeScriptDirectories);
+        return array_map('call_user_func', $this->loadedTypeScriptDirectories);
     }
 
     public function getExtensions(): array
@@ -238,7 +238,7 @@ class LazyComponentsResolver implements ComponentsResolver
         return $files;
     }
 
-    protected function evaluateCollection(array $collection): array
+    protected function evaluateComponentCollection(array $collection): array
     {
         return collect($collection)
             ->flatMap('call_user_func')
