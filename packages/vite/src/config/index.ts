@@ -31,7 +31,7 @@ export default (options: ResolvedOptions, config: DynamicConfiguration): Plugin 
 		configureServer(server) {
 			let restarting = false
 
-			async function forceRestart(message: string) {
+			function forceRestart(message: string) {
 				if (restarting) {
 					return
 				}
@@ -42,13 +42,13 @@ export default (options: ResolvedOptions, config: DynamicConfiguration): Plugin 
 					timestamp: true,
 				})
 
-				return await server?.restart()
+				return server?.restart()
 			}
 
-			async function handleFileChange(file: string) {
+			function handleFileChange(file: string) {
 				// Force-reload the server when the config changes
 				if (file.endsWith('config/hybridly.php')) {
-					return await forceRestart('Configuration file changed')
+					return forceRestart('Configuration file changed')
 				}
 
 				// When routing changes, write route definitions
@@ -56,7 +56,7 @@ export default (options: ResolvedOptions, config: DynamicConfiguration): Plugin 
 				// Check for controller changes as well to support spatie/laravel-route-attributes
 				// TODO make this configurable
 				if (/routes\/.*\.php$/.test(file) || /app\/Http\/Controllers\/.*\.php$/.test(file) || /routes\.php$/.test(file)) {
-					return await forceRestart('Routing changed')
+					return forceRestart('Routing changed')
 				}
 
 				// Force-reload the server when the routing or components change
