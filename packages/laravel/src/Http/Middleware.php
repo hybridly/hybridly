@@ -104,7 +104,7 @@ class Middleware
      */
     public function version(Request $request): \Closure|string|false|null
     {
-        if (class_exists($vite = Innocenzi\Vite\Vite::class)) {
+        if (class_exists($vite = \Innocenzi\Vite\Vite::class)) {
             return resolve($vite)->getHash();
         }
 
