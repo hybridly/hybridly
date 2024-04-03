@@ -2,7 +2,7 @@ import isEqual from 'lodash.isequal'
 import type { Progress, UrlResolvable, HybridRequestOptions } from '@hybridly/core'
 import type { DeepReadonly } from 'vue'
 import { computed, reactive, ref, toRaw, watch } from 'vue'
-import { clone, setValueAtPath, unsetPropertyAtPath } from '@hybridly/utils'
+import { clone, merge, setValueAtPath, unsetPropertyAtPath } from '@hybridly/utils'
 import { router } from '@hybridly/core'
 import type { Path, SearchableObject } from '@clickbar/dot-diver'
 import { getByPath } from '@clickbar/dot-diver'
@@ -48,8 +48,8 @@ export function useForm<
 >(options: FormOptions<T>) {
 	// https://github.com/hybridly/hybridly/issues/23
 	// TODO: explore unique/automatic key generation
-	const shouldRemember = !!options?.key
-	const historyKey = options?.key as string ?? 'form:default'
+	const shouldRemember = !!options.key
+	const historyKey = options.key as string ?? 'form:default'
 	const historyData = shouldRemember ? router.history.get(historyKey) as any : undefined
 	const timeoutIds = {
 		recentlyFailed: undefined as ReturnType<typeof setTimeout> | undefined,
@@ -117,27 +117,29 @@ export function useForm<
 	/**
 	 * Submits the form.
 	 */
-	function submit(optionsOverrides?: Omit<HybridRequestOptions, 'data'>) {
-		const url = typeof options.url === 'function'
-			? options.url()
-			: options.url
+	function submit(optionsOverrides?: Omit<FormOptions<T>, 'fields' | 'key'>) {
+		const { fields: _f, key: _k, ...optionsWithoutFields } = options
+		const optionsWithOverrides = optionsOverrides
+			? merge<typeof optionsOverrides>(optionsWithoutFields, optionsOverrides, { mergePlainObjects: true })
+			: optionsWithoutFields
 
-		const data = typeof options.transform === 'function'
-			? options.transform?.(fields)
+		const url = typeof optionsWithOverrides.url === 'function'
+			? optionsWithOverrides.url()
+			: optionsWithOverrides.url
+
+		const data = typeof optionsWithOverrides.transform === 'function'
+			? optionsWithOverrides.transform(fields)
 			: fields
 
-		const preserveState = optionsOverrides?.preserveState ?? options.preserveState
-		const hooks = { ...options?.hooks, ...optionsOverrides?.hooks }
+		const preserveState = optionsWithOverrides.preserveState ?? optionsWithOverrides.method !== 'GET'
+		const hooks = optionsWithOverrides.hooks ?? {}
 
 		return router.navigate({
-			...options,
+			...optionsWithOverrides,
 			url: url ?? state.context.value?.url,
-			method: options.method ?? 'POST',
-			...optionsOverrides,
+			method: optionsWithOverrides.method ?? 'POST',
 			data: safeClone(data),
-			preserveState: preserveState === undefined && options.method !== 'GET'
-				? true
-				: preserveState,
+			preserveState,
 			hooks: {
 				before: (navigation, context) => {
 					failed.value = false
@@ -159,20 +161,20 @@ export function useForm<
 					setErrors(incoming)
 					failed.value = true
 					recentlyFailed.value = true
-					timeoutIds.recentlyFailed = setTimeout(() => recentlyFailed.value = false, options?.timeout ?? 5000)
+					timeoutIds.recentlyFailed = setTimeout(() => recentlyFailed.value = false, optionsWithOverrides.timeout ?? 5000)
 					return hooks.error?.(incoming, context)
 				},
 				success: (payload, context) => {
 					clearErrors()
-					if (options?.updateInitials) {
+					if (optionsWithOverrides.updateInitials) {
 						setInitial(fields)
 					}
-					if (options?.reset !== false) {
+					if (optionsWithOverrides.reset !== false) {
 						reset()
 					}
 					successful.value = true
 					recentlySuccessful.value = true
-					timeoutIds.recentlySuccessful = setTimeout(() => recentlySuccessful.value = false, options?.timeout ?? 5000)
+					timeoutIds.recentlySuccessful = setTimeout(() => recentlySuccessful.value = false, optionsWithOverrides.timeout ?? 5000)
 					return hooks.success?.(payload, context)
 				},
 				after: (context) => {
