@@ -30,7 +30,7 @@ class LazyComponentsResolver implements ComponentsResolver
     ) {
         $this->identifierGenerator = new KebabCaseIdentifierGenerator();
         $this->extensions = array_map(
-            callback: fn (string $extension) => ".{$extension}",
+            callback: fn (string $extension) => str($extension)->start('.')->toString(),
             array: $configuration->architecture->extensions,
         );
     }
