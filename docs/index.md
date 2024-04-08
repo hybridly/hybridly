@@ -2,6 +2,7 @@
 layout: home
 title: Hybridly - Server-driven, client-rendered applications
 titleTemplate: false
+markdownStyles: false
 ---
 
 <script setup>

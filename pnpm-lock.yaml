@@ -85,8 +85,8 @@ importers:
         specifier: ^5.1.7
         version: 5.2.6(@types/node@20.11.30)
       vitepress:
-        specifier: 1.0.0-rc.42
-        version: 1.0.0-rc.42(@types/node@20.11.30)(axios@1.6.8)(postcss@8.4.38)(search-insights@2.7.0)(typescript@5.4.3)
+        specifier: ^1.0.1
+        version: 1.0.2(@types/node@20.11.30)(axios@1.6.8)(postcss@8.4.38)(search-insights@2.7.0)(typescript@5.4.3)
       vitest:
         specifier: 0.34.6
         version: 0.34.6(@vitest/ui@0.34.6)(happy-dom@14.3.6)
@@ -6786,12 +6786,12 @@ packages:
     optionalDependencies:
       fsevents: 2.3.3
 
-  /vitepress@1.0.0-rc.42(@types/node@20.11.30)(axios@1.6.8)(postcss@8.4.38)(search-insights@2.7.0)(typescript@5.4.3):
-    resolution: {integrity: sha512-VeiVVXFblt/sjruFSJBNChMWwlztMrRMe8UXdNpf4e05mKtTYEY38MF5qoP90KxPTCfMQiKqwEGwXAGuOTK8HQ==}
+  /vitepress@1.0.2(@types/node@20.11.30)(axios@1.6.8)(postcss@8.4.38)(search-insights@2.7.0)(typescript@5.4.3):
+    resolution: {integrity: sha512-bEj9yTEdWyewJFOhEREZF+mXuAgOq27etuJZT6DZSp+J3XpQstXMJc5piSVwhZBtuj8OfA0iXy+jdP1c71KMYQ==}
     hasBin: true
     peerDependencies:
-      markdown-it-mathjax3: ^4.3.2
-      postcss: ^8.4.34
+      markdown-it-mathjax3: ^4
+      postcss: ^8
     peerDependenciesMeta:
       markdown-it-mathjax3:
         optional: true
