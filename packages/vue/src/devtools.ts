@@ -1,7 +1,6 @@
 import { setupDevtoolsPlugin } from '@vue/devtools-api'
 import { registerHook } from '@hybridly/core'
 import type { App, Plugin } from 'vue'
-import { triggerRef } from 'vue'
 import { state } from './stores/state'
 
 declare const __VUE_PROD_DEVTOOLS__: boolean
@@ -133,7 +132,6 @@ export function setupDevtools(app: App) {
 
 				if (event === 'after') {
 					setTimeout(() => {
-						triggerRef(state.context)
 						api.notifyComponentUpdate()
 					}, 100)
 				}
