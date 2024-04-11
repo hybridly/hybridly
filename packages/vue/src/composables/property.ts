@@ -7,7 +7,7 @@ import { toReactive } from '../utils'
 
 /** Accesses all current properties. */
 export function useProperties<T extends object, Global extends GlobalHybridlyProperties = GlobalHybridlyProperties>() {
-	return readonly(toReactive(computed(() => state.context.value?.view.properties as T & Global)))
+	return readonly(toReactive(computed(() => state.properties.value as T & Global)))
 }
 
 /** Accesses a property with a dot notation. */
@@ -21,7 +21,7 @@ export function useProperty<
 		? P
 		: string,
 ): ComputedRef<ReturnType> {
-	return computed(() => getByPath(state.context.value?.view.properties as GlobalHybridlyProperties, path) as ReturnType)
+	return computed(() => getByPath(state.properties.value as GlobalHybridlyProperties, path) as ReturnType)
 }
 
 /**
@@ -37,9 +37,13 @@ export function setProperty<
 	path: [Override] extends [never] ? P : string,
 	value: ValueType,
 ): void {
-	if (!state.context.value?.view.properties) {
+	if (!state.properties.value) {
 		return
 	}
 
-	setByPath(state.context.value.view.properties as GlobalHybridlyProperties, path, toValue(value as any))
+	setByPath(state.properties.value, path, toValue(value as any))
+
+	if (state.context.value?.view.properties) {
+		setByPath(state.context.value.view.properties as GlobalHybridlyProperties, path, toValue(value as any))
+	}
 }

@@ -5,6 +5,7 @@ import { HttpResponse } from 'msw'
 import type { RouterContext, RouterContextOptions } from '../src/context'
 import { HYBRIDLY_HEADER } from '../src/constants'
 import { initializeContext } from '../src/context'
+import { createRouter } from '../src/router/router'
 import type { HybridPayload } from '../src/router'
 import { http } from './server'
 
@@ -36,11 +37,14 @@ export async function fakeRouterContext(options: PartialDeep<RouterContextOption
 	return await initializeContext(makeRouterContextOptions(options))
 }
 
+export async function fakeRouter(options: PartialDeep<RouterContextOptions> = {}): Promise<RouterContext> {
+	return await createRouter(makeRouterContextOptions(options))
+}
 /** Mocks a request using MSW. */
-export function mockSuccessfulUrl(url: string, method: keyof typeof http, options: Partial<MockOptions> = {}): RequestHandler {
+export function mockSuccessfulUrl(url: string, method: keyof typeof http, options: Partial<MockOptions> = {}, payload: PartialDeep<HybridPayload> = {}): RequestHandler {
 	return mockUrl(url, method, {
 		status: 200,
-		json: fakePayload(),
+		json: fakePayload(payload),
 		...options,
 	})
 }
