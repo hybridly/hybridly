@@ -88,11 +88,26 @@ export function useForm<
 		})
 	}
 
+	/**
+	 * Resets the form's failed and successful flags.
+	 */
 	function resetSubmissionState() {
-		successful.value = failed.value = recentlyFailed.value = recentlySuccessful.value = false
+		successful.value = false
+		failed.value = false
+		recentlyFailed.value = false
+		recentlySuccessful.value = false
 		clearTimeout(timeoutIds.recentlySuccessful!)
 		clearTimeout(timeoutIds.recentlyFailed!)
 		progress.value = undefined
+	}
+
+	/**
+	 * Resets the form to it's initial state (including errors and flags).
+	 */
+	function fullyReset() {
+		resetSubmissionState()
+		clearErrors()
+		reset()
 	}
 
 	/**
@@ -100,11 +115,8 @@ export function useForm<
 	 */
 	function reset(...keys: P[]) {
 		if (keys.length === 0) {
-			resetSubmissionState()
 			keys = Object.keys(fields) as P[]
 		}
-
-		clearErrors(...keys)
 
 		keys.forEach((key) => {
 			Reflect.set(fields, key, safeClone(Reflect.get(initial, key)))
@@ -171,13 +183,12 @@ export function useForm<
 					return hooks.error?.(incoming, context)
 				},
 				success: (payload, context) => {
+					clearErrors()
 					if (optionsWithOverrides.updateInitials) {
 						setInitial(fields)
 					}
 					if (optionsWithOverrides.reset !== false) {
 						reset()
-					} else {
-						clearErrors()
 					}
 					successful.value = true
 					recentlySuccessful.value = true
@@ -263,6 +274,7 @@ export function useForm<
 		clearError,
 		setInitial,
 		hasDirty,
+		fullyReset,
 		submitWith: submit,
 		/** @deprecated Use `submitWith` instead */
 		submitWithOptions: submit,

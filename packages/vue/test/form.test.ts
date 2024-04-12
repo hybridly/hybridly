@@ -91,7 +91,7 @@ it('it updates failed and successful', async({ expect }) => {
 	expect(form.successful).toBe(true)
 	expect(form.recentlySuccessful).toBe(false)
 
-	form.reset()
+	form.resetSubmissionState()
 	expect(form.successful).toBe(false)
 
 	await form.submit() // Retrigger submission to have successful = true
@@ -117,7 +117,7 @@ it('it updates failed and successful', async({ expect }) => {
 	expect(form.failed).toBe(true)
 	expect(form.recentlyFailed).toBe(false)
 
-	form.reset()
+	form.resetSubmissionState()
 	expect(form.failed).toBe(false)
 })
 
