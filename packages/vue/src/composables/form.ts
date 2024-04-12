@@ -88,13 +88,23 @@ export function useForm<
 		})
 	}
 
+	function resetSubmissionState() {
+		successful.value = failed.value = recentlyFailed.value = recentlySuccessful.value = false
+		clearTimeout(timeoutIds.recentlySuccessful!)
+		clearTimeout(timeoutIds.recentlyFailed!)
+		progress.value = undefined
+	}
+
 	/**
 	 * Resets the form to its initial values.
 	 */
 	function reset(...keys: P[]) {
 		if (keys.length === 0) {
+			resetSubmissionState()
 			keys = Object.keys(fields) as P[]
 		}
+
+		clearErrors(...keys)
 
 		keys.forEach((key) => {
 			Reflect.set(fields, key, safeClone(Reflect.get(initial, key)))
@@ -142,11 +152,7 @@ export function useForm<
 			preserveState,
 			hooks: {
 				before: (navigation, context) => {
-					failed.value = false
-					successful.value = false
-					recentlySuccessful.value = false
-					clearTimeout(timeoutIds.recentlySuccessful!)
-					clearTimeout(timeoutIds.recentlyFailed!)
+					resetSubmissionState()
 					return hooks.before?.(navigation, context)
 				},
 				start: (context) => {
@@ -165,12 +171,13 @@ export function useForm<
 					return hooks.error?.(incoming, context)
 				},
 				success: (payload, context) => {
-					clearErrors()
 					if (optionsWithOverrides.updateInitials) {
 						setInitial(fields)
 					}
 					if (optionsWithOverrides.reset !== false) {
 						reset()
+					} else {
+						clearErrors()
 					}
 					successful.value = true
 					recentlySuccessful.value = true
@@ -247,6 +254,7 @@ export function useForm<
 
 	return reactive({
 		reset,
+		resetSubmissionState,
 		clear,
 		fields,
 		abort,
