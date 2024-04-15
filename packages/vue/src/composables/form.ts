@@ -89,9 +89,31 @@ export function useForm<
 	}
 
 	/**
-	 * Resets the form to its initial values.
+	 * Resets the form's failed and successful flags.
 	 */
-	function reset(...keys: P[]) {
+	function resetSubmissionState() {
+		successful.value = false
+		failed.value = false
+		recentlyFailed.value = false
+		recentlySuccessful.value = false
+		clearTimeout(timeoutIds.recentlySuccessful!)
+		clearTimeout(timeoutIds.recentlyFailed!)
+		progress.value = undefined
+	}
+
+	/**
+	 * Resets the fields, errors and submission state.
+	 */
+	function reset() {
+		resetSubmissionState()
+		clearErrors()
+		resetFields()
+	}
+
+	/**
+	 * Resets the fields to their initial values.
+	 */
+	function resetFields(...keys: P[]) {
 		if (keys.length === 0) {
 			keys = Object.keys(fields) as P[]
 		}
@@ -142,11 +164,7 @@ export function useForm<
 			preserveState,
 			hooks: {
 				before: (navigation, context) => {
-					failed.value = false
-					successful.value = false
-					recentlySuccessful.value = false
-					clearTimeout(timeoutIds.recentlySuccessful!)
-					clearTimeout(timeoutIds.recentlyFailed!)
+					resetSubmissionState()
 					return hooks.before?.(navigation, context)
 				},
 				start: (context) => {
@@ -170,7 +188,7 @@ export function useForm<
 						setInitial(fields)
 					}
 					if (optionsWithOverrides.reset !== false) {
-						reset()
+						resetFields()
 					}
 					successful.value = true
 					recentlySuccessful.value = true
@@ -246,7 +264,9 @@ export function useForm<
 	}, { deep: true, immediate: true })
 
 	return reactive({
+		resetFields,
 		reset,
+		resetSubmissionState,
 		clear,
 		fields,
 		abort,
