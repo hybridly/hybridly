@@ -416,7 +416,9 @@ export async function navigate(options: InternalNavigationOptions) {
 
 export async function performHybridRequest(targetUrl: URL, options: HybridRequestOptions, abortController?: AbortController): Promise<AxiosResponse> {
 	const context = getInternalRouterContext()
-	const preloaded = getPreloadedRequest(targetUrl)
+	const preloaded = options.method === 'GET'
+		?	getPreloadedRequest(targetUrl)
+		: false
 
 	if (preloaded) {
 		debug.router(`Found a pre-loaded request for [${targetUrl}]`)
