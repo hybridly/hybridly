@@ -102,18 +102,18 @@ export function useForm<
 	}
 
 	/**
-	 * Resets the form to it's initial state (including errors and flags).
+	 * Resets the fields, errors and submission state.
 	 */
-	function fullyReset() {
+	function reset() {
 		resetSubmissionState()
 		clearErrors()
-		reset()
+		resetFields()
 	}
 
 	/**
-	 * Resets the form to its initial values.
+	 * Resets the fields to their initial values.
 	 */
-	function reset(...keys: P[]) {
+	function resetFields(...keys: P[]) {
 		if (keys.length === 0) {
 			keys = Object.keys(fields) as P[]
 		}
@@ -188,7 +188,7 @@ export function useForm<
 						setInitial(fields)
 					}
 					if (optionsWithOverrides.reset !== false) {
-						reset()
+						resetFields()
 					}
 					successful.value = true
 					recentlySuccessful.value = true
@@ -264,6 +264,7 @@ export function useForm<
 	}, { deep: true, immediate: true })
 
 	return reactive({
+		resetFields,
 		reset,
 		resetSubmissionState,
 		clear,
@@ -274,7 +275,6 @@ export function useForm<
 		clearError,
 		setInitial,
 		hasDirty,
-		fullyReset,
 		submitWith: submit,
 		/** @deprecated Use `submitWith` instead */
 		submitWithOptions: submit,
