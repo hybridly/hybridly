@@ -9,7 +9,10 @@ use Illuminate\Foundation\ViteManifestNotFoundException;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-/** @mixin Handler */
+/**
+ * @mixin Handler
+ * @deprecated Use `\Hybridly\Exceptions\HandleHybridExceptions` instead.
+ */
 trait HandlesHybridExceptions
 {
     /**
