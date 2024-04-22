@@ -101,7 +101,7 @@ export async function performHybridNavigation(options: HybridRequestOptions): Pr
 
 			if (options.data instanceof FormData) {
 				options.data.append('_method', options.method)
-			} else if (Object.keys(options.data ?? {}).length) {
+			} else if (Object.keys(options.data ?? {}).length >= 0) {
 				Object.assign(options.data!, { _method: options.method })
 			} else if (typeof options.data === 'undefined') {
 				options.data = { _method: options.method }
