@@ -31,7 +31,7 @@ defineProps<{
 
 ```vue [components/base-modal.vue]
 <script setup lang="ts">
-const { show, close, unmount } = useDialog() // [!code focus]
+const { show, close, unmount } = useDialog()
 
 defineProps<{
   title?: string
@@ -43,12 +43,12 @@ defineProps<{
     appear
     as="template"
     :show="show"
-    @after-leave="unmount" // [!code focus] // [!code hl]
+    @after-leave="unmount"
   >
-		<headless-dialog // [!code focus:5]
+		<headless-dialog
       as="div"
       class="relative z-30"
-      @close="close" // [!code hl]
+      @close="close"
     >
 			<headless-transition-child
 				as="template"
@@ -76,19 +76,19 @@ defineProps<{
 						<headless-dialog-panel class="relative overflow-hidden flex flex-col rounded-lg bg-white px-4 pt-5 pb-4 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-2xl sm:p-6">
 							<div class="justify-between flex items-center mb-2">
 								<headless-dialog-title v-if="title" as="h3" class="text-lg font-medium leading-6 text-gray-800" v-text="title" />
-								<button  // [!code focus:5]
+								<button
 									type="button"
 									class="rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-									@click="close" // [!code hl]
+									@click="close"
 								>
 									<span class="sr-only">Close</span>
 									<i-mdi-close class="h-6 w-6" aria-hidden="true" />
-								</button> // [!code focus]
+								</button>
 							</div>
 							<div class="sm:flex sm:items-start">
 								<div class="mt-3 text-center sm:mt-0 sm:text-left w-full">
 									<div class="mt-2 w-full">
-										<slot /> // [!code focus]
+										<slot />
 									</div>
 								</div>
 							</div>
@@ -116,18 +116,26 @@ The `base` method takes the name of a route and its parameters are arguments. Wh
 use App\Data\ChirpData;
 use App\Models\Chirp;
 
+use function Hybridly\view;
+
 class ChirpController extends Controller  
 {
     public function edit(Chirp $chirp)
     {
         $this->authorize('edit', $chirp);
 
-        return hybridly('chirps.edit', [ // [!code focus:3]
+        return view('chirps.edit', [ // [!code focus:3]
             'chirp' => ChirpData::from($chirp),
         ])->base('chirp.show', $chirp); // [!code hl]
     }
 }   
 ```
+
+### Forcing the base page
+
+You may set the `force` parameter of the `base` method to `true` if you want to force the base page to be displayed when rendering the dialog. 
+
+This means that every time that dialog is opened, its background page will no longer be the current page, but the specified base page.
 
 ## Closing a dialog
 
