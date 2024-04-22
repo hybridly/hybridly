@@ -26,6 +26,7 @@ class Factory implements HybridResponse
     protected ?View $view = null;
     protected ?View $dialogView = null;
     protected ?string $dialogBaseUrl = null;
+    protected bool $redirectToDialogBase = false;
 
     public function __construct(
         protected Hybridly $hybridly,
@@ -37,8 +38,10 @@ class Factory implements HybridResponse
 
     /**
      * Sets the base route for this view, implying a dialog will be rendered.
+     * Setting `force` to `true` will always force a redirect to the base view
+     * instead of opening the dialog in the current page during hybrid navigations.
      */
-    public function base(string $route, mixed $parameters = null): static
+    public function base(string $route, mixed $parameters = null, bool $force = false): static
     {
         // In order to provide autocompletion support without adding
         // a `baseUrl` method, we check if `$route` is a named
@@ -47,6 +50,10 @@ class Factory implements HybridResponse
         $this->dialogBaseUrl = Route::has($route)
             ? route($route, $parameters)
             : $route;
+
+        if ($force) {
+            $this->redirectToDialogBase = true;
+        }
 
         return $this;
     }
@@ -169,14 +176,21 @@ class Factory implements HybridResponse
         [$properties] = $this->resolveProperties($payload->dialog, $request);
 
         return new Payload(
-            view: $this->getBaseView($payload->dialog->redirectUrl, $request),
+            view: $this->getBaseView(
+                targetUrl: $this->redirectToDialogBase
+                    ? $payload->dialog->baseUrl
+                    : $payload->dialog->redirectUrl,
+                originalRequest: $request,
+            ),
             url: $payload->url,
             version: $payload->version,
             dialog: new Dialog(
                 component: $payload->dialog->component,
                 properties: $properties,
                 baseUrl: $payload->dialog->baseUrl,
-                redirectUrl: $payload->dialog->redirectUrl,
+                redirectUrl: $this->redirectToDialogBase
+                    ? $payload->dialog->baseUrl
+                    : $payload->dialog->redirectUrl,
                 key: $payload->dialog->key,
             ),
         );
