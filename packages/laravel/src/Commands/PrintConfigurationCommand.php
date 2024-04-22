@@ -10,7 +10,7 @@ use Illuminate\Console\Command;
 
 class PrintConfigurationCommand extends Command
 {
-    protected $signature = 'hybridly:config {--pretty}';
+    protected $signature = 'hybridly:config {--pretty=false}';
     protected $description = 'Prints the internal Hybridly configuration.';
     protected $hidden = true;
 
@@ -37,10 +37,10 @@ class PrintConfigurationCommand extends Command
             ],
             'components' => [
                 'eager' => Configuration::get()->architecture->eagerLoadViews,
-                'layouts' => $this->hybridly->getViewFinder()->getLayouts(),
-                'views' => $this->hybridly->getViewFinder()->getViews(),
-                'components' => $this->hybridly->getViewFinder()->getComponents(),
-                'files' => $this->hybridly->getViewFinder()->getTypeScriptDirectories(),
+                'layouts' => $this->hybridly->getLayouts(),
+                'views' => $this->hybridly->getViews(),
+                'components' => $this->hybridly->getComponents(),
+                'files' => $this->hybridly->getTypeScriptDirectories(),
             ],
             'routing' => $this->routeExtractor->toArray(),
         ];
@@ -55,10 +55,10 @@ class PrintConfigurationCommand extends Command
             $pretty = true;
         }
 
-        echo json_encode(
+        $this->output->write(json_encode(
             value: $configuration,
             flags: $pretty ? \JSON_PRETTY_PRINT | \JSON_UNESCAPED_SLASHES : 0,
-        );
+        ));
 
         return self::SUCCESS;
     }

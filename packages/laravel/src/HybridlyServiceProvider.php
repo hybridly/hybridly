@@ -2,6 +2,8 @@
 
 namespace Hybridly;
 
+use Hybridly\Architecture\ComponentsResolver;
+use Hybridly\Architecture\LazyComponentsResolver;
 use Hybridly\Commands\GenerateGlobalTypesCommand;
 use Hybridly\Commands\I18nCommand;
 use Hybridly\Commands\InstallCommand;
@@ -14,6 +16,7 @@ use Hybridly\Support\RayDumper;
 use Hybridly\Support\Version;
 use Hybridly\Tables\Actions\Http\InvokedActionController;
 use Hybridly\Testing\TestResponseMacros;
+use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Foundation\CachesRoutes;
 use Illuminate\Foundation\Console\AboutCommand;
 use Illuminate\Foundation\Vite;
@@ -95,8 +98,9 @@ class HybridlyServiceProvider extends PackageServiceProvider
 
     protected function registerBindings(): void
     {
+        $this->app->singleton(Configuration::class, fn (Application $app) => Configuration::fromArray($app['config']['hybridly'] ?? []));
+        $this->app->singleton(ComponentsResolver::class, fn (Application $app) => new LazyComponentsResolver($app[Configuration::class]));
         $this->app->singleton(Hybridly::class);
-        $this->app->singleton(Configuration::class, fn ($app) => Configuration::fromArray($app['config']['hybridly'] ?? []));
     }
 
     protected function registerDirectives(): void

@@ -1,10 +1,10 @@
 <?php
 
-namespace Hybridly\Support;
+namespace Hybridly\Architecture;
 
 use Hybridly\Support\Configuration\Configuration;
 
-final class VueViewFinder
+class LazyComponentsResolver implements ComponentsResolver
 {
     protected const DEFAULT_DEPTH = 20;
 
@@ -23,21 +23,28 @@ final class VueViewFinder
     /** @var string[] */
     protected array $extensions = [];
 
+    protected IdentifierGenerator $identifierGenerator;
+
     public function __construct(
         private readonly Configuration $configuration,
     ) {
+        $this->identifierGenerator = new KebabCaseIdentifierGenerator();
         $this->extensions = array_map(
-            callback: fn (string $extension) => ".{$extension}",
+            callback: fn (string $extension) => str($extension)->start('.')->toString(),
             array: $configuration->architecture->extensions,
         );
     }
 
-    /**
-     * Loads view files from the given directory and associates them to the given namespace.
-     */
+    public function setIdentifierGenerator(IdentifierGenerator $identifierGenerator): static
+    {
+        $this->identifierGenerator = $identifierGenerator;
+
+        return $this;
+    }
+
     public function loadViewsFrom(string $directory, null|string|array $namespace = null, ?int $depth = null): static
     {
-        $this->views = array_merge($this->views, $this->findVueFiles(
+        $this->views[] = fn () => $this->findVueFiles(
             directory: $directory,
             baseDirectory: $directory,
             namespace: $namespace,
@@ -46,61 +53,46 @@ final class VueViewFinder
                 $this->configuration->architecture->layoutsDirectory,
                 $this->configuration->architecture->componentsDirectory,
             ]), strict: true),
-        ));
+        );
 
         return $this;
     }
 
-    /**
-     * Loads layout files from the given directory and associates them to the given namespace.
-     */
     public function loadLayoutsFrom(string $directory, null|string|array $namespace = null): static
     {
-        $this->layouts = array_merge($this->layouts, $this->findVueFiles(
+        $this->layouts[] = fn () => $this->findVueFiles(
             directory: $directory,
             baseDirectory: $directory,
             namespace: $namespace,
-        ));
+        );
 
         return $this;
     }
 
-    /**
-     * Loads component files from the given directory and associates them to the given namespace.
-     */
     public function loadComponentsFrom(string $directory, null|string|array $namespace = null): static
     {
-        $this->components = array_merge($this->components, $this->findVueFiles(
+        $this->components[] = fn () => $this->findVueFiles(
             directory: $directory,
             baseDirectory: $directory,
             namespace: $namespace,
-        ));
+        );
 
         return $this;
     }
 
-    /**
-     * Auto-import TypeScript files from the given directory.
-     */
     public function loadTypeScriptFilesFrom(string $directory, bool $deep = false): static
     {
-        $this->loadedTypeScriptDirectories = [
-            ...$this->loadedTypeScriptDirectories,
-            $deep
-                ? str($directory)->finish('/**/*.ts')->toString()
-                : str($directory)->finish('/*.ts')->toString(),
-        ];
+        $this->loadedTypeScriptDirectories[] = $deep
+            ? fn () => str($directory)->finish('/**/*.ts')->toString()
+            : fn () => str($directory)->finish('/*.ts')->toString();
 
         return $this;
     }
 
-    /**
-     * Loads a namespaced module and its views, layouts and components.
-     */
     public function loadModuleFrom(
         string $directory,
         null|string|array $namespace,
-        bool $deep,
+        bool $deep = false,
         bool $loadViews = true,
         bool $loadLayouts = true,
         bool $loadComponents = true,
@@ -109,31 +101,32 @@ final class VueViewFinder
         $namespace ??= str($directory)->basename()->kebab();
 
         if ($loadTypeScript) {
-            rescue(fn () => $this->loadTypeScriptFilesFrom($directory, $deep), report: false);
+            $this->loadTypeScriptFilesFrom($directory, $deep);
         }
 
         if ($loadViews) {
-            rescue(fn () => $this->loadViewsFrom($deep ? $directory : ($directory . '/' . $this->configuration->architecture->viewsDirectory), $namespace), report: false);
+            $this->loadViewsFrom($deep ? $directory : ($directory . '/' . $this->configuration->architecture->viewsDirectory), $namespace);
         }
 
         if ($loadLayouts) {
-            rescue(fn () => $this->loadLayoutsFrom($directory . '/' . $this->configuration->architecture->layoutsDirectory, $namespace), report: false);
+            $this->loadLayoutsFrom($directory . '/' . $this->configuration->architecture->layoutsDirectory, $namespace);
         }
 
         if ($loadComponents) {
-            rescue(fn () => $this->loadComponentsFrom($directory . '/' . $this->configuration->architecture->componentsDirectory, $namespace), report: false);
+            $this->loadComponentsFrom($directory . '/' . $this->configuration->architecture->componentsDirectory, $namespace);
         }
 
         return $this;
     }
 
-    /**
-     * Loads all modules in the given directory.
-     */
     public function loadModulesFrom(string $directory, bool $deep): void
     {
+        if (!is_dir($directory)) {
+            return;
+        }
+
         foreach (scandir($directory) as $namespace) {
-            if (\in_array($namespace, ['.', '..'], true)) {
+            if (\in_array($namespace, ['.', '..'], strict: true)) {
                 continue;
             }
 
@@ -145,54 +138,57 @@ final class VueViewFinder
         }
     }
 
-    /**
-     * Gets namespaced view files.
-     *
-     * @return array<{path: string, identifier: string}>
-     */
     public function getViews(): array
     {
-        return $this->views;
+        return $this->evaluateComponentCollection($this->views);
     }
 
-    /**
-     * Determines whether the given identifier is registered as a view.
-     */
+    public function getLayouts(): array
+    {
+        return $this->evaluateComponentCollection($this->layouts);
+    }
+
+    public function getComponents(): array
+    {
+        return $this->evaluateComponentCollection($this->components);
+    }
+
+    public function getTypeScriptDirectories(): array
+    {
+        return array_map('call_user_func', $this->loadedTypeScriptDirectories);
+    }
+
+    public function getExtensions(): array
+    {
+        return $this->extensions;
+    }
+
     public function hasView(string $identifier): bool
     {
-        return collect($this->views)->contains(function (array $view) use ($identifier) {
+        return collect($this->getViews())->contains(function (array $view) use ($identifier) {
             return $view['identifier'] === $identifier;
         });
     }
 
-    /**
-     * Gets namespaced layouts files.
-     *
-     * @return array<{path: string, identifier: string}>
-     */
-    public function getLayouts(): array
+    public function unload(bool $views = true, bool $layouts = true, bool $components = true, bool $typeScriptDirectories = true): static
     {
-        return $this->layouts;
-    }
+        if ($views) {
+            $this->views = [];
+        }
 
-    /**
-     * Gets namespaced layouts files.
-     *
-     * @return array<{path: string, identifier: string}>
-     */
-    public function getComponents(): array
-    {
-        return $this->components;
-    }
+        if ($layouts) {
+            $this->layouts = [];
+        }
 
-    /**
-     * Gets directories from which TypeScript files should be loaded.
-     *
-     * @return string[]
-     */
-    public function getTypeScriptDirectories(): array
-    {
-        return $this->loadedTypeScriptDirectories;
+        if ($components) {
+            $this->components = [];
+        }
+
+        if ($typeScriptDirectories) {
+            $this->loadedTypeScriptDirectories = [];
+        }
+
+        return $this;
     }
 
     /**
@@ -211,6 +207,10 @@ final class VueViewFinder
         $filter ??= fn () => true;
         $files = [];
 
+        if (!is_dir($directory)) {
+            return [];
+        }
+
         foreach (scandir($directory) as $file) {
             if (\in_array($file, ['.', '..'], true)) {
                 continue;
@@ -225,11 +225,11 @@ final class VueViewFinder
             if (is_dir($path)) {
                 $files = array_merge($files, $this->findVueFiles($path, $baseDirectory, $namespace, $depth - 1, $filter));
             } else {
-                if (str($path)->endsWith($this->extensions)) {
+                if (str($path)->endsWith($this->getExtensions())) {
                     $files[] = [
                         'namespace' => $namespace,
                         'path' => str($path)->replaceStart(base_path(), '')->ltrim('/\\')->toString(),
-                        'identifier' => $this->getIdentifier($path, $baseDirectory, $namespace),
+                        'identifier' => $this->identifierGenerator->generate($this, $path, $baseDirectory, $namespace),
                     ];
                 }
             }
@@ -238,22 +238,11 @@ final class VueViewFinder
         return $files;
     }
 
-    /**
-     * An identifier is a dot-notated path from the base directory to the Vue file.
-     */
-    protected function getIdentifier(string $path, string $baseDirectory, string $namespace): string
+    protected function evaluateComponentCollection(array $collection): array
     {
-        return str(
-            str($path)
-                ->after($baseDirectory)
-                ->ltrim('/\\')
-                ->replace(['/', '\\'], '.')
-                ->replace($this->extensions, '')
-                ->explode('.')
-                ->map(fn (string $str) => str($str)->kebab())
-                ->join('.'),
-        )
-            ->when($namespace !== 'default')
-            ->prepend("{$namespace}::");
+        return collect($collection)
+            ->flatMap('call_user_func')
+            ->unique('identifier')
+            ->all();
     }
 }

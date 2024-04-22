@@ -1,10 +1,9 @@
 <?php
 
-namespace Hybridly\Support;
+namespace Hybridly\View;
 
 use Hybridly\Hybridly;
-use Hybridly\View\Dialog;
-use Hybridly\View\View;
+use Hybridly\Support\Header;
 use Illuminate\Contracts\Routing\UrlGenerator;
 use Illuminate\Http\Request;
 

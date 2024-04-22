@@ -104,11 +104,11 @@ class Middleware
      */
     public function version(Request $request): \Closure|string|false|null
     {
-        if (class_exists($vite = Innocenzi\Vite\Vite::class)) {
+        if (class_exists($vite = \Innocenzi\Vite\Vite::class)) {
             return resolve($vite)->getHash();
         }
 
-        if (class_exists(Illuminate\Foundation\Vite::class)) {
+        if (class_exists(\Illuminate\Foundation\Vite::class)) {
             return Vite::manifestHash();
         }
 
