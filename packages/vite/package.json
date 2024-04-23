@@ -1,6 +1,6 @@
 {
   "name": "@hybridly/vite",
-  "version": "0.7.3",
+  "version": "0.7.4",
   "description": "Vite plugin for Hybridly",
   "keywords": [
     "hybridly",
