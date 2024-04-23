@@ -101,10 +101,10 @@ export async function performHybridNavigation(options: HybridRequestOptions): Pr
 
 			if (options.data instanceof FormData) {
 				options.data.append('_method', options.method)
-			} else if (Object.keys(options.data ?? {}).length >= 0) {
-				Object.assign(options.data!, { _method: options.method })
 			} else if (typeof options.data === 'undefined') {
 				options.data = { _method: options.method }
+			}	else if (options.data instanceof Object && Object.keys(options.data).length >= 0) {
+				Object.assign(options.data!, { _method: options.method })
 			} else {
 				debug.router('Could not spoof method because body type is not supported.', options.data)
 			}
