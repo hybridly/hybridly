@@ -46,8 +46,6 @@ class GenerateGlobalTypesCommand extends Command
 
         try {
             $collection = (new TypeScriptTransformer($config))->transform();
-
-            throw new \Exception();
         } catch (\Exception $exception) {
             $this->components->error($exception->getMessage());
             $this->exitCode = !$this->option('allow-failures')
@@ -90,7 +88,6 @@ class GenerateGlobalTypesCommand extends Command
 
         $namespace ??= null;
 
-        File::ensureDirectoryExists(\dirname(base_path(self::GLOBAL_PROPERTIES_PATH)));
         File::put(
             base_path(self::GLOBAL_PROPERTIES_PATH),
             $this->getGlobalHybridPropertiesInterface($config, $namespace),
