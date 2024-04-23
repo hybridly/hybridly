@@ -17,10 +17,10 @@ trait HasSharedProperties
     {
         if (\is_array($key)) {
             $this->sharedProperties = array_merge($this->sharedProperties, $key);
-        } elseif ($key instanceof Arrayable) {
-            $this->sharedProperties = array_merge($this->sharedProperties, $key->toArray());
         } elseif ($key instanceof Hybridable) {
             $this->sharedProperties = array_merge($this->sharedProperties, $key->toHybridArray());
+        } elseif ($key instanceof Arrayable) {
+            $this->sharedProperties = array_merge($this->sharedProperties, $key->toArray());
         } else {
             Arr::set($this->sharedProperties, $key, value($value));
         }

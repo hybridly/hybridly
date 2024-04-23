@@ -163,12 +163,12 @@ class Factory implements HybridResponse
 
     protected function transformProperties(array|Arrayable|TransformableData $properties): array
     {
-        if ($properties instanceof Arrayable || $properties instanceof TransformableData) {
-            $properties = $properties->toArray();
-        }
-
         if ($properties instanceof Hybridable) {
             $properties = $properties->toHybridArray();
+        }
+
+        if ($properties instanceof Arrayable || $properties instanceof TransformableData) {
+            $properties = $properties->toArray();
         }
 
         return $properties;

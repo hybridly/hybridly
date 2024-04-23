@@ -17,10 +17,10 @@ trait HasPersistentProperties
     {
         if (\is_array($properties)) {
             $this->persistent = array_merge($this->persistent, $properties);
-        } elseif ($properties instanceof Arrayable) {
-            $this->persistent = array_merge($this->persistent, $properties->toArray());
         } elseif ($properties instanceof Hybridable) {
             $this->persistent = array_merge($this->persistent, $properties->toHybridArray());
+        } elseif ($properties instanceof Arrayable) {
+            $this->persistent = array_merge($this->persistent, $properties->toArray());
         } else {
             $this->persistent[] = $properties;
         }

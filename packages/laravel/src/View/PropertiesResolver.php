@@ -74,12 +74,12 @@ final class PropertiesResolver
         $deferred = [];
 
         foreach ($properties as $key => $value) {
-            if ($value instanceof Arrayable) {
-                $value = $value->toArray();
-            }
-
             if ($value instanceof Hybridable) {
                 $value = $value->toHybridArray();
+            }
+
+            if ($value instanceof Arrayable) {
+                $value = $value->toArray();
             }
 
             if (\is_array($value)) {
@@ -100,12 +100,12 @@ final class PropertiesResolver
     protected function resolveArrayableProperties(array $properties, bool $unpackDotProps = true): array
     {
         foreach ($properties as $key => $value) {
-            if ($value instanceof Arrayable) {
-                $value = $value->toArray();
-            }
-
             if ($value instanceof Hybridable) {
                 $value = $value->toHybridArray();
+            }
+
+            if ($value instanceof Arrayable) {
+                $value = $value->toArray();
             }
 
             if (\is_array($value)) {

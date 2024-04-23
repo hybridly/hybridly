@@ -35,12 +35,12 @@ class Arr extends SupportArr
         $array = \is_callable($callback) ? array_filter($array, $callback) : array_filter($array);
 
         foreach ($array as &$value) {
-            if ($value instanceof Arrayable) {
-                $value = $value->toArray();
-            }
-
             if ($value instanceof Hybridable) {
                 $value = $value->toHybridArray();
+            }
+
+            if ($value instanceof Arrayable) {
+                $value = $value->toArray();
             }
 
             if (\is_array($value)) {
