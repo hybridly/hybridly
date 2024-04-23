@@ -3,6 +3,7 @@
 use Hybridly\Exceptions\MissingViewComponentException;
 use Hybridly\Support\Configuration\Architecture;
 use Hybridly\Support\Header;
+use Hybridly\Support\Hybridable;
 use Hybridly\View\Factory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -88,6 +89,40 @@ test('hybridly responses to non-hybridly requests', function () {
             'component' => 'users.edit',
             'properties' => [
                 'user' => 'Makise Kurisu',
+            ],
+            'deferred' => [],
+        ],
+    ]);
+});
+
+test('`Hybridable` classes are serialized', function () {
+    hybridly()->setRootView(Architecture::ROOT_VIEW);
+    hybridly()->setVersion('123');
+
+    $request = mock_request(url: '/users/makise', hybridly: true, bind: true);
+    $factory = hybridly('users.edit', ['user' => new class () implements Hybridable
+    {
+        public function toHybridArray(): array
+        {
+            return ['full_name' => 'Makise Kurisu'];
+        }
+    }]);
+
+    $response = $factory->toResponse($request);
+    $payload = $response->getOriginalContent();
+
+    expect($factory)->toBeInstanceOf(Factory::class);
+    expect($response)->toBeInstanceOf(JsonResponse::class);
+    expect($payload)->toMatchArray([
+        'dialog' => null,
+        'version' => '123',
+        'url' => 'http://localhost/users/makise',
+        'view' => [
+            'component' => 'users.edit',
+            'properties' => [
+                'user' => [
+                    'full_name' => 'Makise Kurisu',
+                ],
             ],
             'deferred' => [],
         ],

@@ -2,6 +2,7 @@
 
 namespace Hybridly\Concerns;
 
+use Hybridly\Support\Hybridable;
 use Illuminate\Contracts\Support\Arrayable;
 
 trait HasPersistentProperties
@@ -18,6 +19,8 @@ trait HasPersistentProperties
             $this->persistent = array_merge($this->persistent, $properties);
         } elseif ($properties instanceof Arrayable) {
             $this->persistent = array_merge($this->persistent, $properties->toArray());
+        } elseif ($properties instanceof Hybridable) {
+            $this->persistent = array_merge($this->persistent, $properties->toHybridArray());
         } else {
             $this->persistent[] = $properties;
         }

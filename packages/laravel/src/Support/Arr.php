@@ -39,6 +39,10 @@ class Arr extends SupportArr
                 $value = $value->toArray();
             }
 
+            if ($value instanceof Hybridable) {
+                $value = $value->toHybridArray();
+            }
+
             if (\is_array($value)) {
                 $value = static::filterRecursive($value, $callback);
             }

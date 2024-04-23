@@ -6,6 +6,7 @@ use Hybridly\Contracts\HybridResponse;
 use Hybridly\Exceptions\MissingViewComponentException;
 use Hybridly\Hybridly;
 use Hybridly\Support\Header;
+use Hybridly\Support\Hybridable;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\JsonResponse;
@@ -164,6 +165,10 @@ class Factory implements HybridResponse
     {
         if ($properties instanceof Arrayable || $properties instanceof TransformableData) {
             $properties = $properties->toArray();
+        }
+
+        if ($properties instanceof Hybridable) {
+            $properties = $properties->toHybridArray();
         }
 
         return $properties;

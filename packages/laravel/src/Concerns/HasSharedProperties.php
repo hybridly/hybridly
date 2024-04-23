@@ -3,6 +3,7 @@
 namespace Hybridly\Concerns;
 
 use Hybridly\Support\Arr;
+use Hybridly\Support\Hybridable;
 use Illuminate\Contracts\Support\Arrayable;
 
 trait HasSharedProperties
@@ -18,6 +19,8 @@ trait HasSharedProperties
             $this->sharedProperties = array_merge($this->sharedProperties, $key);
         } elseif ($key instanceof Arrayable) {
             $this->sharedProperties = array_merge($this->sharedProperties, $key->toArray());
+        } elseif ($key instanceof Hybridable) {
+            $this->sharedProperties = array_merge($this->sharedProperties, $key->toHybridArray());
         } else {
             Arr::set($this->sharedProperties, $key, value($value));
         }
