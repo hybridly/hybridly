@@ -12,7 +12,7 @@ function getRunOptions(options: ViteOptions): Runner[] {
 	return [
 		{
 			name: 'Generate TypeScript types',
-			run: [php, 'artisan', 'hybridly:types'],
+			run: [php, 'artisan', 'hybridly:types', (options.allowTypeGenerationFailures !== false) ? '--allow-failures' : ''].filter(Boolean),
 			pattern: [
 				'+(app|src)/**/*Data.php',
 				'+(app|src)/**/Enums/*.php',

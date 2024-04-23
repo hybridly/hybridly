@@ -19,7 +19,7 @@ class GenerateGlobalTypesCommand extends Command
     protected const PHP_TYPES_PATH = '.hybridly/php-types.d.ts';
     protected const GLOBAL_PROPERTIES_PATH = '.hybridly/global-properties.d.ts';
 
-    protected $signature = 'hybridly:types';
+    protected $signature = 'hybridly:types {--allow-failures}';
     protected $description = 'Generates the global types definitions for the front-end.';
     protected $hidden = true;
 
@@ -46,9 +46,13 @@ class GenerateGlobalTypesCommand extends Command
 
         try {
             $collection = (new TypeScriptTransformer($config))->transform();
+
+            throw new \Exception();
         } catch (\Exception $exception) {
             $this->components->error($exception->getMessage());
-            $this->exitCode = self::FAILURE;
+            $this->exitCode = !$this->option('allow-failures')
+                ? self::FAILURE
+                : self::SUCCESS;
 
             return;
         }
@@ -79,11 +83,14 @@ class GenerateGlobalTypesCommand extends Command
             $namespace = $this->getGlobalPropertiesNamespace($config);
         } catch (\Exception $exception) {
             $this->components->error($exception->getMessage());
-            $this->exitCode = self::FAILURE;
+            $this->exitCode = !$this->option('allow-failures')
+                ? self::FAILURE
+                : self::SUCCESS;
         }
 
         $namespace ??= null;
 
+        File::ensureDirectoryExists(\dirname(base_path(self::GLOBAL_PROPERTIES_PATH)));
         File::put(
             base_path(self::GLOBAL_PROPERTIES_PATH),
             $this->getGlobalHybridPropertiesInterface($config, $namespace),

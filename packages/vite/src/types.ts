@@ -34,6 +34,8 @@ export interface ViteOptions {
 	tsconfig?: TsConfigOptions
 	/** Warns when displaying local builds. */
 	warnOnLocalBuilds?: boolean
+	/** Type generation failures will return exit code zero if this option is `true`. */
+	allowTypeGenerationFailures?: boolean
 }
 
 export interface LayoutOptions {
