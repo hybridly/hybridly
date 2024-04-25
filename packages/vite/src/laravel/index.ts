@@ -7,6 +7,7 @@ import { loadEnv } from 'vite'
 import type { DynamicConfiguration } from '@hybridly/core'
 import type { InputOption } from 'rollup'
 import type { ViteOptions } from '../types'
+import { determineDevEnvironment } from '../config/env'
 import { isIpv6 } from './utils'
 import { resolveDevelopmentEnvironmentServerConfig, resolveEnvironmentServerConfig } from './dev-env'
 
@@ -102,11 +103,17 @@ export default function laravel(options: ViteOptions, hybridlyConfig: DynamicCon
 					version += `${colors.yellow(`v${hybridlyConfig.versions.npm}`)} ${colors.dim('(npm)')}`
 					version += ` — ${colors.yellow('this may lead to undefined behavior')}`
 
+					const devEnvironment = determineDevEnvironment()
+
 					setTimeout(() => {
 						server.config.logger.info(`\n  ${colors.magenta(`${colors.bold('HYBRIDLY')} v${hybridlyConfig.versions.composer}`)}  ${latest}`)
 						server.config.logger.info('')
 						server.config.logger.info(`  ${colors.green('➜')}  ${colors.bold('URL')}: ${colors.cyan(hybridlyConfig.routing.url)}`)
 						server.config.logger.info(`  ${colors.green('➜')}  ${colors.bold('Registered')}: ${registered}`)
+
+						if (devEnvironment) {
+							server.config.logger.info(`  ${colors.green('➜')}  ${colors.bold('Detected dev environment')}: ${devEnvironment}`)
+						}
 
 						if (hybridlyConfig.versions.composer !== hybridlyConfig.versions.npm) {
 							server.config.logger.info(`  ${colors.yellow('➜')}  ${colors.bold('Version mismatch')}: ${version}`)
