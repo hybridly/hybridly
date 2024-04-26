@@ -39,8 +39,6 @@ jobs:
 
       - name: Install pnpm
         uses: pnpm/action-setup@v3
-        with:
-          version: latest
 
       - name: Setup PHP ${{ matrix.php }}
         uses: shivammathur/setup-php@v2
