@@ -80,7 +80,7 @@ export default function laravel(options: ViteOptions, hybridlyConfig: DynamicCon
 			const envDir = resolvedConfig.envDir || process.cwd()
 			const appUrl = loadEnv(resolvedConfig.mode, envDir, 'APP_URL').APP_URL ?? 'undefined'
 
-			server.httpServer?.once('listening', () => {
+			server.httpServer?.once('listening', async() => {
 				const address = server.httpServer?.address()
 				const isAddressInfo = (x: string | AddressInfo | null | undefined): x is AddressInfo => typeof x === 'object'
 
@@ -103,7 +103,7 @@ export default function laravel(options: ViteOptions, hybridlyConfig: DynamicCon
 					version += `${colors.yellow(`v${hybridlyConfig.versions.npm}`)} ${colors.dim('(npm)')}`
 					version += ` — ${colors.yellow('this may lead to undefined behavior')}`
 
-					const devEnvironment = determineDevEnvironment()
+					const devEnvironment = await determineDevEnvironment()
 
 					setTimeout(() => {
 						server.config.logger.info(`\n  ${colors.magenta(`${colors.bold('HYBRIDLY')} v${hybridlyConfig.versions.composer}`)}  ${latest}`)
@@ -111,8 +111,8 @@ export default function laravel(options: ViteOptions, hybridlyConfig: DynamicCon
 						server.config.logger.info(`  ${colors.green('➜')}  ${colors.bold('URL')}: ${colors.cyan(hybridlyConfig.routing.url)}`)
 						server.config.logger.info(`  ${colors.green('➜')}  ${colors.bold('Registered')}: ${registered}`)
 
-						if (devEnvironment) {
-							server.config.logger.info(`  ${colors.green('➜')}  ${colors.bold('Detected dev environment')}: ${devEnvironment}`)
+						if (devEnvironment !== 'native') {
+							server.config.logger.info(`  ${colors.green('➜')}  ${colors.bold('Development environment')}: ${colors.cyan(devEnvironment)}`)
 						}
 
 						if (hybridlyConfig.versions.composer !== hybridlyConfig.versions.npm) {

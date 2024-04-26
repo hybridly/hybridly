@@ -3,12 +3,13 @@ import type { Runner } from 'vite-plugin-run'
 import type { ViteOptions } from '../types'
 import { getPhpExecutable } from '../config/env'
 
-function getRunOptions(options: ViteOptions): Runner[] {
+async function getRunOptions(options: ViteOptions): Promise<Runner[]> {
 	if (options.run === false) {
 		return []
 	}
 
-	const php = getPhpExecutable()
+	// Explicit typing is needed to please TypeScript
+	const php: string[] = await getPhpExecutable()
 
 	return [
 		{
