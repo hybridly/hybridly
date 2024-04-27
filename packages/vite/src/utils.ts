@@ -1,6 +1,10 @@
+import { exec } from 'node:child_process'
+import { promisify } from 'node:util'
 import makeDebugger from 'debug'
 import { importModule, isPackageExists, resolveModule } from 'local-pkg'
 import { LAYOUT_PLUGIN_NAME, CONFIG_PLUGIN_NAME } from './constants'
+
+export const execSync = promisify(exec)
 
 export const debug = {
 	config: makeDebugger(CONFIG_PLUGIN_NAME),

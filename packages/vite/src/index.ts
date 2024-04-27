@@ -24,7 +24,7 @@ export default async function plugin(options: Options = {}) {
 		initialize(resolvedOptions, config),
 		layout(resolvedOptions, config),
 		resolvedOptions.laravel !== false && laravel(resolvedOptions, config),
-		resolvedOptions.run !== false && run(getRunOptions(resolvedOptions)),
+		resolvedOptions.run !== false && run(await getRunOptions(resolvedOptions)),
 		resolvedOptions.vueComponents !== false && vueComponents(await getVueComponentsOptions(resolvedOptions, config)),
 		resolvedOptions.autoImports !== false && autoimport(getAutoImportsOptions(resolvedOptions, config)),
 		resolvedOptions.icons !== false && icons(getIconsOptions(resolvedOptions, config)),

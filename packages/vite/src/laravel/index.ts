@@ -7,6 +7,7 @@ import { loadEnv } from 'vite'
 import type { DynamicConfiguration } from '@hybridly/core'
 import type { InputOption } from 'rollup'
 import type { ViteOptions } from '../types'
+import { determineDevEnvironment } from '../config/env'
 import { isIpv6 } from './utils'
 import { resolveDevelopmentEnvironmentServerConfig, resolveEnvironmentServerConfig } from './dev-env'
 
@@ -79,7 +80,7 @@ export default function laravel(options: ViteOptions, hybridlyConfig: DynamicCon
 			const envDir = resolvedConfig.envDir || process.cwd()
 			const appUrl = loadEnv(resolvedConfig.mode, envDir, 'APP_URL').APP_URL ?? 'undefined'
 
-			server.httpServer?.once('listening', () => {
+			server.httpServer?.once('listening', async() => {
 				const address = server.httpServer?.address()
 				const isAddressInfo = (x: string | AddressInfo | null | undefined): x is AddressInfo => typeof x === 'object'
 
@@ -102,11 +103,17 @@ export default function laravel(options: ViteOptions, hybridlyConfig: DynamicCon
 					version += `${colors.yellow(`v${hybridlyConfig.versions.npm}`)} ${colors.dim('(npm)')}`
 					version += ` — ${colors.yellow('this may lead to undefined behavior')}`
 
+					const devEnvironment = await determineDevEnvironment()
+
 					setTimeout(() => {
 						server.config.logger.info(`\n  ${colors.magenta(`${colors.bold('HYBRIDLY')} v${hybridlyConfig.versions.composer}`)}  ${latest}`)
 						server.config.logger.info('')
 						server.config.logger.info(`  ${colors.green('➜')}  ${colors.bold('URL')}: ${colors.cyan(hybridlyConfig.routing.url)}`)
 						server.config.logger.info(`  ${colors.green('➜')}  ${colors.bold('Registered')}: ${registered}`)
+
+						if (devEnvironment !== 'native') {
+							server.config.logger.info(`  ${colors.green('➜')}  ${colors.bold('Development environment')}: ${colors.cyan(devEnvironment)}`)
+						}
 
 						if (hybridlyConfig.versions.composer !== hybridlyConfig.versions.npm) {
 							server.config.logger.info(`  ${colors.yellow('➜')}  ${colors.bold('Version mismatch')}: ${version}`)
