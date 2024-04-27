@@ -7,7 +7,7 @@ import { defineComponent, h, ref, shallowRef, watch } from 'vue'
 
 export const HybridFrame = defineComponent({
 	name: 'HybridFrame',
-	setup(props) {
+	setup(props, { slots }) {
 		const frame = shallowRef<Component | undefined>()
 		const key = ref<string | undefined>()
 		const properties = ref<Record<string, any>>({})
@@ -30,22 +30,32 @@ export const HybridFrame = defineComponent({
 			const payload = response.data as Frame
 			const component = payload?.component ?? props.component
 
-			if (!component) {
-				console.warn('Frames must either define or receive a component.')
-				return
-			}
+			frame.value = component
+				? await context.adapter.resolveComponent(component)
+				: undefined
 
-			frame.value = await context.adapter.resolveComponent(component)
 			properties.value = payload.properties
 			key.value = random()
 		}, { immediate: true })
 
 		return () => {
-			if (!props.href || !frame.value) {
+			if (!props.href) {
 				return
 			}
 
-			return h(frame.value, {
+			if (!frame.value && !slots?.default) {
+				console.warn('Frames must define a slot or a component.')
+				return
+			}
+
+			if (slots?.default) {
+				return slots.default({
+					...properties.value,
+					key: key.value,
+				})
+			}
+
+			return h(frame.value!, {
 				...properties.value,
 				key: key.value,
 			})
