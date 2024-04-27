@@ -67,6 +67,7 @@ export async function RadixResolver(prefix: string) {
 export function HybridlyResolver(options: ViteOptions, config: DynamicConfiguration): ComponentResolver[] {
 	return [
 		HybridlyLinkResolver(options?.vueComponents === false ? undefined : options?.vueComponents?.linkName),
+		HybridlyFrameResolver(),
 		ProvidedComponentListResolver(config),
 	]
 }
@@ -80,6 +81,21 @@ export function HybridlyLinkResolver(linkName: string = 'RouterLink'): Component
 					from: 'hybridly/vue',
 					name: 'RouterLink',
 					as: linkName,
+				}
+			}
+		},
+	}
+}
+
+export function HybridlyFrameResolver(frameName: string = 'HybridFrame'): ComponentResolver {
+	return {
+		type: 'component' as const,
+		resolve: (name: string) => {
+			if (name === frameName) {
+				return {
+					from: 'hybridly/vue',
+					name: 'HybridFrame',
+					as: frameName,
 				}
 			}
 		},

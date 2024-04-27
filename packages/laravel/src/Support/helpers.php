@@ -2,13 +2,14 @@
 
 namespace Hybridly;
 
+use Hybridly\Frame\Factory as FrameFactory;
 use Hybridly\Support\Deferred;
 use Hybridly\Support\Header;
 use Hybridly\Support\Partial;
-use Hybridly\View\Factory;
+use Hybridly\View\Factory as ViewFactory;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
-use Spatie\LaravelData\Contracts\DataObject;
+use Spatie\LaravelData\Contracts\TransformableData;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -44,15 +45,27 @@ if (!\function_exists('Hybridly\is_partial')) {
     }
 }
 
+if (!\function_exists('Hybridly\frame')) {
+    /**
+     * Returns a hybrid frame.
+     *
+     * @see https://hybridly.dev/api/laravel/functions.html#frame
+     */
+    function frame(string $component = null, array|Arrayable|TransformableData $properties = []): FrameFactory
+    {
+        return resolve(FrameFactory::class)->frame($component, $properties);
+    }
+}
+
 if (!\function_exists('Hybridly\view')) {
     /**
      * Returns a hybrid view.
      *
      * @see https://hybridly.dev/api/laravel/functions.html#view
      */
-    function view(string $component = null, array|Arrayable|DataObject $properties = []): Factory
+    function view(string $component = null, array|Arrayable|TransformableData $properties = []): ViewFactory
     {
-        return resolve(Factory::class)->view($component, $properties);
+        return resolve(ViewFactory::class)->view($component, $properties);
     }
 }
 
@@ -62,9 +75,9 @@ if (!\function_exists('Hybridly\dialog')) {
      *
      * @see https://hybridly.dev/api/laravel/functions.html#dialog
      */
-    function dialog(string $component = null, array|Arrayable|DataObject $properties = [], string $base = ''): Factory
+    function dialog(string $component = null, array|Arrayable|TransformableData $properties = [], string $base = ''): ViewFactory
     {
-        return resolve(Factory::class)
+        return resolve(ViewFactory::class)
             ->view($component, $properties)
             ->base($base);
     }
@@ -76,9 +89,9 @@ if (!\function_exists('Hybridly\properties')) {
      *
      * @see https://hybridly.dev/api/laravel/functions.html#properties
      */
-    function properties(array|Arrayable|DataObject $properties): Factory
+    function properties(array|Arrayable|TransformableData $properties): ViewFactory
     {
-        return resolve(Factory::class)->properties($properties);
+        return resolve(ViewFactory::class)->properties($properties);
     }
 }
 

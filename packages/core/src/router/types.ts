@@ -192,6 +192,13 @@ export interface View {
 	deferred: string[]
 }
 
+export interface Frame {
+	/** Name of the component to use. */
+	component?: string
+	/** Properties to apply to the component. */
+	properties: Properties
+}
+
 export interface Dialog extends Required<View> {
 	/** URL that is the base background view when navigating to the dialog directly. */
 	baseUrl: string

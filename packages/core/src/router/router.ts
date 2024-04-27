@@ -414,6 +414,9 @@ export async function navigate(options: InternalNavigationOptions) {
 	await runHooks('navigated', {}, options, context)
 }
 
+/**
+ * @internal Not for end-user purpose.
+ */
 export async function performHybridRequest(targetUrl: URL, options: HybridRequestOptions, abortController?: AbortController): Promise<AxiosResponse> {
 	const context = getInternalRouterContext()
 	const preloaded = options.method === 'GET'

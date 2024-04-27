@@ -5,8 +5,8 @@ namespace Hybridly\View;
 use Hybridly\Contracts\HybridResponse;
 use Hybridly\Exceptions\MissingViewComponentException;
 use Hybridly\Hybridly;
+use Hybridly\Support\Concerns\TransformsProperties;
 use Hybridly\Support\Header;
-use Hybridly\Support\Hybridable;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\JsonResponse;
@@ -20,6 +20,8 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class Factory implements HybridResponse
 {
+    use TransformsProperties;
+
     public const RESPONSE_EVENT = 'hybridly.response';
 
     protected ?View $view = null;
@@ -159,19 +161,6 @@ class Factory implements HybridResponse
             view: $this->hybridly->getRootView(),
             data: ['payload' => $payload->toArray()],
         );
-    }
-
-    protected function transformProperties(array|Arrayable|TransformableData $properties): array
-    {
-        if ($properties instanceof Hybridable) {
-            $properties = $properties->toHybridArray();
-        }
-
-        if ($properties instanceof Arrayable || $properties instanceof TransformableData) {
-            $properties = $properties->toArray();
-        }
-
-        return $properties;
     }
 
     protected function renderDialog(Request $request, Payload $payload)
