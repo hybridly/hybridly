@@ -131,6 +131,7 @@ export default defineConfig({
 						{ text: 'Persistent properties', link: '/guide/persistent-properties' },
 						{ text: 'Progress indicator', link: '/guide/progress-indicator' },
 						{ text: 'Hooks', link: '/guide/hooks' },
+						{ text: 'Frames', link: '/guide/frames' },
 					],
 				},
 				{
