@@ -5,7 +5,7 @@ import { determineDevEnvironment, getPhpExecutable } from './env'
 export async function loadConfiguration(laravelPath: string, basePath: string): Promise<DynamicConfiguration> {
 	try {
 		const php = (await getPhpExecutable(laravelPath)).join(' ')
-		const { stdout } = await execSync(`${php} artisan hybridly:config`)
+		const { stdout, stderr } = await execSync(`${php} artisan hybridly:config`, { cwd: laravelPath })
 
 		if (stderr) {
 			throw stderr

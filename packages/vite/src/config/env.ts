@@ -1,4 +1,4 @@
-import fs from 'node:fs'
+import fs from 'node:fs/promises'
 import { loadEnv } from 'vite'
 
 let phpExecutable: string[]
@@ -7,25 +7,23 @@ let devEnvironment: 'ddev' | 'lando' | 'native'
 /**
  * Gets all environment variables, including `.env` ones.
  */
-export function getEnv() {
-	return { ...process.env, ...loadEnv('mock', process.cwd(), '') }
+export function getEnv(laravelPath: string, prefixes: string | Array<string> = '') {
+	return { ...process.env, ...loadEnv('mock', laravelPath, prefixes) }
 }
 
-export async function getPhpExecutable(): Promise<string[]> {
+export async function getPhpExecutable(laravelPath: string): Promise<string[]> {
 	if (phpExecutable) {
 		return phpExecutable
 	}
 
-	const env = getEnv()
+	const env = getEnv(laravelPath, 'PHP_EXECUTABLE_PATH')
 	const php = (env.PHP_EXECUTABLE_PATH ?? 'php').split(' ')
 
 	if (!env.PHP_EXECUTABLE_PATH) {
 		const devEnvironment = await determineDevEnvironment()
 
-		if (devEnvironment === 'ddev') {
-			php.unshift('ddev')
-		} else if (devEnvironment === 'lando') {
-			php.unshift('lando')
+		if (devEnvironment === 'ddev' || devEnvironment === 'lando') {
+			php.unshift(devEnvironment)
 		}
 	}
 
@@ -37,13 +35,12 @@ export async function determineDevEnvironment() {
 		return devEnvironment
 	}
 
-	if (fs.existsSync(`${process.cwd()}/.ddev`)) {
-		devEnvironment = 'ddev'
-	} else if (fs.existsSync(`${process.cwd()}/.lando.yml`)) {
-		devEnvironment = 'lando'
-	} else {
-		devEnvironment = 'native'
+	try {
+		return devEnvironment = await Promise.any([
+			fs.stat(`${getLaravelPath()}/.ddev`).then(() => 'ddev'),
+			fs.stat(`${getLaravelPath()}/.lando.yml`).then(() => 'lando'),
+		])
+	} catch {
+		return devEnvironment = 'native'
 	}
-
-	return devEnvironment
 }

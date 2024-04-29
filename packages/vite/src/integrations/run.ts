@@ -4,7 +4,7 @@ import type { Runner } from 'vite-plugin-run'
 import type { ResolvedOptions } from '../types'
 import { getPhpExecutable } from '../config/env'
 
-async function getRunOptions(options: ResolvedOptions): Runner[] {
+async function getRunOptions(options: ResolvedOptions): Promise<Runner[]> {
 	if (options.run === false) {
 		return []
 	}
@@ -15,7 +15,12 @@ async function getRunOptions(options: ResolvedOptions): Runner[] {
 	return [
 		{
 			name: 'Generate TypeScript types',
-			run: [php, path.resolve(options.laravelPath, 'artisan'), 'hybridly:types'],
+			run: [
+				php,
+				path.resolve(options.laravelPath, 'artisan'),
+				'hybridly:types',
+				options.allowTypeGenerationFailures !== false ? ['--allow-failures'] : [],
+			].flat(),
 			pattern: [
 				'+(app|src)/**/*Data.php',
 				'+(app|src)/**/Enums/*.php',
@@ -24,7 +29,7 @@ async function getRunOptions(options: ResolvedOptions): Runner[] {
 		},
 		{
 			name: 'Generate i18n',
-			run: [php, path.resolve(options.laravelPath, 'artisan'), 'hybridly:i18n'],
+			run: [php, path.resolve(options.laravelPath, 'artisan'), 'hybridly:i18n'].flat(),
 			pattern: 'lang/**/*.php',
 		},
 		...options.run ?? [],

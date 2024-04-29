@@ -89,7 +89,7 @@ export default (options: ResolvedOptions, config: DynamicConfiguration): Plugin 
 		},
 		async load(id) {
 			if (id === RESOLVED_CONFIG_VIRTUAL_MODULE_ID) {
-				return getClientCode(options, config)
+				return getClientCode(config)
 			}
 		},
 		// Denies HMR for `.hybridly` content, it causes unwanted reloads

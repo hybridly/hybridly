@@ -58,9 +58,8 @@ function getAutoImportsOptions(options: ResolvedOptions, config: DynamicConfigur
 			vueTemplate: true,
 			dts: path.resolve(options.laravelPath, '.hybridly/auto-imports.d.ts'),
 			dirs: [
-				// TODO do we even need to use root_directory anymore, since we can use basePath
-				path.resolve(options.laravelPath, config.architecture.root_directory, 'utils'),
-				path.resolve(options.laravelPath, config.architecture.root_directory, 'composables'),
+				path.resolve(options.basePath, 'utils'),
+				path.resolve(options.basePath, 'composables'),
 				...config.components.files,
 			],
 			imports: options.autoImportsMap ?? [

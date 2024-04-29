@@ -1,7 +1,6 @@
 import type { DynamicConfiguration } from '@hybridly/core'
-import type { ResolvedOptions } from '../types'
 
-export function getClientCode(options: ResolvedOptions, config: DynamicConfiguration) {
+export function getClientCode(config: DynamicConfiguration) {
 	const paths = config.components.views.map(({ path }) => `"~/${path}"`).join(',')
 
 	return `

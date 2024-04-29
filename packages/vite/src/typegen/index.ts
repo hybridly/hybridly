@@ -30,7 +30,7 @@ export function generateTsConfig(options: ResolvedOptions, config: DynamicConfig
 			baseUrl: '..',
 			paths: {
 				'#/*': [
-					path.resolve(options.laravelPath, '.hybridly/*'),
+					path.resolve(options.laravelPath, '.hybridly', '*'),
 				],
 				'~/*': [
 					path.resolve(options.basePath, '*'),
