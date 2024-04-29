@@ -26,6 +26,9 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Testing\TestResponse;
 use Illuminate\View\Compilers\BladeCompiler;
 use Illuminate\View\Factory;
+use Laravel\Octane\Events\RequestReceived;
+use Laravel\Octane\Events\TaskReceived;
+use Laravel\Octane\Events\TickReceived;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 
@@ -56,6 +59,7 @@ class HybridlyServiceProvider extends PackageServiceProvider
     public function bootingPackage(): void
     {
         $this->registerActionsEndpoint();
+        $this->registerOctaneListener();
     }
 
     public function packageBooted(): void
@@ -77,6 +81,20 @@ class HybridlyServiceProvider extends PackageServiceProvider
             \Spatie\LaravelRay\Ray::macro('stopShowingHybridRequests', function () use ($dumper) {
                 $dumper->stopShowingHybridRequests();
             });
+        }
+    }
+
+    protected function registerOctaneListener(): void
+    {
+        if (!class_exists(\Laravel\Octane\Octane::class)) {
+            return;
+        }
+
+        foreach ([RequestReceived::class, TaskReceived::class, TickReceived::class] as $event) {
+            $this->app['events']->listen(
+                $event,
+                fn (RequestReceived|TaskReceived|TickReceived $event) => $event->sandbox->make(Hybridly::class)->flush(),
+            );
         }
     }
 
