@@ -26,6 +26,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Testing\TestResponse;
 use Illuminate\View\Compilers\BladeCompiler;
 use Illuminate\View\Factory;
+use Laravel\Octane\Events\RequestReceived;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 
@@ -56,6 +57,7 @@ class HybridlyServiceProvider extends PackageServiceProvider
     public function bootingPackage(): void
     {
         $this->registerActionsEndpoint();
+        $this->registerOctaneListener();
     }
 
     public function packageBooted(): void
@@ -78,6 +80,18 @@ class HybridlyServiceProvider extends PackageServiceProvider
                 $dumper->stopShowingHybridRequests();
             });
         }
+    }
+
+    protected function registerOctaneListener(): void
+    {
+        if (!class_exists(RequestReceived::class)) {
+            return;
+        }
+
+        $this->app['events']->listen(
+            RequestReceived::class,
+            fn (RequestReceived $event) => $event->sandbox->make(Hybridly::class)->flush(),
+        );
     }
 
     protected function registerArchitecture(): void
