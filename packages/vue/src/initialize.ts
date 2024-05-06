@@ -11,6 +11,7 @@ import { devtools } from './devtools'
 import { dialogStore } from './stores/dialog'
 import { onMountedCallbacks } from './stores/mount'
 import { viewTransition } from './plugins/view-transition'
+import {initResources} from "./composables/resource";
 
 /**
  * Initializes Hybridly's router and context.
@@ -39,6 +40,7 @@ export async function initializeHybridly(options: InitializeOptions = {}) {
 			},
 			onContextUpdate: (context) => {
 				state.setContext(context)
+				initResources()
 			},
 			onViewSwap: async(options) => {
 				if (options.component) {

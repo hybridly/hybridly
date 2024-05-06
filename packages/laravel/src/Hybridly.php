@@ -16,6 +16,7 @@ final class Hybridly
     use Concerns\HasSharedProperties;
     use Concerns\HasVersion;
     use Concerns\ResolvesUrls;
+    use Resources\Concerns\HasResources;
     use Conditionable;
     use ForwardsCalls, Macroable {
         Macroable::__call as macroCall;

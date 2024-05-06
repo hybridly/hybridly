@@ -10,6 +10,7 @@ use Hybridly\Commands\InstallCommand;
 use Hybridly\Commands\MakeTableCommand;
 use Hybridly\Commands\PrintConfigurationCommand;
 use Hybridly\Http\Controller;
+use Hybridly\Resources\Http\ServeResourceController;
 use Hybridly\Support\Configuration\Configuration;
 use Hybridly\Support\Data\PartialLazy;
 use Hybridly\Support\RayDumper;
@@ -204,6 +205,10 @@ class HybridlyServiceProvider extends PackageServiceProvider
             Route::post($this->getConfiguration()->tables->actionsEndpoint, InvokedActionController::class)
                 ->middleware($this->getConfiguration()->tables->actionsEndpointMiddleware)
                 ->name($this->getConfiguration()->tables->actionsEndpointName);
+
+            Route::post('/hybridly/resource', ServeResourceController::class)
+                ->middleware('web')
+                ->name('hybridly.resource');
         }
     }
 
