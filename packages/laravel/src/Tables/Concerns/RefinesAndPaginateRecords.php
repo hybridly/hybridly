@@ -11,6 +11,7 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Spatie\LaravelData\Contracts\BaseDataCollectable;
 use Spatie\LaravelData\Data;
@@ -82,6 +83,11 @@ trait RefinesAndPaginateRecords
             'links' => $pagination['links'],
             'meta' => $pagination['meta'],
         ];
+    }
+
+    protected function getRequest(): Request
+    {
+        return $this->getRefineInstance()->getRequest();
     }
 
     protected function transformRecords(Paginator|CursorPaginator $paginator): Paginator|CursorPaginator|BaseDataCollectable
