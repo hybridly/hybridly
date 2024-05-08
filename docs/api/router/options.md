@@ -97,3 +97,9 @@ Automatically [spoofs](https://laravel.com/docs/9.x/routing#form-method-spoofing
 - Type: `UrlTransformable`
 
 Object which properties will affect the provided `url`. Can also be a callback that returns an `UrlTransformable`.
+
+## `progress`
+
+= Type: `boolean`
+
+When set to `false`, the request will not have a progress bar.

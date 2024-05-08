@@ -45,6 +45,7 @@ The following is a non-exhaustive comparison table between Inertia and Hybridly'
 | Programmatic navigation                         |                        Yes                        |       [Yes](../guide/navigation.md#programmatically)       |
 | Front-end-initiated external navigation support |            <span class="no">No</span>             |           [Yes](../api/router/utils.md#external)           |
 | Back-end-initiated external navigation support  |                        Yes                        |     [Yes](../api/laravel/functions.md#to_external_url)     |
+| Disable progress bar per navigation             |            <span class="no">No</span>             |          [Yes](../api/router/options.md#progress)          |
 | Custom Axios instance support                   |            <span class="no">No</span>             |      [Yes](../api/utils/initialize-hybridly.md#axios)      |
 | Request events support                          |                        Yes                        |           [Yes](../api/router/options.md#hooks)            |
 | Global events support                           |                        Yes                        |                  [Yes](../guide/hooks.md)                  |
