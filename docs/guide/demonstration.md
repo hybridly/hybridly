@@ -56,4 +56,5 @@ The following recording is a small preview of the features of Blue Bird. Example
 ## Community projects
 
 [PingCRM](https://github.com/inertiajs/pingcrm), Inertia's demonstration project, has been migrated to Hybridly by [Amine Ilidrissi](https://twitter.com/realaminevg). You may check out the repository [here](https://github.com/hybridly/pingcrm).
+
 [Hybridly Laravel Breeze Scaffold](https://github.com/agednerd/hybridly-breeze-app), Laravel Breeze's base Vue scaffold has been migrated to Hybridly by [William Lepinski](https://github.com/wlepinski). You may check out the repository [here](https://github.com/agednerd/hybridly-breeze-app).
