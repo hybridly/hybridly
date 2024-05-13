@@ -157,7 +157,7 @@ const { close } = useDialog() // [!code hl]
     <create-chirp
       :chirp="chirp"
       :edit="true"
-      @success="close" // [!code hl]
+      @success="close/* [!code hl] */"
     />
   </base-modal>
 </template>

@@ -186,7 +186,7 @@ The value of a column is accessible in the `records` property of the table:
 	<td
 		v-for="column in users.columns"
 		:key="column.name"
-		v-text="record[column.name]" // [!code hl]
+		 v-text="record[column.name]/* [!code hl] */"
 	/>
 </tr>
 ```
@@ -341,8 +341,8 @@ To let users select records, you may use [form input binding](https://vuejs.org/
 <tr v-for="{ key, value, actions } in users.records" :key="key">
 	<td>
 		<input
-			v-model="users.selection.only" // [!code hl]
-			:value="key" // [!code hl]
+			v-model="users.selection.only/* [!code hl] */"
+			:value="key/* [!code hl] */"
 			type="checkbox"
 		/>
 	</td>
@@ -380,8 +380,7 @@ Actions work by making a `POST` hybrid request to a dedicated endpoint. The [`us
 ```vue-html [bulk-actions.vue]
 <div v-for="action in users.bulkActions" :key="action.name">
 	<button
-		@click="action.execute()" // [!code hl]
-		v-text="action.label"
+		@click="action.execute()/* [!code hl] */"
 	/>
 </div>
 ```
@@ -392,7 +391,7 @@ Actions work by making a `POST` hybrid request to a dedicated endpoint. The [`us
 		<button
 			v-for="action in actions"
 			:key="action.name"
-			@click="action.execute()" // [!code hl]
+			 @click="action.execute()/* [!code hl] */"
 			v-text="action.label"
 		/>
 	</td>
