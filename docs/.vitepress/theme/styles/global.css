@@ -117,3 +117,12 @@ aside.VPSidebar::-webkit-scrollbar-thumb {
 	background: var(--vp-c-scrollbar) !important;
 	border: 3px solid var(--vp-c-scrollbar) !important;
 }
+
+.is-link > .item > .link {
+	transition-property: transform;
+	transition-duration: 150ms;
+}
+
+.is-link > .item > .link:hover {
+	transform: translateX(5px);
+}

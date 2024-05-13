@@ -78,15 +78,15 @@ const features: Feature[] = [
 				<!-- Left block -->
 				<section class="max-w-2xl grow group [&>*]:ease-in-out [&>*]:transition [&>*]:duration-500">
 					<!-- Title -->
-					<h1 class="title font-title title-bg bg-clip-text text-center text-5xl font-medium uppercase text-transparent lg:text-left lg:text-8xl group-hover:-translate-x-12">
+					<h1 class="title font-title title-bg bg-clip-text text-center text-5xl font-medium uppercase text-transparent lg:text-left lg:text-8xl lg:group-hover:-translate-x-12">
 						Hybridly
 					</h1>
 					<!-- Subtitle -->
-					<p class="mt-2 text-center text-2xl font-medium lg:text-left lg:text-3xl group-hover:-translate-x-8">
+					<p class="mt-2 text-center text-2xl font-medium lg:text-left lg:text-3xl lg:group-hover:-translate-x-8">
 						Server-driven, client-rendered applications.
 					</p>
 					<!-- Description -->
-					<p class="mt-4 text-center text-lg font-medium opacity-60 lg:text-left lg:text-2xl group-hover:-translate-x-4">
+					<p class="mt-4 text-center text-lg font-medium opacity-60 lg:text-left lg:text-2xl lg:group-hover:-translate-x-4">
 						Build single-page applications the classic way. No API, no route duplication, no front-end state. Fully server-driven.
 					</p>
 					<!-- Actions -->
