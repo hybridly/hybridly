@@ -28,7 +28,7 @@
 &nbsp;
 
 **Will Hybridly be properly maintained?**
-> I'm primarily building Hybridly for myself. I am actively using and improving it. That means Hybridly is an opinionated project and may not suit your tastes, but it will live as long as I am a developer and I didn't find a better way to build web applications.
+> I'm primarily building Hybridly for myself. I am actively using and improving it. That means Hybridly is an opinionated project and may not suit your tastes, but it will live as long as I am a developer and I didn't find a better way to build web applications. That being said, if I ever happen to give up on Hybridly, I will make sure to pass the project on the community so it can live on.
 
 <p align="center">
   <br />

@@ -30,19 +30,6 @@ There have been months without release or news about its development. Months wit
 
 Because of that, other issues with the implementation itself, and some of my opinions diverging from the philosophy of the maintainers, I simply decided to build my own solution.
 
-## Questions & answers
+---
 
-**What's the goal of this project?**
-> Hybridly aims to provide the best developer experience possible when using Laravel, Vue and Vite. Over time, the goal is to become closer to what Nuxt 3 currently is in terms of development experience.
-
-**Why fork Inertia instead of contributing?**
-> That's what I tried before writing Hybridly, but the maintenance of Inertia is highly lacking, pull requests and issues are not being addressed. Additionally, its minimalist philosophy is not compatible with my developer experience needs.
-
-**When should I use Hybridly instead of Inertia?**
-> Inertia is popular and sponsored by Laravel. It's the safe option. Hybridly is moving faster, and exists because Inertia has issues and a different philosophy. Chose Inertia for better community support, and Hybridly if you value developer experience more at the expense of a smaller community.
-
-**Can I use Hybridly with other frameworks than Laravel or Vue?**
-> The core of Hybridly is framework-agnostic, just like Inertia's. But there is no plan for an official adapter other than Laravel and Vue, because that is what I am using and willing to maintain. Feel free to create your own adapter though.
-
-**Will Hybridly be properly maintained?**
-> I'm primarily building Hybridly for myself. I am actively using and improving it, for both personal and professional projects. That means Hybridly is an opinionated project and may not suit your tastes, but it will live as long as I am a developer and I didn't find a better way to build web applications.
+<!--@include: @/../README.md{10,32}-->
