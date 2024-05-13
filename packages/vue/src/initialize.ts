@@ -11,6 +11,8 @@ import { devtools } from './devtools'
 import { dialogStore } from './stores/dialog'
 import { onMountedCallbacks } from './stores/mount'
 import { viewTransition } from './plugins/view-transition'
+import type { DefaultFormOptions } from './composables'
+import { formStore } from './stores/form'
 
 /**
  * Initializes Hybridly's router and context.
@@ -129,6 +131,10 @@ function prepare(options: ResolvedInitializeOptions) {
 		options.plugins.push(viewTransition())
 	}
 
+	if (options.defaultFormOptions) {
+		formStore.setDefaultConfig(options.defaultFormOptions)
+	}
+
 	return {
 		isServer,
 		element,
@@ -167,7 +173,7 @@ type ResolvedInitializeOptions = InitializeOptions & DynamicConfiguration & {
 	imported: Record<string, any>
 }
 
-interface InitializeOptions {
+export interface InitializeOptions {
 	/** Callback that gets executed before Vue is mounted. */
 	enhanceVue?: (vue: App<Element>) => any
 	/** ID of the app element. */
@@ -193,6 +199,8 @@ interface InitializeOptions {
 	 * @see https://developer.mozilla.org/en-US/docs/Web/API/ViewTransition
 	 */
 	viewTransition?: boolean
+	/** Options that will apply to all forms by default. Specific forms' options will override them. */
+	defaultFormOptions?: DefaultFormOptions
 }
 
 interface SetupArguments {

@@ -98,7 +98,7 @@ export interface HybridRequestOptions extends Omit<NavigationOptions, 'payload'>
 	useFormData?: boolean
 	/**
 	 * If `false`, disable automatic form spoofing.
-	 * @see https://laravel.com/docs/9.x/routing#form-method-spoofing
+	 * @see https://laravel.com/docs/master/routing#form-method-spoofing
 	 */
 	spoof?: boolean
 	/**

@@ -7,12 +7,15 @@ import { router } from '@hybridly/core'
 import type { Path, SearchableObject } from '@clickbar/dot-diver'
 import { getByPath } from '@clickbar/dot-diver'
 import { state } from '../stores/state'
+import { formStore } from '../stores/form'
 
 type Errors<T extends SearchableObject> = {
 	[K in keyof T]?: T[K] extends Record<string, any>
 		? Errors<T[K]>
 		: string;
 }
+
+export type DefaultFormOptions = Pick<FormOptions<object>, 'timeout' | 'reset' | 'updateInitials' | 'progress' | 'preserveScroll' | 'preserveState' | 'preserveUrl' | 'headers' | 'errorBag' | 'spoof' | 'transformUrl' | 'updateHistoryState' | 'useFormData'>
 
 interface FormOptions<T extends SearchableObject> extends Omit<HybridRequestOptions, 'data' | 'url'> {
 	fields: T
@@ -141,9 +144,11 @@ export function useForm<
 	 */
 	function submit(optionsOverrides?: Omit<FormOptions<T>, 'fields' | 'key'>) {
 		const { fields: _f, key: _k, ...optionsWithoutFields } = options
-		const optionsWithOverrides = optionsOverrides
-			? merge<typeof optionsOverrides>(optionsWithoutFields, optionsOverrides, { mergePlainObjects: true })
+		const resolvedOptions = optionsOverrides
+			? merge(optionsWithoutFields, optionsOverrides, { mergePlainObjects: true })
 			: optionsWithoutFields
+
+		const optionsWithOverrides = merge<FormOptions<T>>(formStore.getDefaultConfig(), resolvedOptions, { mergePlainObjects: true })
 
 		const url = typeof optionsWithOverrides.url === 'function'
 			? optionsWithOverrides.url()

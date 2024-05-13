@@ -76,6 +76,12 @@ When set to `false`, disables the built-in progress indicator. Otherwise, config
 
 Defines the plugins that should be registered. Refer to the [plugin documentation](../../guide/plugins.md) to learn more about them.
 
+## `defaultFormOptions`
+
+- **Type**: `FormOptions`
+
+Specifies default options that will be applied to all `useForm` instances. More specific options will take precedence.
+
 ## `axios`
 
 - **Type**: `Axios`
