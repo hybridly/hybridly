@@ -119,7 +119,7 @@ class LazyComponentsResolver implements ComponentsResolver
         return $this;
     }
 
-    public function loadModulesFrom(string $directory, bool $deep): void
+    public function loadModulesFrom(string $directory, bool $deep = false): void
     {
         if (!is_dir($directory)) {
             return;

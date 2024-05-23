@@ -40,7 +40,7 @@ interface ComponentsResolver
     /**
      * Loads all modules in the given directory.
      */
-    public function loadModulesFrom(string $directory, bool $deep): void;
+    public function loadModulesFrom(string $directory, bool $deep = false): void;
 
     /**
      * Gets namespaced view files.
