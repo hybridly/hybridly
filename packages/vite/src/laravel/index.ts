@@ -86,7 +86,7 @@ export default function laravel(options: ViteOptions, hybridlyConfig: DynamicCon
 
 				if (isAddressInfo(address)) {
 					viteDevServerUrl = resolveDevServerUrl(address, server.config, userConfig)
-					fs.writeFileSync(hotFile, viteDevServerUrl)
+					fs.writeFileSync(hotFile, `${viteDevServerUrl}${server.config.base.replace(/\/$/, '')}`)
 
 					if (!hybridlyConfig.versions) {
 						return
