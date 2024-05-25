@@ -18,11 +18,11 @@ The following is a non-exhaustive comparison table between Inertia and Hybridly'
 | Partial reloads                                 |                        Yes                        |             [Yes](../guide/partial-reloads.md)             |
 | Lazy properties                                 |                        Yes                        | [Yes](../guide/partial-reloads.md#partial-only-properties) |
 | Deferred properties                             |            <span class="no">No</span>             |   [Yes](../guide/partial-reloads.md#deferred-properties)   |
-| Persistent properties                           |            <span class="no">No</span>             |             [Yes](./persistent-properties.md)              |
+| Persistent properties                           |                   Yes (v1.2.0)                    |             [Yes](./persistent-properties.md)              |
 | Global properties                               |                        Yes                        |            [Yes](../guide/global-properties.md)            |
 | `only` support for partial properties           |                        Yes                        |            [Yes](../api/router/options.md#only)            |
-| `except` support for partial properties         |            <span class="no">No</span>             |           [Yes](../api/router/options.md#except)           |
-| Dot notation support for partial properties     |            <span class="no">No</span>             |                            Yes                             |
+| `except` support for partial properties         |                   Yes (v1.1.0)                    |           [Yes](../api/router/options.md#except)           |
+| Dot notation support for partial properties     |                   Yes (v1.2.0)                    |                            Yes                             |
 | Infinite scrolling support                      |            <span class="no">No</span>             |        [Yes](../api/router/options.md#preserveurl)         |
 | Custom architecture support                     |            <span class="no">No</span>             |              [Yes](../guide/architecture.md)               |
 | Persistent layout                               |                        Yes                        |       [Yes](views-and-layouts.md#persistent-layouts)       |
