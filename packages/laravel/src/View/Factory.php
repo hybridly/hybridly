@@ -282,7 +282,7 @@ class Factory implements HybridResponse
     /**
      * Resolves the properties on the given view or dialog.
      */
-    protected function resolveProperties(Dialog|View $view, Request $request, boolean $includeSharedProperties = true): array
+    protected function resolveProperties(Dialog|View $view, Request $request, bool $includeSharedProperties = true): array
     {
         // We don't use dependency injection, because the request object
         // could be different than the one given to `toResponse`.
