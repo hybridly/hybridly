@@ -176,7 +176,7 @@ class Factory implements HybridResponse
 
     protected function renderDialog(Request $request, Payload $payload)
     {
-        [$properties] = $this->resolveProperties($payload->dialog, $request);
+        [$properties] = $this->resolveProperties($payload->dialog, $request, false);
 
         return new Payload(
             view: $this->getBaseView(
@@ -282,7 +282,7 @@ class Factory implements HybridResponse
     /**
      * Resolves the properties on the given view or dialog.
      */
-    protected function resolveProperties(Dialog|View $view, Request $request): array
+    protected function resolveProperties(Dialog|View $view, Request $request, boolean $includeSharedProperties = true): array
     {
         // We don't use dependency injection, because the request object
         // could be different than the one given to `toResponse`.
@@ -290,7 +290,7 @@ class Factory implements HybridResponse
 
         return $resolver->resolve(
             component: $view->component,
-            properties: [...$this->hybridly->shared(), ...$view->properties],
+            properties: $includeSharedProperties ? [...$this->hybridly->shared(), ...$view->properties] : $view->properties,
             persisted: $this->hybridly->persisted(),
         );
     }
