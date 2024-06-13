@@ -11,12 +11,12 @@ trait HasScope
         return $this;
     }
 
-    protected function getScope(): ?string
+    public function getScope(): ?string
     {
         return $this->evaluate($this->scope ?? null);
     }
 
-    protected function formatScope(?string $type = null): ?string
+    public function formatScope(?string $type = null): ?string
     {
         if (!$this->getScope()) {
             return $type;
