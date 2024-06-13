@@ -185,6 +185,8 @@ test('properties can be added on-the-fly on the factory instance', function () {
 test('dialogs and their properties can be resolved', function () {
     Route::get('/', fn () => hybridly('index', ['foo' => 'bar']))->name('index');
 
+    hybridly()->share(['shared' => 'data']);
+
     $request = mock_request(url: '/users/makise', hybridly: true, bind: true);
     $factory = hybridly('users.edit', [
         'user' => 'Makise Kurisu',
@@ -201,6 +203,7 @@ test('dialogs and their properties can be resolved', function () {
             'component' => 'index',
             'properties' => [
                 'foo' => 'bar',
+                'shared' => 'data',
             ],
             'deferred' => [],
         ],
