@@ -176,7 +176,13 @@ class Factory implements HybridResponse
 
     protected function renderDialog(Request $request, Payload $payload)
     {
-        [$properties] = $this->resolveProperties($payload->dialog, $request, false);
+        // Dialogs do not need shared properties, as they are already part of the base view.
+        // See: https://github.com/hybridly/hybridly/pull/153
+        [$properties] = $this->resolveProperties(
+            view: $payload->dialog,
+            request: $request,
+            includeSharedProperties: false,
+        );
 
         return new Payload(
             view: $this->getBaseView(
