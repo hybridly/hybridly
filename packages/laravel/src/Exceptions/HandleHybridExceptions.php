@@ -2,7 +2,6 @@
 
 namespace Hybridly\Exceptions;
 
-use Exception;
 use Hybridly\Components\Concerns\EvaluatesClosures;
 use Hybridly\Contracts\HybridResponse;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -104,6 +103,37 @@ class HandleHybridExceptions
         return $this;
     }
 
+    /**
+     * Specifies the configuration instance to configure Hybridly with.
+     */
+    public function using(Exceptions $exceptions): void
+    {
+        $this->__invoke($exceptions);
+    }
+
+    /**
+     * Adds the `local` environment.
+     */
+    public function inDevelopment(): static
+    {
+        $this->environments[] = 'local';
+
+        return $this;
+    }
+
+    /**
+     * Also handle the specified status codes.
+     */
+    public function handleStatusCode(int|array $codes): static
+    {
+        $this->statusCodes = [
+            ...$this->statusCodes,
+            ...Arr::wrap($codes),
+        ];
+
+        return $this;
+    }
+
     protected function respondUsing(Response $response, \Throwable $e, Request $request): Response
     {
         if ($this->shouldHandleTokenMismatch($response, $request, $e)) {
@@ -140,7 +170,7 @@ class HandleHybridExceptions
     protected function renderHybridResponse(Response $response, Request $request, \Throwable $e): HybridResponse
     {
         if (\is_null($this->renderUsingCallback)) {
-            throw new Exception('The `renderHybridResponse` method is not implemented.');
+            throw new \Exception('The `renderHybridResponse` method is not implemented.');
         }
 
         return $this->evaluate($this->renderUsingCallback, [
