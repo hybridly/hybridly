@@ -10,6 +10,10 @@ export async function loadConfiguration(): Promise<DynamicConfiguration> {
 	} catch (e) {
 		console.error('Could not load configuration from [php artisan hybridly:config].')
 
+		if ((e as any).stdout) {
+			console.error((e as any).stdout);
+		}
+
 		if (await determineDevEnvironment() === 'ddev') {
 			console.error('This is possibly caused by not starting ddev first.')
 		} else if (await determineDevEnvironment() === 'lando') {
