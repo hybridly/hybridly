@@ -36,6 +36,14 @@ it('fails the command when there is no middleware, but still generates types', f
     expect(File::exists(base_path('.hybridly/php-types.d.ts')))->toBeTrue();
 });
 
+it('allows failures when `--allow-failures` is passed', function () {
+    copy_stubs([
+        'UserData.php' => 'app/Data',
+    ]);
+
+    artisan('hybridly:types --allow-failures')->assertExitCode(0);
+});
+
 it('succeeds when the middleware exists and generates types', function () {
     copy_stubs([
         'UserData.php' => 'app/Data',

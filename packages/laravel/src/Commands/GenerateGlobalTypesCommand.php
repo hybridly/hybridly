@@ -27,8 +27,16 @@ class GenerateGlobalTypesCommand extends Command
 
     public function handle(TypeScriptTransformerConfig $typeScriptTransformerConfig, Configuration $hybridlyConfiguration): int
     {
-        $this->writePhpTypes($typeScriptTransformerConfig);
-        $this->writeGlobalPropertiesInterface($hybridlyConfiguration->typescript);
+        try {
+            $this->writePhpTypes($typeScriptTransformerConfig);
+            $this->writeGlobalPropertiesInterface($hybridlyConfiguration->typescript);
+        } catch (\Throwable $exception) {
+            if ($this->option('allow-failures')) {
+                return self::SUCCESS;
+            }
+
+            throw $exception;
+        }
 
         return $this->exitCode;
     }
@@ -43,17 +51,7 @@ class GenerateGlobalTypesCommand extends Command
         }
 
         $config->outputFile(base_path(self::PHP_TYPES_PATH));
-
-        try {
-            $collection = (new TypeScriptTransformer($config))->transform();
-        } catch (\Exception $exception) {
-            $this->components->error($exception->getMessage());
-            $this->exitCode = !$this->option('allow-failures')
-                ? self::FAILURE
-                : self::SUCCESS;
-
-            return;
-        }
+        $collection = (new TypeScriptTransformer($config))->transform();
 
         if ($this->output->isVerbose()) {
             $this->table(
