@@ -87,7 +87,7 @@ export async function initializeHybridly(options: InitializeOptions = {}) {
 		app.use(devtools)
 	}
 
-	await options.enhanceVue?.(app)
+	await options.enhanceVue?.(app, payload)
 	return app.mount(element)
 }
 
@@ -175,7 +175,12 @@ type ResolvedInitializeOptions = InitializeOptions & DynamicConfiguration & {
 
 export interface InitializeOptions {
 	/** Callback that gets executed before Vue is mounted. */
-	enhanceVue?: (vue: App<Element>) => any
+	enhanceVue?: (
+		/** Vue application to enhance. */
+		vue: App<Element>, 
+		/** Initial payload. */
+		payload: Record<string, any>,
+	) => any
 	/** ID of the app element. */
 	id?: string
 	/** Clean up the host element's payload dataset after loading. */
