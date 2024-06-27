@@ -16,7 +16,7 @@ use Illuminate\Support\Collection;
 use Spatie\LaravelData\Contracts\BaseDataCollectable;
 use Spatie\LaravelData\Data;
 
-trait RefinesAndPaginateRecords
+trait RefinesAndPaginatesRecords
 {
     private null|Refine $refine = null;
     private mixed $cachedRecords = null;

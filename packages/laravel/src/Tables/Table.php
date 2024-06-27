@@ -12,7 +12,7 @@ abstract class Table extends Components\Component
     use Concerns\HasColumns;
     use Concerns\HasId;
     use Concerns\HasModel;
-    use Concerns\RefinesAndPaginateRecords;
+    use Concerns\RefinesAndPaginatesRecords;
 
     public static function make(array $parameters = []): static
     {
