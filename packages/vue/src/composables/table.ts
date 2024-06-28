@@ -4,6 +4,7 @@ import { toReactive } from '../utils'
 import { useBulkSelect } from './bulk-select'
 import type { AvailableHybridRequestOptions, SortDirection, ToggleSortOptions } from './refinements'
 import { useRefinements } from './refinements'
+import { getByPath } from '@clickbar/dot-diver'
 
 declare global {
 	interface Table<
@@ -30,6 +31,8 @@ export interface Column<T extends object = never> {
 	label: string
 	/** The type of this column. */
 	type: string
+	/** Metadata of this column. */
+	metadata: Record<string, any>
 }
 
 // #region action
@@ -62,7 +65,7 @@ export type RecordIdentifier = string | number
 
 type AsRecordType<T extends Record<string, any>> = {
 	[K in keyof T]: {
-		metadata: Record<string, any>
+		extra: Record<string, any>
 		value: T[K]
 	}
 }
@@ -228,8 +231,8 @@ export function useTable<
 			selected: bulk.selected(getRecordKey(record)),
 			/** Gets the value of the record for the specified column. */
 			value: (column: string | Column<RecordType>) => record[typeof column === 'string' ? column : column.name].value,
-			/** Gets the value of the record for the specified column. */
-			metadata: (column: string | Column<RecordType>) => record[typeof column === 'string' ? column : column.name].metadata,
+			/** Gets the extra object of the record for the specified column. */
+			extra: (column: string | Column<RecordType>, path: string) => getByPath(record[typeof column === 'string' ? column : column.name].extra, path),
 		}))),
 		/**
 		 * Paginated meta and links.

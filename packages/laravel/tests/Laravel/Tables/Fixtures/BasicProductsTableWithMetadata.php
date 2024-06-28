@@ -8,7 +8,7 @@ use Hybridly\Tables\Columns\TextColumn;
 use Hybridly\Tables\Table;
 use Hybridly\Tests\Fixtures\Database\Product;
 
-class BasicProductsTableWithCellMetadata extends Table
+class BasicProductsTableWithMetadata extends Table
 {
     protected string $model = Product::class;
 
@@ -23,8 +23,8 @@ class BasicProductsTableWithCellMetadata extends Table
     public function defineColumns(): array
     {
         return [
-            TextColumn::make('name')->metadata(fn (Product $product) => [
-                'tooltip' => "Made by {$product->vendor?->value}",
+            TextColumn::make('name')->metadata([
+                'color' => 'primary',
             ]),
         ];
     }

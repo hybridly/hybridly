@@ -217,7 +217,7 @@ trait RefinesAndPaginatesRecords
             return collect($record)
                 ->mapWithKeys(static fn (mixed $value, string $key) => [
                     $key => $key === 'authorization' ? $value : [
-                        'metadata' => isset($columns[$key]) ? $columns[$key]->getMetadata([
+                        'extra' => isset($columns[$key]) ? $columns[$key]->getExtra([
                             'record' => $model,
                             'model' => $model,
                         ], [

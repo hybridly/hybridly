@@ -37,11 +37,11 @@
     "records": [
         {
             "id": {
-                "metadata": [],
+                "extra": [],
                 "value": 1
             },
             "name": {
-                "metadata": [],
+                "extra": [],
                 "value": "AirPods"
             }
         }
@@ -80,7 +80,8 @@
         {
             "name": "name",
             "type": "text",
-            "label": "Name"
+            "label": "Name",
+            "metadata": []
         }
     ],
     "endpoint": "hybridly.action.invoke",

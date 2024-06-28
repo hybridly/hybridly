@@ -13,11 +13,11 @@
     "records": [
         {
             "name": {
-                "metadata": [],
+                "extra": [],
                 "value": "AirPods"
             },
             "created_at": {
-                "metadata": [],
+                "extra": [],
                 "value": "2021-01-01T00:00:00+00:00"
             },
             "authorization": {
@@ -60,12 +60,14 @@
         {
             "name": "name",
             "type": "text",
-            "label": "Name"
+            "label": "Name",
+            "metadata": []
         },
         {
             "name": "created_at",
             "type": "text",
-            "label": "Created at"
+            "label": "Created at",
+            "metadata": []
         }
     ],
     "endpoint": "hybridly.action.invoke",

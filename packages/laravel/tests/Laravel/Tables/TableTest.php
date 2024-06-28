@@ -8,12 +8,12 @@ use Hybridly\Tests\Fixtures\Vendor;
 use Hybridly\Tests\Laravel\Tables\Fixtures\BasicProductsTable;
 use Hybridly\Tests\Laravel\Tables\Fixtures\BasicProductsTableWithActions;
 use Hybridly\Tests\Laravel\Tables\Fixtures\BasicProductsTableWithActionsAndFilters;
-use Hybridly\Tests\Laravel\Tables\Fixtures\BasicProductsTableWithAttributes;
-use Hybridly\Tests\Laravel\Tables\Fixtures\BasicProductsTableWithCellMetadata;
 use Hybridly\Tests\Laravel\Tables\Fixtures\BasicProductsTableWithConditionallyHiddenStuff;
 use Hybridly\Tests\Laravel\Tables\Fixtures\BasicProductsTableWithData;
 use Hybridly\Tests\Laravel\Tables\Fixtures\BasicProductsTableWithDataUsingFromModel;
+use Hybridly\Tests\Laravel\Tables\Fixtures\BasicProductsTableWithExtra;
 use Hybridly\Tests\Laravel\Tables\Fixtures\BasicProductsTableWithHiddenStuff;
+use Hybridly\Tests\Laravel\Tables\Fixtures\BasicProductsTableWithMetadata;
 use Hybridly\Tests\Laravel\Tables\Fixtures\BasicProductsTableWithSoftDeleteAction;
 use Hybridly\Tests\Laravel\Tables\Fixtures\BasicScopedProductsTable;
 use Hybridly\Tests\Laravel\Tables\Fixtures\BasicTableWithConstructor;
@@ -305,13 +305,13 @@ it('may have cell metadata', function () {
     ProductFactory::new()->create(['name' => 'Product 1', 'vendor' => Vendor::Apple]);
     ProductFactory::new()->create(['name' => 'Product 2', 'vendor' => Vendor::Microsoft]);
 
-    $table = BasicProductsTableWithCellMetadata::make();
+    $table = BasicProductsTableWithExtra::make();
 
     expect($table->getRecords())->toMatchSnapshot();
 });
 
-it('may have column attributes', function () {
-    $table = BasicProductsTableWithAttributes::make();
+it('may have column metadata', function () {
+    $table = BasicProductsTableWithMetadata::make();
 
     expect($table->getTableColumns())->toMatchSnapshot();
 });

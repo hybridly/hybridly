@@ -1,11 +1,11 @@
 [
     {
         "id": {
-            "metadata": [],
+            "extra": [],
             "value": 1
         },
         "name": {
-            "metadata": {
+            "extra": {
                 "tooltip": "Made by apple"
             },
             "value": "Product 1"
@@ -13,11 +13,11 @@
     },
     {
         "id": {
-            "metadata": [],
+            "extra": [],
             "value": 2
         },
         "name": {
-            "metadata": {
+            "extra": {
                 "tooltip": "Made by microsoft"
             },
             "value": "Product 2"

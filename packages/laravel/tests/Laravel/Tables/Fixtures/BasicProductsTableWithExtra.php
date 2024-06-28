@@ -8,7 +8,7 @@ use Hybridly\Tables\Columns\TextColumn;
 use Hybridly\Tables\Table;
 use Hybridly\Tests\Fixtures\Database\Product;
 
-class BasicProductsTableWithAttributes extends Table
+class BasicProductsTableWithExtra extends Table
 {
     protected string $model = Product::class;
 
@@ -23,8 +23,8 @@ class BasicProductsTableWithAttributes extends Table
     public function defineColumns(): array
     {
         return [
-            TextColumn::make('name')->attributes([
-                'color' => 'primary',
+            TextColumn::make('name')->extra(fn (Product $product) => [
+                'tooltip' => "Made by {$product->vendor?->value}",
             ]),
         ];
     }

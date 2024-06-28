@@ -13,7 +13,7 @@
     "records": [
         {
             "id": {
-                "metadata": [],
+                "extra": [],
                 "value": 1
             }
         }

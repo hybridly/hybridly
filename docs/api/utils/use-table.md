@@ -156,11 +156,29 @@ Clears the filter with the same name as the column, if it exists.
 
 The `records` property returns a computed list of `Record` objects with the following properties:
 
-### `record`
+```vue-html
+<tr v-for="{ key, value } in users.records" :key="key">
+	<td
+		v-for="column in users.columns"
+		:key="column.name"
+		v-text="value(column)/* [!code hl] */"
+	/>
+</tr>
+```
 
-- Type: `T`
+### `value`
 
-The actual record. Its type is determined by the first generic of `useTable`.
+- Type: `Function`
+- Parameters: `column: Column`
+
+Gets the value of the record for the specified column.
+
+### `extra`
+
+- Type: `Function`
+- Parameters: `column: Column` and `path: string`
+
+Gets the extra data of the record for the specified column. The second parameter is the dot-notation-enabled path to the extra property you want to access.
 
 ### `key`
 
@@ -205,12 +223,11 @@ Toggles selection for this record.
 
 Checks whether this record is selected.
 
-### `value`
+### `record`
 
-- Type: `Function`
-- Parameters: `column: Column`
+- Type: `T`
 
-Gets the value of the record for the specified column.
+The actual record. Its type is determined by the first generic of `useTable`.
 
 ## Bulk-selection
 
