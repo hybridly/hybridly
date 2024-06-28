@@ -307,4 +307,4 @@ it('may have cell metadata', function () {
     $table = BasicProductsTableWithCellMetadata::make();
 
     expect($table->getRecords())->toMatchSnapshot();
-})->only();
+});
