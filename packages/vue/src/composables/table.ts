@@ -207,7 +207,7 @@ export function useTable<
 		/** List of records for this table. */
 		records: computed(() => table.value.records.map((record) => ({
 			/** The actual record. */
-			record: Object.values(record).map(record => record.value),
+			record: Object.values(record).map((record) => record.value),
 			/** The key of the record. Use this instead of `id`. */
 			key: getRecordKey(record),
 			/** Executes the given inline action. */
