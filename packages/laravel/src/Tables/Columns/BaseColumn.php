@@ -9,6 +9,7 @@ use Hybridly\Tables\Columns;
 abstract class BaseColumn extends Component
 {
     use Columns\Concerns\CanTransformValue;
+    use Concerns\HasAttributes;
     use Concerns\HasLabel;
     use Concerns\HasMetadata;
     use Concerns\HasName;
@@ -36,6 +37,7 @@ abstract class BaseColumn extends Component
             'name' => $this->getName(),
             'type' => $this->getType(),
             'label' => $this->getLabel(),
+            'attributes' => $this->getAttributes(),
         ];
     }
 

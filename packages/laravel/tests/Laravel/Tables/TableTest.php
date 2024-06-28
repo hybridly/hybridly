@@ -8,6 +8,7 @@ use Hybridly\Tests\Fixtures\Vendor;
 use Hybridly\Tests\Laravel\Tables\Fixtures\BasicProductsTable;
 use Hybridly\Tests\Laravel\Tables\Fixtures\BasicProductsTableWithActions;
 use Hybridly\Tests\Laravel\Tables\Fixtures\BasicProductsTableWithActionsAndFilters;
+use Hybridly\Tests\Laravel\Tables\Fixtures\BasicProductsTableWithAttributes;
 use Hybridly\Tests\Laravel\Tables\Fixtures\BasicProductsTableWithCellMetadata;
 use Hybridly\Tests\Laravel\Tables\Fixtures\BasicProductsTableWithConditionallyHiddenStuff;
 use Hybridly\Tests\Laravel\Tables\Fixtures\BasicProductsTableWithData;
@@ -307,4 +308,10 @@ it('may have cell metadata', function () {
     $table = BasicProductsTableWithCellMetadata::make();
 
     expect($table->getRecords())->toMatchSnapshot();
+});
+
+it('may have column attributes', function () {
+    $table = BasicProductsTableWithAttributes::make();
+
+    expect($table->getTableColumns())->toMatchSnapshot();
 });
