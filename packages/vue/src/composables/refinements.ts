@@ -287,12 +287,17 @@ export function useRefinements<
 		const watchFn = options?.watch ?? watch
 		const getFilterValue = () => transform(refinements.value.filters.find((f) => f.name === name)?.value)
 		const _ref = ref(getFilterValue())
-		let _filterTimeout: ReturnType<typeof setTimeout>
+		let _refWatchDisabled = false
 		let _refTimeout: ReturnType<typeof setTimeout>
+		let _filterTimeout: ReturnType<typeof setTimeout>
 
 		// We watch refinements instead of using the `success` hook to handle
 		// situations where the filter value is updated through another request
 		watch(() => refinements.value.filters.find((f) => f.name === name), (filter) => {
+			if (_refWatchDisabled) {
+				return
+			}
+
 			clearTimeout(_refTimeout)
 			_refTimeout = setTimeout(() => _ref.value = transform(filter?.value), refDebounce)
 		}, { deep: true })
@@ -302,7 +307,17 @@ export function useRefinements<
 			clearTimeout(_filterTimeout)
 			_filterTimeout = setTimeout(() => {
 				clearTimeout(_refTimeout)
-				applyFilter(name, transform(value), options)
+				_refWatchDisabled = true
+				applyFilter(name, transform(value), {
+					...options,
+					hooks: {
+						...options?.hooks,
+						after: (context) => {
+							_refWatchDisabled = false
+							options?.hooks?.after?.(context)
+						},
+					},
+				})
 			}, debounce)
 		})
 
