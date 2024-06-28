@@ -255,7 +255,7 @@ it('supports dependency injection on the constructor', function () {
 
     expect($table->getRecords())
         ->toHaveCount(1)
-        ->sequence(fn ($expect) => $expect->name->toBe('Product 2'));
+        ->sequence(fn ($expect) => $expect->name->value->toBe('Product 2'));
 });
 
 it('supports custom arguments on the constructor', function () {
@@ -266,7 +266,7 @@ it('supports custom arguments on the constructor', function () {
 
     expect($table->getRecords())
         ->toHaveCount(1)
-        ->sequence(fn ($expect) => $expect->name->toBe('Product 2'));
+        ->sequence(fn ($expect) => $expect->name->value->toBe('Product 2'));
 });
 
 it('supports custom arguments on `make`', function () {
@@ -279,7 +279,7 @@ it('supports custom arguments on `make`', function () {
 
     expect($table->getRecords())
         ->toHaveCount(1)
-        ->sequence(fn ($expect) => $expect->name->toBe('Product 2'));
+        ->sequence(fn ($expect) => $expect->name->value->toBe('Product 2'));
 });
 
 it('supports dependency injection and custom arguments on `make`', function () {
@@ -297,7 +297,7 @@ it('supports dependency injection and custom arguments on `make`', function () {
 
     expect($table->getRecords())
         ->toHaveCount(1)
-        ->sequence(fn ($expect) => $expect->name->toBe('Product bar'));
+        ->sequence(fn ($expect) => $expect->name->value->toBe('Product bar'));
 });
 
 it('may have cell metadata', function () {
