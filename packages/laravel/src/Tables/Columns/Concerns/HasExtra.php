@@ -16,6 +16,15 @@ trait HasExtra
         return $this;
     }
 
+    public function hasExtra(): bool
+    {
+        if ($this->extra instanceof \Closure) {
+            return true;
+        }
+
+        return \count($this->extra) > 0;
+    }
+
     public function getExtra(array $named = [], array $typed = []): array
     {
         return $this->evaluate($this->extra, $named, $typed);

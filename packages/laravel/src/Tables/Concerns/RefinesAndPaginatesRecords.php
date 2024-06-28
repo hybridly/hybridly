@@ -215,27 +215,37 @@ trait RefinesAndPaginatesRecords
             }
 
             return collect($record)
-                ->mapWithKeys(static fn (mixed $value, string $key) => [
-                    $key => $key === 'authorization' ? $value : [
-                        'extra' => isset($columns[$key]) ? $columns[$key]->getExtra([
-                            'record' => $model,
-                            'model' => $model,
-                        ], [
-                            $modelClass => $model,
-                        ]) : [],
-                        'value' => !isset($columns[$key]) || !$columns[$key]->canTransformValue()
-                            ? $value
-                            : $columns[$key]->getTransformedValue(
-                                named: [
-                                    'column' => $columns[$key],
-                                    'record' => $record,
-                                ],
-                                typed: [
-                                    $modelClass => $model,
-                                ],
-                            ),
-                    ],
-                ])
+                ->mapWithKeys(static function (mixed $value, string $key) use ($columns, $model, $record, $modelClass) {
+                    /** @var ?BaseColumn */
+                    $column = $columns[$key] ?? null;
+
+                    return [
+                        $key => $key === 'authorization' ? $value : [
+                            'extra' => \is_null($column) || !$column->hasExtra()
+                                ? []
+                                : $column->getExtra(
+                                    named: [
+                                        'record' => $model,
+                                        'model' => $model,
+                                    ],
+                                    typed: [
+                                        $modelClass => $model,
+                                    ],
+                                ),
+                            'value' => \is_null($column) || !$column->canTransformValue()
+                                ? $value
+                                : $column->getTransformedValue(
+                                    named: [
+                                        'column' => $column,
+                                        'record' => $record,
+                                    ],
+                                    typed: [
+                                        $modelClass => $model,
+                                    ],
+                                ),
+                        ],
+                    ];
+                })
                 ->filter(fn ($_, string $key) => \in_array($key, $columnsToInclude, strict: true));
         });
     }
