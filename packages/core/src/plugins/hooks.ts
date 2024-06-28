@@ -1,14 +1,19 @@
 import type { AxiosResponse } from 'axios'
 import type { InternalRouterContext } from '../context'
 import { getRouterContext } from '../context'
-import type { HybridRequestOptions, Errors, Progress, HybridPayload, InternalNavigationOptions } from '../router'
+import type { Errors, HybridPayload, HybridRequestOptions, InternalNavigationOptions, Progress } from '../router'
 import type { MaybePromise } from '../types'
 
 // #region requesthooks
 export interface RequestHooks {
 /* [!code focus:54] */	/**
-	 * Called before a navigation request is going to happen.
-	 */
+/////////////////////// * Called before a navigation request is going to happen.
+///////////////////////
+///////////////////////
+///////////////////////
+///////////////////////
+///////////////////////
+*/
 	before: (options: HybridRequestOptions, context: InternalRouterContext) => MaybePromise<any | boolean>
 
 	/**
@@ -66,8 +71,13 @@ export interface RequestHooks {
 // #region hooks
 export interface Hooks extends RequestHooks {
 /* [!code focus:28] */	/**
-	 * Called when Hybridly's context is initialized.
-	 */
+/////////////////////// * Called when Hybridly's context is initialized.
+///////////////////////
+///////////////////////
+///////////////////////
+///////////////////////
+///////////////////////
+*/
 	initialized: (context: InternalRouterContext) => MaybePromise<any>
 
 	/**
@@ -131,7 +141,7 @@ export function appendCallbackToHooks<T extends keyof Hooks>(hook: T, fn: Hooks[
  */
 export function registerHook<T extends keyof Hooks>(hook: T, fn: Hooks[T], options?: HookOptions): () => void {
 	if (options?.once) {
-		const unregister = appendCallbackToHooks(hook, async(...args: any[]) => {
+		const unregister = appendCallbackToHooks(hook, async (...args: any[]) => {
 			await fn(...args as [any, any])
 			unregister()
 		})

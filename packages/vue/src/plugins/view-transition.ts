@@ -9,7 +9,7 @@ export function viewTransition(): Plugin {
 
 	return {
 		name: 'view-transition',
-		navigating: async({ type, hasDialog }) => {
+		navigating: async ({ type, hasDialog }) => {
 			if (type === 'initial' || hasDialog) {
 				return
 			}

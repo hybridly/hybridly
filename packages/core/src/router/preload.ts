@@ -3,7 +3,7 @@ import type { AxiosResponse } from 'axios'
 import { getInternalRouterContext, getRouterContext } from '../context'
 import { makeUrl } from '../url'
 import type { HybridRequestOptions } from './types'
-import { performHybridRequest, isHybridResponse } from './router'
+import { isHybridResponse, performHybridRequest } from './router'
 
 /**
  * Checks if there is a preloaded request for the given URL.

@@ -7,7 +7,7 @@ import type { HybridPayload } from '../router'
 import { updateRoutingConfiguration } from '../routing'
 import { runHooks } from '../plugins'
 import { isDownloadResponse } from '../download'
-import type { RouterContext, InternalRouterContext, RouterContextOptions, SetContextOptions } from './types'
+import type { InternalRouterContext, RouterContext, RouterContextOptions, SetContextOptions } from './types'
 
 const state = {
 	initialized: false,

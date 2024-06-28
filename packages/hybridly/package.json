@@ -1,47 +1,43 @@
 {
   "name": "hybridly",
+  "type": "module",
   "version": "0.7.8",
   "description": "Solution to develop server-driven, client-rendered applications",
-  "keywords": [
-    "hybridly",
-    "inertiajs"
-  ],
+  "author": "Enzo Innocenzi <enzo@innocenzi.dev>",
   "license": "MIT",
+  "funding": "https://github.com/sponsors/innocenzi",
+  "homepage": "https://github.com/hybridly/hybridly#readme",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/hybridly/hybridly.git"
   },
-  "funding": "https://github.com/sponsors/innocenzi",
-  "author": "Enzo Innocenzi <enzo@innocenzi.dev>",
-  "type": "module",
-  "homepage": "https://github.com/hybridly/hybridly#readme",
   "bugs": {
     "url": "https://github.com/hybridly/hybridly/issues"
   },
+  "keywords": [
+    "hybridly",
+    "inertiajs"
+  ],
   "publishConfig": {
     "provenance": true,
     "access": "public"
   },
   "sideEffects": false,
-  "files": [
-    "dist",
-    "*.d.ts"
-  ],
   "exports": {
     ".": {
-      "require": "./dist/index.cjs",
+      "types": "./dist/index.d.ts",
       "import": "./dist/index.mjs",
-      "types": "./dist/index.d.ts"
+      "require": "./dist/index.cjs"
     },
     "./vite": {
-      "require": "./dist/vite.cjs",
+      "types": "./dist/vite.d.ts",
       "import": "./dist/vite.mjs",
-      "types": "./dist/vite.d.ts"
+      "require": "./dist/vite.cjs"
     },
     "./vue": {
-      "require": "./dist/vue.cjs",
+      "types": "./dist/vue.d.ts",
       "import": "./dist/vue.mjs",
-      "types": "./dist/vue.d.ts"
+      "require": "./dist/vue.cjs"
     },
     "./client": {
       "types": "./client.d.ts"
@@ -50,6 +46,10 @@
   "main": "dist/index.cjs",
   "module": "dist/index.mjs",
   "types": "index.d.ts",
+  "files": [
+    "*.d.ts",
+    "dist"
+  ],
   "scripts": {
     "build": "unbuild",
     "stub": "unbuild --stub"

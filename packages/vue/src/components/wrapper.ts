@@ -1,7 +1,6 @@
-/* eslint-disable vue/order-in-components */
 import { debug } from '@hybridly/utils'
 import type { ComponentOptions } from 'vue'
-import { toRaw, defineComponent, h, nextTick } from 'vue'
+import { defineComponent, h, nextTick, toRaw } from 'vue'
 import { dialogStore } from '../stores/dialog'
 import { onMountedCallbacks } from '../stores/mount'
 import { state } from '../stores/state'

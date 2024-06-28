@@ -1,7 +1,8 @@
 {
-  "private": true,
-  "version": "0.7.8",
   "type": "module",
+  "version": "0.7.8",
+  "private": true,
+  "packageManager": "pnpm@9.4.0",
   "scripts": {
     "release": "bumpp package.json packages/*/package.json --all --execute \"tsx build/bump-php-packages.ts\" --commit \"release: v\"",
     "build": "pnpm -r build",
@@ -14,7 +15,6 @@
     "docs:serve": "vitepress serve docs",
     "ci": "pnpm run lint && pnpm run build && pnpm run test"
   },
-  "packageManager": "pnpm@9.4.0",
   "devDependencies": {
     "@fontsource-variable/rubik": "^5.0.22",
     "@hybridly/core": "workspace:*",
@@ -46,8 +46,8 @@
   },
   "pnpm": {
     "overrides": {
-      "vitest": "0.34.6",
-      "@vitest/ui": "0.34.6"
+      "@vitest/ui": "0.34.6",
+      "vitest": "0.34.6"
     },
     "peerDependencyRules": {
       "ignoreMissing": [

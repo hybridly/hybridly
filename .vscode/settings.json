@@ -1,5 +1,5 @@
 {
-	"typescript.tsdk": "node_modules/typescript/lib",
-	"unocss.root": "docs",
-	"hybridly.test.directory": "packages/laravel/tests"
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "unocss.root": "docs",
+  "hybridly.test.directory": "packages/laravel/tests"
 }

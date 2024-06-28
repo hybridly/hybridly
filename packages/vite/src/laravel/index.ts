@@ -2,7 +2,7 @@ import fs from 'node:fs'
 import type { AddressInfo } from 'node:net'
 import path from 'node:path'
 import colors from 'picocolors'
-import type { Plugin, UserConfig, ResolvedConfig } from 'vite'
+import type { Plugin, ResolvedConfig, UserConfig } from 'vite'
 import { loadEnv } from 'vite'
 import type { DynamicConfiguration } from '@hybridly/core'
 import type { InputOption } from 'rollup'
@@ -52,19 +52,25 @@ export default function laravel(options: ViteOptions, hybridlyConfig: DynamicCon
 				},
 				server: {
 					origin: userConfig.server?.origin ?? '__laravel_vite_placeholder__',
-					...(process.env.LARAVEL_SAIL ? {
-						host: userConfig.server?.host ?? '0.0.0.0',
-						port: userConfig.server?.port ?? (env.VITE_PORT ? parseInt(env.VITE_PORT) : 5173),
-						strictPort: userConfig.server?.strictPort ?? true,
-					} : undefined),
-					...(serverConfig ? {
-						host: userConfig.server?.host ?? serverConfig.host,
-						hmr: userConfig.server?.hmr === false ? false : {
-							...serverConfig.hmr,
-							...(userConfig.server?.hmr === true ? {} : userConfig.server?.hmr),
-						},
-						https: userConfig.server?.https ?? serverConfig.https,
-					} : undefined),
+					...(process.env.LARAVEL_SAIL
+						? {
+								host: userConfig.server?.host ?? '0.0.0.0',
+								port: userConfig.server?.port ?? (env.VITE_PORT ? Number.parseInt(env.VITE_PORT) : 5173),
+								strictPort: userConfig.server?.strictPort ?? true,
+							}
+						: undefined),
+					...(serverConfig
+						? {
+								host: userConfig.server?.host ?? serverConfig.host,
+								hmr: userConfig.server?.hmr === false
+									? false
+									: {
+											...serverConfig.hmr,
+											...(userConfig.server?.hmr === true ? {} : userConfig.server?.hmr),
+										},
+								https: userConfig.server?.https ?? serverConfig.https,
+							}
+						: undefined),
 				},
 			}
 		},
@@ -80,7 +86,7 @@ export default function laravel(options: ViteOptions, hybridlyConfig: DynamicCon
 			const envDir = resolvedConfig.envDir || process.cwd()
 			const appUrl = loadEnv(resolvedConfig.mode, envDir, 'APP_URL').APP_URL ?? 'undefined'
 
-			server.httpServer?.once('listening', async() => {
+			server.httpServer?.once('listening', async () => {
 				const address = server.httpServer?.address()
 				const isAddressInfo = (x: string | AddressInfo | null | undefined): x is AddressInfo => typeof x === 'object'
 

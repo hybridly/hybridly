@@ -1,175 +1,175 @@
 {
-    "url": "https://bluebird.test",
-    "port": null,
-    "defaults": {
-        "bar": "baz"
+  "url": "https://bluebird.test",
+  "port": null,
+  "defaults": {
+    "bar": "baz"
+  },
+  "routes": {
+    "baz": {
+      "domain": null,
+      "method": ["GET", "HEAD"],
+      "uri": "baz",
+      "name": "baz",
+      "bindings": [],
+      "wheres": []
     },
-    "routes": {
-        "baz": {
-            "domain": null,
-            "method": ["GET", "HEAD"],
-            "uri": "baz",
-            "name": "baz",
-            "bindings": [],
-            "wheres": []
-        },
-        "baz.nested": {
-            "domain": null,
-            "method": ["GET", "HEAD"],
-            "uri": "baz/nested",
-            "name": "baz.nested",
-            "bindings": [],
-            "wheres": []
-        },
-        "foo": {
-            "domain": null,
-            "method": ["GET", "HEAD"],
-            "uri": "{bar}",
-            "name": "foo",
-            "bindings": {
-                "bar": "id"
-            },
-            "wheres": []
-        },
-        "foo.optional": {
-            "domain": null,
-            "method": ["GET", "HEAD"],
-            "uri": "{bar?}",
-            "name": "foo.optional",
-            "bindings": {
-                "bar": "id"
-            },
-            "wheres": []
-        },
-        "optional": {
-            "domain": null,
-            "method": ["GET", "HEAD"],
-            "uri": "{test?}",
-            "name": "optional",
-            "bindings": {
-                "test": "id"
-            },
-            "wheres": []
-        },
-        "index": {
-            "domain": null,
-            "method": ["GET", "HEAD"],
-            "uri": "",
-            "name": "index",
-            "bindings": [],
-            "wheres": []
-        },
-        "fixed-subdomain": {
-            "domain": "fixed.bluebird.test",
-            "method": ["GET", "HEAD"],
-            "uri": "",
-            "name": "fixed-subdomain",
-            "bindings": [],
-            "wheres": []
-        },
-        "subdomain": {
-            "domain": "{subdomain}.bluebird.test",
-            "method": ["GET", "HEAD"],
-            "uri": "",
-            "name": "subdomain",
-            "bindings": { "subdomain": "subdomain" },
-            "wheres": []
-        },
-        "chirp.store": {
-            "domain": null,
-            "method": ["POST"],
-            "uri": "chirps",
-            "name": "chirp.store",
-            "bindings": [],
-            "wheres": []
-        },
-        "chirp.show": {
-            "domain": null,
-            "method": ["GET", "HEAD"],
-            "uri": "chirps/{chirp}",
-            "name": "chirp.show",
-            "bindings": { "chirp": "id" },
-            "wheres": { "chirp": "[0-9]+" }
-        },
-        "chirp.like": {
-            "domain": null,
-            "method": ["POST"],
-            "uri": "chirps/{chirp}/likes",
-            "name": "chirp.like",
-            "bindings": { "chirp": "id" },
-            "wheres": []
-        },
-        "chirp.unlike": {
-            "domain": null,
-            "method": ["DELETE"],
-            "uri": "chirps/{chirp}/likes",
-            "name": "chirp.unlike",
-            "bindings": { "chirp": "id" },
-            "wheres": []
-        },
-        "chirp.destroy": {
-            "domain": null,
-            "method": ["DELETE"],
-            "uri": "chirps/{chirp}",
-            "name": "chirp.destroy",
-            "bindings": { "chirp": "id" },
-            "wheres": []
-        },
-        "users.show": {
-            "domain": null,
-            "method": ["GET", "HEAD"],
-            "uri": "users/{user}",
-            "name": "users.show",
-            "bindings": { "user": "id" },
-            "wheres": []
-        },
-        "users.show-comments": {
-            "domain": null,
-            "method": ["GET", "HEAD"],
-            "uri": "users/{user}/comments",
-            "name": "users.show-comments",
-            "bindings": { "user": "id" },
-            "wheres": []
-        },
-        "users.show-likes": {
-            "domain": null,
-            "method": ["GET", "HEAD"],
-            "uri": "users/{user}/likes",
-            "name": "users.show-likes",
-            "bindings": { "user": "id" },
-            "wheres": []
-        },
-        "login": {
-            "domain": null,
-            "method": ["GET", "HEAD"],
-            "uri": "login",
-            "name": "login",
-            "bindings": [],
-            "wheres": []
-        },
-        "login.attempt": {
-            "domain": null,
-            "method": ["POST"],
-            "uri": "login",
-            "name": "login.attempt",
-            "bindings": [],
-            "wheres": []
-        },
-        "logout": {
-            "domain": null,
-            "method": ["POST"],
-            "uri": "logout",
-            "name": "logout",
-            "bindings": [],
-            "wheres": []
-        },
-        "login.bypass": {
-            "domain": null,
-            "method": ["GET", "HEAD"],
-            "uri": "bypass-login/{user?}",
-            "name": "login.bypass",
-            "bindings": { "user": "id" },
-            "wheres": []
-        }
+    "baz.nested": {
+      "domain": null,
+      "method": ["GET", "HEAD"],
+      "uri": "baz/nested",
+      "name": "baz.nested",
+      "bindings": [],
+      "wheres": []
+    },
+    "foo": {
+      "domain": null,
+      "method": ["GET", "HEAD"],
+      "uri": "{bar}",
+      "name": "foo",
+      "bindings": {
+        "bar": "id"
+      },
+      "wheres": []
+    },
+    "foo.optional": {
+      "domain": null,
+      "method": ["GET", "HEAD"],
+      "uri": "{bar?}",
+      "name": "foo.optional",
+      "bindings": {
+        "bar": "id"
+      },
+      "wheres": []
+    },
+    "optional": {
+      "domain": null,
+      "method": ["GET", "HEAD"],
+      "uri": "{test?}",
+      "name": "optional",
+      "bindings": {
+        "test": "id"
+      },
+      "wheres": []
+    },
+    "index": {
+      "domain": null,
+      "method": ["GET", "HEAD"],
+      "uri": "",
+      "name": "index",
+      "bindings": [],
+      "wheres": []
+    },
+    "fixed-subdomain": {
+      "domain": "fixed.bluebird.test",
+      "method": ["GET", "HEAD"],
+      "uri": "",
+      "name": "fixed-subdomain",
+      "bindings": [],
+      "wheres": []
+    },
+    "subdomain": {
+      "domain": "{subdomain}.bluebird.test",
+      "method": ["GET", "HEAD"],
+      "uri": "",
+      "name": "subdomain",
+      "bindings": { "subdomain": "subdomain" },
+      "wheres": []
+    },
+    "chirp.store": {
+      "domain": null,
+      "method": ["POST"],
+      "uri": "chirps",
+      "name": "chirp.store",
+      "bindings": [],
+      "wheres": []
+    },
+    "chirp.show": {
+      "domain": null,
+      "method": ["GET", "HEAD"],
+      "uri": "chirps/{chirp}",
+      "name": "chirp.show",
+      "bindings": { "chirp": "id" },
+      "wheres": { "chirp": "[0-9]+" }
+    },
+    "chirp.like": {
+      "domain": null,
+      "method": ["POST"],
+      "uri": "chirps/{chirp}/likes",
+      "name": "chirp.like",
+      "bindings": { "chirp": "id" },
+      "wheres": []
+    },
+    "chirp.unlike": {
+      "domain": null,
+      "method": ["DELETE"],
+      "uri": "chirps/{chirp}/likes",
+      "name": "chirp.unlike",
+      "bindings": { "chirp": "id" },
+      "wheres": []
+    },
+    "chirp.destroy": {
+      "domain": null,
+      "method": ["DELETE"],
+      "uri": "chirps/{chirp}",
+      "name": "chirp.destroy",
+      "bindings": { "chirp": "id" },
+      "wheres": []
+    },
+    "users.show": {
+      "domain": null,
+      "method": ["GET", "HEAD"],
+      "uri": "users/{user}",
+      "name": "users.show",
+      "bindings": { "user": "id" },
+      "wheres": []
+    },
+    "users.show-comments": {
+      "domain": null,
+      "method": ["GET", "HEAD"],
+      "uri": "users/{user}/comments",
+      "name": "users.show-comments",
+      "bindings": { "user": "id" },
+      "wheres": []
+    },
+    "users.show-likes": {
+      "domain": null,
+      "method": ["GET", "HEAD"],
+      "uri": "users/{user}/likes",
+      "name": "users.show-likes",
+      "bindings": { "user": "id" },
+      "wheres": []
+    },
+    "login": {
+      "domain": null,
+      "method": ["GET", "HEAD"],
+      "uri": "login",
+      "name": "login",
+      "bindings": [],
+      "wheres": []
+    },
+    "login.attempt": {
+      "domain": null,
+      "method": ["POST"],
+      "uri": "login",
+      "name": "login.attempt",
+      "bindings": [],
+      "wheres": []
+    },
+    "logout": {
+      "domain": null,
+      "method": ["POST"],
+      "uri": "logout",
+      "name": "logout",
+      "bindings": [],
+      "wheres": []
+    },
+    "login.bypass": {
+      "domain": null,
+      "method": ["GET", "HEAD"],
+      "uri": "bypass-login/{user?}",
+      "name": "login.bypass",
+      "bindings": { "user": "id" },
+      "wheres": []
     }
+  }
 }

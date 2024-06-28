@@ -23,7 +23,7 @@ export async function forEachPlugin(cb: (plugin: Plugin) => MaybePromise<any>) {
 export async function runPluginHooks<T extends keyof Hooks>(hook: T, ...args: Parameters<Hooks[T]>): Promise<boolean> {
 	let result = true
 
-	await forEachPlugin(async(plugin) => {
+	await forEachPlugin(async (plugin) => {
 		if (plugin[hook]) {
 			debug.plugin(plugin.name, `Calling "${hook}" hook.`)
 			result &&= await plugin[hook]?.(...args as [any, any]) !== false

@@ -1,12 +1,12 @@
 import { mount } from '@vue/test-utils'
-import { it, vi } from 'vitest'
-import { nextTick, watch, defineComponent } from 'vue'
+import { vi } from 'vitest'
+import { defineComponent, nextTick, watch } from 'vue'
 import { useForm, useProperty } from '@hybridly/vue'
 import { state } from '@hybridly/vue/stores/state'
 import { fakeRouter, mockSuccessfulUrl } from '../../core/test/utils'
 import { server } from '../../core/test/server'
 
-it('it has no reactivity issues', async({ expect }) => {
+test('it has no reactivity issues', async ({ expect }) => {
 	const testData = {
 		with: [
 			{
@@ -35,7 +35,7 @@ it('it has no reactivity issues', async({ expect }) => {
 				state.setContext(context)
 			},
 
-			onViewSwap: async(options) => {
+			onViewSwap: async (options) => {
 				state.setProperties(options.properties)
 			},
 		},

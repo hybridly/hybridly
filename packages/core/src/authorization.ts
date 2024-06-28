@@ -9,7 +9,7 @@ export interface Authorizable<Authorizations extends Record<string, boolean>> {
 export function can<
 	Authorizations extends Record<string, boolean>,
 	Data extends Authorizable<Authorizations>,
-	Action extends keyof Data['authorization']
+	Action extends keyof Data['authorization'],
 >(resource: Data, action: Action) {
 	return resource.authorization?.[action] ?? false
 }

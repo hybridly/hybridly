@@ -1,5 +1,0 @@
-node_modules
-public
-vendor
-**/dist
-!docs/.vitepress

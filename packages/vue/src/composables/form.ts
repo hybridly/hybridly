@@ -1,5 +1,5 @@
 import isEqual from 'lodash.isequal'
-import type { Progress, UrlResolvable, HybridRequestOptions } from '@hybridly/core'
+import type { HybridRequestOptions, Progress, UrlResolvable } from '@hybridly/core'
 import type { DeepReadonly } from 'vue'
 import { computed, reactive, ref, toRaw, watch } from 'vue'
 import { clone, merge, setValueAtPath, unsetPropertyAtPath } from '@hybridly/utils'
@@ -47,7 +47,7 @@ function safeClone<T>(obj: T): T {
 
 export function useForm<
 	T extends SearchableObject,
-	P extends Path<T> & string = Path<T> & string
+	P extends Path<T> & string = Path<T> & string,
 >(options: FormOptions<T>) {
 	// https://github.com/hybridly/hybridly/issues/23
 	// TODO: explore unique/automatic key generation

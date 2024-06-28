@@ -3,7 +3,7 @@ import { type Plugin } from 'vite'
 import type { DynamicConfiguration } from '@hybridly/core'
 import { CONFIG_PLUGIN_NAME, CONFIG_VIRTUAL_MODULE_ID, RESOLVED_CONFIG_VIRTUAL_MODULE_ID } from '../constants'
 import type { ViteOptions } from '../types'
-import { generateRouteDefinitionFile, generateLaravelIdeaHelper, generateTsConfig } from '../typegen'
+import { generateLaravelIdeaHelper, generateRouteDefinitionFile, generateTsConfig } from '../typegen'
 import { loadConfiguration } from './load'
 import { getClientCode } from './client'
 

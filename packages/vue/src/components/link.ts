@@ -1,9 +1,8 @@
-/* eslint-disable vue/order-in-components */
 import qs from 'qs'
 import type { PropType } from 'vue'
-import { h, defineComponent } from 'vue'
-import type { Method, HybridRequestOptions } from '@hybridly/core'
-import { router, makeUrl } from '@hybridly/core'
+import { defineComponent, h } from 'vue'
+import type { HybridRequestOptions, Method } from '@hybridly/core'
+import { makeUrl, router } from '@hybridly/core'
 import type { RequestData } from '@hybridly/utils'
 import { debug, merge } from '@hybridly/utils'
 
@@ -159,11 +158,11 @@ function shouldIntercept(event: KeyboardEvent): boolean {
 
 	return !(
 		(event.target && (event?.target as HTMLElement).isContentEditable)
-    || event.defaultPrevented
-    || (isLink && event.which > 1)
-    || (isLink && event.altKey)
-    || (isLink && event.ctrlKey)
-    || (isLink && event.metaKey)
-    || (isLink && event.shiftKey)
+		|| event.defaultPrevented
+		|| (isLink && event.which > 1)
+		|| (isLink && event.altKey)
+		|| (isLink && event.ctrlKey)
+		|| (isLink && event.metaKey)
+		|| (isLink && event.shiftKey)
 	)
 }

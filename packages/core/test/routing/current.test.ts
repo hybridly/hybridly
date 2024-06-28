@@ -1,9 +1,9 @@
 import { beforeEach, expect, test } from 'vitest'
-import { currentRouteMatches, route, getCurrentRouteName } from '../../src/routing'
+import { currentRouteMatches, getCurrentRouteName, route } from '../../src/routing'
 import { fakeRouterContext } from '../utils'
 import routing from './fixtures/routing.json'
 
-beforeEach(async() => {
+beforeEach(async () => {
 	await fakeRouterContext({
 		routing: routing as any,
 	})
@@ -82,14 +82,14 @@ test('the current url can be matched to a route with a parameterized subdomain',
 
 // This seems to be the behaviour of the current implementation, but it's not clear if this is the desired behaviour.
 // As it seems that the port is extracted from the url, only to be used for the custom domain routes.
-test('a different port config is ignored on routes without a specific domain', async() => {
+test('a different port config is ignored on routes without a specific domain', async () => {
 	await fakeRouterContext({ routing: { ...routing as any, port: 8080 } })
 
 	location.href = 'https://bluebird.test/'
 	expect(currentRouteMatches('index')).toBe(true)
 })
 
-test('a different port config is used for custom domain routes matching', async() => {
+test('a different port config is used for custom domain routes matching', async () => {
 	await fakeRouterContext({ routing: { ...routing as any, port: 8080 } })
 
 	location.href = 'https://fixed.bluebird.test:8080/'

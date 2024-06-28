@@ -1,45 +1,45 @@
 {
   "name": "@hybridly/vite",
+  "type": "module",
   "version": "0.7.8",
   "description": "Vite plugin for Hybridly",
+  "author": "Enzo Innocenzi <enzo@innocenzi.dev>",
+  "license": "MIT",
+  "funding": "https://github.com/sponsors/innocenzi",
+  "homepage": "https://github.com/hybridly/hybridly/tree/main/packages/vite#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hybridly/hybridly.git",
+    "directory": "packages/vite"
+  },
+  "bugs": {
+    "url": "https://github.com/hybridly/hybridly/issues"
+  },
   "keywords": [
     "hybridly",
     "inertiajs",
     "vite",
     "vite-plugin"
   ],
-  "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/hybridly/hybridly.git",
-    "directory": "packages/vite"
-  },
-  "funding": "https://github.com/sponsors/innocenzi",
-  "author": "Enzo Innocenzi <enzo@innocenzi.dev>",
-  "type": "module",
-  "homepage": "https://github.com/hybridly/hybridly/tree/main/packages/vite#readme",
-  "bugs": {
-    "url": "https://github.com/hybridly/hybridly/issues"
-  },
   "publishConfig": {
     "provenance": true,
     "access": "public"
   },
   "sideEffects": false,
-  "files": [
-    "dist",
-    "*.d.ts"
-  ],
   "exports": {
     ".": {
-      "require": "./dist/index.cjs",
+      "types": "./dist/index.d.ts",
       "import": "./dist/index.mjs",
-      "types": "./dist/index.d.ts"
+      "require": "./dist/index.cjs"
     }
   },
   "main": "dist/index.cjs",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
+  "files": [
+    "*.d.ts",
+    "dist"
+  ],
   "scripts": {
     "build": "unbuild",
     "stub": "unbuild --stub"

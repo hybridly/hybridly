@@ -2,7 +2,7 @@ import type { Axios, AxiosResponse } from 'axios'
 import type { Hooks } from '../plugins/hooks'
 import type { Plugin } from '../plugins/plugin'
 import type { RoutingConfiguration } from '../routing/types'
-import type { PendingNavigation, ResolveComponent, SwapView, View, HybridPayload, Dialog } from '../router'
+import type { Dialog, HybridPayload, PendingNavigation, ResolveComponent, SwapView, View } from '../router'
 
 /** Options for creating a router context. */
 export interface RouterContextOptions {
@@ -73,7 +73,7 @@ export interface Adapter {
 	executeOnMounted: (callback: Function) => void
 }
 
-export interface ResolvedAdapter extends Adapter{
+export interface ResolvedAdapter extends Adapter {
 	updateRoutingConfiguration: (routing?: RoutingConfiguration) => void
 }
 

@@ -1,44 +1,44 @@
 {
   "name": "@hybridly/vue",
+  "type": "module",
   "version": "0.7.8",
   "description": "Vue adapter for Hybridly",
+  "author": "Enzo Innocenzi <enzo@innocenzi.dev>",
+  "license": "MIT",
+  "funding": "https://github.com/sponsors/innocenzi",
+  "homepage": "https://github.com/hybridly/hybridly/tree/main/packages/vue#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hybridly/hybridly.git",
+    "directory": "packages/vue"
+  },
+  "bugs": {
+    "url": "https://github.com/hybridly/hybridly/issues"
+  },
   "keywords": [
     "hybridly",
     "inertiajs",
     "vue",
     "vue-plugin"
   ],
-  "homepage": "https://github.com/hybridly/hybridly/tree/main/packages/vue#readme",
-  "bugs": {
-    "url": "https://github.com/hybridly/hybridly/issues"
-  },
-  "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/hybridly/hybridly.git",
-    "directory": "packages/vue"
-  },
-  "funding": "https://github.com/sponsors/innocenzi",
-  "author": "Enzo Innocenzi <enzo@innocenzi.dev>",
   "publishConfig": {
     "provenance": true,
     "access": "public"
   },
   "sideEffects": false,
-  "type": "module",
-  "files": [
-    "dist"
-  ],
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "require": "./dist/index.cjs",
-      "import": "./dist/index.mjs"
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
     }
   },
   "main": "dist/index.cjs",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "unbuild",
     "stub": "unbuild --stub"

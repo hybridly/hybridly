@@ -1,8 +1,0 @@
-{
-	"extends": "@innocenzi/eslint-config/vue",
-	"rules": {
-		"import/named": "off",
-		"@typescript-eslint/consistent-type-imports": "error",
-		"tailwindcss/classnames-order": "off"
-	}
-}

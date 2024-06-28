@@ -1,5 +1,5 @@
 import { debounce, debug } from '@hybridly/utils'
-import { stringify, parse } from 'superjson'
+import { parse, stringify } from 'superjson'
 import { SCROLL_REGION_ATTRIBUTE } from '../constants'
 import type { InternalRouterContext, RouterContextOptions, Serializer } from '../context'
 import { getInternalRouterContext, getRouterContext, setContext } from '../context'
@@ -60,7 +60,7 @@ export async function registerEventListeners() {
 
 	// Popstate is for catching back and forward navigations. We want
 	// to imitate native browser behavior while keeping the SPA feeling.
-	window?.addEventListener('popstate', async(event) => {
+	window?.addEventListener('popstate', async (event) => {
 		debug.history('Navigation detected (popstate event). State:', { state: event.state })
 
 		// Abort any active navigation.

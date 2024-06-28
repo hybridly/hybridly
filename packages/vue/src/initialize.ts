@@ -2,7 +2,7 @@ import type { App, DefineComponent, Plugin as VuePlugin } from 'vue'
 import { createApp, h } from 'vue'
 import type { DynamicConfiguration, Plugin, RouterContext, RouterContextOptions } from '@hybridly/core'
 import { createRouter } from '@hybridly/core'
-import { showViewComponentErrorModal, debug, random } from '@hybridly/utils'
+import { debug, random, showViewComponentErrorModal } from '@hybridly/utils'
 import type { Axios } from 'axios'
 import { type ProgressOptions, progress } from './plugins/progress'
 import { wrapper } from './components/wrapper'
@@ -36,13 +36,13 @@ export async function initializeHybridly(options: InitializeOptions = {}) {
 			executeOnMounted: (callback) => {
 				onMountedCallbacks.push(callback)
 			},
-			onDialogClose: async() => {
+			onDialogClose: async () => {
 				dialogStore.hide()
 			},
 			onContextUpdate: (context) => {
 				state.setContext(context)
 			},
-			onViewSwap: async(options) => {
+			onViewSwap: async (options) => {
 				if (options.component) {
 					onMountedCallbacks.push(() => options.onMounted?.({ isDialog: false }))
 					state.setView(options.component)
@@ -111,7 +111,7 @@ function prepare(options: ResolvedInitializeOptions) {
 	}
 
 	debug.adapter('vue', 'Resolved:', { isServer, element, payload })
-	const resolve = async(name: string): Promise<DefineComponent> => {
+	const resolve = async (name: string): Promise<DefineComponent> => {
 		debug.adapter('vue', 'Resolving component', name)
 
 		if (!options.imported) {

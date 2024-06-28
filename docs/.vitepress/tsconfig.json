@@ -1,14 +1,14 @@
 {
-    "compilerOptions": {
-        "target": "esnext",
-        "module": "ESNext",
-        "lib": ["esnext", "dom", "dom.iterable"],
-        "moduleResolution": "bundler",
-        "esModuleInterop": true,
-        "strict": true,
-        "strictNullChecks": true,
-        "resolveJsonModule": true,
-        "skipDefaultLibCheck": true,
-        "types": ["vite/client"]
-    }
+  "compilerOptions": {
+    "target": "esnext",
+    "lib": ["esnext", "dom", "dom.iterable"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "types": ["vite/client"],
+    "strict": true,
+    "strictNullChecks": true,
+    "esModuleInterop": true,
+    "skipDefaultLibCheck": true
+  }
 }

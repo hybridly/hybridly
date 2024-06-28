@@ -1,6 +1,7 @@
 import baseMerge from 'deepmerge'
 // @ts-expect-error due to moduleresolution
 import { isPlainObject } from 'is-plain-object'
+
 export { default as clone } from 'lodash.clonedeep'
 
 export function random(length: number = 10): string {
@@ -39,7 +40,7 @@ export function match<TValue extends string | number = string, TReturnValue = un
 
 export function debounce<F extends(...params: any[]) => ReturnType<F>>(fn: F, delay: number): F {
 	let timeoutID: ReturnType<typeof setTimeout>
-	return function(...args: unknown[]) {
+	return function (...args: unknown[]) {
 		clearTimeout(timeoutID)
 		timeoutID = setTimeout(() => fn(args), delay)
 	} as F

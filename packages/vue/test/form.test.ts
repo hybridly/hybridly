@@ -1,14 +1,14 @@
-import { beforeEach, it, vi } from 'vitest'
+import { beforeEach, vi } from 'vitest'
 import { useForm } from '@hybridly/vue'
 import { nextTick } from 'vue'
-import { fakeRouterContext, mockSuccessfulUrl, mockInvalidUrl, delay } from '../../core/test/utils'
+import { delay, fakeRouterContext, mockInvalidUrl, mockSuccessfulUrl } from '../../core/test/utils'
 import { server } from '../../core/test/server'
 
-beforeEach(async() => {
+beforeEach(async () => {
 	await fakeRouterContext()
 })
 
-it('it resets dirty state after successful form submission', async({ expect }) => {
+test('it resets dirty state after successful form submission', async ({ expect }) => {
 	// Given
 	server.resetHandlers(mockSuccessfulUrl('http://localhost.test/navigation', 'post'))
 
@@ -32,7 +32,7 @@ it('it resets dirty state after successful form submission', async({ expect }) =
 	expect(form.isDirty).toBe(false)
 })
 
-it('it does not reset dirty state after failed form submission', async({ expect }) => {
+test('it does not reset dirty state after failed form submission', async ({ expect }) => {
 	// Given
 	server.resetHandlers(mockInvalidUrl('http://localhost.test/navigation', 'post'))
 
@@ -56,7 +56,7 @@ it('it does not reset dirty state after failed form submission', async({ expect 
 	expect(form.isDirty).toBe(true)
 })
 
-it('it updates failed and successful', async({ expect }) => {
+test('it updates failed and successful', async ({ expect }) => {
 	server.resetHandlers(mockSuccessfulUrl('http://localhost.test/navigation', 'post'))
 
 	const form = useForm({
@@ -121,7 +121,7 @@ it('it updates failed and successful', async({ expect }) => {
 	expect(form.failed).toBe(false)
 })
 
-it('it can override all options', async({ expect }) => {
+test('it can override all options', async ({ expect }) => {
 	// Given
 	server.resetHandlers(mockSuccessfulUrl('http://localhost.test/navigation', 'post'))
 

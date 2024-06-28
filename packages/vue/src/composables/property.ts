@@ -15,7 +15,7 @@ export function useProperty<
 	Override = never,
 	T extends SearchableObject = GlobalHybridlyProperties,
 	P extends Path<T> & string = Path<T> & string,
-	ReturnType = [Override] extends [never] ? PathValue<T, P> : Override
+	ReturnType = [Override] extends [never] ? PathValue<T, P> : Override,
 >(
 	path: [Override] extends [never]
 		? P
@@ -32,7 +32,7 @@ export function setProperty<
 	Override = never,
 	T extends SearchableObject = GlobalHybridlyProperties,
 	P extends Path<T> & string = Path<T> & string,
-	ValueType = [Override] extends [never] ? PathValue<T, P> : Override
+	ValueType = [Override] extends [never] ? PathValue<T, P> : Override,
 >(
 	path: [Override] extends [never] ? P : string,
 	value: ValueType,

@@ -36,7 +36,7 @@ export function resolveDevelopmentEnvironmentHost(configPath: string): string | 
 export function resolveDevelopmentEnvironmentServerConfig(): {
 	hmr?: { host: string }
 	host?: string
-	https?: { cert: Buffer; key: Buffer }
+	https?: { cert: Buffer, key: Buffer }
 } | undefined {
 	const configPath = determineDevelopmentEnvironmentConfigPath()
 	const host = resolveDevelopmentEnvironmentHost(configPath)
@@ -68,7 +68,7 @@ export function resolveDevelopmentEnvironmentServerConfig(): {
 export function resolveEnvironmentServerConfig(env: Record<string, string>): {
 	hmr?: { host: string }
 	host?: string
-	https?: { cert: Buffer; key: Buffer }
+	https?: { cert: Buffer, key: Buffer }
 } | undefined {
 	if (!env.VITE_DEV_SERVER_KEY && !env.VITE_DEV_SERVER_CERT) {
 		return

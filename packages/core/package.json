@@ -1,42 +1,42 @@
 {
   "name": "@hybridly/core",
+  "type": "module",
   "version": "0.7.8",
   "description": "Core functionality of Hybridly",
-  "keywords": [
-    "hybridly",
-    "inertiajs"
-  ],
+  "author": "Enzo Innocenzi <enzo@innocenzi.dev>",
   "license": "MIT",
+  "funding": "https://github.com/sponsors/innocenzi",
+  "homepage": "https://github.com/hybridly/hybridly#readme",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/hybridly/hybridly.git"
   },
-  "funding": "https://github.com/sponsors/innocenzi",
-  "author": "Enzo Innocenzi <enzo@innocenzi.dev>",
-  "type": "module",
-  "homepage": "https://github.com/hybridly/hybridly#readme",
   "bugs": {
     "url": "https://github.com/hybridly/hybridly/issues"
   },
+  "keywords": [
+    "hybridly",
+    "inertiajs"
+  ],
   "publishConfig": {
     "provenance": true,
     "access": "public"
   },
   "sideEffects": false,
-  "files": [
-    "dist",
-    "*.d.ts"
-  ],
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "require": "./dist/index.cjs",
-      "import": "./dist/index.mjs"
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
     }
   },
   "main": "dist/index.cjs",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
+  "files": [
+    "*.d.ts",
+    "dist"
+  ],
   "scripts": {
     "build": "unbuild",
     "stub": "unbuild --stub"
