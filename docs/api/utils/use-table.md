@@ -34,6 +34,83 @@ const $props = defineProps<{
 const users = useTable($props, 'users')
 ```
 
+## Records
+
+The `records` property returns a computed list of `Record` objects with the following properties:
+
+```vue-html
+<tr v-for="{ key, value } in users.records" :key="key">
+	<td
+		v-for="column in users.columns"
+		:key="column.name"
+		v-text="value(column)"
+	/>
+</tr>
+```
+
+### `value`
+
+- Type: `Function`
+- Parameters: `column: Column`
+
+Gets the value of the record for the specified column.
+
+### `extra`
+
+- Type: `Function`
+- Parameters: `column: Column` and `path: string`
+
+Gets the extra data of the record for the specified column. The second parameter is the dot-notation-enabled path to the extra property you want to access.
+
+### `key`
+
+- Type: `string | int`
+
+The key of the record. Generally, it is the value of the `id` column. It is used for executing actions, but may be missing if [actions are disabled](../../guide/tables.md#disabling-actions-globally).
+
+### `execute`
+
+- Type: `Function`
+- Parameters: `action: Action`
+
+Executes the given inline action for the record.
+
+### `actions`
+
+- Type: `Action[]`
+
+The list of inline actions. Each `Action` has an additional scoped `execute` function.
+
+### `select`
+
+- Type: `Function`
+
+Selects this record.
+
+### `deselect`
+
+- Type: `Function`
+
+Deselects this record.
+
+### `toggle`
+
+- Type: `Function`
+
+Toggles selection for this record.
+
+### `selected`
+
+- Type: `bool`
+
+Checks whether this record is selected.
+
+### `record`
+
+- Type: `T`
+
+The actual record. Its type is determined by the first generic of `useTable`.
+
 ## Actions
 
 The following functions and properties are used to deal with actions. All `Action` objects use the following interface:
@@ -151,83 +228,6 @@ Applies the filter with the same name as the column, if it exists.
 - Parameters: `options?: AvailableHybridRequestOptions`
 
 Clears the filter with the same name as the column, if it exists.
-
-## Records
-
-The `records` property returns a computed list of `Record` objects with the following properties:
-
-```vue-html
-<tr v-for="{ key, value } in users.records" :key="key">
-	<td
-		v-for="column in users.columns"
-		:key="column.name"
-		v-text="value(column)/* [!code hl] */"
-	/>
-</tr>
-```
-
-### `value`
-
-- Type: `Function`
-- Parameters: `column: Column`
-
-Gets the value of the record for the specified column.
-
-### `extra`
-
-- Type: `Function`
-- Parameters: `column: Column` and `path: string`
-
-Gets the extra data of the record for the specified column. The second parameter is the dot-notation-enabled path to the extra property you want to access.
-
-### `key`
-
-- Type: `string | int`
-
-The key of the record. Generally, it is the value of the `id` column. It is used for executing actions, but may be missing if [actions are disabled](../../guide/tables.md#disabling-actions-globally).
-
-### `execute`
-
-- Type: `Function`
-- Parameters: `action: Action`
-
-Executes the given inline action for the record.
-
-### `actions`
-
-- Type: `Action[]`
-
-The list of inline actions. Each `Action` has an additional scoped `execute` function.
-
-### `select`
-
-- Type: `Function`
-
-Selects this record.
-
-### `deselect`
-
-- Type: `Function`
-
-Deselects this record.
-
-### `toggle`
-
-- Type: `Function`
-
-Toggles selection for this record.
-
-### `selected`
-
-- Type: `bool`
-
-Checks whether this record is selected.
-
-### `record`
-
-- Type: `T`
-
-The actual record. Its type is determined by the first generic of `useTable`.
 
 ## Bulk-selection
 
