@@ -203,9 +203,9 @@ export function useTable<
 			/** Clears the filter for this column. */
 			clearFilter: (options?: AvailableHybridRequestOptions) => refinements.clearFilter(column.name as string, options),
 			/** Checks whether the column is sortable. */
-			isSortable: refinements.sorts.find((sort) => sort.name === column.name),
+			isSortable: !!refinements.sorts.find((sort) => sort.name === column.name),
 			/** Checks whether the column is filterable. */
-			isFilterable: refinements.filters.find((filters) => filters.name === column.name),
+			isFilterable: !!refinements.filters.find((filters) => filters.name === column.name),
 		}))),
 		/** List of records for this table. */
 		records: computed(() => table.value.records.map((record) => ({
