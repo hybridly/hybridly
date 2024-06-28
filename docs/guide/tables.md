@@ -218,7 +218,7 @@ TextColumn::make('id')
 	->hidden(fn () => ! auth()->user()->is_admin)
 ```
 
-[metadata](#adding-extra-data-to-cells)
+Hidden columns **are not transmitted to the front-end at all**, and their corresponding model properties will not be available. If you need to hide a column but still have access to its properties, you may use [metadata](#adding-metadata) instead.
 
 ### Adding metadata
 
@@ -226,10 +226,9 @@ You may pass any information to a column by passing an array to the `metadata` f
 
 :::code-group
 ```php [UsersTable.php]
-TextColumn::make('full_name')
-	->metadata([
-		'color' => 'primary'
-	])
+TextColumn::make('full_name')->metadata([
+    'color' => 'primary'
+])
 ```
 ```vue-html [index.vue]
 <tr v-for="{ key, value } in users.records" :key="key">
