@@ -12,8 +12,14 @@
     },
     "records": [
         {
-            "name": "AirPods",
-            "created_at": "2021-01-01T00:00:00+00:00",
+            "name": {
+                "extra": [],
+                "value": "AirPods"
+            },
+            "created_at": {
+                "extra": [],
+                "value": "2021-01-01T00:00:00+00:00"
+            },
             "authorization": {
                 "returns-true": false,
                 "returns-false": false

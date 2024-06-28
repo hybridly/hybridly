@@ -11,7 +11,9 @@ use Hybridly\Tests\Laravel\Tables\Fixtures\BasicProductsTableWithActionsAndFilte
 use Hybridly\Tests\Laravel\Tables\Fixtures\BasicProductsTableWithConditionallyHiddenStuff;
 use Hybridly\Tests\Laravel\Tables\Fixtures\BasicProductsTableWithData;
 use Hybridly\Tests\Laravel\Tables\Fixtures\BasicProductsTableWithDataUsingFromModel;
+use Hybridly\Tests\Laravel\Tables\Fixtures\BasicProductsTableWithExtra;
 use Hybridly\Tests\Laravel\Tables\Fixtures\BasicProductsTableWithHiddenStuff;
+use Hybridly\Tests\Laravel\Tables\Fixtures\BasicProductsTableWithMetadata;
 use Hybridly\Tests\Laravel\Tables\Fixtures\BasicProductsTableWithSoftDeleteAction;
 use Hybridly\Tests\Laravel\Tables\Fixtures\BasicScopedProductsTable;
 use Hybridly\Tests\Laravel\Tables\Fixtures\BasicTableWithConstructor;
@@ -254,7 +256,7 @@ it('supports dependency injection on the constructor', function () {
 
     expect($table->getRecords())
         ->toHaveCount(1)
-        ->sequence(fn ($expect) => $expect->name->toBe('Product 2'));
+        ->sequence(fn ($expect) => $expect->name->value->toBe('Product 2'));
 });
 
 it('supports custom arguments on the constructor', function () {
@@ -265,7 +267,7 @@ it('supports custom arguments on the constructor', function () {
 
     expect($table->getRecords())
         ->toHaveCount(1)
-        ->sequence(fn ($expect) => $expect->name->toBe('Product 2'));
+        ->sequence(fn ($expect) => $expect->name->value->toBe('Product 2'));
 });
 
 it('supports custom arguments on `make`', function () {
@@ -278,7 +280,7 @@ it('supports custom arguments on `make`', function () {
 
     expect($table->getRecords())
         ->toHaveCount(1)
-        ->sequence(fn ($expect) => $expect->name->toBe('Product 2'));
+        ->sequence(fn ($expect) => $expect->name->value->toBe('Product 2'));
 });
 
 it('supports dependency injection and custom arguments on `make`', function () {
@@ -296,5 +298,20 @@ it('supports dependency injection and custom arguments on `make`', function () {
 
     expect($table->getRecords())
         ->toHaveCount(1)
-        ->sequence(fn ($expect) => $expect->name->toBe('Product bar'));
+        ->sequence(fn ($expect) => $expect->name->value->toBe('Product bar'));
+});
+
+it('may have cell metadata', function () {
+    ProductFactory::new()->create(['name' => 'Product 1', 'vendor' => Vendor::Apple]);
+    ProductFactory::new()->create(['name' => 'Product 2', 'vendor' => Vendor::Microsoft]);
+
+    $table = BasicProductsTableWithExtra::make();
+
+    expect($table->getRecords())->toMatchSnapshot();
+});
+
+it('may have column metadata', function () {
+    $table = BasicProductsTableWithMetadata::make();
+
+    expect($table->getTableColumns())->toMatchSnapshot();
 });

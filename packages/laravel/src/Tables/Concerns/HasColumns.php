@@ -9,7 +9,7 @@ trait HasColumns
 {
     private mixed $cachedColumns = null;
 
-    protected function getTableColumns(): Collection
+    public function getTableColumns(): Collection
     {
         return $this->cachedColumns ??= collect($this->defineColumns())
             ->filter(static fn (BaseColumn $column): bool => !$column->isHidden());

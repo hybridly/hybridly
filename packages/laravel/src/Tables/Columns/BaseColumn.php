@@ -9,6 +9,7 @@ use Hybridly\Tables\Columns;
 abstract class BaseColumn extends Component
 {
     use Columns\Concerns\CanTransformValue;
+    use Columns\Concerns\HasExtra;
     use Concerns\HasLabel;
     use Concerns\HasMetadata;
     use Concerns\HasName;

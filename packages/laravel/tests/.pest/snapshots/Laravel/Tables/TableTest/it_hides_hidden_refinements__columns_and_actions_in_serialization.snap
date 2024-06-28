@@ -12,7 +12,10 @@
     },
     "records": [
         {
-            "id": 1
+            "id": {
+                "extra": [],
+                "value": 1
+            }
         }
     ],
     "paginator": {

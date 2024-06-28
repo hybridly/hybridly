@@ -1,5 +1,6 @@
 import { computed, reactive } from 'vue'
 import { route, router } from '@hybridly/core'
+import { getByPath } from '@clickbar/dot-diver'
 import { toReactive } from '../utils'
 import { useBulkSelect } from './bulk-select'
 import type { AvailableHybridRequestOptions, SortDirection, ToggleSortOptions } from './refinements'
@@ -16,7 +17,7 @@ declare global {
 		columns: Column<T>[]
 		inlineActions: InlineAction[]
 		bulkActions: BulkAction[]
-		records: T[]
+		records: Array<T>
 		paginator: Exclude<PaginatorKind extends 'cursor' ? CursorPaginator<T> : (PaginatorKind extends 'simple' ? SimplePaginator<T> : Paginator<T>), 'data'>
 		refinements: Refinements
 		endpoint: string
@@ -30,8 +31,8 @@ export interface Column<T extends object = never> {
 	label: string
 	/** The type of this column. */
 	type: string
-	/** Custom metadata for this column. */
-	metadata: any
+	/** Metadata of this column. */
+	metadata: Record<string, any>
 }
 
 // #region action
@@ -62,11 +63,18 @@ export interface InlineAction extends Action {
 
 export type RecordIdentifier = string | number
 
+type AsRecordType<T extends Record<string, any>> = {
+	[K in keyof T]: {
+		extra: Record<string, any>
+		value: T[K]
+	}
+}
+
 /**
  * Provides utilities for working with tables.
  */
 export function useTable<
-	RecordType extends(Props[PropsKey] extends Table<infer RecordType, any> ? RecordType : never),
+	RecordType extends(Props[PropsKey] extends Table<infer T, any> ? AsRecordType<T> : never),
 	PaginatorKindName extends (Props[PropsKey] extends Table<RecordType, infer PaginatorKind> ? PaginatorKind : never),
 	TableType extends (Props[PropsKey] extends Table<RecordType, PaginatorKindName> ? Table<RecordType, PaginatorKindName> : never),
 	Props extends Record<string, unknown>,
@@ -85,10 +93,10 @@ export function useTable<
 		}
 
 		if (Reflect.has(record, '__hybridId')) {
-			return Reflect.get(record, '__hybridId') as any
+			return Reflect.get(record, '__hybridId').value as any
 		}
 
-		return Reflect.get(record, table.value.keyName) as any
+		return Reflect.get(record, table.value.keyName).value as any
 	}
 
 	function getActionName(action: Action | string): string {
@@ -202,7 +210,7 @@ export function useTable<
 		/** List of records for this table. */
 		records: computed(() => table.value.records.map((record) => ({
 			/** The actual record. */
-			record,
+			record: Object.values(record).map((record) => record.value),
 			/** The key of the record. Use this instead of `id`. */
 			key: getRecordKey(record),
 			/** Executes the given inline action. */
@@ -222,7 +230,9 @@ export function useTable<
 			/** Checks whether this record is selected. */
 			selected: bulk.selected(getRecordKey(record)),
 			/** Gets the value of the record for the specified column. */
-			value: (column: string | Column<RecordType>) => record[typeof column === 'string' ? column : column.name],
+			value: (column: string | Column<RecordType>) => record[typeof column === 'string' ? column : column.name].value,
+			/** Gets the extra object of the record for the specified column. */
+			extra: (column: string | Column<RecordType>, path: string) => getByPath(record[typeof column === 'string' ? column : column.name].extra, path),
 		}))),
 		/**
 		 * Paginated meta and links.

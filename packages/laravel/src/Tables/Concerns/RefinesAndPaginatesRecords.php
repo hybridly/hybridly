@@ -196,16 +196,15 @@ trait RefinesAndPaginatesRecords
         $paginatedRecords = $this->paginateRecords($this->getRefinedQuery());
 
         /** @var Collection<BaseColumn> */
-        $columns = $this->getTableColumns();
+        $columns = $this->getTableColumns()->mapWithKeys(static fn (BaseColumn $column) => [$column->getName() => $column]);
 
         $columnsWithTransforms = $columns->filter(static fn (BaseColumn $column) => $column->canTransformValue());
         $keyName = $this->getKeyName();
         $modelClass = $this->getModelClass();
         $includeOriginalRecordId = Configuration::get()->tables->enableActions && $columnsWithTransforms->contains(static fn (BaseColumn $column) => $column->getName() === $keyName);
-        $columnNames = $columns->map(static fn (BaseColumn $column) => $column->getName());
-        $columnsToInclude = [...$columnNames->toArray(), $keyName, '__hybridId', 'authorization'];
+        $columnsToInclude = [...$columns->keys(), $keyName, '__hybridId', 'authorization'];
 
-        return $paginatedRecords->through(function (Model $model) use ($includeOriginalRecordId, $columnsWithTransforms, $modelClass, $columnNames, $keyName, $columnsToInclude) {
+        return $paginatedRecords->through(function (Model $model) use ($includeOriginalRecordId, $modelClass, $columns, $columnsToInclude) {
             $record = $this->getRecordFromModel($model);
 
             // If actions are enabled but the record's key is not included in the
@@ -215,24 +214,39 @@ trait RefinesAndPaginatesRecords
                 $record['__hybridId'] = $model->getKey();
             }
 
-            return array_filter(
-                array: [
-                    ...$record,
-                    ...$columnsWithTransforms->mapWithKeys(static fn (BaseColumn $column) => [
-                        $column->getName() => !$column->canTransformValue() ? data_get($record, $column->getName()) : $column->getTransformedValue(
-                            named: [
-                                'column' => $column,
-                                'record' => $record,
-                            ],
-                            typed: [
-                                $modelClass => $model,
-                            ],
-                        ),
-                    ]),
-                ],
-                callback: fn (string $key) => \in_array($key, $columnsToInclude, true),
-                mode: \ARRAY_FILTER_USE_KEY,
-            );
+            return collect($record)
+                ->mapWithKeys(static function (mixed $value, string $key) use ($columns, $model, $record, $modelClass) {
+                    /** @var ?BaseColumn */
+                    $column = $columns[$key] ?? null;
+
+                    return [
+                        $key => $key === 'authorization' ? $value : [
+                            'extra' => \is_null($column) || !$column->hasExtra()
+                                ? []
+                                : $column->getExtra(
+                                    named: [
+                                        'record' => $model,
+                                        'model' => $model,
+                                    ],
+                                    typed: [
+                                        $modelClass => $model,
+                                    ],
+                                ),
+                            'value' => \is_null($column) || !$column->canTransformValue()
+                                ? $value
+                                : $column->getTransformedValue(
+                                    named: [
+                                        'column' => $column,
+                                        'record' => $record,
+                                    ],
+                                    typed: [
+                                        $modelClass => $model,
+                                    ],
+                                ),
+                        ],
+                    ];
+                })
+                ->filter(fn ($_, string $key) => \in_array($key, $columnsToInclude, strict: true));
         });
     }
 }

@@ -74,6 +74,24 @@ const users = useTable($props, 'users') // [!code focus]
 </script>
 ```
 
+At its simplest, the template for a table may look like that:
+
+```vue
+<template>
+	<table>
+		<tbody>
+			<tr v-for="{ key, value } in users.records" :key="key"> <!-- [!code focus:7] -->
+				<td
+					v-for="column in users.columns"
+					:key="column.name"
+					v-text="value(column)"
+				/>
+			</tr>
+		</tbody>
+	</table>
+</template>
+```
+
 :::tip User interface
 The user interface is completely up to you, no component is provided. You may refer to the [`useTable`](../api/utils/use-table.md) documentation to see which utilities are available to work with tables.
 :::
@@ -182,11 +200,11 @@ TextColumn::make('full_name')
 The value of a column is accessible in the `records` property of the table:
 
 ```vue-html
-<tr v-for="{ key, record } in users.records" :key="key">
+<tr v-for="{ key, value } in users.records" :key="key">
 	<td
 		v-for="column in users.columns"
 		:key="column.name"
-		 v-text="record[column.name]/* [!code hl] */"
+		 v-text="value(column)/* [!code hl] */"
 	/>
 </tr>
 ```
@@ -200,7 +218,7 @@ TextColumn::make('id')
 	->hidden(fn () => ! auth()->user()->is_admin)
 ```
 
-Hidden columns are not transmitted to the front-end at all, and their corresponding model properties will not be available. If you need to hide a column but still have access to its properties, you may use [metadata](#adding-metadata) instead.
+Hidden columns **are not transmitted to the front-end at all**, and their corresponding model properties will not be available. If you need to hide a column but still have access to its properties, you may use [metadata](#adding-metadata) instead.
 
 ### Adding metadata
 
@@ -208,20 +226,19 @@ You may pass any information to a column by passing an array to the `metadata` f
 
 :::code-group
 ```php [UsersTable.php]
-TextColumn::make('full_name')
-	->metadata([
-		'color' => 'primary'
-	])
+TextColumn::make('full_name')->metadata([
+    'color' => 'primary'
+])
 ```
 ```vue-html [index.vue]
-<tr v-for="{ key, record } in users.records" :key="key">
+<tr v-for="{ key, value } in users.records" :key="key">
 	<td
 		v-for="column in users.columns"
 		:key="column.name"
 		:class="{
 			'text-primary': column.metadata.color === 'primary'  // [!code hl]
 		}"
-		v-text="record[column.name]"
+		v-text="value(column)"
 	/>
 </tr>
 ```
@@ -477,6 +494,29 @@ protected function transformRecords(Paginator $paginator): Paginator
 		});
 }
 ```
+
+### Adding extra data to cells
+
+You may pass any arbitrary data to a cell by passing a callback to the `extra` method.
+
+:::code-group
+```php [UsersTable.php]
+TextColumn::make('first_name')
+	->extra(fn (User $user) => [
+		'tooltip' => "{$user->full_name}"
+	])
+```
+```vue-html [index.vue]
+<tr v-for="{ key, value, extra } in users.records" :key="key">
+	<td
+		v-for="column in users.columns"
+		:key="column.name"
+		v-text="value(column)"
+		:title="extra(column, 'tooltip')/* [!code hl] */"
+	/>
+</tr>
+```
+:::
 
 ## Using different paginators
 

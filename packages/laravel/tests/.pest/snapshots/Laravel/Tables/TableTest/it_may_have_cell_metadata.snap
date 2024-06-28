@@ -1,0 +1,26 @@
+[
+    {
+        "id": {
+            "extra": [],
+            "value": 1
+        },
+        "name": {
+            "extra": {
+                "tooltip": "Made by apple"
+            },
+            "value": "Product 1"
+        }
+    },
+    {
+        "id": {
+            "extra": [],
+            "value": 2
+        },
+        "name": {
+            "extra": {
+                "tooltip": "Made by microsoft"
+            },
+            "value": "Product 2"
+        }
+    }
+]
