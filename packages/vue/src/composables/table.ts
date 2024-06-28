@@ -1,10 +1,10 @@
 import { computed, reactive } from 'vue'
 import { route, router } from '@hybridly/core'
+import { getByPath } from '@clickbar/dot-diver'
 import { toReactive } from '../utils'
 import { useBulkSelect } from './bulk-select'
 import type { AvailableHybridRequestOptions, SortDirection, ToggleSortOptions } from './refinements'
 import { useRefinements } from './refinements'
-import { getByPath } from '@clickbar/dot-diver'
 
 declare global {
 	interface Table<
