@@ -8,6 +8,7 @@ use Hybridly\Tests\Fixtures\Vendor;
 use Hybridly\Tests\Laravel\Tables\Fixtures\BasicProductsTable;
 use Hybridly\Tests\Laravel\Tables\Fixtures\BasicProductsTableWithActions;
 use Hybridly\Tests\Laravel\Tables\Fixtures\BasicProductsTableWithActionsAndFilters;
+use Hybridly\Tests\Laravel\Tables\Fixtures\BasicProductsTableWithCellMetadata;
 use Hybridly\Tests\Laravel\Tables\Fixtures\BasicProductsTableWithConditionallyHiddenStuff;
 use Hybridly\Tests\Laravel\Tables\Fixtures\BasicProductsTableWithData;
 use Hybridly\Tests\Laravel\Tables\Fixtures\BasicProductsTableWithDataUsingFromModel;
@@ -298,3 +299,12 @@ it('supports dependency injection and custom arguments on `make`', function () {
         ->toHaveCount(1)
         ->sequence(fn ($expect) => $expect->name->toBe('Product bar'));
 });
+
+it('may have cell metadata', function () {
+    ProductFactory::new()->create(['name' => 'Product 1', 'vendor' => Vendor::Apple]);
+    ProductFactory::new()->create(['name' => 'Product 2', 'vendor' => Vendor::Microsoft]);
+
+    $table = BasicProductsTableWithCellMetadata::make();
+
+    expect($table->getRecords())->toMatchSnapshot();
+})->only();

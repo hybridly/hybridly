@@ -13,8 +13,8 @@ trait HasMetadata
         return $this;
     }
 
-    public function getMetadata(): array
+    public function getMetadata(array $named = [], array $typed = []): array
     {
-        return $this->evaluate($this->metadata);
+        return $this->evaluate($this->metadata, $named, $typed);
     }
 }

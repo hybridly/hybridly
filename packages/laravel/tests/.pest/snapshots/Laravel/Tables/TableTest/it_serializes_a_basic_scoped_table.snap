@@ -74,8 +74,7 @@
         {
             "name": "name",
             "type": "text",
-            "label": "Name",
-            "metadata": []
+            "label": "Name"
         }
     ],
     "endpoint": "hybridly.action.invoke",

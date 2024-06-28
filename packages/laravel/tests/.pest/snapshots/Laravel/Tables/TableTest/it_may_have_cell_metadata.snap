@@ -1,0 +1,26 @@
+[
+    {
+        "id": {
+            "metadata": [],
+            "value": 1
+        },
+        "name": {
+            "metadata": {
+                "tooltip": "Made by apple"
+            },
+            "value": "Product 1"
+        }
+    },
+    {
+        "id": {
+            "metadata": [],
+            "value": 2
+        },
+        "name": {
+            "metadata": {
+                "tooltip": "Made by microsoft"
+            },
+            "value": "Product 2"
+        }
+    }
+]

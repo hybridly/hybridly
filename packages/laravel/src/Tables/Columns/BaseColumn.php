@@ -36,7 +36,6 @@ abstract class BaseColumn extends Component
             'name' => $this->getName(),
             'type' => $this->getType(),
             'label' => $this->getLabel(),
-            'metadata' => $this->getMetadata(),
         ];
     }
 
