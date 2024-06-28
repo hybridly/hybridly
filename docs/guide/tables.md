@@ -74,6 +74,24 @@ const users = useTable($props, 'users') // [!code focus]
 </script>
 ```
 
+At its simplest, the template for a table may look like that:
+
+```vue
+<template>
+	<table>
+		<tbody>
+			<tr v-for="{ key, value } in users.records" :key="key"> <!-- [!code focus:7] -->
+				<td
+					v-for="column in users.columns"
+					:key="column.name"
+					v-text="value(column)"
+				/>
+			</tr>
+		</tbody>
+	</table>
+</template>
+```
+
 :::tip User interface
 The user interface is completely up to you, no component is provided. You may refer to the [`useTable`](../api/utils/use-table.md) documentation to see which utilities are available to work with tables.
 :::
