@@ -5,6 +5,7 @@ namespace Hybridly\Refining\Filters;
 use BackedEnum;
 use Hybridly\Refining\Concerns\SupportsRelationConstraints;
 use Illuminate\Contracts\Database\Eloquent\Builder;
+use Illuminate\Support\Collection;
 
 class SelectFilter extends BaseFilter
 {
@@ -33,9 +34,15 @@ class SelectFilter extends BaseFilter
     {
         $options = $this->evaluate($this->options);
 
+        if ($options instanceof Collection) {
+            $options = $options->toArray();
+        }
+
         if (\is_string($options) && is_a($options, BackedEnum::class, allow_string: true)) {
             $options = array_map(fn (\BackedEnum $enum) => $enum->value, $options::cases());
-        } elseif (\is_string($options)) {
+        }
+
+        if (\is_string($options)) {
             throw new \InvalidArgumentException("The options for the [{$property}] filter must be either an array or a backed enum.");
         }
 
@@ -86,7 +93,7 @@ class SelectFilter extends BaseFilter
 
     protected function applyMultipleSelectQuery(Builder $builder, mixed $value, string $property, array $options, array $allowedOptions): void
     {
-        $value = array_map(fn ($s) => trim($s), explode(',', $value));
+        $value = array_map(fn ($s) => trim($s), \is_array($value) ? $value : explode(',', $value));
 
         if (empty(array_intersect($value, $allowedOptions))) {
             return;
