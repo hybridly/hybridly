@@ -209,8 +209,8 @@ At this point, your `package.json` should look like the following:
 				"build": "vite build"
 		},
 		"devDependencies": {
-				"axios": "^1.3.0",
-				"hybridly": "0.5.7",
+				"axios": "^1.7.2",
+				"hybridly": "0.7.3",
 				"lodash": "^4.17.19",
 				"postcss": "^8.1.14",
 				"vite": "^5.0.8",

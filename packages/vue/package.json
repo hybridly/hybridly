@@ -50,17 +50,18 @@
     "@clickbar/dot-diver": "^1.0.6",
     "@hybridly/core": "workspace:*",
     "@hybridly/utils": "workspace:*",
-    "@vue/devtools-api": "^6.6.1",
+    "@vue/devtools-api": "^7.3.5",
     "defu": "^6.1.4",
     "lodash.isequal": "^4.5.0",
     "nprogress": "^0.2.0",
     "qs": "^6.12.1"
   },
   "devDependencies": {
-    "@types/lodash": "^4.17.0",
+    "@types/lodash": "^4.17.6",
     "@types/lodash.isequal": "^4.5.8",
     "@types/nprogress": "^0.2.3",
-    "@vue/test-utils": "^2.4.5",
-    "vue": "^3.4.23"
+    "@vue/test-utils": "^2.4.6",
+    "axios": "^1.7.2",
+    "vue": "^3.4.31"
   }
 }
