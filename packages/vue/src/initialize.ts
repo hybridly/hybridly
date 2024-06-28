@@ -177,7 +177,7 @@ export interface InitializeOptions {
 	/** Callback that gets executed before Vue is mounted. */
 	enhanceVue?: (
 		/** Vue application to enhance. */
-		vue: App<Element>, 
+		vue: App<Element>,
 		/** Initial payload. */
 		payload: Record<string, any>,
 	) => any
