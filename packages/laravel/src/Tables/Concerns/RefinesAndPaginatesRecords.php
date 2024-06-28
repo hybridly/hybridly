@@ -198,29 +198,49 @@ trait RefinesAndPaginatesRecords
         /** @var Collection<BaseColumn> */
         $columns = $this->getTableColumns()->mapWithKeys(static fn (BaseColumn $column) => [$column->getName() => $column]);
 
-        $columnsWithTransforms = $columns->filter(static fn (BaseColumn $column) => $column->canTransformValue());
         $keyName = $this->getKeyName();
         $modelClass = $this->getModelClass();
-        $includeOriginalRecordId = Configuration::get()->tables->enableActions && $columnsWithTransforms->contains(static fn (BaseColumn $column) => $column->getName() === $keyName);
+
+        // These are the columns we may include, if requested, in the record object.
         $columnsToInclude = [...$columns->keys(), $keyName, '__hybridId', 'authorization'];
 
-        return $paginatedRecords->through(function (Model $model) use ($includeOriginalRecordId, $modelClass, $columns, $columnsToInclude) {
+        // We need to know if the record key is included in the columns, because it may be used for actions.
+        // If it's included but transformed, we consider it's not included and we will force-include it.
+        $hasKeyAsColumn = $columns->has($keyName) && !$columns->get($keyName)->canTransformValue();
+
+        // If we need the original record ID for actions, we may force-include it if it's not already in the columns.
+        $forceIncludeOriginalRecordId = Configuration::get()->tables->enableActions && !$hasKeyAsColumn;
+
+        return $paginatedRecords->through(function (Model $model, int $fakeId) use ($forceIncludeOriginalRecordId, $hasKeyAsColumn, $modelClass, $columns, $columnsToInclude) {
             $record = $this->getRecordFromModel($model);
 
             // If actions are enabled but the record's key is not included in the
             // columns or is transformed, ensure we still return it because
             // it is needed to identify records when performing actions
-            if ($includeOriginalRecordId) {
-                $record['__hybridId'] = $model->getKey();
+            if (!$hasKeyAsColumn) {
+                $record['__hybridId'] = $forceIncludeOriginalRecordId
+                    ? $model->getKey()
+                    : $fakeId;
             }
 
-            return collect($record)
-                ->mapWithKeys(static function (mixed $value, string $key) use ($columns, $model, $record, $modelClass) {
+            return collect($columnsToInclude)
+                ->mapWithKeys(static function (string $key) use ($columns, $model, $record, $modelClass) {
                     /** @var ?BaseColumn */
                     $column = $columns[$key] ?? null;
+                    $value = $record[$key] ?? null;
+
+                    // These are special columns that shouldn't be nested as a {value, extra} object.
+                    if (\in_array($key, ['__hybridId', 'authorization'], strict: true)) {
+                        return [$key => $value];
+                    }
+
+                    // If we don't have a column for this property, we don't send it to the front-end.
+                    if (!$columns->has($key)) {
+                        return [];
+                    }
 
                     return [
-                        $key => $key === 'authorization' ? $value : [
+                        $key => [
                             'extra' => \is_null($column) || !$column->hasExtra()
                                 ? []
                                 : $column->getExtra(
@@ -246,7 +266,7 @@ trait RefinesAndPaginatesRecords
                         ],
                     ];
                 })
-                ->filter(fn ($_, string $key) => \in_array($key, $columnsToInclude, strict: true));
+                ->filter(fn (mixed $value, string $key) => \in_array($key, $columnsToInclude, strict: true) && !\is_null($value));
         });
     }
 }
