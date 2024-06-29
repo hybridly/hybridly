@@ -14,7 +14,6 @@ export function viewTransition(): Plugin {
 				return
 			}
 
-			// eslint-disable-next-line promise/param-names
 			return new Promise((confirmTransitionStarted) => document.startViewTransition!(() => {
 				confirmTransitionStarted(true)
 				return new Promise<void>((resolve) => domUpdated = resolve)

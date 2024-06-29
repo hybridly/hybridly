@@ -183,9 +183,9 @@ function ensureCommandShouldRunInEnvironment(command: 'build' | 'serve', env: Re
 /**
  * Resolves input files.
  */
-function resolveInput(userConfig: UserConfig, hybridlyConfig: DynamicConfiguration, ssr: boolean): InputOption | string | undefined {
+function resolveInput(userConfig: UserConfig, hybridlyConfig: DynamicConfiguration, _ssr: boolean): InputOption | string | undefined {
 	// TODO: SSR support
-	// if (ssr) {
+	// if (_ssr) {
 	// 	return config.ssr
 	// }
 
