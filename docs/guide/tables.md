@@ -62,16 +62,14 @@ return view('users.index', [
 The table property can be typed using the global `Table` type, which also accepts a generic that describes the table shape:
 
 ```ts
-<script setup lang="ts">
-const $props = defineProps<{ // [!code focus:7]
+const $props = defineProps<{
 	users: Table<{
 		id: number
 		full_name: string
 	}>
 }>()
 
-const users = useTable($props, 'users') // [!code focus]
-</script>
+const users = useTable($props, 'users')
 ```
 
 At its simplest, the template for a table may look like that:
@@ -80,7 +78,7 @@ At its simplest, the template for a table may look like that:
 <template>
 	<table>
 		<tbody>
-			<tr v-for="{ key, value } in users.records" :key="key"> <!-- [!code focus:7] -->
+			<tr v-for="{ key, value } in users.records" :key="key"> <!-- [!code focus:6] -->
 				<td
 					v-for="column in users.columns"
 					:key="column.name"
@@ -143,7 +141,7 @@ const $props = defineProps<{
 
 const users = useTable($props, 'users')
 const projects = useTable($props, 'projects')
-``` 
+```
 :::
 
 When scoping tables, refining records and pagination will automatically work through the utilities provided by [`useTable`](../api/utils/use-table.md).
@@ -247,7 +245,6 @@ TextColumn::make('full_name')->metadata([
 ## Refining records
 
 Filtering and sorting tables records works by leveraging the existing [refining](./refining.md) features. You can define or apply refiners using the same API on both the back-end and front-end.
-
 
 ### Defining refiners
 
@@ -420,7 +417,7 @@ You may learn about all utilities in [their documentation](../api/utils/use-tabl
 
 ### Action responses
 
-Actions use hybrid requests. By default, all callbacks will simply redirect back. 
+Actions use hybrid requests. By default, all callbacks will simply redirect back.
 
 However, you may want to [redirect](./responses.md#external-redirects) to a specific URL, open a [dialog](./dialogs.md), or return any valid [hybrid response](./responses.md).
 
@@ -465,7 +462,6 @@ use Hybridly\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\LaravelData\Data;
 
-
 final class UsersTable extends Table
 {
     protected string $model = User::class;
@@ -480,7 +476,7 @@ final class UsersTable extends Table
 
 ### Hooking into the paginator
 
-In certain scenarios, you may want to hook into the paginator to manually transform the records. 
+In certain scenarios, you may want to hook into the paginator to manually transform the records.
 
 It is possible to do so by overriding the `transformRecords` method, which is called just before serialization:
 

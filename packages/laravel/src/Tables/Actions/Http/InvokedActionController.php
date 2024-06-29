@@ -8,6 +8,7 @@ use Hybridly\Tables\Actions\DataTransferObjects\BulkActionData;
 use Hybridly\Tables\Actions\DataTransferObjects\InlineActionData;
 use Hybridly\Tables\Actions\DataTransferObjects\InvokedActionData;
 use Hybridly\Tables\Actions\InlineAction;
+use Hybridly\Tables\AnonymousTable;
 use Hybridly\Tables\Exceptions\CouldNotResolveTableException;
 use Hybridly\Tables\Exceptions\InvalidActionException;
 use Hybridly\Tables\Exceptions\InvalidActionTypeException;
@@ -48,6 +49,10 @@ final class InvokedActionController
 
         if (!$table instanceof Table) {
             throw InvalidTableException::with($tableId);
+        }
+
+        if ($table instanceof AnonymousTable) {
+            throw InvalidTableException::cannotBeAnonymous();
         }
 
         $actions = match ($data::class) {
