@@ -4,6 +4,7 @@ namespace Hybridly\Refining\Concerns;
 
 use Hybridly\Refining\Contracts\Refiner;
 use Hybridly\Refining\Refine;
+use Hybridly\Refining\Sorts\BaseSort;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
 
@@ -43,7 +44,14 @@ trait HasRefiners
         return $this;
     }
 
-    public function getSortDirectionFromRequest(string $property, ?string $alias = null): ?string
+    public function hasOtherSorts(BaseSort $sort): bool
+    {
+        return collect(explode(',', $this->getRequest()->get($this->formatScope($this->getSortsKey()))))
+            ->filter()
+            ->contains(fn (string $sortName) => ltrim($sortName, '-') !== ($sort->getAlias() ?? $sort->getProperty()));
+    }
+
+    public function getSortDirectionFromRequest(BaseSort $sort): ?string
     {
         $callback = static function (Request $request, string $scope, string $property, ?string $alias) {
             $sorts = collect(explode(',', $request->get($scope)));
@@ -57,8 +65,8 @@ trait HasRefiners
             named: [
                 'request' => $this->getRequest(),
                 'scope' => $this->formatScope($this->getSortsKey()),
-                'property' => $property,
-                'alias' => $alias,
+                'property' => $sort->getProperty(),
+                'alias' => $sort->getAlias(),
             ],
             typed: [
                 Request::class => $this->getRequest(),

@@ -39,7 +39,7 @@ Refine::query(
 ```
 :::
 
-This `Refine` instance will update the query according to the specified refiners and the current request. 
+This `Refine` instance will update the query according to the specified refiners and the current request.
 
 The query can then be executed as usual by chaining any Eloquent builder method, like `paginate` or `get`:
 
@@ -50,7 +50,7 @@ $chirps = Refine::model(Chirp::class)
 
 ## Specifying refiners
 
-A refiner is an object that updates the query according to the current request. 
+A refiner is an object that updates the query according to the current request.
 
 Filters and sorts are example of built-in refiners, but you may create your own by implementing the `Hybridly\Refining\Contracts\Refiner` interface.
 
@@ -121,28 +121,47 @@ const refine = useRefinements($props, 'refinements') // [!code focus]
 </script>
 
 <template>
-  <!-- Loops through available filters --> // [!code focus:21]
-  <div v-for="filter in refine.filters" :key="filter.name">
+	<!-- Loops through available filters --> // [!code focus:21]
+	<div v-for="filter in refine.filters" :key="filter.name">
+		<!-- Shows a `text` input for the filter named `body` -->
+		<template v-if="filter.name === 'body'">
+			<input
+				type="text"
+				@change="filter.apply($event.target.value)"
+			/>
+		</template>
 
-    <!-- Shows a `text` input for the filter named `body` -->
-    <template v-if="filter.name === 'body'">
-      <input
-        type="text"
-        @change="filter.apply($event.target.value)"
-      />
-    </template>
-
-    <!-- Shows a `select` input for the "trashed" filter -->
-    <template v-if="filter.type === 'trashed'">
-      <select @change="filter.apply($event.target.value)">
-        <option value="with" :selected="filter.value === 'with'">All</option>
-        <option value="only" :selected="filter.value === 'only'">Trashed</option>
-        <option value="" :selected="!filter.value">Not trashed</option>
-      </select>
-    </template>
-
-  </div>
+		<!-- Shows a `select` input for the "trashed" filter -->
+		<template v-if="filter.type === 'trashed'">
+			<select @change="filter.apply($event.target.value)">
+				<option value="with" :selected="filter.value === 'with'">
+					All
+				</option>
+				<option value="only" :selected="filter.value === 'only'">
+					Trashed
+				</option>
+				<option value="" :selected="!filter.value">
+					Not trashed
+				</option>
+			</select>
+		</template>
+	</div>
 </template>
+```
+
+## Specifying a default sort
+
+A sort may automatically get applied in the specified direction by calling the `default` method.
+
+```php
+Sorts\Sort::make('full_name')->default();
+```
+
+This sort will not be applied if another sort is active. If you wish to always enable it, you may set the `sole` parameter to `false`:
+
+```php
+Sorts\Sort::make('full_name')->default('asc', sole: false);
+Sorts\Sort::make('email');
 ```
 
 ## Querying nested relationships
@@ -154,14 +173,13 @@ Filters have basic relationship filtering capabilities, which means you may use 
 Filters\Filter::make('user.full_name', alias: 'user');
 ```
 
-It is recommended to specify an alias when filtering relationship properties, otherwise the filter name will have its `.` replaced by underscores. 
+It is recommended to specify an alias when filtering relationship properties, otherwise the filter name will have its `.` replaced by underscores.
 
 Note that filters using relationship use `whereHas` under the hood, which might not be the best option performance-wise.
 
 :::warning Sorts are not supported
 Note that the provided sorts do not support relationships. You will need to use a custom sort with a subquery to achieve a relationship sort.
 :::
-
 
 ## Using an alias
 
@@ -172,7 +190,7 @@ It may not be desirable to expose the name of a database column to users. You ma
 Sorts\Sort::make('created_at', alias: 'date');
 ```
 
-In the example above, `date` is used to apply the sort instead of the column name `created_at`. 
+In the example above, `date` is used to apply the sort instead of the column name `created_at`.
 
 Note that certain refiners, like `TrashedFilter` or `CallbackFilter`, cannot have an alias as they don't use the specified property in their query.
 

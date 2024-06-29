@@ -29,9 +29,23 @@ abstract class BaseSort extends Components\Component implements Refiner, Sort
         $this->configure();
     }
 
+    public function getProperty(): string
+    {
+        return $this->property;
+    }
+
+    public function getAlias(): ?string
+    {
+        return $this->alias;
+    }
+
     public function refine(Refine $refiner, Builder $builder): void
     {
-        $this->direction = $refiner->getSortDirectionFromRequest($this->property, $this->alias);
+        $this->direction = $refiner->getSortDirectionFromRequest($this);
+
+        if ($this->isSole() && $refiner->hasOtherSorts($this)) {
+            return;
+        }
 
         if (\is_null($this->direction) && !$this->getDefaultDirection()) {
             return;
