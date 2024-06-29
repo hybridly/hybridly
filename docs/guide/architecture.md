@@ -63,7 +63,7 @@ final class AppServiceProvider extends ServiceProvider
 resources/
 ├── applications/
 │   ├── main.ts
-│   └── root.blade.ts
+│   └── root.blade.php
 └── domains/ // [!code hl]
     └── authentication/
         ├── layouts/
@@ -166,7 +166,7 @@ return hybridly('authentication::login');
 resources/
 ├── applications/
 │   ├── main.ts
-│   └── root.blade.ts
+│   └── root.blade.php
 └── domains/
     └── authentication/
         ├── layouts/
