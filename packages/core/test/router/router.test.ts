@@ -1,4 +1,4 @@
-import { beforeEach } from 'vitest'
+import { beforeEach, test } from 'vitest'
 import { performHybridNavigation, router } from '../../src/router/router'
 import { getRouterContext, registerHook } from '../../src'
 import { fakePayload, fakeRouterContext, mockSuccessfulUrl } from '../utils'

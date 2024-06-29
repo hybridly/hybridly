@@ -1,4 +1,4 @@
-import { beforeEach, vi } from 'vitest'
+import { beforeEach, test, vi } from 'vitest'
 import { useForm } from '@hybridly/vue'
 import { nextTick } from 'vue'
 import { delay, fakeRouterContext, mockInvalidUrl, mockSuccessfulUrl } from '../../core/test/utils'

@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, vi } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { initializeContext } from '../../src/context'
 import { route } from '../../src/routing/index'
 import { makeRouterContextOptions } from '../utils'

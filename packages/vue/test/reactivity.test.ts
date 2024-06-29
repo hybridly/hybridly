@@ -1,5 +1,5 @@
 import { mount } from '@vue/test-utils'
-import { vi } from 'vitest'
+import { test, vi } from 'vitest'
 import { defineComponent, nextTick, watch } from 'vue'
 import { useForm, useProperty } from '@hybridly/vue'
 import { state } from '@hybridly/vue/stores/state'

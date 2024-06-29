@@ -1,4 +1,4 @@
-import { expect } from 'vitest'
+import { expect, test } from 'vitest'
 import { initializeContext, setContext } from '../../src/context'
 import { fakeRouterContext, makeRouterContextOptions } from '../utils'
 
