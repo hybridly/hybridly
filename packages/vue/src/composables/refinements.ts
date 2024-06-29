@@ -1,8 +1,8 @@
 import type { HybridRequestOptions } from '@hybridly/core'
 import { router } from '@hybridly/core'
 import type { Ref } from 'vue'
-import { computed, ref, watch } from 'vue'
-import type { FormDataConvertible } from '@hybridly/utils'
+import { computed, nextTick, ref, watch } from 'vue'
+import { type FormDataConvertible, debounce } from '@hybridly/utils'
 import { toReactive } from '../utils'
 
 export type SortDirection = 'asc' | 'desc'
@@ -17,10 +17,10 @@ export interface ToggleSortOptions extends AvailableHybridRequestOptions {
 
 export interface BindFilterOptions<T> extends AvailableHybridRequestOptions {
 	transformValue?: (value?: T) => any
-	/** If specified, this callback will watch the ref and apply  */
+	/** If specified, this callback will be responsible for watching the specified ref that contains the filter value.  */
 	watch?: (ref: Ref<T>, cb: any) => void
 	/**
-	 * The debounce time in milliseconds for updating this filter.
+	 * The debounce time in milliseconds for applying this filter.
 	 * @default 250ms
 	 */
 	debounce?: number
@@ -281,47 +281,52 @@ export function useRefinements<
 	}
 
 	function bindFilter<T = any>(name: string, options: BindFilterOptions<T> = {}) {
-		const debounce = options.debounce ?? 250
-		const refDebounce = options.syncDebounce ?? 250
 		const transform = options?.transformValue ?? ((value) => value)
 		const watchFn = options?.watch ?? watch
 		const getFilterValue = () => transform(refinements.value.filters.find((f) => f.name === name)?.value)
-		const _ref = ref(getFilterValue())
-		let _refWatchDisabled = false
-		let _refTimeout: ReturnType<typeof setTimeout>
-		let _filterTimeout: ReturnType<typeof setTimeout>
+		const _proxy = ref(getFilterValue())
+		let filterIsBeingApplied = false
+		let proxyIsBeingUpdated = false
 
-		// We watch refinements instead of using the `success` hook to handle
-		// situations where the filter value is updated through another request
-		watch(() => refinements.value.filters.find((f) => f.name === name), (filter) => {
-			if (_refWatchDisabled) {
-				return
-			}
-
-			clearTimeout(_refTimeout)
-			_refTimeout = setTimeout(() => _ref.value = transform(filter?.value), refDebounce)
-		}, { deep: true })
-
-		watchFn(_ref, (value: T) => {
-			clearTimeout(_refTimeout)
-			clearTimeout(_filterTimeout)
-			_filterTimeout = setTimeout(() => {
-				clearTimeout(_refTimeout)
-				_refWatchDisabled = true
-				applyFilter(name, transform(value), {
-					...options,
-					hooks: {
-						...options?.hooks,
-						after: (context) => {
-							_refWatchDisabled = false
-							options?.hooks?.after?.(context)
-						},
-					},
-				})
-			}, debounce)
+		// This debounced function applies the filter.
+		const debouncedApplyFilter = debounce(options.debounce ?? 250, async (value: T) => {
+			await applyFilter(name, transform(value), options)
+			nextTick(() => filterIsBeingApplied = false)
 		})
 
-		return _ref as Ref<T>
+		// This debounced function updates the `ref` value
+		// according to the most recent associated value.
+		const debounceUpdateProxyValue = debounce(options.syncDebounce ?? 250, () => {
+			const filter = refinements.value.filters.find((f) => f.name === name)
+			if (filter) {
+				_proxy.value = transform(filter?.value)
+			}
+			nextTick(() => proxyIsBeingUpdated = false)
+		}, { atBegin: true })
+
+		// We watch refinements instead of using the `success`
+		// hook so we can handle situations where the filter
+		// value is updated through another hybrid request.
+		watch(() => refinements.value.filters.find((f) => f.name === name)?.value, () => {
+			if (filterIsBeingApplied === true) {
+				return
+			}
+			proxyIsBeingUpdated = true
+			debounceUpdateProxyValue()
+		}, { deep: true })
+
+		// This watcher ensures that the filter is applied when the `ref`
+		// changes. Under the hood, it debounces the application of
+		// the filter, so it avoids spamming filter queries.
+		watchFn(_proxy, async (value: T) => {
+			if (proxyIsBeingUpdated === true) {
+				return
+			}
+			filterIsBeingApplied = true
+			debouncedApplyFilter(value)
+		})
+
+		return _proxy as Ref<T>
 	}
 
 	return {
