@@ -55,7 +55,6 @@
     "local-pkg": "^0.5.0",
     "magic-string": "^0.30.10",
     "picocolors": "^1.0.1",
-    "throttle-debounce": "^5.0.2",
     "unplugin-auto-import": "^0.17.6",
     "unplugin-icons": "^0.19.0",
     "unplugin-vue-components": "^0.27.2",

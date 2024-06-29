@@ -103,11 +103,11 @@ export async function registerEventListeners() {
 
 	// On scroll, we want to save the positions of all scrollbars.
 	// This is needed in order to restore them upon navigation.
-	window?.addEventListener('scroll', (event) => debounce(() => {
+	window?.addEventListener('scroll', (event) => debounce(100, () => {
 		if ((event?.target as Element)?.hasAttribute?.(SCROLL_REGION_ATTRIBUTE)) {
 			saveScrollPositions()
 		}
-	}, 100), true)
+	}), true)
 }
 
 /** Checks if the current navigation was made by going back or forward. */

@@ -2,6 +2,7 @@ import baseMerge from 'deepmerge'
 // @ts-expect-error due to moduleresolution
 import { isPlainObject } from 'is-plain-object'
 
+export { debounce, throttle } from 'throttle-debounce'
 export { default as clone } from 'lodash.clonedeep'
 
 export function random(length: number = 10): string {
@@ -36,14 +37,6 @@ export function match<TValue extends string | number = string, TReturnValue = un
 	const error = new Error(`Tried to handle "${value}" but there is no handler defined. Only defined handlers are: ${handlers}.`)
 
 	throw error
-}
-
-export function debounce<F extends(...params: any[]) => ReturnType<F>>(fn: F, delay: number): F {
-	let timeoutID: ReturnType<typeof setTimeout>
-	return function (...args: unknown[]) {
-		clearTimeout(timeoutID)
-		timeoutID = setTimeout(() => fn(args), delay)
-	} as F
 }
 
 export function value<T>(value: T | (() => T)): T {
