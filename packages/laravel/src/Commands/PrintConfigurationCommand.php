@@ -14,14 +14,7 @@ class PrintConfigurationCommand extends Command
     protected $description = 'Prints the internal Hybridly configuration.';
     protected $hidden = true;
 
-    public function __construct(
-        private readonly Hybridly $hybridly,
-        private readonly RouteExtractor $routeExtractor,
-    ) {
-        parent::__construct();
-    }
-
-    public function handle(): int
+    public function handle(Hybridly $hybridly, RouteExtractor $routeExtractor): int
     {
         $configuration = [
             'versions' => [
@@ -37,12 +30,12 @@ class PrintConfigurationCommand extends Command
             ],
             'components' => [
                 'eager' => Configuration::get()->architecture->eagerLoadViews,
-                'layouts' => $this->hybridly->getLayouts(),
-                'views' => $this->hybridly->getViews(),
-                'components' => $this->hybridly->getComponents(),
-                'files' => $this->hybridly->getTypeScriptDirectories(),
+                'layouts' => $hybridly->getLayouts(),
+                'views' => $hybridly->getViews(),
+                'components' => $hybridly->getComponents(),
+                'files' => $hybridly->getTypeScriptDirectories(),
             ],
-            'routing' => $this->routeExtractor->toArray(),
+            'routing' => $routeExtractor->toArray(),
         ];
 
         // We do a lil bit of h4cking around the `pretty` option
