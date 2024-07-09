@@ -161,9 +161,9 @@ export function useTable<
 		selectAll: bulk.selectAll,
 		/** Deselects all records. */
 		deselectAll: bulk.deselectAll,
-		/** Selects paged records. */
+		/** Selects records on the current page. */
 		selectPage: () => bulk.select(...table.value.records.map((record: RecordType) => getRecordKey(record))),
-		/** Deselects paged records. */
+		/** Deselects records on the current page. */
 		deselectPage: () => bulk.deselect(...table.value.records.map((record: RecordType) => getRecordKey(record))),
 		/** Checks if the given record is selected. */
 		isSelected: (record: RecordType) => bulk.selected(getRecordKey(record)),
