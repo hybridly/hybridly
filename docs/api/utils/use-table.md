@@ -255,6 +255,18 @@ Selects all records.
 
 De-selects all records.
 
+### `selectPage`
+
+- Type: `Function`
+
+Selects paged records.
+
+### `deselectPage`
+
+- Type: `Function`
+
+De-selects paged records.
+
 ### `isSelected`
 
 - Type: `Function`
