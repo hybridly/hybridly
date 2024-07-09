@@ -8,6 +8,7 @@ use Hybridly\Tests\Fixtures\Vendor;
 use Hybridly\Tests\Laravel\Tables\Fixtures\BasicProductsTable;
 use Hybridly\Tests\Laravel\Tables\Fixtures\BasicProductsTableWithActions;
 use Hybridly\Tests\Laravel\Tables\Fixtures\BasicProductsTableWithActionsAndFilters;
+use Hybridly\Tests\Laravel\Tables\Fixtures\BasicProductsTableWithActionsThatSendResponses;
 use Hybridly\Tests\Laravel\Tables\Fixtures\BasicProductsTableWithConditionallyHiddenStuff;
 use Hybridly\Tests\Laravel\Tables\Fixtures\BasicProductsTableWithData;
 use Hybridly\Tests\Laravel\Tables\Fixtures\BasicProductsTableWithDataUsingFromModel;
@@ -20,8 +21,10 @@ use Hybridly\Tests\Laravel\Tables\Fixtures\BasicTableWithConstructor;
 use Hybridly\Tests\Laravel\Tables\Fixtures\BasicTableWithDependencyInjection;
 use Hybridly\Tests\Laravel\Tables\Fixtures\BasicTableWithDependencyInjectionAndArguments;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
 use Pest\Expectation;
 
+use function Pest\Laravel\from;
 use function Pest\Laravel\post;
 
 beforeEach(function () {
@@ -314,4 +317,46 @@ it('may have column metadata', function () {
     $table = BasicProductsTableWithMetadata::make();
 
     expect($table->getTableColumns())->toMatchSnapshot();
+});
+
+it('inline actions can return any response', function () {
+    Table::encodeIdUsing(static fn () => BasicProductsTableWithActionsThatSendResponses::class);
+    Table::decodeIdUsing(static fn () => BasicProductsTableWithActionsThatSendResponses::class);
+
+    $product = ProductFactory::createImmutable();
+
+    // External redirect
+    post(config('hybridly.tables.actions_endpoint'), [
+        'type' => 'action:inline',
+        'action' => 'external_redirect',
+        'tableId' => BasicProductsTableWithActionsThatSendResponses::class,
+        'recordId' => $product->id,
+    ])->assertRedirect('https://google.com?q=AirPods');
+
+    // Internal redirect
+    Route::get('products/{product}', fn (Product $product) => $product->id)->name('product');
+    post(config('hybridly.tables.actions_endpoint'), [
+        'type' => 'action:inline',
+        'action' => 'internal_redirect',
+        'tableId' => BasicProductsTableWithActionsThatSendResponses::class,
+        'recordId' => $product->id,
+    ])->assertRedirect("/products/{$product->id}");
+
+    // Flash message
+    post(config('hybridly.tables.actions_endpoint'), [
+        'type' => 'action:inline',
+        'action' => 'flash_message',
+        'tableId' => BasicProductsTableWithActionsThatSendResponses::class,
+        'recordId' => $product->id,
+    ])->assertSessionHas('message', "Got product [{$product->id}]");
+
+    // No op redirects back
+    from('/foo')
+        ->post(config('hybridly.tables.actions_endpoint'), [
+            'type' => 'action:inline',
+            'action' => 'no_op',
+            'tableId' => BasicProductsTableWithActionsThatSendResponses::class,
+            'recordId' => $product->id,
+        ])
+        ->assertRedirect('/foo');
 });
