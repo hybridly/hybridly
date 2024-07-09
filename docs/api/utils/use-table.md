@@ -16,9 +16,9 @@ function useTable<
   Properties extends Record<string, any>,
 	Paginator extends 'simple' | 'cursor' | 'length-aware',
 >(
-  properties: Properties,
-  tableKey: keyof Properties,
-  defaultOptions: HybridRequestOptions = {}
+	properties: Properties,
+	tableKey: keyof Properties,
+	defaultOptions: HybridRequestOptions = {}
 )
 ```
 
@@ -28,7 +28,7 @@ function useTable<
 
 ```ts
 const $props = defineProps<{
-  users: Table<App.Data.UserData>
+	users: Table<App.Data.UserData>
 }>()
 
 const users = useTable($props, 'users')
@@ -254,6 +254,18 @@ Selects all records.
 - Type: `Function`
 
 De-selects all records.
+
+### `selectPage`
+
+- Type: `Function`
+
+Selects all records on the current page.
+
+### `deselectPage`
+
+- Type: `Function`
+
+De-selects all records on the current page.
 
 ### `isSelected`
 
