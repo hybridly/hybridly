@@ -75,7 +75,7 @@ return [
         'enable_actions' => true,
         'actions_endpoint' => 'invoke',
         'actions_endpoint_name' => 'hybridly.action.invoke',
-        'actions_endpoint_middleware' => [],
+        'actions_endpoint_middleware' => ['web'],
     ],
 
     /*

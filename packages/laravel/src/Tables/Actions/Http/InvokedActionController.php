@@ -84,8 +84,7 @@ final class InvokedActionController
         );
 
         if ($result instanceof Response) {
-            $result->send();
-            exit;
+            return $result;
         }
 
         return back();
@@ -128,8 +127,7 @@ final class InvokedActionController
         );
 
         if ($result instanceof Response) {
-            $result->send();
-            exit;
+            return $result;
         }
 
         return back();
