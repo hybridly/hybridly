@@ -259,13 +259,13 @@ De-selects all records.
 
 - Type: `Function`
 
-Selects paged records.
+Selects all records on current page.
 
 ### `deselectPage`
 
 - Type: `Function`
 
-De-selects paged records.
+De-selects all records on current page.
 
 ### `isSelected`
 
