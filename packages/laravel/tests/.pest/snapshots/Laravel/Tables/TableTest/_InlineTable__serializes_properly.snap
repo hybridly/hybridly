@@ -1,0 +1,66 @@
+{
+    "id": "products-table",
+    "keyName": "id",
+    "refinements": {
+        "sorts": [
+            {
+                "name": "id",
+                "hidden": false,
+                "label": "Id",
+                "metadata": [],
+                "is_active": false,
+                "direction": null,
+                "default": null,
+                "desc": "-id",
+                "asc": "id",
+                "next": "id"
+            }
+        ],
+        "filters": [],
+        "scope": null,
+        "keys": {
+            "sorts": "sort",
+            "filters": "filters"
+        }
+    },
+    "records": [],
+    "paginator": {
+        "links": [
+            {
+                "url": null,
+                "label": "&laquo; Previous",
+                "active": false
+            },
+            {
+                "url": "http:\/\/localhost?page=1",
+                "label": "1",
+                "active": true
+            },
+            {
+                "url": null,
+                "label": "Next &raquo;",
+                "active": false
+            }
+        ],
+        "meta": {
+            "current_page": 1,
+            "first_page_url": "http:\/\/localhost?page=1",
+            "last_page": 1,
+            "last_page_url": "http:\/\/localhost?page=1",
+            "path": "http:\/\/localhost",
+            "per_page": 10
+        }
+    },
+    "columns": [
+        {
+            "name": "id",
+            "type": "text",
+            "label": "#",
+            "metadata": []
+        }
+    ],
+    "endpoint": "hybridly.action.invoke",
+    "inlineActions": [],
+    "bulkActions": [],
+    "scope": null
+}

@@ -11,4 +11,9 @@ class InvalidTableException extends Exception
     {
         return new self(sprintf("Table [{$table}] must extend the [%s] class.", Table::class));
     }
+
+    public static function cannotBeAnonymous(): self
+    {
+        return new self('Anonymous tables do not support actions.');
+    }
 }

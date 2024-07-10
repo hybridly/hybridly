@@ -1,5 +1,9 @@
 <?php
 
+use Hybridly\Refining\Sorts\Sort;
+use Hybridly\Tables\Columns\TextColumn;
+use Hybridly\Tables\Exceptions\InvalidTableException;
+use Hybridly\Tables\InlineTable;
 use Hybridly\Tables\Table;
 use Hybridly\Tests\Fixtures\Database\Product;
 use Hybridly\Tests\Fixtures\Database\ProductFactory;
@@ -26,6 +30,7 @@ use Pest\Expectation;
 
 use function Pest\Laravel\from;
 use function Pest\Laravel\post;
+use function Pest\Laravel\withoutExceptionHandling;
 
 beforeEach(function () {
     Table::encodeIdUsing(static fn () => 'products-table');
@@ -360,3 +365,31 @@ it('inline actions can return any response', function () {
         ])
         ->assertRedirect('/foo');
 });
+
+test('`InlineTable` serializes properly', function () {
+    $table = InlineTable::create(
+        model: Product::class,
+        columns: [
+            TextColumn::make('id')->label('#'),
+        ],
+        refiners: [
+            Sort::make('id'),
+        ],
+    );
+
+    expect($table)->toMatchSnapshot();
+});
+
+test('`InlineTable` cannot have actions', function () {
+    withoutExceptionHandling();
+
+    Table::encodeIdUsing(static fn () => InlineTable::class);
+    Table::decodeIdUsing(static fn () => InlineTable::class);
+
+    post(config('hybridly.tables.actions_endpoint'), [
+        'type' => 'action:inline',
+        'action' => 'say_my_name',
+        'tableId' => InlineTable::class,
+        'recordId' => ProductFactory::createImmutable()->id,
+    ]);
+})->throws(InvalidTableException::class);

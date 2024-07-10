@@ -12,6 +12,7 @@ use Hybridly\Tables\Exceptions\CouldNotResolveTableException;
 use Hybridly\Tables\Exceptions\InvalidActionException;
 use Hybridly\Tables\Exceptions\InvalidActionTypeException;
 use Hybridly\Tables\Exceptions\InvalidTableException;
+use Hybridly\Tables\InlineTable;
 use Hybridly\Tables\Table;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
@@ -48,6 +49,10 @@ final class InvokedActionController
 
         if (!$table instanceof Table) {
             throw InvalidTableException::with($tableId);
+        }
+
+        if ($table instanceof InlineTable) {
+            throw InvalidTableException::cannotBeAnonymous();
         }
 
         $actions = match ($data::class) {
