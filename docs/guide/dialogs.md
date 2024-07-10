@@ -12,44 +12,45 @@ This feature has not been dogfed yet and is considered experimental. Its API may
 
 ## Creating a dialog
 
-Dialogs may be anything you want — most commonly, they will be modals or slideovers. The following component is an example of a dialog component which is shown as a modal. 
+Dialogs may be anything you want — most commonly, they will be modals or slideovers. The following component is an example of a dialog component which is shown as a modal.
 
 :::code-group
 ```vue [views/chirps/edit.vue]
 <script setup lang="ts">
 defineProps<{
-  chirp: App.Data.ChirpData
+	chirp: App.Data.ChirpData
 }>()
 </script>
 
 <template>
-  <base-modal title="Edit chirp"> // [!code hl]
-    <create-chirp :chirp="chirp" :edit="true" />
-  </base-modal> // [!code hl]
+	<base-modal title="Edit chirp">
+		// [!code hl]
+		<create-chirp :chirp="chirp" :edit="true" />
+	</base-modal> // [!code hl]
 </template>
 ```
 
 ```vue [components/base-modal.vue]
 <script setup lang="ts">
-const { show, close, unmount } = useDialog()
-
 defineProps<{
-  title?: string
+	title?: string
 }>()
+
+const { show, close, unmount } = useDialog()
 </script>
 
 <template>
 	<headless-transition-root
-    appear
-    as="template"
-    :show="show"
-    @after-leave="unmount"
-  >
+		appear
+		as="template"
+		:show="show"
+		@after-leave="unmount"
+	>
 		<headless-dialog
-      as="div"
-      class="relative z-30"
-      @close="close"
-    >
+			as="div"
+			class="relative z-30"
+			@close="close"
+		>
 			<headless-transition-child
 				as="template"
 				enter="ease-out duration-300"
@@ -73,20 +74,25 @@ defineProps<{
 						leave-from="opacity-100 translate-y-0 sm:scale-100"
 						leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
 					>
-						<headless-dialog-panel class="relative overflow-hidden flex flex-col rounded-lg bg-white px-4 pt-5 pb-4 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-2xl sm:p-6">
-							<div class="justify-between flex items-center mb-2">
-								<headless-dialog-title v-if="title" as="h3" class="text-lg font-medium leading-6 text-gray-800" v-text="title" />
+						<headless-dialog-panel class="relative flex flex-col overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-2xl sm:p-6">
+							<div class="mb-2 flex items-center justify-between">
+								<headless-dialog-title
+									v-if="title"
+									as="h3"
+									class="text-lg font-medium leading-6 text-gray-800"
+									v-text="title"
+								/>
 								<button
 									type="button"
 									class="rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
 									@click="close"
 								>
 									<span class="sr-only">Close</span>
-									<i-mdi-close class="h-6 w-6" aria-hidden="true" />
+									<i-mdi-close class="size-6" aria-hidden="true" />
 								</button>
 							</div>
 							<div class="sm:flex sm:items-start">
-								<div class="mt-3 text-center sm:mt-0 sm:text-left w-full">
+								<div class="mt-3 w-full text-center sm:mt-0 sm:text-left">
 									<div class="mt-2 w-full">
 										<slot />
 									</div>
@@ -102,7 +108,7 @@ defineProps<{
 ```
 :::
 
-For this example, the modal component is implemented as a Headless UI [`Dialog`](https://headlessui.com/vue/dialog) using the [`Transition`](https://headlessui.com/vue/transition) component to show and animate the dialog when it appears and when it closes. 
+For this example, the modal component is implemented as a Headless UI [`Dialog`](https://headlessui.com/vue/dialog) using the [`Transition`](https://headlessui.com/vue/transition) component to show and animate the dialog when it appears and when it closes.
 
 Notice the call to [`unmount`](../api/utils/use-dialog.md#unmount), which is needed to remove the dialog from the DOM after it's closed and its animations have finished.
 
@@ -118,7 +124,7 @@ use App\Models\Chirp;
 
 use function Hybridly\view;
 
-class ChirpController extends Controller  
+class ChirpController extends Controller
 {
     public function edit(Chirp $chirp)
     {
@@ -128,37 +134,43 @@ class ChirpController extends Controller
             'chirp' => ChirpData::from($chirp),
         ])->base('chirp.show', $chirp); // [!code hl]
     }
-}   
+}
 ```
 
 ### Forcing the base page
 
-You may set the `force` parameter of the `base` method to `true` if you want to force the base page to be displayed when rendering the dialog. 
+You may set the `force` parameter of the `base` method to `true` if you want to force the base page to be displayed when rendering the dialog.
 
 This means that every time that dialog is opened, its background page will no longer be the current page, but the specified base page.
 
+### Keeping the base page
+
+You may set the `keep` parameter of the `base` method to `true` if you want to keep the current view and not update its properties when rendering the dialog.
+
+This means that every time that dialog is opened, its background page will no longer be updated.
+
 ## Closing a dialog
 
-Navigating away from a dialog will automatically close it. 
+Navigating away from a dialog will automatically close it.
 
 In addition to the `close` function returned by [`useDialog`](../api/utils/use-dialog.md), it's possible to call `router.dialog.close()`. This function takes the same [options](../api/router/options.md) as any navigation.
 
 ```vue
 <script setup lang="ts">
 defineProps<{
-  chirp: App.Data.ChirpData
+	chirp: App.Data.ChirpData
 }>()
 
 const { close } = useDialog() // [!code hl]
 </script>
 
 <template>
-  <base-modal title="Edit chirp">
-    <create-chirp
-      :chirp="chirp"
-      :edit="true"
-      @success="close/* [!code hl] */"
-    />
-  </base-modal>
+	<base-modal title="Edit chirp">
+		<create-chirp
+			:chirp="chirp"
+			:edit="true"
+			@success="close/* [!code hl] */"
+		/>
+	</base-modal>
 </template>
 ```

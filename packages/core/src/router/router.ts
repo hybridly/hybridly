@@ -189,10 +189,13 @@ export async function performHybridNavigation(options: HybridRequestOptions): Pr
 		debug.router('The response respects the Hybridly protocol.')
 		const payload = response.data as HybridPayload
 
+		// If the navigation does not have a view, we keep the current one.
+		// This should only happen when using dialogs.
+
 		// If the navigation was asking for specific properties, we ensure that the
 		// new request object contains the properties of the current view context,
 		// because the back-end sent back only the required properties.
-		if ((options.only?.length ?? options.except?.length) && payload.view.component === context.view.component) {
+		if (payload.view && (options.only?.length ?? options.except?.length) && payload.view.component === context.view.component) {
 			debug.router(`Merging ${options.only ? '"only"' : '"except"'} properties.`, payload.view.properties)
 			payload.view.properties = merge(context.view.properties, payload.view.properties)
 			debug.router('Merged properties:', payload.view.properties)
@@ -318,6 +321,7 @@ export async function navigate(options: InternalNavigationOptions) {
 
 	// If no request was given, we use the current context instead.
 	options.payload ??= payloadFromContext()
+	options.payload.view ??= payloadFromContext().view
 
 	function evaluateConditionalOption<T extends boolean | string>(option?: ConditionalNavigationOption<T>) {
 		return typeof option === 'function'

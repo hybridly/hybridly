@@ -26,6 +26,7 @@ class Factory implements HybridResponse
     protected ?View $dialogView = null;
     protected ?string $dialogBaseUrl = null;
     protected bool $redirectToDialogBase = false;
+    protected bool $keepBaseView = false;
 
     public function __construct(
         protected Hybridly $hybridly,
@@ -37,10 +38,11 @@ class Factory implements HybridResponse
 
     /**
      * Sets the base route for this view, implying a dialog will be rendered.
-     * Setting `force` to `true` will always force a redirect to the base view
+     * Setting `force` to `true` will always force a redirect to the base view.
      * instead of opening the dialog in the current page during hybrid navigations.
+     * Setting `keep` to `true` will avoid returning an updated base view when rendering the dialog from.
      */
-    public function base(string $route, mixed $parameters = null, bool $force = false): static
+    public function base(string $route, mixed $parameters = null, bool $force = false, bool $keep = false): static
     {
         // In order to provide autocompletion support without adding
         // a `baseUrl` method, we check if `$route` is a named
@@ -52,6 +54,10 @@ class Factory implements HybridResponse
 
         if ($force) {
             $this->redirectToDialogBase = true;
+        }
+
+        if ($keep) {
+            $this->keepBaseView = true;
         }
 
         return $this;
@@ -185,12 +191,17 @@ class Factory implements HybridResponse
         );
 
         return new Payload(
-            view: $this->getBaseView(
-                targetUrl: $this->redirectToDialogBase
-                    ? $payload->dialog->baseUrl
-                    : $payload->dialog->redirectUrl,
-                originalRequest: $request,
-            ),
+            // For performance reason, we may omit computing the base view.
+            // This is useful when that view already exists, but
+            // only works when coming from an HTML request.
+            view: $this->keepBaseView && $this->hybridly->isHybrid($request)
+                ? null
+                : $this->getBaseView(
+                    targetUrl: $this->redirectToDialogBase
+                        ? $payload->dialog->baseUrl
+                        : $payload->dialog->redirectUrl,
+                    originalRequest: $request,
+                ),
             url: $payload->url,
             version: $payload->version,
             dialog: new Dialog(
