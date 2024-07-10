@@ -267,6 +267,12 @@ Selects all records on the current page.
 
 De-selects all records on the current page.
 
+### `isPageSelected`
+
+- Type: `Computed<bool>`
+
+Checks if all records on the current page are selected.
+
 ### `isSelected`
 
 - Type: `Function`
@@ -300,12 +306,6 @@ Deselectsthe given record.
 - Type: `Computed<bool>`
 
 Checks if all records are selected.
-
-### `pageSelected`
-
-- Type: `Computed<bool>`
-
-Checks if all records on the current page are selected.
 
 ## Pagination
 
