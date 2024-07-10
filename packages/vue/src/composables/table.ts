@@ -169,6 +169,8 @@ export function useTable<
 		isSelected: (record: RecordType) => bulk.selected(getRecordKey(record)),
 		/** Whether all records are selected. */
 		allSelected: bulk.allSelected,
+		/** Whether all records on the current page are selected. */
+		pageSelected: computed(() => table.value.records.every((record: RecordType) => bulk.selected(getRecordKey(record)))),
 		/** The current record selection. */
 		selection: bulk.selection,
 		/** Toggles selection for the given record. */

@@ -301,6 +301,12 @@ Deselectsthe given record.
 
 Checks if all records are selected.
 
+### `pageSelected`
+
+- Type: `Computed<bool>`
+
+Checks if all records on the current page are selected.
+
 ## Pagination
 
 A `paginator` object is returned. Its shape is typed and depends on the second generic of [`useTable`](#usage), which should be one of `simple`, `cursor` or `length-aware`.
