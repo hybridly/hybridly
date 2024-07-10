@@ -15,7 +15,7 @@ export function useDialog() {
 		/** Unmounts the dialog. Should be called after its closing animations. */
 		unmount: () => dialogStore.removeComponent(),
 		/** Whether the dialog is shown. */
-		show: computed(() => dialogStore.state.show.value),
+		show: computed({ get: () => dialogStore.state.show.value, set: (v) => !v ? router.dialog.close({ local: true }) : null }),
 		/** Properties of the dialog. */
 		properties: computed(() => state.context.value?.dialog?.properties),
 	}
