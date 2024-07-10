@@ -62,11 +62,11 @@ if (!\function_exists('Hybridly\dialog')) {
      *
      * @see https://hybridly.dev/api/laravel/functions.html#dialog
      */
-    function dialog(string $component = null, array|Arrayable|DataObject $properties = [], string $base = ''): Factory
+    function dialog(string $component = null, array|Arrayable|DataObject $properties = [], string $base = '', bool $force = false, bool $keep = false): Factory
     {
         return resolve(Factory::class)
             ->view($component, $properties)
-            ->base($base);
+            ->base($base, force: $force, keep: $keep);
     }
 }
 
