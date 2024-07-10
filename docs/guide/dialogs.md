@@ -23,92 +23,42 @@ defineProps<{
 </script>
 
 <template>
-	<base-modal title="Edit chirp">
-		// [!code hl]
-		<create-chirp :chirp="chirp" :edit="true" />
-	</base-modal> // [!code hl]
+	<base-dialog>
+		<edit-chirp :chirp="chirp" />
+	</base-dialog>
 </template>
 ```
 
 ```vue [components/base-modal.vue]
 <script setup lang="ts">
-defineProps<{
-	title?: string
-}>()
+import { DialogClose, DialogContent, DialogOverlay, DialogPortal, DialogRoot } from 'radix-vue'
 
 const { show, close, unmount } = useDialog()
 </script>
 
 <template>
-	<headless-transition-root
-		appear
-		as="template"
-		:show="show"
-		@after-leave="unmount"
-	>
-		<headless-dialog
-			as="div"
-			class="relative z-30"
-			@close="close"
-		>
-			<headless-transition-child
-				as="template"
-				enter="ease-out duration-300"
-				enter-from="opacity-0"
-				enter-to="opacity-100"
-				leave="ease-in duration-200"
-				leave-from="opacity-100"
-				leave-to="opacity-0"
+	<dialog-root :open="show">
+		<dialog-portal>
+			<dialog-overlay class="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/50 backdrop-blur-sm" />
+			<dialog-content
+				class="bg-background data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] fixed left-1/2 top-1/2 z-50 w-full max-w-sm -translate-x-1/2 -translate-y-1/2 gap-4 border p-5 shadow-lg duration-200 sm:rounded-lg"
+				@interact-outside="close"
+				@escape-key-down="close"
+				@pointer-down-outside="close"
+				@after-leave="unmount"
 			>
-				<div class="fixed inset-0 bg-gray-500/75 backdrop-blur-sm transition-opacity" />
-			</headless-transition-child>
-
-			<div class="fixed inset-0 z-30 overflow-y-auto">
-				<div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
-					<headless-transition-child
-						as="template"
-						enter="ease-out duration-100"
-						enter-from="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-						enter-to="opacity-100 translate-y-0 sm:scale-100"
-						leave="ease-in duration-100"
-						leave-from="opacity-100 translate-y-0 sm:scale-100"
-						leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-					>
-						<headless-dialog-panel class="relative flex flex-col overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-2xl sm:p-6">
-							<div class="mb-2 flex items-center justify-between">
-								<headless-dialog-title
-									v-if="title"
-									as="h3"
-									class="text-lg font-medium leading-6 text-gray-800"
-									v-text="title"
-								/>
-								<button
-									type="button"
-									class="rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-									@click="close"
-								>
-									<span class="sr-only">Close</span>
-									<i-mdi-close class="size-6" aria-hidden="true" />
-								</button>
-							</div>
-							<div class="sm:flex sm:items-start">
-								<div class="mt-3 w-full text-center sm:mt-0 sm:text-left">
-									<div class="mt-2 w-full">
-										<slot />
-									</div>
-								</div>
-							</div>
-						</headless-dialog-panel>
-					</headless-transition-child>
-				</div>
-			</div>
-		</headless-dialog>
-	</headless-transition-root>
+				<slot :close="close" />
+				<dialog-close as-child>
+					<slot name="close" :close="close" />
+				</dialog-close>
+			</dialog-content>
+		</dialog-portal>
+	</dialog-root>
 </template>
 ```
 :::
 
-For this example, the modal component is implemented as a Headless UI [`Dialog`](https://headlessui.com/v1/vue/dialog) using the [`Transition`](https://headlessui.com/v1/vue/transition) component to show and animate the dialog when it appears and when it closes.
+In this example, the modal component is implemented as a Radix [`Dialog`](https://www.radix-vue.com/components/dialog.html) using the [`tailwindcss-animate`](https://github.com/jamiebuilds/tailwindcss-animate) plugin to animate it.
 
 Notice the call to [`unmount`](../api/utils/use-dialog.md#unmount), which is needed to remove the dialog from the DOM after it's closed and its animations have finished.
 
@@ -124,7 +74,7 @@ use App\Models\Chirp;
 
 use function Hybridly\view;
 
-class ChirpController extends Controller
+final class ChirpController
 {
     public function edit(Chirp $chirp)
     {
@@ -137,15 +87,25 @@ class ChirpController extends Controller
 }
 ```
 
-### Forcing the base page
+## Forcing the base page to be displayed
 
-You may set the `force` parameter of the `base` method to `true` if you want to force the base page to be displayed when rendering the dialog.
+If you want the base page of a dialog to always be displayed, even when the dialog is opened from a different page, you may set the `force` parameter of the `base` method to `true`:
+
+```php
+return view('chirps.edit', ['chirp' => ChirpData::from($chirp)])
+	->base('chirp.show', $chirp, force: true);
+```
 
 This means that every time that dialog is opened, its background page will no longer be the current page, but the specified base page.
 
-### Keeping the base page
+## Keeping the current state of the base page
 
-You may set the `keep` parameter of the `base` method to `true` if you want to keep the current view and not update its properties when rendering the dialog.
+For performance reasons, you may prefer that the properties of the base page are not updated. You may achieve this by setting the `keep` parameter of the `base` method to `true`:
+
+```php
+return view('chirps.edit', ['chirp' => ChirpData::from($chirp)])
+	->base('chirp.show', $chirp, keep: true);
+```
 
 This means that every time that dialog is opened, its background page will no longer be updated.
 
