@@ -108,7 +108,7 @@ const { show, close, unmount } = useDialog()
 ```
 :::
 
-For this example, the modal component is implemented as a Headless UI [`Dialog`](https://headlessui.com/vue/dialog) using the [`Transition`](https://headlessui.com/vue/transition) component to show and animate the dialog when it appears and when it closes.
+For this example, the modal component is implemented as a Headless UI [`Dialog`](https://headlessui.com/v1/vue/dialog) using the [`Transition`](https://headlessui.com/v1/vue/transition) component to show and animate the dialog when it appears and when it closes.
 
 Notice the call to [`unmount`](../api/utils/use-dialog.md#unmount), which is needed to remove the dialog from the DOM after it's closed and its animations have finished.
 
