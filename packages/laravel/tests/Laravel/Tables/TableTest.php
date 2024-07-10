@@ -1,9 +1,9 @@
 <?php
 
 use Hybridly\Refining\Sorts\Sort;
-use Hybridly\Tables\AnonymousTable;
 use Hybridly\Tables\Columns\TextColumn;
 use Hybridly\Tables\Exceptions\InvalidTableException;
+use Hybridly\Tables\InlineTable;
 use Hybridly\Tables\Table;
 use Hybridly\Tests\Fixtures\Database\Product;
 use Hybridly\Tests\Fixtures\Database\ProductFactory;
@@ -366,8 +366,8 @@ it('inline actions can return any response', function () {
         ->assertRedirect('/foo');
 });
 
-test('`AnonymousTable` serializes properly', function () {
-    $table = AnonymousTable::create(
+test('`InlineTable` serializes properly', function () {
+    $table = InlineTable::create(
         model: Product::class,
         columns: [
             TextColumn::make('id')->label('#'),
@@ -380,16 +380,16 @@ test('`AnonymousTable` serializes properly', function () {
     expect($table)->toMatchSnapshot();
 });
 
-test('`AnonymousTable` cannot have actions', function () {
+test('`InlineTable` cannot have actions', function () {
     withoutExceptionHandling();
 
-    Table::encodeIdUsing(static fn () => AnonymousTable::class);
-    Table::decodeIdUsing(static fn () => AnonymousTable::class);
+    Table::encodeIdUsing(static fn () => InlineTable::class);
+    Table::decodeIdUsing(static fn () => InlineTable::class);
 
     post(config('hybridly.tables.actions_endpoint'), [
         'type' => 'action:inline',
         'action' => 'say_my_name',
-        'tableId' => AnonymousTable::class,
+        'tableId' => InlineTable::class,
         'recordId' => ProductFactory::createImmutable()->id,
     ]);
 })->throws(InvalidTableException::class);

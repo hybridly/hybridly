@@ -2,7 +2,7 @@
 
 namespace Hybridly\Tables;
 
-class AnonymousTable extends Table
+final class InlineTable extends Table
 {
     protected array $columns = [];
     protected array $refiners = [];
