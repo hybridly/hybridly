@@ -7,17 +7,23 @@ outline: deep
 This composable returns reactive utilities to work with the current route. These utilities are the reactive equivalents of [`router.matches`](../router/utils.md#matches) and [`router.current`](../router/utils.md#current).
 
 | Related | [Routing](../../guide/routing.md), [`route`](route.md) |
-| ------- | --------------------------------------------------------------- |
+| ------- | ------------------------------------------------------ |
 
 ## Usage
 
-`useRoute` doesn't accept any option. 
+`useRoute` doesn't accept any option.
 
 ```ts
-const { current, matches } = useRoute()
+const { isNavigating, current, matches } = useRoute()
 ```
 
 ## Utilities
+
+### `isNavigating`
+
+- **Type**: `Ref<boolean>`
+
+Ref that determines whether a navigation is occuring.
 
 ### `current`
 

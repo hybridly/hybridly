@@ -3,15 +3,15 @@
 This helper function generates a URL based on a route name and the provided arguments.
 
 | Related | [Routing](../../guide/routing.md), [`useRoute`](use-route.md) |
-| ------- | ---------------------------------------------------------------------------- |
+| ------- | ------------------------------------------------------------- |
 
 ## Usage
 
 ```ts
 function route<T extends RouteName>(
-  name: T,
-  parameters?: RouteParameters<T>,
-  absolute?: boolean
+	name: T,
+	parameters?: RouteParameters<T>,
+	absolute?: boolean
 ): string
 ```
 
@@ -34,10 +34,10 @@ Route::get('/users/{user}', [UsersController::class, 'show'])
   ->name('users.show')
 ```
 
-```ts
+```vue
 <script setup lang="ts">
 const $props = defineProps<{ // [!code focus:3]
-  user: App.Data.UserData
+	user: App.Data.UserData
 }>()
 
 const index = route('users.show', { user: $props.user }) // [!code focus]

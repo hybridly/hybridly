@@ -4,6 +4,8 @@ import type { RouteName, RouteParameters } from '@hybridly/core'
 import { router } from '@hybridly/core'
 import { registerHook } from './register-hook'
 
+const isNavigating = ref(false)
+
 export function useRoute() {
 	const current = ref(router.current())
 
@@ -11,11 +13,14 @@ export function useRoute() {
 		return router.matches(toValue(name), parameters)
 	}
 
+	registerHook('before', () => isNavigating.value = true)
+	registerHook('after', () => isNavigating.value = false)
 	registerHook('navigated', () => {
 		current.value = router.current()
 	})
 
 	return {
+		isNavigating: readonly(isNavigating),
 		current: readonly(current),
 		matches,
 	}
