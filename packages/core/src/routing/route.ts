@@ -59,7 +59,8 @@ function getUrlRegexForRoute<T extends RouteName>(name: T) {
  * Otherwise it will accept and thus return true for any values for the parameters defined by the route.
  * Note: passing additional parameters that are not defined by the route or included in the current URL will cause this to return false.
  */
-export function urlMatchesRoute<T extends RouteName>(url: string, name: T, routeParameters?: RouteParameters<T>): boolean {
+export function urlMatchesRoute<T extends RouteName>(fullUrl: string, name: T, routeParameters?: RouteParameters<T>): boolean {
+	const url = makeUrl(fullUrl, { hash: '' }).toString()
 	const parameters = routeParameters || {}
 	const definition = getRouting().routes[name]
 

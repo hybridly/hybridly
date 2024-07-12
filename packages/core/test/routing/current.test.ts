@@ -126,3 +126,13 @@ test('providing an invalid route name will return false', () => {
 	location.href = 'https://bluebird.test/'
 	expect(currentRouteMatches('__UNDEFINED__')).toBe(false)
 })
+
+test('anchors are stripped when checking for matches', () => {
+	location.href = `${route('chirp.show', { chirp: 1 })}#some-anchor`
+	expect(currentRouteMatches('index')).toBe(false)
+	expect(currentRouteMatches('chirp.*')).toBe(true)
+	expect(currentRouteMatches('chirp.*.show')).toBe(false)
+	expect(currentRouteMatches('*')).toBe(true)
+	expect(currentRouteMatches('*.show')).toBe(true)
+	expect(currentRouteMatches('*.like')).toBe(false)
+})
