@@ -29,7 +29,7 @@ defineProps<{
 </template>
 ```
 
-```vue [components/base-modal.vue]
+```vue [components/base-dialog.vue]
 <script setup lang="ts">
 import { DialogClose, DialogContent, DialogOverlay, DialogPortal, DialogRoot } from 'radix-vue'
 
@@ -125,12 +125,12 @@ const { close } = useDialog() // [!code hl]
 </script>
 
 <template>
-	<base-modal title="Edit chirp">
+	<base-dialog title="Edit chirp">
 		<create-chirp
 			:chirp="chirp"
 			:edit="true"
 			@success="close/* [!code hl] */"
 		/>
-	</base-modal>
+	</base-dialog>
 </template>
 ```
