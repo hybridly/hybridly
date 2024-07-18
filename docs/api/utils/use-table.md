@@ -128,7 +128,7 @@ The returned actions contain an extra `execute` function that can be used to cal
 ```vue-html
 <div v-for="action in users.bulkActions" :key="action.name">
 	<button
-		@click="action.execute()" // [!code hl]
+		@click="action.execute()/* [!code hl]*/"
 		v-text="action.label"
 	/>
 </div>
@@ -145,7 +145,7 @@ The returned actions contain an extra `execute` function that can be used to cal
 ```vue-html
 <div v-for="action in users.inlineActions" :key="action.name">
 	<button
-		@click="action.execute(record)" // [!code hl]
+		@click="action.execute(record)/* [!code hl]*/"
 		v-text="action.label"
 	/>
 </div>

@@ -15,9 +15,9 @@ Similar to the `<a>` tag, accepts the hyperlink to navigate to. If this doesn't 
 
 ```vue
 <template>
-  <router-link :href="route('index')"> // [!code focus]
-    Home
-  </router-link>
+	<router-link :href="route('index')/* [!code focus]*/">
+		Home
+	</router-link>
 </template>
 ```
 
@@ -31,13 +31,13 @@ When set to `true`, disables the custom click handler. This must be used when na
 
 ```vue
 <template>
-  <router-link
-    v-for="link in navigation"
-    :key="link.url"
-    :href="link.url"
-    :external="link.external" // [!code focus]
-    v-text="link.label"
-  />
+	<router-link
+		v-for="link in navigation"
+		:key="link.url"
+		:href="link.url"
+		:external="link.external/* [!code focus]*/"
+		v-text="link.label"
+	/>
 </template>
 ```
 
@@ -55,13 +55,13 @@ import BaseButton from '@/views/components/base-button.vue' // [!code focus]
 </script>
 
 <template>
-  <router-link
-    :as="BaseButton" // [!code focus]
-    method="POST"
-    :href="route('chirps.delete')"
-  >
-    Delete
-  </router-link>
+	<router-link
+		:as="BaseButton/* [!code focus]*/"
+		method="POST"
+		:href="route('chirps.delete')"
+	>
+		Delete
+	</router-link>
 </template>
 ```
 
@@ -93,7 +93,7 @@ When set to `true`, the click handler will not be triggered and the `disabled` H
 
 - **Type**: `boolean | 'mount' | 'hover'`
 
-When set to `true`, the URL will be preloaded when hovering over the link. 
+When set to `true`, the URL will be preloaded when hovering over the link.
 When set to `mount`, the preloading will be done when the link component is mounted.
 
 Read more on [preloading](../../guide/navigation.md#preloading-requests).

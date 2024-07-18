@@ -49,13 +49,13 @@ return hybridly()
 ```
 
 ## `external`
-  
-Generates a response for redirecting to an external website, or a non-hybrid view. 
+
+Generates a response for redirecting to an external website, or a non-hybrid view.
 
 This can also be used to redirect to a hybrid view when it is not known whether the current request is hybrid or not.
 
 > See also: [`to_external_url`](./functions.md#to-external-url)
-> 
+>
 > See [external redirects](../../guide/responses.md#external-redirects) for more details.
 
 ### Usage
@@ -69,7 +69,7 @@ return hybridly()->external('https://google.com');
 Creates a property that will only get evaluated and included when specifically requested through a partial reload.
 
 > See also: [`partial`](./functions.md#partial)
-> 
+>
 > See [partial reloads](../../guide/partial-reloads.md) for more details.
 
 ### Usage
@@ -88,7 +88,7 @@ return hybridly('booking.estimates.show', [
 Creates a partial property that will automatically be loaded in a subsequent partial reload when the page loads.
 
 > See also: [`deferred`](./functions.md#deferred), [`partial`](./functions.md#partial)
-> 
+>
 > See [deferred properties](../../guide/partial-reloads.md#deferred-properties) for more details.
 
 ### Usage
@@ -134,7 +134,7 @@ if (hybridly()->isPartial()) {
 
 > See also: [architecture](../../guide/architecture.md#custom)
 
-Loads views, layouts and components from the current directory. 
+Loads views, layouts and components from the current directory.
 
 The layouts and components must be located in the `layouts` and `components` directories, respectively. Views are loaded deeply by default.
 
@@ -243,9 +243,9 @@ public function boot(Hybridly $hybridly): void
 
 > See also: [architecture](../../guide/architecture.md#custom)
 
-Loads Vue files in the given directory and registers them as components for the given namespace (or no namespace if left empty). 
+Loads Vue files in the given directory and registers them as components for the given namespace (or no namespace if left empty).
 
-These components may be auto-imported by using their namespace and relative dot-notated path. 
+These components may be auto-imported by using their namespace and relative dot-notated path.
 
 ### Usage
 
@@ -261,7 +261,6 @@ public function boot(Hybridly $hybridly): void
 ```
 
 Using the example above, the component `src/Billing/components/invoice/item.vue` can be auto-imported as `<billing-invoice-item />`.
-
 
 ## `loadTypeScriptFilesFrom`
 
