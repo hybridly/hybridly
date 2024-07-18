@@ -22,7 +22,7 @@ a:has(code) {
 }
 
 .vp-doc strong {
-	color: var(--vp-c-text-1);
+	color: var(--vp-c-text-bold);
 	font-weight: 500;
 }
 

@@ -106,7 +106,7 @@ const features: Feature[] = [
 								/>
 							</svg>
 						</a>
-						<a class="px-4.5 group flex items-center rounded-full border border-[--vp-button-alt-border] bg-[--vp-c-bg-soft] py-2 font-medium text-[--vp-c-text-1] transition hover:bg-[--vp-c-bg-mute]" href="/guide/demonstration">Demonstration</a>
+						<!-- <a class="px-4.5 group flex items-center rounded-full border border-[--vp-button-alt-border] bg-[--vp-c-bg-soft] py-2 font-medium text-[--vp-c-text-1] transition hover:bg-[--vp-c-bg-mute]" href="/guide/demonstration">Demonstration</a> -->
 						<a class="px-4.5 group flex items-center rounded-full border border-[--vp-button-alt-border] bg-[--vp-c-bg-soft] py-2 font-medium text-[--vp-c-text-1] transition hover:bg-[--vp-c-bg-mute]" href="https://github.com/hybridly/hybridly">See on GitHub</a>
 					</div>
 				</section>

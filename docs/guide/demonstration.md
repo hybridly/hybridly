@@ -2,11 +2,15 @@
 
 ## Overview
 
-Blue Bird, a real-world application, showcases how to use Hybridly. 
+Blue Bird is an example application that showcases how to use Hybridly.
 
-It's a Twitter-like social network built with best practices in mind. [`laravel-data`](https://github.com/spatie/laravel-data) and [TypeScript Transformer](https://github.com/spatie/laravel-typescript-transformer) are used to provide TypeScript definitions.
+It's a Twitter mini-clone built in a way that should be familiar with Laravel developers. [`laravel-data`](https://github.com/spatie/laravel-data) and [TypeScript Transformer](https://github.com/spatie/laravel-typescript-transformer) are used to provide TypeScript definitions.
 
 You can find the source code on [GitHub](https://github.com/hybridly/demo).
+
+:::tip Hosted demonstration
+A real-world application is being worked on and will replace Blue Bird. It will be a hosted, open-source web application built with best practices in mind.
+:::
 
 ## Typed global properties
 
@@ -51,7 +55,6 @@ The following recording is a small preview of the features of Blue Bird. Example
 <video controls class="mt-8 rounded-lg shadow-lg w-full">
    <source src="../assets/bluebird.webm" type="video/webm">
 </video>
-
 
 ## Community projects
 

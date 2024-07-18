@@ -69,4 +69,7 @@
 	--vp-custom-block-danger-border: #fca5a5;
 	--vp-custom-block-danger-bg: var(--vp-c-default-soft);
 	--vp-custom-block-danger-text: var(--vp-c-text-1);
+
+	--vp-c-text-1: #d2d2d2;
+	--vp-c-text-bold: white;
 }
