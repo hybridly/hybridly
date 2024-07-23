@@ -139,7 +139,7 @@ class ChirpViewModel extends Data
     public function __construct(
         public readonly ChirpData $chirp,
         #[DataCollectionOf(ChirpData::class)]
-        public readonly PaginatedDataCollection $chirps,
+        public readonly PaginatedDataCollection $comments,
         public readonly string $previous,
     ) {
     }
