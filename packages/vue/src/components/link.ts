@@ -56,7 +56,7 @@ export const RouterLink = defineComponent({
 					return
 				}
 
-				if (type === 'mount' && preloads !== 'mount') {
+				if (type === 'mount' && preloads !== 'mount' && !('ontouchstart' in window || navigator.maxTouchPoints > 0)) {
 					return
 				}
 
