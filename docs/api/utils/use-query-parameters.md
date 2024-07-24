@@ -1,14 +1,13 @@
 # `useQueryParameters`
 
-This composable returns a reactive object containing the current query parameters.
+This function returns a reactive object containing the current query parameters.
 
-:::info Experimental
-This function has not been dogfed yet and is considered experimental. Its API may change at any time. Feel free to give feedback on our Discord server.
-:::
+| Related | [`useQueryParameter`](./use-query-parameter.md) |
+| ------- | ----------------------------------------------- |
 
 ## Usage
 
-This function may be useful to avoid having to pass query parameters from the controller to the front-end from.
+This function is specifically useful to avoid passing query parameters from the controller to the page component as properties.
 
 Simply call `useQueryParameters` and access query parameters on the returned object:
 
@@ -16,4 +15,10 @@ Simply call `useQueryParameters` and access query parameters on the returned obj
 // ?foo=bar
 const parameters = useQueryParameters()
 console.log(parameters.foo) // bar
+```
+
+You may also specify a generic to specify the type of `parameters`:
+
+```ts
+const parameters = useQueryParameters<{ foo: string }>()
 ```

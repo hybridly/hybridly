@@ -203,6 +203,7 @@ export default defineConfig({
 						{ text: 'useTable', link: '/api/utils/use-table' },
 						{ text: 'useBackForward', link: '/api/utils/use-back-forward' },
 						{ text: 'useHistoryState', link: '/api/utils/use-history-state' },
+						{ text: 'useQueryParameter', link: '/api/utils/use-query-parameter' },
 						{ text: 'useQueryParameters', link: '/api/utils/use-query-parameters' },
 						{ text: 'useRoute', link: '/api/utils/use-route' },
 						{ text: 'useProperties', link: '/api/utils/use-properties' },
