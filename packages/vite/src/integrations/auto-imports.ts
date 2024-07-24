@@ -22,6 +22,7 @@ export const HybridlyImports = {
 		'usePaginator',
 		'registerHook',
 		'useRoute',
+		'useQueryParameter',
 		'useQueryParameters',
 	],
 	'hybridly': [
