@@ -1,7 +1,7 @@
 {
   "name": "@hybridly/utils",
   "type": "module",
-  "version": "0.7.10",
+  "version": "0.7.11",
   "description": "Utils used in Hybridly packages",
   "author": "Enzo Innocenzi <enzo@innocenzi.dev>",
   "license": "MIT",
