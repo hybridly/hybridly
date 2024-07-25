@@ -2,6 +2,7 @@
 
 namespace Hybridly\Tables\Actions\Http;
 
+use Hybridly\Contracts\HybridResponse;
 use Hybridly\Tables\Actions\BaseAction;
 use Hybridly\Tables\Actions\BulkAction;
 use Hybridly\Tables\Actions\DataTransferObjects\BulkActionData;
@@ -88,7 +89,7 @@ final class InvokedActionController
             ],
         );
 
-        if ($result instanceof Response) {
+        if ($result instanceof Response || $result instanceof HybridResponse) {
             return $result;
         }
 
@@ -131,7 +132,7 @@ final class InvokedActionController
             ],
         );
 
-        if ($result instanceof Response) {
+        if ($result instanceof Response || $result instanceof HybridResponse) {
             return $result;
         }
 
