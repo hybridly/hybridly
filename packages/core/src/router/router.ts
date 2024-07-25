@@ -197,7 +197,17 @@ export async function performHybridNavigation(options: HybridRequestOptions): Pr
 		// because the back-end sent back only the required properties.
 		if (payload.view && (options.only?.length ?? options.except?.length) && payload.view.component === context.view.component) {
 			debug.router(`Merging ${options.only ? '"only"' : '"except"'} properties.`, payload.view.properties)
-			payload.view.properties = merge(context.view.properties, payload.view.properties)
+			const mergedPayloadProperties = merge(context.view.properties, payload.view.properties)
+
+			// Overwrite errors with the errors coming in from the response instead of deeply merging them
+			// which prevents errors from being removed when they are not present in the response.
+			if (options.errorBag) {
+				(mergedPayloadProperties.errors as any)[options.errorBag] = (payload.view.properties.errors as any)[options.errorBag] ?? {}
+			} else {
+				mergedPayloadProperties.errors = payload.view.properties.errors
+			}
+
+			payload.view.properties = mergedPayloadProperties
 			debug.router('Merged properties:', payload.view.properties)
 		}
 
