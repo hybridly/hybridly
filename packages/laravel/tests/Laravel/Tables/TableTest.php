@@ -28,6 +28,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Pest\Expectation;
 
+use function Hybridly\view;
 use function Pest\Laravel\from;
 use function Pest\Laravel\post;
 use function Pest\Laravel\withoutExceptionHandling;
@@ -329,6 +330,8 @@ it('inline actions can return any response', function () {
     Table::decodeIdUsing(static fn () => BasicProductsTableWithActionsThatSendResponses::class);
 
     $product = ProductFactory::createImmutable();
+    Route::get('products/{product}', fn (Product $product) => $product->id)->name('product');
+    Route::get('products-details/{product}', fn (Product $product) => view('product', ['product' => $product]))->name('product-details');
 
     // External redirect
     post(config('hybridly.tables.actions_endpoint'), [
@@ -339,7 +342,6 @@ it('inline actions can return any response', function () {
     ])->assertRedirect('https://google.com?q=AirPods');
 
     // Internal redirect
-    Route::get('products/{product}', fn (Product $product) => $product->id)->name('product');
     post(config('hybridly.tables.actions_endpoint'), [
         'type' => 'action:inline',
         'action' => 'internal_redirect',
@@ -364,6 +366,16 @@ it('inline actions can return any response', function () {
             'recordId' => $product->id,
         ])
         ->assertRedirect('/foo');
+
+    // Hybrid response
+    from('/foo')
+        ->post(config('hybridly.tables.actions_endpoint'), [
+            'type' => 'action:inline',
+            'action' => 'hybrid_response',
+            'tableId' => BasicProductsTableWithActionsThatSendResponses::class,
+            'recordId' => $product->id,
+        ])
+        ->assertOk();
 });
 
 test('`InlineTable` serializes properly', function () {
