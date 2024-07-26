@@ -93,7 +93,7 @@ export function useTable<
 		}
 
 		if (Reflect.has(record, '__hybridId')) {
-			return Reflect.get(record, '__hybridId').value as any
+			return Reflect.get(record, '__hybridId') as any
 		}
 
 		return Reflect.get(record, table.value.keyName).value as any
