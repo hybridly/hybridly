@@ -12,7 +12,10 @@ export const wrapper = defineComponent({
 			debug.adapter('vue:render:layout', 'Rendering layout.')
 
 			if (typeof state.view.value?.layout === 'function') {
-				return state.view.value.layout(h, view, renderDialog())
+				return state.view.value.layout(h, view, renderDialog(), {
+					...(state.view.value?.properties ?? {}),
+					...state.properties.value,
+				})
 			}
 
 			if (Array.isArray(state.view.value?.layout)) {
