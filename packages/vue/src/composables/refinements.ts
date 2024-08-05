@@ -201,7 +201,7 @@ export function useRefinements<
 		const filter = getFilter(name)
 
 		if (!filter) {
-			console.warn(`[Refinement] Filter "${name} does not exist."`)
+			console.warn(`[Refinement] Filter "${name}" does not exist.`)
 			return
 		}
 
@@ -258,7 +258,7 @@ export function useRefinements<
 		const sort = getSort(name)
 
 		if (!sort) {
-			console.warn(`[Refinement] Sort "${name} does not exist."`)
+			console.warn(`[Refinement] Sort "${name}" does not exist.`)
 			return
 		}
 
