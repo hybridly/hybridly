@@ -3,6 +3,7 @@
 namespace Hybridly\Refining\Sorts;
 
 use Hybridly\Components;
+use Hybridly\Refining;
 use Hybridly\Refining\Contracts\Refiner;
 use Hybridly\Refining\Contracts\Sort;
 use Hybridly\Refining\Refine;
@@ -16,6 +17,7 @@ abstract class BaseSort extends Components\Component implements Refiner, Sort
     use Components\Concerns\HasName;
     use Components\Concerns\IsHideable;
     use Concerns\HasDefault;
+    use Refining\Concerns\QualifiesColumns;
 
     protected null|string $direction = null;
     protected \Closure|bool $isDirectionCycleInverted = false;

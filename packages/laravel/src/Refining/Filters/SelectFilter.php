@@ -109,7 +109,7 @@ class SelectFilter extends BaseFilter
             builder: $builder,
             property: $property,
             callback: fn (Builder $builder, string $column) => $builder->whereIn(
-                column: $builder->qualifyColumn($column),
+                column: $this->qualifyColumn($builder, $column),
                 values: $value,
                 boolean: $this->getQueryBoolean(),
             ),
@@ -130,7 +130,7 @@ class SelectFilter extends BaseFilter
             builder: $builder,
             property: $property,
             callback: fn (Builder $builder, string $column) => $builder->where(
-                column: $builder->qualifyColumn($column),
+                column: $this->qualifyColumn($builder, $column),
                 operator: $this->evaluate($this->operator),
                 value: $value,
                 boolean: $this->getQueryBoolean(),

@@ -17,7 +17,7 @@ class Sort extends BaseSort
     public function apply(Builder $builder, string $direction, string $property): void
     {
         $builder->orderBy(
-            column: $builder->qualifyColumn($property),
+            column: $this->qualifyColumn($builder, $property),
             direction: $direction,
         );
     }

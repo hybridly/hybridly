@@ -53,7 +53,7 @@ class Filter extends BaseFilter
             callback: function (Builder $builder, string $column, bool $isRelation) use ($value, $property) {
                 if ($this->getMode() === self::EXACT) {
                     return $builder->where(
-                        column: $builder->qualifyColumn($column),
+                        column: $this->qualifyColumn($builder, $column),
                         operator: $this->getOperator(),
                         value: $value,
                         boolean: $isRelation ? 'and' : $this->getQueryBoolean(),

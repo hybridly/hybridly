@@ -3,6 +3,7 @@
 namespace Hybridly\Refining\Filters;
 
 use Hybridly\Components;
+use Hybridly\Refining;
 use Hybridly\Refining\Contracts\Filter;
 use Hybridly\Refining\Contracts\Refiner;
 use Hybridly\Refining\Refine;
@@ -18,6 +19,7 @@ abstract class BaseFilter extends Components\Component implements Refiner, Filte
     use Components\Concerns\IsHideable;
     use Concerns\HasDefaultValue;
     use Concerns\HasType;
+    use Refining\Concerns\QualifiesColumns;
 
     protected mixed $value = null;
 

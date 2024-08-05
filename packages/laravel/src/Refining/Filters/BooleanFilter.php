@@ -34,7 +34,7 @@ class BooleanFilter extends BaseFilter
             builder: $builder,
             property: $property,
             callback: fn (Builder $builder, string $column) => $builder->where(
-                column: $builder->qualifyColumn($column),
+                column: $this->qualifyColumn($builder, $column),
                 operator: '=',
                 value: $value,
                 boolean: $this->getQueryBoolean(),

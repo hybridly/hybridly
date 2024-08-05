@@ -4,6 +4,8 @@ use Hybridly\Refining\Sorts\BaseSort;
 use Hybridly\Refining\Sorts\Sort;
 use Hybridly\Support\Configuration\Configuration;
 use Hybridly\Tests\Fixtures\Database\ProductFactory;
+use Illuminate\Database\Events\QueryExecuted;
+use Illuminate\Support\Facades\DB;
 
 beforeEach(function () {
     ProductFactory::new()->create(['name' => 'AirPods', 'published_at' => now()->setYear(2016)]);
@@ -171,3 +173,17 @@ test('direction cycle can be inverted', function (?string $query, ?string $next)
     ['name', null],
     ['-name', 'name'],
 ]);
+
+test('order by statements can be unqualified', function () {
+    DB::listen(function (QueryExecuted $query) {
+        expect($query->sql)->toContain('order by "name"');
+    });
+
+    mock_refiner(
+        query: ['sort' => 'name'],
+        refiners: [
+            Sort::make('name')->withoutQualifyingColumn(),
+        ],
+        apply: true,
+    )->get();
+});

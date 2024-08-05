@@ -5,6 +5,8 @@ use Hybridly\Refining\Filters\Filter;
 use Hybridly\Tests\Fixtures\Database\Product;
 use Hybridly\Tests\Fixtures\Database\ProductFactory;
 use Hybridly\Tests\Fixtures\Vendor;
+use Illuminate\Database\Events\QueryExecuted;
+use Illuminate\Support\Facades\DB;
 use Pest\Expectation;
 
 beforeEach(function () {
@@ -126,4 +128,16 @@ it('supports filtering with enums', function () {
     );
 
     expect($filters)->count()->toBe(2);
+});
+
+test('order by statements can be unqualified', function () {
+    DB::listen(function (QueryExecuted $query) {
+        expect($query->sql)->toContain('where "vendor"');
+    });
+
+    mock_refiner(
+        query: ['filters' => ['vendor' => Vendor::Microsoft->value]],
+        refiners: [Filter::make('vendor')->withoutQualifyingColumn()],
+        apply: true,
+    )->get();
 });
