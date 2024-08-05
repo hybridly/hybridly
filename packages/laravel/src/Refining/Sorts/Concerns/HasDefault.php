@@ -7,6 +7,12 @@ trait HasDefault
     protected null|\Closure|string $defaultDirection = null;
     protected \Closure|bool $sole = true;
 
+    /**
+     * Applies this sort by default.
+     * If `sole` is set to `false`, the default sort will not be applied if other sorts are active.
+     *
+     * @see https://hybridly.dev/guide/refining.html#specifying-a-default-sort
+     */
     public function default(\Closure|string $direction = 'asc', \Closure|bool $sole = true): static
     {
         $this->defaultDirection = $direction;
@@ -15,6 +21,12 @@ trait HasDefault
         return $this;
     }
 
+    /**
+     * If set to `false`, the default sort will not be applied if other sorts are active.
+     *
+     * @default false
+     * @see https://hybridly.dev/guide/refining.html#specifying-a-default-sort
+     */
     public function sole(\Closure|bool $sole = true): static
     {
         $this->sole = $sole;
