@@ -51,9 +51,11 @@ class Filter extends BaseFilter
             builder: $builder,
             property: $property,
             callback: function (Builder $builder, string $column, bool $isRelation) use ($value, $property) {
+                $qualifiedColumn = $this->qualifyColumn($builder, $column);
+
                 if ($this->getMode() === self::EXACT) {
                     return $builder->where(
-                        column: $this->qualifyColumn($builder, $column),
+                        column: $qualifiedColumn,
                         operator: $this->getOperator(),
                         value: $value,
                         boolean: $isRelation ? 'and' : $this->getQueryBoolean(),
@@ -67,9 +69,9 @@ class Filter extends BaseFilter
                 };
 
                 $sql = match ($this->getMode()) {
-                    self::LOOSE => "LOWER({$column}) {$operator} ?",
-                    self::BEGINS_WITH_STRICT => "{$column} {$operator} ?",
-                    self::ENDS_WITH_STRICT => "{$column} {$operator} ?",
+                    self::LOOSE => "LOWER({$qualifiedColumn}) {$operator} ?",
+                    self::BEGINS_WITH_STRICT => "{$qualifiedColumn} {$operator} ?",
+                    self::ENDS_WITH_STRICT => "{$qualifiedColumn} {$operator} ?",
                 };
 
                 $bindings = match ($this->getMode()) {
