@@ -84,6 +84,24 @@ export function useBulkSelect<T = any>() {
 		return selection.value.all && selection.value.except.size === 0
 	})
 
+	/**
+	 * Binds a checkbox's properties.
+	 */
+	function bindCheckbox(key: T) {
+		return {
+			onChange: (event: Event) => {
+				const target = event.target as HTMLInputElement
+				if (target.checked) {
+					select(target.value as T)
+				} else {
+					deselect(target.value as T)
+				}
+			},
+			checked: selected(key),
+			value: key,
+		}
+	}
+
 	return {
 		allSelected,
 		selectAll,
@@ -93,5 +111,6 @@ export function useBulkSelect<T = any>() {
 		toggle,
 		selected,
 		selection,
+		bindCheckbox,
 	}
 }

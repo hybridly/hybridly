@@ -173,6 +173,8 @@ export function useTable<
 		allSelected: bulk.allSelected,
 		/** The current record selection. */
 		selection: bulk.selection,
+		/** Binds a checkbox to its selection state. */
+		bindCheckbox: (key: RecordIdentifier) => bulk.bindCheckbox(key),
 		/** Toggles selection for the given record. */
 		toggle: (record: RecordType) => bulk.toggle(getRecordKey(record)),
 		/** Selects selection for the given record. */

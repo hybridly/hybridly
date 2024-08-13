@@ -349,14 +349,13 @@ BulkAction::make('delete')
 
 The `useTable` function returns utilities to select records. The selected records are scoped to the `useTable` call, so all bulk actions will use them.
 
-To let users select records, you may use [form input binding](https://vuejs.org/guide/essentials/forms.html#checkbox) on [`selection.only`](../api/utils/use-table.md#selection):
+To let users select records, you may use the `bindCheckbox` function. It takes the record key as the parameter and returns the necessary properties and event listeners to support all selection states.
 
 ```vue-html
 <tr v-for="{ key, value, actions } in users.records" :key="key">
 	<td>
 		<input
-			v-model="users.selection.only/* [!code hl] */"
-			:value="key/* [!code hl] */"
+			v-model="users.bindCheckbox(key)/* [!code hl] */"
 			type="checkbox"
 		/>
 	</td>
