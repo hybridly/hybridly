@@ -1,10 +1,11 @@
-import { computed, reactive } from 'vue'
+import { computed, reactive, toRaw } from 'vue'
 import { route, router } from '@hybridly/core'
 import { getByPath } from '@clickbar/dot-diver'
 import { toReactive } from '../utils'
 import { useBulkSelect } from './bulk-select'
 import type { AvailableHybridRequestOptions, SortDirection, ToggleSortOptions } from './refinements'
 import { useRefinements } from './refinements'
+import { useQueryParameters } from './query-parameters'
 
 declare global {
 	interface Table<
@@ -70,6 +71,14 @@ type AsRecordType<T extends Record<string, any>> = {
 	}
 }
 
+export interface TableDefaultOptions extends AvailableHybridRequestOptions {
+	/**
+	 * Whether to include existing query parameters in the request.
+	 * @default true
+	 */
+	includeQueryParameters?: boolean
+}
+
 /**
  * Provides utilities for working with tables.
  */
@@ -79,10 +88,22 @@ export function useTable<
 	TableType extends (Props[PropsKey] extends Table<RecordType, PaginatorKindName> ? Table<RecordType, PaginatorKindName> : never),
 	Props extends Record<string, unknown>,
 	PropsKey extends keyof Props,
->(props: Props, key: PropsKey, defaultOptions: AvailableHybridRequestOptions = {}) {
+>(props: Props, key: PropsKey, defaultOptions: TableDefaultOptions = {}) {
 	const table = computed(() => props[key] as TableType)
 	const bulk = useBulkSelect<RecordIdentifier>()
 	const refinements = useRefinements(toReactive(table) as any, 'refinements', defaultOptions)
+
+	/**
+	 * Gets existing query parameters. They will be added to the request, so that the
+	 * actions in the table have access to them in case the table relies on them.
+	 */
+	function getDefaultData() {
+		if (defaultOptions?.includeQueryParameters !== false) {
+			return structuredClone(toRaw(useQueryParameters()))
+		}
+
+		return {}
+	}
 
 	/**
 	 * Gets the actual identifier for a record.
@@ -112,6 +133,7 @@ export function useTable<
 			url: route(table.value.endpoint),
 			preserveState: true,
 			data: {
+				...getDefaultData(),
 				type: 'action:inline',
 				action: getActionName(action),
 				tableId: table.value.id,
@@ -138,6 +160,7 @@ export function useTable<
 			url: route(table.value.endpoint),
 			preserveState: true,
 			data: {
+				...getDefaultData(),
 				type: 'action:bulk',
 				action: actionName,
 				tableId: table.value.id,
