@@ -1,6 +1,7 @@
 import { computed, reactive, toRaw } from 'vue'
 import { route, router } from '@hybridly/core'
 import { getByPath } from '@clickbar/dot-diver'
+import type { FormDataConvertible } from '@hybridly/utils'
 import { toReactive } from '../utils'
 import { useBulkSelect } from './bulk-select'
 import type { AvailableHybridRequestOptions, SortDirection, ToggleSortOptions } from './refinements'
@@ -77,6 +78,10 @@ export interface TableDefaultOptions extends AvailableHybridRequestOptions {
 	 * @default true
 	 */
 	includeQueryParameters?: boolean
+	/**
+	 * Additionnal data to send with the requests.
+	 */
+	data?: Record<string, FormDataConvertible> | FormDataConvertible
 }
 
 /**
@@ -94,15 +99,20 @@ export function useTable<
 	const refinements = useRefinements(toReactive(table) as any, 'refinements', defaultOptions)
 
 	/**
-	 * Gets existing query parameters. They will be added to the request, so that the
-	 * actions in the table have access to them in case the table relies on them.
+	 * Gets additionnal data to send with the request.
 	 */
-	function getDefaultData() {
+	function getAdditionnalData() {
+		const data = {}
+
 		if (defaultOptions?.includeQueryParameters !== false) {
-			return structuredClone(toRaw(useQueryParameters()))
+			Object.assign(data, structuredClone(toRaw(useQueryParameters())))
 		}
 
-		return {}
+		if (defaultOptions?.data) {
+			Object.assign(data, defaultOptions.data)
+		}
+
+		return data
 	}
 
 	/**
@@ -133,7 +143,7 @@ export function useTable<
 			url: route(table.value.endpoint),
 			preserveState: true,
 			data: {
-				...getDefaultData(),
+				...getAdditionnalData(),
 				type: 'action:inline',
 				action: getActionName(action),
 				tableId: table.value.id,
@@ -160,7 +170,7 @@ export function useTable<
 			url: route(table.value.endpoint),
 			preserveState: true,
 			data: {
-				...getDefaultData(),
+				...getAdditionnalData(),
 				type: 'action:bulk',
 				action: actionName,
 				tableId: table.value.id,
