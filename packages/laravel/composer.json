@@ -34,16 +34,14 @@
         },
         "files": [
             "src/Support/global_helpers.php",
-            "src/Support/helpers.php"
+            "src/Support/helpers.php",
+            "src/Testing/helpers.php"
         ]
     },
     "autoload-dev": {
         "psr-4": {
             "Hybridly\\Tests\\": "tests"
-        },
-        "files": [
-            "src/Testing/helpers.php"
-        ]
+        }
     },
     "config": {
         "sort-packages": true
