@@ -11,6 +11,7 @@ export function generateTsConfig(options: ViteOptions, config: DynamicConfigurat
 			module: 'esnext',
 			moduleResolution: 'bundler',
 			strict: true,
+			skipLibCheck: true,
 			jsx: 'preserve',
 			sourceMap: true,
 			resolveJsonModule: true,
