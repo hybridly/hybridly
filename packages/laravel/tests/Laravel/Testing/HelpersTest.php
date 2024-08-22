@@ -12,6 +12,7 @@ test('the `partial_headers` helper generates headers for partial requests', func
     expect(partial_headers('foo.component', only: [
         'user.name',
     ]))->toBe([
+        Header::HYBRID_REQUEST => true,
         Header::PARTIAL_COMPONENT => 'foo.component',
         Header::PARTIAL_ONLY => json_encode(['user.name']),
     ]);
@@ -19,18 +20,25 @@ test('the `partial_headers` helper generates headers for partial requests', func
     expect(partial_headers('foo.component', except: [
         'user.name',
     ]))->toBe([
+        Header::HYBRID_REQUEST => true,
         Header::PARTIAL_COMPONENT => 'foo.component',
         Header::PARTIAL_EXCEPT => json_encode(['user.name']),
     ]);
 
     expect(partial_headers('foo.component'))->toBe([
+        Header::HYBRID_REQUEST => true,
         Header::PARTIAL_COMPONENT => 'foo.component',
     ]);
 
     expect(partial_headers('foo.component', except: ['foo'], only: ['bar']))->toBe([
+        Header::HYBRID_REQUEST => true,
         Header::PARTIAL_COMPONENT => 'foo.component',
         Header::PARTIAL_ONLY => json_encode(['bar']),
         Header::PARTIAL_EXCEPT => json_encode(['foo']),
+    ]);
+
+    expect(partial_headers('foo.component', hybrid: false))->toBe([
+        Header::PARTIAL_COMPONENT => 'foo.component',
     ]);
 });
 
