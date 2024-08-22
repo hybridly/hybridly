@@ -14,9 +14,10 @@ if (!\function_exists('Hybridly\Testing\partial_headers')) {
      *
      * @see https://hybridly.dev/api/laravel/functions.html#partial-headers
      */
-    function partial_headers(string $component, array $only = null, array $except = null): array
+    function partial_headers(string $component, array $only = null, array $except = null, bool $hybrid = true): array
     {
         return array_filter([
+            Header::HYBRID_REQUEST => $hybrid,
             Header::PARTIAL_COMPONENT => $component,
             Header::PARTIAL_ONLY => !\is_null($only) ? json_encode($only) : null,
             Header::PARTIAL_EXCEPT => !\is_null($except) ? json_encode($except) : null,
