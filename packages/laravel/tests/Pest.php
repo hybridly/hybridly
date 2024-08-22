@@ -37,13 +37,13 @@ function mock_request(string $url = '/', string $method = 'GET', bool $bind = fa
     return $request;
 }
 
-function make_mock_request(mixed $response, string $url = '/mock-url'): TestResponse
+function make_mock_request(mixed $response, string $url = '/mock-url', array $headers = []): TestResponse
 {
     app('router')->get($url, function () use ($response) {
         return $response;
     });
 
-    return get($url);
+    return get($url, $headers);
 }
 
 function make_hybrid_mock_request(string $component = 'test', mixed $properties = [], string $url = '/hybrid-mock-url'): TestResponse

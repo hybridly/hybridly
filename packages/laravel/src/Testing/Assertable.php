@@ -4,6 +4,8 @@ namespace Hybridly\Testing;
 
 use Hybridly\Hybridly;
 use Hybridly\Support\Configuration\Configuration;
+use Hybridly\Support\Header;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Illuminate\Testing\TestResponse;
 use InvalidArgumentException;
@@ -12,7 +14,7 @@ use PHPUnit\Framework\AssertionFailedError;
 
 class Assertable extends AssertableJson
 {
-    protected string $view;
+    protected ?string $view;
     protected string $url;
     protected array $payload;
     protected array $properties;
@@ -22,8 +24,13 @@ class Assertable extends AssertableJson
     public static function fromTestResponse(TestResponse $response): self
     {
         try {
-            $response->assertViewHas('payload');
-            $payload = json_decode(json_encode($response->viewData('payload')), true);
+            $payload = $response->baseResponse instanceof JsonResponse
+                ? json_decode($response->baseResponse->getContent(), associative: true)
+                : json_decode(json_encode($response->viewData('payload')), true);
+
+            if (!$response->headers->has(Header::HYBRID_REQUEST)) {
+                $response->assertViewHas('payload');
+            }
 
             PHPUnit::assertIsArray($payload);
             PHPUnit::assertArrayHasKey('view', $payload);
@@ -33,7 +40,7 @@ class Assertable extends AssertableJson
             PHPUnit::assertArrayHasKey('url', $payload);
             PHPUnit::assertArrayHasKey('version', $payload);
         } catch (AssertionFailedError) {
-            PHPUnit::fail(sprintf('Not a valid hybrid response: %s', json_encode($payload ?? [], \JSON_PRETTY_PRINT)));
+            PHPUnit::fail(\sprintf('Not a valid hybrid response: %s', json_encode($payload ?? [], \JSON_PRETTY_PRINT)));
         }
 
         $instance = static::fromArray($payload);
@@ -200,7 +207,7 @@ class Assertable extends AssertableJson
         try {
             resolve(Hybridly::class)->hasView($identifier);
         } catch (InvalidArgumentException) {
-            PHPUnit::fail(sprintf('Hybridly view [%s] is not registered.', $identifier));
+            PHPUnit::fail(\sprintf('Hybridly view [%s] is not registered.', $identifier));
         }
     }
 }

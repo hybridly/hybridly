@@ -1,6 +1,18 @@
 <?php
 
+use Hybridly\Support\Header;
 use Hybridly\Testing\Assertable;
+
+use function Hybridly\properties;
+
+test('`fromTestResponse` works with properties-only responses', function () {
+    make_mock_request(
+        response: properties(['foo' => 'bar']),
+        headers: [
+            Header::HYBRID_REQUEST => true,
+        ],
+    )->assertHybrid();
+});
 
 test('the `assertHybridViewComponent` method asserts that the view is the expected value', function () {
     make_hybrid_mock_request()->assertHybrid(function (Assertable $view) {
