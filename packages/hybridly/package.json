@@ -1,7 +1,7 @@
 {
   "name": "hybridly",
   "type": "module",
-  "version": "0.7.13",
+  "version": "0.7.14",
   "description": "Solution to develop server-driven, client-rendered applications",
   "author": "Enzo Innocenzi <enzo@innocenzi.dev>",
   "license": "MIT",
