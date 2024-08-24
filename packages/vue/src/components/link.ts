@@ -76,6 +76,10 @@ export const RouterLink = defineComponent({
 				...props.disabled ? { disabled: props.disabled } : {},
 				onMouseenter: () => performPreload('hover'),
 				onClick: (event: KeyboardEvent) => {
+					if (props.disabled) {
+						return
+					}
+
 					// If the target is external, we don't want hybridly to handle the
 					// navigation, so we return early to avoid preventing the event.
 					if (props.external) {
@@ -87,10 +91,6 @@ export const RouterLink = defineComponent({
 					}
 
 					event.preventDefault()
-
-					if (props.disabled) {
-						return
-					}
 
 					router.navigate({
 						url,
