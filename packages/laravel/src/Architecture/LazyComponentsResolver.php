@@ -228,7 +228,10 @@ class LazyComponentsResolver implements ComponentsResolver
                 if (str($path)->endsWith($this->getExtensions())) {
                     $files[] = [
                         'namespace' => $namespace,
-                        'path' => str($path)->replaceStart(base_path(), '')->ltrim('/\\')->toString(),
+                        'path' => str($path)->replaceStart(base_path(), '')
+                            ->replace('\\', '/')
+                            ->ltrim('/')
+                            ->toString(),
                         'identifier' => $this->identifierGenerator->generate($this, $path, $baseDirectory, $namespace),
                     ];
                 }
