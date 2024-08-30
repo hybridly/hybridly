@@ -1,5 +1,5 @@
 export { createRouter, router } from './router/router'
-export type { Router, HybridRequestOptions, NavigationResponse, HybridPayload, ResolveComponent, Method, Progress } from './router/types'
+export type { Router, PendingHybridRequest, HybridRequestOptions, NavigationResponse, HybridPayload, ResolveComponent, Method, Progress } from './router/types'
 
 export { getRouterContext } from './context'
 export type { RouterContext, RouterContextOptions } from './context'

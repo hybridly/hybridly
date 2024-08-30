@@ -73,6 +73,11 @@ export interface InternalNavigationOptions extends NavigationOptions {
 	 * @internal
 	 */
 	hasDialog?: boolean
+	/**
+	 * Final properties object for the view.
+	 * @internal
+	 */
+	properties?: Properties
 }
 
 export type Method = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE'
@@ -80,6 +85,8 @@ export type Method = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE'
 export interface HybridRequestOptions extends Omit<NavigationOptions, 'payload'> {
 	/** The URL to navigation. */
 	url?: UrlResolvable
+	/** Whether the request is asynchronous. */
+	async?: boolean
 	/** HTTP verb to use for the request. */
 	method?: Method | Lowercase<Method>
 	/** Body of the request. */
@@ -121,10 +128,6 @@ export interface DialogRouter {
 }
 
 export interface Router {
-	/** Aborts the currently pending navigate, if any. */
-	abort: () => Promise<void>
-	/** Checks if there is an active navigate. */
-	active: () => boolean
 	/** Makes a navigate with the given options. */
 	navigate: (options: HybridRequestOptions) => Promise<NavigationResponse>
 	/** Reloads the current page. */
@@ -164,8 +167,8 @@ export interface Router {
 	}
 }
 
-/** A navigation being made. */
-export interface PendingNavigation {
+/** A hybrid request being made. */
+export interface PendingHybridRequest {
 	/** The URL to which the request is being made. */
 	url: URL
 	/** Abort controller associated to this request. */
@@ -174,8 +177,16 @@ export interface PendingNavigation {
 	options: HybridRequestOptions
 	/** Navigation identifier. */
 	id: string
-	/** Current status. */
-	status: 'pending' | 'success' | 'error'
+	/** Whether the request has completed. */
+	completed: boolean
+	/** Whether the request has been gracefully interrupted. */
+	cancelled: boolean
+	/** Whether the request has been forcefully interrupted. */
+	interrupted: boolean
+	/** Promise for the request. */
+	promise: Promise<NavigationResponse>
+	/** Callback that resolves the request promise. */
+	resolve: (response: NavigationResponse) => void
 }
 
 /*

@@ -38,8 +38,8 @@ export function progress(options?: Partial<ProgressOptions>) {
 				injectCSS(resolved.color)
 			}
 		},
-		start: (context) => {
-			if (context.pendingNavigation?.options.progress === false) {
+		start: (request) => {
+			if (request.options.progress === false) {
 				return
 			}
 
