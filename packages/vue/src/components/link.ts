@@ -57,15 +57,16 @@ export const RouterLink = defineComponent({
 				}
 
 				if (type === 'mount' && preloads !== 'mount') {
+					// eslint-disable-next-line no-useless-return
 					return
 				}
 
-				router.preload(url, {
-					data,
-					preserveScroll,
-					preserveState,
-					...props.options,
-				})
+				// router.preload(url, {
+				// 	data,
+				// 	preserveScroll,
+				// 	preserveState,
+				// 	...props.options,
+				// })
 			}
 
 			performPreload('mount')

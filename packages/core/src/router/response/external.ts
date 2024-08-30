@@ -1,12 +1,12 @@
 import type { AxiosResponse } from 'axios'
 import qs from 'qs'
 import { debug } from '@hybridly/utils'
-import type { HybridRequestOptions } from './router/types'
-import { EXTERNAL_NAVIGATION_HEADER, STORAGE_EXTERNAL_KEY } from './constants'
-import { getRouterContext, setContext } from './context'
-import { navigate } from './router/router'
-import type { UrlResolvable } from './url'
-import { makeUrl, sameUrls } from './url'
+import { EXTERNAL_NAVIGATION_HEADER, STORAGE_EXTERNAL_KEY } from '../../constants'
+import { getRouterContext, setContext } from '../../context'
+import type { UrlResolvable } from '../../url'
+import { makeUrl, sameUrls } from '../../url'
+import type { HybridRequestOptions } from '../types'
+import { navigate } from '../view'
 
 /**
  * Performs an external navigation by saving options to the storage and

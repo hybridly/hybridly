@@ -1,7 +1,7 @@
 import isEqual from 'lodash.isequal'
-import type { HybridRequestOptions, Progress, UrlResolvable } from '@hybridly/core'
+import type { HybridRequestOptions, PendingHybridRequest, Progress, UrlResolvable } from '@hybridly/core'
 import type { DeepReadonly } from 'vue'
-import { computed, reactive, ref, toRaw, watch } from 'vue'
+import { computed, reactive, ref, shallowRef, toRaw, watch } from 'vue'
 import { clone, merge, setValueAtPath, unsetPropertyAtPath } from '@hybridly/utils'
 import { router } from '@hybridly/core'
 import type { Path, SearchableObject } from '@clickbar/dot-diver'
@@ -81,6 +81,8 @@ export function useForm<
 	const processing = ref(false)
 	/** The current request's progress. */
 	const progress = ref<Progress>()
+	/** The current request. */
+	const request = shallowRef<PendingHybridRequest>()
 
 	/**
 	 * Sets new initial values for the form, so subsequent resets will use thse values.
@@ -168,26 +170,27 @@ export function useForm<
 			data: safeClone(data),
 			preserveState,
 			hooks: {
-				before: (navigation, context) => {
+				before: (_request, context) => {
+					request.value = _request
 					resetSubmissionState()
-					return hooks.before?.(navigation, context)
+					return hooks.before?.(_request, context)
 				},
-				start: (context) => {
+				start: (request, context) => {
 					processing.value = true
-					return hooks.start?.(context)
+					return hooks.start?.(request, context)
 				},
-				progress: (incoming, context) => {
+				progress: (incoming, request, context) => {
 					progress.value = incoming
-					return hooks.progress?.(incoming, context)
+					return hooks.progress?.(incoming, request, context)
 				},
-				error: (incoming, context) => {
+				error: (incoming, request, context) => {
 					setErrors(incoming)
 					failed.value = true
 					recentlyFailed.value = true
 					timeoutIds.recentlyFailed = setTimeout(() => recentlyFailed.value = false, optionsWithOverrides.timeout ?? 5000)
-					return hooks.error?.(incoming, context)
+					return hooks.error?.(incoming, request, context)
 				},
-				success: (payload, context) => {
+				success: (payload, request, context) => {
 					clearErrors()
 					if (optionsWithOverrides.updateInitials) {
 						setInitial(fields)
@@ -198,12 +201,13 @@ export function useForm<
 					successful.value = true
 					recentlySuccessful.value = true
 					timeoutIds.recentlySuccessful = setTimeout(() => recentlySuccessful.value = false, optionsWithOverrides.timeout ?? 5000)
-					return hooks.success?.(payload, context)
+					return hooks.success?.(payload, request, context)
 				},
-				after: (context) => {
+				after: (_request, context) => {
+					request.value = undefined
 					progress.value = undefined
 					processing.value = false
-					return hooks.after?.(context)
+					return hooks.after?.(_request, context)
 				},
 			},
 		})
@@ -254,7 +258,7 @@ export function useForm<
 	 * Aborts the submission.
 	 */
 	function abort() {
-		router.abort()
+		// TODO: cancel associated request
 	}
 
 	watch([fields, processing, errors], () => {

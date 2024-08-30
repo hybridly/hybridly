@@ -8,6 +8,7 @@ export const debug = {
 	external: makeDebugger('hybridly:core:external'),
 	scroll: makeDebugger('hybridly:core:scroll'),
 	hook: makeDebugger('hybridly:core:hook'),
+	queue: makeDebugger('hybridly:core:queue'),
 	plugin: (name: string, ...args: any[]) => makeDebugger('hybridly:plugin').extend(name.replace('hybridly:', ''))(args.shift(), ...args),
 	adapter: (name: string, ...args: any[]) => makeDebugger('hybridly:adapter').extend(name)(args.shift(), ...args),
 }
