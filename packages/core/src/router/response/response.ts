@@ -64,40 +64,38 @@ export async function handleHybridRequestResponse(requestResponse: HybridRequest
 	debug.router('The response respects the Hybridly protocol.')
 	const payload = response.data as HybridPayload
 
-	// If the navigation does not have a view, we keep the current one.
-	// This should only happen when using dialogs.
+	// We only want to make a page navigation if the request was synchronous
+	// or if we didn't navigate during the request and the response.
+	if (!options.async || (context.view.component === request.view.component)) {
+		const properties = (() => {
+			if (!payload.view && !isPartial(options)) {
+				return undefined
+			}
 
-	// If the navigation was asking for specific properties, we ensure that the
-	// new request object contains the properties of the current view context,
-	// because the back-end sent back only the required properties.
-	const properties = (() => {
-		if (!payload.view && !isPartial(options)) {
-			return undefined
+			if (!payload.view.component || (payload.view.component === context.view.component)) {
+				return resolveProperties(context.view.properties, payload.view, options.errorBag)
+			}
+		})()
+
+		if (properties) {
+			debug.router('Merged properties:', properties)
 		}
 
-		if (!payload.view.component || (payload.view.component === context.view.component)) {
-			return resolveProperties(context.view.properties, payload.view, options.errorBag)
-		}
-	})()
-
-	if (properties) {
-		debug.router('Merged properties:', properties)
+		await navigate({
+			type: 'server',
+			properties,
+			payload: {
+				...payload,
+				url: fillHash(request.url, payload.url),
+			},
+			preserveScroll: options.preserveScroll,
+			preserveState: options.preserveState,
+			preserveUrl: options.preserveUrl,
+			replace: options.replace === true || options.preserveUrl || (sameUrls(payload.url, window.location.href) && !sameHashes(payload.url, window.location.href)),
+		})
+	} else {
+		debug.router('Discarding navigation from an async request initiated on a previous page.')
 	}
-
-	// If everything was according to the plan, we can make our navigation and
-	// update the context. Underlying adapters get the updated data.
-	await navigate({
-		type: 'server',
-		properties,
-		payload: {
-			...payload,
-			url: fillHash(request.url, payload.url),
-		},
-		preserveScroll: options.preserveScroll,
-		preserveState: options.preserveState,
-		preserveUrl: options.preserveUrl,
-		replace: options.replace === true || options.preserveUrl || (sameUrls(payload.url, window.location.href) && !sameHashes(payload.url, window.location.href)),
-	})
 
 	// If the new view's properties has errors, userland expects an event
 	// with said errors to be emitted. However, errors can be scoped with

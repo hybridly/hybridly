@@ -186,6 +186,8 @@ export interface PendingHybridRequest {
 	promise: Promise<NavigationResponse>
 	/** Callback that resolves the request promise. */
 	resolve: (response: NavigationResponse) => void
+	/** The view from which the request has started. */
+	view: View
 }
 
 /*

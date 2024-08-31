@@ -28,6 +28,7 @@ export function createPendingHybridRequest(options: HybridRequestOptions): Pendi
 		cancelled: false,
 		completed: false,
 		interrupted: false,
+		view: context.view,
 	} satisfies PendingHybridRequest
 }
 
