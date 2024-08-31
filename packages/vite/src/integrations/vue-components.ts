@@ -2,7 +2,7 @@ import vueComponents from 'unplugin-vue-components/vite'
 import { HeadlessUiResolver } from 'unplugin-vue-components/resolvers'
 import iconsResolver from 'unplugin-icons/resolver'
 import type { ComponentResolver } from 'unplugin-vue-components/types'
-import { match, merge } from '@hybridly/utils'
+import { match, merge, wrap } from '@hybridly/utils'
 import type { DynamicConfiguration } from '@hybridly/core'
 import type { ViteOptions } from '../types'
 import { importPackage, isPackageInstalled, toKebabCase } from '../utils'
@@ -33,9 +33,7 @@ async function getVueComponentsOptions(options: ViteOptions, config: DynamicConf
 		? options.customIcons
 		: options.customIcons?.collections ?? []
 	const overrideResolvers = options.overrideResolvers
-		?	Array.isArray(options.overrideResolvers)
-			? options.overrideResolvers
-			: [options.overrideResolvers]
+		? wrap(options.overrideResolvers)
 		: false
 
 	const shouldImportHeadlessUi = isPackageInstalled('@headlessui/vue') && options.vueComponents?.headlessUiPrefix !== false

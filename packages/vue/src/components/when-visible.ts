@@ -1,5 +1,7 @@
-import { computed, defineComponent, h, onMounted, onUnmounted, ref } from 'vue'
-import { getByPath } from '@hybridly/utils'
+import type { PropType } from 'vue'
+import { computed, defineComponent, h, onMounted, onUnmounted, ref, watch } from 'vue'
+import { getByPath, wrap } from '@hybridly/utils'
+import { type HybridRequestOptions, router } from '@hybridly/core'
 import { state } from '../stores/state'
 
 export const WhenVisible = defineComponent({
@@ -17,15 +19,23 @@ export const WhenVisible = defineComponent({
 			type: Number,
 			default: 0,
 		},
+		once: {
+			type: Boolean,
+			default: false,
+		},
+		options: {
+			type: Object as PropType<Omit<HybridRequestOptions, 'url' | 'data' | 'method'>>,
+			default: () => ({}),
+		},
 	},
 	setup(props, { slots }) {
 		const isVisible = ref(false)
 		const rootEl = ref(null)
+		const hasRan = ref(false)
 		let observer: IntersectionObserver | undefined
 
 		const shouldRender = computed(() => {
-			const keys = Array.isArray(props.data) ? props.data : [props.data]
-			return keys.every((key) => getByPath(state.properties.value as any, key) !== undefined)
+			return wrap(props.data).every((key) => getByPath(state.properties.value as any, key) !== undefined)
 		})
 
 		onMounted(() => {
@@ -44,6 +54,21 @@ export const WhenVisible = defineComponent({
 		onUnmounted(() => {
 			if (observer) {
 				observer.disconnect()
+			}
+		})
+
+		watch(isVisible, () => {
+			if (hasRan.value && props.once) {
+				return
+			}
+
+			if (isVisible.value) {
+				router.reload({
+					...props.options,
+					only: props.data,
+				})
+
+				hasRan.value = true
 			}
 		})
 

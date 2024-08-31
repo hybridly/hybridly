@@ -1,5 +1,5 @@
 import type { AxiosProgressEvent, AxiosResponse } from 'axios'
-import { debug, hasFiles, match, mergeObject, objectToFormData, promiseWithResolvers, random, showResponseErrorModal } from '@hybridly/utils'
+import { debug, hasFiles, match, mergeObject, objectToFormData, promiseWithResolvers, random, showResponseErrorModal, wrap } from '@hybridly/utils'
 import { getInternalRouterContext, getRouterContext } from '../../context'
 import { DIALOG_KEY_HEADER, DIALOG_REDIRECT_HEADER, ERROR_BAG_HEADER, EXCEPT_DATA_HEADER, HYBRIDLY_HEADER, ONLY_DATA_HEADER, PARTIAL_COMPONENT_HEADER, VERSION_HEADER } from '../../constants'
 import { runHooks } from '../../plugins'
@@ -47,8 +47,8 @@ export async function sendHybridRequest(request: PendingHybridRequest): Promise<
 			...(context.dialog ? { [DIALOG_REDIRECT_HEADER]: context.dialog!.redirectUrl ?? '' } : {}),
 			...mergeObject(request.options.only !== undefined || request.options.except !== undefined, {
 				[PARTIAL_COMPONENT_HEADER]: context.view.component,
-				...mergeObject(request.options.only, { [ONLY_DATA_HEADER]: JSON.stringify(request.options.only) }),
-				...mergeObject(request.options.except, { [EXCEPT_DATA_HEADER]: JSON.stringify(request.options.except) }),
+				...mergeObject(request.options.only, { [ONLY_DATA_HEADER]: JSON.stringify(wrap(request.options.only)) }),
+				...mergeObject(request.options.except, { [EXCEPT_DATA_HEADER]: JSON.stringify(wrap(request.options.except)) }),
 			}),
 			...mergeObject(request.options.errorBag, { [ERROR_BAG_HEADER]: request.options.errorBag }),
 			...mergeObject(context.version, { [VERSION_HEADER]: context.version }),
