@@ -115,9 +115,9 @@ if (! \function_exists('Hybridly\deferred')) {
      *
      * @see https://hybridly.dev/api/laravel/functions.html#deferred
      */
-    function deferred(\Closure $callback): Deferred
+    function deferred(\Closure $callback, ?string $group = null): Deferred
     {
-        return new Deferred($callback);
+        return new Deferred($callback, group: $group);
     }
 }
 

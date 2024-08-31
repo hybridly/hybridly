@@ -24,6 +24,6 @@ final class Deferred implements Property, IgnoreFirstLoad, Mergeable
 
     public function group(): string
     {
-        return $this->group;
+        return $this->group ?? 'default';
     }
 }

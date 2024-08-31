@@ -85,15 +85,18 @@ export async function navigate(options: InternalNavigationOptions) {
 
 	// If there are deferred properties, we handle them
 	// by making a partial-reload after the view component has mounted
-	if (context.view.deferred?.length) {
+	if (Object.entries(context.view.deferred ?? {}).length) {
 		debug.router('Request has deferred properties, queueing a partial reload:', context.view.deferred)
 		context.adapter.executeOnMounted(async () => {
-			await performHybridNavigation({
-				preserveScroll: true,
-				preserveState: true,
-				replace: true,
-				only: context.view.deferred,
-			})
+			return Promise.all(Object.entries(context.view.deferred).map(async ([_, properties]) => {
+				await performHybridNavigation({
+					preserveScroll: true,
+					preserveState: true,
+					replace: true,
+					async: true,
+					only: properties,
+				})
+			}))
 		})
 	}
 
@@ -138,7 +141,7 @@ export async function performLocalNavigation(targetUrl: UrlResolvable, options?:
 			view: {
 				component: options?.component ?? context.view.component,
 				properties: options?.properties ?? {},
-				deferred: [],
+				deferred: {},
 				mergeable: [],
 			},
 		},
