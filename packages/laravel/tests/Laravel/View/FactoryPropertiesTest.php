@@ -30,7 +30,7 @@ it('finds deferred properties', function () {
     ]);
 
     expect($properties)->toBe(['normal' => 'yes', 'nested' => ['foo' => 'bar']]);
-    expect($deferred)->toBe(['deferred', 'nested.deferred']);
+    expect($deferred)->toBe(['default' => ['deferred', 'nested.deferred']]);
 });
 
 it('resolves functions', function () {

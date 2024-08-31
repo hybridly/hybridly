@@ -251,9 +251,22 @@ it('resolves `Deferred` properties', function (array $parameters, array $expecte
     expect($properties)->toBe($expectedProperties);
     expect($deferred)->toBe($expectedDeferred);
 })->with([
-    [['partial' => false], ['deferred', 'nested.deferred'], ['normal' => true, 'nested' => ['normal' => true]]],
+    [['partial' => false], ['default' => ['deferred', 'nested.deferred']], ['normal' => true, 'nested' => ['normal' => true]]],
     [['partial' => true], [], []],
     [['partial' => true, 'only' => ['deferred', 'nested.deferred']], [], ['deferred' => 'foo', 'nested' => ['deferred' => 'bar']]],
+]);
+
+it('resolves grouped `Deferred` properties', function (array $parameters, array $expectedDeferred) {
+    [$properties, $deferred, $mergeable] = get_properties_resolver(...$parameters)->resolve('foo', [
+        'deferred' => new Deferred(fn () => 'foo'),
+        'slow_deferred' => new Deferred(fn () => 'foo', group: 'slower'),
+    ]);
+
+    expect($deferred)->toBe($expectedDeferred);
+})->with([
+    [['partial' => false], ['default' => ['deferred'], 'slower' => ['slow_deferred']]],
+    [['partial' => true], []],
+    [['partial' => true, 'only' => ['deferred', 'slow_deferred']], []],
 ]);
 
 it('resolves `Mergeable` properties', function (array $parameters, array $expectedMergeable) {
