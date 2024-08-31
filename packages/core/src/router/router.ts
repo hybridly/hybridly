@@ -11,6 +11,7 @@ import { getHistoryMemo, handleBackForwardNavigation, isBackForwardNavigation, r
 import type { Router } from './types'
 import { performHybridNavigation } from './request/request'
 import { navigate, performLocalNavigation } from './view'
+import { cancelSyncRequest } from './request/request-stack'
 
 /**
  * The hybridly router.
@@ -22,6 +23,7 @@ import { navigate, performLocalNavigation } from './view'
  * router.get('/posts/edit', { post })
  */
 export const router = {
+	abort: () => cancelSyncRequest(),
 	navigate: async (options) => await performHybridNavigation(options),
 	reload: async (options) => await performHybridNavigation({ preserveScroll: true, preserveState: true, replace: true, async: true, ...options }),
 	get: async (url, options = {}) => await performHybridNavigation({ ...options, url, method: 'GET' }),

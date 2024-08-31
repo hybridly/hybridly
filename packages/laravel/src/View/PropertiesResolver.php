@@ -6,10 +6,13 @@ use Hybridly\Support\Arr;
 use Hybridly\Support\CaseConverter;
 use Hybridly\Support\Configuration\Configuration;
 use Hybridly\Support\Configuration\Properties;
-use Hybridly\Support\Deferred;
 use Hybridly\Support\Header;
-use Hybridly\Support\Hybridable;
-use Hybridly\Support\Partial;
+use Hybridly\Support\Properties\Deferred;
+use Hybridly\Support\Properties\Hybridable;
+use Hybridly\Support\Properties\IgnoreFirstLoad;
+use Hybridly\Support\Properties\Mergeable;
+use Hybridly\Support\Properties\Persistent;
+use Hybridly\Support\Properties\Property;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -23,20 +26,60 @@ final class PropertiesResolver
     ) {
     }
 
-    public function resolve(string $component = null, array $properties = [], array $persisted = []): array
+    public function resolve(string $component = null, array $properties = [], array $persistedByPath = []): array
     {
         $partial = \is_null($component)
             ? $this->request->headers->has(Header::PARTIAL_COMPONENT)
             : $this->request->header(Header::PARTIAL_COMPONENT) === $component;
 
-        $deferred = [];
+        // First, we resolve all properties that can be converted to an array.
+        // This is needed so we can work with nested properties and dot-notation.
+        $properties = $this->resolveArrayableProperties($properties);
 
+        // When the request is not partial, there are specified computation to do.
         if (!$partial) {
-            $deferred = $this->resolveDeferredProperties($this->resolveArrayableProperties($properties));
-            $properties = Arr::filterRecursive($properties, static fn ($property) => !($property instanceof Partial));
+            // If the request is not a partial hybrid request, we want to resolve deferred properties,
+            // because they will be automatically loaded back with a subsequent partial request.
+            $deferred = $this->filterToPropertyPaths($properties, function (mixed $value, string $path) {
+                if ($value instanceof Deferred) {
+                    return $path;
+                }
+
+                return false;
+            });
+
+            // Additionally, we want to exclude properties that should not be loaded on first load.
+            $properties = Arr::filterRecursive($properties, static fn ($property) => !($property instanceof IgnoreFirstLoad));
         }
 
-        // First, we need to resolve property instances to an array that
+        // Mergeable properties are then resolved. These are special properties
+        // that will have a special merge treatment when merging on the front-end.
+        $mergeable = $this->filterToPropertyPaths($properties, function (mixed $value, string $path) {
+            if ($value instanceof Mergeable) {
+                return $value->shouldMerge()
+                    ? [$path, $value->shouldBeUnique()]
+                    : false;
+            }
+
+            return false;
+        });
+
+        // Next up, we want to know which properties should always be present on
+        // the response. These properties are either `Persistent` instances,
+        // or they were mentionned in the `$persisted` array.
+        $persisted = $this->filterToPropertyPaths($properties, function (mixed $value, string $path) use ($persistedByPath) {
+            if (\in_array($path, $persistedByPath, strict: true)) {
+                return $path;
+            }
+
+            if ($value instanceof Persistent) {
+                return $path;
+            }
+
+            return false;
+        });
+
+        // Finally, we need to resolve property instances to an array that
         // we can recursively traverse. This is needed to include
         // or exclude properties using the dot-notation.
         $properties = $this->resolveArrayableProperties($properties);
@@ -63,15 +106,15 @@ final class PropertiesResolver
             array: $this->evaluatePropertyInstances($properties),
         );
 
-        return [$properties, $deferred];
+        return [$properties, $deferred ?? [], $mergeable];
     }
 
     /**
-     * Resolves which properties are deferred.
+     * Returns an array of property paths, filtered by the specified callback.
      */
-    protected function resolveDeferredProperties(array $properties, string $path = ''): array
+    protected function filterToPropertyPaths(array $properties, \Closure $callback, string $path = ''): array
     {
-        $deferred = [];
+        $selected = [];
 
         foreach ($properties as $key => $value) {
             if ($value instanceof Hybridable) {
@@ -83,19 +126,19 @@ final class PropertiesResolver
             }
 
             if (\is_array($value)) {
-                $deferred = array_merge($deferred, $this->resolveDeferredProperties($value, $path ? ("{$path}.{$key}") : $key));
+                $selected = array_merge($selected, $this->filterToPropertyPaths($value, $callback, $path ? ("{$path}.{$key}") : $key));
             }
 
-            if ($value instanceof Deferred) {
-                $deferred[] = ($path ? ("{$path}.{$key}") : $key);
+            if ($result = $callback($value, ($path ? ("{$path}.{$key}") : $key), $path)) {
+                $selected[] = $result;
             }
         }
 
-        return $deferred;
+        return $selected;
     }
 
     /**
-     * Resolves all specific property instances to an array.
+     * Resolves properties that can be converted to an array.
      */
     protected function resolveArrayableProperties(array $properties, bool $unpackDotProps = true): array
     {
@@ -129,6 +172,10 @@ final class PropertiesResolver
     protected function evaluatePropertyInstances(array $properties): array
     {
         foreach ($properties as $key => $value) {
+            if ($value instanceof Property) {
+                $value = $value->__invoke();
+            }
+
             if (\is_object($value) && \is_callable($value)) {
                 $value = app()->call($value);
             }

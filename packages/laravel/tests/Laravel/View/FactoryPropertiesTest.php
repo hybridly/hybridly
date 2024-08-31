@@ -1,8 +1,8 @@
 <?php
 
 use Hybridly\Support\CaseConverter;
-use Hybridly\Support\Deferred;
-use Hybridly\Support\Partial;
+use Hybridly\Support\Properties\Deferred;
+use Hybridly\Support\Properties\Partial;
 use Hybridly\View\Factory;
 use Hybridly\View\PropertiesResolver;
 use Illuminate\Contracts\Support\Arrayable;

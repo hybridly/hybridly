@@ -2,8 +2,8 @@
 
 namespace Hybridly\Concerns;
 
-use Hybridly\Support\Deferred;
-use Hybridly\Support\Partial;
+use Hybridly\Support\Properties\Deferred;
+use Hybridly\Support\Properties\Partial;
 use Hybridly\View\Factory;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;

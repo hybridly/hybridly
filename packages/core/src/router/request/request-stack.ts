@@ -28,7 +28,7 @@ const queues = {
 	} as RequestQueue,
 }
 
-function getRequestQueue(request: PendingHybridRequest): RequestQueue {
+export function getRequestQueue(request: PendingHybridRequest): RequestQueue {
 	return request.options.async
 		 ? queues.async
 		 : queues.sync
@@ -42,17 +42,11 @@ export function enqueueRequest(request: PendingHybridRequest) {
 }
 
 export async function processRequestQueue(queue: RequestQueue) {
-	if (queue.processing) {
-		return
-	}
-
-	queue.processing = true
 	await process(queue)
-	queue.processing = false
 }
 
 async function process(queue: RequestQueue) {
-	const request = queue.requests.shift()
+	const request = queue.requests[0]
 
 	if (!request) {
 		debug.queue('End of request queue.')
@@ -60,7 +54,13 @@ async function process(queue: RequestQueue) {
 	}
 
 	debug.queue('Processing request', request)
-	const response = await sendHybridRequest(request)
+	const response = await sendHybridRequest(request).catch(() => undefined)
+
+	if (!response) {
+		return
+	}
+
+	queue.requests.shift()
 
 	addResponseToQueue({
 		request,
@@ -76,12 +76,12 @@ export function removeRequestFromQueue(request: PendingHybridRequest) {
 	stack.requests = stack.requests.filter((r) => r !== request)
 }
 
-export function interruptInFlight(request: PendingHybridRequest): void {
-	cancelRequest(request, { interrupted: true, force: false })
+export function interruptInFlight(queue: RequestQueue): void {
+	cancelRequest(queue, { interrupted: true, force: false })
 }
 
-export function cancelInFlight(request: PendingHybridRequest): void {
-	cancelRequest(request, { cancelled: true, force: true })
+export function cancelSyncRequest(): void {
+	cancelRequest(queues.sync, { cancelled: true, force: true })
 }
 
 interface CancelRequestOptions {
@@ -90,23 +90,25 @@ interface CancelRequestOptions {
 	force: boolean
 }
 
-function cancelRequest(request: PendingHybridRequest, options: CancelRequestOptions): void {
-	if (!shouldCancelRequest(request, options.force)) {
+function cancelRequest(queue: RequestQueue, options: CancelRequestOptions): void {
+	if (!shouldCancelRequest(queue, options.force)) {
 		return
 	}
 
-	removeRequestFromQueue(request)
-	request.completed = false
-	request.cancelled = options.cancelled ?? false
-	request.interrupted = options.interrupted ?? false
-	request.controller?.abort()
+	const request = queue.requests.shift()
+
+	if (request) {
+		request.completed = false
+		request.cancelled = options.cancelled ?? false
+		request.interrupted = options.interrupted ?? false
+		request.controller?.abort()
+	}
 }
 
-function shouldCancelRequest(request: PendingHybridRequest, force: boolean) {
+function shouldCancelRequest(queue: RequestQueue, force: boolean) {
 	if (force) {
 		return true
 	}
 
-	const stack = getRequestQueue(request)
-	return stack.interruptible && stack.requests.length >= stack.maxConcurrent
+	return queue.interruptible && queue.requests.length >= queue.maxConcurrent
 }

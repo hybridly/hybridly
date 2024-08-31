@@ -6,7 +6,7 @@ use Hybridly\Contracts\HybridResponse;
 use Hybridly\Exceptions\MissingViewComponentException;
 use Hybridly\Hybridly;
 use Hybridly\Support\Header;
-use Hybridly\Support\Hybridable;
+use Hybridly\Support\Properties\Hybridable;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\JsonResponse;
@@ -256,7 +256,7 @@ class Factory implements HybridResponse
         }
 
         if (!$response instanceof self) {
-            throw new \LogicException(sprintf('Target URL [%s] does not return a hybrid response.', $targetUrl));
+            throw new \LogicException(\sprintf('Target URL [%s] does not return a hybrid response.', $targetUrl));
         }
 
         return $this->resolveView($response->view, $request);
@@ -278,6 +278,7 @@ class Factory implements HybridResponse
                 component: $this->view->component,
                 properties: Arr::except($this->view->properties, array_keys($this->hybridly->shared())),
                 deferred: [],
+                mergeable: [],
             ),
         );
     }
@@ -287,12 +288,13 @@ class Factory implements HybridResponse
      */
     protected function resolveView(View $view, Request $request): View
     {
-        [$properties, $deferred] = $this->resolveProperties($view, $request);
+        [$properties, $deferred, $mergeable] = $this->resolveProperties($view, $request);
 
         return new View(
             component: $view->component,
             properties: $properties,
             deferred: $deferred,
+            mergeable: $mergeable,
         );
     }
 
@@ -308,7 +310,7 @@ class Factory implements HybridResponse
         return $resolver->resolve(
             component: $view->component,
             properties: $includeSharedProperties ? [...$this->hybridly->shared(), ...$view->properties] : $view->properties,
-            persisted: $this->hybridly->persisted(),
+            persistedByPath: $this->hybridly->persisted(),
         );
     }
 

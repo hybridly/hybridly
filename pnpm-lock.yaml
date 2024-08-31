@@ -127,6 +127,9 @@ importers:
 
   packages/utils:
     dependencies:
+      '@clickbar/dot-diver':
+        specifier: ^1.0.7
+        version: 1.0.7
       debug:
         specifier: ^4.3.6
         version: 4.3.6
@@ -195,9 +198,6 @@ importers:
 
   packages/vue:
     dependencies:
-      '@clickbar/dot-diver':
-        specifier: ^1.0.7
-        version: 1.0.7
       '@hybridly/core':
         specifier: workspace:*
         version: link:../core
@@ -7173,7 +7173,7 @@ snapshots:
       debug: 4.3.6
       esbuild: 0.21.5
       jiti: 2.0.0-beta.2
-      jiti-v1: jiti@1.21.0
+      jiti-v1: jiti@1.21.6
       pathe: 1.1.2
       pkg-types: 1.2.0
       tsx: 4.17.0

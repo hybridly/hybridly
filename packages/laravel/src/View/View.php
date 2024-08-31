@@ -10,6 +10,7 @@ class View implements Arrayable
         public ?string $component,
         public array $properties,
         public array $deferred = [],
+        public array $mergeable = [],
     ) {
         // Converts identifiers using PascalCase to proper kebab-cased identifiers.
         if (preg_match('/[A-Z]/', $this->component)) {
@@ -38,6 +39,7 @@ class View implements Arrayable
             'component' => $this->component,
             'properties' => $this->properties,
             'deferred' => $this->deferred,
+            'mergeable' => $this->mergeable,
         ];
     }
 }

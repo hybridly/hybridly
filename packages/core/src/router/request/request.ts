@@ -1,12 +1,12 @@
 import type { AxiosProgressEvent, AxiosResponse } from 'axios'
-import { debug, hasFiles, mergeObject, objectToFormData, promiseWithResolvers, random } from '@hybridly/utils'
+import { debug, hasFiles, match, mergeObject, objectToFormData, promiseWithResolvers, random, showResponseErrorModal } from '@hybridly/utils'
 import { getInternalRouterContext, getRouterContext } from '../../context'
 import { DIALOG_KEY_HEADER, DIALOG_REDIRECT_HEADER, ERROR_BAG_HEADER, EXCEPT_DATA_HEADER, HYBRIDLY_HEADER, ONLY_DATA_HEADER, PARTIAL_COMPONENT_HEADER, VERSION_HEADER } from '../../constants'
 import { runHooks } from '../../plugins'
 import { makeUrl } from '../../url'
 import { NavigationCancelledError } from '../../errors'
 import type { HybridRequestOptions, Method, NavigationResponse, PendingHybridRequest } from '../types'
-import { enqueueRequest, interruptInFlight } from './request-stack'
+import { enqueueRequest, getRequestQueue, interruptInFlight } from './request-stack'
 
 export function createPendingHybridRequest(options: HybridRequestOptions): PendingHybridRequest {
 	const context = getRouterContext()
@@ -68,7 +68,9 @@ export async function sendHybridRequest(request: PendingHybridRequest): Promise<
 
 export async function performHybridRequest(request: PendingHybridRequest): Promise<NavigationResponse> {
 	// TODO: preloading
+	const queue = getRequestQueue(request)
 
+	interruptInFlight(queue)
 	enqueueRequest(request)
 
 	return request.promise
@@ -84,20 +86,61 @@ export async function performHybridNavigation(options: HybridRequestOptions): Pr
 
 	const request = createPendingHybridRequest(options)
 
-	// Before anything else, we fire the "before" event to make sure
-	// there was no user-specified handler returning "false".
-	if (!await runHooks('before', options.hooks, request, context)) {
-		debug.router('"before" event returned false, aborting the navigation.')
-		throw new NavigationCancelledError('The navigation was cancelled by the "before" event.')
+	try {
+		// Before anything else, we fire the "before" event to make sure
+		// there was no user-specified handler returning "false".
+		if (!await runHooks('before', options.hooks, request, context)) {
+			debug.router('"before" event returned false, aborting the navigation.')
+			throw new NavigationCancelledError('The navigation was cancelled by the "before" event.')
+		}
+
+		await runHooks('start', options.hooks, request, context)
+		debug.router('Making request with axios.')
+
+		return await performHybridRequest(request)
+	//
+	} catch (error: any) {
+		await match(error.constructor.name, {
+			NavigationCancelledError: async () => {
+				debug.router('The request was cancelled through the "before" hook.', error)
+				await runHooks('abort', options.hooks, request, context)
+			},
+			AbortError: async () => {
+				debug.router('The request was aborted.', error)
+				await runHooks('abort', options.hooks, request, context)
+			},
+			NotAHybridResponseError: async () => {
+				debug.router('The response was not hybrid.')
+				console.error(error)
+				await runHooks('invalid', options.hooks, request, error, context)
+				if (context.responseErrorModals) {
+					showResponseErrorModal(error.response.data)
+				}
+			},
+			default: async () => {
+				if (error?.name === 'CanceledError') {
+					debug.router('The request was cancelled.', error)
+					await runHooks('abort', options.hooks, request, context)
+				} else {
+					debug.router('An unknown error occured.', error)
+					console.error(error)
+					await runHooks('exception', options.hooks, error, request, context)
+				}
+			},
+		})
+
+		await runHooks('fail', options.hooks, request, context)
+
+		return {
+			error: {
+				type: error.constructor.name,
+				actual: error,
+			},
+		}
+	} finally {
+		debug.router('Ending navigation.')
+		await runHooks('after', options.hooks, request, context)
 	}
-
-	// Interrupt any interruptible request before performing a new one.
-	interruptInFlight(request)
-
-	await runHooks('start', options.hooks, request, context)
-	debug.router('Making request with axios.')
-
-	return await performHybridRequest(request)
 }
 
 /**
@@ -119,6 +162,10 @@ export async function transformOptions(options: HybridRequestOptions) {
 	// By default, don't show progress when a request is asynchronous.
 	if (options.async === true && options.progress === undefined) {
 		options.progress = false
+	}
+
+	if (options.async === true && options.replace === undefined) {
+		options.replace = true
 	}
 
 	// If applicable, converts the data to a `FormData` object.
