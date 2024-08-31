@@ -256,7 +256,7 @@ class Factory implements HybridResponse
         }
 
         if (!$response instanceof self) {
-            throw new \LogicException(\sprintf('Target URL [%s] does not return a hybrid response.', $targetUrl));
+            throw new \LogicException(sprintf('Target URL [%s] does not return a hybrid response.', $targetUrl));
         }
 
         return $this->resolveView($response->view, $request);
