@@ -2,7 +2,7 @@ import vueComponents from 'unplugin-vue-components/vite'
 import { HeadlessUiResolver } from 'unplugin-vue-components/resolvers'
 import iconsResolver from 'unplugin-icons/resolver'
 import type { ComponentResolver } from 'unplugin-vue-components/types'
-import { merge } from '@hybridly/utils'
+import { match, merge } from '@hybridly/utils'
 import type { DynamicConfiguration } from '@hybridly/core'
 import type { ViteOptions } from '../types'
 import { importPackage, isPackageInstalled, toKebabCase } from '../utils'
@@ -10,6 +10,10 @@ import { importPackage, isPackageInstalled, toKebabCase } from '../utils'
 type VueComponentsOptions = Parameters<typeof vueComponents>[0] & {
 	/** Name of the Link component. */
 	linkName?: string
+	/** Name of the Deferred component. */
+	deferredName?: string
+	/** Name of the WhenVisible component. */
+	whenVisibleName?: string
 	/** Specify the prefix for the Headless UI integration, or disable it. */
 	headlessUiPrefix?: string | false
 	/** Specify the prefix for the Radix integration, or disable it. */
@@ -66,23 +70,50 @@ export async function RadixResolver(prefix: string) {
 
 export function HybridlyResolver(options: ViteOptions, config: DynamicConfiguration): ComponentResolver[] {
 	return [
-		HybridlyLinkResolver(options?.vueComponents === false ? undefined : options?.vueComponents?.linkName),
+		HybridlyComponentsResolver(
+			options.vueComponents
+				? {
+						deferredName: options?.vueComponents?.deferredName,
+						linkName: options?.vueComponents?.linkName,
+						whenVisibleName: options?.vueComponents?.whenVisibleName,
+					}
+				: undefined,
+		),
 		ProvidedComponentListResolver(config),
 	]
 }
 
-export function HybridlyLinkResolver(linkName: string = 'RouterLink'): ComponentResolver {
+interface HybridlyComponentsResolverOptions {
+	deferredName?: string
+	linkName?: string
+	whenVisibleName?: string
+}
+
+export function HybridlyComponentsResolver(options?: HybridlyComponentsResolverOptions): ComponentResolver {
+	const deferredName = options?.deferredName ?? 'Deferred'
+	const whenVisibleName = options?.whenVisibleName ?? 'WhenVisible'
+	const linkName = options?.linkName ?? 'RouterLink'
+
 	return {
-		type: 'component' as const,
-		resolve: (name: string) => {
-			if (name === linkName) {
-				return {
-					from: 'hybridly/vue',
-					name: 'RouterLink',
-					as: linkName,
-				}
-			}
-		},
+		type: 'component',
+		resolve: (name: string) => match(name, {
+			[deferredName]: {
+				from: 'hybridly/vue',
+				name: 'Deferred',
+				as: deferredName,
+			},
+			[whenVisibleName]: {
+				from: 'hybridly/vue',
+				name: 'WhenVisible',
+				as: whenVisibleName,
+			},
+			[linkName]: {
+				from: 'hybridly/vue',
+				name: 'RouterLink',
+				as: linkName,
+			},
+			default: undefined,
+		}),
 	}
 }
 
