@@ -201,7 +201,7 @@ export interface View {
 	/** Properties to apply to the component. */
 	properties: Properties
 	/** Deferred properties for this view. */
-	deferred: string[]
+	deferred: Record<string, string | string[]>
 	/** Properties that should be merged with the existing payload. */
 	mergeable: Array<[string, boolean]>
 }

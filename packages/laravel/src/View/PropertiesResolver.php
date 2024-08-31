@@ -40,13 +40,16 @@ final class PropertiesResolver
         if (!$partial) {
             // If the request is not a partial hybrid request, we want to resolve deferred properties,
             // because they will be automatically loaded back with a subsequent partial request.
-            $deferred = $this->filterToPropertyPaths($properties, function (mixed $value, string $path) {
+            $deferred = collect($this->filterToPropertyPaths($properties, function (mixed $value, string $path) {
                 if ($value instanceof Deferred) {
-                    return $path;
+                    return [
+                        'key' => $path,
+                        'group' => $value->group(),
+                    ];
                 }
 
                 return false;
-            });
+            }))->groupBy('group')->map->pluck('key')->toArray();
 
             // Additionally, we want to exclude properties that should not be loaded on first load.
             $properties = Arr::filterRecursive($properties, static fn ($property) => !($property instanceof IgnoreFirstLoad));
