@@ -1,5 +1,5 @@
 import { defineComponent } from 'vue'
-import { getByPath } from '@hybridly/utils'
+import { getByPath, wrap } from '@hybridly/utils'
 import { state } from '../stores/state'
 
 export const Deferred = defineComponent({
@@ -11,8 +11,7 @@ export const Deferred = defineComponent({
 		},
 	},
 	render() {
-		const keys = (Array.isArray(this.$props.data) ? this.$props.data : [this.$props.data])
-		return keys.every((key) => getByPath(state.properties.value as any, key) !== undefined)
+		return wrap(this.$props.data).every((key) => getByPath(state.properties.value as any, key) !== undefined)
 			? this.$slots.default?.()
 			: this.$slots.fallback?.()
 	},

@@ -39,6 +39,10 @@ export function match<TValue extends string | number = string, TReturnValue = un
 	throw new Error(`Tried to handle "${value}" but there is no handler defined. Only defined handlers are: ${handlers}.`)
 }
 
+export function wrap<T>(value: T | T[]): T[] {
+	return Array.isArray(value) ? value : [value]
+}
+
 export function value<T>(value: T | (() => T)): T {
 	if (typeof value === 'function') {
 		return (value as any)?.() as T

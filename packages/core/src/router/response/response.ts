@@ -1,4 +1,4 @@
-import { debug, getByPath, merge, setByPath } from '@hybridly/utils'
+import { debug, getByPath, merge, setByPath, wrap } from '@hybridly/utils'
 import type { AxiosResponse } from 'axios'
 import { runHooks } from '../../plugins'
 import { getInternalRouterContext } from '../../context'
@@ -147,7 +147,7 @@ function resolveProperties(original: Properties, payload: View, errorBag?: strin
 		if (Array.isArray(originalValue)) {
 			const array = [
 				...originalValue,
-				...(Array.isArray(newValue) ? newValue : [newValue]),
+				...wrap(newValue),
 			]
 
 			setByPath(mergedPayloadProperties, mergeableProperty, unique ? [...new Set(array)] : array)
