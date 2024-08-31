@@ -2,6 +2,7 @@ import baseMerge from 'deepmerge'
 // @ts-expect-error due to moduleresolution
 import { isPlainObject } from 'is-plain-object'
 
+export { setByPath, getByPath, type PathValue, type Path, type SearchableObject } from '@clickbar/dot-diver'
 export { debounce, throttle } from 'throttle-debounce'
 export { default as clone } from 'lodash.clonedeep'
 

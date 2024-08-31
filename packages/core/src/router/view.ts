@@ -61,6 +61,7 @@ export async function navigate(options: InternalNavigationOptions) {
 				component: context.view.component,
 				properties: merge(context.view.properties, options.payload.view.properties),
 				deferred: context.view.deferred,
+				mergeable: context.view.mergeable,
 			},
 			url: context.url,
 			version: options.payload.version,
@@ -138,6 +139,7 @@ export async function performLocalNavigation(targetUrl: UrlResolvable, options?:
 				component: options?.component ?? context.view.component,
 				properties: options?.properties ?? {},
 				deferred: [],
+				mergeable: [],
 			},
 		},
 	})

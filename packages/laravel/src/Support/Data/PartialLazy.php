@@ -2,7 +2,7 @@
 
 namespace Hybridly\Support\Data;
 
-use Hybridly\Support\Partial;
+use Hybridly\Support\Properties\Partial;
 use Spatie\LaravelData\Support\Lazy\ConditionalLazy;
 
 use function Hybridly\partial;

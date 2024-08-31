@@ -25,6 +25,7 @@ export const RouterLink: DefineComponent<RouterLinkProps> = defineComponent({
 	setup(_, { slots, attrs }) {
 		return (props: typeof _) => {
 			let data = props.data ?? {}
+			const async = props.async
 			const preloads = props.preload ?? false
 			const preserveScroll = props.preserveScroll
 			const preserveState = props.preserveState
@@ -120,6 +121,7 @@ export const RouterLink: DefineComponent<RouterLinkProps> = defineComponent({
 						url,
 						data,
 						method,
+						async,
 						preserveState: (method !== 'GET'),
 						...props.options,
 					})
@@ -171,6 +173,10 @@ export const RouterLink: DefineComponent<RouterLinkProps> = defineComponent({
 			default: undefined,
 		},
 		preserveState: {
+			type: Boolean,
+			default: undefined,
+		},
+		async: {
 			type: Boolean,
 			default: undefined,
 		},

@@ -128,6 +128,7 @@ export interface DialogRouter {
 }
 
 export interface Router {
+	abort: () => void
 	/** Makes a navigate with the given options. */
 	navigate: (options: HybridRequestOptions) => Promise<NavigationResponse>
 	/** Reloads the current page. */
@@ -203,6 +204,8 @@ export interface View {
 	properties: Properties
 	/** Deferred properties for this view. */
 	deferred: string[]
+	/** Properties that should be merged with the existing payload. */
+	mergeable: Array<[string, boolean]>
 }
 
 export interface Dialog extends Required<View> {
