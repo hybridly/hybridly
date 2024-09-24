@@ -24,7 +24,7 @@ trait RefinesAndPaginatesRecords
 
     public function getRefiners(): Collection
     {
-        return $this->cachedRefinements ??= collect($this->defineRefiners())
+        return $this->cachedRefiners ??= collect($this->defineRefiners())
             ->filter(static fn (Refiner $refiner): bool => !$refiner->isHidden());
     }
 
