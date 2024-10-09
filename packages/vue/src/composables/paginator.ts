@@ -41,10 +41,10 @@ interface PaginatorLink {
 interface CursorPaginatorMeta {
 	path: string
 	per_page: number
-	previous_cursor: string
+	prev_cursor: string
 	next_cursor: string
 	next_page_url?: string
-	previous_page_url?: string
+	prev_page_url?: string
 }
 
 interface SimplePaginatorMeta {
