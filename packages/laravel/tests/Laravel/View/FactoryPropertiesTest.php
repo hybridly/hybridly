@@ -1,8 +1,8 @@
 <?php
 
 use Hybridly\Support\CaseConverter;
-use Hybridly\Support\Deferred;
-use Hybridly\Support\Partial;
+use Hybridly\Support\Properties\Deferred;
+use Hybridly\Support\Properties\Partial;
 use Hybridly\View\Factory;
 use Hybridly\View\PropertiesResolver;
 use Illuminate\Contracts\Support\Arrayable;
@@ -30,7 +30,7 @@ it('finds deferred properties', function () {
     ]);
 
     expect($properties)->toBe(['normal' => 'yes', 'nested' => ['foo' => 'bar']]);
-    expect($deferred)->toBe(['deferred', 'nested.deferred']);
+    expect($deferred)->toBe(['default' => ['deferred', 'nested.deferred']]);
 });
 
 it('resolves functions', function () {

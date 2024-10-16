@@ -5,7 +5,7 @@ import layout from './layout'
 import type { ViteOptions } from './types'
 import { getRunOptions, run } from './integrations/run'
 import { HybridlyImports, autoimport, getAutoImportsOptions } from './integrations/auto-imports'
-import { HybridlyLinkResolver, HybridlyResolver, ProvidedComponentListResolver, getVueComponentsOptions, vueComponents } from './integrations/vue-components'
+import { HybridlyComponentsResolver, HybridlyResolver, ProvidedComponentListResolver, getVueComponentsOptions, vueComponents } from './integrations/vue-components'
 import { getIconsOptions, icons } from './integrations/icons'
 import { getVueOptions, vue } from './integrations/vue'
 import { loadConfiguration } from './config/load'
@@ -34,4 +34,4 @@ export default async function plugin(options: Options = {}) {
 	]
 }
 
-export { layout, ViteOptions as Options, HybridlyImports, HybridlyResolver, HybridlyLinkResolver, ProvidedComponentListResolver }
+export { layout, ViteOptions as Options, HybridlyImports, HybridlyResolver, HybridlyComponentsResolver, ProvidedComponentListResolver }

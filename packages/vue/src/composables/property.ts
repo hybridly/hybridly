@@ -1,7 +1,7 @@
 import type { ComputedRef } from 'vue'
 import { computed, readonly, toValue } from 'vue'
-import { getByPath, setByPath } from '@clickbar/dot-diver'
-import type { Path, PathValue, SearchableObject } from '@clickbar/dot-diver'
+import { getByPath, setByPath } from '@hybridly/utils'
+import type { Path, PathValue, SearchableObject } from '@hybridly/utils'
 import { state } from '../stores/state'
 import { toReactive } from '../utils'
 

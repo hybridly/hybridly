@@ -2,13 +2,14 @@
 
 namespace Hybridly;
 
-use Hybridly\Support\Deferred;
 use Hybridly\Support\Header;
-use Hybridly\Support\Partial;
+use Hybridly\Support\Properties\Deferred;
+use Hybridly\Support\Properties\Merge;
+use Hybridly\Support\Properties\Partial;
 use Hybridly\View\Factory;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
-use Spatie\LaravelData\Contracts\DataObject;
+use Spatie\LaravelData\Contracts\TransformableData;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -50,7 +51,7 @@ if (!\function_exists('Hybridly\view')) {
      *
      * @see https://hybridly.dev/api/laravel/functions.html#view
      */
-    function view(string $component = null, array|Arrayable|DataObject $properties = []): Factory
+    function view(string $component = null, array|Arrayable|TransformableData $properties = []): Factory
     {
         return resolve(Factory::class)->view($component, $properties);
     }
@@ -62,7 +63,7 @@ if (!\function_exists('Hybridly\dialog')) {
      *
      * @see https://hybridly.dev/api/laravel/functions.html#dialog
      */
-    function dialog(string $component = null, array|Arrayable|DataObject $properties = [], string $base = '', bool $force = false, bool $keep = false): Factory
+    function dialog(string $component = null, array|Arrayable|TransformableData $properties = [], string $base = '', bool $force = false, bool $keep = false): Factory
     {
         return resolve(Factory::class)
             ->view($component, $properties)
@@ -76,7 +77,7 @@ if (!\function_exists('Hybridly\properties')) {
      *
      * @see https://hybridly.dev/api/laravel/functions.html#properties
      */
-    function properties(array|Arrayable|DataObject $properties): Factory
+    function properties(array|Arrayable|TransformableData $properties): Factory
     {
         return resolve(Factory::class)->properties($properties);
     }
@@ -94,6 +95,18 @@ if (!\function_exists('Hybridly\partial')) {
     }
 }
 
+if (!\function_exists('Hybridly\merge')) {
+    /**
+     * Specifies that a property should merge itself with its current instance.
+     *
+     * @see https://hybridly.dev/api/laravel/functions.html#merge
+     */
+    function merge(\Closure $callback): Merge
+    {
+        return new Merge($callback);
+    }
+}
+
 if (!\function_exists('Hybridly\deferred')) {
     /**
      * Creates a deferred property that will not be included in an initial load,
@@ -101,9 +114,9 @@ if (!\function_exists('Hybridly\deferred')) {
      *
      * @see https://hybridly.dev/api/laravel/functions.html#deferred
      */
-    function deferred(\Closure $callback): Deferred
+    function deferred(\Closure $callback, ?string $group = null): Deferred
     {
-        return new Deferred($callback);
+        return new Deferred($callback, group: $group);
     }
 }
 

@@ -1,6 +1,6 @@
 import { computed, reactive, toRaw } from 'vue'
 import { route, router } from '@hybridly/core'
-import { getByPath } from '@clickbar/dot-diver'
+import { getByPath } from '@hybridly/utils'
 import type { FormDataConvertible } from '@hybridly/utils'
 import { toReactive } from '../utils'
 import { useBulkSelect } from './bulk-select'

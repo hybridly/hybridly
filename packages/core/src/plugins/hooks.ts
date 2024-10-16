@@ -2,7 +2,7 @@
 import type { AxiosResponse } from 'axios'
 import type { InternalRouterContext } from '../context'
 import { getRouterContext } from '../context'
-import type { Errors, HybridPayload, HybridRequestOptions, InternalNavigationOptions, Progress } from '../router'
+import type { Errors, HybridPayload, InternalNavigationOptions, PendingHybridRequest, Progress } from '../router'
 import type { MaybePromise } from '../types'
 
 // #region requesthooks
@@ -10,74 +10,64 @@ export interface RequestHooks {
 /* [!code focus:54] */	/**
 * Called before a navigation request is going to happen.
 */
-	before: (options: HybridRequestOptions, context: InternalRouterContext) => MaybePromise<any | boolean>
+	before: (request: PendingHybridRequest, context: InternalRouterContext) => MaybePromise<any | boolean>
 
 	/**
 	 * Called before the request of a navigation is going to happen.
 	 */
-	start: (context: InternalRouterContext) => MaybePromise<any>
+	start: (request: PendingHybridRequest, context: InternalRouterContext) => MaybePromise<any>
 
 	/**
 	 * Called when progress on the request is being made.
 	 */
-	progress: (progress: Progress, context: InternalRouterContext) => MaybePromise<any>
+	progress: (progress: Progress, request: PendingHybridRequest, context: InternalRouterContext) => MaybePromise<any>
 
 	/**
 	 * Called when data is received after a request for a navigation.
 	 */
-	data: (response: AxiosResponse, context: InternalRouterContext) => MaybePromise<any>
+	data: (request: PendingHybridRequest, response: AxiosResponse, context: InternalRouterContext) => MaybePromise<any>
 
 	/**
 	 * Called when a request is successful and there is no error.
 	 */
-	success: (payload: HybridPayload, context: InternalRouterContext) => MaybePromise<any>
+	success: (payload: HybridPayload, request: PendingHybridRequest, context: InternalRouterContext) => MaybePromise<any>
 
 	/**
 	 * Called when a request is successful but there were errors.
 	 */
-	error: (errors: Errors, context: InternalRouterContext) => MaybePromise<any>
+	error: (errors: Errors, request: PendingHybridRequest, context: InternalRouterContext) => MaybePromise<any>
 
 	/**
 	 * Called when a request has been aborted.
 	 */
-	abort: (context: InternalRouterContext) => MaybePromise<any>
+	abort: (request: PendingHybridRequest, context: InternalRouterContext) => MaybePromise<any>
 
 	/**
 	 * Called when a response to a request is not a valid hybrid response.
 	 */
-	invalid: (response: AxiosResponse, context: InternalRouterContext) => MaybePromise<any>
+	invalid: (request: PendingHybridRequest, response: AxiosResponse, context: InternalRouterContext) => MaybePromise<any>
 
 	/**
 	 * Called when an unknowne exception was triggered.
 	 */
-	exception: (error: Error, context: InternalRouterContext) => MaybePromise<any>
+	exception: (error: Error, request: PendingHybridRequest, context: InternalRouterContext) => MaybePromise<any>
 
 	/**
 	 * Called whenever the request failed, for any reason, in addition to other hooks.
 	 */
-	fail: (context: InternalRouterContext) => MaybePromise<any>
+	fail: (request: PendingHybridRequest, context: InternalRouterContext) => MaybePromise<any>
 
 	/**
 	 * Called after a request has been made, even if it didn't succeed.
 	 */
-	after: (context: InternalRouterContext) => MaybePromise<any>
+	after: (request: PendingHybridRequest, context: InternalRouterContext) => MaybePromise<any>
 }
 // #endregion requesthooks
 
 // #region hooks
 export interface Hooks extends RequestHooks {
 /* [!code focus:28] */	/**
-/////////////////////// * Called when Hybridly's context is initialized.
-///////////////////////
-///////////////////////
-///////////////////////
-///////////////////////
-///////////////////////
-///////////////////////
-///////////////////////
-///////////////////////
-///////////////////////
-///////////////////////
+* Called when Hybridly's context is initialized.
 */
 	initialized: (context: InternalRouterContext) => MaybePromise<any>
 
@@ -143,7 +133,7 @@ export function appendCallbackToHooks<T extends keyof Hooks>(hook: T, fn: Hooks[
 export function registerHook<T extends keyof Hooks>(hook: T, fn: Hooks[T], options?: HookOptions): () => void {
 	if (options?.once) {
 		const unregister = appendCallbackToHooks(hook, async (...args: any[]) => {
-			await fn(...args as [any, any])
+			await fn(...args as [any, any, any])
 			unregister()
 		})
 

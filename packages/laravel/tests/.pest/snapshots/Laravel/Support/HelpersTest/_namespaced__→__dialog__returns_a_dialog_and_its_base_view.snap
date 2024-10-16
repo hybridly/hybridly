@@ -7,6 +7,6 @@
 	<title>Document</title>
 </head>
 <body>
-		<div id="root" class="" data-payload="{&quot;view&quot;:{&quot;component&quot;:&quot;users.index&quot;,&quot;properties&quot;:[],&quot;deferred&quot;:[]},&quot;dialog&quot;:{&quot;component&quot;:&quot;users.show&quot;,&quot;properties&quot;:{&quot;user&quot;:&quot;Jon Doe&quot;},&quot;baseUrl&quot;:&quot;http:\/\/localhost&quot;,&quot;redirectUrl&quot;:&quot;http:\/\/localhost&quot;,&quot;key&quot;:&quot;foo-bar&quot;},&quot;url&quot;:&quot;http:\/\/localhost&quot;,&quot;version&quot;:null}"></div>
+		<div id="root" class="" data-payload="{&quot;view&quot;:{&quot;component&quot;:&quot;users.index&quot;,&quot;properties&quot;:[],&quot;deferred&quot;:[],&quot;mergeable&quot;:[]},&quot;dialog&quot;:{&quot;component&quot;:&quot;users.show&quot;,&quot;properties&quot;:{&quot;user&quot;:&quot;Jon Doe&quot;},&quot;baseUrl&quot;:&quot;http:\/\/localhost&quot;,&quot;redirectUrl&quot;:&quot;http:\/\/localhost&quot;,&quot;key&quot;:&quot;foo-bar&quot;},&quot;url&quot;:&quot;http:\/\/localhost&quot;,&quot;version&quot;:null}"></div>
 </body>
 </html>

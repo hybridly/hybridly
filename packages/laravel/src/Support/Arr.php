@@ -2,6 +2,7 @@
 
 namespace Hybridly\Support;
 
+use Hybridly\Support\Properties\Hybridable;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Arr as SupportArr;
 

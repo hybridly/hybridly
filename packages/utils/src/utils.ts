@@ -2,6 +2,7 @@ import baseMerge from 'deepmerge'
 // @ts-expect-error due to moduleresolution
 import { isPlainObject } from 'is-plain-object'
 
+export { setByPath, getByPath, type PathValue, type Path, type SearchableObject } from '@clickbar/dot-diver'
 export { debounce, throttle } from 'throttle-debounce'
 export { default as clone } from 'lodash.clonedeep'
 
@@ -39,6 +40,10 @@ export function match<TValue extends string | number = string, TReturnValue = un
 	throw error
 }
 
+export function wrap<T>(value: T | T[]): T[] {
+	return Array.isArray(value) ? value : [value]
+}
+
 export function value<T>(value: T | (() => T)): T {
 	if (typeof value === 'function') {
 		return (value as any)?.() as T
@@ -47,9 +52,9 @@ export function value<T>(value: T | (() => T)): T {
 	return value
 }
 
-export function when<T, D>(condition: any, data: T, _default?: D): T | D | undefined {
+export function mergeObject<T extends object>(condition: any, data: T): T | object {
 	if (!condition) {
-		return _default
+		return {}
 	}
 
 	return data
@@ -141,4 +146,14 @@ export function unsetPropertyAtPath(obj: any, path: string): void {
 	if (Object.keys(nestedObject).length === 0) {
 		unsetPropertyAtPath(obj, segments.slice(0, -1).join('.'))
 	}
+}
+
+export function promiseWithResolvers<T>(): PromiseWithResolvers<T> {
+	let resolve: any
+	let reject: any
+	const promise = new Promise<T>((_resolve, _reject) => {
+		resolve = _resolve
+		reject = _reject
+	})
+	return { promise, resolve, reject }
 }

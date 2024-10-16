@@ -1,11 +1,11 @@
 <?php
 
-namespace Hybridly\Support;
+namespace Hybridly\Support\Properties;
 
 /**
  * Represents a property that will get evaluated only when specified in a partial reload.
  */
-class Partial
+class Partial implements IgnoreFirstLoad
 {
     public function __construct(
         private readonly \Closure $callback,
