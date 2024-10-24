@@ -8,10 +8,15 @@ use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Routing\Route;
 use Illuminate\Routing\Router;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Reflector;
+use Illuminate\Support\Str;
 use JsonSerializable;
+use Laravel\Folio\FolioRoutes;
+use Laravel\Folio\Pipeline\PotentiallyBindablePathSegment;
 use ReflectionClass;
 use ReflectionMethod;
+use ReflectionProperty;
 
 final class RouteExtractor implements JsonSerializable, Arrayable
 {
@@ -63,10 +68,9 @@ final class RouteExtractor implements JsonSerializable, Arrayable
                     'bindings' => $this->resolveBindings($route),
                     'wheres' => $route->wheres,
                 ],
-            ])
-            ->all();
+            ]);
 
-        return $routes;
+        return $routes->merge($this->folioRoutes())->all();
     }
 
     public function jsonSerialize(): mixed
@@ -162,5 +166,64 @@ final class RouteExtractor implements JsonSerializable, Arrayable
         return method_exists(app('url'), 'getDefaultParameters')
             ? app('url')->getDefaultParameters()
             : [];
+    }
+
+    /**
+     * @see https://github.com/laravel/folio/blob/master/src/Console/ListCommand.php
+     */
+    private function folioRoutes(): Collection
+    {
+        if (!app()->has(FolioRoutes::class)) {
+            return collect();
+        }
+
+        // Use existing named Folio routes (instead of searching view files) to respect route caching
+        return collect(app(FolioRoutes::class)->routes())->map(function (array $route, $routeName) {
+            $uri = rtrim($route['baseUri'], '/') . str_replace([$route['mountPath'], '.blade.php'], '', $route['path']);
+
+            $segments = explode('/', $uri);
+            $parameters = [];
+            $bindings = [];
+
+            foreach ($segments as $i => $segment) {
+                // Folio doesn't support sub-segment parameters
+                if (str_starts_with($segment, '[')) {
+                    $param = new PotentiallyBindablePathSegment($segment);
+
+                    $parameters[] = $name = $param->variable();
+                    $segments[$i] = "{{$name}}";
+
+                    if ($field = $param->field()) {
+                        $bindings[$name] = $field;
+                    } elseif ($param->bindable()) {
+                        $override =
+                            (new ReflectionClass($param->class()))->isInstantiable() &&
+                            ((new ReflectionMethod($param->class(), 'getRouteKeyName'))->class !== Model::class ||
+                                (new ReflectionMethod($param->class(), 'getKeyName'))->class !== Model::class ||
+                                (new ReflectionProperty($param->class(), 'primaryKey'))->class !== Model::class);
+
+                        $bindings[$name] = $override ? app($param->class())->getRouteKeyName() : 'id';
+                    }
+                }
+            }
+
+            $uri = implode('/', $segments);
+            $uri = Str::replaceEnd('/index', '', $uri);
+
+            if ($route['domain'] && str_contains($route['domain'], '{')) {
+                preg_match_all('/{(.*?)}/', $route['domain'], $matches);
+                array_unshift($parameters, ...$matches[1]);
+            }
+
+            return [
+                'uri' => $uri === '' ? '/' : trim($uri, '/'),
+                'method' => ['GET'],
+                'domain' => $route['domain'],
+                'name' => $routeName,
+                'parameters' => $parameters,
+                'bindings' => $bindings,
+                'wheres' => [],
+            ];
+        });
     }
 }
