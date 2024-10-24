@@ -74,7 +74,7 @@ final class Version
 
         $latest = static::getLatestVersion();
 
-        return sprintf(
+        return \sprintf(
             '%s (%s available)',
             "<fg=red>{$version}</>",
             "<fg=green;options=bold>{$latest}</>",

@@ -148,7 +148,7 @@ class HybridlyServiceProvider extends PackageServiceProvider
         // Overrides @vite so we don't have to specify the path to the
         // application entry point in multiple files
         $this->app->afterResolving('blade.compiler', function (BladeCompiler $compiler) {
-            $compiler->directive('vite', fn (?string $expression = null) => sprintf(
+            $compiler->directive('vite', fn (?string $expression = null) => \sprintf(
                 '<?php echo app(%s::class)(%s); ?>',
                 Vite::class,
                 $expression ?: '"' . $this->getConfiguration()->architecture->getApplicationMainPath() . '"',

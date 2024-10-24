@@ -40,7 +40,7 @@ class Assertable extends AssertableJson
             PHPUnit::assertArrayHasKey('url', $payload);
             PHPUnit::assertArrayHasKey('version', $payload);
         } catch (AssertionFailedError) {
-            PHPUnit::fail(sprintf('Not a valid hybrid response: %s', json_encode($payload ?? [], \JSON_PRETTY_PRINT)));
+            PHPUnit::fail(\sprintf('Not a valid hybrid response: %s', json_encode($payload ?? [], \JSON_PRETTY_PRINT)));
         }
 
         $instance = static::fromArray($payload);
@@ -207,7 +207,7 @@ class Assertable extends AssertableJson
         try {
             resolve(Hybridly::class)->hasView($identifier);
         } catch (InvalidArgumentException) {
-            PHPUnit::fail(sprintf('Hybridly view [%s] is not registered.', $identifier));
+            PHPUnit::fail(\sprintf('Hybridly view [%s] is not registered.', $identifier));
         }
     }
 }

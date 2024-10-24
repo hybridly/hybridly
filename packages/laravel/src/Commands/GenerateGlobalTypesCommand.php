@@ -63,7 +63,7 @@ class GenerateGlobalTypesCommand extends Command
             );
         }
 
-        $this->components->info(sprintf(
+        $this->components->info(\sprintf(
             '%s PHP types written to <comment>%s</comment>.',
             $collection->count(),
             self::PHP_TYPES_PATH,
@@ -92,10 +92,10 @@ class GenerateGlobalTypesCommand extends Command
         );
 
         $message = $namespace
-            ? sprintf('Interface <comment>%s</comment>', $namespace)
+            ? \sprintf('Interface <comment>%s</comment>', $namespace)
             : 'Empty interface';
 
-        $this->components->info(sprintf(
+        $this->components->info(\sprintf(
             '%s written to <comment>%s</comment>.',
             $message,
             self::GLOBAL_PROPERTIES_PATH,

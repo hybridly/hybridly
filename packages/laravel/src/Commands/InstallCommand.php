@@ -18,7 +18,7 @@ class InstallCommand extends GeneratorCommand
         parent::handle();
 
         $this->installMiddleware(
-            sprintf('\\%s\\%s::class', $this->getDefaultNamespace(trim($this->rootNamespace(), '\\')), $this->argument('name')),
+            \sprintf('\\%s\\%s::class', $this->getDefaultNamespace(trim($this->rootNamespace(), '\\')), $this->argument('name')),
         );
 
         Artisan::call('vendor:publish --tag=hybridly-config');

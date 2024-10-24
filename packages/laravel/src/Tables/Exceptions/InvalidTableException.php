@@ -9,7 +9,7 @@ class InvalidTableException extends Exception
 {
     public static function with(string $table): self
     {
-        return new self(sprintf("Table [{$table}] must extend the [%s] class.", Table::class));
+        return new self(\sprintf("Table [{$table}] must extend the [%s] class.", Table::class));
     }
 
     public static function cannotBeAnonymous(): self

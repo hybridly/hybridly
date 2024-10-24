@@ -22,7 +22,7 @@ final class AuthorizationArrayResolver
                     return [$action => Gate::allows($action, $model)];
                 } catch (\ArgumentCountError $previous) {
                     throw new \ArgumentCountError(
-                        message: sprintf(
+                        message: \sprintf(
                             'Could not allow action `%s` on model `%s`. %s',
                             $action,
                             \is_string($model) ? $model : $model::class,
