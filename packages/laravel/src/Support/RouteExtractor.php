@@ -11,12 +11,12 @@ use Illuminate\Routing\Router;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Reflector;
 use Illuminate\Support\Str;
+use JsonSerializable;
 use Laravel\Folio\FolioRoutes;
 use Laravel\Folio\Pipeline\PotentiallyBindablePathSegment;
-use JsonSerializable;
-use ReflectionProperty;
 use ReflectionClass;
 use ReflectionMethod;
+use ReflectionProperty;
 
 final class RouteExtractor implements JsonSerializable, Arrayable
 {
