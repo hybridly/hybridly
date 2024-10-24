@@ -32,7 +32,7 @@ In the example above, the corresponding single-file component would simply accep
 ```vue
 <script setup lang="ts">
 defineProps<{ // [!code focus:3]
-  chirps: Paginator<App.Data.ChirpData>
+	chirps: Paginator<App.Data.ChirpData>
 }>()
 </script>
 ```
@@ -102,12 +102,23 @@ In the example above, using `router.post('/users', { data: user })` would redire
 
 It's often necessary to redirect to an external website, or an internal page that doesn't use Hybridly.
 
-If you redirect using a classic server-side redirection, the front-end adapter will not understand the response and will display an error modal. 
+If you redirect using a classic server-side redirection, the front-end adapter will not understand the response and will display an error modal.
 
-Instead, you may use `hybridly()->external($url)` to iniate a client-side redirect using `window.location`:
+Instead, you may use `Hybridly\to_external_url($url)` to iniate a client-side redirect using `window.location`:
 
 ```php
-hybridly()->external('https://google.com');
+use function Hybridly\to_external_url;
+
+to_external_url('https://google.com');
+```
+
+You may open the URL in a new tab by specifying a target:
+
+```php
+use Hybridly\Support\Target;
+use function Hybridly\to_external_url;
+
+to_external_url('https://google.com', target: Target::NEW_TAB);
 ```
 
 This method can also be used when dealing with potentially non-hybrid request. In such cases, a normal `RedirectResponse` will be returned instead.
@@ -116,7 +127,7 @@ This method can also be used when dealing with potentially non-hybrid request. I
 
 Download responses using a `Content-Disposition` header are supported.
 
-You may use any of the usual utilities for creating downloads, such as [`download`](https://laravel.com/docs/master/responses#file-downloads), [`streamDownload`](https://laravel.com/docs/master/responses#streamed-downloads), or [`Storage::download`](https://laravel.com/docs/10.x/filesystem#downloading-files). 
+You may use any of the usual utilities for creating downloads, such as [`download`](https://laravel.com/docs/master/responses#file-downloads), [`streamDownload`](https://laravel.com/docs/master/responses#streamed-downloads), or [`Storage::download`](https://laravel.com/docs/10.x/filesystem#downloading-files).
 
 ```php
 return response()->download($invoice->file_path, 'invoice.pdf');
@@ -156,7 +167,7 @@ use App\ViewModels\ChirpViewModel; // [!code focus:6]
 
 class ChirpController extends Controller
 {
-    public function show(Chirp $chirp) 
+    public function show(Chirp $chirp)
     {
         $this->authorize('view', $chirp);
 
@@ -181,9 +192,9 @@ Unfortunately, since Vue [doesn't have support](https://vuejs.org/api/sfc-script
 ```vue
 <script setup lang="ts">
 const $props = defineProps<{ // [!code focus:5]
-  chirp: App.ViewModels.ChirpViewModel['chirp'],
-  comments: App.ViewModels.ChirpViewModel['comments'],
-  previous: App.ViewModels.ChirpViewModel['previous'],
+	chirp: App.ViewModels.ChirpViewModel['chirp']
+	comments: App.ViewModels.ChirpViewModel['comments']
+	previous: App.ViewModels.ChirpViewModel['previous']
 }>()
 </script>
 ```

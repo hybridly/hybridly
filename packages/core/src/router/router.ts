@@ -1,6 +1,6 @@
 import type { AxiosProgressEvent, AxiosResponse } from 'axios'
 import { debug, hasFiles, match, merge, objectToFormData, random, showResponseErrorModal, when } from '@hybridly/utils'
-import { DIALOG_KEY_HEADER, DIALOG_REDIRECT_HEADER, ERROR_BAG_HEADER, EXCEPT_DATA_HEADER, EXTERNAL_NAVIGATION_HEADER, HYBRIDLY_HEADER, ONLY_DATA_HEADER, PARTIAL_COMPONENT_HEADER, VERSION_HEADER } from '../constants'
+import { DIALOG_KEY_HEADER, DIALOG_REDIRECT_HEADER, ERROR_BAG_HEADER, EXCEPT_DATA_HEADER, EXTERNAL_NAVIGATION_HEADER, EXTERNAL_NAVIGATION_TARGET_HEADER, HYBRIDLY_HEADER, ONLY_DATA_HEADER, PARTIAL_COMPONENT_HEADER, VERSION_HEADER } from '../constants'
 import { NavigationCancelledError, NotAHybridResponseError } from '../errors'
 import type { InternalRouterContext, RouterContextOptions } from '../context'
 import { getInternalRouterContext, getRouterContext, initializeContext, payloadFromContext, setContext } from '../context'
@@ -166,6 +166,7 @@ export async function performHybridNavigation(options: HybridRequestOptions): Pr
 			await performExternalNavigation({
 				url: fillHash(targetUrl, response.headers[EXTERNAL_NAVIGATION_HEADER]!),
 				preserveScroll: options.preserveScroll === true,
+				target: response.headers[EXTERNAL_NAVIGATION_TARGET_HEADER] ?? 'current',
 			})
 
 			return { response }
