@@ -15,6 +15,18 @@ import { makeUrl, sameUrls } from './url'
  */
 export async function performExternalNavigation(options: ExternalNavigationOptions): Promise<void> {
 	debug.external('Navigating to an external URL:', options)
+
+	if (options.target === 'new-tab') {
+		const link = document.createElement('a')
+		link.style.display = 'none'
+		link.target = '_blank'
+		link.href = options.url
+		link.click()
+		setTimeout(() => link.remove(), 0)
+
+		return
+	}
+
 	window.sessionStorage.setItem(STORAGE_EXTERNAL_KEY, JSON.stringify(options))
 	window.location.href = options.url
 
@@ -79,4 +91,6 @@ interface ExternalNavigationOptions {
 	url: string
 	/** Whether to preserve the scroll if the external navigation leads to a hybrid view. */
 	preserveScroll: boolean
+	/** Where to navigate to. */
+	target: 'current' | 'new-tab'
 }

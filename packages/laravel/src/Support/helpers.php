@@ -5,6 +5,7 @@ namespace Hybridly;
 use Hybridly\Support\Deferred;
 use Hybridly\Support\Header;
 use Hybridly\Support\Partial;
+use Hybridly\Support\Target;
 use Hybridly\View\Factory;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
@@ -114,7 +115,7 @@ if (!\function_exists('Hybridly\to_external_url')) {
      *
      * @see https://hybridly.dev/api/laravel/functions.html#to-external-url
      */
-    function to_external_url(string|RedirectResponse $url, array $headers = []): Response
+    function to_external_url(string|RedirectResponse $url, array $headers = [], Target $target = Target::CURRENT): Response
     {
         if ($url instanceof RedirectResponse) {
             $url = $url->getTargetUrl();
@@ -123,7 +124,7 @@ if (!\function_exists('Hybridly\to_external_url')) {
         if (is_hybrid()) {
             return new Response(
                 status: Response::HTTP_CONFLICT,
-                headers: [...$headers, Header::EXTERNAL => $url],
+                headers: [...$headers, Header::EXTERNAL => $url, Header::EXTERNAL_TARGET => $target->value],
             );
         }
 

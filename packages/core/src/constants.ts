@@ -1,6 +1,7 @@
 export const STORAGE_EXTERNAL_KEY = 'hybridly:external'
 export const HYBRIDLY_HEADER = 'x-hybrid'
 export const EXTERNAL_NAVIGATION_HEADER = `${HYBRIDLY_HEADER}-external`
+export const EXTERNAL_NAVIGATION_TARGET_HEADER = `${HYBRIDLY_HEADER}-external-target`
 export const PARTIAL_COMPONENT_HEADER = `${HYBRIDLY_HEADER}-partial-component`
 export const ONLY_DATA_HEADER = `${HYBRIDLY_HEADER}-only-data`
 export const DIALOG_KEY_HEADER = `${HYBRIDLY_HEADER}-dialog-key`
