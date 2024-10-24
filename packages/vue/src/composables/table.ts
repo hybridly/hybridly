@@ -89,8 +89,8 @@ export interface TableDefaultOptions extends AvailableHybridRequestOptions {
  */
 export function useTable<
 	RecordType extends(Props[PropsKey] extends Table<infer T, any> ? AsRecordType<T> : never),
-	PaginatorKindName extends (Props[PropsKey] extends Table<RecordType, infer PaginatorKind> ? PaginatorKind : never),
-	TableType extends (Props[PropsKey] extends Table<RecordType, PaginatorKindName> ? Table<RecordType, PaginatorKindName> : never),
+	PaginatorKindName extends (Props[PropsKey] extends Table<any, infer PaginatorKind> ? PaginatorKind : never),
+	TableType extends (Props[PropsKey] extends Table<any, PaginatorKindName> ? Table<RecordType, PaginatorKindName> : never),
 	Props extends Record<string, unknown>,
 	PropsKey extends keyof Props,
 >(props: Props, key: PropsKey, defaultOptions: TableDefaultOptions = {}) {
