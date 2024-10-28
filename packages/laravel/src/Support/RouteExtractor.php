@@ -13,7 +13,7 @@ use JsonSerializable;
 use ReflectionClass;
 use ReflectionMethod;
 
-final class RouteExtractor implements JsonSerializable, Arrayable
+class RouteExtractor implements JsonSerializable, Arrayable
 {
     public function __construct(
         private readonly Router $router,

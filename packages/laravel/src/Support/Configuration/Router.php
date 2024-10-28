@@ -2,11 +2,14 @@
 
 namespace Hybridly\Support\Configuration;
 
+use Hybridly\Support\RouteExtractor;
+
 final class Router
 {
     public function __construct(
         public array $allowedVendors,
         public array $excludedRoutes,
+        public string $routesExtractor,
     ) {
     }
 
@@ -17,6 +20,7 @@ final class Router
                 'laravel/fortify',
             ],
             excludedRoutes: $config['exclude'] ?? [],
+            routesExtractor: $config['routes_extractor'] ?? RouteExtractor::class,
         );
     }
 }

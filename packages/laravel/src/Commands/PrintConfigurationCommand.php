@@ -4,7 +4,6 @@ namespace Hybridly\Commands;
 
 use Hybridly\Hybridly;
 use Hybridly\Support\Configuration\Configuration;
-use Hybridly\Support\RouteExtractor;
 use Hybridly\Support\Version;
 use Illuminate\Console\Command;
 
@@ -14,8 +13,10 @@ class PrintConfigurationCommand extends Command
     protected $description = 'Prints the internal Hybridly configuration.';
     protected $hidden = true;
 
-    public function handle(Hybridly $hybridly, RouteExtractor $routeExtractor): int
+    public function handle(Hybridly $hybridly): int
     {
+        $routeExtractor = $this->laravel->make(Configuration::get()->router->routesExtractor);
+
         $configuration = [
             'versions' => [
                 'composer' => Version::getComposerVersion(),
