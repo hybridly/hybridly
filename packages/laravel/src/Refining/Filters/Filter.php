@@ -124,7 +124,7 @@ class Filter extends BaseFilter
         return $this;
     }
 
-    public function beingsWithStrict(): static
+    public function beginsWithStrict(): static
     {
         $this->mode = static::BEGINS_WITH_STRICT;
 

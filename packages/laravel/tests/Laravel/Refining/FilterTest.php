@@ -16,7 +16,7 @@ beforeEach(function () {
 });
 
 it('can be serialized', function () {
-    $filter = Filter::make('name')->beingsWithStrict()
+    $filter = Filter::make('name')->beginsWithStrict()
         ->metadata(['foo' => 'bar'])
         ->label('Product name');
 
@@ -54,7 +54,7 @@ test('in `begins_with_strict` mode, it only includes records that begin with the
     $filters = mock_refiner(
         query: ['filters' => ['name' => 'Macbook']],
         refiners: [
-            Filter::make('name')->beingsWithStrict(),
+            Filter::make('name')->beginsWithStrict(),
         ],
     );
 
