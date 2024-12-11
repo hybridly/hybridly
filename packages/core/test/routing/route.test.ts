@@ -77,4 +77,24 @@ describe('an url can be generated from a route name', () => {
 		const bar = { id: 'owo' }
 		expect(route('foo', { bar })).toBe('https://bluebird.test/owo')
 	})
+
+	it('foo', async () => {
+		await initializeContext(makeRouterContextOptions({
+			routing: {
+				url: 'https://bluebird.test',
+				defaults: {
+					bar: 'baz',
+				},
+				routes: {
+					test: {
+						method: ['GET'],
+						uri: 'test/{page?}',
+						name: 'test',
+					},
+				},
+			},
+		}))
+
+		expect(route('test', { foo: 'bar', baz: 'baz' })).toBe('https://bluebird.test/test?foo=bar&baz=baz')
+	})
 })
