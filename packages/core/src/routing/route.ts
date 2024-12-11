@@ -170,9 +170,11 @@ function getRouteTransformable(routeName: string, routeParameters?: any, shouldT
 	const replaceParameter = (match: string, parameterName: string, optional: string | null) => {
 		const value = getRouteParameterValue(routeName, parameterName, parameters)
 
+		const found = missing.indexOf(parameterName)
 		// Removes this parameter from the missing parameter list.
-		missing.splice(missing.indexOf(parameterName), 1)
-
+		if (found >= 0) {
+			missing.splice(found, 1)
+		}
 		// If the parameter is passed, use it.
 		if (value) {
 			return value
