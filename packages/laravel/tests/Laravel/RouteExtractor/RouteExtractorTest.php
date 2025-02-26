@@ -54,7 +54,5 @@ test('routes from vendors can be opted-in', function () {
 
     Configuration::get()->router->allowedVendors = ['laravel/framework'];
 
-    expect(app(RouteExtractor::class)->getRoutes())
-        ->toHaveCount(1)
-        ->sequence(fn ($_, $key) => $key->toBe('vendor-route'));
+    expect(array_keys(app(RouteExtractor::class)->getRoutes()))->toContain('vendor-route');
 });

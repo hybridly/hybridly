@@ -5,5 +5,6 @@ export default defineEslintConfig({
 	markdown: true,
 	rules: {
 		'vue/multiline-html-element-content-newline': ['off'],
+		'jsonc/indent': ['off'],
 	},
 })

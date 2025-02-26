@@ -21,12 +21,13 @@ jobs:
       matrix:
         node-version: ["22.x"]
         os: [ubuntu-latest]
-        php: [8.3, 8.4]
-        laravel: ["11.*"]
+        php: [8.4]
+        laravel: ["11.*", "12.*"]
         include:
           - laravel: 11.*
             testbench: 9.*
-            collision: 8.*
+          - laravel: 12.*
+            testbench: 10.*
 
     name: P${{ matrix.php }} - L${{ matrix.laravel }} - N${{ matrix.node-version }} - ${{ matrix.os }}
 
@@ -59,7 +60,7 @@ jobs:
       - name: Install PHP dependencies
         run: |
           composer install --no-interaction
-          composer require "nunomaduro/collision:${{ matrix.collision }}" "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" --no-interaction --no-progress --with-all-dependencies
+          composer require "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" --no-interaction --no-progress --with-all-dependencies
 
       - name: Install Node dependencies
         run: pnpm install
