@@ -26,7 +26,7 @@ trait ForwardsToHybridlyHelpers
      *
      * @see https://hybridly.dev/api/laravel/hybridly.html#view
      */
-    public function view(string $component = null, array|Arrayable|DataObject $properties = []): Factory
+    public function view(?string $component = null, array|Arrayable|DataObject $properties = []): Factory
     {
         return view($component, $properties);
     }
@@ -79,7 +79,7 @@ trait ForwardsToHybridlyHelpers
      *
      * @see https://hybridly.dev/api/laravel/hybridly.html#is-hybrid
      */
-    public function isHybrid(Request $request = null): bool
+    public function isHybrid(?Request $request = null): bool
     {
         return is_hybrid($request);
     }
@@ -89,7 +89,7 @@ trait ForwardsToHybridlyHelpers
      *
      * @see https://hybridly.dev/api/laravel/hybridly.html#is-partial
      */
-    public function isPartial(Request $request = null): bool
+    public function isPartial(?Request $request = null): bool
     {
         return is_partial($request);
     }
