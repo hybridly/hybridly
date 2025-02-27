@@ -11,7 +11,7 @@ trait HasRootView
     /**
      * Sets the root view for the next response.
      */
-    public function setRootView(\Closure|string $rootView = null): static
+    public function setRootView(null|\Closure|string $rootView = null): static
     {
         $this->rootView = $rootView;
 

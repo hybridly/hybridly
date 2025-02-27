@@ -51,7 +51,7 @@ class TestResponseMacros
 
     public function assertHybrid(): Closure
     {
-        return function (Closure $callback = null): TestResponse {
+        return function (?Closure $callback = null): TestResponse {
             /** @var TestResponse $this */
             $assert = Assertable::fromTestResponse($this);
 
@@ -70,7 +70,7 @@ class TestResponseMacros
      */
     public function assertHasHybridProperty(): Closure
     {
-        return function (string $key, $length = null, \Closure $callback = null): TestResponse {
+        return function (string $key, $length = null, ?\Closure $callback = null): TestResponse {
             /** @var TestResponse $this */
             Assertable::fromTestResponse($this)->has('view.properties.' . $key, $length, $callback);
 
@@ -83,7 +83,7 @@ class TestResponseMacros
      */
     public function assertMissingHybridProperty(): Closure
     {
-        return function (string $key, $length = null, \Closure $callback = null): TestResponse {
+        return function (string $key, $length = null, ?\Closure $callback = null): TestResponse {
             /** @var TestResponse $this */
             Assertable::fromTestResponse($this)->missing('view.properties.' . $key, $length, $callback);
 
@@ -148,7 +148,7 @@ class TestResponseMacros
      */
     public function assertHybridDialog(): Closure
     {
-        return function (array $properties = null, string $view = null, string $baseUrl = null, string $redirectUrl = null): TestResponse {
+        return function (?array $properties = null, ?string $view = null, ?string $baseUrl = null, ?string $redirectUrl = null): TestResponse {
             /** @var TestResponse $this */
             Assertable::fromTestResponse($this)->assertDialog($properties, $view, $baseUrl, $redirectUrl);
 

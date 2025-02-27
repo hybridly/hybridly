@@ -31,7 +31,7 @@ trait HasSharedProperties
     /**
      * Gets data being shared to every response.
      */
-    public function shared(string $key = null, mixed $default = null): mixed
+    public function shared(?string $key = null, mixed $default = null): mixed
     {
         if ($key) {
             return data_get($this->sharedProperties, $key, value($default));
