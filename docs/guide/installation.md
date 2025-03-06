@@ -38,7 +38,6 @@ More information about the preset can be found on its [**repository**](https://g
 Once you have installed the preset, **you do not need to follow the rest of the installation guide**. Hybridly is already installed.
 :::
 
-
 ## Server-side setup
 
 This section is a summary of what's needed server-side, so that you can conveniently copy-paste snippets. For more thorough explanations, follow the [detailed guide](#detailed-installation-guide).
@@ -59,7 +58,7 @@ php artisan hybridly:install
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
-		@vite(['resources/css/app.css', 'resources/application/main.ts'])
+		@vite
 	</head>
 	<body class="antialiased">
 		@hybridly
@@ -101,11 +100,7 @@ import hybridly from 'hybridly/vite'
 
 export default defineConfig({
 	plugins: [
-		hybridly({
-			laravel: {
-				detectTls: true
-			}
-		}),
+		hybridly(),
 	],
 })
 ```
@@ -227,16 +222,12 @@ import hybridly from 'hybridly/vite'
 
 export default defineConfig({
 	plugins: [
-		hybridly({
-			laravel: {
-				detectTls: true
-			}
-		}),
+		hybridly(),
 	],
 })
 ```
 
-If you add `detectTls`, which you should, don't forget to also run `valet secure` and set up `APP_URL` in `.env`.
+Don't forget to also run `valet secure` and set up `APP_URL` in `.env`.
 
 ### Initialize Hybridly
 
