@@ -17,7 +17,7 @@ initializeHybridly()
 
 - **Type**: `(vue: App) => MaybePromise<void>`
 
-Defines a callback that receives the Vue instance as a parameter and gets executed before Vue is mounted. 
+Defines a callback that receives the Vue instance as a parameter and gets executed before Vue is mounted.
 
 This can be used to register additionnal Vue plugins, directives or components.
 
@@ -25,7 +25,7 @@ This can be used to register additionnal Vue plugins, directives or components.
 
 ```ts
 import { createApp } from 'vue'
-import { createHead } from '@unhead/vue'
+import { createHead } from '@unhead/vue/client'
 import { autoAnimatePlugin as autoAnimate } from '@formkit/auto-animate/vue'
 import { initializeHybridly } from 'virtual:hybridly/setup'
 
@@ -93,7 +93,7 @@ import { initializeHybridly } from 'virtual:hybridly/setup'
 import axios from 'axios'
 
 initializeHybridly({
-	axios: axios.create({ // [!code focus:5] 
+	axios: axios.create({ // [!code focus:5]
 		headers: {
 			'X-Custom-Header': 'value',
 		},

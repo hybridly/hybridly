@@ -17,14 +17,16 @@ In `main.ts`, import `createHead` and register its return value as a plugin.
 ```ts
 import { createApp } from 'vue'
 import { initializeHybridly } from 'virtual:hybridly/config'
-import { createHead } from '@unhead/vue' // [!code hl]
+import { createHead } from '@unhead/vue/client' // [!code hl]
 
 initializeHybridly({
-  enhanceVue: (vue) => {
-    const head = createHead()
-    head.push({titleTemplate: (title) => title ? `${title} - Blue Bird` : 'Blue Bird'})
-    vue.use(head)
-  }
+	enhanceVue: (vue) => {
+		vue.use(createHead({
+			init: [
+				{ titleTemplate: (title) => title ? `${title} - Blue Bird` : 'Blue Bird' }
+			]
+		}))
+	}
 })
 ```
 
@@ -45,8 +47,8 @@ useHead({
 </script>
 
 <template>
-  <!-- Some layout here -->
-  <slot />
+	<!-- Some layout here -->
+	<slot />
 </template>
 ```
 
@@ -58,7 +60,7 @@ useHead({
 </script>
 
 <template layout="default">
-  <!-- view component -->
+	<!-- view component -->
 </template>
 ```
 :::
