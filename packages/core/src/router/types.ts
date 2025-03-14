@@ -150,7 +150,7 @@ export interface Router {
 	/** Determines if the given route name and parameters matches the current route. */
 	matches: <T extends RouteName>(name: T, parameters?: RouteParameters<T>) => boolean
 	/** Gets the current route name. Returns `undefined` is unknown. */
-	current: () => string | undefined
+	current: () => RouteName | undefined
 	/** Access the dialog router. */
 	dialog: DialogRouter
 	/** Access the history state. */
