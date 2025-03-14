@@ -5,7 +5,10 @@ import type { Runner } from './integrations/run'
 import type { VueOptions } from './integrations/vue'
 import type { CustomComponentsOptions, CustomResolvers } from './integrations/vue-components'
 
-export type PathOptions = { laravelPath?: string; basePath?: string }
+export interface PathOptions {
+	laravelPath?: string
+	basePath?: string
+}
 export type ResolvedOptions = ViteOptions & Required<PathOptions>
 export interface ViteOptions {
 	/** Disables the Laravel integration. Useful if you prefer to use the official one. */
