@@ -11,7 +11,7 @@ export default (options: ResolvedOptions, config: DynamicConfiguration): Plugin 
 	generateTsConfig(options, config)
 	generateLaravelIdeaHelper(options, config)
 	generateRouteDefinitionFile(options, config)
-	generateVueExtensionFile()
+	generateVueExtensionFile(options)
 
 	return {
 		name: CONFIG_PLUGIN_NAME,

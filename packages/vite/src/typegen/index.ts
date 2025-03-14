@@ -94,7 +94,7 @@ export function generateLaravelIdeaHelper(options: ResolvedOptions, config: Dyna
 	write(options, JSON.stringify(ideJson, null, 2), 'ide.json')
 }
 
-export async function generateVueExtensionFile() {
+export async function generateVueExtensionFile(options: ResolvedOptions) {
 	const file = `
 /* eslint-disable */
 /* prettier-ignore */
@@ -112,7 +112,7 @@ declare module 'vue' {
 }
 `
 
-	write(file, 'vue-extension.d.ts')
+	write(options, file, 'vue-extension.d.ts')
 }
 
 export async function generateRouteDefinitionFile(options: ResolvedOptions, config?: DynamicConfiguration) {
