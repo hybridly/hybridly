@@ -32,13 +32,13 @@ The following is a non-exhaustive comparison table between Inertia and Hybridly'
 | Icons support                                   |            <span class="no">No</span>             |           [Yes](../configuration/vite.md#icons)            |
 | `layout` support in templates                   |            <span class="no">No</span>             |                [Yes](views-and-layouts.md)                 |
 | Built-in `form` util                            |                        Yes                        |              [Yes](../api/utils/use-form.md)               |
-| Built-in `route` util with TypeScript support   |   <span class="no">No</span> (external package)   |                [Yes](../api/utils/route.md)                |
+| Built-in `route` util with TypeScript support   |      <span class="no">No</span> <sup>4</sup>      |                [Yes](../api/utils/route.md)                |
 | Built-in `can` util with TypeScript support     |            <span class="no">No</span>             |                 [Yes](../api/utils/can.md)                 |
 | Built-in `Paginator` types                      |            <span class="no">No</span>             |               [Yes](./responses.md#overview)               |
 | Built-in testing utils                          |                        Yes                        |              [Yes](../api/laravel/testing.md)              |
 | Local navigation support (no server round-trip) |            <span class="no">No</span>             |            [Yes](../api/router/utils.md#local)             |
 | Server-side rendering                           |                        Yes                        | <span class="planned" title="at some point">Planned</span> |
-| Built-in meta management                        |                        Yes                        |          <span class="no">No <sup>4</sup></span>           |
+| Built-in meta management                        |                        Yes                        |          <span class="no">No <sup>5</sup></span>           |
 | Internationalization support                    |            <span class="no">No</span>             |                  [Yes](../guide/i18n.md)                   |
 | Property case conversion support                |            <span class="no">No</span>             |             [Yes](../guide/case-conversion.md)             |
 | Exposed back-forward detection                  |            <span class="no">No</span>             |          [Yes](../api/utils/use-back-forward.md)           |
@@ -58,7 +58,8 @@ The following is a non-exhaustive comparison table between Inertia and Hybridly'
   1. Support through third-party package using <a href="https://github.com/lepikhinb/momentum-modal">Momentum</a> <br />
   2. Unofficial extension by <a href="https://twitter.com/nicolashedger">Nicolas Hedger</a> <br />
   3. Support through Laravel Data <br />
-  4. <a href="https://unhead.unjs.io/"><code>@unhead/vue</code></a> is recommended instead <br />
+  4. Support through first-party package using <a href="https://github.com/laravel/wayfinder">Wayfinder</a> <br />
+  5. <a href="https://unhead.unjs.io/"><code>@unhead/vue</code></a> is recommended instead <br />
 </div>
 
 <style>
