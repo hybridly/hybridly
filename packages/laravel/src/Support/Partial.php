@@ -9,8 +9,7 @@ class Partial
 {
     public function __construct(
         private readonly \Closure $callback,
-    ) {
-    }
+    ) {}
 
     public function __invoke(): mixed
     {

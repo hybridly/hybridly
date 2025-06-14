@@ -17,26 +17,25 @@ export function random(length: number = 10): string {
 }
 
 /** Simple pattern matching util. */
-export function match<TValue extends string | number = string, TReturnValue = unknown>(
+export function match<TValue extends string | number = string, TReturnValue = unknown, TArgs extends readonly unknown[] = []>(
 	value: TValue,
-	lookup: Record<TValue | 'default', TReturnValue | ((...args: any[]) => TReturnValue)>,
-	...args: any[]
+	lookup: Record<TValue | 'default', TReturnValue | ((...args: TArgs) => TReturnValue | Promise<TReturnValue>)>,
+	...args: TArgs
 ): TReturnValue | Promise<TReturnValue> {
 	if (value in lookup || 'default' in lookup) {
-		const returnValue = value in lookup
-			? lookup[value]
-			: lookup.default
+		const returnValue = (value in lookup ? lookup[value] : lookup.default) as
+			TReturnValue | ((...args: TArgs) => TReturnValue | Promise<TReturnValue>)
 
-		return typeof returnValue === 'function' ? returnValue(...args) : returnValue
+		return typeof returnValue === 'function'
+			? (returnValue as (...args: TArgs) => TReturnValue | Promise<TReturnValue>)(...args)
+			: returnValue as TReturnValue
 	}
 
 	const handlers = Object.keys(lookup)
 		.map((key) => `"${key}"`)
 		.join(', ')
 
-	const error = new Error(`Tried to handle "${value}" but there is no handler defined. Only defined handlers are: ${handlers}.`)
-
-	throw error
+	throw new Error(`Tried to handle "${value}" but there is no handler defined. Only defined handlers are: ${handlers}.`)
 }
 
 export function value<T>(value: T | (() => T)): T {

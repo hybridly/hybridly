@@ -24,11 +24,11 @@ class Assertable extends AssertableJson
     public static function fromTestResponse(TestResponse $response): self
     {
         try {
-            $payload = $response->baseResponse instanceof JsonResponse
+            $payload = ($response->baseResponse instanceof JsonResponse)
                 ? json_decode($response->baseResponse->getContent(), associative: true)
                 : json_decode(json_encode($response->viewData('payload')), true);
 
-            if (!$response->headers->has(Header::HYBRID_REQUEST)) {
+            if (! $response->headers->has(Header::HYBRID_REQUEST)) {
                 $response->assertViewHas('payload');
             }
 
@@ -58,7 +58,7 @@ class Assertable extends AssertableJson
     {
         PHPUnit::assertSame($value, $this->view, 'Unexpected hybrid view component.');
 
-        if ($shouldExist || (\is_null($shouldExist) && Configuration::get()->testing->ensureViewsExist)) {
+        if ($shouldExist || \is_null($shouldExist) && Configuration::get()->testing->ensureViewsExist) {
             $this->ensureViewExists($value);
         }
 
@@ -141,7 +141,7 @@ class Assertable extends AssertableJson
 
             // ['property_name' => fn () => ...] -> assert using a callback
             if (\is_string($key) && \is_callable($value)) {
-                $firstParameterTypeHint = (new \ReflectionFunction($value))
+                $firstParameterTypeHint = new \ReflectionFunction($value)
                     ->getParameters()[0]
                     ->getType()
                     ?->getName();

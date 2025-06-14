@@ -17,10 +17,12 @@ it('applies specified boolean mode on filters in a group', function () {
         query: array_filter(['filters' => ['query' => 'AirPods']]),
         refiners: [
             Sort::make('created_at', alias: 'date'),
-            Group::make()->refiners([
-                Filter::make('name', alias: 'query'),
-                Filter::make('description', alias: 'query')->loose(),
-            ])->booleanMode('or'),
+            Group::make()
+                ->refiners([
+                    Filter::make('name', alias: 'query'),
+                    Filter::make('description', alias: 'query')->loose(),
+                ])
+                ->booleanMode('or'),
         ],
     );
 
@@ -37,21 +39,24 @@ it('does not leak options to other filters', function () {
         query: array_filter(['filters' => ['query' => 'dummy']]),
         refiners: [
             CallbackFilter::make('query', $callback),
-            Group::make()->refiners([
-                CallbackFilter::make('query', $callback),
-                CallbackFilter::make('query', $callback),
-            ])->booleanMode('or'),
+            Group::make()
+                ->refiners([
+                    CallbackFilter::make('query', $callback),
+                    CallbackFilter::make('query', $callback),
+                ])
+                ->booleanMode('or'),
             CallbackFilter::make('query', $callback),
         ],
         apply: true,
     );
 
-    expect($options)->toBe([
-        null,
-        ['boolean' => 'or'],
-        ['boolean' => 'or'],
-        null,
-    ]);
+    expect($options)
+        ->toBe([
+            null,
+            ['boolean' => 'or'],
+            ['boolean' => 'or'],
+            null,
+        ]);
 });
 
 it('makes a grouped subquery per group', function () {
@@ -64,10 +69,12 @@ it('makes a grouped subquery per group', function () {
         query: array_filter(['filters' => ['query' => 'AirPods']]),
         refiners: [
             Filter::make('price')->operator('>')->default(500),
-            Group::make()->refiners([
-                Filter::make('name', alias: 'query'),
-                Filter::make('description', alias: 'query')->loose(),
-            ])->booleanMode('or'),
+            Group::make()
+                ->refiners([
+                    Filter::make('name', alias: 'query'),
+                    Filter::make('description', alias: 'query')->loose(),
+                ])
+                ->booleanMode('or'),
         ],
     );
 

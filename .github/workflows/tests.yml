@@ -22,10 +22,8 @@ jobs:
         node-version: ["22.x"]
         os: [ubuntu-latest]
         php: [8.4]
-        laravel: ["11.*", "12.*"]
+        laravel: ["12.*"]
         include:
-          - laravel: 11.*
-            testbench: 9.*
           - laravel: 12.*
             testbench: 10.*
 
@@ -66,8 +64,6 @@ jobs:
         run: pnpm install
 
       - name: CI scripts
-        env:
-          PHP_CS_FIXER_IGNORE_ENV: true
         run: |
           pnpm run ci
-          composer ci
+          composer qa

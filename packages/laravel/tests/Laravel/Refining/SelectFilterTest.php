@@ -15,10 +15,11 @@ test('the `where` statement uses the value from the given key', function (?strin
         ],
     );
 
-    expect($filters->toRawSql())->toBe(match (true) {
-        is_null($os) => 'select * from "products" where "products"."deleted_at" is null',
-        default => "select * from \"products\" where \"products\".\"os\" = '{$os}' and \"products\".\"deleted_at\" is null"
-    });
+    expect($filters->toRawSql())
+        ->toBe(match (true) {
+            is_null($os) => 'select * from "products" where "products"."deleted_at" is null',
+            default => "select * from \"products\" where \"products\".\"os\" = '{$os}' and \"products\".\"deleted_at\" is null",
+        });
 })->with([
     ['iphone', 'ios'],
     ['samsung', 'android'],
@@ -37,10 +38,11 @@ test('the `where` statement uses the key when the options is a list', function (
         ],
     );
 
-    expect($filters->toRawSql())->toBe(match (true) {
-        is_null($os) => 'select * from "products" where "products"."deleted_at" is null',
-        default => "select * from \"products\" where \"products\".\"os\" = '{$os}' and \"products\".\"deleted_at\" is null"
-    });
+    expect($filters->toRawSql())
+        ->toBe(match (true) {
+            is_null($os) => 'select * from "products" where "products"."deleted_at" is null',
+            default => "select * from \"products\" where \"products\".\"os\" = '{$os}' and \"products\".\"deleted_at\" is null",
+        });
 })->with([
     ['ios'],
     ['android'],

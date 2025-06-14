@@ -20,13 +20,14 @@ trait HasScope
 
     public function formatScope(?string $type = null): ?string
     {
-        if (!$this->getScope()) {
+        if (! $this->getScope()) {
             return $type;
         }
 
         return str($this->getScope())
             ->slug()
-            ->when($type)->append('-' . $type)
+            ->when($type)
+            ->append('-' . $type)
             ->toString();
     }
 }

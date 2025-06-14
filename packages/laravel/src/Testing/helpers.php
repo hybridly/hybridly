@@ -4,7 +4,7 @@ namespace Hybridly\Testing;
 
 use Hybridly\Support\Header;
 
-if (!\function_exists('Hybridly\Testing\partial_headers')) {
+if (! \function_exists('Hybridly\Testing\partial_headers')) {
     /**
      * Generates headers for testing partial requests.
      *
@@ -19,8 +19,8 @@ if (!\function_exists('Hybridly\Testing\partial_headers')) {
         return array_filter([
             Header::HYBRID_REQUEST => $hybrid,
             Header::PARTIAL_COMPONENT => $component,
-            Header::PARTIAL_ONLY => !\is_null($only) ? json_encode($only) : null,
-            Header::PARTIAL_EXCEPT => !\is_null($except) ? json_encode($except) : null,
+            Header::PARTIAL_ONLY => ! \is_null($only) ? json_encode($only) : null,
+            Header::PARTIAL_EXCEPT => ! \is_null($except) ? json_encode($except) : null,
         ]);
     }
 }

@@ -27,7 +27,9 @@ class BasicProductsTableWithSoftDeleteAction extends Table
     public function defineActions(): array
     {
         return [
-            InlineAction::make('say_my_name')->action(fn (Product $record) => self::$name = $record->name)->resolveModelUsing(fn (string $modelClass, $data) => $modelClass::withTrashed()->findOrFail($data->recordId)),
+            InlineAction::make('say_my_name')
+                ->action(fn (Product $record) => self::$name = $record->name)
+                ->resolveModelUsing(fn (string $modelClass, $data) => $modelClass::withTrashed()->findOrFail($data->recordId)),
         ];
     }
 

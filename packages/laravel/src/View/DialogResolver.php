@@ -12,8 +12,7 @@ final class DialogResolver
     public function __construct(
         private readonly Hybridly $hybridly,
         private readonly UrlGenerator $urlGenerator,
-    ) {
-    }
+    ) {}
 
     public function resolve(View $view, string $baseUrl, Request $request): ?Dialog
     {
@@ -40,7 +39,7 @@ final class DialogResolver
             return null;
         }
 
-        if (!$this->hybridly->isHybrid($request)) {
+        if (! $this->hybridly->isHybrid($request)) {
             return null;
         }
 

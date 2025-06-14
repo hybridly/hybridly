@@ -46,20 +46,21 @@ class GenerateGlobalTypesCommand extends Command
      */
     protected function writePhpTypes(TypeScriptTransformerConfig $config): void
     {
-        if (!class_exists(TypeScriptTransformer::class)) {
+        if (! class_exists(TypeScriptTransformer::class)) {
             return;
         }
 
         $config->outputFile(base_path(self::PHP_TYPES_PATH));
-        $collection = (new TypeScriptTransformer($config))->transform();
+        $collection = new TypeScriptTransformer($config)->transform();
 
         if ($this->output->isVerbose()) {
             $this->table(
                 ['PHP class', 'TypeScript entity'],
-                collect($collection)->map(fn (TransformedType $type, string $class) => [
-                    $class,
-                    $type->getTypeScriptName(),
-                ]),
+                collect($collection)
+                    ->map(fn (TransformedType $type, string $class) => [
+                        $class,
+                        $type->getTypeScriptName(),
+                    ]),
             );
         }
 
@@ -79,7 +80,7 @@ class GenerateGlobalTypesCommand extends Command
             $namespace = $this->getGlobalPropertiesNamespace($config);
         } catch (\Exception $exception) {
             $this->components->error($exception->getMessage());
-            $this->exitCode = !$this->option('allow-failures')
+            $this->exitCode = ! $this->option('allow-failures')
                 ? self::FAILURE
                 : self::SUCCESS;
         }
@@ -117,28 +118,29 @@ class GenerateGlobalTypesCommand extends Command
             ->extending(\Hybridly\Http\Middleware::class)
             ->get() + [null];
 
-        if (!$class) {
+        if (! $class) {
             throw CouldNotFindMiddlewareException::create();
         }
 
-        $methods = (new \ReflectionClass($class))->getMethods(\ReflectionMethod::IS_PUBLIC);
-        $share = collect($methods)->first(function (ReflectionMethod $method) {
-            return $method->getName() === 'share';
-        });
+        $methods = new \ReflectionClass($class)->getMethods(\ReflectionMethod::IS_PUBLIC);
+        $share = collect($methods)
+            ->first(function (ReflectionMethod $method) {
+                return $method->getName() === 'share';
+            });
 
-        if (!$share) {
+        if (! $share) {
             return null;
         }
 
-        if (!$data = $share->getReturnType()?->getName()) {
+        if (! ($data = $share->getReturnType()?->getName())) {
             return null;
         }
 
-        if (!class_exists($data)) {
+        if (! class_exists($data)) {
             return null;
         }
 
-        if (!class_implements($data, BaseData::class)) {
+        if (! class_implements($data, BaseData::class)) {
             return null;
         }
 

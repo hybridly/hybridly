@@ -45,7 +45,7 @@ abstract class BaseColumn extends Component
     {
         return match ($parameterName) {
             'column' => [$this],
-            default => []
+            default => [],
         };
     }
 
@@ -53,7 +53,7 @@ abstract class BaseColumn extends Component
     {
         return match ($parameterType) {
             static::class => [$this],
-            default => []
+            default => [],
         };
     }
 }

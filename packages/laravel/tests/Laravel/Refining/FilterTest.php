@@ -16,13 +16,15 @@ beforeEach(function () {
 });
 
 it('can be serialized', function () {
-    $filter = Filter::make('name')->beginsWithStrict()
+    $filter = Filter::make('name')
+        ->beginsWithStrict()
         ->metadata(['foo' => 'bar'])
         ->label('Product name');
 
     expect($filter)
         ->toBeInstanceOf(BaseFilter::class)
-        ->jsonSerialize()->toBe([
+        ->jsonSerialize()
+        ->toBe([
             'name' => 'name',
             'hidden' => false,
             'label' => 'Product name',
@@ -59,8 +61,8 @@ test('in `begins_with_strict` mode, it only includes records that begin with the
     );
 
     expect($filters)
-        ->first()->name->toBe('Macbook Pro M1')
-        ->count()->toBe(1);
+        ->first()
+        ->name->toBe('Macbook Pro M1')->count()->toBe(1);
 });
 
 test('in `ends_with_strict` mode, it only includes records that end with the specified value', function () {
@@ -72,8 +74,8 @@ test('in `ends_with_strict` mode, it only includes records that end with the spe
     );
 
     expect($filters)
-        ->first()->name->toBe('Macbook Pro M1')
-        ->count()->toBe(1);
+        ->first()
+        ->name->toBe('Macbook Pro M1')->count()->toBe(1);
 });
 
 test('in `loose` mode, it only includes records that match the specified value', function () {
@@ -101,8 +103,8 @@ test('in non-`strict` mode, it can use a `NOT LIKE` operator', function () {
     );
 
     expect($filters->get())
-        ->first()->name->toBe('Macbook Pro M1')
-        ->count()->toBe(1);
+        ->first()
+        ->name->toBe('Macbook Pro M1')->count()->toBe(1);
 });
 
 it('supports filtering with enums', function () {
@@ -118,8 +120,8 @@ it('supports filtering with enums', function () {
     );
 
     expect($filters)
-        ->first()->vendor->toBe(Vendor::Microsoft)
-        ->count()->toBe(1);
+        ->first()
+        ->vendor->toBe(Vendor::Microsoft)->count()->toBe(1);
 
     $filters = mock_refiner(
         query: ['filters' => ['vendor' => 'foobar']],

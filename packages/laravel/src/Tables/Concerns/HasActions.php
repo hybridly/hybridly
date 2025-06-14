@@ -14,8 +14,8 @@ trait HasActions
     public function getActions(bool $showHidden = false): Collection
     {
         return $this->cachedActions ??= collect($this->defineActions())
-            ->when(!$showHidden)
-            ->filter(static fn (BaseAction $action): bool => !$action->isHidden());
+            ->when(! $showHidden)
+            ->filter(static fn (BaseAction $action): bool => ! $action->isHidden());
     }
 
     public function getInlineActions(bool $showHidden = false): Collection

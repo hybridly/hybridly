@@ -41,7 +41,7 @@ abstract class BaseAction extends Component
     {
         return match ($parameterName) {
             'action' => [$this],
-            default => []
+            default => [],
         };
     }
 
@@ -49,7 +49,7 @@ abstract class BaseAction extends Component
     {
         return match ($parameterType) {
             static::class => [$this],
-            default => []
+            default => [],
         };
     }
 }

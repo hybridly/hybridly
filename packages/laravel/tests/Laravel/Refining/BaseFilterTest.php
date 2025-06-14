@@ -12,8 +12,7 @@ beforeEach(function () {
     ProductFactory::new()->create(['name' => 'AirPods Pro']);
     ProductFactory::new()->create(['name' => 'Macbook Pro M1']);
 
-    $this->filter = new class ()
-    {
+    $this->filter = new class() {
         public function __invoke(Builder $builder, mixed $value): void
         {
             $builder->where('name', '=', $value);
@@ -34,8 +33,8 @@ test('filters can have a default value', function () {
     );
 
     expect($filters)
-        ->first()->name->toBe('AirPods Pro')
-        ->count()->toBe(1);
+        ->first()
+        ->name->toBe('AirPods Pro')->count()->toBe(1);
 });
 
 test('filters are applied using their property', function () {
@@ -47,8 +46,8 @@ test('filters are applied using their property', function () {
     );
 
     expect($filters)
-        ->first()->name->toBe('AirPods Pro')
-        ->count()->toBe(1);
+        ->first()
+        ->name->toBe('AirPods Pro')->count()->toBe(1);
 });
 
 test('filters are not applied when their property is used but an alias is defined', function () {
@@ -76,7 +75,8 @@ test('filters use the alias when defined', function () {
 test('filters can be serialized', function () {
     expect(Filter::make('airpods_gen'))
         ->toBeInstanceOf(BaseFilter::class)
-        ->jsonSerialize()->toBe([
+        ->jsonSerialize()
+        ->toBe([
             'name' => 'airpods_gen',
             'hidden' => false,
             'label' => 'Airpods gen',
@@ -91,7 +91,8 @@ test('filters can be serialized', function () {
 test('filters use their alias as name when defined', function () {
     expect(Filter::make('airpods_gen', alias: 'airpods_generation'))
         ->toBeInstanceOf(BaseFilter::class)
-        ->jsonSerialize()->toBe([
+        ->jsonSerialize()
+        ->toBe([
             'name' => 'airpods_generation',
             'hidden' => false,
             'label' => 'Airpods generation',
@@ -112,14 +113,15 @@ test('serialization takes current state into account', function () {
         apply: true,
     );
 
-    expect(data_get(json_decode(json_encode($filters)), 'filters.0'))->toMatchArray([
-        'name' => 'product',
-        'label' => 'Product',
-        'type' => 'exact',
-        'metadata' => [],
-        'is_active' => true,
-        'value' => 'AirPods Pro',
-    ]);
+    expect(data_get(json_decode(json_encode($filters)), 'filters.0'))
+        ->toMatchArray([
+            'name' => 'product',
+            'label' => 'Product',
+            'type' => 'exact',
+            'metadata' => [],
+            'is_active' => true,
+            'value' => 'AirPods Pro',
+        ]);
 });
 
 test('filters key is globally configurable', function () {
@@ -133,8 +135,8 @@ test('filters key is globally configurable', function () {
     );
 
     expect($filters)
-        ->first()->name->toBe('AirPods Pro')
-        ->count()->toBe(1);
+        ->first()
+        ->name->toBe('AirPods Pro')->count()->toBe(1);
 });
 
 test('filters key is locally configurable', function () {
@@ -146,8 +148,8 @@ test('filters key is locally configurable', function () {
     )->filtersKey('product-filters');
 
     expect($filters)
-        ->first()->name->toBe('AirPods Pro')
-        ->count()->toBe(1);
+        ->first()
+        ->name->toBe('AirPods Pro')->count()->toBe(1);
 });
 
 test('filters key respects the scope', function () {
@@ -156,9 +158,11 @@ test('filters key respects the scope', function () {
         refiners: [
             Filter::make('name'),
         ],
-    )->scope('products')->filtersKey('filtering');
+    )
+        ->scope('products')
+        ->filtersKey('filtering');
 
     expect($filters)
-        ->first()->name->toBe('AirPods Pro')
-        ->count()->toBe(1);
+        ->first()
+        ->name->toBe('AirPods Pro')->count()->toBe(1);
 });

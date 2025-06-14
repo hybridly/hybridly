@@ -14,8 +14,7 @@ final class Configuration
         public readonly Properties $properties,
         public readonly Testing $testing,
         public readonly TypeScript $typescript,
-    ) {
-    }
+    ) {}
 
     public static function fromArray(array $config): static
     {

@@ -10,6 +10,5 @@ class DataObjectWithLazyProperty extends Data
     public function __construct(
         public readonly bool $foo,
         public readonly Lazy|string $bar,
-    ) {
-    }
+    ) {}
 }

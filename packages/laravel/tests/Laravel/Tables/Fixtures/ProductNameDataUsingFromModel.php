@@ -17,8 +17,7 @@ class ProductNameDataUsingFromModel extends DataResource
     public function __construct(
         public readonly string $name,
         public readonly CarbonInterface $created_at,
-    ) {
-    }
+    ) {}
 
     public static function fromModel(Product $product): static
     {

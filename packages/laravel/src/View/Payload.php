@@ -11,8 +11,7 @@ class Payload implements Arrayable
         public string $url,
         public ?string $version,
         public ?Dialog $dialog,
-    ) {
-    }
+    ) {}
 
     public function toArray()
     {

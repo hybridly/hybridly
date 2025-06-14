@@ -6,7 +6,7 @@ final class CustomTransformer
 {
     public function __invoke(?string $namespace): ?string
     {
-        if (!$namespace) {
+        if (! $namespace) {
             return null;
         }
 

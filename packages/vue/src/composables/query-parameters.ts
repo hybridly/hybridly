@@ -24,7 +24,7 @@ export function useQueryParameters<T extends Record<string, any> = Record<string
 	}
 
 	updateState()
-	registerHook('after', updateState)
+	registerHook('navigated', updateState)
 
 	return state as T
 }

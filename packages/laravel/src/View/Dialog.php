@@ -12,8 +12,7 @@ class Dialog implements Arrayable
         public string $baseUrl,
         public string $redirectUrl,
         public string $key,
-    ) {
-    }
+    ) {}
 
     public function withProperties(array $properties): self
     {

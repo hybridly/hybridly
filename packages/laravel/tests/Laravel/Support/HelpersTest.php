@@ -10,7 +10,14 @@ use Illuminate\Support\Facades\Route;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 
-use function Hybridly\{deferred, dialog, is_hybrid, is_partial, partial, properties, to_external_url, view};
+use function Hybridly\deferred;
+use function Hybridly\dialog;
+use function Hybridly\is_hybrid;
+use function Hybridly\is_partial;
+use function Hybridly\partial;
+use function Hybridly\properties;
+use function Hybridly\to_external_url;
+use function Hybridly\view;
 
 describe('namespaced', function () {
     beforeEach(function () {
@@ -54,25 +61,29 @@ describe('namespaced', function () {
     test('`partial` returns a `Partial` instance', function () {
         expect(partial(fn () => 'foo'))
             ->toBeInstanceOf(Partial::class)
-            ->__invoke()->toBe('foo');
+            ->__invoke()
+            ->toBe('foo');
     });
 
     test('`deferred` returns a `Deferred` instance', function () {
         expect(deferred(fn () => 'bar'))
             ->toBeInstanceOf(Deferred::class)
-            ->__invoke()->toBe('bar');
+            ->__invoke()
+            ->toBe('bar');
     });
 
     test('`to_external_url` returns a `RedirectResponse` on non-hybrid requests', function () {
         expect(to_external_url('https://google.fr'))
             ->toBeInstanceOf(RedirectResponse::class)
-            ->getTargetUrl()->toBe('https://google.fr');
+            ->getTargetUrl()
+            ->toBe('https://google.fr');
     });
 
     test('`to_external_url` accepts `RedirectResponse` as a parameter', function () {
         expect(to_external_url(new RedirectResponse('https://google.fr')))
             ->toBeInstanceOf(RedirectResponse::class)
-            ->getTargetUrl()->toBe('https://google.fr');
+            ->getTargetUrl()
+            ->toBe('https://google.fr');
     });
 
     test('`to_external_url` returns a `HTTP_CONFLICT` response on hybrid requests', function () {
@@ -80,7 +91,8 @@ describe('namespaced', function () {
 
         expect(to_external_url('https://google.fr'))
             ->toBeInstanceOf(Response::class)
-            ->getStatusCode()->toBe(Response::HTTP_CONFLICT);
+            ->getStatusCode()
+            ->toBe(Response::HTTP_CONFLICT);
     });
 
     test('`is_hybrid` determines whether a request is hybrid', function (bool $expected) {

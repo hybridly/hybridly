@@ -519,7 +519,7 @@ export async function performLocalNavigation(targetUrl: UrlResolvable, options?:
 			url,
 			view: {
 				component: options?.component ?? context.view.component,
-				properties: options?.properties ?? {},
+				properties: options?.properties ?? context.view.properties,
 				deferred: [],
 			},
 		},

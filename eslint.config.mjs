@@ -6,5 +6,6 @@ export default defineEslintConfig({
 	rules: {
 		'vue/multiline-html-element-content-newline': ['off'],
 		'jsonc/indent': ['off'],
+		'yaml/quotes': ['off'],
 	},
 })

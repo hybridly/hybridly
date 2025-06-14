@@ -8,8 +8,7 @@ final class InvokedActionData
 {
     public function __construct(
         public readonly string $type,
-    ) {
-    }
+    ) {}
 
     public static function fromRequest(Request $request): static
     {

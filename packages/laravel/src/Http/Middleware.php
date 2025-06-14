@@ -54,7 +54,7 @@ class Middleware
         // hybridly protocol because an endpoint can send JSON and HTML.
         $response->headers->set('Vary', Header::HYBRID_REQUEST);
 
-        if (!$request->header(Header::HYBRID_REQUEST)) {
+        if (! $request->header(Header::HYBRID_REQUEST)) {
             return $response;
         }
 
@@ -141,11 +141,11 @@ class Middleware
      */
     public function resolveValidationErrors(Request $request): object
     {
-        if (!$request->hasSession()) {
+        if (! $request->hasSession()) {
             return (object) [];
         }
 
-        if (!$errors = $request->session()->get('errors')) {
+        if (! ($errors = $request->session()->get('errors'))) {
             return (object) [];
         }
 

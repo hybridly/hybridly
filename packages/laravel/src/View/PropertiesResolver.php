@@ -20,8 +20,7 @@ final class PropertiesResolver
     public function __construct(
         protected readonly Request $request,
         protected readonly CaseConverter $caseConverter,
-    ) {
-    }
+    ) {}
 
     public function resolve(string $component = null, array $properties = [], array $persisted = []): array
     {
@@ -31,9 +30,9 @@ final class PropertiesResolver
 
         $deferred = [];
 
-        if (!$partial) {
+        if (! $partial) {
             $deferred = $this->resolveDeferredProperties($this->resolveArrayableProperties($properties));
-            $properties = Arr::filterRecursive($properties, static fn ($property) => !($property instanceof Partial));
+            $properties = Arr::filterRecursive($properties, static fn ($property) => ! ($property instanceof Partial));
         }
 
         // First, we need to resolve property instances to an array that
@@ -83,11 +82,11 @@ final class PropertiesResolver
             }
 
             if (\is_array($value)) {
-                $deferred = array_merge($deferred, $this->resolveDeferredProperties($value, $path ? ("{$path}.{$key}") : $key));
+                $deferred = array_merge($deferred, $this->resolveDeferredProperties($value, $path ? "{$path}.{$key}" : $key));
             }
 
             if ($value instanceof Deferred) {
-                $deferred[] = ($path ? ("{$path}.{$key}") : $key);
+                $deferred[] = $path ? "{$path}.{$key}" : $key;
             }
         }
 
@@ -167,7 +166,7 @@ final class PropertiesResolver
         return match (Configuration::get()->properties->forceOutputCase) {
             Properties::SNAKE => $this->caseConverter->convert($array, 'snake'),
             Properties::CAMEL => $this->caseConverter->convert($array, 'camel'),
-            default => $array
+            default => $array,
         };
     }
 }

@@ -20,7 +20,8 @@ it('can be serialized', function () {
 
     expect($sort)
         ->toBeInstanceOf(BaseSort::class)
-        ->jsonSerialize()->toBe([
+        ->jsonSerialize()
+        ->toBe([
             'name' => 'created_at',
             'hidden' => false,
             'label' => 'Creation date',
@@ -39,7 +40,8 @@ it('can be serialized', function () {
 it('uses its alias as name when serialized', function () {
     expect(Sort::make('created_at', alias: 'date'))
         ->toBeInstanceOf(BaseSort::class)
-        ->jsonSerialize()->toBe([
+        ->jsonSerialize()
+        ->toBe([
             'name' => 'date',
             'hidden' => false,
             'label' => 'Date',
@@ -88,17 +90,18 @@ test('serialization takes current state into account', function () {
         apply: true,
     );
 
-    expect(data_get(json_decode(json_encode($sorts)), 'sorts.0'))->toMatchArray([
-        'name' => 'date',
-        'label' => 'Date',
-        'metadata' => [],
-        'is_active' => true,
-        'direction' => 'desc',
-        'default' => null,
-        'desc' => '-date',
-        'asc' => 'date',
-        'next' => null,
-    ]);
+    expect(data_get(json_decode(json_encode($sorts)), 'sorts.0'))
+        ->toMatchArray([
+            'name' => 'date',
+            'label' => 'Date',
+            'metadata' => [],
+            'is_active' => true,
+            'direction' => 'desc',
+            'default' => null,
+            'desc' => '-date',
+            'asc' => 'date',
+            'next' => null,
+        ]);
 });
 
 test('sorts key is globally configurable', function () {
@@ -112,8 +115,8 @@ test('sorts key is globally configurable', function () {
     );
 
     expect($sorts)
-        ->first()->name->toBe('Macbook Pro M1')
-        ->count()->toBe(3);
+        ->first()
+        ->name->toBe('Macbook Pro M1')->count()->toBe(3);
 });
 
 test('sorts key is locally configurable', function () {
@@ -125,8 +128,8 @@ test('sorts key is locally configurable', function () {
     )->sortsKey('product-sorts');
 
     expect($sorts)
-        ->first()->name->toBe('Macbook Pro M1')
-        ->count()->toBe(3);
+        ->first()
+        ->name->toBe('Macbook Pro M1')->count()->toBe(3);
 });
 
 test('sorts keys respect the scope', function () {
@@ -135,11 +138,13 @@ test('sorts keys respect the scope', function () {
         refiners: [
             Sort::make('name'),
         ],
-    )->scope('products')->sortsKey('sorting');
+    )
+        ->scope('products')
+        ->sortsKey('sorting');
 
     expect($sorts)
-        ->first()->name->toBe('Macbook Pro M1')
-        ->count()->toBe(3);
+        ->first()
+        ->name->toBe('Macbook Pro M1')->count()->toBe(3);
 });
 
 test('`next` toggles between possible sorts', function (?string $query, ?string $next) {

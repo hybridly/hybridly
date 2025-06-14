@@ -27,11 +27,12 @@ test('refiners should execute only once', function () {
 
     Mockery::close();
 
-    expect($refine->get()->map->name)->toMatchArray([
-        'Macbook Pro M1',
-        'AirPods Pro',
-        'AirPods',
-    ]);
+    expect($refine->get()->map->name)
+        ->toMatchArray([
+            'Macbook Pro M1',
+            'AirPods Pro',
+            'AirPods',
+        ]);
 });
 
 test('the refine instance can be serialized', function () {
@@ -40,41 +41,43 @@ test('the refine instance can be serialized', function () {
             Sort::make('created_at', alias: 'date'),
             Filter::make('name')->loose(),
         ],
-    )->scope('products');
+    )
+        ->scope('products');
 
-    expect(json_decode(json_encode($refine), associative: true))->toBe([
-        'sorts' => [
-            [
-                'name' => 'date',
-                'hidden' => false,
-                'label' => 'Date',
-                'metadata' => [],
-                'is_active' => false,
-                'direction' => null,
-                'default' => null,
-                'desc' => '-date',
-                'asc' => 'date',
-                'next' => 'date',
+    expect(json_decode(json_encode($refine), associative: true))
+        ->toBe([
+            'sorts' => [
+                [
+                    'name' => 'date',
+                    'hidden' => false,
+                    'label' => 'Date',
+                    'metadata' => [],
+                    'is_active' => false,
+                    'direction' => null,
+                    'default' => null,
+                    'desc' => '-date',
+                    'asc' => 'date',
+                    'next' => 'date',
+                ],
             ],
-        ],
-        'filters' => [
-            [
-                'name' => 'name',
-                'hidden' => false,
-                'label' => 'Name',
-                'type' => 'similar:loose',
-                'metadata' => [],
-                'is_active' => false,
-                'value' => null,
-                'default' => null,
+            'filters' => [
+                [
+                    'name' => 'name',
+                    'hidden' => false,
+                    'label' => 'Name',
+                    'type' => 'similar:loose',
+                    'metadata' => [],
+                    'is_active' => false,
+                    'value' => null,
+                    'default' => null,
+                ],
             ],
-        ],
-        'scope' => 'products',
-        'keys' => [
-            'sorts' => 'products-sort',
-            'filters' => 'products-filters',
-        ],
-    ]);
+            'scope' => 'products',
+            'keys' => [
+                'sorts' => 'products-sort',
+                'filters' => 'products-filters',
+            ],
+        ]);
 });
 
 it('serializes flattened filters and sorts when grouping', function () {
@@ -82,10 +85,12 @@ it('serializes flattened filters and sorts when grouping', function () {
         query: ['filters' => ['name' => 'AirPods']],
         refiners: [
             Sort::make('created_at', alias: 'date'),
-            Group::make()->refiners([
-                Filter::make('name'),
-                Filter::make('description'),
-            ])->booleanMode('or'),
+            Group::make()
+                ->refiners([
+                    Filter::make('name'),
+                    Filter::make('description'),
+                ])
+                ->booleanMode('or'),
         ],
     );
 

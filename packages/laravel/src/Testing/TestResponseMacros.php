@@ -22,7 +22,7 @@ class TestResponseMacros
             try {
                 $response = Assertable::fromTestResponse($this);
 
-                if (!\is_null($path)) {
+                if (! \is_null($path)) {
                     dd($response->getValue('view.properties.' . $path) ?? $response->toArray());
                 }
 

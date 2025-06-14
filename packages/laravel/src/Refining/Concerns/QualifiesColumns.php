@@ -18,7 +18,7 @@ trait QualifiesColumns
 
     public function qualifyColumn(Builder $builder, string|Expression $column): string
     {
-        if (!$this->qualifiesColumn()) {
+        if (! $this->qualifiesColumn()) {
             return $column;
         }
 

@@ -16,8 +16,7 @@ class BasicTableWithDependencyInjectionAndArguments extends Table
     public function __construct(
         private readonly Request $request,
         private readonly string $contains,
-    ) {
-    }
+    ) {}
 
     public function defineColumns(): array
     {

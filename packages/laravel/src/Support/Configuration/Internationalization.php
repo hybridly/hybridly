@@ -9,8 +9,7 @@ final class Internationalization
         public readonly string $fileName,
         public readonly string $localesPath,
         public readonly string $langPath,
-    ) {
-    }
+    ) {}
 
     public static function fromArray(array $config): static
     {

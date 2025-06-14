@@ -27,7 +27,11 @@ class View implements Arrayable
                     ->append($expected);
             }
 
-            trigger_deprecation('hybridly/laravel', '0.7', "Passing component names with uppercase to Hybridly is deprecated, you should use kebab case instead (Received: {$this->component}, expected: {$expected})");
+            trigger_deprecation(
+                'hybridly/laravel',
+                '0.7',
+                "Passing component names with uppercase to Hybridly is deprecated, you should use kebab case instead (Received: {$this->component}, expected: {$expected})",
+            );
             $this->component = $expected;
         }
     }

@@ -12,7 +12,7 @@ trait HasColumns
     public function getTableColumns(): Collection
     {
         return $this->cachedColumns ??= collect($this->defineColumns())
-            ->filter(static fn (BaseColumn $column): bool => !$column->isHidden());
+            ->filter(static fn (BaseColumn $column): bool => ! $column->isHidden());
     }
 
     protected function defineColumns(): array

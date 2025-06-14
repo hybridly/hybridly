@@ -13,7 +13,7 @@ class DataResourceTypeScriptTransformer extends BaseDataTypeScriptTransformer
     {
         $properties = array_filter(
             $class->getProperties(ReflectionProperty::IS_PUBLIC),
-            fn (ReflectionProperty $property) => !$property->isStatic() && $property->getName() !== 'authorization',
+            fn (ReflectionProperty $property) => ! $property->isStatic() && $property->getName() !== 'authorization',
         );
 
         return array_values($properties);

@@ -7,7 +7,7 @@ use Spatie\LaravelData\Contracts\DataObject;
 
 use function Hybridly\view;
 
-if (!function_exists('hybridly')) {
+if (! function_exists('hybridly')) {
     /**
      * Gets the hybridly instance or returns a view.
      *
@@ -17,7 +17,7 @@ if (!function_exists('hybridly')) {
      */
     function hybridly(?string $component = null, array|Arrayable|DataObject $properties = []): Hybridly|Factory
     {
-        if (!is_null($component) || !empty($properties)) {
+        if (! is_null($component) || ! empty($properties)) {
             return view($component, $properties);
         }
 

@@ -42,39 +42,51 @@ class LazyComponentsResolver implements ComponentsResolver
         return $this;
     }
 
-    public function loadViewsFrom(string $directory, null|string|array $namespace = null, ?int $depth = null): static
+    public function loadViewsFrom(string $directory, null|string|array $namespace = null, ?int $depth = null, ?\Closure $filter = null): static
     {
         $this->views[] = fn () => $this->findVueFiles(
             directory: $directory,
             baseDirectory: $directory,
             namespace: $namespace,
             depth: $depth,
-            filter: fn (string $file) => !\in_array($file, array_merge($this->configuration->architecture->excludedViewsDirectories, [
-                $this->configuration->architecture->layoutsDirectory,
-                $this->configuration->architecture->componentsDirectory,
-            ]), strict: true),
+            filter: function (string $file, string $directory) use ($filter) {
+                if ($filter && ! $filter($file, $directory)) {
+                    return false;
+                }
+
+                return ! \in_array(
+                    $file,
+                    array_merge($this->configuration->architecture->excludedViewsDirectories, [
+                        $this->configuration->architecture->layoutsDirectory,
+                        $this->configuration->architecture->componentsDirectory,
+                    ]),
+                    strict: true,
+                );
+            },
         );
 
         return $this;
     }
 
-    public function loadLayoutsFrom(string $directory, null|string|array $namespace = null): static
+    public function loadLayoutsFrom(string $directory, null|string|array $namespace = null, ?\Closure $filter = null): static
     {
         $this->layouts[] = fn () => $this->findVueFiles(
             directory: $directory,
             baseDirectory: $directory,
             namespace: $namespace,
+            filter: $filter,
         );
 
         return $this;
     }
 
-    public function loadComponentsFrom(string $directory, null|string|array $namespace = null): static
+    public function loadComponentsFrom(string $directory, null|string|array $namespace = null, ?\Closure $filter = null): static
     {
         $this->components[] = fn () => $this->findVueFiles(
             directory: $directory,
             baseDirectory: $directory,
             namespace: $namespace,
+            filter: $filter,
         );
 
         return $this;
@@ -121,7 +133,7 @@ class LazyComponentsResolver implements ComponentsResolver
 
     public function loadModulesFrom(string $directory, bool $deep = false): void
     {
-        if (!is_dir($directory)) {
+        if (! is_dir($directory)) {
             return;
         }
 
@@ -165,9 +177,10 @@ class LazyComponentsResolver implements ComponentsResolver
 
     public function hasView(string $identifier): bool
     {
-        return collect($this->getViews())->contains(function (array $view) use ($identifier) {
-            return $view['identifier'] === $identifier;
-        });
+        return collect($this->getViews())
+            ->contains(function (array $view) use ($identifier) {
+                return $view['identifier'] === $identifier;
+            });
     }
 
     public function unload(bool $views = true, bool $layouts = true, bool $components = true, bool $typeScriptDirectories = true): static
@@ -207,7 +220,7 @@ class LazyComponentsResolver implements ComponentsResolver
         $filter ??= fn () => true;
         $files = [];
 
-        if (!is_dir($directory)) {
+        if (! is_dir($directory)) {
             return [];
         }
 
@@ -216,7 +229,7 @@ class LazyComponentsResolver implements ComponentsResolver
                 continue;
             }
 
-            if (!$filter($file, $directory)) {
+            if (! $filter($file, $directory)) {
                 continue;
             }
 
@@ -228,7 +241,8 @@ class LazyComponentsResolver implements ComponentsResolver
                 if (str($path)->endsWith($this->getExtensions())) {
                     $files[] = [
                         'namespace' => $namespace,
-                        'path' => str($path)->replaceStart(base_path(), '')
+                        'path' => str($path)
+                            ->replaceStart(base_path(), '')
                             ->replace('\\', '/')
                             ->ltrim('/')
                             ->toString(),

@@ -23,7 +23,7 @@ trait HasRootView
      */
     public function getRootView(): string
     {
-        $rootView = $this->rootView instanceof \Closure
+        $rootView = ($this->rootView instanceof \Closure)
             ? app()->call($this->rootView)
             : $this->rootView;
 

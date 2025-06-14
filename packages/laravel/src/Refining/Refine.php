@@ -58,7 +58,7 @@ class Refine extends Components\Component
             $query = $query::query();
         }
 
-        if (!$query instanceof Builder) {
+        if (! ($query instanceof Builder)) {
             throw new InvalidArgumentException('Expected a model class name or a query instance.');
         }
 
@@ -84,7 +84,7 @@ class Refine extends Components\Component
     public function getSorts(): array
     {
         return collect($this->getRefiners())
-            ->flatMap(fn (Refiner $refiner) => $refiner instanceof Group ? $refiner->getRefiners() : [$refiner])
+            ->flatMap(fn (Refiner $refiner) => ($refiner instanceof Group) ? $refiner->getRefiners() : [$refiner])
             ->filter(fn (Refiner $refiner) => $refiner instanceof BaseSort)
             ->values()
             ->toArray();
@@ -93,7 +93,7 @@ class Refine extends Components\Component
     public function getFilters(): array
     {
         return collect($this->getRefiners())
-            ->flatMap(fn (Refiner $refiner) => $refiner instanceof Group ? $refiner->getRefiners() : [$refiner])
+            ->flatMap(fn (Refiner $refiner) => ($refiner instanceof Group) ? $refiner->getRefiners() : [$refiner])
             ->filter(fn (Refiner $refiner) => $refiner instanceof BaseFilter)
             ->values()
             ->toArray();
@@ -116,7 +116,7 @@ class Refine extends Components\Component
     {
         return match ($parameterType) {
             self::class => [$this],
-            default => []
+            default => [],
         };
     }
 }

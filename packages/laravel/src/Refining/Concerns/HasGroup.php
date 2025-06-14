@@ -25,7 +25,7 @@ trait HasGroup
 
     public static function getGroupOptions(): ?array
     {
-        if (!static::hasGroup()) {
+        if (! static::hasGroup()) {
             return null;
         }
 

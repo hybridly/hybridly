@@ -21,7 +21,7 @@ final class CaseConverter
             $key = (string) match ($case) {
                 'snake' => str()->snake($key),
                 'camel' => str()->camel($key),
-                'kebab' => str()->kebab($key)
+                'kebab' => str()->kebab($key),
             };
 
             $result[$key] = $value;

@@ -19,7 +19,7 @@ abstract class BaseSort extends Components\Component implements Refiner, Sort
     use Concerns\HasDefault;
     use Refining\Concerns\QualifiesColumns;
 
-    protected null|string $direction = null;
+    protected ?string $direction = null;
     protected \Closure|bool $isDirectionCycleInverted = false;
 
     public function __construct(
@@ -49,7 +49,7 @@ abstract class BaseSort extends Components\Component implements Refiner, Sort
             return;
         }
 
-        if (\is_null($this->direction) && !$this->getDefaultDirection()) {
+        if (\is_null($this->direction) && ! $this->getDefaultDirection()) {
             return;
         }
 
@@ -58,7 +58,7 @@ abstract class BaseSort extends Components\Component implements Refiner, Sort
 
     public function isActive(): bool
     {
-        return !\is_null($this->direction);
+        return ! \is_null($this->direction);
     }
 
     public function jsonSerialize(): mixed
@@ -92,7 +92,7 @@ abstract class BaseSort extends Components\Component implements Refiner, Sort
         return match ($parameterType) {
             Refiner::class => [$this->sort],
             Sort::class => [$this->sort],
-            default => []
+            default => [],
         };
     }
 
@@ -103,7 +103,7 @@ abstract class BaseSort extends Components\Component implements Refiner, Sort
             'direction' => [$this->direction],
             'property' => [$this->property],
             'alias' => [$this->alias],
-            default => []
+            default => [],
         };
     }
 

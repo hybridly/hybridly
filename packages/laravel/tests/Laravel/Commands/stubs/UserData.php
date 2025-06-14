@@ -8,6 +8,5 @@ final class UserData extends Data
 {
     public function __construct(
         public readonly string $username,
-    ) {
-    }
+    ) {}
 }

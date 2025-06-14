@@ -12,13 +12,13 @@ test('configuration subsets can be pretty-printed', function (string $path, stri
         ->expectsOutput($output);
 })->with([
     'architecture' => ['architecture', <<<JSON
-    {
-        "root_directory": "resources",
-        "components_directory": "components",
-        "application_main_path": "resources/application/main.ts"
-    }
-    JSON],
+        {
+            "root_directory": "resources",
+            "components_directory": "components",
+            "application_main_path": "resources/application/main.ts"
+        }
+        JSON],
     'architecture.root_directory' => ['architecture.root_directory', <<<JSON
-    "resources"
-    JSON],
+        "resources"
+        JSON],
 ]);

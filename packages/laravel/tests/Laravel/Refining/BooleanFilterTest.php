@@ -17,8 +17,8 @@ test('it converts the value to boolean', function (mixed $bool, ?string $name, i
     );
 
     expect($filters)
-        ->first()->name->toBe($name)
-        ->count()->toBe($count);
+        ->first()
+        ->name->toBe($name)->count()->toBe($count);
 })->with([
     // Truthy values
     [true, 'AirPods Pro', 1],
@@ -27,7 +27,6 @@ test('it converts the value to boolean', function (mixed $bool, ?string $name, i
     ['on', 'AirPods Pro', 1],
     [1, 'AirPods Pro', 1],
     ['1', 'AirPods Pro', 1],
-
     // Falsy values
     [false, 'Macbook Pro M1', 1],
     ['false', 'Macbook Pro M1', 1],
@@ -35,7 +34,6 @@ test('it converts the value to boolean', function (mixed $bool, ?string $name, i
     ['off', 'Macbook Pro M1', 1],
     ['0', 'Macbook Pro M1', 1],
     [0, 'Macbook Pro M1', 1],
-
     // Filter not applied
     [null, 'AirPods Pro', 2],
 ]);

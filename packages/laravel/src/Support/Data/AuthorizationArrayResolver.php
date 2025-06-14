@@ -15,7 +15,7 @@ final class AuthorizationArrayResolver
                 $policy = \is_array($value) ? $value : [$value, $action];
 
                 try {
-                    if (!\is_int($key)) {
+                    if (! \is_int($key)) {
                         return [$action => Gate::allows($policy[1], [$policy[0], $model])];
                     }
 

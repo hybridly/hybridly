@@ -25,7 +25,7 @@ class MakeTableCommand extends GeneratorCommand
     protected function getStub()
     {
         $stub = match (true) {
-            !empty($this->option('model')) => '/stubs/table.model.php.stub',
+            ! empty($this->option('model')) => '/stubs/table.model.php.stub',
             default => '/stubs/table.php.stub',
         };
 
@@ -36,7 +36,7 @@ class MakeTableCommand extends GeneratorCommand
     {
         return file_exists($customPath = $this->laravel->basePath(trim($stub, '/')))
             ? $customPath
-            : __DIR__ . '/../..' . $stub;
+            : (__DIR__ . '/../..' . $stub);
     }
 
     protected function getDefaultNamespace($rootNamespace)
@@ -67,7 +67,7 @@ class MakeTableCommand extends GeneratorCommand
     {
         $modelClass = $this->parseModel($this->option('model'));
 
-        if (!class_exists($modelClass) && confirm("A {$modelClass} model does not exist. Do you want to generate it?", default: true)) {
+        if (! class_exists($modelClass) && confirm("A {$modelClass} model does not exist. Do you want to generate it?", default: true)) {
             $this->call('make:model', ['name' => $modelClass]);
         }
 
@@ -89,7 +89,7 @@ class MakeTableCommand extends GeneratorCommand
 
     protected function afterPromptingForMissingArguments(InputInterface $input, OutputInterface $output)
     {
-        if (!$this->hasOption('model') || !empty($this->option('model'))) {
+        if (! $this->hasOption('model') || ! empty($this->option('model'))) {
             return;
         }
 

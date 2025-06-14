@@ -12,16 +12,15 @@ final class ResolveAuthorizationsPipe implements DataPipe
 {
     public function __construct(
         private readonly AuthorizationArrayResolver $resolver,
-    ) {
-    }
+    ) {}
 
     public function handle(mixed $payload, DataClass $class, array $properties, CreationContext $creationContext): array
     {
-        if (!$payload instanceof Model) {
+        if (! ($payload instanceof Model)) {
             return $properties;
         }
 
-        if (!is_subclass_of($dataClass = $creationContext->dataClass, DataResourceContract::class)) {
+        if (! is_subclass_of($dataClass = $creationContext->dataClass, DataResourceContract::class)) {
             return $properties;
         }
 

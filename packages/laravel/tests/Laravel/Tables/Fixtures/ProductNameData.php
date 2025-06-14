@@ -15,6 +15,5 @@ class ProductNameData extends DataResource
     public function __construct(
         public readonly string $name,
         public readonly CarbonInterface $created_at,
-    ) {
-    }
+    ) {}
 }

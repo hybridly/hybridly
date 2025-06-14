@@ -39,10 +39,10 @@ class Filter extends BaseFilter
 
     public function apply(Builder $builder, mixed $value, string $property): void
     {
-        if (($enumClass = $this->getEnumClass()) && !$value instanceof \BackedEnum) {
+        if (($enumClass = $this->getEnumClass()) && ! ($value instanceof \BackedEnum)) {
             $value = $enumClass::tryFrom($value);
 
-            if (!$value) {
+            if (! $value) {
                 return;
             }
         }
@@ -65,7 +65,7 @@ class Filter extends BaseFilter
                 $operator = match (strtolower($operator = $this->getOperator())) {
                     '=', 'like' => 'LIKE',
                     'not like' => 'NOT LIKE',
-                    default => throw new \InvalidArgumentException("Invalid operator [{$operator}] provided for [{$property}] filter.")
+                    default => throw new \InvalidArgumentException("Invalid operator [{$operator}] provided for [{$property}] filter."),
                 };
 
                 $sql = match ($this->getMode()) {
@@ -152,7 +152,7 @@ class Filter extends BaseFilter
     {
         $mode = $this->evaluate($this->mode);
 
-        if (!\in_array($mode, [self::LOOSE, self::BEGINS_WITH_STRICT, self::ENDS_WITH_STRICT, self::EXACT], true)) {
+        if (! \in_array($mode, [self::LOOSE, self::BEGINS_WITH_STRICT, self::ENDS_WITH_STRICT, self::EXACT], true)) {
             throw new \InvalidArgumentException("Invalid similarity mode [{$mode}] provided.");
         }
 
