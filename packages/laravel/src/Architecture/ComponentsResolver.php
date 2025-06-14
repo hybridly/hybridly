@@ -7,17 +7,17 @@ interface ComponentsResolver
     /**
      * Loads view files from the given directory and associates them to the given namespace.
      */
-    public function loadViewsFrom(string $directory, null|string|array $namespace = null, ?int $depth = null): static;
+    public function loadViewsFrom(string $directory, null|string|array $namespace = null, ?int $depth = null, ?\Closure $filter = null): static;
 
     /**
      * Loads layout files from the given directory and associates them to the given namespace.
      */
-    public function loadLayoutsFrom(string $directory, null|string|array $namespace = null): static;
+    public function loadLayoutsFrom(string $directory, null|string|array $namespace = null, ?\Closure $filter = null): static;
 
     /**
      * Loads component files from the given directory and associates them to the given namespace.
      */
-    public function loadComponentsFrom(string $directory, null|string|array $namespace = null): static;
+    public function loadComponentsFrom(string $directory, null|string|array $namespace = null, ?\Closure $filter = null): static;
 
     /**
      * Auto-import TypeScript files from the given directory.

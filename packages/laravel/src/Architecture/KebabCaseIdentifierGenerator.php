@@ -2,6 +2,8 @@
 
 namespace Hybridly\Architecture;
 
+use Illuminate\Support\Stringable;
+
 final class KebabCaseIdentifierGenerator implements IdentifierGenerator
 {
     public function generate(ComponentsResolver $components, string $path, string $baseDirectory, string $namespace): string
@@ -10,7 +12,11 @@ final class KebabCaseIdentifierGenerator implements IdentifierGenerator
             ->after($baseDirectory)
             ->ltrim('/\\')
             ->replace(['/', '\\'], '.')
-            ->replace($components->getExtensions(), '')
+            ->chopEnd(collect($components->getExtensions())->flatMap(fn (string $extension) => [
+                ".view{$extension}",
+                ".layout{$extension}",
+                $extension,
+            ])->toArray())
             ->explode('.')
             ->map(fn (string $str) => str($str)->kebab())
             ->join('.');

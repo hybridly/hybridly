@@ -163,3 +163,22 @@ test('identifiers are kebab-cased', function (string $view, string $identifier) 
     ['views/MyPascalCaseView.vue', 'foo::views.my-pascal-case-view'],
     ['views/my-kebab-case-view.vue', 'foo::views.my-kebab-case-view'],
 ]);
+
+test('resolving can use filters', function () {
+    with_view_components([
+        'invalid-view.vue',
+        'index.view.vue',
+    ], function () {
+        /** @var ComponentsResolver */
+        $components = resolve(ComponentsResolver::class);
+        $components->loadViewsFrom(
+            directory: resource_path(),
+            namespace: 'foo',
+            filter: fn (string $file) => str_ends_with($file, '.view.vue'),
+        );
+
+        expect($components->getViews())->toBe([
+            ['namespace' => 'foo', 'path' => "resources/index.view.vue", 'identifier' => 'foo::index'],
+        ]);
+    });
+});

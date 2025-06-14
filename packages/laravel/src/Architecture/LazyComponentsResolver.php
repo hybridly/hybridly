@@ -42,39 +42,47 @@ class LazyComponentsResolver implements ComponentsResolver
         return $this;
     }
 
-    public function loadViewsFrom(string $directory, null|string|array $namespace = null, ?int $depth = null): static
+    public function loadViewsFrom(string $directory, null|string|array $namespace = null, ?int $depth = null, ?\Closure $filter = null): static
     {
         $this->views[] = fn () => $this->findVueFiles(
             directory: $directory,
             baseDirectory: $directory,
             namespace: $namespace,
             depth: $depth,
-            filter: fn (string $file) => !\in_array($file, array_merge($this->configuration->architecture->excludedViewsDirectories, [
-                $this->configuration->architecture->layoutsDirectory,
-                $this->configuration->architecture->componentsDirectory,
-            ]), strict: true),
+            filter: function (string $file, string $directory) use ($filter) {
+                if ($filter && !$filter($file, $directory)) {
+                    return false;
+                }
+
+                return !\in_array($file, array_merge($this->configuration->architecture->excludedViewsDirectories, [
+                    $this->configuration->architecture->layoutsDirectory,
+                    $this->configuration->architecture->componentsDirectory,
+                ]), strict: true);
+            },
         );
 
         return $this;
     }
 
-    public function loadLayoutsFrom(string $directory, null|string|array $namespace = null): static
+    public function loadLayoutsFrom(string $directory, null|string|array $namespace = null, ?\Closure $filter = null): static
     {
         $this->layouts[] = fn () => $this->findVueFiles(
             directory: $directory,
             baseDirectory: $directory,
             namespace: $namespace,
+            filter: $filter,
         );
 
         return $this;
     }
 
-    public function loadComponentsFrom(string $directory, null|string|array $namespace = null): static
+    public function loadComponentsFrom(string $directory, null|string|array $namespace = null, ?\Closure $filter = null): static
     {
         $this->components[] = fn () => $this->findVueFiles(
             directory: $directory,
             baseDirectory: $directory,
             namespace: $namespace,
+            filter: $filter,
         );
 
         return $this;
