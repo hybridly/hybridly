@@ -33,7 +33,7 @@ final class InvokedActionController
         return match ($call->type) {
             static::INLINE_ACTION => $this->executeInlineAction(InlineActionData::fromRequest($request)),
             static::BULK_ACTION => $this->executeBulkAction(BulkActionData::fromRequest($request)),
-            default => throw InvalidActionTypeException::with($call->type)
+            default => throw InvalidActionTypeException::with($call->type),
         };
     }
 
@@ -48,7 +48,7 @@ final class InvokedActionController
             throw CouldNotResolveTableException::with($tableId);
         }
 
-        if (!$table instanceof Table) {
+        if (! ($table instanceof Table)) {
             throw InvalidTableException::with($tableId);
         }
 
@@ -61,7 +61,7 @@ final class InvokedActionController
             BulkActionData::class => $table->getBulkActions(showHidden: true),
         };
 
-        if (!$action = $actions->first(fn (BaseAction $action) => $action->getName() === $data->action)) {
+        if (! ($action = $actions->first(fn (BaseAction $action) => $action->getName() === $data->action))) {
             throw InvalidActionException::with($data->action, $tableId);
         }
 
@@ -111,7 +111,7 @@ final class InvokedActionController
         $query = $table->getRefinedQuery();
         $query = match (true) {
             $data->all === true => $query->whereNotIn($key, $data->except),
-            default => $query->whereIn($key, $data->only)
+            default => $query->whereIn($key, $data->only),
         };
 
         // If the action has a 'query' parameter, we pass it.

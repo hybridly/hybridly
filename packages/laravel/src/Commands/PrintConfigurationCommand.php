@@ -42,7 +42,7 @@ class PrintConfigurationCommand extends Command
         // We do a lil bit of h4cking around the `pretty` option
         // to affect what is returned in the configuration
         if ($pretty = ($only = $this->option('pretty')) !== 'false') {
-            if (!\in_array($only, ['true', 'false', null], strict: true)) {
+            if (! \in_array($only, ['true', 'false', null], strict: true)) {
                 $configuration = data_get($configuration, $only);
             }
 
@@ -51,7 +51,7 @@ class PrintConfigurationCommand extends Command
 
         $this->output->write(json_encode(
             value: $configuration,
-            flags: $pretty ? \JSON_PRETTY_PRINT | \JSON_UNESCAPED_SLASHES : 0,
+            flags: $pretty ? (\JSON_PRETTY_PRINT | \JSON_UNESCAPED_SLASHES) : 0,
         ));
 
         return self::SUCCESS;

@@ -11,8 +11,7 @@ final class Properties
     public function __construct(
         public readonly false|string $forceInputCase,
         public readonly false|string $forceOutputCase,
-    ) {
-    }
+    ) {}
 
     public static function fromArray(array $config): static
     {

@@ -13,7 +13,7 @@ class DataResourceTypeScriptCollector extends Collector
 {
     public function getTransformedType(ReflectionClass $class): ?TransformedType
     {
-        if (!$class->isSubclassOf(BaseData::class)) {
+        if (! $class->isSubclassOf(BaseData::class)) {
             return null;
         }
 

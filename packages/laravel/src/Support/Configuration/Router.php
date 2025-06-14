@@ -10,8 +10,7 @@ final class Router
         public array $allowedVendors,
         public array $excludedRoutes,
         public string $routesExtractor,
-    ) {
-    }
+    ) {}
 
     public static function fromArray(array $config): static
     {

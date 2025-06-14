@@ -62,7 +62,7 @@ final class Version
 
     private static function formatVersion(?string $version): string
     {
-        if (!$version) {
+        if (! $version) {
             return '<fg=red;options=bold>NOT INSTALLED</>';
         }
 

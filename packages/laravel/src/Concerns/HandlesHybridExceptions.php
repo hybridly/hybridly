@@ -52,9 +52,11 @@ trait HandlesHybridExceptions
      */
     protected function onSessionExpired(Response $response, Request $request, \Throwable $e): mixed
     {
-        return redirect()->back()->with([
-            'error' => 'Your session has expired. Please refresh the page.',
-        ]);
+        return redirect()
+            ->back()
+            ->with([
+                'error' => 'Your session has expired. Please refresh the page.',
+            ]);
     }
 
     /**

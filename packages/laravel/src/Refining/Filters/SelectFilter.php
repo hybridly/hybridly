@@ -99,7 +99,7 @@ class SelectFilter extends BaseFilter
             return;
         }
 
-        if (!array_is_list($options)) {
+        if (! array_is_list($options)) {
             $value = collect($value)
                 ->map(fn ($v) => $options[$v] ?? null)
                 ->filter();
@@ -118,13 +118,13 @@ class SelectFilter extends BaseFilter
 
     protected function applySingleSelectQuery(Builder $builder, mixed $value, string $property, array $options, array $allowedOptions): void
     {
-        if (!\in_array($value, $allowedOptions, strict: false)) {
+        if (! \in_array($value, $allowedOptions, strict: false)) {
             return;
         }
 
         $value = array_is_list($options)
             ? $value
-            : $options[$value] ?? null;
+            : ($options[$value] ?? null);
 
         $this->applyRelationConstraint(
             builder: $builder,

@@ -39,9 +39,10 @@ function mock_request(string $url = '/', string $method = 'GET', bool $bind = fa
 
 function make_mock_request(mixed $response, string $url = '/mock-url', array $headers = []): TestResponse
 {
-    app('router')->get($url, function () use ($response) {
-        return $response;
-    });
+    app('router')
+        ->get($url, function () use ($response) {
+            return $response;
+        });
 
     return get($url, $headers);
 }

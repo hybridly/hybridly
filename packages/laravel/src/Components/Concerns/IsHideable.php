@@ -27,6 +27,6 @@ trait IsHideable
             return true;
         }
 
-        return !$this->evaluate($this->isVisible);
+        return ! $this->evaluate($this->isVisible);
     }
 }

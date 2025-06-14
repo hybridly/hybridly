@@ -16,7 +16,8 @@ it('can be serialized', function () {
 
     expect($filter)
         ->toBeInstanceOf(BaseFilter::class)
-        ->jsonSerialize()->toBe([
+        ->jsonSerialize()
+        ->toBe([
             'name' => 'airpods_gen',
             'hidden' => false,
             'label' => 'Airpods gen',
@@ -41,52 +42,64 @@ it('throws a validation exception when the type of the received value cannot be 
 
 it('filters according to the given callback', function () {
     ProductFactory::new()->count(10)->create();
-    ProductFactory::new()->count(4)->sequence(
-        ['name' => 'AirPods (2nd generation)'],
-        ['name' => 'AirPods (3rd generation)'],
-        ['name' => 'AirPods Pro (2nd generation)'],
-        ['name' => 'AirPods Max'],
-    )->create();
+    ProductFactory::new()
+        ->count(4)
+        ->sequence(
+            ['name' => 'AirPods (2nd generation)'],
+            ['name' => 'AirPods (3rd generation)'],
+            ['name' => 'AirPods Pro (2nd generation)'],
+            ['name' => 'AirPods Max'],
+        )
+        ->create();
 
     $filters = mock_refiner(
         query: ['filters' => ['airpods_gen' => 2]],
         refiners: [
-            CallbackFilter::make('airpods_gen', fn (Builder $builder, int $value) => match ($value) {
-                2 => $builder->where('name', 'like', '%(2nd generation)'),
-                3 => $builder->where('name', 'like', '%(3rd generation)'),
-                default => null
-            }),
+            CallbackFilter::make(
+                'airpods_gen',
+                fn (Builder $builder, int $value) => match ($value) {
+                    2 => $builder->where('name', 'like', '%(2nd generation)'),
+                    3 => $builder->where('name', 'like', '%(3rd generation)'),
+                    default => null,
+                },
+            ),
         ],
     );
 
     expect($filters)
-        ->first()->name->toBe('AirPods (2nd generation)')
-        ->count()->toBe(2);
+        ->first()
+        ->name->toBe('AirPods (2nd generation)')->count()->toBe(2);
 });
 
 it('injects parameters by type and by name', function () {
     ProductFactory::new()->count(10)->create();
-    ProductFactory::new()->count(4)->sequence(
-        ['name' => 'AirPods (2nd generation)'],
-        ['name' => 'AirPods (3rd generation)'],
-        ['name' => 'AirPods Pro (2nd generation)'],
-        ['name' => 'AirPods Max'],
-    )->create();
+    ProductFactory::new()
+        ->count(4)
+        ->sequence(
+            ['name' => 'AirPods (2nd generation)'],
+            ['name' => 'AirPods (3rd generation)'],
+            ['name' => 'AirPods Pro (2nd generation)'],
+            ['name' => 'AirPods Max'],
+        )
+        ->create();
 
     $filters = mock_refiner(
         query: ['filters' => ['airpods_gen' => 2]],
         refiners: [
-            CallbackFilter::make('airpods_gen', fn (Builder $qb, int $value) => match ($value) {
-                2 => $qb->where('name', 'like', '%(2nd generation)'),
-                3 => $qb->where('name', 'like', '%(3rd generation)'),
-                default => null
-            }),
+            CallbackFilter::make(
+                'airpods_gen',
+                fn (Builder $qb, int $value) => match ($value) {
+                    2 => $qb->where('name', 'like', '%(2nd generation)'),
+                    3 => $qb->where('name', 'like', '%(3rd generation)'),
+                    default => null,
+                },
+            ),
         ],
     );
 
     expect($filters)
-        ->first()->name->toBe('AirPods (2nd generation)')
-        ->count()->toBe(2);
+        ->first()
+        ->name->toBe('AirPods (2nd generation)')->count()->toBe(2);
 });
 
 it('accepts invokable classes by fqcn', function () {
@@ -102,13 +115,12 @@ it('accepts invokable classes by fqcn', function () {
     );
 
     expect($filters)
-        ->first()->name->toBe('AirPods Pro')
-        ->count()->toBe(1);
+        ->first()
+        ->name->toBe('AirPods Pro')->count()->toBe(1);
 });
 
 it('uses the type of the invokable class', function () {
-    $filter = CallbackFilter::make('name', new class ()
-    {
+    $filter = CallbackFilter::make('name', new class() {
         public function __invoke(Builder $builder, mixed $value): void
         {
             $builder->where('name', '=', $value);
@@ -122,7 +134,8 @@ it('uses the type of the invokable class', function () {
 
     expect($filter)
         ->toBeInstanceOf(BaseFilter::class)
-        ->jsonSerialize()->toBe([
+        ->jsonSerialize()
+        ->toBe([
             'name' => 'name',
             'hidden' => false,
             'label' => 'Name',

@@ -12,11 +12,10 @@ class Arr extends SupportArr
      */
     public static function onlyDot(array $array, string|array $only): array
     {
-        return self::only($array, $only) +
-            collect(self::dot($array))
-                ->filter(fn ($_, $key) => collect($only)->some(fn ($only) => $only === $key || str_starts_with($key, $only . '.')))
-                ->undot()
-                ->toArray();
+        return self::only($array, $only) + collect(self::dot($array))
+            ->filter(fn ($_, $key) => collect($only)->some(fn ($only) => $only === $key || str_starts_with($key, $only . '.')))
+            ->undot()
+            ->toArray();
     }
 
     /**

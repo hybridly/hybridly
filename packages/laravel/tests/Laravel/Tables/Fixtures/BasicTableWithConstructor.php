@@ -14,8 +14,7 @@ class BasicTableWithConstructor extends Table
 
     public function __construct(
         private readonly Vendor $vendor,
-    ) {
-    }
+    ) {}
 
     public function defineColumns(): array
     {

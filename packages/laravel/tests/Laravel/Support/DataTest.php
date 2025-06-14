@@ -32,11 +32,12 @@ test('partial properties in data objects are ignored like normal partial propert
         ]),
     ], partial: false);
 
-    expect($properties)->toBe([
-        'data' => [
-            'foo' => true,
-        ],
-    ]);
+    expect($properties)
+        ->toBe([
+            'data' => [
+                'foo' => true,
+            ],
+        ]);
 });
 
 test('partial properties in data objects are resolved when using partial reloads', function () {
@@ -47,66 +48,86 @@ test('partial properties in data objects are resolved when using partial reloads
         ]),
     ], partial: true);
 
-    expect($properties)->toBe([
-        'data' => [
-            'foo' => true,
-            'bar' => 'baz',
-        ],
-    ]);
+    expect($properties)
+        ->toBe([
+            'data' => [
+                'foo' => true,
+                'bar' => 'baz',
+            ],
+        ]);
 });
 
 test('partial properties in data objects are ignored when excluded in partial reloads', function () {
-    $properties = resolve_properties([
-        'data' => DataObjectWithLazyProperty::from([
-            'foo' => true,
-            'bar' => Lazy::partial(fn () => 'baz'),
-        ]),
-    ], except: ['data'], partial: true);
+    $properties = resolve_properties(
+        [
+            'data' => DataObjectWithLazyProperty::from([
+                'foo' => true,
+                'bar' => Lazy::partial(fn () => 'baz'),
+            ]),
+        ],
+        except: ['data'],
+        partial: true,
+    );
 
     expect($properties)->toBeEmpty();
 });
 
 test('partial properties in data objects are ignored when excluded with dot notation in partial reloads', function () {
-    $properties = resolve_properties([
-        'data' => DataObjectWithLazyProperty::from([
-            'foo' => true,
-            'bar' => Lazy::partial(fn () => 'baz'),
-        ]),
-    ], except: ['data.bar'], partial: true);
-
-    expect($properties)->toBe([
-        'data' => [
-            'foo' => true,
+    $properties = resolve_properties(
+        [
+            'data' => DataObjectWithLazyProperty::from([
+                'foo' => true,
+                'bar' => Lazy::partial(fn () => 'baz'),
+            ]),
         ],
-    ]);
+        except: ['data.bar'],
+        partial: true,
+    );
 
-    $properties = resolve_properties([
-        'data' => DataObjectWithLazyProperty::from([
-            'foo' => true,
-            'bar' => Lazy::partial(fn () => 'baz'),
-        ]),
-    ], except: ['data.foo'], partial: true);
+    expect($properties)
+        ->toBe([
+            'data' => [
+                'foo' => true,
+            ],
+        ]);
 
-    expect($properties)->toBe([
-        'data' => [
-            'bar' => 'baz',
+    $properties = resolve_properties(
+        [
+            'data' => DataObjectWithLazyProperty::from([
+                'foo' => true,
+                'bar' => Lazy::partial(fn () => 'baz'),
+            ]),
         ],
-    ]);
+        except: ['data.foo'],
+        partial: true,
+    );
+
+    expect($properties)
+        ->toBe([
+            'data' => [
+                'bar' => 'baz',
+            ],
+        ]);
 });
 
 test('other properties are ignored when only some partial properties are specified in data objects during partial reloads', function () {
-    $properties = resolve_properties([
-        'data' => DataObjectWithLazyProperty::from([
-            'foo' => true,
-            'bar' => Lazy::partial(fn () => 'baz'),
-        ]),
-    ], only: ['data.bar'], partial: true);
-
-    expect($properties)->toBe([
-        'data' => [
-            'bar' => 'baz',
+    $properties = resolve_properties(
+        [
+            'data' => DataObjectWithLazyProperty::from([
+                'foo' => true,
+                'bar' => Lazy::partial(fn () => 'baz'),
+            ]),
         ],
-    ]);
+        only: ['data.bar'],
+        partial: true,
+    );
+
+    expect($properties)
+        ->toBe([
+            'data' => [
+                'bar' => 'baz',
+            ],
+        ]);
 });
 
 test('properties using lazy closures are resolved', function () {
@@ -117,12 +138,13 @@ test('properties using lazy closures are resolved', function () {
         ]),
     ], partial: false);
 
-    expect($properties)->toBe([
-        'data' => [
-            'foo' => true,
-            'bar' => 'baz',
-        ],
-    ]);
+    expect($properties)
+        ->toBe([
+            'data' => [
+                'foo' => true,
+                'bar' => 'baz',
+            ],
+        ]);
 });
 
 test('properties using lazy closures are resolved during partial reloads', function () {
@@ -133,52 +155,63 @@ test('properties using lazy closures are resolved during partial reloads', funct
         ]),
     ], partial: true);
 
-    expect($properties)->toBe([
-        'data' => [
-            'foo' => true,
-            'bar' => 'baz',
-        ],
-    ]);
+    expect($properties)
+        ->toBe([
+            'data' => [
+                'foo' => true,
+                'bar' => 'baz',
+            ],
+        ]);
 });
 
 test('properties using lazy closures are not evaluated when exluded during partial reloads', function () {
     $evaluated = false;
-    $properties = resolve_properties([
-        'data' => DataObjectWithLazyProperty::from([
-            'foo' => true,
-            'bar' => Lazy::closure(function () use (&$evaluated) {
-                $evaluated = true;
+    $properties = resolve_properties(
+        [
+            'data' => DataObjectWithLazyProperty::from([
+                'foo' => true,
+                'bar' => Lazy::closure(function () use (&$evaluated) {
+                    $evaluated = true;
 
-                return 'baz';
-            }),
-        ]),
-    ], except: ['data.bar'], partial: true);
+                    return 'baz';
+                }),
+            ]),
+        ],
+        except: ['data.bar'],
+        partial: true,
+    );
 
     expect($evaluated)->toBeFalse();
-    expect($properties)->toBe([
-        'data' => [
-            'foo' => true,
-        ],
-    ]);
+    expect($properties)
+        ->toBe([
+            'data' => [
+                'foo' => true,
+            ],
+        ]);
 });
 
 test('properties using lazy partials are not evaluated when exluded during partial reloads', function () {
     $evaluated = false;
-    $properties = resolve_properties([
-        'data' => DataObjectWithLazyProperty::from([
-            'foo' => true,
-            'bar' => Lazy::partial(function () use (&$evaluated) {
-                $evaluated = true;
+    $properties = resolve_properties(
+        [
+            'data' => DataObjectWithLazyProperty::from([
+                'foo' => true,
+                'bar' => Lazy::partial(function () use (&$evaluated) {
+                    $evaluated = true;
 
-                return 'baz';
-            }),
-        ]),
-    ], except: ['data.bar'], partial: true);
+                    return 'baz';
+                }),
+            ]),
+        ],
+        except: ['data.bar'],
+        partial: true,
+    );
 
     expect($evaluated)->toBeFalse();
-    expect($properties)->toBe([
-        'data' => [
-            'foo' => true,
-        ],
-    ]);
+    expect($properties)
+        ->toBe([
+            'data' => [
+                'foo' => true,
+            ],
+        ]);
 });

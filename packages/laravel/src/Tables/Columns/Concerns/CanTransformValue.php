@@ -7,7 +7,7 @@ use Hybridly\Components\Component;
 /** @mixin Component */
 trait CanTransformValue
 {
-    protected null|\Closure $getValueUsing = null;
+    protected ?\Closure $getValueUsing = null;
 
     /**
      * Transforms the value of the column using the given callback.
@@ -21,7 +21,7 @@ trait CanTransformValue
 
     public function canTransformValue(): bool
     {
-        return !\is_null($this->getValueUsing);
+        return ! \is_null($this->getValueUsing);
     }
 
     public function getTransformedValue(array $named = [], array $typed = []): mixed

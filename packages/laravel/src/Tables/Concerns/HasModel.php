@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 
 trait HasModel
 {
-    protected static null|\Closure $getModelClassesUsing = null;
+    protected static ?\Closure $getModelClassesUsing = null;
 
     public static function getModelClassesUsing(\Closure $callback): void
     {
@@ -19,11 +19,11 @@ trait HasModel
     {
         $model = $this->getModelClass();
 
-        if (!class_exists($model)) {
+        if (! class_exists($model)) {
             throw TableModelNotFoundException::invalid(static::class, $model);
         }
 
-        if (!is_a($model, class: Model::class, allow_string: true)) {
+        if (! is_a($model, class: Model::class, allow_string: true)) {
             throw TableModelNotFoundException::notModel(static::class, $model);
         }
 

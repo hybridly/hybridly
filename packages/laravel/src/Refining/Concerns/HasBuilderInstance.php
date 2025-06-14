@@ -19,7 +19,7 @@ trait HasBuilderInstance
 
     public function getBuilderInstance(): Builder
     {
-        if (!$this->builderInstance) {
+        if (! $this->builderInstance) {
             throw new \RuntimeException('No builder instance has been defined.');
         }
 

@@ -54,7 +54,7 @@ abstract class BaseFilter extends Components\Component implements Refiner, Filte
 
     public function isActive(): bool
     {
-        return !\is_null($this->value);
+        return ! \is_null($this->value);
     }
 
     public function jsonSerialize(): mixed
@@ -81,7 +81,7 @@ abstract class BaseFilter extends Components\Component implements Refiner, Filte
         return match ($parameterType) {
             Refiner::class => [$this->filter],
             Filter::class => [$this->filter],
-            default => []
+            default => [],
         };
     }
 
@@ -92,7 +92,7 @@ abstract class BaseFilter extends Components\Component implements Refiner, Filte
             'value' => [$this->value],
             'property' => [$this->property],
             'alias' => [$this->alias],
-            default => []
+            default => [],
         };
     }
 }

@@ -12,8 +12,7 @@ final class Tables
         public readonly string $actionsEndpoint,
         public readonly array $actionsEndpointMiddleware,
         public readonly string $actionsEndpointName,
-    ) {
-    }
+    ) {}
 
     public static function fromArray(array $config): static
     {

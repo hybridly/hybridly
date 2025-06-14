@@ -33,8 +33,7 @@ class Factory implements HybridResponse
         protected Router $router,
         protected DialogResolver $dialogResolver,
         protected ResponseFactory $responseFactory,
-    ) {
-    }
+    ) {}
 
     /**
      * Sets the base route for this view, implying a dialog will be rendered.
@@ -121,8 +120,7 @@ class Factory implements HybridResponse
      */
     public function render(): string|false
     {
-        return $this
-            ->toResponse(request())
+        return $this->toResponse(request())
             ->getContent();
     }
 
@@ -148,7 +146,7 @@ class Factory implements HybridResponse
 
         // If the component is missing and there is no page loaded,
         // throw an exception because the front-end cannot handle that situation.
-        if (!$this->hybridly->isHybrid($request) && !$this->view->component) {
+        if (! $this->hybridly->isHybrid($request) && ! $this->view->component) {
             throw MissingViewComponentException::make();
         }
 
@@ -240,13 +238,13 @@ class Factory implements HybridResponse
         $request->setUserResolver(fn () => $originalRequest->getUserResolver());
         $request->setRouteResolver(fn () => $route);
 
-        if ($originalRequest->hasSession() && $session = $originalRequest->session()) {
+        if ($originalRequest->hasSession() && ($session = $originalRequest->session())) {
             $request->setLaravelSession($session);
         }
 
         app()->instance('request', $request);
 
-        $response = (new SubstituteBindings($this->router))->handle(
+        $response = new SubstituteBindings($this->router)->handle(
             request: $request,
             next: fn () => $route->run(),
         );
@@ -255,7 +253,7 @@ class Factory implements HybridResponse
             return $this->getBaseView($response->getTargetUrl(), $request);
         }
 
-        if (!$response instanceof self) {
+        if (! ($response instanceof self)) {
             throw new \LogicException(\sprintf('Target URL [%s] does not return a hybrid response.', $targetUrl));
         }
 
@@ -267,7 +265,7 @@ class Factory implements HybridResponse
      */
     protected function resolveDialog(Request $request): ?Dialog
     {
-        if (!$this->dialogBaseUrl) {
+        if (! $this->dialogBaseUrl) {
             return null;
         }
 

@@ -13,7 +13,7 @@ use Spatie\LaravelData\Contracts\DataObject;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 
-if (!\function_exists('Hybridly\is_hybrid')) {
+if (! \function_exists('Hybridly\is_hybrid')) {
     /**
      * Checks if the given request is hybrid.
      *
@@ -27,7 +27,7 @@ if (!\function_exists('Hybridly\is_hybrid')) {
     }
 }
 
-if (!\function_exists('Hybridly\is_partial')) {
+if (! \function_exists('Hybridly\is_partial')) {
     /**
      * Checks if the given request is a partial hybrid request.
      *
@@ -37,7 +37,7 @@ if (!\function_exists('Hybridly\is_partial')) {
     {
         $request ??= request();
 
-        if (!is_hybrid($request)) {
+        if (! is_hybrid($request)) {
             return false;
         }
 
@@ -45,7 +45,7 @@ if (!\function_exists('Hybridly\is_partial')) {
     }
 }
 
-if (!\function_exists('Hybridly\view')) {
+if (! \function_exists('Hybridly\view')) {
     /**
      * Returns a hybrid view.
      *
@@ -57,7 +57,7 @@ if (!\function_exists('Hybridly\view')) {
     }
 }
 
-if (!\function_exists('Hybridly\dialog')) {
+if (! \function_exists('Hybridly\dialog')) {
     /**
      * Returns a dialog with the given properties and base view.
      *
@@ -71,7 +71,7 @@ if (!\function_exists('Hybridly\dialog')) {
     }
 }
 
-if (!\function_exists('Hybridly\properties')) {
+if (! \function_exists('Hybridly\properties')) {
     /**
      * Returns properties for an existing view.
      *
@@ -83,7 +83,7 @@ if (!\function_exists('Hybridly\properties')) {
     }
 }
 
-if (!\function_exists('Hybridly\partial')) {
+if (! \function_exists('Hybridly\partial')) {
     /**
      * Creates a partial-only property.
      *
@@ -95,7 +95,7 @@ if (!\function_exists('Hybridly\partial')) {
     }
 }
 
-if (!\function_exists('Hybridly\deferred')) {
+if (! \function_exists('Hybridly\deferred')) {
     /**
      * Creates a deferred property that will not be included in an initial load,
      * but will automatically be loaded in a subsequent partial reload.
@@ -108,7 +108,7 @@ if (!\function_exists('Hybridly\deferred')) {
     }
 }
 
-if (!\function_exists('Hybridly\to_external_url')) {
+if (! \function_exists('Hybridly\to_external_url')) {
     /**
      * Generates a response for redirecting to an external website, or a non-hybrid view.
      * This can also be used to redirect to a hybrid view when it is not known whether the current request is hybrid or not.

@@ -21,9 +21,10 @@ test('the `assertHybridViewComponent` method asserts that the view is the expect
 });
 
 test('the `assertViewUrl` method asserts that the url is the expected value', function () {
-    make_hybrid_mock_request(url: '/url-to-a-page')->assertHybrid(function (Assertable $view) {
-        $view->assertViewUrl(config('app.url') . '/url-to-a-page');
-    });
+    make_hybrid_mock_request(url: '/url-to-a-page')
+        ->assertHybrid(function (Assertable $view) {
+            $view->assertViewUrl(config('app.url') . '/url-to-a-page');
+        });
 });
 
 test('the `assertHybridVersion` method asserts that the version is the expected value', function () {
@@ -37,14 +38,15 @@ test('the `assertHybridVersion` method asserts that the version is the expected 
 test('the `getPayload` method returns the payload', function () {
     make_hybrid_mock_request()->assertHybrid(function (Assertable $view) {
         expect($view->getPayload())->toBeArray();
-        expect($view->getPayload())->toHaveKeys([
-            'view',
-            'view.component',
-            'view.properties',
-            'dialog',
-            'url',
-            'version',
-        ]);
+        expect($view->getPayload())
+            ->toHaveKeys([
+                'view',
+                'view.component',
+                'view.properties',
+                'dialog',
+                'url',
+                'version',
+            ]);
     });
 });
 
@@ -66,13 +68,14 @@ test('the `getProperty` method returns the property value at the given path', fu
 test('the `toArray` function converts the Assertable instance to an array', function () {
     make_hybrid_mock_request()->assertHybrid(function (Assertable $view) {
         expect($view->toArray())->toBeArray();
-        expect($view->getPayload())->toHaveKeys([
-            'view',
-            'view.component',
-            'view.properties',
-            'dialog',
-            'url',
-            'version',
-        ]);
+        expect($view->getPayload())
+            ->toHaveKeys([
+                'view',
+                'view.component',
+                'view.properties',
+                'dialog',
+                'url',
+                'version',
+            ]);
     });
 });

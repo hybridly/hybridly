@@ -31,8 +31,8 @@ class HandleHybridExceptions
     protected array $environments = ['production'];
 
     protected array $withExceptionsCallbacks = [];
-    protected null|\Closure $renderUsingCallback = null;
-    protected null|\Closure $expireSessionUsingCallback = null;
+    protected ?\Closure $renderUsingCallback = null;
+    protected ?\Closure $expireSessionUsingCallback = null;
 
     public function __invoke(Exceptions $exceptions): void
     {
@@ -96,7 +96,7 @@ class HandleHybridExceptions
      */
     public function inEnvironments(null|string|array $environments = null): static
     {
-        if (!\is_null($environments)) {
+        if (! \is_null($environments)) {
             $this->environments = Arr::wrap($environments);
         }
 
@@ -151,20 +151,28 @@ class HandleHybridExceptions
 
     protected function onSessionExpired(Response $response, Request $request, \Throwable $e): mixed
     {
-        $callback = $this->expireSessionUsingCallback ?? fn () => redirect()->back()->with([
-            'error' => 'Your session has expired. Please refresh the page.',
-        ]);
+        $callback =
+            $this->expireSessionUsingCallback ??
+            fn () => redirect()
+                ->back()
+                ->with([
+                    'error' => 'Your session has expired. Please refresh the page.',
+                ]);
 
-        return $this->evaluate($callback, [
-            'response' => $response,
-            'request' => $request,
-            'exception' => $e,
-        ], [
-            Response::class => $response,
-            Request::class => $request,
-            \Throwable::class => $e,
-            \Exception::class => $e,
-        ]);
+        return $this->evaluate(
+            $callback,
+            [
+                'response' => $response,
+                'request' => $request,
+                'exception' => $e,
+            ],
+            [
+                Response::class => $response,
+                Request::class => $request,
+                \Throwable::class => $e,
+                \Exception::class => $e,
+            ],
+        );
     }
 
     protected function renderHybridResponse(Response $response, Request $request, \Throwable $e): HybridResponse
@@ -173,17 +181,21 @@ class HandleHybridExceptions
             throw new \Exception('The `renderHybridResponse` method is not implemented.');
         }
 
-        return $this->evaluate($this->renderUsingCallback, [
-            'response' => $response,
-            'request' => $request,
-            'exception' => $e,
-            'e' => $e,
-        ], [
-            Response::class => $response,
-            Request::class => $request,
-            \Throwable::class => $e,
-            \Exception::class => $e,
-        ]);
+        return $this->evaluate(
+            $this->renderUsingCallback,
+            [
+                'response' => $response,
+                'request' => $request,
+                'exception' => $e,
+                'e' => $e,
+            ],
+            [
+                Response::class => $response,
+                Request::class => $request,
+                \Throwable::class => $e,
+                \Exception::class => $e,
+            ],
+        );
     }
 
     protected function shouldRenderHybridResponse(Response $response, Request $request, \Throwable $e): bool
@@ -192,7 +204,7 @@ class HandleHybridExceptions
             return false;
         }
 
-        if (!app()->environment($this->environments)) {
+        if (! app()->environment($this->environments)) {
             return false;
         }
 

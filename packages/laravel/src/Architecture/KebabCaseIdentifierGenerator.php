@@ -12,11 +12,15 @@ final class KebabCaseIdentifierGenerator implements IdentifierGenerator
             ->after($baseDirectory)
             ->ltrim('/\\')
             ->replace(['/', '\\'], '.')
-            ->chopEnd(collect($components->getExtensions())->flatMap(fn (string $extension) => [
-                ".view{$extension}",
-                ".layout{$extension}",
-                $extension,
-            ])->toArray())
+            ->chopEnd(
+                collect($components->getExtensions())
+                    ->flatMap(fn (string $extension) => [
+                        ".view{$extension}",
+                        ".layout{$extension}",
+                        $extension,
+                    ])
+                    ->toArray(),
+            )
             ->explode('.')
             ->map(fn (string $str) => str($str)->kebab())
             ->join('.');

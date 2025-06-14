@@ -74,7 +74,7 @@ trait HasRefiners
         );
 
         // If we didn't get a sort value, there is no sort.
-        if (!$sort) {
+        if (! $sort) {
             return null;
         }
 

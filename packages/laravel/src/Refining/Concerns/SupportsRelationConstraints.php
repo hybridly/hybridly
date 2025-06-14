@@ -9,7 +9,7 @@ trait SupportsRelationConstraints
 {
     protected function applyRelationConstraint(Builder $builder, string $property, \Closure $callback): void
     {
-        if (!str_contains($property, '.')) {
+        if (! str_contains($property, '.')) {
             $callback($builder, $property, false);
 
             return;
@@ -26,7 +26,7 @@ trait SupportsRelationConstraints
             : 'whereHas';
 
         $builder->{$method}($relation, function (Builder $builder) use ($property, $callback) {
-            if (!str_contains($property, '.')) {
+            if (! str_contains($property, '.')) {
                 $callback($builder, $property, true);
             } else {
                 $this->applyRelationConstraint($builder, $property, $callback);

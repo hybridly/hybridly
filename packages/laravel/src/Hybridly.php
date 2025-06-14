@@ -24,8 +24,7 @@ final class Hybridly
 
     public function __construct(
         private readonly ComponentsResolver $components,
-    ) {
-    }
+    ) {}
 
     public function __call($method, $parameters)
     {

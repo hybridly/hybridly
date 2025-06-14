@@ -8,8 +8,7 @@ final class Refining
     public function __construct(
         public string $sortsKey,
         public string $filtersKey,
-    ) {
-    }
+    ) {}
 
     public static function fromArray(array $config): static
     {

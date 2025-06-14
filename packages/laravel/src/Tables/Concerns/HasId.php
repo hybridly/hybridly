@@ -4,15 +4,15 @@ namespace Hybridly\Tables\Concerns;
 
 trait HasId
 {
-    private static null|\Closure $encodesIdUsing = null;
-    private static null|\Closure $decodesIdUsing = null;
+    private static ?\Closure $encodesIdUsing = null;
+    private static ?\Closure $decodesIdUsing = null;
 
-    public static function encodeIdUsing(null|\Closure $callback): void
+    public static function encodeIdUsing(?\Closure $callback): void
     {
         static::$encodesIdUsing = $callback;
     }
 
-    public static function decodeIdUsing(null|\Closure $callback): void
+    public static function decodeIdUsing(?\Closure $callback): void
     {
         static::$decodesIdUsing = $callback;
     }

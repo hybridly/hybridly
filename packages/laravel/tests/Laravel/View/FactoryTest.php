@@ -16,7 +16,8 @@ test('external responses to non-hybridly requests', function () {
 
     expect(hybridly()->external('https://google.fr/'))
         ->toBeInstanceOf(RedirectResponse::class)
-        ->getStatusCode()->toBe(Response::HTTP_FOUND)
+        ->getStatusCode()
+        ->toBe(Response::HTTP_FOUND)
         ->headers->all()->toMatchArray([
             'location' => ['https://google.fr/'],
         ]);
@@ -27,7 +28,8 @@ test('external responses to non-hybridly requests with custom headers', function
 
     expect(hybridly()->external('https://google.fr/', ['X-Robots-Tag' => 'noindex, nofollow']))
         ->toBeInstanceOf(RedirectResponse::class)
-        ->getStatusCode()->toBe(Response::HTTP_FOUND)
+        ->getStatusCode()
+        ->toBe(Response::HTTP_FOUND)
         ->headers->all()->toMatchArray([
             'location' => ['https://google.fr/'],
             'x-robots-tag' => ['noindex, nofollow'],
@@ -39,7 +41,8 @@ test('external responses to hybridly requests', function () {
 
     expect(hybridly()->external('https://google.fr/'))
         ->toBeInstanceOf(Response::class)
-        ->getStatusCode()->toBe(Response::HTTP_CONFLICT)
+        ->getStatusCode()
+        ->toBe(Response::HTTP_CONFLICT)
         ->headers->all()->toMatchArray([
             Header::EXTERNAL => ['https://google.fr/'],
         ]);
@@ -50,7 +53,8 @@ test('external responses to hybridly requests with custom headers', function () 
 
     expect(hybridly()->external('https://google.fr/', ['X-Robots-Tag' => 'noindex, nofollow']))
         ->toBeInstanceOf(Response::class)
-        ->getStatusCode()->toBe(Response::HTTP_CONFLICT)
+        ->getStatusCode()
+        ->toBe(Response::HTTP_CONFLICT)
         ->headers->all()->toMatchArray([
             Header::EXTERNAL => ['https://google.fr/'],
             'x-robots-tag' => ['noindex, nofollow'],
@@ -64,7 +68,8 @@ test('external responses with redirect responses as input', function () {
 
     expect(hybridly()->external($redirect))
         ->toBeInstanceOf(Response::class)
-        ->getStatusCode()->toBe(Response::HTTP_CONFLICT)
+        ->getStatusCode()
+        ->toBe(Response::HTTP_CONFLICT)
         ->headers->all()->toMatchArray([
             Header::EXTERNAL => ['https://google.fr/'],
         ]);
@@ -81,18 +86,19 @@ test('hybridly responses to non-hybridly requests', function () {
 
     expect($factory)->toBeInstanceOf(Factory::class);
     expect($response)->toBeInstanceOf(Response::class);
-    expect($payload)->toMatchArray([
-        'dialog' => null,
-        'version' => '123',
-        'url' => 'http://localhost/users/makise',
-        'view' => [
-            'component' => 'users.edit',
-            'properties' => [
-                'user' => 'Makise Kurisu',
+    expect($payload)
+        ->toMatchArray([
+            'dialog' => null,
+            'version' => '123',
+            'url' => 'http://localhost/users/makise',
+            'view' => [
+                'component' => 'users.edit',
+                'properties' => [
+                    'user' => 'Makise Kurisu',
+                ],
+                'deferred' => [],
             ],
-            'deferred' => [],
-        ],
-    ]);
+        ]);
 });
 
 test('`Hybridable` classes are serialized', function () {
@@ -100,8 +106,7 @@ test('`Hybridable` classes are serialized', function () {
     hybridly()->setVersion('123');
 
     $request = mock_request(url: '/users/makise', hybridly: true, bind: true);
-    $factory = hybridly('users.edit', ['user' => new class () implements Hybridable
-    {
+    $factory = hybridly('users.edit', ['user' => new class() implements Hybridable {
         public function toHybridArray(): array
         {
             return ['full_name' => 'Makise Kurisu'];
@@ -113,20 +118,21 @@ test('`Hybridable` classes are serialized', function () {
 
     expect($factory)->toBeInstanceOf(Factory::class);
     expect($response)->toBeInstanceOf(JsonResponse::class);
-    expect($payload)->toMatchArray([
-        'dialog' => null,
-        'version' => '123',
-        'url' => 'http://localhost/users/makise',
-        'view' => [
-            'component' => 'users.edit',
-            'properties' => [
-                'user' => [
-                    'full_name' => 'Makise Kurisu',
+    expect($payload)
+        ->toMatchArray([
+            'dialog' => null,
+            'version' => '123',
+            'url' => 'http://localhost/users/makise',
+            'view' => [
+                'component' => 'users.edit',
+                'properties' => [
+                    'user' => [
+                        'full_name' => 'Makise Kurisu',
+                    ],
                 ],
+                'deferred' => [],
             ],
-            'deferred' => [],
-        ],
-    ]);
+        ]);
 });
 
 test('hybridly responses to hybridly requests', function () {
@@ -140,18 +146,19 @@ test('hybridly responses to hybridly requests', function () {
 
     expect($factory)->toBeInstanceOf(Factory::class);
     expect($response)->toBeInstanceOf(JsonResponse::class);
-    expect($payload)->toMatchArray([
-        'dialog' => null,
-        'version' => '123',
-        'url' => 'http://localhost/users/makise',
-        'view' => [
-            'component' => 'users.edit',
-            'properties' => [
-                'user' => 'Makise Kurisu',
+    expect($payload)
+        ->toMatchArray([
+            'dialog' => null,
+            'version' => '123',
+            'url' => 'http://localhost/users/makise',
+            'view' => [
+                'component' => 'users.edit',
+                'properties' => [
+                    'user' => 'Makise Kurisu',
+                ],
+                'deferred' => [],
             ],
-            'deferred' => [],
-        ],
-    ]);
+        ]);
 });
 
 test('properties can be added on-the-fly on the factory instance', function () {
@@ -167,19 +174,20 @@ test('properties can be added on-the-fly on the factory instance', function () {
 
     expect($factory)->toBeInstanceOf(Factory::class);
     expect($response)->toBeInstanceOf(JsonResponse::class);
-    expect($payload)->toMatchArray([
-        'dialog' => null,
-        'version' => '123',
-        'url' => 'http://localhost/users/makise',
-        'view' => [
-            'component' => 'users.edit',
-            'properties' => [
-                'user' => 'Makise Kurisu',
-                'husband' => 'Okabe Rintarou',
+    expect($payload)
+        ->toMatchArray([
+            'dialog' => null,
+            'version' => '123',
+            'url' => 'http://localhost/users/makise',
+            'view' => [
+                'component' => 'users.edit',
+                'properties' => [
+                    'user' => 'Makise Kurisu',
+                    'husband' => 'Okabe Rintarou',
+                ],
+                'deferred' => [],
             ],
-            'deferred' => [],
-        ],
-    ]);
+        ]);
 });
 
 test('dialogs and their properties can be resolved', function () {
@@ -201,28 +209,29 @@ test('dialogs and their properties can be resolved', function () {
 
     expect($factory)->toBeInstanceOf(Factory::class);
     expect($response)->toBeInstanceOf(JsonResponse::class);
-    expect($payload)->toMatchArray([
-        'view' => [
-            'component' => 'index',
-            'properties' => [
-                'foo' => 'bar',
-                'shared' => 'data',
+    expect($payload)
+        ->toMatchArray([
+            'view' => [
+                'component' => 'index',
+                'properties' => [
+                    'foo' => 'bar',
+                    'shared' => 'data',
+                ],
+                'deferred' => [],
             ],
-            'deferred' => [],
-        ],
-        'dialog' => [
-            'component' => 'users.edit',
-            'properties' => [
-                'user' => 'Makise Kurisu',
-                'email' => 'makise@gadgetlab.jp',
+            'dialog' => [
+                'component' => 'users.edit',
+                'properties' => [
+                    'user' => 'Makise Kurisu',
+                    'email' => 'makise@gadgetlab.jp',
+                ],
+                'baseUrl' => 'http://localhost',
+                'redirectUrl' => 'http://localhost',
+                'key' => data_get($payload, 'dialog.key'),
             ],
-            'baseUrl' => 'http://localhost',
-            'redirectUrl' => 'http://localhost',
-            'key' => data_get($payload, 'dialog.key'),
-        ],
-        'url' => 'http://localhost/users/makise',
-        'version' => null,
-    ]);
+            'url' => 'http://localhost/users/makise',
+            'version' => null,
+        ]);
 });
 
 test('the url resolver is used when constructing a response', function () {
@@ -233,9 +242,10 @@ test('the url resolver is used when constructing a response', function () {
         ->toResponse($request)
         ->getOriginalContent();
 
-    expect($payload)->toMatchArray([
-        'url' => 'https://customdomain.com/users/makise',
-    ]);
+    expect($payload)
+        ->toMatchArray([
+            'url' => 'https://customdomain.com/users/makise',
+        ]);
 });
 
 test('hybridly responses without a view component', function () {
@@ -249,18 +259,19 @@ test('hybridly responses without a view component', function () {
 
     expect($factory)->toBeInstanceOf(Factory::class);
     expect($response)->toBeInstanceOf(JsonResponse::class);
-    expect($payload)->toMatchArray([
-        'dialog' => null,
-        'version' => '123',
-        'url' => 'http://localhost/users/makise',
-        'view' => [
-            'component' => null,
-            'properties' => [
-                'user' => 'Makise Kurisu',
+    expect($payload)
+        ->toMatchArray([
+            'dialog' => null,
+            'version' => '123',
+            'url' => 'http://localhost/users/makise',
+            'view' => [
+                'component' => null,
+                'properties' => [
+                    'user' => 'Makise Kurisu',
+                ],
+                'deferred' => [],
             ],
-            'deferred' => [],
-        ],
-    ]);
+        ]);
 });
 
 test('hybridly responses without a view component on initial load', function () {
@@ -286,21 +297,22 @@ test('base view may be omitted on dialog responses coming from hybrid requests',
 
     expect($factory)->toBeInstanceOf(Factory::class);
     expect($response)->toBeInstanceOf(JsonResponse::class);
-    expect($payload)->toMatchArray([
-        'view' => null,
-        'dialog' => [
-            'component' => 'users.edit',
-            'properties' => [
-                'user' => 'Makise Kurisu',
-                'email' => 'makise@gadgetlab.jp',
+    expect($payload)
+        ->toMatchArray([
+            'view' => null,
+            'dialog' => [
+                'component' => 'users.edit',
+                'properties' => [
+                    'user' => 'Makise Kurisu',
+                    'email' => 'makise@gadgetlab.jp',
+                ],
+                'baseUrl' => 'http://localhost',
+                'redirectUrl' => 'http://localhost',
+                'key' => data_get($payload, 'dialog.key'),
             ],
-            'baseUrl' => 'http://localhost',
-            'redirectUrl' => 'http://localhost',
-            'key' => data_get($payload, 'dialog.key'),
-        ],
-        'url' => 'http://localhost/users/makise',
-        'version' => null,
-    ]);
+            'url' => 'http://localhost/users/makise',
+            'version' => null,
+        ]);
 });
 
 test('base view may not be omitted on dialog responses coming from non-hybrid requests', function () {
@@ -317,27 +329,28 @@ test('base view may not be omitted on dialog responses coming from non-hybrid re
 
     expect($factory)->toBeInstanceOf(Factory::class);
     expect($response)->not->toBeInstanceOf(JsonResponse::class);
-    expect($payload['payload'])->toMatchArray([
-        'view' => [
-            'component' => 'index',
-            'properties' => [
-                'foo' => 'bar',
+    expect($payload['payload'])
+        ->toMatchArray([
+            'view' => [
+                'component' => 'index',
+                'properties' => [
+                    'foo' => 'bar',
+                ],
+                'deferred' => [],
             ],
-            'deferred' => [],
-        ],
-        'dialog' => [
-            'component' => 'users.edit',
-            'properties' => [
-                'user' => 'Makise Kurisu',
-                'email' => 'makise@gadgetlab.jp',
+            'dialog' => [
+                'component' => 'users.edit',
+                'properties' => [
+                    'user' => 'Makise Kurisu',
+                    'email' => 'makise@gadgetlab.jp',
+                ],
+                'baseUrl' => 'http://localhost',
+                'redirectUrl' => 'http://localhost',
+                'key' => data_get($payload['payload'], 'dialog.key'),
             ],
-            'baseUrl' => 'http://localhost',
-            'redirectUrl' => 'http://localhost',
-            'key' => data_get($payload['payload'], 'dialog.key'),
-        ],
-        'url' => 'http://localhost/users/makise',
-        'version' => null,
-    ]);
+            'url' => 'http://localhost/users/makise',
+            'version' => null,
+        ]);
 });
 
 test('a redirect to the base view may be forced', function () {
@@ -358,25 +371,26 @@ test('a redirect to the base view may be forced', function () {
 
     expect($factory)->toBeInstanceOf(Factory::class);
     expect($response)->toBeInstanceOf(JsonResponse::class);
-    expect($payload)->toMatchArray([
-        'view' => [
-            'component' => 'index',
-            'properties' => [
-                'foo' => 'bar',
+    expect($payload)
+        ->toMatchArray([
+            'view' => [
+                'component' => 'index',
+                'properties' => [
+                    'foo' => 'bar',
+                ],
+                'deferred' => [],
             ],
-            'deferred' => [],
-        ],
-        'dialog' => [
-            'component' => 'users.edit',
-            'properties' => [
-                'user' => 'Makise Kurisu',
-                'email' => 'makise@gadgetlab.jp',
+            'dialog' => [
+                'component' => 'users.edit',
+                'properties' => [
+                    'user' => 'Makise Kurisu',
+                    'email' => 'makise@gadgetlab.jp',
+                ],
+                'baseUrl' => 'http://localhost',
+                'redirectUrl' => 'http://localhost',
+                'key' => data_get($payload, 'dialog.key'),
             ],
-            'baseUrl' => 'http://localhost',
-            'redirectUrl' => 'http://localhost',
-            'key' => data_get($payload, 'dialog.key'),
-        ],
-        'url' => 'http://localhost/users/makise',
-        'version' => null,
-    ]);
+            'url' => 'http://localhost/users/makise',
+            'version' => null,
+        ]);
 });

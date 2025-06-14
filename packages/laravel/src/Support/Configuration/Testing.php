@@ -6,8 +6,7 @@ final class Testing
 {
     public function __construct(
         public readonly bool $ensureViewsExist,
-    ) {
-    }
+    ) {}
 
     public static function fromArray(array $config): static
     {

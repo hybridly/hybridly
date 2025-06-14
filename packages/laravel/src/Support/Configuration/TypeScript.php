@@ -9,8 +9,7 @@ final class TypeScript
     public function __construct(
         public array $basePaths,
         public ?string $namespaceTransformer,
-    ) {
-    }
+    ) {}
 
     public static function fromArray(array $config): static
     {

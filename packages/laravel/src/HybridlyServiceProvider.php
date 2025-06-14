@@ -86,7 +86,7 @@ class HybridlyServiceProvider extends PackageServiceProvider
 
     protected function registerOctaneListener(): void
     {
-        if (!class_exists(\Laravel\Octane\Octane::class)) {
+        if (! class_exists(\Laravel\Octane\Octane::class)) {
             return;
         }
 
@@ -151,7 +151,7 @@ class HybridlyServiceProvider extends PackageServiceProvider
             $compiler->directive('vite', fn (?string $expression = null) => \sprintf(
                 '<?php echo app(%s::class)(%s); ?>',
                 Vite::class,
-                $expression ?: '"' . $this->getConfiguration()->architecture->getApplicationMainPath() . '"',
+                $expression ?: ('"' . $this->getConfiguration()->architecture->getApplicationMainPath() . '"'),
             ));
         });
     }
@@ -196,11 +196,11 @@ class HybridlyServiceProvider extends PackageServiceProvider
 
     protected function registerActionsEndpoint(): void
     {
-        if (!$this->getConfiguration()->tables->enableActions) {
+        if (! $this->getConfiguration()->tables->enableActions) {
             return;
         }
 
-        if (!($this->app instanceof CachesRoutes && $this->app->routesAreCached())) {
+        if (! ($this->app instanceof CachesRoutes && $this->app->routesAreCached())) {
             Route::post($this->getConfiguration()->tables->actionsEndpoint, InvokedActionController::class)
                 ->middleware($this->getConfiguration()->tables->actionsEndpointMiddleware)
                 ->name($this->getConfiguration()->tables->actionsEndpointName);

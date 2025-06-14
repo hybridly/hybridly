@@ -87,25 +87,26 @@ test('the `assertHybridProperties` method asserts the properties using the given
         'case9' => true,
         'case10' => false,
         'case11' => ['hey'],
-    ])->assertHybridProperties([
-        'case1', // asserts it exists
-        'case2' => 'bar', // asserts it has the given value
-        'case3' => fn ($case) => expect($case)->toBe('zyx'), // asserts using callback
-        'case4' => 3, // asserts it has the given count
-        'case5' => 5, // asserts it has the given value
-        'case6' => [
-            'hello' => 'world',
-            'say' => 'hi',
-        ],
-        'case6.hello' => 'world', // asserts it has the given value
-        'case6.say' => 'hi', // asserts it has the given value
-        'case6.say' => fn ($say) => expect($say)->toBe('hi'), // asserts using callback and dot notation
-        'case7' => fn (Assertable $assert) => $assert->hasAll(['drink', 'stay']), // asserts using callback and typehinted parameter
-        'case8' => null, // assert that value is null
-        'case9' => true, // assert that value is true
-        'case10' => false, // assert that value is false
-        'case11' => ['hey'],
-    ]);
+    ])
+        ->assertHybridProperties([
+            'case1', // asserts it exists
+            'case2' => 'bar', // asserts it has the given value
+            'case3' => fn ($case) => expect($case)->toBe('zyx'), // asserts using callback
+            'case4' => 3, // asserts it has the given count
+            'case5' => 5, // asserts it has the given value
+            'case6' => [
+                'hello' => 'world',
+                'say' => 'hi',
+            ],
+            'case6.hello' => 'world', // asserts it has the given value
+            'case6.say' => 'hi', // asserts it has the given value
+            'case6.say' => fn ($say) => expect($say)->toBe('hi'), // asserts using callback and dot notation
+            'case7' => fn (Assertable $assert) => $assert->hasAll(['drink', 'stay']), // asserts using callback and typehinted parameter
+            'case8' => null, // assert that value is null
+            'case9' => true, // assert that value is true
+            'case10' => false, // assert that value is false
+            'case11' => ['hey'],
+        ]);
 });
 
 test('the `assertHybridPayload` method asserts the payload property at the given path has the expected value', function () {

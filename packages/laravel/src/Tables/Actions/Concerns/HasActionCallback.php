@@ -4,7 +4,7 @@ namespace Hybridly\Tables\Actions\Concerns;
 
 trait HasActionCallback
 {
-    protected \Closure|null $actionCallback = null;
+    protected ?\Closure $actionCallback = null;
 
     public function action(\Closure|string|null $callback): static
     {

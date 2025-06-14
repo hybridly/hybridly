@@ -22,8 +22,7 @@ final class Architecture
         public readonly string $layoutsDirectory,
         public readonly string $componentsDirectory,
         public readonly array $excludedViewsDirectories,
-    ) {
-    }
+    ) {}
 
     public static function fromArray(array $config): static
     {

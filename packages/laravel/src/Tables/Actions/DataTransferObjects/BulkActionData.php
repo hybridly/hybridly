@@ -12,8 +12,7 @@ final class BulkActionData
         public readonly bool $all,
         public readonly array $except,
         public readonly array $only,
-    ) {
-    }
+    ) {}
 
     public static function fromRequest(Request $request): static
     {

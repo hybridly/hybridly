@@ -31,10 +31,10 @@ class BasicProductsTableWithConditionallyHiddenStuff extends Table
         return [
             BulkAction::make('say_our_names')
                 ->action(fn (Collection $records) => $records->each(fn (Product $record) => self::$names[] = $record->name))
-                ->hidden(!auth()->check()),
+                ->hidden(! auth()->check()),
             InlineAction::make('say_my_name')
                 ->action(fn (Product $record) => self::$name = $record->name)
-                ->hidden(!auth()->check()),
+                ->hidden(! auth()->check()),
         ];
     }
 

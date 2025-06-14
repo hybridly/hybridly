@@ -29,7 +29,7 @@ final class RayDumper
     private function registerListener(): void
     {
         $this->dispatcher->listen('hybridly.response', function (array $response) {
-            if (!$this->showHybridRequests) {
+            if (! $this->showHybridRequests) {
                 return;
             }
 

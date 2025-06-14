@@ -6,7 +6,7 @@ final class GlobalPropertiesNamespaceTransformer
 {
     public function __invoke(?string $namespace = null): ?string
     {
-        if (!$namespace) {
+        if (! $namespace) {
             return null;
         }
 

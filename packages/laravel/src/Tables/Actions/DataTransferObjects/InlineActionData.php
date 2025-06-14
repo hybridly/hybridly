@@ -11,8 +11,7 @@ final class InlineActionData
         public readonly int|string $recordId,
         public readonly string $action,
         public readonly string $type,
-    ) {
-    }
+    ) {}
 
     public static function fromRequest(Request $request): static
     {
