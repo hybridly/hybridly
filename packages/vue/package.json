@@ -47,21 +47,21 @@
     "vue": "^3.2.45"
   },
   "dependencies": {
-    "@clickbar/dot-diver": "^1.0.7",
+    "@clickbar/dot-diver": "catalog:",
     "@hybridly/core": "workspace:*",
     "@hybridly/utils": "workspace:*",
-    "@vue/devtools-api": "^7.7.2",
-    "defu": "^6.1.4",
-    "lodash.isequal": "^4.5.0",
-    "nprogress": "^0.2.0",
-    "qs": "^6.14.0"
+    "@vue/devtools-api": "catalog:",
+    "defu": "catalog:",
+    "lodash.isequal": "catalog:",
+    "nprogress": "catalog:",
+    "qs": "catalog:"
   },
   "devDependencies": {
-    "@types/lodash": "^4.17.15",
-    "@types/lodash.isequal": "^4.5.8",
-    "@types/nprogress": "^0.2.3",
-    "@vue/test-utils": "^2.4.6",
-    "axios": "^1.8.1",
-    "vue": "^3.5.13"
+    "@types/lodash": "catalog:",
+    "@types/lodash.isequal": "catalog:",
+    "@types/nprogress": "catalog:",
+    "@vue/test-utils": "catalog:",
+    "axios": "catalog:",
+    "vue": "catalog:"
   }
 }

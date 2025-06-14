@@ -208,7 +208,7 @@ At this point, your `package.json` should look like the following:
 				"hybridly": "0.7.3",
 				"lodash": "^4.17.19",
 				"postcss": "^8.1.14",
-				"vite": "^5.0.8",
+				"vite": "^6.3.5",
 				"vue": "^3.2.41"
 		}
 }

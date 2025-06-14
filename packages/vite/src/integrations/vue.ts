@@ -1,16 +1,14 @@
 import path from 'node:path'
 import { merge } from '@hybridly/utils'
-import vue from '@vitejs/plugin-vue'
+import vue, { type Options } from '@vitejs/plugin-vue'
 import type { ViteOptions } from '../types'
 
-type VueOptions = Parameters<typeof vue>[0]
-
-function getVueOptions(options: ViteOptions): VueOptions {
+function getVueOptions(options: ViteOptions): Options {
 	if (options.vue === false) {
-		return
+		return {}
 	}
 
-	return merge<VueOptions>(
+	return merge<Options>(
 		{
 			template: {
 				transformAssetUrls: {
@@ -32,4 +30,4 @@ function getVueOptions(options: ViteOptions): VueOptions {
 	)
 }
 
-export { VueOptions, getVueOptions, vue }
+export { Options as VueOptions, getVueOptions, vue }

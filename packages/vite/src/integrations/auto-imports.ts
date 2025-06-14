@@ -35,7 +35,7 @@ export const HybridlyImports = {
 
 function getAutoImportsOptions(options: ViteOptions, config: DynamicConfiguration): AutoImportOptions {
 	if (options.autoImports === false) {
-		return
+		return {}
 	}
 
 	const presets = ['@vueuse/core', 'vue-i18n'] as const

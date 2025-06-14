@@ -2,7 +2,7 @@
   "type": "module",
   "version": "0.7.19",
   "private": true,
-  "packageManager": "pnpm@9.15.6",
+  "packageManager": "pnpm@10.12.1",
   "scripts": {
     "release": "bumpp package.json packages/*/package.json --all --execute \"tsx build/bump-php-packages.ts\" --commit \"release: v\"",
     "build": "pnpm -r build",
@@ -16,37 +16,38 @@
     "ci": "pnpm run lint && pnpm run build && pnpm run test"
   },
   "devDependencies": {
-    "@fontsource-variable/rubik": "^5.1.1",
+    "@fontsource-variable/rubik": "catalog:",
     "@hybridly/core": "workspace:*",
     "@hybridly/utils": "workspace:*",
     "@hybridly/vite": "workspace:*",
     "@hybridly/vue": "workspace:*",
-    "@innocenzi/eslint-config": "^0.22.7",
-    "@types/debug": "^4.1.12",
-    "@types/node": "^20.17.19",
-    "@types/qs": "^6.9.18",
-    "@types/throttle-debounce": "^5.0.2",
-    "@vitest/ui": "^2.1.9",
-    "axios": "^1.8.1",
-    "bumpp": "^9.11.1",
-    "eslint": "^9.21.0",
-    "happy-dom": "^14.12.3",
+    "@innocenzi/eslint-config": "catalog:",
+    "@types/debug": "catalog:",
+    "@types/node": "catalog:",
+    "@types/qs": "catalog:",
+    "@types/throttle-debounce": "catalog:",
+    "@vitest/ui": "catalog:",
+    "axios": "catalog:",
+    "bumpp": "catalog:",
+    "eslint": "catalog:",
+    "happy-dom": "catalog:",
     "hybridly": "workspace:*",
-    "msw": "^2.7.3",
-    "tailwindcss": "^3.4.17",
-    "tsx": "^4.19.3",
-    "type-fest": "^4.35.0",
-    "typescript": "^5.7.3",
-    "unbuild": "^2.0.0",
-    "unocss": "^0.63.6",
-    "vite": "^5.4.14",
-    "vitepress": "^1.6.3",
-    "vitest": "^2.1.9",
-    "vue": "^3.5.13"
+    "msw": "catalog:",
+    "tailwindcss": "catalog:",
+    "tsx": "catalog:",
+    "type-fest": "catalog:",
+    "typescript": "catalog:",
+    "unbuild": "catalog:",
+    "unocss": "catalog:",
+    "vite": "catalog:",
+    "vitepress": "catalog:",
+    "vitest": "catalog:",
+    "vue": "catalog:"
   },
   "pnpm": {
     "overrides": {
       "@vitest/ui": "0.34.6",
+			"vite": "6.3.5",
       "vitest": "0.34.6"
     },
     "peerDependencyRules": {
@@ -56,6 +57,10 @@
         "react-dom",
         "@types/react"
       ]
-    }
+    },
+    "onlyBuiltDependencies": [
+      "esbuild",
+      "msw"
+    ]
   }
 }
