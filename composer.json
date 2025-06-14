@@ -16,6 +16,7 @@
         "spatie/php-structure-discoverer": "^2.0"
     },
     "require-dev": {
+        "carthage-software/mago": "^0.24.1",
         "friendsofphp/php-cs-fixer": "^3.65",
         "guzzlehttp/promises": "^2.0.4",
         "laravel/octane": "^2.6",
@@ -26,7 +27,6 @@
         "spatie/laravel-data": "^4.11.1",
         "spatie/laravel-ray": "^1.37.1",
         "spatie/laravel-typescript-transformer": "^2.5",
-        "spatie/x-ray": "^1.2.0",
         "symplify/monorepo-builder": "^11.2.22"
     },
     "replace": {
@@ -61,6 +61,7 @@
     "config": {
         "sort-packages": true,
         "allow-plugins": {
+            "carthage-software/mago": true,
             "pestphp/pest-plugin": true,
             "phpstan/extension-installer": true
         }
@@ -76,20 +77,16 @@
         }
     },
     "scripts": {
-        "monorepo:bump": "vendor/bin/monorepo-builder bump-interdependency",
-        "monorepo:alias": "vendor/bin/monorepo-builder package-alias",
-        "monorepo:merge": "vendor/bin/monorepo-builder merge",
-        "monorepo:validate": "vendor/bin/monorepo-builder validate",
-        "lint": "vendor/bin/php-cs-fixer fix --dry-run --config=.php-cs-fixer.php --allow-risky=yes",
-        "lint:fix": "vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.php --allow-risky=yes",
-        "analyze": "vendor/bin/phpstan analyse",
+        "monorepo:bump": "php -d\"error_reporting = E_ALL & ~E_DEPRECATED\" vendor/bin/monorepo-builder bump-interdependency",
+        "monorepo:alias": "php -d\"error_reporting = E_ALL & ~E_DEPRECATED\" vendor/bin/monorepo-builder package-alias",
+        "monorepo:merge": "php -d\"error_reporting = E_ALL & ~E_DEPRECATED\" vendor/bin/monorepo-builder merge",
+        "monorepo:validate": "php -d\"error_reporting = E_ALL & ~E_DEPRECATED\" vendor/bin/monorepo-builder validate",
         "test": "pest --test-directory=packages/laravel/tests",
-        "xray": "vendor/bin/x-ray ./packages/laravel --snippets --github --no-progress",
-        "ci": [
+        "fmt": "mago fmt",
+        "qa": [
             "@monorepo:validate",
-            "@lint",
-            "@test",
-            "@xray"
+            "@fmt",
+            "@test"
         ]
     }
 }

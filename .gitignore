@@ -4,12 +4,10 @@
 *.log
 dist
 node_modules
-.php-cs-fixer.cache
 coverage
 phpstan.neon
 testbench.yaml
 vendor
-.php_cs.cache
 .phpunit.result.cache
 cache
 .phpunit.cache
