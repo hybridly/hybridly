@@ -1,7 +1,7 @@
 {
   "name": "@hybridly/core",
   "type": "module",
-  "version": "0.8.0",
+  "version": "0.8.1",
   "description": "Core functionality of Hybridly",
   "author": "Enzo Innocenzi <enzo@innocenzi.dev>",
   "license": "MIT",
