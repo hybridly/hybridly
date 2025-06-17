@@ -75,8 +75,14 @@ export const RouterLink = defineComponent({
 				...as === 'a' ? { href: url } : {},
 				...props.disabled ? { disabled: props.disabled } : {},
 				onMouseenter: () => performPreload('hover'),
+				onAuxclick: (event: PointerEvent) => {
+					if (props.disabled) {
+						event.preventDefault()
+					}
+				},
 				onClick: (event: KeyboardEvent) => {
 					if (props.disabled) {
+						event.preventDefault()
 						return
 					}
 
