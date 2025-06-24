@@ -259,7 +259,9 @@ class LazyComponentsResolver implements ComponentsResolver
     {
         return collect($collection)
             ->flatMap('call_user_func')
+            ->unique('path')
             ->unique('identifier')
+            ->values()
             ->all();
     }
 }
