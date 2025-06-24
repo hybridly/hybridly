@@ -50,7 +50,7 @@ class LazyComponentsResolver implements ComponentsResolver
             namespace: $namespace,
             depth: $depth,
             filter: function (string $file, string $directory) use ($filter) {
-                if ($filter && ! $filter($file, $directory)) {
+                if (! is_dir("{$directory}/{$file}") && $filter && ! $filter($file, $directory)) {
                     return false;
                 }
 
