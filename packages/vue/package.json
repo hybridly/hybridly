@@ -1,7 +1,7 @@
 {
   "name": "@hybridly/vue",
   "type": "module",
-  "version": "0.8.1",
+  "version": "0.8.2",
   "description": "Vue adapter for Hybridly",
   "author": "Enzo Innocenzi <enzo@innocenzi.dev>",
   "license": "MIT",
