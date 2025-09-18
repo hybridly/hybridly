@@ -141,7 +141,7 @@ class Assertable extends AssertableJson
 
             // ['property_name' => fn () => ...] -> assert using a callback
             if (\is_string($key) && \is_callable($value)) {
-                $firstParameterTypeHint = new \ReflectionFunction($value)
+                $firstParameterTypeHint = (new \ReflectionFunction($value))
                     ->getParameters()[0]
                     ->getType()
                     ?->getName();

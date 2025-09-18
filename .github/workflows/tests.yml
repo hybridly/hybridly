@@ -21,7 +21,7 @@ jobs:
       matrix:
         node-version: ["22.x"]
         os: [ubuntu-latest]
-        php: [8.4]
+        php: [8.3, 8.4]
         laravel: ["12.*"]
         include:
           - laravel: 12.*

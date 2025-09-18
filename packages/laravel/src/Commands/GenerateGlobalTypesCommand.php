@@ -51,7 +51,7 @@ class GenerateGlobalTypesCommand extends Command
         }
 
         $config->outputFile(base_path(self::PHP_TYPES_PATH));
-        $collection = new TypeScriptTransformer($config)->transform();
+        $collection = (new TypeScriptTransformer($config))->transform();
 
         if ($this->output->isVerbose()) {
             $this->table(
@@ -122,7 +122,7 @@ class GenerateGlobalTypesCommand extends Command
             throw CouldNotFindMiddlewareException::create();
         }
 
-        $methods = new \ReflectionClass($class)->getMethods(\ReflectionMethod::IS_PUBLIC);
+        $methods = (new \ReflectionClass($class))->getMethods(\ReflectionMethod::IS_PUBLIC);
         $share = collect($methods)
             ->first(function (ReflectionMethod $method) {
                 return $method->getName() === 'share';
