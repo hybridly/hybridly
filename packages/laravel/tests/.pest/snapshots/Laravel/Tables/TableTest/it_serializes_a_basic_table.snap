@@ -48,16 +48,19 @@
             {
                 "url": null,
                 "label": "&laquo; Previous",
+                "page": null,
                 "active": false
             },
             {
                 "url": "http:\/\/localhost?page=1",
                 "label": "1",
+                "page": 1,
                 "active": true
             },
             {
                 "url": null,
                 "label": "Next &raquo;",
+                "page": null,
                 "active": false
             }
         ],
