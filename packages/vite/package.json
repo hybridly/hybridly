@@ -1,7 +1,7 @@
 {
   "name": "@hybridly/vite",
   "type": "module",
-  "version": "0.8.2",
+  "version": "0.8.3",
   "description": "Vite plugin for Hybridly",
   "author": "Enzo Innocenzi <enzo@innocenzi.dev>",
   "license": "MIT",
