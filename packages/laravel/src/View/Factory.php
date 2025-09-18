@@ -244,7 +244,7 @@ class Factory implements HybridResponse
 
         app()->instance('request', $request);
 
-        $response = new SubstituteBindings($this->router)->handle(
+        $response = (new SubstituteBindings($this->router))->handle(
             request: $request,
             next: fn () => $route->run(),
         );

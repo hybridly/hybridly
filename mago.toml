@@ -1,4 +1,4 @@
-php_version = "8.4.0"
+php_version = "8.3.0"
 
 [source]
 paths = ["packages/laravel"]

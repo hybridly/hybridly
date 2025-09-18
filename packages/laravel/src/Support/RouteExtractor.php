@@ -97,7 +97,7 @@ class RouteExtractor implements JsonSerializable, Arrayable
             }
 
             $model = Reflector::getParameterClassName($parameter);
-            $override = new ReflectionClass($model)->isInstantiable() && (new ReflectionMethod($model, 'getRouteKeyName'))->class !== Model::class;
+            $override = (new ReflectionClass($model))->isInstantiable() && (new ReflectionMethod($model, 'getRouteKeyName'))->class !== Model::class;
 
             // Avoid booting this model if it doesn't override the default route key name
             $bindings[$parameter->getName()] = $override ? app($model)->getRouteKeyName() : 'id';
@@ -114,7 +114,7 @@ class RouteExtractor implements JsonSerializable, Arrayable
     protected function isVendorRoute(Route $route): bool
     {
         if ($route->action['uses'] instanceof \Closure) {
-            $path = new \ReflectionFunction($route->action['uses'])->getFileName();
+            $path = (new \ReflectionFunction($route->action['uses']))->getFileName();
         } elseif (\is_string($route->action['uses']) && str_contains($route->action['uses'], 'SerializableClosure')) {
             return false;
         } elseif (\is_string($route->action['uses'])) {
@@ -122,7 +122,7 @@ class RouteExtractor implements JsonSerializable, Arrayable
                 return false;
             }
 
-            $path = new ReflectionClass($route->getControllerClass())->getFileName();
+            $path = (new ReflectionClass($route->getControllerClass()))->getFileName();
         } else {
             return false;
         }

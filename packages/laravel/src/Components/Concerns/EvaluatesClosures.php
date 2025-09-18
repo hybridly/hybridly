@@ -28,7 +28,7 @@ trait EvaluatesClosures
 
         $dependencies = [];
 
-        foreach (new ReflectionFunction($value)->getParameters() as $parameter) {
+        foreach ((new ReflectionFunction($value))->getParameters() as $parameter) {
             $dependencies[] = $this->resolveClosureDependencyForEvaluation($parameter, $named, $typed);
         }
 
