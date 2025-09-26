@@ -66,19 +66,10 @@ export interface RequestHooks {
 
 // #region hooks
 export interface Hooks extends RequestHooks {
-/* [!code focus:28] */	/**
-/////////////////////// * Called when Hybridly's context is initialized.
-///////////////////////
-///////////////////////
-///////////////////////
-///////////////////////
-///////////////////////
-///////////////////////
-///////////////////////
-///////////////////////
-///////////////////////
-///////////////////////
-*/
+/* [!code focus:28] */
+	/**
+  * Called when Hybridly's context is initialized.
+  */
 	initialized: (context: InternalRouterContext) => MaybePromise<any>
 
 	/**
