@@ -13,7 +13,7 @@ beforeEach(async () => {
 describe('an url can be generated from a route name', () => {
 	it('without parameter', () => {
 		expect(route('index')).toBe('https://bluebird.test')
-		expect(route('index', {}, false)).toBe('')
+		expect(route('index', {}, false)).toBe('/')
 	})
 
 	it('with required parameter', () => {

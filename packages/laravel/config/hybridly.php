@@ -43,6 +43,7 @@ return [
         'root_view' => Architecture::ROOT_VIEW,
         'extensions' => ['vue', 'tsx'],
         'excluded_views_directories' => [],
+        'generate_absolute_urls' => true,
     ],
     /*
      * |--------------------------------------------------------------------------

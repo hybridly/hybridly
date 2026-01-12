@@ -10,6 +10,7 @@ final class Router
         public array $allowedVendors,
         public array $excludedRoutes,
         public string $routesExtractor,
+        public bool $generateAbsoluteUrls,
     ) {}
 
     public static function fromArray(array $config): static
@@ -20,6 +21,7 @@ final class Router
             ],
             excludedRoutes: $config['exclude'] ?? [],
             routesExtractor: $config['routes_extractor'] ?? RouteExtractor::class,
+            generateAbsoluteUrls: $config['generate_absolute_urls'] ?? true,
         );
     }
 }

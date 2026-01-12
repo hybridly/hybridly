@@ -36,7 +36,10 @@ class PrintConfigurationCommand extends Command
                 'components' => $hybridly->getComponents(),
                 'files' => $hybridly->getTypeScriptDirectories(),
             ],
-            'routing' => $routeExtractor->toArray(),
+            'routing' => [
+                ...$routeExtractor->toArray(),
+                'absolute' => Configuration::get()->router->generateAbsoluteUrls,
+            ],
         ];
 
         // We do a lil bit of h4cking around the `pretty` option

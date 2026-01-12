@@ -96,7 +96,7 @@ export function generateRouteFromName<T extends RouteName>(name: T, parameters?:
 	const url = getUrlFromName(name, parameters, shouldThrow)
 
 	return absolute === false
-		? url.toString().replace(url.origin, '')
+		? (url.toString().replace(url.origin, '') || '/')
 		: url.toString()
 }
 
@@ -247,5 +247,5 @@ export function getRouting(): RoutingConfiguration {
  * Generates a route from the given route name.
  */
 export function route<T extends RouteName>(name: T, parameters?: RouteParameters<T>, absolute?: boolean) {
-	return generateRouteFromName(name, parameters, absolute)
+	return generateRouteFromName(name, parameters, absolute ?? getRouting().absolute ?? true)
 }

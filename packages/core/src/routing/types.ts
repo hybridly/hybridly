@@ -5,6 +5,7 @@ export interface RoutingConfiguration {
 	port?: number
 	defaults: Record<string, any>
 	routes: Record<string, RouteDefinition>
+  absolute: boolean
 }
 
 export interface RouteDefinition {
