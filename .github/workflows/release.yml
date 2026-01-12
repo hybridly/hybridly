@@ -20,10 +20,10 @@ jobs:
       - name: Install pnpm
         uses: pnpm/action-setup@v3
 
-      - name: Use Node.js v20
+      - name: Use Node.js v24
         uses: actions/setup-node@v4
         with:
-          node-version: v20
+          node-version: v24
           registry-url: https://registry.npmjs.org/
           cache: "pnpm"
 
@@ -35,8 +35,6 @@ jobs:
 
       - name: Publish to NPM
         run: pnpm -r publish --no-git-checks
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
 
       - run: npx conventional-github-releaser -p angular
         continue-on-error: true
