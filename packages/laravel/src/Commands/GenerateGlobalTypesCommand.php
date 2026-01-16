@@ -159,16 +159,25 @@ class GenerateGlobalTypesCommand extends Command
 
         if ($namespace) {
             return <<<JS
-                /* eslint-disable */
-                /* prettier-ignore */
-                interface GlobalHybridlyProperties extends {$namespace} {}
+                import 'hybridly';
+
+                declare module 'hybridly' {
+                    export interface GlobalHybridlyProperties extends {$namespace} {
+                    }
+                }
+
+                export {}
             JS;
         }
 
         return <<<JS
-            /* eslint-disable */
-            /* prettier-ignore */
-            type GlobalHybridlyProperties = never;
+            import 'hybridly';
+
+            declare module 'hybridly' {
+                export type GlobalHybridlyProperties = never
+            }
+
+            export {}
         JS;
     }
 }

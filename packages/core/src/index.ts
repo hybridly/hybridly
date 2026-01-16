@@ -18,5 +18,7 @@ export type { RouteDefinition, GlobalRouteCollection, RoutingConfiguration, Rout
 
 export type { DynamicConfiguration } from './config'
 
+export type { GlobalHybridlyProperties } from './properties'
+
 export * as constants from './constants'
 export * from './types'

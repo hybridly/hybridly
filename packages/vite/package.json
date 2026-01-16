@@ -28,25 +28,23 @@
   "sideEffects": false,
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.cjs"
+      "types": "./dist/index.d.mts",
+      "import": "./dist/index.mjs"
     }
   },
-  "main": "dist/index.cjs",
   "module": "dist/index.mjs",
-  "types": "dist/index.d.ts",
+  "types": "dist/index.d.mts",
   "files": [
     "*.d.ts",
     "dist"
   ],
   "scripts": {
-    "build": "unbuild",
-    "stub": "unbuild --stub"
+    "build": "obuild",
+    "build:stub": "obuild --stub"
   },
   "peerDependencies": {
-    "vite": "^6.3.5",
-    "vue": "^3.2.45"
+    "vite": "^7.0.0",
+    "vue": "^3.5.0"
   },
   "dependencies": {
     "@hybridly/core": "workspace:*",

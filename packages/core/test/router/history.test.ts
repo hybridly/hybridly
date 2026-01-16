@@ -8,7 +8,7 @@ beforeEach(async () => {
 
 describe('setHistoryState', () => {
 	beforeAll(() => {
-		window.location.href = 'https://localhost'
+		window.location.href = 'https://bluebird.test'
 	})
 
 	afterAll(() => {

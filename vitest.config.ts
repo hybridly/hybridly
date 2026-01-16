@@ -22,6 +22,15 @@ export default defineConfig({
 		restoreMocks: true,
 		unstubGlobals: true,
 		environment: 'happy-dom',
-		threads: false,
+		environmentOptions: {
+			happyDOM: {
+				url: 'https://bluebird.test',
+				settings: {
+					navigator: {
+						userAgent: 'Mozilla/5.0 (X11; Linux x64) AppleWebKit/537.36 (KHTML, like Gecko) HappyDOM/0.0.0',
+					},
+				},
+			},
+		},
 	},
 })

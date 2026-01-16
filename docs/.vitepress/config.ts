@@ -2,13 +2,14 @@ import { resolve } from 'node:path'
 import { existsSync, readFileSync } from 'node:fs'
 import { execSync } from 'node:child_process'
 import { defineConfig } from 'vitepress'
-import Unocss from 'unocss/vite'
+import tailwindcss from '@tailwindcss/vite'
 
 const title = 'Hybridly'
 const description = 'Modern solution to develop server-driven, client-rendered applications.'
 const url = 'https://hybridly.dev'
 const image = `${url}/og.jpg`
 const twitter = 'enzoinnocenzi'
+const bluesky = 'innocenzi.dev'
 const discord = 'https://discord.gg/uZ8eC7kRFV'
 const github = 'https://github.com/hybridly/hybridly'
 
@@ -39,7 +40,7 @@ export default defineConfig({
 		['meta', { name: 'theme-color', content: '#646cff' }],
 	],
 
-	appearance: 'dark',
+	appearance: 'force-dark',
 
 	themeConfig: {
 		logo: '/logo.svg',
@@ -78,6 +79,7 @@ export default defineConfig({
 		},
 
 		socialLinks: [
+			{ icon: 'bluesky', link: `https://bsky.app/profile/${bluesky}` },
 			{ icon: 'twitter', link: `https://twitter.com/${twitter}` },
 			{ icon: 'github', link: `${github}` },
 			{ icon: 'discord', link: discord },
@@ -222,10 +224,6 @@ export default defineConfig({
 				},
 			],
 		},
-
-		footer: {
-			message: 'Made with <span class="i-mdi:cards-heart mx-1 inline-block text-pink-300"></span> by <a class="ml-1 underline" href="https://twitter.com/enzoinnocenzi">Enzo Innocenzi</a>',
-		},
 	},
 
 	markdown: {
@@ -237,7 +235,7 @@ export default defineConfig({
 
 	vite: {
 		plugins: [
-			Unocss(),
+			tailwindcss(),
 		],
 	},
 })

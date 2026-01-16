@@ -33,8 +33,8 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Install pnpm
-        uses: pnpm/action-setup@v3
+      - name: Install Bun
+        uses: oven-sh/setup-bun@v2
 
       - name: Setup PHP ${{ matrix.php }}
         uses: shivammathur/setup-php@v2
@@ -42,13 +42,6 @@ jobs:
           php-version: ${{ matrix.php }}
           extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, bcmath, soap, intl, gd, exif, iconv, imagick, fileinfo
           coverage: none
-
-      - name: Setup Node ${{ matrix.node-version }}
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ matrix.node-version }}
-          registry-url: https://registry.npmjs.org/
-          cache: "pnpm"
 
       - name: Setup problem matchers
         run: |
@@ -60,10 +53,10 @@ jobs:
           composer install --no-interaction
           composer require "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" --no-interaction --no-progress --with-all-dependencies
 
-      - name: Install Node dependencies
-        run: pnpm install
+      - name: Install Bun dependencies
+        run: bun install
 
       - name: CI scripts
         run: |
-          pnpm run ci
+          bun run ci
           composer qa

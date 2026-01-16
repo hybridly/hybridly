@@ -1,1 +1,1 @@
-export { DynamicConfiguration } from './types'
+export type { DynamicConfiguration } from './types'

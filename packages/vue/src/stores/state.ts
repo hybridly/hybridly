@@ -1,4 +1,4 @@
-import type { RouterContext } from '@hybridly/core'
+import type { GlobalHybridlyProperties, RouterContext } from '@hybridly/core'
 import { debug } from '@hybridly/utils'
 import type { ComponentOptions, Ref } from 'vue'
 import { ref, shallowRef, triggerRef, unref } from 'vue'

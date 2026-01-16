@@ -94,7 +94,7 @@ export default function laravel(options: ViteOptions, hybridlyConfig: DynamicCon
 			const appUrl = loadEnv(resolvedConfig.mode, envDir, 'APP_URL').APP_URL ?? 'undefined'
 			const isTestOrCi = ['test', 'ci'].includes(resolvedConfig.mode)
 
-			if (!isTestOrCi) {
+			if (false) {
 				server.httpServer?.once('listening', async () => {
 					const address = server.httpServer?.address()
 					const isAddressInfo = (x: string | AddressInfo | null | undefined): x is AddressInfo => typeof x === 'object'
