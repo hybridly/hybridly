@@ -1,17 +1,9 @@
-import { defineBuildConfig } from 'unbuild'
+import { defineBuildConfig } from 'obuild/config'
 
 export default defineBuildConfig({
-	entries: [
-		'src/index',
-		'src/vite',
-		'src/vue',
-	],
-	clean: true,
-	declaration: true,
-	rollup: {
-		emitCJS: true,
-		output: {
-			exports: 'named',
-		},
-	},
+  entries: [
+    'src/index',
+    'src/vite',
+    'src/vue',
+  ],
 })

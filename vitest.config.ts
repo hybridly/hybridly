@@ -22,6 +22,5 @@ export default defineConfig({
 		restoreMocks: true,
 		unstubGlobals: true,
 		environment: 'happy-dom',
-		threads: false,
 	},
 })

@@ -25,25 +25,21 @@
   "sideEffects": false,
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.cjs"
+      "types": "./dist/index.d.mts",
+      "import": "./dist/index.mjs"
     },
     "./vite": {
-      "types": "./dist/vite.d.ts",
-      "import": "./dist/vite.mjs",
-      "require": "./dist/vite.cjs"
+      "types": "./dist/vite.d.mts",
+      "import": "./dist/vite.mjs"
     },
     "./vue": {
-      "types": "./dist/vue.d.ts",
-      "import": "./dist/vue.mjs",
-      "require": "./dist/vue.cjs"
+      "types": "./dist/vue.d.mts",
+      "import": "./dist/vue.mjs"
     },
     "./client": {
       "types": "./client.d.ts"
     }
   },
-  "main": "dist/index.cjs",
   "module": "dist/index.mjs",
   "types": "index.d.ts",
   "files": [
@@ -51,8 +47,8 @@
     "dist"
   ],
   "scripts": {
-    "build": "unbuild",
-    "stub": "unbuild --stub"
+    "build": "obuild",
+    "build:stub": "obuild --stub"
   },
   "dependencies": {
     "@hybridly/core": "workspace:*",
