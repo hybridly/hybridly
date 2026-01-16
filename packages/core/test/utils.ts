@@ -14,7 +14,7 @@ export const returnsArgs = (...args: any) => args
 
 export function fakePayload(payload: PartialDeep<HybridPayload> = {}): HybridPayload {
 	return defu(payload as HybridPayload, {
-		url: 'https://localhost',
+		url: 'https://bluebird.test',
 		version: 'abc123',
 		view: {
 			component: 'default.view',

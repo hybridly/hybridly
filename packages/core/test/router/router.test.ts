@@ -10,9 +10,9 @@ beforeEach(async () => {
 
 test('performs hybrid navigations', async ({ expect }) => {
 	server.resetHandlers(
-		mockSuccessfulUrl('http://localhost.test/navigation', 'get', {
+		mockSuccessfulUrl('https://bluebird.test/navigation', 'get', {
 			json: fakePayload({
-				url: 'https://localhost.test/navigation',
+				url: 'https://bluebird.test/navigation',
 				view: {
 					component: 'target.view',
 					properties: {
@@ -24,7 +24,7 @@ test('performs hybrid navigations', async ({ expect }) => {
 	)
 
 	const { response } = await performHybridNavigation({
-		url: 'http://localhost.test/navigation',
+		url: 'https://bluebird.test/navigation',
 	})
 
 	expect(response?.data).toMatchSnapshot('navigation response')
