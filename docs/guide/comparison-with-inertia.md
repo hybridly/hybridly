@@ -63,8 +63,10 @@ The following is a non-exhaustive comparison table between Inertia and Hybridly'
 </div>
 
 <style>
+@reference "../.vitepress/theme/tailwind.css";
+
 table a {
-  @apply underline decoration-dashed decoration-offset-4;
+  @apply underline decoration-dashed underline-offset-4;
 }
 
 .no {
