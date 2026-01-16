@@ -4,9 +4,16 @@ import { getByPath, setByPath } from '@clickbar/dot-diver'
 import type { Path, PathValue, SearchableObject } from '@clickbar/dot-diver'
 import { state } from '../stores/state'
 import { toReactive } from '../utils'
+import { GlobalHybridlyProperties } from '@hybridly/core'
+
+type Property = string | number | boolean | Property[] | { [name: string]: Property }
+
+export type InternalProperties = GlobalHybridlyProperties & {
+    [key: string]: Property;
+};
 
 /** Accesses all current properties. */
-export function useProperties<T extends object, Global extends GlobalHybridlyProperties = GlobalHybridlyProperties>() {
+export function useProperties<T extends object, Global extends InternalProperties = InternalProperties>() {
 	return readonly(toReactive(computed(() => state.properties.value as T & Global)))
 }
 
@@ -21,7 +28,7 @@ export function useProperty<
 		? P
 		: string,
 ): ComputedRef<ReturnType> {
-	return computed(() => getByPath(state.properties.value as GlobalHybridlyProperties, path) as ReturnType)
+	return computed(() => getByPath(state.properties.value as InternalProperties, path) as ReturnType)
 }
 
 /**
@@ -41,9 +48,9 @@ export function setProperty<
 		return
 	}
 
-	setByPath(state.properties.value, path, toValue(value as any))
+	setByPath(state.properties.value as InternalProperties, path, toValue(value as any))
 
 	if (state.context.value?.view.properties) {
-		setByPath(state.context.value.view.properties as GlobalHybridlyProperties, path, toValue(value as any))
+		setByPath(state.context.value.view.properties as InternalProperties, path, toValue(value as any))
 	}
 }
