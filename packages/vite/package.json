@@ -43,8 +43,8 @@
     "build:stub": "obuild --stub"
   },
   "peerDependencies": {
-    "vite": "^6.3.5",
-    "vue": "^3.2.45"
+    "vite": "^7.0.0",
+    "vue": "^3.5.0"
   },
   "dependencies": {
     "@hybridly/core": "workspace:*",

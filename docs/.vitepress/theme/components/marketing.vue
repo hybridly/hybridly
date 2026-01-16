@@ -72,26 +72,26 @@ const features: Feature[] = [
 
 <template>
 	<client-only>
-		<section class="relative mx-auto mt-20 flex size-full max-w-5xl flex-col md:px-10 lg:mt-40 xl:px-0">
+		<section class="relative flex flex-col mx-auto mt-20 lg:mt-40 md:px-10 xl:px-0 max-w-5xl size-full">
 			<!-- Hero -->
-			<div class="flex w-full flex-col items-center justify-between gap-x-40 px-6 lg:flex-row lg:items-start lg:px-0">
+			<div class="flex lg:flex-row flex-col justify-between items-center lg:items-start gap-x-40 px-6 lg:px-0 w-full">
 				<!-- Left block -->
-				<section class="group max-w-2xl grow [&>*]:transition [&>*]:duration-500 [&>*]:ease-in-out">
+				<section class="group max-w-2xl *:transition *:duration-500 *:ease-in-out grow">
 					<!-- Title -->
-					<h1 class="title font-title title-bg bg-clip-text text-center text-5xl font-medium uppercase text-transparent lg:text-left lg:text-8xl lg:group-hover:-translate-x-12">
+					<h1 class="bg-clip-text font-title font-medium text-transparent text-5xl lg:text-8xl lg:text-left text-center uppercase lg:group-hover:-translate-x-12 title title-bg">
 						Hybridly
 					</h1>
 					<!-- Subtitle -->
-					<p class="mt-2 text-center text-2xl font-medium lg:text-left lg:text-3xl lg:group-hover:-translate-x-8">
+					<p class="mt-2 font-medium text-2xl lg:text-3xl lg:text-left text-center lg:group-hover:-translate-x-8">
 						Server-driven, client-rendered applications.
 					</p>
 					<!-- Description -->
-					<p class="mt-4 text-center text-lg font-medium opacity-60 lg:text-left lg:text-2xl lg:group-hover:-translate-x-4">
+					<p class="opacity-60 mt-4 font-medium text-lg lg:text-2xl lg:text-left text-center lg:group-hover:-translate-x-4">
 						Build single-page applications the classic way. No API, no route duplication, no front-end state. Fully server-driven.
 					</p>
 					<!-- Actions -->
-					<div class="mt-10 flex flex-wrap justify-center gap-4 lg:justify-start">
-						<a class="px-4.5 group flex items-center rounded-full bg-[#FFEAEF] py-2.5 font-semibold text-[#DB7DA8] transition hover:bg-[#FFDBE3] hover:text-[#D6689B] dark:bg-[--vp-c-brand-light] dark:text-[--vp-c-bg] dark:hover:bg-[--vp-c-brand-lighter] dark:hover:text-[--vp-c-bg]" href="/guide/">
+					<div class="flex flex-wrap justify-center lg:justify-start gap-4 mt-10">
+						<a class="group flex items-center bg-[#FFEAEF] hover:bg-[#FFDBE3] dark:bg-(--vp-c-brand-light) dark:hover:bg-(--vp-c-brand-lighter) px-4.5 py-2.5 rounded-full font-semibold text-[#DB7DA8] hover:text-[#D6689B] dark:hover:text-(--vp-c-bg) dark:text-(--vp-c-bg) transition" href="/guide/">
 							Get started
 							<svg
 								class="ml-2 transition group-hover:translate-x-1"
@@ -106,34 +106,33 @@ const features: Feature[] = [
 								/>
 							</svg>
 						</a>
-						<!-- <a class="px-4.5 group flex items-center rounded-full border border-[--vp-button-alt-border] bg-[--vp-c-bg-soft] py-2 font-medium text-[--vp-c-text-1] transition hover:bg-[--vp-c-bg-mute]" href="/guide/demonstration">Demonstration</a> -->
-						<a class="px-4.5 group flex items-center rounded-full border border-[--vp-button-alt-border] bg-[--vp-c-bg-soft] py-2 font-medium text-[--vp-c-text-1] transition hover:bg-[--vp-c-bg-mute]" href="https://github.com/hybridly/hybridly">See on GitHub</a>
+						<a class="group flex items-center bg-(--vp-c-bg-soft) hover:bg-(--vp-c-bg-mute) px-4.5 py-2 rounded-full font-medium text-(--vp-c-text-1) transition" href="https://github.com/hybridly/hybridly">See on GitHub</a>
 					</div>
 				</section>
 
 				<!-- Logo block -->
-				<div class="lg:h-55 lg:w-55 h-30 w-30 group relative order-first mb-20 flex shrink-0 items-center justify-center transition duration-300 hover:scale-105 lg:order-last lg:mr-20 lg:mt-20">
-					<img class="group-hover:scale-85 absolute z-[1] size-full transition duration-300" src="/logo.svg" />
-					<div class="image-bg absolute -inset-5 rotate-45 opacity-40 dark:opacity-70" />
+				<div class="group relative flex justify-center items-center order-first lg:order-last lg:mt-20 lg:mr-20 mb-20 w-30 lg:w-55 h-30 lg:h-55 hover:scale-105 transition duration-300 shrink-0">
+					<img class="z-1 absolute size-full group-hover:scale-85 transition duration-300" src="/logo.svg" />
+					<div class="absolute -inset-5 opacity-40 dark:opacity-70 rotate-45 image-bg" />
 				</div>
 			</div>
 
 			<!-- Features -->
-			<section class="mt-24 grid grid-cols-1 gap-8 px-8 sm:grid-cols-2 lg:grid-cols-3 lg:px-0">
+			<section class="gap-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 mt-24 px-8 lg:px-0">
 				<template v-for="feature in features" :key="feature.title">
 					<component
 						:is="feature.url ? 'a' : 'div'"
-						class="group relative flex flex-col justify-center gap-4 rounded-lg bg-[--vp-c-bg-soft] p-6 ring-2 ring-transparent hover:ring-[--vp-c-brand]"
+						class="group relative flex flex-col justify-center gap-4 bg-(--vp-c-bg-soft) p-6 rounded-lg ring-2 ring-transparent hover:ring-(--vp-c-brand)"
 						:class="{ 'cursor-pointer ': feature.url }"
 						:href="feature.url"
 					>
-						<div class="h-18 w-18 absolute right-2 top-2 flex shrink-0 items-center justify-center rounded p-2">
-							<div :class="feature.icon" class="size-full text-[--vp-c-text-2] opacity-0 transition duration-300 group-hover:opacity-5 dark:group-hover:opacity-5" />
+						<div class="top-2 right-2 absolute flex justify-center items-center p-2 rounded w-18 h-18 shrink-0">
+							<div :class="feature.icon" class="opacity-0 dark:group-hover:opacity-5 group-hover:opacity-5 size-full text-(--vp-c-text-2) transition duration-300" />
 						</div>
 						<div>
-							<span class="inline-block font-semibold transition duration-300 group-hover:text-[--vp-c-text-2]" v-text="feature.title" />
+							<span class="inline-block font-semibold group-hover:text-(--vp-c-text-2) transition duration-300" v-text="feature.title" />
 							<!-- eslint-disable-next-line vue/no-v-html -->
-							<p class="mt-2 text-sm font-medium leading-relaxed text-[--vp-c-text-2] transition duration-300 group-hover:translate-x-1 group-hover:text-[--vp-c-text-1]" v-html="feature.description" />
+							<p class="mt-2 font-medium text-(--vp-c-text-2) group-hover:text-(--vp-c-text-1) text-sm leading-relaxed transition group-hover:translate-x-1 duration-300" v-html="feature.description" />
 						</div>
 					</component>
 				</template>

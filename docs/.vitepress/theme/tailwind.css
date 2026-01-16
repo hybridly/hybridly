@@ -1,0 +1,5 @@
+@import 'tailwindcss';
+
+@theme {
+  --font-title: 'Rubik Variable', system-ui;
+}
