@@ -6,6 +6,7 @@ use Hybridly\Refining\Contracts\Refiner;
 use Hybridly\Refining\Refine;
 use Hybridly\Support\Configuration\Configuration;
 use Hybridly\Tables\Columns\BaseColumn;
+use Hybridly\Tables\Table;
 use Illuminate\Contracts\Pagination\CursorPaginator;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Contracts\Pagination\Paginator;
@@ -16,6 +17,10 @@ use Illuminate\Support\Collection;
 use Spatie\LaravelData\Contracts\BaseDataCollectable;
 use Spatie\LaravelData\Data;
 
+/**
+ * @mixin Table
+ * @mixin HasColumns
+ */
 trait RefinesAndPaginatesRecords
 {
     private ?Refine $refine = null;
@@ -158,7 +163,7 @@ trait RefinesAndPaginatesRecords
         return $this->getRefineInstance()->refinements();
     }
 
-    protected function getRecordFromModel(Model $model): array|Data
+    protected function getRecordArrayFromModel(Model $model): array
     {
         if (isset($this->data) && is_a($this->data, Data::class, allow_string: true)) {
             $record = $this->resolveDataRecord($model);
@@ -212,7 +217,7 @@ trait RefinesAndPaginatesRecords
         $forceIncludeOriginalRecordId = Configuration::get()->tables->enableActions && ! $hasKeyAsColumn;
 
         return $paginatedRecords->through(function (Model $model, int $fakeId) use ($forceIncludeOriginalRecordId, $hasKeyAsColumn, $modelClass, $columns, $columnsToInclude) {
-            $record = $this->getRecordFromModel($model);
+            $record = $this->getRecordArrayFromModel($model);
 
             // If actions are enabled but the record's key is not included in the
             // columns or is transformed, ensure we still return it because
