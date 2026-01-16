@@ -1,6 +1,6 @@
 [build]
   publish = "docs/.vitepress/dist"
-  command = "pnpm run docs:build"
+  command = "bun run docs:build"
   ignore = "./build/docs-check.sh"
 
 [[redirects]]
