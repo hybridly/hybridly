@@ -92,48 +92,51 @@ export default function laravel(options: ViteOptions, hybridlyConfig: DynamicCon
 		configureServer(server) {
 			const envDir = resolvedConfig.envDir || process.cwd()
 			const appUrl = loadEnv(resolvedConfig.mode, envDir, 'APP_URL').APP_URL ?? 'undefined'
+			const isTestOrCi = ['test', 'ci'].includes(resolvedConfig.mode)
 
-			server.httpServer?.once('listening', async () => {
-				const address = server.httpServer?.address()
-				const isAddressInfo = (x: string | AddressInfo | null | undefined): x is AddressInfo => typeof x === 'object'
+			if (!isTestOrCi) {
+				server.httpServer?.once('listening', async () => {
+					const address = server.httpServer?.address()
+					const isAddressInfo = (x: string | AddressInfo | null | undefined): x is AddressInfo => typeof x === 'object'
 
-				if (isAddressInfo(address)) {
-					viteDevServerUrl = resolveDevServerUrl(address, server.config, userConfig)
-					fs.writeFileSync(hotFile, `${viteDevServerUrl}${server.config.base.replace(/\/$/, '')}`)
+					if (isAddressInfo(address)) {
+						viteDevServerUrl = resolveDevServerUrl(address, server.config, userConfig)
+						fs.writeFileSync(hotFile, `${viteDevServerUrl}${server.config.base.replace(/\/$/, '')}`)
 
-					if (!hybridlyConfig.versions) {
-						return
+						if (!hybridlyConfig.versions) {
+							return
+						}
+
+						let registered = `${colors.bold(hybridlyConfig.components.views.length)} ${colors.dim('views')}, `
+						registered += `${colors.bold(hybridlyConfig.components.components.length)} ${colors.dim('components')}, `
+						registered += `${colors.bold(hybridlyConfig.components.layouts.length)} ${colors.dim('layouts')}, `
+						registered += `${colors.bold(hybridlyConfig.components.files.length)} ${colors.dim('files')}`
+
+						const latest = hybridlyConfig.versions.is_latest ? '' : colors.dim(`(${colors.yellow(`${hybridlyConfig.versions.latest} is available`)})`)
+
+						let version = `${colors.yellow(`v${hybridlyConfig.versions.composer}`)} ${colors.dim('(composer)')}, `
+						version += `${colors.yellow(`v${hybridlyConfig.versions.npm}`)} ${colors.dim('(npm)')}`
+						version += ` — ${colors.yellow('this may lead to undefined behavior')}`
+
+						const devEnvironment = await determineDevEnvironment()
+
+						setTimeout(() => {
+							server.config.logger.info(`\n  ${colors.magenta(`${colors.bold('HYBRIDLY')} v${hybridlyConfig.versions.composer}`)}  ${latest}`)
+							server.config.logger.info('')
+							server.config.logger.info(`  ${colors.green('➜')}  ${colors.bold('URL')}: ${colors.cyan(hybridlyConfig.routing.url)}`)
+							server.config.logger.info(`  ${colors.green('➜')}  ${colors.bold('Registered')}: ${registered}`)
+
+							if (devEnvironment !== 'native') {
+								server.config.logger.info(`  ${colors.green('➜')}  ${colors.bold('Development environment')}: ${colors.cyan(devEnvironment)}`)
+							}
+
+							if (hybridlyConfig.versions.composer !== hybridlyConfig.versions.npm) {
+								server.config.logger.info(`  ${colors.yellow('➜')}  ${colors.bold('Version mismatch')}: ${version}`)
+							}
+						}, 100)
 					}
-
-					let registered = `${colors.bold(hybridlyConfig.components.views.length)} ${colors.dim('views')}, `
-					registered += `${colors.bold(hybridlyConfig.components.components.length)} ${colors.dim('components')}, `
-					registered += `${colors.bold(hybridlyConfig.components.layouts.length)} ${colors.dim('layouts')}, `
-					registered += `${colors.bold(hybridlyConfig.components.files.length)} ${colors.dim('files')}`
-
-					const latest = hybridlyConfig.versions.is_latest ? '' : colors.dim(`(${colors.yellow(`${hybridlyConfig.versions.latest} is available`)})`)
-
-					let version = `${colors.yellow(`v${hybridlyConfig.versions.composer}`)} ${colors.dim('(composer)')}, `
-					version += `${colors.yellow(`v${hybridlyConfig.versions.npm}`)} ${colors.dim('(npm)')}`
-					version += ` — ${colors.yellow('this may lead to undefined behavior')}`
-
-					const devEnvironment = await determineDevEnvironment()
-
-					setTimeout(() => {
-						server.config.logger.info(`\n  ${colors.magenta(`${colors.bold('HYBRIDLY')} v${hybridlyConfig.versions.composer}`)}  ${latest}`)
-						server.config.logger.info('')
-						server.config.logger.info(`  ${colors.green('➜')}  ${colors.bold('URL')}: ${colors.cyan(hybridlyConfig.routing.url)}`)
-						server.config.logger.info(`  ${colors.green('➜')}  ${colors.bold('Registered')}: ${registered}`)
-
-						if (devEnvironment !== 'native') {
-							server.config.logger.info(`  ${colors.green('➜')}  ${colors.bold('Development environment')}: ${colors.cyan(devEnvironment)}`)
-						}
-
-						if (hybridlyConfig.versions.composer !== hybridlyConfig.versions.npm) {
-							server.config.logger.info(`  ${colors.yellow('➜')}  ${colors.bold('Version mismatch')}: ${version}`)
-						}
-					}, 100)
-				}
-			})
+				})
+			}
 
 			if (!exitHandlersBound) {
 				function clean() {
@@ -166,7 +169,7 @@ export default function laravel(options: ViteOptions, hybridlyConfig: DynamicCon
  * Validates the command can run in the given environment.
  */
 function ensureCommandShouldRunInEnvironment(command: 'build' | 'serve', env: Record<string, string>): void {
-	if (command === 'build' || env.LARAVEL_BYPASS_ENV_CHECK === '1') {
+	if (command === 'build' || env.LARAVEL_BYPASS_ENV_CHECK === '1' || !!env.TEST || !!env.VITEST) {
 		return
 	}
 
