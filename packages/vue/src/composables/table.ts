@@ -65,7 +65,7 @@ export interface InlineAction extends Action {
 
 export type RecordIdentifier = string | number
 
-type AsRecordType<T extends Record<string, any>> = {
+type AsRecordTypeWithExtra<T extends Record<string, any>> = {
 	[K in keyof T]: {
 		extra: Record<string, any>
 		value: T[K]
@@ -88,9 +88,10 @@ export interface TableDefaultOptions extends AvailableHybridRequestOptions {
  * Provides utilities for working with tables.
  */
 export function useTable<
-	RecordType extends(Props[PropsKey] extends Table<infer T, any> ? AsRecordType<T> : never),
+  RecordType extends(Props[PropsKey] extends Table<infer T, any> ? T : never),
+	RecordTypeWithExtra extends AsRecordTypeWithExtra<RecordType>,
 	PaginatorKindName extends (Props[PropsKey] extends Table<any, infer PaginatorKind> ? PaginatorKind : never),
-	TableType extends (Props[PropsKey] extends Table<any, PaginatorKindName> ? Table<RecordType, PaginatorKindName> : never),
+	TableType extends (Props[PropsKey] extends Table<any, PaginatorKindName> ? Table<RecordTypeWithExtra, PaginatorKindName> : never),
 	Props extends Record<string, unknown>,
 	PropsKey extends keyof Props,
 >(props: Props, key: PropsKey, defaultOptions: TableDefaultOptions = {}) {
@@ -118,7 +119,7 @@ export function useTable<
 	/**
 	 * Gets the actual identifier for a record.
 	 */
-	function getRecordKey(record: RecordType | RecordIdentifier): RecordIdentifier {
+	function getRecordKey(record: RecordTypeWithExtra | RecordIdentifier): RecordIdentifier {
 		if (typeof record !== 'object') {
 			return record
 		}
@@ -137,7 +138,7 @@ export function useTable<
 	/**
 	 * Executes the given inline action by name.
 	 */
-	async function executeInlineAction(action: Action | string, record: RecordType | RecordIdentifier) {
+	async function executeInlineAction(action: Action | string, record: RecordTypeWithExtra | RecordIdentifier) {
 		return await router.navigate({
 			method: 'post',
 			url: route(table.value.endpoint),
@@ -195,13 +196,13 @@ export function useTable<
 		/** Deselects all records. */
 		deselectAll: bulk.deselectAll,
 		/** Selects records on the current page. */
-		selectPage: () => bulk.select(...table.value.records.map((record: RecordType) => getRecordKey(record))),
+		selectPage: () => bulk.select(...table.value.records.map((record: RecordTypeWithExtra) => getRecordKey(record))),
 		/** Deselects records on the current page. */
-		deselectPage: () => bulk.deselect(...table.value.records.map((record: RecordType) => getRecordKey(record))),
+		deselectPage: () => bulk.deselect(...table.value.records.map((record: RecordTypeWithExtra) => getRecordKey(record))),
 		/** Whether all records on the current page are selected. */
-		isPageSelected: computed(() => table.value.records.length > 0 && table.value.records.every((record: RecordType) => bulk.selected(getRecordKey(record)))),
+		isPageSelected: computed(() => table.value.records.length > 0 && table.value.records.every((record: RecordTypeWithExtra) => bulk.selected(getRecordKey(record)))),
 		/** Checks if the given record is selected. */
-		isSelected: (record: RecordType) => bulk.selected(getRecordKey(record)),
+		isSelected: (record: RecordTypeWithExtra) => bulk.selected(getRecordKey(record)),
 		/** Whether all records are selected. */
 		allSelected: bulk.allSelected,
 		/** The current record selection. */
@@ -209,16 +210,16 @@ export function useTable<
 		/** Binds a checkbox to its selection state. */
 		bindCheckbox: (key: RecordIdentifier) => bulk.bindCheckbox(key),
 		/** Toggles selection for the given record. */
-		toggle: (record: RecordType) => bulk.toggle(getRecordKey(record)),
+		toggle: (record: RecordTypeWithExtra) => bulk.toggle(getRecordKey(record)),
 		/** Selects selection for the given record. */
-		select: (record: RecordType) => bulk.select(getRecordKey(record)),
+		select: (record: RecordTypeWithExtra) => bulk.select(getRecordKey(record)),
 		/** Deselects selection for the given record. */
-		deselect: (record: RecordType) => bulk.deselect(getRecordKey(record)),
+		deselect: (record: RecordTypeWithExtra) => bulk.deselect(getRecordKey(record)),
 
 		/** List of inline actions for this table. */
 		inlineActions: computed(() => table.value.inlineActions.map((action) => ({
 			/** Executes the action. */
-			execute: (record: RecordType | RecordIdentifier) => executeInlineAction(action.name, record),
+			execute: (record: RecordTypeWithExtra | RecordIdentifier) => executeInlineAction(action.name, record),
 			...action,
 		}))),
 		/** List of bulk actions for this table. */
@@ -251,7 +252,7 @@ export function useTable<
 		data: computed(() =>
 			table.value.records.map((record) => {
 				return Object.fromEntries(Object.entries(record).map(([key, value]) => [key, value.value]))
-			})
+			}) as RecordType[]
 		),
 		/** List of records for this table. */
 		records: computed(() => table.value.records.map((record) => ({
@@ -276,9 +277,9 @@ export function useTable<
 			/** Checks whether this record is selected. */
 			selected: bulk.selected(getRecordKey(record)),
 			/** Gets the value of the record for the specified column. */
-			value: (column: string | Column<RecordType>) => record[typeof column === 'string' ? column : column.name].value,
+			value: (column: string | Column<RecordTypeWithExtra>) => record[typeof column === 'string' ? column : column.name].value,
 			/** Gets the extra object of the record for the specified column. */
-			extra: (column: string | Column<RecordType>, path: string) => getByPath(record[typeof column === 'string' ? column : column.name].extra, path),
+			extra: (column: string | Column<RecordTypeWithExtra>, path: string) => getByPath(record[typeof column === 'string' ? column : column.name].extra, path),
 		}))),
 		/**
 		 * Paginated meta and links.
