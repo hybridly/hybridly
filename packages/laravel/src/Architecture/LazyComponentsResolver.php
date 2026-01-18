@@ -6,19 +6,13 @@ use Hybridly\Support\Configuration\Configuration;
 
 class LazyComponentsResolver implements ComponentsResolver
 {
-    protected const DEFAULT_DEPTH = 20;
+    protected const DEFAULT_DEPTH = 5;
 
     /** @var array<{path: string, identifier: string, namespace: string}> */
     protected array $views = [];
 
     /** @var array<{path: string, identifier: string, namespace: string}> */
     protected array $layouts = [];
-
-    /** @var array<{path: string, identifier: string, namespace: string}> */
-    protected array $components = [];
-
-    /** @var string[] */
-    protected array $loadedTypeScriptDirectories = [];
 
     /** @var string[] */
     protected array $extensions = [];
@@ -44,6 +38,8 @@ class LazyComponentsResolver implements ComponentsResolver
 
     public function loadViewsFrom(string $directory, null|string|array $namespace = null, ?int $depth = null, ?\Closure $filter = null): static
     {
+        $filter ??= fn (string $file) => array_any($this->extensions, fn (string $extension) => str_ends_with($file, ".view{$extension}"));
+
         $this->views[] = fn () => $this->findVueFiles(
             directory: $directory,
             baseDirectory: $directory,
@@ -54,14 +50,7 @@ class LazyComponentsResolver implements ComponentsResolver
                     return false;
                 }
 
-                return ! \in_array(
-                    $file,
-                    array_merge($this->configuration->architecture->excludedViewsDirectories, [
-                        $this->configuration->architecture->layoutsDirectory,
-                        $this->configuration->architecture->componentsDirectory,
-                    ]),
-                    strict: true,
-                );
+                return true;
             },
         );
 
@@ -70,33 +59,20 @@ class LazyComponentsResolver implements ComponentsResolver
 
     public function loadLayoutsFrom(string $directory, null|string|array $namespace = null, ?\Closure $filter = null): static
     {
+        $filter ??= fn (string $file) => array_any($this->extensions, fn (string $extension) => str_ends_with($file, ".layout{$extension}"));
+
         $this->layouts[] = fn () => $this->findVueFiles(
             directory: $directory,
             baseDirectory: $directory,
             namespace: $namespace,
-            filter: $filter,
+            filter: function (string $file, string $directory) use ($filter) {
+                if (! is_dir("{$directory}/{$file}") && $filter && ! $filter($file, $directory)) {
+                    return false;
+                }
+
+                return true;
+            },
         );
-
-        return $this;
-    }
-
-    public function loadComponentsFrom(string $directory, null|string|array $namespace = null, ?\Closure $filter = null): static
-    {
-        $this->components[] = fn () => $this->findVueFiles(
-            directory: $directory,
-            baseDirectory: $directory,
-            namespace: $namespace,
-            filter: $filter,
-        );
-
-        return $this;
-    }
-
-    public function loadTypeScriptFilesFrom(string $directory, bool $deep = false): static
-    {
-        $this->loadedTypeScriptDirectories[] = $deep
-            ? fn () => str($directory)->finish('/**/*.ts')->toString()
-            : fn () => str($directory)->finish('/*.ts')->toString();
 
         return $this;
     }
@@ -104,50 +80,13 @@ class LazyComponentsResolver implements ComponentsResolver
     public function loadModuleFrom(
         string $directory,
         null|string|array $namespace,
-        bool $deep = false,
-        bool $loadViews = true,
-        bool $loadLayouts = true,
-        bool $loadComponents = true,
-        bool $loadTypeScript = true,
     ): static {
         $namespace ??= str($directory)->basename()->kebab();
 
-        if ($loadTypeScript) {
-            $this->loadTypeScriptFilesFrom($directory, $deep);
-        }
-
-        if ($loadViews) {
-            $this->loadViewsFrom($deep ? $directory : ($directory . '/' . $this->configuration->architecture->viewsDirectory), $namespace);
-        }
-
-        if ($loadLayouts) {
-            $this->loadLayoutsFrom($directory . '/' . $this->configuration->architecture->layoutsDirectory, $namespace);
-        }
-
-        if ($loadComponents) {
-            $this->loadComponentsFrom($directory . '/' . $this->configuration->architecture->componentsDirectory, $namespace);
-        }
+        $this->loadViewsFrom($directory, $namespace);
+        $this->loadLayoutsFrom($directory, $namespace);
 
         return $this;
-    }
-
-    public function loadModulesFrom(string $directory, bool $deep = false): void
-    {
-        if (! is_dir($directory)) {
-            return;
-        }
-
-        foreach (scandir($directory) as $namespace) {
-            if (\in_array($namespace, ['.', '..'], strict: true)) {
-                continue;
-            }
-
-            $this->loadModuleFrom(
-                directory: $directory . '/' . $namespace,
-                namespace: $namespace,
-                deep: $deep,
-            );
-        }
     }
 
     public function getViews(): array
@@ -158,16 +97,6 @@ class LazyComponentsResolver implements ComponentsResolver
     public function getLayouts(): array
     {
         return $this->evaluateComponentCollection($this->layouts);
-    }
-
-    public function getComponents(): array
-    {
-        return $this->evaluateComponentCollection($this->components);
-    }
-
-    public function getTypeScriptDirectories(): array
-    {
-        return array_map('call_user_func', $this->loadedTypeScriptDirectories);
     }
 
     public function getExtensions(): array
@@ -183,7 +112,7 @@ class LazyComponentsResolver implements ComponentsResolver
             });
     }
 
-    public function unload(bool $views = true, bool $layouts = true, bool $components = true, bool $typeScriptDirectories = true): static
+    public function unload(bool $views = true, bool $layouts = true): static
     {
         if ($views) {
             $this->views = [];
@@ -191,14 +120,6 @@ class LazyComponentsResolver implements ComponentsResolver
 
         if ($layouts) {
             $this->layouts = [];
-        }
-
-        if ($components) {
-            $this->components = [];
-        }
-
-        if ($typeScriptDirectories) {
-            $this->loadedTypeScriptDirectories = [];
         }
 
         return $this;
@@ -225,7 +146,7 @@ class LazyComponentsResolver implements ComponentsResolver
         }
 
         foreach (scandir($directory) as $file) {
-            if (\in_array($file, ['.', '..'], true)) {
+            if (\in_array($file, ['.', '..'], strict: true)) {
                 continue;
             }
 
@@ -242,7 +163,7 @@ class LazyComponentsResolver implements ComponentsResolver
                     $files[] = [
                         'namespace' => $namespace,
                         'path' => str($path)
-                            ->replaceStart(base_path(), '')
+                            ->chopStart(base_path())
                             ->replace('\\', '/')
                             ->ltrim('/')
                             ->toString(),
@@ -259,6 +180,7 @@ class LazyComponentsResolver implements ComponentsResolver
     {
         return collect($collection)
             ->flatMap('call_user_func')
+            ->reverse() // last registered get priority
             ->unique('path')
             ->unique('identifier')
             ->values()

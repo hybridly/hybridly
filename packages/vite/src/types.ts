@@ -1,9 +1,5 @@
-import type { ImportsMap, PresetName } from 'unplugin-auto-import/types'
-import type { AutoImportOptions } from './integrations/auto-imports'
-import type { CustomIconOptions, IconsOptions } from './integrations/icons'
 import type { Runner } from './integrations/run'
 import type { VueOptions } from './integrations/vue'
-import type { CustomComponentsOptions, CustomResolvers } from './integrations/vue-components'
 
 export interface ViteOptions {
 	/** Disables the Laravel integration. Useful if you prefer to use the official one. */
@@ -14,18 +10,6 @@ export interface ViteOptions {
 	vue?: false | VueOptions
 	/** Options for `vite-plugin-run`. Set to `false` to disable. */
 	run?: false | Runner[]
-	/** Options for `unplugin-auto-import`. Set to `false` to disable. */
-	autoImports?: false | AutoImportOptions
-	/** Import map for `unplugin-auto-import`. */
-	autoImportsMap?: Array<ImportsMap | PresetName>
-	/** Options for `unplugin-vue-components`. Set to `false` to disable. */
-	vueComponents?: false | CustomComponentsOptions
-	/** Options for `unplugin-icons`. Set to `false` to disable. */
-	icons?: false | IconsOptions
-	/** Options for custom icon collections. */
-	customIcons?: CustomIconOptions
-	/** Override vue component resolvers. */
-	overrideResolvers?: CustomResolvers
 	/** Whether to write shims. */
 	shims?: boolean
 	/** Enables or disable the kill-switch. */

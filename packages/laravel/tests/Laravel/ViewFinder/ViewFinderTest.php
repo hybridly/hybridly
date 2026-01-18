@@ -45,15 +45,15 @@ test('`hasView` determines if a view is registered', function (string $target, s
         expect($components->hasView($expectedIdentifier))->toBeTrue();
     });
 })->with([
-    ['views/my-view.tsx', 'default', 'my-view'],
-    ['views/my-view.vue', 'default', 'my-view'],
-    ['views/sub/my-view.vue', 'default', 'sub.my-view'],
-    ['views/my-view.vue', 'custom', 'custom::my-view'],
-    ['views/sub/my-view.vue', 'custom', 'custom::sub.my-view'],
+    ['views/my-view.view.tsx', 'default', 'my-view'],
+    ['views/my-view.view.vue', 'default', 'my-view'],
+    ['views/sub/my-view.view.vue', 'default', 'sub.my-view'],
+    ['views/my-view.view.vue', 'custom', 'custom::my-view'],
+    ['views/sub/my-view.view.vue', 'custom', 'custom::sub.my-view'],
 ]);
 
 test('namespaces can be defined as an array and will be converted to kebab case', function () {
-    with_view_components('views/my-view.vue', function () {
+    with_view_components('views/my-view.view.vue', function () {
         /** @var ComponentsResolver */
         $components = resolve(ComponentsResolver::class);
         $components->loadViewsFrom(
@@ -65,19 +65,14 @@ test('namespaces can be defined as an array and will be converted to kebab case'
     });
 });
 
-test('loading a module recursively only the root `components` and `layouts` directories, but loads all views', function () {
+test('loading a module loads views and layouts recursively', function () {
     with_view_components(
         [
-            'view1.vue',
-            'components/component1.vue',
-            'layouts/layout1.vue',
-            // level 1
-            'subdirectory/view2.vue',
-            'subdirectory/components/component2.vue',
-            'subdirectory/layouts/layout2.vue',
-            // level 2
-            'subdirectory/again/view3.vue',
-            'subdirectory/again/components/component3.vue',
+            'component.vue',
+            'view1.view.vue',
+            'layout1.layout.vue',
+            'dir/view2.view.vue',
+            'dir/layout2.layout.vue',
         ],
         function () {
             /** @var ComponentsResolver */
@@ -85,71 +80,18 @@ test('loading a module recursively only the root `components` and `layouts` dire
             $components->loadModuleFrom(
                 directory: resource_path(),
                 namespace: 'foo',
-                deep: true,
             );
 
             expect($components->getViews())
                 ->toBe([
-                    ['namespace' => 'foo', 'path' => 'resources/subdirectory/again/view3.vue', 'identifier' => 'foo::subdirectory.again.view3'],
-                    ['namespace' => 'foo', 'path' => 'resources/subdirectory/view2.vue', 'identifier' => 'foo::subdirectory.view2'],
-                    ['namespace' => 'foo', 'path' => 'resources/view1.vue', 'identifier' => 'foo::view1'],
-                ]);
-
-            expect($components->getComponents())
-                ->toBe([
-                    ['namespace' => 'foo', 'path' => 'resources/components/component1.vue', 'identifier' => 'foo::component1'],
+                    ['namespace' => 'foo', 'path' => 'resources/view1.view.vue', 'identifier' => 'foo::view1'],
+                    ['namespace' => 'foo', 'path' => 'resources/dir/view2.view.vue', 'identifier' => 'foo::dir.view2'],
                 ]);
 
             expect($components->getLayouts())
                 ->toBe([
-                    ['namespace' => 'foo', 'path' => 'resources/layouts/layout1.vue', 'identifier' => 'foo::layout1'],
-                ]);
-        },
-    );
-});
-
-test('loading a module non-recursively only loads the root `views`, `components` and `layouts` directories', function () {
-    with_view_components(
-        [
-            // root
-            'ignored-view.vue',
-            // module
-            'views/view1.vue',
-            'views/subdirectory/view2.vue',
-            'components/component1.vue',
-            'components/subdirectory/component2.vue',
-            'layouts/layout1.vue',
-            'layouts/subdirectory/layout2.vue',
-            // level 1 - ignored
-            'foo/views/view3.vue',
-            'foo/components/component3.vue',
-            'foo/layouts/layout3.vue',
-        ],
-        function () {
-            /** @var ComponentsResolver */
-            $components = resolve(ComponentsResolver::class);
-            $components->loadModuleFrom(
-                directory: resource_path(),
-                namespace: 'foo',
-                deep: false,
-            );
-
-            expect($components->getViews())
-                ->toBe([
-                    ['namespace' => 'foo', 'path' => 'resources/views/subdirectory/view2.vue', 'identifier' => 'foo::subdirectory.view2'],
-                    ['namespace' => 'foo', 'path' => 'resources/views/view1.vue', 'identifier' => 'foo::view1'],
-                ]);
-
-            expect($components->getComponents())
-                ->toBe([
-                    ['namespace' => 'foo', 'path' => 'resources/components/component1.vue', 'identifier' => 'foo::component1'],
-                    ['namespace' => 'foo', 'path' => 'resources/components/subdirectory/component2.vue', 'identifier' => 'foo::subdirectory.component2'],
-                ]);
-
-            expect($components->getLayouts())
-                ->toBe([
-                    ['namespace' => 'foo', 'path' => 'resources/layouts/layout1.vue', 'identifier' => 'foo::layout1'],
-                    ['namespace' => 'foo', 'path' => 'resources/layouts/subdirectory/layout2.vue', 'identifier' => 'foo::subdirectory.layout2'],
+                    ['namespace' => 'foo', 'path' => 'resources/layout1.layout.vue', 'identifier' => 'foo::layout1'],
+                    ['namespace' => 'foo', 'path' => 'resources/dir/layout2.layout.vue', 'identifier' => 'foo::dir.layout2'],
                 ]);
         },
     );
@@ -162,7 +104,6 @@ test('identifiers are kebab-cased', function (string $view, string $identifier) 
         $components->loadModuleFrom(
             directory: resource_path(),
             namespace: 'foo',
-            deep: true,
         );
 
         expect($components->getViews())
@@ -171,19 +112,19 @@ test('identifiers are kebab-cased', function (string $view, string $identifier) 
             ]);
     });
 })->with([
-    ['MyPascalCaseView.vue', 'foo::my-pascal-case-view'],
-    ['my-kebab-case-view.vue', 'foo::my-kebab-case-view'],
-    ['Views/MyPascalCaseView.vue', 'foo::views.my-pascal-case-view'],
-    ['Views/my-kebab-case-view.vue', 'foo::views.my-kebab-case-view'],
-    ['views/MyPascalCaseView.vue', 'foo::views.my-pascal-case-view'],
-    ['views/my-kebab-case-view.vue', 'foo::views.my-kebab-case-view'],
+    ['MyPascalCaseView.view.vue', 'foo::my-pascal-case-view'],
+    ['my-kebab-case-view.view.vue', 'foo::my-kebab-case-view'],
+    ['Views/MyPascalCaseView.view.vue', 'foo::views.my-pascal-case-view'],
+    ['Views/my-kebab-case-view.view.vue', 'foo::views.my-kebab-case-view'],
+    ['views/MyPascalCaseView.view.vue', 'foo::views.my-pascal-case-view'],
+    ['views/my-kebab-case-view.view.vue', 'foo::views.my-kebab-case-view'],
 ]);
 
 test('resolving can use filters', function () {
     with_view_components(
         [
-            'invalid-view.vue',
-            'index.view.vue',
+            'ignore-view.vue',
+            'index.vue',
         ],
         function () {
             /** @var ComponentsResolver */
@@ -191,12 +132,12 @@ test('resolving can use filters', function () {
             $components->loadViewsFrom(
                 directory: resource_path(),
                 namespace: 'foo',
-                filter: fn (string $file) => str_ends_with($file, '.view.vue'),
+                filter: fn (string $file) => str_ends_with($file, '.vue') && ! str_contains($file, 'ignore'),
             );
 
             expect($components->getViews())
                 ->toBe([
-                    ['namespace' => 'foo', 'path' => 'resources/index.view.vue', 'identifier' => 'foo::index'],
+                    ['namespace' => 'foo', 'path' => 'resources/index.vue', 'identifier' => 'foo::index'],
                 ]);
         },
     );

@@ -102,7 +102,7 @@ class HybridlyServiceProvider extends PackageServiceProvider
     {
         // Registers the application directory so the root view can be loaded
         $this->callAfterResolving('view', function (Factory $view): void {
-            $view->addLocation(base_path(\dirname($this->getConfiguration()->architecture->getApplicationMainPath())));
+            $view->addLocation(base_path(\dirname($this->getConfiguration()->architecture->applicationMainPath)));
         });
 
         // Loads the default module if enabled
@@ -151,7 +151,7 @@ class HybridlyServiceProvider extends PackageServiceProvider
             $compiler->directive('vite', fn (?string $expression = null) => \sprintf(
                 '<?php echo app(%s::class)(%s); ?>',
                 Vite::class,
-                $expression ?: ('"' . $this->getConfiguration()->architecture->getApplicationMainPath() . '"'),
+                $expression ?: ('"' . $this->getConfiguration()->architecture->applicationMainPath . '"'),
             ));
         });
     }
@@ -183,7 +183,7 @@ class HybridlyServiceProvider extends PackageServiceProvider
         AboutCommand::add('Hybridly', fn () => [
             'Version (composer)' => Version::getPrettyComposerVersion(),
             'Version (npm)' => Version::getPrettyNpmVersion(),
-            'Application main' => $this->getConfiguration()->architecture->getApplicationMainPath(),
+            'Application main' => $this->getConfiguration()->architecture->applicationMainPath,
             'Extensions' => implode(', ', $this->getConfiguration()->architecture->extensions),
             'Eager view loading' => $this->getConfiguration()->architecture->eagerLoadViews
                 ? '<fg=yellow;options=bold>ENABLED</>'

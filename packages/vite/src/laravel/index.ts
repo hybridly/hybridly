@@ -108,9 +108,7 @@ export default function laravel(options: ViteOptions, hybridlyConfig: DynamicCon
 						}
 
 						let registered = `${colors.bold(hybridlyConfig.components.views.length)} ${colors.dim('views')}, `
-						registered += `${colors.bold(hybridlyConfig.components.components.length)} ${colors.dim('components')}, `
 						registered += `${colors.bold(hybridlyConfig.components.layouts.length)} ${colors.dim('layouts')}, `
-						registered += `${colors.bold(hybridlyConfig.components.files.length)} ${colors.dim('files')}`
 
 						const latest = hybridlyConfig.versions.is_latest ? '' : colors.dim(`(${colors.yellow(`${hybridlyConfig.versions.latest} is available`)})`)
 
@@ -194,13 +192,7 @@ function ensureCommandShouldRunInEnvironment(command: 'build' | 'serve', env: Re
  * Resolves input files.
  */
 function resolveInput(userConfig: UserConfig, hybridlyConfig: DynamicConfiguration, _ssr: boolean): InputOption | string | undefined {
-	// TODO: SSR support
-	// if (_ssr) {
-	// 	return config.ssr
-	// }
-
-	return userConfig.build?.rollupOptions?.input
-		?? hybridlyConfig.architecture.application_main_path
+	return userConfig.build?.rollupOptions?.input ?? hybridlyConfig.architecture.application_main_path
 }
 
 /**

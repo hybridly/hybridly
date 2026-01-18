@@ -9,15 +9,12 @@ export interface DynamicConfiguration {
 	}
 	architecture: {
 		root_directory: string
-		components_directory: string
 		application_main_path: string
 	}
 	components: {
 		eager?: boolean
-		files: string[]
 		views: Component[]
 		layouts: Component[]
-		components: Component[]
 	}
 	routing: RoutingConfiguration
 }

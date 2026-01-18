@@ -1,67 +1,64 @@
 {
-  "name": "@hybridly/vite",
-  "type": "module",
-  "version": "0.9.0",
-  "description": "Vite plugin for Hybridly",
-  "author": "Enzo Innocenzi <enzo@innocenzi.dev>",
-  "license": "MIT",
-  "funding": "https://github.com/sponsors/innocenzi",
-  "homepage": "https://github.com/hybridly/hybridly/tree/main/packages/vite#readme",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/hybridly/hybridly.git",
-    "directory": "packages/vite"
-  },
-  "bugs": {
-    "url": "https://github.com/hybridly/hybridly/issues"
-  },
-  "keywords": [
-    "hybridly",
-    "inertiajs",
-    "vite",
-    "vite-plugin"
-  ],
-  "publishConfig": {
-    "provenance": true,
-    "access": "public"
-  },
-  "sideEffects": false,
-  "exports": {
-    ".": {
-      "types": "./dist/index.d.mts",
-      "import": "./dist/index.mjs"
-    }
-  },
-  "module": "dist/index.mjs",
-  "types": "dist/index.d.mts",
-  "files": [
-    "*.d.ts",
-    "dist"
-  ],
-  "scripts": {
-    "build": "obuild",
-    "build:stub": "obuild --stub"
-  },
-  "peerDependencies": {
-    "vite": "^7.0.0",
-    "vue": "^3.5.0"
-  },
-  "dependencies": {
-    "@hybridly/core": "workspace:*",
-    "@vitejs/plugin-vue": "catalog:",
-    "fast-glob": "catalog:",
-    "local-pkg": "catalog:",
-    "magic-string": "catalog:",
-    "picocolors": "catalog:",
-    "unplugin-auto-import": "catalog:",
-    "unplugin-icons": "catalog:",
-    "unplugin-vue-components": "catalog:",
-    "vite-plugin-run": "catalog:"
-  },
-  "devDependencies": {
-    "@iconify/json": "catalog:",
-    "rollup": "catalog:",
-    "vite": "catalog:",
-    "vue": "catalog:"
-  }
+	"name": "@hybridly/vite",
+	"type": "module",
+	"version": "0.9.0",
+	"description": "Vite plugin for Hybridly",
+	"author": "Enzo Innocenzi <enzo@innocenzi.dev>",
+	"license": "MIT",
+	"funding": "https://github.com/sponsors/innocenzi",
+	"homepage": "https://github.com/hybridly/hybridly/tree/main/packages/vite#readme",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/hybridly/hybridly.git",
+		"directory": "packages/vite"
+	},
+	"bugs": {
+		"url": "https://github.com/hybridly/hybridly/issues"
+	},
+	"keywords": [
+		"hybridly",
+		"inertiajs",
+		"vite",
+		"vite-plugin"
+	],
+	"publishConfig": {
+		"provenance": true,
+		"access": "public"
+	},
+	"sideEffects": false,
+	"exports": {
+		".": {
+			"types": "./dist/index.d.mts",
+			"import": "./dist/index.mjs"
+		}
+	},
+	"module": "dist/index.mjs",
+	"types": "dist/index.d.mts",
+	"files": [
+		"*.d.ts",
+		"dist"
+	],
+	"scripts": {
+		"build": "obuild",
+		"build:stub": "obuild --stub"
+	},
+	"peerDependencies": {
+		"vite": "^7.3.0",
+		"vue": "^3.5.0"
+	},
+	"dependencies": {
+		"@hybridly/core": "workspace:*",
+		"@vitejs/plugin-vue": "catalog:",
+		"fast-glob": "catalog:",
+		"local-pkg": "catalog:",
+		"magic-string": "catalog:",
+		"picocolors": "catalog:",
+		"vite-plugin-run": "catalog:"
+	},
+	"devDependencies": {
+		"@iconify/json": "catalog:",
+		"rollup": "catalog:",
+		"vite": "catalog:",
+		"vue": "catalog:"
+	}
 }

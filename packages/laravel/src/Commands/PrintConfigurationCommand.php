@@ -26,15 +26,12 @@ class PrintConfigurationCommand extends Command
             ],
             'architecture' => [
                 'root_directory' => Configuration::get()->architecture->rootDirectory,
-                'components_directory' => Configuration::get()->architecture->componentsDirectory,
-                'application_main_path' => Configuration::get()->architecture->getApplicationMainPath(),
+                'application_main_path' => Configuration::get()->architecture->applicationMainPath,
             ],
             'components' => [
                 'eager' => Configuration::get()->architecture->eagerLoadViews,
                 'layouts' => $hybridly->getLayouts(),
                 'views' => $hybridly->getViews(),
-                'components' => $hybridly->getComponents(),
-                'files' => $hybridly->getTypeScriptDirectories(),
             ],
             'routing' => [
                 ...$routeExtractor->toArray(),

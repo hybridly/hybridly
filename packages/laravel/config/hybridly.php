@@ -29,8 +29,8 @@ return [
      * | Architecture
      * |--------------------------------------------------------------------------
      * | Hybridly has a flexible architecture implementation. By default,
-     * | views, layouts and components in the `resources` directory
-     * | will be used, but you may change this behavior below.
+     * | views and layouts in the `resources` directory will
+     * | be used, but you may change this behavior below.
      * |
      * | See: https://hybridly.dev/guide/architecture.html
      */
@@ -38,7 +38,6 @@ return [
         'load_default_module' => true,
         'eager_load_views' => true,
         'root_directory' => 'resources',
-        'application_directory' => 'application',
         'application_main' => Architecture::APPLICATION_MAIN,
         'root_view' => Architecture::ROOT_VIEW,
         'extensions' => ['vue', 'tsx'],
