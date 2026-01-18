@@ -137,7 +137,7 @@ trait RefinesAndPaginatesRecords
      */
     protected function getRecordsPerPage(): int
     {
-        return $this->recordsPerPage ?? 10;
+        return $this->recordsPerPage ?? Configuration::get()->tables->recordsPerPage;
     }
 
     protected function transformRefinements(Refine $refining): void

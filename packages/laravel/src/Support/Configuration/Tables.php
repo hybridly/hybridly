@@ -12,6 +12,7 @@ final class Tables
         public readonly string $actionsEndpoint,
         public readonly array $actionsEndpointMiddleware,
         public readonly string $actionsEndpointName,
+        public readonly int $recordsPerPage,
     ) {}
 
     public static function fromArray(array $config): static
@@ -21,6 +22,7 @@ final class Tables
             actionsEndpoint: $config['actions_endpoint'] ?? 'invoke',
             actionsEndpointMiddleware: Arr::wrap($config['actions_endpoint_middleware'] ?? []),
             actionsEndpointName: $config['actions_endpoint_name'] ?? 'hybridly.action.invoke',
+            recordsPerPage: $config['records_per_page'] ?? 10,
         );
     }
 }
