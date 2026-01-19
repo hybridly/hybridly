@@ -1,6 +1,7 @@
 name: release
 
 on:
+  workflow_dispatch:
   push:
     tags:
       - "v*"
@@ -17,24 +18,24 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Install pnpm
-        uses: pnpm/action-setup@v3
+      - name: Install Bun
+        uses: oven-sh/setup-bun@v2
 
-      - name: Use Node.js v24
-        uses: actions/setup-node@v4
-        with:
-          node-version: v24
-          registry-url: https://registry.npmjs.org/
-          cache: "pnpm"
-
-      - name: Install Dependencies
-        run: pnpm install
+      - name: Install dependencies
+        run: bun install
 
       - name: Build
-        run: pnpm run build
+        run: bun run build
+
+      - name: Install Node
+        uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6.2.0
+        with:
+          node-version: 24
+          package-manager-cache: false
+          registry-url: "https://registry.npmjs.org"
 
       - name: Publish to NPM
-        run: pnpm -r publish --no-git-checks
+        run: bun ./build/publish.ts
 
       - run: npx conventional-github-releaser -p angular
         continue-on-error: true

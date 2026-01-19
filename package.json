@@ -43,7 +43,11 @@
 	},
 	"workspaces": {
 		"packages": [
-			"packages/*"
+			"packages/hybridly",
+			"packages/core",
+			"packages/utils",
+			"packages/vite",
+			"packages/vue"
 		],
 		"catalog": {
 			"@clickbar/dot-diver": "^1.0.7",
