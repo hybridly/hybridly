@@ -262,11 +262,19 @@ export function useTable<
 			}))
 		),
 		/** List of records for this table. */
-		data: computed(() =>
-			table.value.records.map((record) => {
-				return Object.fromEntries(Object.entries(record).map(([key, value]) => [key, value.value]).filter(([key]) => key === '__hybridId'))
-			}) as RecordType[]
-		),
+		data: computed(() => {
+			return table.value.records.map((record) => {
+				const entries = Object.entries(record)
+					.map(([key, value]) => [key, value.value])
+					.filter(([key]) => key !== '__hybridId')
+
+				if (entries.length === 0) {
+					return undefined
+				}
+
+				return Object.fromEntries(entries)
+			}).filter(Boolean) as RecordType[]
+		}),
 		/** List of records for this table. */
 		records: computed(() =>
 			table.value.records.map((record) => ({
