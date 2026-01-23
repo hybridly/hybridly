@@ -34,6 +34,12 @@ for (const pattern of workspaces) {
 
 console.log(`Found ${packages.length} packages to publish\n`)
 
+if (!dryRun) {
+	// https://github.com/oven-sh/bun/issues/20477
+	// https://github.com/oven-sh/bun/issues/21852
+	await $`bun update`
+}
+
 for (const directory of packages) {
 	try {
 		const packageJson = await Bun.file(`${directory}/package.json`).json() as PackageJson
