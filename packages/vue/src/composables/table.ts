@@ -251,7 +251,7 @@ export function useTable<
 		/** List of records for this table. */
 		data: computed(() =>
 			table.value.records.map((record) => {
-				return Object.fromEntries(Object.entries(record).map(([key, value]) => [key, value.value]))
+				return Object.fromEntries(Object.entries(record).map(([key, value]) => [key, value.value]).filter(([key]) => key === '__hybridId'))
 			}) as RecordType[]
 		),
 		/** List of records for this table. */
