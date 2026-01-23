@@ -22,7 +22,7 @@ final class PropertiesResolver
         protected readonly CaseConverter $caseConverter,
     ) {}
 
-    public function resolve(string $component = null, array $properties = [], array $persisted = []): array
+    public function resolve(?string $component = null, array $properties = [], array $persisted = []): array
     {
         $partial = \is_null($component)
             ? $this->request->headers->has(Header::PARTIAL_COMPONENT)

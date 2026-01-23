@@ -29,7 +29,7 @@ class Arr extends SupportArr
     /**
      * Same as `array_filter`, but recursive.
      */
-    public static function filterRecursive(array $array, callable $callback = null): array
+    public static function filterRecursive(array $array, ?callable $callback = null): array
     {
         $array = \is_callable($callback) ? array_filter($array, $callback) : array_filter($array);
 
