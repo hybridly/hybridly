@@ -31,14 +31,14 @@ final class PropertiesResolver
         $deferred = [];
 
         if (! $partial) {
-            $deferred = $this->resolveDeferredProperties($this->resolveArrayableProperties($properties));
+            $deferred = $this->resolveDeferredProperties(Arr::resolveArrayableProperties($properties));
             $properties = Arr::filterRecursive($properties, static fn ($property) => ! ($property instanceof Partial));
         }
 
         // First, we need to resolve property instances to an array that
         // we can recursively traverse. This is needed to include
         // or exclude properties using the dot-notation.
-        $properties = $this->resolveArrayableProperties($properties);
+        $properties = Arr::resolveArrayableProperties($properties);
 
         // The `only` and `except` headers contain json-encoded array data. We want to use them to
         // retrieve the properties whose paths they describe using dot-notation.

@@ -4,6 +4,7 @@ namespace Hybridly\Tables\Concerns;
 
 use Hybridly\Refining\Contracts\Refiner;
 use Hybridly\Refining\Refine;
+use Hybridly\Support\Arr;
 use Hybridly\Support\Configuration\Configuration;
 use Hybridly\Tables\Columns\BaseColumn;
 use Hybridly\Tables\Table;
@@ -172,7 +173,7 @@ trait RefinesAndPaginatesRecords
                 $record->excludePermanently('authorization');
             }
 
-            return $record->toArray();
+            return Arr::resolveArrayableProperties($record->all());
         }
 
         return $model->toArray();

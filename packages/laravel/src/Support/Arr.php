@@ -49,4 +49,30 @@ class Arr extends SupportArr
 
         return $array;
     }
+
+    public static function resolveArrayableProperties(array $properties, bool $unpackDotProps = true): array
+    {
+        foreach ($properties as $key => $value) {
+            if ($value instanceof Hybridable) {
+                $value = $value->toHybridArray();
+            }
+
+            if ($value instanceof Arrayable) {
+                $value = $value->toArray();
+            }
+
+            if (\is_array($value)) {
+                $value = static::resolveArrayableProperties($value, unpackDotProps: false);
+            }
+
+            if ($unpackDotProps && str_contains($key, '.')) {
+                data_set($properties, $key, $value);
+                unset($properties[$key]);
+            } else {
+                $properties[$key] = $value;
+            }
+        }
+
+        return $properties;
+    }
 }
