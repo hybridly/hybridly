@@ -1,5 +1,4 @@
 import { $, Glob } from 'bun'
-import { join } from 'node:path'
 
 interface PackageJson {
 	name?: string
@@ -51,17 +50,17 @@ for (const directory of packages) {
 		const tag = isPrerelease ? 'next' : 'latest'
 
 		console.log(`  → Publishing ${packageJson.name}@${packageJson.version}...`)
-    await $`npm publish package.tgz --provenance --access public --tag ${tag} ${dryRun ? '--dry-run' : ''}`.cwd(directory)
+		await $`npm publish package.tgz --provenance --access public --tag ${tag} ${dryRun ? '--dry-run' : ''}`.cwd(directory)
 
 		console.log(`  ✅ Successfully published ${packageJson.name}\n`)
 	} catch (error) {
 		console.error(`  ❌ Failed to publish package at ${directory}:`, error)
 	} finally {
-    const tarball = Bun.file(`${directory}/package.tgz`)
-    if (await tarball.exists()) {
-      await tarball.delete()
-    }
-  }
+		const tarball = Bun.file(`${directory}/package.tgz`)
+		if (await tarball.exists()) {
+			await tarball.delete()
+		}
+	}
 }
 
 console.log('✨ All packages published successfully!')
