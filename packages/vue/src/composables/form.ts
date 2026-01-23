@@ -1,21 +1,35 @@
-import isEqual from 'lodash.isequal'
-import type { HybridRequestOptions, Progress, UrlResolvable } from '@hybridly/core'
-import type { DeepReadonly } from 'vue'
-import { computed, reactive, ref, toRaw, watch } from 'vue'
-import { clone, merge, setValueAtPath, unsetPropertyAtPath } from '@hybridly/utils'
-import { router } from '@hybridly/core'
 import type { Path, SearchableObject } from '@clickbar/dot-diver'
 import { getByPath } from '@clickbar/dot-diver'
-import { state } from '../stores/state'
+import type { HybridRequestOptions, Progress, UrlResolvable } from '@hybridly/core'
+import { router } from '@hybridly/core'
+import { clone, merge, setValueAtPath, unsetPropertyAtPath } from '@hybridly/utils'
+import isEqual from 'lodash.isequal'
+import type { ComputedRef, DeepReadonly, Ref } from 'vue'
+import { computed, reactive, ref, toRaw, watch } from 'vue'
 import { formStore } from '../stores/form'
+import { state } from '../stores/state'
 
 type Errors<T extends SearchableObject> = {
-	[K in keyof T]?: T[K] extends Record<string, any>
-		? Errors<T[K]>
-		: string;
+	[K in keyof T]?: T[K] extends Record<string, any> ? Errors<T[K]>
+		: string
 }
 
-export type DefaultFormOptions = Pick<FormOptions<object>, 'timeout' | 'reset' | 'updateInitials' | 'progress' | 'preserveScroll' | 'preserveState' | 'preserveUrl' | 'headers' | 'errorBag' | 'spoof' | 'transformUrl' | 'updateHistoryState' | 'useFormData'>
+export type DefaultFormOptions = Pick<
+	FormOptions<object>,
+	| 'timeout'
+	| 'reset'
+	| 'updateInitials'
+	| 'progress'
+	| 'preserveScroll'
+	| 'preserveState'
+	| 'preserveUrl'
+	| 'headers'
+	| 'errorBag'
+	| 'spoof'
+	| 'transformUrl'
+	| 'updateHistoryState'
+	| 'useFormData'
+>
 
 interface FormOptions<T extends SearchableObject> extends Omit<HybridRequestOptions, 'data' | 'url'> {
 	fields: T
@@ -41,6 +55,34 @@ interface FormOptions<T extends SearchableObject> extends Omit<HybridRequestOpti
 	transform?: (fields: T) => any
 }
 
+export interface FormReturn<T extends SearchableObject, P extends Path<T> & string = Path<T> & string> {
+	resetFields: (...keys: P[]) => void
+	reset: () => void
+	resetSubmissionState: () => void
+	clear: (...keys: P[]) => void
+	fields: T
+	abort: () => void
+	setErrors: (incoming: Errors<T>) => void
+	clearErrors: (...keys: P[]) => void
+	clearError: (key: P) => void
+	setInitial: (newInitial: Partial<T>) => void
+	hasDirty: (...keys: P[]) => boolean
+	submitWith: (optionsOverrides?: Omit<FormOptions<T>, 'fields' | 'key'>) => Promise<any>
+	submitWithOptions: (optionsOverrides?: Omit<FormOptions<T>, 'fields' | 'key'>) => Promise<any>
+	submit: () => Promise<any>
+	hasErrors: boolean
+	initial: DeepReadonly<T>
+	loaded: DeepReadonly<T>
+	progress: Progress | undefined
+	isDirty: boolean
+	errors: Errors<T>
+	processing: boolean
+	successful: boolean
+	failed: boolean
+	recentlySuccessful: boolean
+	recentlyFailed: boolean
+}
+
 function safeClone<T>(obj: T): T {
 	return clone(toRaw(obj))
 }
@@ -48,7 +90,7 @@ function safeClone<T>(obj: T): T {
 export function useForm<
 	T extends SearchableObject,
 	P extends Path<T> & string = Path<T> & string,
->(options: FormOptions<T>) {
+>(options: FormOptions<T>): FormReturn<T, P> {
 	// https://github.com/hybridly/hybridly/issues/23
 	// TODO: explore unique/automatic key generation
 	const shouldRemember = !!options.key
@@ -295,5 +337,5 @@ export function useForm<
 		failed: failed as DeepReadonly<typeof failed>,
 		recentlySuccessful: recentlySuccessful as DeepReadonly<typeof recentlySuccessful>,
 		recentlyFailed: recentlyFailed as DeepReadonly<typeof recentlyFailed>,
-	})
+	}) as FormReturn<T, P>
 }

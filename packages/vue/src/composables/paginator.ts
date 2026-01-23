@@ -1,3 +1,5 @@
+import { HybridRequestOptions, NavigationResponse, router } from 'hybridly'
+
 declare global {
 	/**
 	 * Paginated data with metadata in a `meta` wrap.
@@ -36,6 +38,7 @@ interface PaginatorLink {
 	url?: string
 	label: string
 	active: boolean
+	page?: number
 }
 
 interface CursorPaginatorMeta {
@@ -73,4 +76,32 @@ interface PaginatorMeta {
 	prev_page_url?: string
 }
 
-export {}
+export type MaybeWithData<T> = T | Omit<T, 'data'>
+
+export type PaginatorResult<T, P> = P extends MaybeWithData<Paginator<T>>
+	? P & { to: (page: number) => Promise<NavigationResponse> | undefined }
+	: P
+
+export function createPaginator<T, P extends MaybeWithData<Paginator<T> | SimplePaginator<T> | CursorPaginator<T>>>(
+	paginator: P,
+	options?: Omit<HybridRequestOptions, 'method' | 'url'>,
+): PaginatorResult<T, P> {
+	const isPaginator = (p: any): p is Paginator<T> => {
+		return 'links' in p && 'meta' in p && 'last_page' in p.meta
+	}
+
+	if (isPaginator(paginator)) {
+		return {
+			...paginator,
+			to: (page: number) => {
+				const link = paginator.links.find((l) => l.page === page)
+
+				if (link?.url) {
+					return router.get(link.url, options)
+				}
+			},
+		} as PaginatorResult<T, P>
+	}
+
+	return paginator as PaginatorResult<T, P>
+}

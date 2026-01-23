@@ -1,8 +1,8 @@
 import type { HybridRequestOptions } from '@hybridly/core'
 import { router } from '@hybridly/core'
+import { debounce, type FormDataConvertible } from '@hybridly/utils'
 import type { Ref } from 'vue'
 import { computed, nextTick, ref, watch } from 'vue'
-import { type FormDataConvertible, debounce } from '@hybridly/utils'
 import { toReactive } from '../utils'
 
 export type SortDirection = 'asc' | 'desc'
@@ -32,7 +32,7 @@ export interface BindFilterOptions<T> extends AvailableHybridRequestOptions {
 }
 
 declare global {
-// #region interfaces
+	// #region interfaces
 	interface FilterRefinement {
 		/**
 		 * Whether this filter is currently active.
@@ -138,13 +138,13 @@ declare global {
 			filters: string
 		}
 	}
-// #endregion interfaces
+	// #endregion interfaces
 }
 
 export function useRefinements<
 	Properties extends object,
 	RefinementsKey extends {
-		[K in keyof Properties]: Properties[K] extends Refinements ? K : never;
+		[K in keyof Properties]: Properties[K] extends Refinements ? K : never
 	}[keyof Properties],
 >(properties: Properties, refinementsKeys: RefinementsKey, defaultOptions: AvailableHybridRequestOptions = {}) {
 	const refinements = computed(() => properties[refinementsKeys] as Refinements)
@@ -280,7 +280,7 @@ export function useRefinements<
 		})
 	}
 
-	function bindFilter<T = any>(name: string, options: BindFilterOptions<T> = {}) {
+	function bindFilter<T = string | number>(name: string, options: BindFilterOptions<T> = {}) {
 		const transform = options?.transformValue ?? ((value) => value)
 		const watchFn = options?.watch ?? watch
 		const getFilterValue = () => transform(refinements.value.filters.find((f) => f.name === name)?.value)

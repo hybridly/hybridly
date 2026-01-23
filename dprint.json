@@ -1,7 +1,7 @@
 {
 	"useTabs": true,
 	"typescript": {
-		"printWidth": 140,
+		"lineWidth": 140,
 		"semiColons": "asi",
 		"quoteStyle": "preferSingle"
 	},

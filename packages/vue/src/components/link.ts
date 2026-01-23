@@ -1,12 +1,26 @@
-import qs from 'qs'
-import type { PropType } from 'vue'
-import { defineComponent, h } from 'vue'
 import type { HybridRequestOptions, Method } from '@hybridly/core'
 import { makeUrl, router } from '@hybridly/core'
 import type { RequestData } from '@hybridly/utils'
 import { debug, merge } from '@hybridly/utils'
+import qs from 'qs'
+import type { DefineComponent, PropType } from 'vue'
+import { defineComponent, h } from 'vue'
 
-export const RouterLink = defineComponent({
+export interface RouterLinkProps {
+	href?: string
+	as?: string | object
+	method?: Method | Lowercase<Method>
+	data?: RequestData
+	external?: boolean
+	disabled?: boolean
+	options?: Omit<HybridRequestOptions, 'url' | 'data' | 'method'>
+	text?: string
+	preload?: boolean | 'hover' | 'mount'
+	preserveScroll?: boolean
+	preserveState?: boolean
+}
+
+export const RouterLink: DefineComponent<RouterLinkProps> = defineComponent({
 	name: 'RouterLink',
 	setup(_, { slots, attrs }) {
 		return (props: typeof _) => {
@@ -32,7 +46,10 @@ export const RouterLink = defineComponent({
 			}
 
 			if (as === 'a' && method !== 'GET') {
-				debug.adapter('vue', `Creating POST/PUT/PATCH/DELETE <a> links is discouraged as it causes "Open Link in New Tab/Window" accessibility issues.\n\nPlease specify a more appropriate element using the "as" attribute. For example:\n\n<RouterLink href="${url}" method="${method}" as="button">...</RouterLink>`)
+				debug.adapter(
+					'vue',
+					`Creating POST/PUT/PATCH/DELETE <a> links is discouraged as it causes "Open Link in New Tab/Window" accessibility issues.\n\nPlease specify a more appropriate element using the "as" attribute. For example:\n\n<RouterLink href="${url}" method="${method}" as="button">...</RouterLink>`,
+				)
 			}
 
 			function performPreload(type: 'hover' | 'mount') {

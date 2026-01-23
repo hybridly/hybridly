@@ -14,7 +14,7 @@ export const hybridlyImports = {
 		'useForm',
 		'useDialog',
 		'useHistoryState',
-		'usePaginator',
+		'createPaginator',
 		'registerHook',
 		'useRoute',
 		'useQueryParameter',
