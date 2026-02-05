@@ -1,7 +1,8 @@
 import { getByPath } from '@clickbar/dot-diver'
 import { route, router } from '@hybridly/core'
 import type { FormDataConvertible } from '@hybridly/utils'
-import { computed, reactive, toRaw } from 'vue'
+import type { MaybeRefOrGetter } from 'vue'
+import { computed, reactive, toRaw, toValue } from 'vue'
 import { toReactive } from '../utils'
 import { useBulkSelect } from './bulk-select'
 import { createPaginator } from './paginator'
@@ -92,16 +93,16 @@ export interface TableDefaultOptions extends AvailableHybridRequestOptions {
  * Provides utilities for working with tables.
  */
 export function useTable<
-	RecordType extends (Props[PropsKey] extends Table<infer T, any> ? T : never),
+	T extends Table,
+	RecordType extends (T extends Table<infer R> ? R : never),
 	RecordTypeWithExtra extends AsRecordTypeWithExtra<RecordType>,
-	PaginatorKindName extends (Props[PropsKey] extends Table<any, infer PaginatorKind> ? PaginatorKind : never),
-	TableType extends (Props[PropsKey] extends Table<any, PaginatorKindName> ? Table<RecordTypeWithExtra, PaginatorKindName> : never),
-	Props extends Record<string, unknown>,
-	PropsKey extends keyof Props,
->(props: Props, key: PropsKey, defaultOptions: TableDefaultOptions = {}) {
-	const table = computed(() => props[key] as TableType)
+	PaginatorKindName extends (T extends Table<RecordType, infer PaginatorKind> ? PaginatorKind : never),
+	InputTable extends (T extends Table<RecordType, PaginatorKindName> ? Table<RecordType, PaginatorKindName> : never),
+	ResolvedTable extends (T extends Table<RecordType, PaginatorKindName> ? Table<RecordTypeWithExtra, PaginatorKindName> : never),
+>(input: MaybeRefOrGetter<InputTable>, defaultOptions: TableDefaultOptions = {}) {
+	const table = computed(() => toValue(input) as unknown as ResolvedTable)
 	const bulk = useBulkSelect<RecordIdentifier>()
-	const refinements = useRefinements(toReactive(table) as any, 'refinements', defaultOptions)
+	const refinements = useRefinements(() => toValue(input).refinements, defaultOptions)
 
 	/**
 	 * Gets additionnal data to send with the request.
@@ -256,9 +257,9 @@ export function useTable<
 				/** Clears the filter for this column. */
 				clearFilter: (options?: AvailableHybridRequestOptions) => refinements.clearFilter(column.name as string, options),
 				/** Checks whether the column is sortable. */
-				isSortable: !!refinements.sorts.find((sort) => sort.name === column.name),
+				isSortable: !!refinements.sorts.value.find((sort) => sort.name === column.name),
 				/** Checks whether the column is filterable. */
-				isFilterable: !!refinements.filters.find((filters) => filters.name === column.name),
+				isFilterable: !!refinements.filters.value.find((filters) => filters.name === column.name),
 			}))
 		),
 		/** List of records for this table. */
@@ -309,6 +310,9 @@ export function useTable<
 		 * Paginated meta and links.
 		 */
 		paginator: computed(() => createPaginator(table.value.paginator)),
+		/**
+		 * Available refinements.
+		 */
 		...refinements,
 	})
 }

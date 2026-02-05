@@ -1,9 +1,8 @@
 import type { HybridRequestOptions } from '@hybridly/core'
 import { router } from '@hybridly/core'
 import { debounce, type FormDataConvertible } from '@hybridly/utils'
-import type { Ref } from 'vue'
-import { computed, nextTick, ref, watch } from 'vue'
-import { toReactive } from '../utils'
+import type { MaybeRefOrGetter, Ref } from 'vue'
+import { computed, nextTick, ref, toValue, watch } from 'vue'
 
 export type SortDirection = 'asc' | 'desc'
 
@@ -141,13 +140,11 @@ declare global {
 	// #endregion interfaces
 }
 
-export function useRefinements<
-	Properties extends object,
-	RefinementsKey extends {
-		[K in keyof Properties]: Properties[K] extends Refinements ? K : never
-	}[keyof Properties],
->(properties: Properties, refinementsKeys: RefinementsKey, defaultOptions: AvailableHybridRequestOptions = {}) {
-	const refinements = computed(() => properties[refinementsKeys] as Refinements)
+export function useRefinements<T extends Refinements>(
+	input: MaybeRefOrGetter<T>,
+	defaultOptions: AvailableHybridRequestOptions = {},
+) {
+	const refinements = computed(() => toValue(input))
 	const sortsKey = computed(() => refinements.value.keys.sorts)
 	const filtersKey = computed(() => refinements.value.keys.filters)
 
@@ -337,35 +334,39 @@ export function useRefinements<
 		/**
 		 * Available filters.
 		 */
-		filters: toReactive(refinements.value.filters.map((filter) => ({
-			...filter,
-			/**
-			 * Applies this filter.
-			 */
-			apply: (value: any, options?: AvailableHybridRequestOptions) => applyFilter(filter.name, value, options),
-			/**
-			 * Clears this filter.
-			 */
-			clear: (options?: AvailableHybridRequestOptions) => clearFilter(filter.name, options),
-		}))),
+		filters: computed(() =>
+			refinements.value.filters.map((filter) => ({
+				...filter,
+				/**
+				 * Applies this filter.
+				 */
+				apply: (value: any, options?: AvailableHybridRequestOptions) => applyFilter(filter.name, value, options),
+				/**
+				 * Clears this filter.
+				 */
+				clear: (options?: AvailableHybridRequestOptions) => clearFilter(filter.name, options),
+			}))
+		),
 		/**
 		 * Available sorts.
 		 */
-		sorts: toReactive(refinements.value.sorts.map((sort) => ({
-			...sort,
-			/**
-			 * Toggles this sort.
-			 */
-			toggle: (options?: ToggleSortOptions) => toggleSort(sort.name, options),
-			/**
-			 * Checks if this sort is active.
-			 */
-			isSorting: (direction?: SortDirection) => isSorting(sort.name, direction),
-			/**
-			 * Clears this sort.
-			 */
-			clear: (options?: AvailableHybridRequestOptions) => clearSorts(options),
-		}))),
+		sorts: computed(() =>
+			refinements.value.sorts.map((sort) => ({
+				...sort,
+				/**
+				 * Toggles this sort.
+				 */
+				toggle: (options?: ToggleSortOptions) => toggleSort(sort.name, options),
+				/**
+				 * Checks if this sort is active.
+				 */
+				isSorting: (direction?: SortDirection) => isSorting(sort.name, direction),
+				/**
+				 * Clears this sort.
+				 */
+				clear: (options?: AvailableHybridRequestOptions) => clearSorts(options),
+			}))
+		),
 		/**
 		 * The key for the filters.
 		 */
