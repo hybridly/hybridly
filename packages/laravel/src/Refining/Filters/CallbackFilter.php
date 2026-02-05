@@ -4,6 +4,7 @@ namespace Hybridly\Refining\Filters;
 
 use Hybridly\Components\Concerns\EvaluatesClosures;
 use Illuminate\Contracts\Database\Eloquent\Builder;
+use ReflectionNamedType;
 
 class CallbackFilter extends BaseFilter
 {
@@ -34,8 +35,8 @@ class CallbackFilter extends BaseFilter
 
     public function apply(Builder $builder, mixed $value, string $property): void
     {
-        // TODO: Get the typehinted type of `$value` in the closure,
-        // and attempt to cast our `$value` to the target type
+        $value = $this->castValueToExpectedType($value);
+
         $this->evaluate(
             value: $this->getFilter(),
             named: [
@@ -47,6 +48,54 @@ class CallbackFilter extends BaseFilter
                 Builder::class => $builder,
             ],
         );
+    }
+
+    /**
+     * Attempts to cast the value to the type expected by the closure's $value parameter.
+     */
+    protected function castValueToExpectedType(mixed $value): mixed
+    {
+        $filter = $this->getFilter();
+
+        $reflection = ($filter instanceof \Closure)
+            ? new \ReflectionFunction($filter)
+            : new \ReflectionMethod($filter, '__invoke');
+
+        $parameter = array_find($reflection->getParameters(), fn ($param) => $param->getName() === 'value');
+        if ($parameter === null || ! $parameter->hasType()) {
+            return $value;
+        }
+
+        $type = $parameter->getType();
+        if ($type instanceof ReflectionNamedType) {
+            return $this->castToType($value, $type);
+        }
+
+        return $value;
+    }
+
+    /**
+     * Casts a value to the specified reflection type.
+     */
+    protected function castToType(mixed $value, ReflectionNamedType $type): mixed
+    {
+        if ($value === null && $type->allowsNull()) {
+            return null;
+        }
+
+        $typeName = $type->getName();
+        if ($typeName === 'mixed' || ! $type->isBuiltin()) {
+            return $value;
+        }
+
+        return match ($typeName) {
+            'int' => (int) $value,
+            'float' => (float) $value,
+            'string' => (string) $value,
+            'bool' => filter_var($value, \FILTER_VALIDATE_BOOLEAN, \FILTER_NULL_ON_FAILURE) ?? ((bool) $value),
+            'array' => \is_array($value) ? $value : [$value],
+            default => $value,
+        };
     }
 
     /**

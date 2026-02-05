@@ -31,14 +31,22 @@ it('can be serialized', function () {
         ]);
 });
 
-it('throws a validation exception when the type of the received value cannot be cast to the type of the expected one', function () {
-    mock_refiner(
-        query: ['filters' => ['airpods_gen' => 'abcd']],
+it('casts string to int when the callback expects an int', function () {
+    ProductFactory::new()->create(['name' => 'AirPods Gen 2', 'price' => 200]);
+    ProductFactory::new()->create(['name' => 'AirPods Gen 3', 'price' => 300]);
+
+    $result = mock_refiner(
+        query: ['filters' => ['min_price' => '250']],
         refiners: [
-            CallbackFilter::make('airpods_gen', fn (Builder $builder, int $value) => null),
+            CallbackFilter::make('min_price', fn (Builder $builder, int $value) => $builder->where('price', '>=', $value)),
         ],
     )->get();
-})->throws(ValidationException::class, 'This filter is invalid.');
+
+    expect($result)
+        ->toHaveCount(1)
+        ->first()
+        ->name->toBe('AirPods Gen 3');
+});
 
 it('filters according to the given callback', function () {
     ProductFactory::new()->count(10)->create();
@@ -145,4 +153,115 @@ it('uses the type of the invokable class', function () {
             'value' => null,
             'default' => null,
         ]);
+});
+
+it('casts string to float when the callback expects a float', function () {
+    ProductFactory::new()->create(['name' => 'Product A', 'price' => 19.99]);
+    ProductFactory::new()->create(['name' => 'Product B', 'price' => 29.99]);
+
+    $result = mock_refiner(
+        query: ['filters' => ['max_price' => '25.50']],
+        refiners: [
+            CallbackFilter::make('max_price', fn (Builder $builder, float $value) => $builder->where('price', '<=', $value)),
+        ],
+    )->get();
+
+    expect($result)
+        ->toHaveCount(1)
+        ->first()
+        ->name->toBe('Product A');
+});
+
+it('casts string to bool when the callback expects a bool', function () {
+    ProductFactory::new()->create(['name' => 'Available Product', 'is_active' => true]);
+    ProductFactory::new()->create(['name' => 'Unavailable Product', 'is_active' => false]);
+
+    $result = mock_refiner(
+        query: ['filters' => ['is_active' => '1']],
+        refiners: [
+            CallbackFilter::make('is_active', fn (Builder $builder, bool $value) => $builder->where('is_active', $value)),
+        ],
+    )->get();
+
+    expect($result)
+        ->toHaveCount(1)
+        ->first()
+        ->name->toBe('Available Product');
+});
+
+it('casts value to string when the callback expects a string', function () {
+    ProductFactory::new()->create(['name' => 'Test Product', 'price' => 123]);
+    ProductFactory::new()->create(['name' => 'Another Product', 'price' => 456]);
+
+    $result = mock_refiner(
+        query: ['filters' => ['price_str' => 123]],
+        refiners: [
+            CallbackFilter::make('price_str', fn (Builder $builder, string $value) => $builder->where('price', $value)),
+        ],
+    )->get();
+
+    expect($result)
+        ->toHaveCount(1)
+        ->first()
+        ->price->toBe(123);
+});
+
+it('casts value to array when the callback expects an array', function () {
+    ProductFactory::new()->create(['name' => 'AirPods']);
+    ProductFactory::new()->create(['name' => 'iPhone']);
+    ProductFactory::new()->create(['name' => 'iPad']);
+
+    $result = mock_refiner(
+        query: ['filters' => ['name' => 'AirPods']],
+        refiners: [
+            CallbackFilter::make('name', fn (Builder $builder, string $property, array $value) => $builder->whereIn('name', $value)),
+        ],
+    )->get();
+
+    expect($result)
+        ->toHaveCount(1)
+        ->first()
+        ->name->toBe('AirPods');
+});
+
+it('handles nullable types correctly', function () {
+    ProductFactory::new()->create(['name' => 'Product A', 'description' => 'A description']);
+
+    $result = mock_refiner(
+        query: ['filters' => ['description' => 'A description']],
+        refiners: [
+            CallbackFilter::make('description', fn (Builder $builder, ?string $value) => $value === null
+                ? $builder->whereNull('description')
+                : $builder->where('description', $value)),
+        ],
+    )->get();
+
+    expect($result)
+        ->toHaveCount(1)
+        ->first()
+        ->name->toBe('Product A');
+});
+
+it('works with invokable classes that have typed parameters', function () {
+    ProductFactory::new()->create(['name' => 'Cheap Item', 'price' => 10]);
+    ProductFactory::new()->create(['name' => 'Expensive Item', 'price' => 100]);
+
+    $filter = new class() {
+        public function __invoke(Builder $builder, int $value, string $property): void
+        {
+            $builder->where('price', '>=', $value);
+        }
+    };
+
+    $result = mock_refiner(
+        query: ['filters' => ['min_price' => '50']],
+        refiners: [
+            CallbackFilter::make('min_price', $filter),
+        ],
+    )->get();
+
+    expect($result)
+        ->toHaveCount(1)
+        ->first()
+        ->name->toBe('Expensive Item');
 });
