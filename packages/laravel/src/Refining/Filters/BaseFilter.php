@@ -20,6 +20,7 @@ abstract class BaseFilter extends Components\Component implements Refiner, Filte
     use Components\Concerns\IsHideable;
     use Concerns\HasDefaultValue;
     use Concerns\HasType;
+    use Concerns\HasPreviewLabel;
     use Refining\Concerns\QualifiesColumns;
 
     protected ?Refining\Filters\QueryFilter $filter = null;
@@ -32,6 +33,9 @@ abstract class BaseFilter extends Components\Component implements Refiner, Filte
         $this->label(str($this->getName())->headline()->lower()->ucfirst());
         $this->type('filter');
         $this->configure();
+        $this->appendMetadata(fn () => array_filter([
+            'preview_label' => $this->getPreviewLabel(),
+        ]));
     }
 
     public function refine(Refine $refiner, Builder $builder): void

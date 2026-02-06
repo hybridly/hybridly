@@ -4,6 +4,7 @@ namespace Hybridly\Refining\Filters;
 
 use Hybridly\Refining\Concerns\SupportsRelationConstraints;
 use Illuminate\Contracts\Database\Eloquent\Builder;
+use Illuminate\Support\Str;
 
 class Filter extends BaseFilter
 {
@@ -20,13 +21,12 @@ class Filter extends BaseFilter
 
     protected function setUp(): void
     {
-        $this->type(function () {
-            if ($this->getMode() === self::EXACT) {
-                return 'exact';
-            }
+        $this->type('search');
 
-            return "similar:{$this->getMode()}";
-        });
+        $this->appendMetadata(fn () => [
+            'current_value_label' => Str::limit($this->filter?->value, limit: 30),
+            'mode' => $this->getMode(),
+        ]);
     }
 
     public static function make(string $property, ?string $alias = null): static
