@@ -33,15 +33,15 @@ class CallbackFilter extends BaseFilter
         return $static;
     }
 
-    public function apply(Builder $builder, mixed $value, string $property): void
+    public function apply(Builder $builder, QueryFilter $filter, string $property): void
     {
-        $value = $this->castValueToExpectedType($value);
+        $filter = $this->castValueToExpectedType($filter->value);
 
         $this->evaluate(
             value: $this->getFilter(),
             named: [
                 'builder' => $builder,
-                'value' => $value,
+                'value' => $filter,
                 'property' => $property,
             ],
             typed: [
@@ -53,7 +53,7 @@ class CallbackFilter extends BaseFilter
     /**
      * Attempts to cast the value to the type expected by the closure's $value parameter.
      */
-    protected function castValueToExpectedType(mixed $value): mixed
+    protected function castValueToExpectedType(array|string|int $value): mixed
     {
         $filter = $this->getFilter();
 
@@ -77,7 +77,7 @@ class CallbackFilter extends BaseFilter
     /**
      * Casts a value to the specified reflection type.
      */
-    protected function castToType(mixed $value, ReflectionNamedType $type): mixed
+    protected function castToType(array|string|int $value, ReflectionNamedType $type): mixed
     {
         if ($value === null && $type->allowsNull()) {
             return null;

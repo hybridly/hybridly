@@ -2,14 +2,11 @@
 
 namespace Hybridly\Refining\Filters;
 
-use Hybridly\Components\Concerns\EvaluatesClosures;
 use Hybridly\Refining\Refine;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 
 class TernaryFilter extends BaseFilter
 {
-    use EvaluatesClosures;
-
     protected ?\Closure $trueQuery = null;
     protected ?\Closure $falseQuery = null;
     protected ?\Closure $blankQuery = null;
@@ -20,11 +17,22 @@ class TernaryFilter extends BaseFilter
     protected function setUp(): void
     {
         $this->type('ternary');
-        $this->appendMetadata(fn () => array_filter([
-            'true_label' => $this->trueLabel ? $this->evaluate($this->trueLabel) : null,
-            'false_label' => $this->falseLabel ? $this->evaluate($this->falseLabel) : null,
-            'placeholder' => $this->placeholder ? $this->evaluate($this->placeholder) : null,
-        ]));
+        $this->appendMetadata(function () {
+            $trueLabel = $this->trueLabel ? $this->evaluate($this->trueLabel) : null;
+            $falseLabel = $this->falseLabel ? $this->evaluate($this->falseLabel) : null;
+            $placeholder = $this->placeholder ? $this->evaluate($this->placeholder) : null;
+
+            return array_filter([
+                'true_label' => $trueLabel,
+                'false_label' => $falseLabel,
+                'placeholder' => $placeholder,
+                'current_value_label' => match ($this->normalizeValue($this->filter?->value)) {
+                    true => $trueLabel,
+                    false => $falseLabel,
+                    default => $placeholder,
+                },
+            ]);
+        });
     }
 
     public static function make(string $property, ?string $alias = null): static
@@ -35,9 +43,9 @@ class TernaryFilter extends BaseFilter
         ]);
     }
 
-    public function apply(Builder $builder, mixed $value, string $property): void
+    public function apply(Builder $builder, QueryFilter $filter, string $property): void
     {
-        $normalizedValue = $this->normalizeValue($value);
+        $normalizedValue = $this->normalizeValue($filter->value);
 
         if ($normalizedValue === true && $this->trueQuery !== null) {
             $this->evaluate(

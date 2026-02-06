@@ -22,9 +22,9 @@ class BooleanFilter extends BaseFilter
         ]);
     }
 
-    public function apply(Builder $builder, mixed $value, string $property): void
+    public function apply(Builder $builder, QueryFilter $filter, string $property): void
     {
-        $value = filter_var($value, \FILTER_VALIDATE_BOOLEAN, \FILTER_NULL_ON_FAILURE);
+        $value = filter_var($filter->value, \FILTER_VALIDATE_BOOLEAN, \FILTER_NULL_ON_FAILURE);
 
         if (\is_null($value)) {
             return;

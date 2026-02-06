@@ -2,7 +2,7 @@
 
 namespace Hybridly\Refining\Concerns;
 
-use Hybridly\Refining\Contracts\Refiner;
+use Hybridly\Refining\Filters\QueryFilter;
 use Hybridly\Refining\Refine;
 use Hybridly\Refining\Sorts\BaseSort;
 use Illuminate\Contracts\Support\Arrayable;
@@ -87,19 +87,20 @@ trait HasRefiners
     /**
      * Gets the filter value for the given property from the request. If an alias is provided, it will be used instead of the property name to look for the value in the request. Returns null if no value is found.
      */
-    public function getFilterValueFromRequest(string $property, ?string $alias = null): mixed
+    public function getFilterValueFromRequest(string $property, ?string $alias = null): ?QueryFilter
     {
         $callback = static function (Request $request, string $scope, string $property, ?string $alias) {
-            $filters = $request->input($scope);
+            $filters = $request->array($scope);
+            $key = $alias ?? $property;
 
-            // If there is no alias, we use the given name to
-            // find the value and return null if there is none.
-            if (\is_null($alias)) {
-                return $filters[$property] ?? null;
+            if (! isset($filters[$property])) {
+                return null;
             }
 
-            // Otherwise, we find the value for the alias if it exists.
-            return $filters[$alias] ?? null;
+            return new QueryFilter(
+                value: data_get($filters, "{$key}.value"),
+                search: data_get($filters, "{$key}.search"),
+            );
         };
 
         return $this->evaluate($callback, [

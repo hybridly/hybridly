@@ -18,9 +18,9 @@ class TrashedFilter extends BaseFilter
         ]);
     }
 
-    public function apply(Builder $builder, mixed $value, string $property): void
+    public function apply(Builder $builder, QueryFilter $filter, string $property): void
     {
-        match ($value) {
+        match ($filter->value) {
             'with' => $builder->withTrashed(),
             'only' => $builder->onlyTrashed(),
             default => $builder->withoutTrashed(),

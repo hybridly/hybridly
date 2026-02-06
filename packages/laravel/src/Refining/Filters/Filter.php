@@ -37,9 +37,11 @@ class Filter extends BaseFilter
         ]);
     }
 
-    public function apply(Builder $builder, mixed $value, string $property): void
+    public function apply(Builder $builder, QueryFilter $filter, string $property): void
     {
-        if (($enumClass = $this->getEnumClass()) && ! ($value instanceof \BackedEnum)) {
+        $value = $filter->value;
+
+        if ($enumClass = $this->getEnumClass()) {
             $value = $enumClass::tryFrom($value);
 
             if (! $value) {

@@ -21,7 +21,7 @@ abstract class BaseFilter extends Components\Component implements Refiner, Filte
     use Concerns\HasType;
     use Refining\Concerns\QualifiesColumns;
 
-    protected mixed $value = null;
+    protected ?Refining\Filters\QueryFilter $filter = null;
 
     public function __construct(
         protected string $property,
@@ -35,12 +35,12 @@ abstract class BaseFilter extends Components\Component implements Refiner, Filte
 
     public function refine(Refine $refiner, Builder $builder): void
     {
-        if (\is_null($this->value = $refiner->getFilterValueFromRequest($this->property, $this->alias) ?? $this->getDefaultValue())) {
+        if (\is_null($this->filter = $refiner->getFilterValueFromRequest($this->property, $this->alias) ?? $this->getDefaultValue())) {
             return;
         }
 
         try {
-            $this->apply($builder, $this->value, $this->property);
+            $this->apply($builder, $this->filter, $this->property);
         } catch (\TypeError $th) {
             if (str_contains($th->getMessage(), 'Argument #2 ($')) {
                 throw ValidationException::withMessages([
@@ -54,7 +54,7 @@ abstract class BaseFilter extends Components\Component implements Refiner, Filte
 
     public function isActive(): bool
     {
-        return ! \is_null($this->value);
+        return ! \is_null($this->filter);
     }
 
     public function jsonSerialize(): mixed
@@ -66,7 +66,8 @@ abstract class BaseFilter extends Components\Component implements Refiner, Filte
             'type' => $this->getType(),
             'metadata' => $this->getMetadata(),
             'is_active' => $this->isActive(),
-            'value' => $this->value,
+            'value' => $this->filter?->value,
+            'search_query' => $this->filter?->search,
             'default' => $this->defaultValue,
         ];
     }
@@ -79,8 +80,6 @@ abstract class BaseFilter extends Components\Component implements Refiner, Filte
     protected function resolveDefaultClosureDependencyForEvaluationByType(string $parameterType): array
     {
         return match ($parameterType) {
-            Refiner::class => [$this->filter],
-            Filter::class => [$this->filter],
             default => [],
         };
     }
@@ -89,7 +88,8 @@ abstract class BaseFilter extends Components\Component implements Refiner, Filte
     {
         return match ($parameterName) {
             'filter' => [$this->filter],
-            'value' => [$this->value],
+            'value' => [$this->filter?->value],
+            'search' => [$this->filter?->search],
             'property' => [$this->property],
             'alias' => [$this->alias],
             default => [],
