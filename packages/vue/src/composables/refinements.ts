@@ -38,6 +38,10 @@ declare global {
 		 */
 		is_active: boolean
 		/**
+		 * A string-based icon identifier.
+		 */
+		icon?: string
+		/**
 		 * The type of this filter.
 		 */
 		type: 'trashed' | 'callback' | 'exact' | 'similar:loose' | 'similar:begins_with_strict' | 'similar:ends_with_strict' | string

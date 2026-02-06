@@ -14,6 +14,7 @@ abstract class BaseFilter extends Components\Component implements Refiner, Filte
 {
     use Components\Concerns\Configurable;
     use Components\Concerns\HasLabel;
+    use Components\Concerns\HasIcon;
     use Components\Concerns\HasMetadata;
     use Components\Concerns\HasName;
     use Components\Concerns\IsHideable;
@@ -64,6 +65,7 @@ abstract class BaseFilter extends Components\Component implements Refiner, Filte
             'hidden' => $this->isHidden(),
             'label' => $this->getLabel(),
             'type' => $this->getType(),
+            'icon' => $this->getIcon(),
             'metadata' => $this->getMetadata(),
             'is_active' => $this->isActive(),
             'value' => $this->filter?->value,
