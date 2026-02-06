@@ -16,7 +16,7 @@ trait EvaluatesClosures
 {
     protected string $evaluationIdentifier;
 
-    public function evaluate(mixed $value, array $named = [], array $typed = []): mixed
+    public function evaluate(mixed $value, array $named = [], array $typed = [], array $positional = []): mixed
     {
         if (\is_object($value) && method_exists($value, '__invoke')) {
             $value = $value->__invoke(...);
@@ -29,17 +29,33 @@ trait EvaluatesClosures
         $dependencies = [];
 
         foreach ((new ReflectionFunction($value))->getParameters() as $parameter) {
-            $dependencies[] = $this->resolveClosureDependencyForEvaluation($parameter, $named, $typed);
+            $dependencies[] = $this->resolveClosureDependencyForEvaluation($parameter, $named, $typed, $positional);
         }
 
         return $value(...$dependencies);
     }
 
+    protected function resolveTyped(string $type, array $typed): mixed
+    {
+        if (array_key_exists($type, $typed)) {
+            return value($typed[$type]);
+        }
+
+        foreach ($typed as $key => $value) {
+            if (is_a($type, $key, allow_string: true)) {
+                return value($value);
+            }
+        }
+
+        return null;
+    }
+
     /**
      * @param  array<string, mixed>  $named
      * @param  array<string, mixed>  $typed
+     * @param  array<int, mixed>  $positional
      */
-    protected function resolveClosureDependencyForEvaluation(ReflectionParameter $parameter, array $named, array $typed): mixed
+    protected function resolveClosureDependencyForEvaluation(ReflectionParameter $parameter, array $named, array $typed, array $positional): mixed
     {
         $parameterName = $parameter->getName();
 
@@ -49,8 +65,8 @@ trait EvaluatesClosures
 
         $typedParameterClassName = $this->getTypedReflectionParameterClassName($parameter);
 
-        if (filled($typedParameterClassName) && \array_key_exists($typedParameterClassName, $typed)) {
-            return value($typed[$typedParameterClassName]);
+        if (is_string($typedParameterClassName) && ($value = $this->resolveTyped($typedParameterClassName, $typed))) {
+            return $value;
         }
 
         // Dependencies are wrapped in an array to differentiate between null and no value.
@@ -75,8 +91,14 @@ trait EvaluatesClosures
             return $this;
         }
 
+        $parameterPosition = $parameter->getPosition();
+
+        if (\array_key_exists($parameterPosition, $positional)) {
+            return value($positional[$parameterPosition]);
+        }
+
         if (filled($typedParameterClassName)) {
-            return app()->make($typedParameterClassName);
+            return resolve($typedParameterClassName);
         }
 
         if ($parameter->isDefaultValueAvailable()) {
