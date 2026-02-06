@@ -84,10 +84,13 @@ trait HasRefiners
             : 'asc';
     }
 
+    /**
+     * Gets the filter value for the given property from the request. If an alias is provided, it will be used instead of the property name to look for the value in the request. Returns null if no value is found.
+     */
     public function getFilterValueFromRequest(string $property, ?string $alias = null): mixed
     {
         $callback = static function (Request $request, string $scope, string $property, ?string $alias) {
-            $filters = $request->get($scope);
+            $filters = $request->input($scope);
 
             // If there is no alias, we use the given name to
             // find the value and return null if there is none.
