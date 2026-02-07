@@ -11,6 +11,7 @@ class Group implements Refiner
     use Components\Concerns\Configurable;
     use Components\Concerns\EvaluatesClosures;
     use Components\Concerns\IsHideable;
+    use Concerns\HasRefineInstance;
 
     public function __construct(
         protected array $refiners = [],

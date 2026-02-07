@@ -18,6 +18,7 @@ abstract class BaseSort extends Components\Component implements Refiner, Sort
     use Components\Concerns\IsHideable;
     use Concerns\HasDefault;
     use Refining\Concerns\QualifiesColumns;
+    use Refining\Concerns\HasRefineInstance;
 
     protected ?string $direction = null;
     protected \Closure|bool $isDirectionCycleInverted = false;
@@ -41,11 +42,13 @@ abstract class BaseSort extends Components\Component implements Refiner, Sort
         return $this->alias;
     }
 
-    public function refine(Refine $refiner, Builder $builder): void
+    public function refine(Refine $refine, Builder $builder): void
     {
-        $this->direction = $refiner->getSortDirectionFromRequest($this);
+        $this->setRefineInstance($refine);
 
-        if ($this->isSole() && $refiner->hasOtherSorts($this)) {
+        $this->direction = $refine->getSortDirectionFromRequest($this);
+
+        if ($this->isSole() && $refine->hasOtherSorts($this)) {
             return;
         }
 
@@ -54,6 +57,11 @@ abstract class BaseSort extends Components\Component implements Refiner, Sort
         }
 
         $this->apply($builder, $this->direction ?? $this->getDefaultDirection(), $this->property);
+    }
+
+    public function setRefineInstance(Refine $refine): void
+    {
+        $this->refine = $refine;
     }
 
     public function isActive(): bool

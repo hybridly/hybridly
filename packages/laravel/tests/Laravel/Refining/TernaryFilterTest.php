@@ -25,29 +25,29 @@ it('can be serialized', function () {
             'custom' => 'data',
         ]);
 
-    expect($filter)
-        ->toBeInstanceOf(BaseFilter::class)
-        ->jsonSerialize()
-        ->toBe([
+    $serialized = $filter->jsonSerialize();
+
+    expect($serialized)
+        ->toMatchArray([
             'name' => 'active',
             'hidden' => false,
             'label' => 'Active',
             'type' => 'ternary',
-            'metadata' => [
-                'custom' => 'data',
-                'true_label' => 'All items',
-                'false_label' => 'Only inactive',
-                'placeholder' => 'Select status',
-            ],
             'is_active' => false,
             'value' => null,
             'default' => null,
         ]);
+
+    expect($serialized['metadata'])
+        ->toHaveKey('custom', 'data')
+        ->toHaveKey('true_label', 'All items')
+        ->toHaveKey('false_label', 'Only inactive')
+        ->toHaveKey('placeholder', 'Select status');
 });
 
 it('applies the true query when value is true', function () {
     $result = mock_refiner(
-        query: ['filters' => ['status' => true]],
+        query: ['filters' => ['status' => ['value' => true]]],
         refiners: [
             TernaryFilter::make('is_active', alias: 'status')
                 ->queries(
@@ -63,7 +63,7 @@ it('applies the true query when value is true', function () {
 
 it('applies the false query when value is false', function () {
     $result = mock_refiner(
-        query: ['filters' => ['status' => false]],
+        query: ['filters' => ['status' => ['value' => false]]],
         refiners: [
             TernaryFilter::make('is_active', alias: 'status')
                 ->queries(
@@ -102,7 +102,7 @@ it('applies the blank query when value is not provided', function () {
 
 it('normalizes string true values', function () {
     $result = mock_refiner(
-        query: ['filters' => ['status' => '1']],
+        query: ['filters' => ['status' => ['value' => '1']]],
         refiners: [
             TernaryFilter::make('is_active', alias: 'status')
                 ->queries(
@@ -118,7 +118,7 @@ it('normalizes string true values', function () {
 
 it('normalizes string false values', function () {
     $result = mock_refiner(
-        query: ['filters' => ['status' => '0']],
+        query: ['filters' => ['status' => ['value' => '0']]],
         refiners: [
             TernaryFilter::make('is_active', alias: 'status')
                 ->queries(
@@ -152,7 +152,7 @@ it('works without a blank query', function () {
 
 it('works without a true query', function () {
     $result = mock_refiner(
-        query: ['filters' => ['status' => true]],
+        query: ['filters' => ['status' => ['value' => true]]],
         refiners: [
             TernaryFilter::make('is_active', alias: 'status')
                 ->queries(
@@ -167,7 +167,7 @@ it('works without a true query', function () {
 
 it('works without a false query', function () {
     $result = mock_refiner(
-        query: ['filters' => ['status' => false]],
+        query: ['filters' => ['status' => ['value' => false]]],
         refiners: [
             TernaryFilter::make('is_active', alias: 'status')
                 ->queries(
@@ -182,7 +182,7 @@ it('works without a false query', function () {
 
 it('injects builder parameter by type', function () {
     $result = mock_refiner(
-        query: ['filters' => ['status' => true]],
+        query: ['filters' => ['status' => ['value' => true]]],
         refiners: [
             TernaryFilter::make('is_active', alias: 'status')
                 ->queries(
@@ -203,7 +203,7 @@ it('injects named parameters', function () {
     $appliedProperty = null;
 
     mock_refiner(
-        query: ['filters' => ['status' => true]],
+        query: ['filters' => ['status' => ['value' => true]]],
         refiners: [
             TernaryFilter::make('is_active', alias: 'status')
                 ->queries(
@@ -237,7 +237,7 @@ it('supports closures for labels and placeholder', function () {
 
 it('applies complex queries with method chaining', function () {
     $result = mock_refiner(
-        query: ['filters' => ['status' => false]],
+        query: ['filters' => ['status' => ['value' => false]]],
         refiners: [
             TernaryFilter::make('is_active', alias: 'status')
                 ->queries(

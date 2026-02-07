@@ -9,10 +9,10 @@ return new class() extends Migration {
     {
         Schema::create('products', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('name')->nullable();
             $table->string('vendor');
             $table->text('description');
-            $table->integer('price');
+            $table->integer('price')->nullable();
             $table->integer('stock_count');
             $table->boolean('is_active');
             $table->timestamp('published_at');

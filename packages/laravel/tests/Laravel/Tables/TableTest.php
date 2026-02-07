@@ -188,7 +188,7 @@ it('takes filters into account when executing bulk actions', function () {
         'only' => [],
         'except' => [],
         'filters' => [
-            'vendor' => Vendor::Microsoft->value,
+            'vendor' => ['value' => Vendor::Microsoft->value],
         ],
     ])->assertRedirect();
 

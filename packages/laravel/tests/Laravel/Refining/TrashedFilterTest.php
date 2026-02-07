@@ -12,21 +12,20 @@ it('can be serialized', function () {
         ])
         ->label('Show deleted');
 
-    expect($filter)
-        ->toBeInstanceOf(BaseFilter::class)
-        ->jsonSerialize()
-        ->toBe([
+    $serialized = $filter->jsonSerialize();
+
+    expect($serialized)
+        ->toMatchArray([
             'name' => 'deleted',
             'hidden' => false,
             'label' => 'Show deleted',
             'type' => 'trashed',
-            'metadata' => [
-                'foo' => 'bar',
-            ],
             'is_active' => false,
             'value' => null,
             'default' => null,
         ]);
+
+    expect($serialized['metadata'])->toHaveKey('foo', 'bar');
 });
 
 it('filters out deleted products when `trashed` is not set', function () {
@@ -47,7 +46,7 @@ it('filters out non-deleted products when `trashed` is set to `only`', function 
     ProductFactory::new()->create(['deleted_at' => now()]);
 
     $filters = mock_refiner(
-        query: ['filters' => ['trashed' => 'only']],
+        query: ['filters' => ['trashed' => ['value' => 'only']]],
         refiners: [
             TrashedFilter::make(),
         ],
@@ -63,7 +62,7 @@ it('includes deleted products when `trashed` is set to `with`', function () {
     ProductFactory::new()->create(['deleted_at' => now()]);
 
     $filters = mock_refiner(
-        query: ['filters' => ['trashed' => 'with']],
+        query: ['filters' => ['trashed' => ['value' => 'with']]],
         refiners: [
             TrashedFilter::make(),
         ],
@@ -77,7 +76,7 @@ it('ignores the filter when `trashed` is set to an unknown value', function () {
     ProductFactory::new()->create(['deleted_at' => now()]);
 
     $filters = mock_refiner(
-        query: ['filters' => ['trashed' => 'wofhwoiefopiwef']],
+        query: ['filters' => ['trashed' => ['value' => 'wofhwoiefopiwef']]],
         refiners: [
             TrashedFilter::make(),
         ],

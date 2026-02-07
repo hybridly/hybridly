@@ -115,3 +115,31 @@ test('order by statements can be unqualified', function () {
         apply: true,
     )->get();
 });
+
+test('it can filter with is null operator', function () {
+    ProductFactory::new()->create(['name' => null]);
+
+    $filters = mock_refiner(
+        query: ['filters' => ['name' => ['operator' => 'is_null']]],
+        refiners: [
+            TextFilter::make('name'),
+        ],
+    );
+
+    expect($filters)
+        ->first()
+        ->name->toBeNull()->count()->toBe(1);
+});
+
+test('it can filter with is not null operator', function () {
+    ProductFactory::new()->create(['name' => null]);
+
+    $filters = mock_refiner(
+        query: ['filters' => ['name' => ['operator' => 'is_not_null']]],
+        refiners: [
+            TextFilter::make('name'),
+        ],
+    );
+
+    expect($filters)->count()->toBe(3);
+});

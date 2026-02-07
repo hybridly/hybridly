@@ -1,6 +1,6 @@
-export { initializeHybridly, type InitializeOptions } from './initialize'
 export { RouterLink } from './components/link'
+export { initializeHybridly, type InitializeOptions } from './initialize'
 
-export { route, router, can } from '@hybridly/core'
+export { can, route, router } from '@hybridly/core'
 
 export * from './composables'

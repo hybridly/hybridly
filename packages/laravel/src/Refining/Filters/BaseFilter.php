@@ -19,11 +19,14 @@ abstract class BaseFilter extends Components\Component implements Refiner, Filte
     use Components\Concerns\HasName;
     use Components\Concerns\IsHideable;
     use Concerns\HasDefaultValue;
+    use Concerns\HasOperators;
     use Concerns\HasType;
     use Concerns\HasPreviewLabel;
     use Refining\Concerns\QualifiesColumns;
+    use Refining\Concerns\HasRefineInstance;
 
     protected ?Refining\Filters\QueryFilter $filter = null;
+    protected Refine $refine;
 
     public function __construct(
         protected string $property,
@@ -38,9 +41,17 @@ abstract class BaseFilter extends Components\Component implements Refiner, Filte
         ]));
     }
 
-    public function refine(Refine $refiner, Builder $builder): void
+    public function refine(Refine $refine, Builder $builder): void
     {
-        if (\is_null($this->filter = $refiner->getFilterValueFromRequest($this->property, $this->alias) ?? $this->getDefaultValue())) {
+        $this->setRefineInstance($refine);
+
+        $this->filter = $refine->getQueryFilterFromRequest(
+            property: $this->property,
+            alias: $this->alias,
+            default: $this->getDefaultValue(),
+        );
+
+        if (\is_null($this->filter)) {
             return;
         }
 
@@ -74,7 +85,11 @@ abstract class BaseFilter extends Components\Component implements Refiner, Filte
             'is_active' => $this->isActive(),
             'value' => $this->filter?->value,
             'search_query' => $this->filter?->search,
+            'operator' => $this->resolveOperator(),
+            'default_operator' => $this->getDefaultOperator(),
+            'supported_operators' => $this->getSupportedOperators(),
             'default' => $this->defaultValue,
+            'options' => $this->filter?->options ?? [],
         ];
     }
 
@@ -98,6 +113,7 @@ abstract class BaseFilter extends Components\Component implements Refiner, Filte
             'search' => [$this->filter?->search],
             'property' => [$this->property],
             'alias' => [$this->alias],
+            'parentBuilder' => [$this->parentBuilder],
             default => [],
         };
     }

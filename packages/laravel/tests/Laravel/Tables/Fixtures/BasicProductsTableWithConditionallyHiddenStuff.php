@@ -2,7 +2,7 @@
 
 namespace Hybridly\Tests\Laravel\Tables\Fixtures;
 
-use Hybridly\Refining\Filters\Filter;
+use Hybridly\Refining\Filters\TextFilter;
 use Hybridly\Refining\Sorts\Sort;
 use Hybridly\Tables\Actions\BulkAction;
 use Hybridly\Tables\Actions\InlineAction;
@@ -22,7 +22,7 @@ class BasicProductsTableWithConditionallyHiddenStuff extends Table
     {
         return [
             Sort::make('name')->hidden(),
-            Filter::make('name')->hidden(),
+            TextFilter::make('name')->hidden(),
         ];
     }
 

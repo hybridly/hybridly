@@ -21,11 +21,30 @@
                 "name": "name",
                 "hidden": false,
                 "label": "Name",
-                "type": "exact",
-                "metadata": [],
+                "type": "text",
+                "icon": null,
+                "metadata": {
+                    "current_value_label": null
+                },
                 "is_active": false,
                 "value": null,
-                "default": null
+                "search_query": null,
+                "operator": "equals",
+                "default_operator": "equals",
+                "supported_operators": [
+                    "equals",
+                    "not_equals",
+                    "contains",
+                    "not_contains",
+                    "begins_with",
+                    "ends_with",
+                    "is_empty",
+                    "is_not_empty",
+                    "is_null",
+                    "is_not_null"
+                ],
+                "default": null,
+                "options": []
             }
         ],
         "scope": null,

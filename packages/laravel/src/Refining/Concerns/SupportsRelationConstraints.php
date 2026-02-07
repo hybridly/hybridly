@@ -21,16 +21,16 @@ trait SupportsRelationConstraints
                 $parts->last(),
             ]);
 
-        $method = $this->getQueryBoolean() === 'or'
-            ? 'orWhereHas'
-            : 'whereHas';
-
-        $builder->{$method}($relation, function (Builder $builder) use ($property, $callback) {
-            if (! str_contains($property, '.')) {
-                $callback($builder, $property, true);
-            } else {
-                $this->applyRelationConstraint($builder, $property, $callback);
-            }
-        });
+        $builder->has(
+            relation: $relation,
+            boolean: $this->getQueryBoolean(),
+            callback: function (Builder $builder) use ($property, $callback) {
+                if (! str_contains($property, '.')) {
+                    $callback($builder, $property, true);
+                } else {
+                    $this->applyRelationConstraint($builder, $property, $callback);
+                }
+            },
+        );
     }
 }

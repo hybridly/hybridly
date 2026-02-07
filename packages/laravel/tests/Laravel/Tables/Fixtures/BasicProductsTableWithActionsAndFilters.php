@@ -2,7 +2,7 @@
 
 namespace Hybridly\Tests\Laravel\Tables\Fixtures;
 
-use Hybridly\Refining\Filters\Filter;
+use Hybridly\Refining\Filters\TextFilter;
 use Hybridly\Tables\Actions\BulkAction;
 use Hybridly\Tables\Columns\TextColumn;
 use Hybridly\Tables\Table;
@@ -16,8 +16,8 @@ class BasicProductsTableWithActionsAndFilters extends Table
     public function defineRefiners(): array
     {
         return [
-            Filter::make('vendor'),
-            Filter::make('is_active'),
+            TextFilter::make('vendor'),
+            TextFilter::make('is_active'),
         ];
     }
 

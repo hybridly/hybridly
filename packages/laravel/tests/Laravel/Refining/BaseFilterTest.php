@@ -2,7 +2,7 @@
 
 use Hybridly\Refining\Filters\BaseFilter;
 use Hybridly\Refining\Filters\CallbackFilter;
-use Hybridly\Refining\Filters\Filter;
+use Hybridly\Refining\Filters\TextFilter;
 use Hybridly\Support\Configuration\Configuration;
 use Hybridly\Tests\Fixtures\Database\ProductFactory;
 use Illuminate\Contracts\Database\Eloquent\Builder;
@@ -39,7 +39,7 @@ test('filters can have a default value', function () {
 
 test('filters are applied using their property', function () {
     $filters = mock_refiner(
-        query: ['filters' => ['name' => 'AirPods Pro']],
+        query: ['filters' => ['name' => ['value' => 'AirPods Pro']]],
         refiners: [
             CallbackFilter::make('name', $this->filter),
         ],
@@ -52,7 +52,7 @@ test('filters are applied using their property', function () {
 
 test('filters are not applied when their property is used but an alias is defined', function () {
     $filters = mock_refiner(
-        query: ['filters' => ['name' => 'AirPods Pro']],
+        query: ['filters' => ['name' => ['value' => 'AirPods Pro']]],
         refiners: [
             CallbackFilter::make('product', $this->filter),
         ],
@@ -63,7 +63,7 @@ test('filters are not applied when their property is used but an alias is define
 
 test('filters use the alias when defined', function () {
     $filters = mock_refiner(
-        query: ['filters' => ['product' => 'AirPods Pro']],
+        query: ['filters' => ['product' => ['value' => 'AirPods Pro']]],
         refiners: [
             CallbackFilter::make('product', $this->filter),
         ],
@@ -73,15 +73,14 @@ test('filters use the alias when defined', function () {
 });
 
 test('filters can be serialized', function () {
-    expect(Filter::make('airpods_gen'))
+    expect(TextFilter::make('airpods_gen'))
         ->toBeInstanceOf(BaseFilter::class)
         ->jsonSerialize()
-        ->toBe([
+        ->toMatchArray([
             'name' => 'airpods_gen',
             'hidden' => false,
             'label' => 'Airpods gen',
-            'type' => 'exact',
-            'metadata' => [],
+            'type' => 'text',
             'is_active' => false,
             'value' => null,
             'default' => null,
@@ -89,15 +88,14 @@ test('filters can be serialized', function () {
 });
 
 test('filters use their alias as name when defined', function () {
-    expect(Filter::make('airpods_gen', alias: 'airpods_generation'))
+    expect(TextFilter::make('airpods_gen', alias: 'airpods_generation'))
         ->toBeInstanceOf(BaseFilter::class)
         ->jsonSerialize()
-        ->toBe([
+        ->toMatchArray([
             'name' => 'airpods_generation',
             'hidden' => false,
             'label' => 'Airpods generation',
-            'type' => 'exact',
-            'metadata' => [],
+            'type' => 'text',
             'is_active' => false,
             'value' => null,
             'default' => null,
@@ -106,9 +104,9 @@ test('filters use their alias as name when defined', function () {
 
 test('serialization takes current state into account', function () {
     $filters = mock_refiner(
-        query: ['filters' => ['product' => 'AirPods Pro']],
+        query: ['filters' => ['product' => ['value' => 'AirPods Pro']]],
         refiners: [
-            Filter::make('name', alias: 'product'),
+            TextFilter::make('product', alias: 'product'),
         ],
         apply: true,
     );
@@ -117,8 +115,7 @@ test('serialization takes current state into account', function () {
         ->toMatchArray([
             'name' => 'product',
             'label' => 'Product',
-            'type' => 'exact',
-            'metadata' => [],
+            'type' => 'text',
             'is_active' => true,
             'value' => 'AirPods Pro',
         ]);
@@ -128,9 +125,9 @@ test('filters key is globally configurable', function () {
     Configuration::get()->refining->filtersKey = 'product-filters';
 
     $filters = mock_refiner(
-        query: ['product-filters' => ['name' => 'AirPods Pro']],
+        query: ['product-filters' => ['name' => ['value' => 'AirPods Pro']]],
         refiners: [
-            Filter::make('name'),
+            TextFilter::make('name'),
         ],
     );
 
@@ -141,9 +138,9 @@ test('filters key is globally configurable', function () {
 
 test('filters key is locally configurable', function () {
     $filters = mock_refiner(
-        query: ['product-filters' => ['name' => 'AirPods Pro']],
+        query: ['product-filters' => ['name' => ['value' => 'AirPods Pro']]],
         refiners: [
-            Filter::make('name'),
+            TextFilter::make('name'),
         ],
     )->filtersKey('product-filters');
 
@@ -154,9 +151,9 @@ test('filters key is locally configurable', function () {
 
 test('filters key respects the scope', function () {
     $filters = mock_refiner(
-        query: ['products-filtering' => ['name' => 'AirPods Pro']],
+        query: ['products-filtering' => ['name' => ['value' => 'AirPods Pro']]],
         refiners: [
-            Filter::make('name'),
+            TextFilter::make('name'),
         ],
     )
         ->scope('products')

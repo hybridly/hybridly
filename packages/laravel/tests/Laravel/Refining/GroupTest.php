@@ -1,7 +1,8 @@
 <?php
 
 use Hybridly\Refining\Filters\CallbackFilter;
-use Hybridly\Refining\Filters\Filter;
+use Hybridly\Refining\Filters\NumericFilter;
+use Hybridly\Refining\Filters\TextFilter;
 use Hybridly\Refining\Group;
 use Hybridly\Refining\Refine;
 use Hybridly\Refining\Sorts\Sort;
@@ -14,13 +15,13 @@ it('applies specified boolean mode on filters in a group', function () {
     ProductFactory::new()->create(['name' => 'Galaxy S23', 'description' => 'Nice photos.']);
 
     $refine = mock_refiner(
-        query: array_filter(['filters' => ['query' => 'AirPods']]),
+        query: array_filter(['filters' => ['query' => ['value' => 'AirPods', 'operator' => 'contains']]]),
         refiners: [
             Sort::make('created_at', alias: 'date'),
             Group::make()
                 ->refiners([
-                    Filter::make('name', alias: 'query'),
-                    Filter::make('description', alias: 'query')->loose(),
+                    TextFilter::make('name', alias: 'query'),
+                    TextFilter::make('description', alias: 'query'),
                 ])
                 ->booleanMode('or'),
         ],
@@ -36,7 +37,7 @@ it('does not leak options to other filters', function () {
     };
 
     mock_refiner(
-        query: array_filter(['filters' => ['query' => 'dummy']]),
+        query: array_filter(['filters' => ['query' => ['value' => 'dummy']]]),
         refiners: [
             CallbackFilter::make('query', $callback),
             Group::make()
@@ -66,13 +67,13 @@ it('makes a grouped subquery per group', function () {
     ProductFactory::new()->create(['name' => 'Galaxy S23', 'description' => 'Nice photos.', 'price' => 1000]);
 
     $refine = mock_refiner(
-        query: array_filter(['filters' => ['query' => 'AirPods']]),
+        query: array_filter(['filters' => ['query' => ['value' => 'AirPods'], 'price' => ['value' => 500, 'operator' => 'greater_than']]]),
         refiners: [
-            Filter::make('price')->operator('>')->default(500),
+            NumericFilter::make('price'),
             Group::make()
                 ->refiners([
-                    Filter::make('name', alias: 'query'),
-                    Filter::make('description', alias: 'query')->loose(),
+                    TextFilter::make('name', alias: 'query'),
+                    TextFilter::make('description', alias: 'query'),
                 ])
                 ->booleanMode('or'),
         ],

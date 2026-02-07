@@ -1,6 +1,6 @@
 <?php
 
-use Hybridly\Refining\Filters\Filter;
+use Hybridly\Refining\Filters\TextFilter;
 use Hybridly\Refining\Group;
 use Hybridly\Refining\Sorts\Sort;
 use Hybridly\Tests\Fixtures\Database\ProductFactory;
@@ -39,7 +39,7 @@ test('the refine instance can be serialized', function () {
     $refine = mock_refiner(
         refiners: [
             Sort::make('created_at', alias: 'date'),
-            Filter::make('name')->loose(),
+            TextFilter::make('name'),
         ],
     )
         ->scope('products');
@@ -65,11 +65,30 @@ test('the refine instance can be serialized', function () {
                     'name' => 'name',
                     'hidden' => false,
                     'label' => 'Name',
-                    'type' => 'similar:loose',
-                    'metadata' => [],
+                    'type' => 'text',
+                    'icon' => null,
+                    'metadata' => [
+                        'current_value_label' => null,
+                    ],
                     'is_active' => false,
                     'value' => null,
+                    'search_query' => null,
+                    'operator' => 'equals',
+                    'default_operator' => 'equals',
+                    'supported_operators' => [
+                        'equals',
+                        'not_equals',
+                        'contains',
+                        'not_contains',
+                        'begins_with',
+                        'ends_with',
+                        'is_empty',
+                        'is_not_empty',
+                        'is_null',
+                        'is_not_null',
+                    ],
                     'default' => null,
+                    'options' => [],
                 ],
             ],
             'scope' => 'products',
@@ -82,13 +101,13 @@ test('the refine instance can be serialized', function () {
 
 it('serializes flattened filters and sorts when grouping', function () {
     $refiner = mock_refiner(
-        query: ['filters' => ['name' => 'AirPods']],
+        query: ['filters' => ['name' => ['value' => 'AirPods']]],
         refiners: [
             Sort::make('created_at', alias: 'date'),
             Group::make()
                 ->refiners([
-                    Filter::make('name'),
-                    Filter::make('description'),
+                    TextFilter::make('name'),
+                    TextFilter::make('description'),
                 ])
                 ->booleanMode('or'),
         ],

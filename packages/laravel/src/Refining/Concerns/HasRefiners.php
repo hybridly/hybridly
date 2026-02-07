@@ -2,6 +2,7 @@
 
 namespace Hybridly\Refining\Concerns;
 
+use Hybridly\Refining\Filters\Operator;
 use Hybridly\Refining\Filters\QueryFilter;
 use Hybridly\Refining\Refine;
 use Hybridly\Refining\Sorts\BaseSort;
@@ -85,21 +86,30 @@ trait HasRefiners
     }
 
     /**
-     * Gets the filter value for the given property from the request. If an alias is provided, it will be used instead of the property name to look for the value in the request. Returns null if no value is found.
+     * Gets the filter value for the given property from the request. If an alias is provided, it will be used instead of the property name to look for the value in the request. Returns null if no value is found, or a QueryFilter with the default value if provided.
      */
-    public function getFilterValueFromRequest(string $property, ?string $alias = null): ?QueryFilter
+    public function getQueryFilterFromRequest(string $property, ?string $alias = null, mixed $default = null): ?QueryFilter
     {
-        $callback = static function (Request $request, string $scope, string $property, ?string $alias) {
+        $callback = static function (Request $request, string $scope, string $property, ?string $alias, mixed $default) {
             $filters = $request->array($scope);
             $key = $alias ?? $property;
 
-            if (! isset($filters[$property])) {
-                return null;
+            if (! isset($filters[$key])) {
+                return $default !== null ? new QueryFilter(value: $default) : null;
+            }
+
+            $value = data_get($filters, "{$key}.value");
+            $operator = data_get($filters, "{$key}.operator");
+
+            if ($operator) {
+                $operator = Operator::tryFrom($operator);
             }
 
             return new QueryFilter(
-                value: data_get($filters, "{$key}.value"),
+                value: $value === 'null' ? null : $value,
                 search: data_get($filters, "{$key}.search"),
+                operator: $operator,
+                options: data_get($filters, "{$key}.options", default: []),
             );
         };
 
@@ -108,6 +118,7 @@ trait HasRefiners
             'scope' => $this->formatScope($this->getFiltersKey()),
             'property' => $property,
             'alias' => $alias,
+            'default' => $default,
         ]);
     }
 

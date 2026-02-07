@@ -2,6 +2,7 @@
 
 namespace Hybridly\Refining\Filters;
 
+use Hybridly\Refining\Filters\Operator;
 use Hybridly\Refining\Refine;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 
@@ -17,6 +18,13 @@ class TernaryFilter extends BaseFilter
     protected function setUp(): void
     {
         $this->type('ternary');
+
+        $this->supportedOperators([
+            Operator::EQUALS,
+        ]);
+
+        $this->defaultOperator(Operator::EQUALS);
+
         $this->appendMetadata(function () {
             $trueLabel = $this->trueLabel ? $this->evaluate($this->trueLabel) : null;
             $falseLabel = $this->falseLabel ? $this->evaluate($this->falseLabel) : null;
@@ -80,10 +88,10 @@ class TernaryFilter extends BaseFilter
 
     public function refine(Refine $refiner, Builder $builder): void
     {
-        $this->value = $refiner->getFilterValueFromRequest($this->property, $this->alias);
+        $this->filter = $refiner->getQueryFilterFromRequest($this->property, $this->alias);
 
         // If value is null/blank and we have a blank query, apply it
-        if ($this->value === null && $this->blankQuery !== null) {
+        if ($this->filter === null && $this->blankQuery !== null) {
             $this->evaluate(
                 value: $this->blankQuery,
                 named: [
@@ -111,6 +119,26 @@ class TernaryFilter extends BaseFilter
         $this->trueQuery = $true;
         $this->falseQuery = $false;
         $this->blankQuery = $blank;
+
+        return $this;
+    }
+
+    /**
+     * Defines the labels for the true and false states.
+     */
+    public function labels(null|string|\Closure $true = null, null|string|\Closure $false = null, null|string|\Closure $placeholder = null): static
+    {
+        if ($true !== null) {
+            $this->trueLabel($true);
+        }
+
+        if ($false !== null) {
+            $this->falseLabel($false);
+        }
+
+        if ($placeholder !== null) {
+            $this->placeholder($placeholder);
+        }
 
         return $this;
     }
