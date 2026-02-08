@@ -16,17 +16,17 @@
         "spatie/php-structure-discoverer": "^2.0"
     },
     "require-dev": {
-        "carthage-software/mago": "^0.24.1",
-        "guzzlehttp/promises": "^2.0.4",
-        "laravel/octane": "^2.6",
-        "nunomaduro/collision": "^8.5",
-        "orchestra/testbench": "^9.6.1|^10.0",
-        "pestphp/pest": "^4.3",
+        "carthage-software/mago": "^0.24.5",
+        "guzzlehttp/promises": "^2.3.0",
+        "laravel/octane": "^2.13.5",
+        "nunomaduro/collision": "^8.8.3",
+        "orchestra/testbench": "^9.6.1|^10.9",
+        "pestphp/pest": "^4.3.2",
         "pestphp/pest-plugin-laravel": "^4.0",
-        "spatie/laravel-data": "^4.11.1",
-        "spatie/laravel-ray": "^1.37.1",
-        "spatie/laravel-typescript-transformer": "^2.5",
-        "symplify/monorepo-builder": "^11.2.22"
+        "spatie/laravel-data": "^4.19.1",
+        "spatie/laravel-ray": "^1.43.5",
+        "spatie/laravel-typescript-transformer": "^2.5.2",
+        "symplify/monorepo-builder": "^11.2.23"
     },
     "replace": {
         "hybridly/laravel": "self.version"
