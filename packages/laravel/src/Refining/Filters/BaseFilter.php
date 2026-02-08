@@ -57,12 +57,6 @@ abstract class BaseFilter extends Components\Component implements Refiner, Filte
 
         try {
             $this->apply($builder, $this->filter, $this->property);
-        } catch (\TypeError $th) {
-            if (str_contains($th->getMessage(), 'Argument #2 ($')) {
-                throw ValidationException::withMessages([
-                    $this->property => 'This filter is invalid.',
-                ]);
-            }
         } catch (\Throwable $th) {
             throw $th;
         }
@@ -83,12 +77,12 @@ abstract class BaseFilter extends Components\Component implements Refiner, Filte
             'icon' => $this->getIcon(),
             'metadata' => $this->getMetadata(),
             'is_active' => $this->isActive(),
-            'value' => $this->filter?->value,
+            'value' => $this->getValue(),
             'search_query' => $this->filter?->search,
             'operator' => $this->resolveOperator(),
             'default_operator' => $this->getDefaultOperator(),
             'supported_operators' => $this->getSupportedOperators(),
-            'default' => $this->defaultValue,
+            'default' => $this->getDefaultValue(),
             'options' => $this->filter?->options ?? [],
         ];
     }
@@ -96,6 +90,11 @@ abstract class BaseFilter extends Components\Component implements Refiner, Filte
     protected function getQueryBoolean(): string
     {
         return Refine::getGroupOption('boolean', default: 'and');
+    }
+
+    protected function getValue(): mixed
+    {
+        return $this->filter?->value;
     }
 
     protected function resolveDefaultClosureDependencyForEvaluationByType(string $parameterType): array

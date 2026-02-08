@@ -253,6 +253,55 @@ export interface NumericFilterRefinement extends BaseFilterRefinement {
 }
 
 /**
+ * Time suggestion for single date filters.
+ */
+export interface TimeSuggestion {
+	type: 'time'
+	label: string
+	date: string
+}
+
+/**
+ * Timeframe suggestion for date range filters.
+ */
+export interface TimeframeSuggestion {
+	type: 'timeframe'
+	label: string
+	start: string
+	end: string
+}
+
+/**
+ * Date filter refinement.
+ */
+export interface DateFilterRefinement extends BaseFilterRefinement {
+	type: 'date'
+	operator?: FilterOperator
+	metadata: BaseFilterRefinement['metadata'] & {
+		/**
+		 * Whether this is a timeframe filter (with start and end columns).
+		 */
+		is_timeframe?: boolean
+		/**
+		 * The start column for timeframe filters.
+		 */
+		start_column?: string
+		/**
+		 * The end column for timeframe filters.
+		 */
+		end_column?: string
+		/**
+		 * Suggested dates or timeframes for this filter.
+		 */
+		suggestions?: Array<TimeSuggestion | TimeframeSuggestion>
+		/**
+		 * A description for this filter, suitable for display purposes.
+		 */
+		description?: string
+	}
+}
+
+/**
  * Trashed filter refinement.
  */
 export interface TrashedFilterRefinement extends BaseFilterRefinement {
@@ -277,6 +326,7 @@ export type FilterRefinement =
 	| TernaryFilterRefinement
 	| BooleanFilterRefinement
 	| NumericFilterRefinement
+	| DateFilterRefinement
 	| TrashedFilterRefinement
 	| CallbackFilterRefinement
 
@@ -369,6 +419,10 @@ interface BoundFilterRefinementMethods {
 	 */
 	search: (value?: string | number, options?: AvailableHybridRequestOptions) => Promise<NavigationResponse | undefined>
 	/**
+	 * Whether this filter is a date filter.
+	 */
+	isDateFilter: () => boolean
+	/**
 	 * Whether this filter is a select filter.
 	 */
 	isSelectFilter: () => boolean
@@ -399,6 +453,13 @@ interface BoundFilterRefinementMethods {
  */
 export function isTextFilter(filter: FilterRefinement | BoundFilterRefinement): filter is BoundTextFilterRefinement {
 	return filter.type === 'text'
+}
+
+/**
+ * Checks whether the given filter is a date filter, and narrows its type.
+ */
+export function isDateFilter(filter: FilterRefinement | BoundFilterRefinement): filter is BoundDateFilterRefinement {
+	return filter.type === 'date'
 }
 
 /**
@@ -440,6 +501,11 @@ export function isCallbackFilter(filter: FilterRefinement | BoundFilterRefinemen
  * Bound text filter refinement with type-specific methods.
  */
 export interface BoundTextFilterRefinement extends TextFilterRefinement, BoundFilterRefinementMethods {}
+
+/**
+ * Bound date filter refinement with type-specific methods.
+ */
+export interface BoundDateFilterRefinement extends DateFilterRefinement, BoundFilterRefinementMethods {}
 
 /**
  * Bound select filter refinement with type-specific methods.
@@ -617,6 +683,10 @@ export function useRefinements<T extends Refinements>(
 			 * Whether this filter is a select filter.
 			 */
 			isSelectFilter: () => isSelectFilter(filter),
+			/**
+			 * Whether this filter is a date filter.
+			 */
+			isDateFilter: () => isDateFilter(filter),
 			/**
 			 * Whether this filter is a search filter.
 			 */

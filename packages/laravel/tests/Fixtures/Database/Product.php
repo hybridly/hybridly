@@ -14,5 +14,6 @@ final class Product extends Model
     protected $casts = [
         'is_active' => 'boolean',
         'vendor' => Vendor::class,
+        'published_at' => 'datetime',
     ];
 }
