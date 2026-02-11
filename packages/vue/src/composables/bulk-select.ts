@@ -20,6 +20,17 @@ export function useBulkSelect<T = any>() {
 	}) as Ref<BulkSelection<T>>
 
 	/**
+	 * Toggles selection for all records.
+	 */
+	function toggleAll(force?: boolean) {
+		if (!selection.value.all || force === true) {
+			selectAll()
+		} else {
+			deselectAll()
+		}
+	}
+
+	/**
 	 * Selects all records.
 	 */
 	function selectAll() {
@@ -85,6 +96,13 @@ export function useBulkSelect<T = any>() {
 	})
 
 	/**
+	 * Checks whether any record is selected.
+	 */
+	const anySelected = computed(() => {
+		return selection.value.all || selection.value.only.size > 0
+	})
+
+	/**
 	 * Binds a checkbox's properties.
 	 */
 	function bindCheckbox(key: T) {
@@ -104,6 +122,8 @@ export function useBulkSelect<T = any>() {
 
 	return {
 		allSelected,
+		anySelected,
+		toggleAll,
 		selectAll,
 		deselectAll,
 		select,
