@@ -78,7 +78,7 @@ interface PaginatorMeta {
 
 export type MaybeWithData<T> = T | Omit<T, 'data'>
 
-export type PaginatorResult<T, P> = P extends MaybeWithData<Paginator<T>>
+export type PaginatorResult<T, P = MaybeWithData<Paginator<T>>> = P extends MaybeWithData<Paginator<T>>
 	? P & { to: (page: number, options?: Omit<HybridRequestOptions, 'method' | 'url'>) => Promise<NavigationResponse> | undefined }
 	: P
 
