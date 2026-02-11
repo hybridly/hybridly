@@ -5,8 +5,8 @@ namespace Hybridly\View;
 use Hybridly\Contracts\HybridResponse;
 use Hybridly\Exceptions\MissingViewComponentException;
 use Hybridly\Hybridly;
+use Hybridly\Support\Arr as SupportArr;
 use Hybridly\Support\Header;
-use Hybridly\Support\Hybridable;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\JsonResponse;
@@ -167,15 +167,7 @@ class Factory implements HybridResponse
 
     protected function transformProperties(array|Arrayable|TransformableData $properties): array
     {
-        if ($properties instanceof Hybridable) {
-            $properties = $properties->toHybridArray();
-        }
-
-        if ($properties instanceof Arrayable || $properties instanceof TransformableData) {
-            $properties = $properties->toArray();
-        }
-
-        return $properties;
+        return SupportArr::resolveArrayableProperties($properties);
     }
 
     protected function renderDialog(Request $request, Payload $payload)
