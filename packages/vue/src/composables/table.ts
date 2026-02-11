@@ -1,5 +1,5 @@
 import { getByPath } from '@clickbar/dot-diver'
-import { route, router } from '@hybridly/core'
+import { HybridRequestOptions, route, router } from '@hybridly/core'
 import type { FormDataConvertible } from '@hybridly/utils'
 import type { MaybeRefOrGetter } from 'vue'
 import { computed, reactive, toRaw, toValue } from 'vue'
@@ -61,9 +61,13 @@ export interface BulkAction extends Action {
 	deselect: boolean
 }
 
-interface BulkActionOptions {
+interface BulkActionOptions extends Omit<HybridRequestOptions, 'url'> {
 	/** Force deselecting all records after action. */
 	deselect?: boolean
+}
+
+interface InlineActionOptions<T> extends Omit<HybridRequestOptions, 'url'> {
+	record: T
 }
 
 export interface InlineAction extends Action {
@@ -106,15 +110,19 @@ export function useTable<
 	/**
 	 * Gets additionnal data to send with the request.
 	 */
-	function getAdditionnalData() {
+	function getAdditionnalData(options: Omit<HybridRequestOptions, 'url'>) {
 		const data = {}
+		options = {
+			...defaultOptions,
+			...options,
+		}
 
 		if (defaultOptions?.includeQueryParameters !== false) {
 			Object.assign(data, structuredClone(toRaw(useQueryParameters())))
 		}
 
-		if (defaultOptions?.data) {
-			Object.assign(data, defaultOptions.data)
+		if (options?.data) {
+			Object.assign(data, options.data)
 		}
 
 		return data
@@ -172,7 +180,10 @@ export function useTable<
 	/**
 	 * Executes the given inline action by name.
 	 */
-	async function executeInlineAction(action: InlineAction | string, record: RecordTypeWithExtra | RecordIdentifier | RecordType) {
+	async function executeInlineAction(
+		action: InlineAction | string,
+		options: InlineActionOptions<RecordTypeWithExtra | RecordIdentifier | RecordType>,
+	) {
 		const resolvedAction = resolveInlineAction(action)
 
 		if (!resolvedAction) {
@@ -185,11 +196,11 @@ export function useTable<
 			url: getActionUrl(resolvedAction, table.value),
 			preserveState: true,
 			data: {
-				...getAdditionnalData(),
+				...getAdditionnalData(options),
 				type: 'action:inline',
 				action: resolvedAction.name,
 				tableId: table.value.id,
-				recordId: getRecordKey(record),
+				recordId: getRecordKey(options.record),
 			},
 		})
 	}
@@ -197,7 +208,7 @@ export function useTable<
 	/**
 	 * Executes the given bulk action for the given records.
 	 */
-	async function executeBulkAction(action: BulkAction | string, options?: BulkActionOptions) {
+	async function executeBulkAction(action: BulkAction | string, options: BulkActionOptions = {}) {
 		const resolvedAction = resolveBulkAction(action)
 
 		if (!resolvedAction) {
@@ -217,7 +228,7 @@ export function useTable<
 			url: getActionUrl(resolvedAction, table.value),
 			preserveState: true,
 			data: {
-				...getAdditionnalData(),
+				...getAdditionnalData(options),
 				type: 'action:bulk',
 				action: resolvedAction.name,
 				tableId: table.value.id,
@@ -273,7 +284,7 @@ export function useTable<
 		inlineActions: computed(() =>
 			table.value.inlineActions.map((action) => ({
 				/** Executes the action. */
-				execute: (record: RecordTypeWithExtra | RecordIdentifier | RecordType) => executeInlineAction(action, record),
+				execute: (record: RecordTypeWithExtra | RecordIdentifier | RecordType) => executeInlineAction(action, { record }),
 				...action,
 			}))
 		),
@@ -339,12 +350,12 @@ export function useTable<
 					/** The key of the record. Use this instead of `id`. */
 					key: getRecordKey(record),
 					/** Executes the given inline action. */
-					execute: (action: string | InlineAction) => executeInlineAction(action, getRecordKey(record)),
+					execute: (action: string | InlineAction) => executeInlineAction(action, { record: getRecordKey(record) }),
 					/** Gets the available inline actions. */
 					actions: table.value.inlineActions.map((action) => ({
 						...action,
 						/** Executes the action. */
-						execute: () => executeInlineAction(action.name, getRecordKey(record)),
+						execute: () => executeInlineAction(action.name, { record: getRecordKey(record) }),
 					})),
 					/** Selects this record. */
 					select: () => bulk.select(getRecordKey(record)),
