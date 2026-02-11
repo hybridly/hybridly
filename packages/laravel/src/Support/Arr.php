@@ -4,6 +4,8 @@ namespace Hybridly\Support;
 
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Arr as SupportArr;
+use Illuminate\Support\Enumerable;
+use Spatie\LaravelData\Contracts\TransformableData;
 
 class Arr extends SupportArr
 {
@@ -53,6 +55,14 @@ class Arr extends SupportArr
     public static function resolveArrayableProperties(array $properties, bool $unpackDotProps = true): array
     {
         foreach ($properties as $key => $value) {
+            if ($value instanceof Enumerable) {
+                $value = $value->all();
+            }
+
+            if ($value instanceof TransformableData) {
+                $value = $value->all();
+            }
+
             if ($value instanceof Hybridable) {
                 $value = $value->toHybridArray();
             }
