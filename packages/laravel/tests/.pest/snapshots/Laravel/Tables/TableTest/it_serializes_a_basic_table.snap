@@ -108,7 +108,8 @@
         {
             "name": "say_my_name",
             "label": "Say my name",
-            "metadata": []
+            "metadata": [],
+            "url": null
         }
     ],
     "bulkActions": [
@@ -116,6 +117,7 @@
             "name": "say_our_names",
             "label": "Say our names",
             "metadata": [],
+            "url": null,
             "deselect": true
         }
     ],

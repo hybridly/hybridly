@@ -14,6 +14,7 @@ use Hybridly\Support\Configuration\Configuration;
 use Hybridly\Support\Data\PartialLazy;
 use Hybridly\Support\RayDumper;
 use Hybridly\Support\Version;
+use Hybridly\Tables\Actions\DataTransferObjects\BulkSelection;
 use Hybridly\Tables\Actions\Http\InvokedActionController;
 use Hybridly\Testing\TestResponseMacros;
 use Illuminate\Contracts\Foundation\Application;
@@ -196,6 +197,8 @@ class HybridlyServiceProvider extends PackageServiceProvider
 
     protected function registerActionsEndpoint(): void
     {
+        $this->app->bind(BulkSelection::class, fn ($app) => BulkSelection::fromRequest($app->make(Request::class)));
+
         if (! $this->getConfiguration()->tables->enableActions) {
             return;
         }

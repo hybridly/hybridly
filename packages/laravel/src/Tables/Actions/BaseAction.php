@@ -9,6 +9,7 @@ use Hybridly\Tables\Actions;
 abstract class BaseAction extends Component
 {
     use Actions\Concerns\HasActionCallback;
+    use Actions\Concerns\HasUrl;
     use Concerns\HasLabel;
     use Concerns\HasMetadata;
     use Concerns\HasName;
@@ -34,6 +35,7 @@ abstract class BaseAction extends Component
             'name' => $this->getName(),
             'label' => $this->getLabel(),
             'metadata' => $this->getMetadata(),
+            'url' => $this->getUrl(),
         ];
     }
 

@@ -5,6 +5,7 @@ namespace Hybridly\Tables\Actions\Http;
 use Hybridly\Contracts\HybridResponse;
 use Hybridly\Tables\Actions\BaseAction;
 use Hybridly\Tables\Actions\BulkAction;
+use Hybridly\Tables\Actions\BulkSelected;
 use Hybridly\Tables\Actions\DataTransferObjects\BulkActionData;
 use Hybridly\Tables\Actions\DataTransferObjects\InlineActionData;
 use Hybridly\Tables\Actions\DataTransferObjects\InvokedActionData;
@@ -104,15 +105,10 @@ final class InvokedActionController
          */
         [$table, $action] = $this->resolveAction($data);
 
-        $model = $table->getModelClass();
-        $key = $table->getKeyName();
-
         /** @var \Illuminate\Database\Eloquent\Builder */
-        $query = $table->getRefinedQuery();
-        $query = match (true) {
-            $data->all === true => $query->whereNotIn($key, $data->except),
-            default => $query->whereIn($key, $data->only),
-        };
+        $query = $table
+            ->getRefinedQuery()
+            ->tap(new BulkSelected($data, keyName: $table->getKeyName()));
 
         // If the action has a 'query' parameter, we pass it.
         // Otherwise we execute the query here and pass the result as 'records'.

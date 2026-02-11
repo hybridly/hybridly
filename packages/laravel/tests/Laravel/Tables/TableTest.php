@@ -138,7 +138,7 @@ it('can execute a conditionally hidden inline actions', function () {
 
     $product = ProductFactory::createImmutable();
 
-    $this->withoutExceptionHandling();
+    withoutExceptionHandling();
 
     post(config('hybridly.tables.actions_endpoint'), [
         'type' => 'action:inline',
