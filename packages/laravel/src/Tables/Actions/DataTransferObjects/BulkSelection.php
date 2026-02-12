@@ -29,4 +29,17 @@ final class BulkSelection
             only: $request->input('only', []),
         );
     }
+
+    public function hasSelection(): bool
+    {
+        if ($this->all) {
+            return true;
+        }
+
+        if (count($this->except) > 0) {
+            return true;
+        }
+
+        return count($this->only) > 0;
+    }
 }
