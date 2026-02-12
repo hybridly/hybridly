@@ -130,6 +130,7 @@ class SelectFilter extends BaseFilter
                 return $this->evaluate(
                     value: $this->formatSelectedOptionLabelUsing,
                     named: [
+                        'key' => array_key_first($options),
                         'option' => array_first($options),
                     ],
                     typed: [
@@ -166,21 +167,26 @@ class SelectFilter extends BaseFilter
             }
 
             if ($this->filter?->value) {
-                $builder->orWhere(function (Builder $builder) {
-                    $this->evaluate($this->resolveBuilderOptionFromKeyUsing, named: [
-                        'builder' => $builder,
-                        'query' => $builder,
-                        'key' => $this->filter->value,
-                    ]);
-                });
+                $builder->where(
+                    function (Builder $builder) {
+                        $this->evaluate($this->resolveBuilderOptionFromKeyUsing, named: [
+                            'builder' => $builder,
+                            'query' => $builder,
+                            'key' => $this->filter->value,
+                        ]);
+                    },
+                    boolean: $this->isSearching() ? 'or' : 'and',
+                );
             }
 
             return $builder->get();
         });
 
         $this->resolveBuilderOptionFromKeyUsing(function (Builder $builder, array|string|int $key) {
-            if (is_array($key)) {
+            if (is_array($key) && count($key) > 1) {
                 $builder->whereIn($builder->getModel()->getKeyName(), array_values($key));
+            } elseif (is_array($key) && count($key) === 1) {
+                $builder->where($builder->getModel()->getKeyName(), array_first($key));
             } else {
                 $builder->where($builder->getModel()->getKeyName(), $key);
             }
@@ -752,8 +758,11 @@ class SelectFilter extends BaseFilter
         }
 
         return collect($values)
-            ->filter(fn ($value) => $value !== null) // Filter out null values
-            ->mapWithKeys(function (int|string|Model|UnitEnum $key) {
+            ->mapWithKeys(function (null|int|string|Model|UnitEnum $key) {
+                if ($key === null) {
+                    return [];
+                }
+
                 $value = $this->evaluate(
                     value: $this->parseOptionUsing,
                     named: [
@@ -766,6 +775,7 @@ class SelectFilter extends BaseFilter
 
                 return [$key => $value];
             })
+            ->filter(fn ($value) => $value !== null)
             ->all();
     }
 
