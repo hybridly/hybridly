@@ -732,7 +732,7 @@ class SelectFilter extends BaseFilter
         return true;
     }
 
-    protected function getSelectedOptionsLabel(): ?string
+    protected function getSelectedOptionsLabel(): null|array|string
     {
         if (! $this->filter && ! $this->hasEmptyRelationshipOption) {
             return null;
@@ -798,7 +798,7 @@ class SelectFilter extends BaseFilter
         );
     }
 
-    protected function getOptionLabel(int|string|Model|UnitEnum $option): string|int|null
+    protected function getOptionLabel(int|string|Model|UnitEnum $option): array|string|int|null
     {
         return $this->evaluate(
             value: $this->formatOptionLabelUsing,
