@@ -38,6 +38,7 @@
 		"typescript": "catalog:",
 		"vite": "catalog:",
 		"vitepress": "https://pkg.pr.new/vitepress@f8d8c0d",
+		"vitepress-plugin-llms": "^1.11.0",
 		"vitest": "catalog:",
 		"vue": "catalog:"
 	},

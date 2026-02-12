@@ -1,8 +1,9 @@
-import { resolve } from 'node:path'
-import { existsSync, readFileSync } from 'node:fs'
-import { execSync } from 'node:child_process'
-import { defineConfig } from 'vitepress'
 import tailwindcss from '@tailwindcss/vite'
+import { execSync } from 'node:child_process'
+import { existsSync, readFileSync } from 'node:fs'
+import { resolve } from 'node:path'
+import { defineConfig } from 'vitepress'
+import llmstxt from 'vitepress-plugin-llms'
 
 const title = 'Hybridly'
 const description = 'Modern solution to develop server-driven, client-rendered applications.'
@@ -236,6 +237,7 @@ export default defineConfig({
 	vite: {
 		plugins: [
 			tailwindcss(),
+			llmstxt(),
 		],
 	},
 })
