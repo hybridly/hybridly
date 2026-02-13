@@ -7,7 +7,7 @@ use Hybridly\Support\Partial;
 use Hybridly\View\Factory;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
-use Spatie\LaravelData\Contracts\DataObject;
+use Spatie\LaravelData\Contracts\TransformableData;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -26,7 +26,7 @@ trait ForwardsToHybridlyHelpers
      *
      * @see https://hybridly.dev/api/laravel/hybridly.html#view
      */
-    public function view(?string $component = null, array|Arrayable|DataObject $properties = []): Factory
+    public function view(?string $component = null, array|Arrayable|TransformableData $properties = []): Factory
     {
         return view($component, $properties);
     }
@@ -36,7 +36,7 @@ trait ForwardsToHybridlyHelpers
      *
      * @see https://hybridly.dev/api/laravel/hybridly.html#properties
      */
-    public function properties(array|Arrayable|DataObject $properties): Factory
+    public function properties(array|Arrayable|TransformableData $properties): Factory
     {
         return properties($properties);
     }
