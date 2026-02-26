@@ -562,7 +562,7 @@ export interface UseRefinements {
 	/**
 	 * Binds a named filter to a ref, applying filters when it changes and updating the ref accordingly.
 	 */
-	bindFilter: <T = string | number>(name: string, options?: BindFilterOptions<T>) => Ref<T>
+	bindFilter: <T = string | number>(name: string, options?: BindFilterOptions<T>) => Ref<string>
 	/**
 	 * Available filters.
 	 */
@@ -874,7 +874,7 @@ export function useRefinements<T extends Refinements>(
 		})
 	}
 
-	function bindFilter<T = string | number>(name: string, options: BindFilterOptions<T> = {}) {
+	function bindFilter<T = string | number>(name: string, options: BindFilterOptions<T> = {}): Ref<string> {
 		const transform = options?.transformValue ?? ((value) => value)
 		const watchFn = options?.watch ?? watch
 		const getFilterValue = () => transform(refinements.value.filters.find((f) => f.name === name)?.value)
@@ -920,7 +920,7 @@ export function useRefinements<T extends Refinements>(
 			debouncedApplyFilter(value)
 		})
 
-		return _proxy as Ref<T>
+		return _proxy as Ref<string>
 	}
 
 	return {
