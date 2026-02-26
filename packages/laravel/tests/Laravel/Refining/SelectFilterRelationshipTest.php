@@ -395,6 +395,26 @@ it('can filter for books without author when empty option is selected', function
     expect($books->pluck('title')->sort()->values()->all())->toBe(['Another Unknown', 'Unknown Book']);
 });
 
+it('does not filter by empty relationship when only searching relationship options', function () {
+    $author1 = AuthorFactory::new()->create(['name' => 'George Orwell']);
+    $author2 = AuthorFactory::new()->create(['name' => 'Jane Austen']);
+
+    BookFactory::new()->create(['title' => '1984', 'author_id' => $author1->id]);
+    BookFactory::new()->create(['title' => 'Pride and Prejudice', 'author_id' => $author2->id]);
+    BookFactory::new()->create(['title' => 'Unknown Book', 'author_id' => null]);
+
+    $books = mock_refiner(
+        query: ['filters' => ['author' => ['search' => 'geo']]],
+        refiners: [
+            SelectFilter::make('author')
+                ->relationship('author', 'name', hasEmptyOption: true),
+        ],
+        classOrQuery: Book::class,
+    )->get();
+
+    expect($books)->count()->toBe(3);
+});
+
 it('includes allows_empty_relationship_option metadata when enabled', function () {
     AuthorFactory::new()->create(['name' => 'George Orwell']);
     AuthorFactory::new()->create(['name' => 'Jane Austen']);

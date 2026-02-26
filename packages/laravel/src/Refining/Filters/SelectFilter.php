@@ -252,6 +252,10 @@ class SelectFilter extends BaseFilter
             $this->ensureValuesAreAllowed($selectedOptions);
 
             if (count($selectedOptions) === 0) {
+                if ($this->shouldApplyUnsatisfiableConstraint()) {
+                    $this->applyUnsatisfiableConstraint($builder);
+                }
+
                 return;
             }
 
@@ -318,7 +322,7 @@ class SelectFilter extends BaseFilter
 
     public function apply(Builder $builder, QueryFilter $filter, string $property): void
     {
-        $hasEmptyOption = $filter->value === null || is_array($filter->value) && in_array(null, $filter->value, strict: true);
+        $hasEmptyOption = data_get($filter->options, 'empty') === true || is_array($filter->value) && in_array(null, $filter->value, strict: true);
 
         // handles the empty option for relationships
         if ($this->isRelationship() && $this->hasEmptyRelationshipOption && $hasEmptyOption) {
@@ -734,11 +738,11 @@ class SelectFilter extends BaseFilter
 
     protected function getSelectedOptionsLabel(): null|array|string
     {
-        if (! $this->filter && ! $this->hasEmptyRelationshipOption) {
+        if (! $this->filter) {
             return null;
         }
 
-        if ($this->filter?->value === null) {
+        if ($this->filter->value === null && data_get($this->filter->options, 'empty') === true) {
             return $this->evaluate($this->emptyRelationshipOptionLabel);
         }
 
@@ -876,5 +880,38 @@ class SelectFilter extends BaseFilter
         }
 
         return $options;
+    }
+
+    /**
+     * Determines whether an explicit but unresolvable selection should yield no results.
+     *
+     * This guards inclusion semantics (`equals` / `in`) from silently becoming a no-op
+     * when provided values cannot be resolved to actual options (e.g. invalid enum,
+     * missing id, soft-deleted related model not included by the relationship query).
+     *
+     * In those cases, we apply an impossible constraint so the query returns zero rows,
+     * which is consistent with the user's explicit inclusion intent.
+     */
+    protected function shouldApplyUnsatisfiableConstraint(): bool
+    {
+        $value = $this->filter?->value;
+
+        if ($value === null) {
+            return false;
+        }
+
+        if (is_array($value) && array_filter($value, fn (mixed $item) => $item !== null) === []) {
+            return false;
+        }
+
+        return match ($this->resolveOperator()) {
+            Operator::EQUALS, Operator::IN => true,
+            default => false,
+        };
+    }
+
+    protected function applyUnsatisfiableConstraint(Builder $builder): void
+    {
+        $builder->whereRaw('0 = 1', boolean: $this->getQueryBoolean());
     }
 }
