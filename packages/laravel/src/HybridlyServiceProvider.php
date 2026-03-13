@@ -17,8 +17,10 @@ use Hybridly\Support\Version;
 use Hybridly\Tables\Actions\DataTransferObjects\BulkSelection;
 use Hybridly\Tables\Actions\Http\InvokedActionController;
 use Hybridly\Testing\TestResponseMacros;
+use Illuminate\Config\Repository;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Foundation\CachesRoutes;
+use Illuminate\Events\Dispatcher;
 use Illuminate\Foundation\Console\AboutCommand;
 use Illuminate\Foundation\Vite;
 use Illuminate\Http\Request;
@@ -92,7 +94,7 @@ class HybridlyServiceProvider extends PackageServiceProvider
         }
 
         foreach ([RequestReceived::class, TaskReceived::class, TickReceived::class] as $event) {
-            $this->app['events']->listen(
+            $this->app->make(Dispatcher::class)->listen(
                 $event,
                 fn (RequestReceived|TaskReceived|TickReceived $event) => $event->sandbox->make(Hybridly::class)->flush(),
             );
@@ -117,8 +119,8 @@ class HybridlyServiceProvider extends PackageServiceProvider
 
     protected function registerBindings(): void
     {
-        $this->app->singleton(Configuration::class, fn (Application $app) => Configuration::fromArray($app['config']['hybridly'] ?? []));
-        $this->app->singleton(ComponentsResolver::class, fn (Application $app) => new LazyComponentsResolver($app[Configuration::class]));
+        $this->app->singleton(Configuration::class, fn (Application $app) => Configuration::fromArray($app->make(Repository::class)->get('hybridly', default: [])));
+        $this->app->singleton(ComponentsResolver::class, fn (Application $app) => new LazyComponentsResolver($app->make(Configuration::class)));
         $this->app->singleton(Hybridly::class);
     }
 
