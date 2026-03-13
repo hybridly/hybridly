@@ -36,6 +36,28 @@ class LazyComponentsResolver implements ComponentsResolver
         return $this;
     }
 
+    public function addView(string $path, string $namespace, string $identifier): static
+    {
+        $this->views[] = fn () => [[
+            'path' => $path,
+            'namespace' => $namespace,
+            'identifier' => $identifier,
+        ]];
+
+        return $this;
+    }
+
+    public function addLayout(string $path, string $namespace, string $identifier): static
+    {
+        $this->layouts[] = fn () => [[
+            'path' => $path,
+            'namespace' => $namespace,
+            'identifier' => $identifier,
+        ]];
+
+        return $this;
+    }
+
     public function loadViewsFrom(string $directory, null|string|array $namespace = null, ?int $depth = null, ?\Closure $filter = null): static
     {
         $filter ??= fn (string $file) => array_any($this->extensions, fn (string $extension) => str_ends_with($file, ".view{$extension}"));
