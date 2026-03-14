@@ -65,7 +65,7 @@ class Factory implements HybridResponse
     /**
      * Sets the hybridly view data.
      */
-    public function view(string $component = null, array|Arrayable|TransformableData $properties = []): static
+    public function view(?string $component = null, array|Arrayable|TransformableData $properties = []): static
     {
         $this->view = new View(
             component: $component,
