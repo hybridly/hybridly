@@ -20,7 +20,7 @@
         "guzzlehttp/promises": "^2.3.0",
         "laravel/octane": "^2.13.5",
         "nunomaduro/collision": "^8.8.3",
-        "orchestra/testbench": "^9.6.1|^10.9",
+        "orchestra/testbench": "^10.9|^11.0",
         "pestphp/pest": "^4.3.2",
         "pestphp/pest-plugin-laravel": "^4.0",
         "spatie/laravel-data": "^4.19.1",
