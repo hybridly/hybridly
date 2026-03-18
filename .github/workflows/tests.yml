@@ -19,15 +19,14 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node-version: ["22.x"]
         os: [ubuntu-latest]
-        php: [8.4]
-        laravel: ["12.*"]
+        php: [8.5]
+        laravel: ["13.x"]
         include:
-          - laravel: 12.*
+          - laravel: 13.*
             testbench: 10.*
 
-    name: P${{ matrix.php }} - L${{ matrix.laravel }} - N${{ matrix.node-version }} - ${{ matrix.os }}
+    name: P${{ matrix.php }} - L${{ matrix.laravel }} - ${{ matrix.os }}
 
     steps:
       - name: Checkout code
