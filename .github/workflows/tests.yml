@@ -11,7 +11,7 @@ on:
 jobs:
   test:
     if: ${{ !startsWith(github.event.head_commit.message, 'release:') }}
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
 
     env:
       DEBUG: "hybridly:*"
@@ -19,15 +19,13 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node-version: ["22.x"]
-        os: [ubuntu-latest]
-        php: [8.4]
-        laravel: ["12.*"]
+        php: [8.5]
+        laravel: ["13.*"]
         include:
-          - laravel: 12.*
-            testbench: 10.*
+          - laravel: 13.*
+            testbench: 11.*
 
-    name: P${{ matrix.php }} - L${{ matrix.laravel }} - N${{ matrix.node-version }} - ${{ matrix.os }}
+    name: P${{ matrix.php }} - L${{ matrix.laravel }}
 
     steps:
       - name: Checkout code
