@@ -312,6 +312,16 @@ class DateFilter extends BaseFilter
 
             ['start' => $startDate, 'end' => $endDate] = $dates;
 
+            foreach ($this->suggestions as $suggestion) {
+                if (! ($suggestion instanceof TimeframeSuggestion)) {
+                    continue;
+                }
+
+                if ($suggestion->start->is($startDate) && $suggestion->end->is($endDate)) {
+                    return $suggestion->label;
+                }
+            }
+
             return $startDate->format('M j, Y') . ' - ' . $endDate->format('M j, Y');
         }
 

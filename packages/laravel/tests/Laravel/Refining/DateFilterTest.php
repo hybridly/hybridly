@@ -219,3 +219,26 @@ test('it provides current value label for timeframe', function () {
 
     expect($serialized['metadata']['current_value_label'])->toBe('Feb 1, 2024 - Apr 30, 2024');
 });
+
+test('it uses timeframe suggestion label for current value label when dates match', function () {
+    $refiner = mock_refiner(
+        query: ['filters' => ['period' => ['value' => ['start' => '2024-02-01', 'end' => '2024-04-30'], 'operator' => 'between']]],
+        refiners: [
+            DateFilter::make('period')
+                ->timeframe(start: 'published_at', end: 'created_at')
+                ->suggest([
+                    new TimeframeSuggestion(
+                        label: 'Current quarter',
+                        start: CarbonImmutable::parse('2024-02-01'),
+                        end: CarbonImmutable::parse('2024-04-30'),
+                    ),
+                ]),
+        ],
+        apply: true,
+    );
+
+    $filter = $refiner->getFilters()[0];
+    $serialized = $filter->jsonSerialize();
+
+    expect($serialized['metadata']['current_value_label'])->toBe('Current quarter');
+});
