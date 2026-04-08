@@ -7,9 +7,10 @@ import type { MaybePromise } from '../types'
 
 // #region requesthooks
 export interface RequestHooks {
-/* [!code focus:54] */	/**
-* Called before a navigation request is going to happen.
-*/
+	/* [!code focus:54] */
+	/**
+	 * Called before a navigation request is going to happen.
+	 */
 	before: (request: PendingHybridRequest, context: InternalRouterContext) => MaybePromise<any | boolean>
 
 	/**
@@ -66,7 +67,7 @@ export interface RequestHooks {
 
 // #region hooks
 export interface Hooks extends RequestHooks {
-/* [!code focus:28] */
+	/* [!code focus:28] */
 	/**
 	 * Called when Hybridly's context is initialized.
 	 */

@@ -1,8 +1,8 @@
 import type { Axios } from 'axios'
 import type { Hooks } from '../plugins/hooks'
 import type { Plugin } from '../plugins/plugin'
-import type { RoutingConfiguration } from '../routing/types'
 import type { Dialog, HybridPayload, ResolveComponent, SwapView, View } from '../router'
+import type { RoutingConfiguration } from '../routing/types'
 
 /** Options for creating a router context. */
 export interface RouterContextOptions {

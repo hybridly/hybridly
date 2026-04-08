@@ -1,53 +1,53 @@
 {
-  "name": "@hybridly/utils",
-  "type": "module",
-  "version": "0.10.0-beta.14",
-  "description": "Utils used in Hybridly packages",
-  "author": "Enzo Innocenzi <enzo@innocenzi.dev>",
-  "license": "MIT",
-  "funding": "https://github.com/sponsors/innocenzi",
-  "homepage": "https://github.com/hybridly/hybridly/tree/main/packages/config#readme",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/hybridly/hybridly.git",
-    "directory": "packages/utils"
-  },
-  "bugs": {
-    "url": "https://github.com/hybridly/hybridly/issues"
-  },
-  "keywords": [
-    "hybridly"
-  ],
-  "publishConfig": {
-    "provenance": true,
-    "access": "public"
-  },
-  "sideEffects": false,
-  "exports": {
-    ".": {
-      "types": "./dist/index.d.mts",
-      "import": "./dist/index.mjs"
-    }
-  },
-  "module": "dist/index.mjs",
-  "types": "dist/index.d.mts",
-  "files": [
-    "*.d.ts",
-    "dist"
-  ],
-  "scripts": {
-    "build": "obuild",
-    "build:stub": "obuild --stub"
-  },
-  "dependencies": {
-    "@clickbar/dot-diver": "catalog:",
-    "debug": "catalog:",
-    "deepmerge": "catalog:",
-    "is-plain-object": "catalog:",
-    "lodash.clonedeep": "catalog:",
-    "throttle-debounce": "catalog:"
-  },
-  "devDependencies": {
-    "@types/lodash.clonedeep": "catalog:"
-  }
+	"name": "@hybridly/utils",
+	"type": "module",
+	"version": "0.10.0-beta.14",
+	"description": "Utils used in Hybridly packages",
+	"author": "Enzo Innocenzi <enzo@innocenzi.dev>",
+	"license": "MIT",
+	"funding": "https://github.com/sponsors/innocenzi",
+	"homepage": "https://github.com/hybridly/hybridly/tree/main/packages/config#readme",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/hybridly/hybridly.git",
+		"directory": "packages/utils"
+	},
+	"bugs": {
+		"url": "https://github.com/hybridly/hybridly/issues"
+	},
+	"keywords": [
+		"hybridly"
+	],
+	"publishConfig": {
+		"provenance": true,
+		"access": "public"
+	},
+	"sideEffects": false,
+	"exports": {
+		".": {
+			"types": "./dist/index.d.mts",
+			"import": "./dist/index.mjs"
+		}
+	},
+	"module": "dist/index.mjs",
+	"types": "dist/index.d.mts",
+	"files": [
+		"*.d.ts",
+		"dist"
+	],
+	"scripts": {
+		"build": "obuild",
+		"build:stub": "obuild --stub"
+	},
+	"dependencies": {
+		"@clickbar/dot-diver": "catalog:",
+		"debug": "catalog:",
+		"deepmerge": "catalog:",
+		"is-plain-object": "catalog:",
+		"lodash.clonedeep": "catalog:",
+		"throttle-debounce": "catalog:"
+	},
+	"devDependencies": {
+		"@types/lodash.clonedeep": "catalog:"
+	}
 }

@@ -23,8 +23,7 @@ final class PropertiesResolver
     public function __construct(
         protected readonly Request $request,
         protected readonly CaseConverter $caseConverter,
-    ) {
-    }
+    ) {}
 
     public function resolve(?string $component = null, array $properties = [], array $persistedByPath = []): array
     {
@@ -37,7 +36,7 @@ final class PropertiesResolver
         $properties = $this->resolveArrayableProperties($properties);
 
         // When the request is not partial, there are specified computation to do.
-        if (!$partial) {
+        if (! $partial) {
             // If the request is not a partial hybrid request, we want to resolve deferred properties,
             // because they will be automatically loaded back with a subsequent partial request.
             $deferred = collect($this->filterToPropertyPaths($properties, function (mixed $value, string $path) {
@@ -49,10 +48,12 @@ final class PropertiesResolver
                 }
 
                 return false;
-            }))->groupBy('group')->map->pluck('key')->toArray();
+            }))
+                ->groupBy('group')
+                ->map->pluck('key')->toArray();
 
             // Additionally, we want to exclude properties that should not be loaded on first load.
-            $properties = Arr::filterRecursive($properties, static fn ($property) => !($property instanceof IgnoreFirstLoad));
+            $properties = Arr::filterRecursive($properties, static fn ($property) => ! ($property instanceof IgnoreFirstLoad));
         }
 
         // Mergeable properties are then resolved. These are special properties
@@ -129,10 +130,10 @@ final class PropertiesResolver
             }
 
             if (\is_array($value)) {
-                $selected = array_merge($selected, $this->filterToPropertyPaths($value, $callback, $path ? ("{$path}.{$key}") : $key));
+                $selected = array_merge($selected, $this->filterToPropertyPaths($value, $callback, $path ? "{$path}.{$key}" : $key));
             }
 
-            if ($result = $callback($value, ($path ? ("{$path}.{$key}") : $key), $path)) {
+            if ($result = $callback($value, $path ? "{$path}.{$key}" : $key, $path)) {
                 $selected[] = $result;
             }
         }
@@ -217,7 +218,7 @@ final class PropertiesResolver
         return match (Configuration::get()->properties->forceOutputCase) {
             Properties::SNAKE => $this->caseConverter->convert($array, 'snake'),
             Properties::CAMEL => $this->caseConverter->convert($array, 'camel'),
-            default => $array
+            default => $array,
         };
     }
 }
