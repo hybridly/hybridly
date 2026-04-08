@@ -117,7 +117,6 @@ export default defineConfig({
 						{ text: 'Authentication', link: '/guide/authentication' },
 						{ text: 'Authorization', link: '/guide/authorization' },
 						{ text: 'File uploads', link: '/guide/file-uploads' },
-						{ text: 'Flash notifications', link: '/guide/flash-notifications' },
 						{ text: 'Exception handling', link: '/guide/exception-handling' },
 						{ text: 'Testing', link: '/guide/testing' },
 						{ text: 'Debugging', link: '/guide/debugging' },
