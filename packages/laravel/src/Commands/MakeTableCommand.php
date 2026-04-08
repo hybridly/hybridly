@@ -14,7 +14,7 @@ use function Laravel\Prompts\confirm;
 use function Laravel\Prompts\suggest;
 
 #[AsCommand(name: 'make:table')]
-class MakeTableCommand extends GeneratorCommand
+final class MakeTableCommand extends GeneratorCommand
 {
     use CreatesMatchingTest;
 

@@ -9,18 +9,23 @@ The simplest way to get started with Hybridly is to use the preset in a fresh La
 The recommended way of installing Hybridly is to use the preset in a [fresh Laravel project](https://laravel.com/docs/installation). Run the following command in the root of your project:
 
 :::code-group
+
 ```bash [npm]
 npx @preset/cli apply hybridly/preset
 ```
+
 ```bash [pnpm]
 pnpm dlx @preset/cli apply hybridly/preset
 ```
+
 ```bash [bun]
 bunx @preset/cli apply hybridly/preset
 ```
+
 ```bash [yarn]
 yarn dlx @preset/cli apply hybridly/preset
 ```
+
 :::
 
 The preset automatically sets up [Tailwind CSS](https://tailwindcss.com) and [Pest](https://pestphp.com). You may add any of the following flags to the previous command to customize the preset:
@@ -46,13 +51,12 @@ This section is a summary of what's needed server-side, so that you can convenie
 
 ```bash
 composer require hybridly/laravel
-php artisan hybridly:install
 ```
 
-### Create `root.blade.php` in `resources/application`
+### Create `root.blade.php` in `resources`
 
 ```blade
-<!-- resources/application/root.blade.php -->
+<!-- resources/root.blade.php -->
 <!DOCTYPE html>
 <html>
 	<head>
@@ -73,41 +77,49 @@ This section is a summary of what's needed client-side, so that you can convenie
 ### Install the dependencies
 
 :::code-group
+
 ```bash [ni]
 ni hybridly vue axios -D
 ```
+
 ```bash [pnpm]
 pnpm i hybridly vue axios -D
 ```
+
 ```bash [bun]
 bun i hybridly vue axios -D
 ```
+
 ```bash [npm]
 npm i hybridly vue axios -D
 ```
+
 ```bash [yarn]
 yarn add hybridly vue axios -D
 ```
+
 :::
 
 ### Configure Vite
 
-Rename `vite.config.js` to `vite.config.ts`, and register `hybridly/vite` as a plugin.
+Rename `vite.config.js` to `vite.config.ts`, and register `hybridly/vite` as a plugin. You may uninstall `@laravel/vite-plugin`, which functionality is included in the Hybridly plugin.
 
 ```ts
-import { defineConfig } from 'vite'
+import tailwindcss from '@tailwindcss/vite'
 import hybridly from 'hybridly/vite'
+import { defineConfig } from 'vite'
 
 export default defineConfig({
 	plugins: [
 		hybridly(),
+		tailwindcss(),
 	],
 })
 ```
 
 ### Initialize Hybridly
 
-Delete the `resources/js` directory, and create a `resources/application/main.ts` file with the following snippet:
+Delete the `resources/js` directory, and create a `resources/main.ts` file with the following snippet:
 
 ```ts
 import { initializeHybridly } from 'virtual:hybridly/config'
@@ -198,27 +210,27 @@ At this point, your `package.json` should look like the following:
 
 ```json
 {
-		"private": true,
-		"scripts": {
-				"dev": "vite",
-				"build": "vite build"
-		},
-		"devDependencies": {
-				"axios": "^1.7.2",
-				"hybridly": "0.7.3",
-				"lodash": "^4.17.19",
-				"postcss": "^8.1.14",
-				"vite": "^6.3.5",
-				"vue": "^3.2.41"
-		}
+	"private": true,
+	"scripts": {
+		"dev": "vite",
+		"build": "vite build"
+	},
+	"devDependencies": {
+		"axios": "^1.7.2",
+		"hybridly": "0.7.3",
+		"lodash": "^4.17.19",
+		"postcss": "^8.1.14",
+		"vite": "^6.3.5",
+		"vue": "^3.2.41"
+	}
 }
 ```
 
 Now is a good time to rename `vite.config.js` to `vite.config.ts` and register the `hybridly` plugin, exported by `hybridly/vite`.
 
 ```ts
-import { defineConfig } from 'vite'
 import hybridly from 'hybridly/vite'
+import { defineConfig } from 'vite'
 
 export default defineConfig({
 	plugins: [
@@ -234,11 +246,11 @@ Don't forget to also run `valet secure` and set up `APP_URL` in `.env`.
 The Vite part is done, now you need to make your scripts aware of Hybridly. Delete the `resources/js` directory and create `resources/application/main.ts`, which should contain the following snippet:
 
 ```ts
-import { createApp } from 'vue'
 import { initializeHybridly } from 'virtual:hybridly/config'
+import { createApp } from 'vue'
 
 initializeHybridly({
-	enhanceVue: (vue) => {}
+	enhanceVue: (vue) => {},
 })
 ```
 

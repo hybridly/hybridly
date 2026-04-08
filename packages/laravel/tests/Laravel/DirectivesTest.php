@@ -44,14 +44,15 @@ it('renders encoded payload in the data-payload attribute', function () {
     $php = test()->directives['hybridly']();
     $html = Blade::render($php, ['payload' => $payload], true);
 
-    expect($html)->toBe(trim(<<<HTML
-        <div id="root" class="" data-payload="{&quot;view&quot;:{&quot;component&quot;:&quot;users.edit&quot;,&quot;properties&quot;:{&quot;user&quot;:&quot;Makise Kurisu&quot;},&quot;deferred&quot;:[],&quot;mergeable&quot;:[]},&quot;url&quot;:&quot;https:\/\/localhost\/&quot;,&quot;version&quot;:&quot;abc123&quot;,&quot;dialog&quot;:null}"></div>
-    HTML));
+    expect($html)
+        ->toBe(trim(<<<HTML
+            <div id="root" class="" data-payload="{&quot;view&quot;:{&quot;component&quot;:&quot;users.edit&quot;,&quot;properties&quot;:{&quot;user&quot;:&quot;Makise Kurisu&quot;},&quot;deferred&quot;:[],&quot;mergeable&quot;:[]},&quot;url&quot;:&quot;https:\/\/localhost\/&quot;,&quot;version&quot;:&quot;abc123&quot;,&quot;dialog&quot;:null}"></div>
+        HTML));
 });
 
 it('generates a call to `Vite::class` with the default configuration when there is no parameters', function () {
     expect(test()->directives['vite']())
-        ->toBe('<?php echo app(Illuminate\Foundation\Vite::class)("resources/application/main.ts"); ?>');
+        ->toBe('<?php echo app(Illuminate\Foundation\Vite::class)("resources/main.ts"); ?>');
 });
 
 it('generates a call to `Vite::class` with the specified single-argument string configuration if provided', function () {

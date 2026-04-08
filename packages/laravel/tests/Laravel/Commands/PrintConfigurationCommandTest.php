@@ -14,7 +14,7 @@ test('configuration subsets can be pretty-printed', function (string $path, stri
     'architecture' => ['architecture', <<<JSON
         {
             "root_directory": "resources",
-            "application_main_path": "resources/application/main.ts"
+            "application_main_path": "resources/main.ts"
         }
         JSON],
     'architecture.root_directory' => ['architecture.root_directory', <<<JSON

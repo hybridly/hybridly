@@ -2,36 +2,37 @@
 
 namespace Hybridly\Support\Configuration;
 
+use Hybridly\Architecture\JustInTimeComponentRepository;
+use Hybridly\Architecture\ResourcesComponentLoader;
+
 /**
  * @see https://hybridly.dev/guide/architecture.html
  */
 final class Architecture
 {
-    public const APPLICATION_MAIN = 'application/main.ts';
+    public const ENTRYPOINT = 'main.ts';
     public const ROOT_VIEW = 'root';
 
     public string $applicationMainPath {
-        get => $this->rootDirectory . '/' . $this->applicationMain;
+        get => $this->rootDirectory . '/' . $this->entrypoint;
     }
 
     public function __construct(
         public readonly string $rootView,
-        public readonly bool $loadDefaultModule,
         public readonly bool $eagerLoadViews,
-        public readonly array $extensions,
-        public readonly string $applicationMain,
+        public readonly string $entrypoint,
         public readonly string $rootDirectory,
+        public readonly string $componentLoader,
     ) {}
 
     public static function fromArray(array $config): static
     {
         return new static(
             rootView: $config['root_view'] ?? self::ROOT_VIEW,
-            loadDefaultModule: $config['load_default_module'] ?? true,
             eagerLoadViews: $config['eager_load_views'] ?? true,
-            extensions: $config['extensions'] ?? ['vue', 'tsx'],
-            applicationMain: $config['application_main'] ?? self::APPLICATION_MAIN,
+            entrypoint: $config['entrypoint'] ?? self::ENTRYPOINT,
             rootDirectory: $config['root_directory'] ?? 'resources',
+            componentLoader: $config['component_loader'] ?? ResourcesComponentLoader::class,
         );
     }
 }

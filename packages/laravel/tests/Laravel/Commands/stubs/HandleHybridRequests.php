@@ -4,9 +4,9 @@ namespace App\Http\Middleware;
 
 use App\Data\SharedData;
 use App\Data\UserData;
-use Hybridly\Http\Middleware;
+use Hybridly\HandleHybridRequests;
 
-final class HandleHybridRequests extends Middleware
+final class HandleHybridRequests extends HandleHybridRequests
 {
     /**
      * Defines the properties that are shared to all requests.

@@ -3,12 +3,15 @@
 namespace Hybridly\Concerns;
 
 use Hybridly\Support\Arr;
-use Hybridly\Support\Hybridable;
+use Hybridly\Support\Properties\Hybridable;
 use Illuminate\Contracts\Support\Arrayable;
 
 trait HasSharedProperties
 {
-    protected array $sharedProperties = [];
+    /**
+     * Properties being shared to every response.
+     */
+    private(set) array $sharedProperties = [];
 
     /**
      * Shares data to every response.
@@ -26,18 +29,6 @@ trait HasSharedProperties
         }
 
         return $this;
-    }
-
-    /**
-     * Gets data being shared to every response.
-     */
-    public function shared(?string $key = null, mixed $default = null): mixed
-    {
-        if ($key) {
-            return data_get($this->sharedProperties, $key, value($default));
-        }
-
-        return $this->sharedProperties;
     }
 
     /**

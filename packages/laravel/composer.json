@@ -53,6 +53,13 @@
             "aliases": {
                 "Hybridly": "Hybridly\\Facades\\Hybridly"
             }
+        },
+        "tempest": {
+            "can-discover": true,
+            "ignore": [
+                "src/Support/TypeScriptTransformer/DataResourceTypeScriptCollector.php",
+                "src/Support/TypeScriptTransformer/DataResourceTypeScriptTransformer.php"
+            ]
         }
     },
     "minimum-stability": "stable",

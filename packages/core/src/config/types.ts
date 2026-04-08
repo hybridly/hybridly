@@ -22,5 +22,4 @@ export interface DynamicConfiguration {
 interface Component {
 	path: string
 	identifier: string
-	namespace: string
 }

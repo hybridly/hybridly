@@ -48,7 +48,7 @@ test('the `partial_headers` helper generates headers for partial requests', func
 });
 
 test('the `partial_headers` works for actual requests', function () {
-    Route::middleware(StartSession::class, \Hybridly\Http\Middleware::class)
+    Route::middleware(StartSession::class, \Hybridly\HandleHybridRequests::class)
         ->get('/', fn () => hybridly('foo.component', [
             'partial' => on_demand(fn () => 'Partial property'),
             'normal' => 'Normal property',

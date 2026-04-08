@@ -28,7 +28,7 @@ test('the `assertViewUrl` method asserts that the url is the expected value', fu
 });
 
 test('the `assertHybridVersion` method asserts that the version is the expected value', function () {
-    hybridly()->setVersion('owo');
+    hybridly()->resolveVersionUsing(fn () => 'owo');
 
     make_hybrid_mock_request()->assertHybrid(function (Assertable $view) {
         $view->assertHybridVersion('owo');

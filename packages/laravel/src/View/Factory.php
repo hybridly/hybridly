@@ -6,6 +6,7 @@ use Hybridly\Contracts\HybridResponse;
 use Hybridly\Exceptions\MissingViewComponentException;
 use Hybridly\Hybridly;
 use Hybridly\Support\Arr as SupportArr;
+use Hybridly\Support\Configuration\Configuration;
 use Hybridly\Support\Header;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Contracts\Support\Arrayable;
@@ -33,6 +34,7 @@ class Factory implements HybridResponse
         protected Router $router,
         protected DialogResolver $dialogResolver,
         protected ResponseFactory $responseFactory,
+        protected Configuration $configuration,
     ) {}
 
     /**
@@ -130,19 +132,12 @@ class Factory implements HybridResponse
             view: $this->resolveView($this->view, $request),
             dialog: $this->resolveDialog($request),
             url: $this->resolveUrl($request),
-            version: $this->hybridly->getVersion(),
+            version: $this->hybridly->version,
         );
 
         if ($payload->dialog) {
             $payload = $this->renderDialog($request, $payload);
         }
-
-        event(self::RESPONSE_EVENT, [[
-            'payload' => $payload->toArray(),
-            'request' => $request,
-            'version' => $this->hybridly->getVersion(),
-            'root_view' => $this->hybridly->getRootView(),
-        ]]);
 
         // If the component is missing and there is no page loaded,
         // throw an exception because the front-end cannot handle that situation.
@@ -160,7 +155,7 @@ class Factory implements HybridResponse
         }
 
         return $this->responseFactory->view(
-            view: $this->hybridly->getRootView(),
+            view: $this->configuration->architecture->rootView,
             data: ['payload' => $payload->toArray()],
         );
     }
@@ -266,7 +261,7 @@ class Factory implements HybridResponse
             request: $request,
             view: new View(
                 component: $this->view->component,
-                properties: Arr::except($this->view->properties, array_keys($this->hybridly->shared())),
+                properties: Arr::except($this->view->properties, array_keys($this->hybridly->sharedProperties)),
                 deferred: [],
                 mergeable: [],
             ),
@@ -299,8 +294,8 @@ class Factory implements HybridResponse
 
         return $resolver->resolve(
             component: $view->component,
-            properties: $includeSharedProperties ? [...$this->hybridly->shared(), ...$view->properties] : $view->properties,
-            persistedByPath: $this->hybridly->persisted(),
+            properties: $includeSharedProperties ? [...$this->hybridly->sharedProperties, ...$view->properties] : $view->properties,
+            persistedByPath: $this->hybridly->persistedProperties,
         );
     }
 

@@ -121,7 +121,7 @@ test('the `assertHybridView` method asserts the hybrid response view is the expe
 });
 
 test('the `assertHybridVersion` method asserts the hybrid response version is the expected value', function () {
-    hybridly()->setVersion('owo');
+    hybridly()->resolveVersionUsing(fn () => 'owo');
     make_hybrid_mock_request()->assertHybridVersion('owo');
 });
 

@@ -4,11 +4,12 @@ use Hybridly\Support\Configuration\Architecture;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Support\Facades\Route;
 
+use function Hybridly\view;
 use function Pest\Laravel\get;
 
 test('the middleware applies session errors', function () {
-    Route::middleware(StartSession::class, \Hybridly\Http\Middleware::class)
-        ->get('/', fn () => hybridly('users.edit', ['user' => 'Makise Kurisu']));
+    Route::middleware(StartSession::class, \Hybridly\HandleHybridRequests::class)
+        ->get('/', fn () => view('users.edit', ['user' => 'Makise Kurisu']));
 
     $response = get('/');
     $response->assertOk();

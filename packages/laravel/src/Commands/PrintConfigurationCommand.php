@@ -2,20 +2,21 @@
 
 namespace Hybridly\Commands;
 
-use Hybridly\Hybridly;
+use Hybridly\Architecture\ComponentRepository;
+use Hybridly\Architecture\ComponentType;
 use Hybridly\Support\Configuration\Configuration;
 use Hybridly\Support\Version;
 use Illuminate\Console\Command;
 
-class PrintConfigurationCommand extends Command
+final class PrintConfigurationCommand extends Command
 {
     protected $signature = 'hybridly:config {--pretty=false}';
     protected $description = 'Prints the internal Hybridly configuration.';
     protected $hidden = true;
 
-    public function handle(Hybridly $hybridly): int
+    public function handle(Configuration $config, ComponentRepository $components): int
     {
-        $routeExtractor = $this->laravel->make(Configuration::get()->router->routesExtractor);
+        $routeExtractor = $this->laravel->make($config->router->routesExtractor);
 
         $configuration = [
             'versions' => [
@@ -25,17 +26,17 @@ class PrintConfigurationCommand extends Command
                 'latest' => Version::getLatestVersion(),
             ],
             'architecture' => [
-                'root_directory' => Configuration::get()->architecture->rootDirectory,
-                'application_main_path' => Configuration::get()->architecture->applicationMainPath,
+                'root_directory' => $config->architecture->rootDirectory,
+                'application_main_path' => $config->architecture->applicationMainPath,
             ],
             'components' => [
-                'eager' => Configuration::get()->architecture->eagerLoadViews,
-                'layouts' => $hybridly->getLayouts(),
-                'views' => $hybridly->getViews(),
+                'eager' => $config->architecture->eagerLoadViews,
+                'layouts' => $components->list(ComponentType::LAYOUT),
+                'views' => $components->list(ComponentType::VIEW),
             ],
             'routing' => [
                 ...$routeExtractor->toArray(),
-                'absolute' => Configuration::get()->router->generateAbsoluteUrls,
+                'absolute' => $config->router->generateAbsoluteUrls,
             ],
         ];
 

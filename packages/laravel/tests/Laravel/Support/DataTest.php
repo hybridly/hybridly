@@ -5,6 +5,7 @@ use Hybridly\View\PropertiesResolver;
 use Illuminate\Http\Request;
 use Spatie\LaravelData\Lazy;
 
+use function Hybridly\on_demand;
 use function Hybridly\Testing\partial_headers;
 
 function resolve_properties(array $properties, array $headers = [], array $persisted = [], bool $partial = false, ?array $only = null, ?array $except = null): array
@@ -28,7 +29,7 @@ test('partial properties in data objects are ignored like normal partial propert
     $properties = resolve_properties([
         'data' => DataObjectWithLazyProperty::from([
             'foo' => true,
-            'bar' => Lazy::partial(fn () => 'baz'),
+            'bar' => on_demand(fn () => 'baz'),
         ]),
     ], partial: false);
 
@@ -44,7 +45,7 @@ test('partial properties in data objects are resolved when using partial reloads
     $properties = resolve_properties([
         'data' => DataObjectWithLazyProperty::from([
             'foo' => true,
-            'bar' => Lazy::partial(fn () => 'baz'),
+            'bar' => on_demand(fn () => 'baz'),
         ]),
     ], partial: true);
 
@@ -62,7 +63,7 @@ test('partial properties in data objects are ignored when excluded in partial re
         [
             'data' => DataObjectWithLazyProperty::from([
                 'foo' => true,
-                'bar' => Lazy::partial(fn () => 'baz'),
+                'bar' => on_demand(fn () => 'baz'),
             ]),
         ],
         except: ['data'],
@@ -77,7 +78,7 @@ test('partial properties in data objects are ignored when excluded with dot nota
         [
             'data' => DataObjectWithLazyProperty::from([
                 'foo' => true,
-                'bar' => Lazy::partial(fn () => 'baz'),
+                'bar' => on_demand(fn () => 'baz'),
             ]),
         ],
         except: ['data.bar'],
@@ -95,7 +96,7 @@ test('partial properties in data objects are ignored when excluded with dot nota
         [
             'data' => DataObjectWithLazyProperty::from([
                 'foo' => true,
-                'bar' => Lazy::partial(fn () => 'baz'),
+                'bar' => on_demand(fn () => 'baz'),
             ]),
         ],
         except: ['data.foo'],
@@ -115,7 +116,7 @@ test('other properties are ignored when only some partial properties are specifi
         [
             'data' => DataObjectWithLazyProperty::from([
                 'foo' => true,
-                'bar' => Lazy::partial(fn () => 'baz'),
+                'bar' => on_demand(fn () => 'baz'),
             ]),
         ],
         only: ['data.bar'],
@@ -196,7 +197,7 @@ test('properties using lazy partials are not evaluated when exluded during parti
         [
             'data' => DataObjectWithLazyProperty::from([
                 'foo' => true,
-                'bar' => Lazy::partial(function () use (&$evaluated) {
+                'bar' => on_demand(function () use (&$evaluated) {
                     $evaluated = true;
 
                     return 'baz';

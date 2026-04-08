@@ -52,7 +52,7 @@ it('resolves callables', function () {
         {
             return ['name' => 'Makise Kurisu'];
         }
-    }; 
+    };
 
     $payload = resolve(Factory::class)
         ->view('users.edit', ['user' => $callable, 'type' => 'app'])

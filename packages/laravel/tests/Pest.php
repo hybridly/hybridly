@@ -6,6 +6,7 @@ use Hybridly\Tests\Fixtures\Database\Product;
 use Hybridly\Tests\TestCase;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
 use Illuminate\Testing\TestResponse;
 
 use function Pest\Laravel\get;
@@ -13,6 +14,23 @@ use function Pest\Laravel\get;
 uses(TestCase::class)
     ->beforeEach(fn () => config()->set('hybridly.testing.ensure_views_exist', false))
     ->in(__DIR__);
+
+function with_components(array|string $paths, \Closure $assertion): void
+{
+    File::ensureDirectoryExists(resource_path());
+    File::cleanDirectory(resource_path());
+
+    foreach ((array) $paths as $path) {
+        $target = resource_path($path);
+
+        File::ensureDirectoryExists(dirname($target));
+        File::put($target, '<template />');
+    }
+
+    $assertion();
+
+    File::cleanDirectory(resource_path());
+}
 
 function mock_request(string $url = '/', string $method = 'GET', bool $bind = false, bool $hybrid = true, array $headers = [], array $query = []): Request
 {

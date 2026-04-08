@@ -2,13 +2,12 @@
 
 namespace Hybridly\Testing;
 
-use Hybridly\Hybridly;
+use Hybridly\Architecture\ComponentRepository;
 use Hybridly\Support\Configuration\Configuration;
 use Hybridly\Support\Header;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Illuminate\Testing\TestResponse;
-use InvalidArgumentException;
 use PHPUnit\Framework\Assert as PHPUnit;
 use PHPUnit\Framework\AssertionFailedError;
 
@@ -58,7 +57,9 @@ class Assertable extends AssertableJson
     {
         PHPUnit::assertSame($value, $this->view, 'Unexpected hybrid view component.');
 
-        if ($shouldExist || \is_null($shouldExist) && Configuration::get()->testing->ensureViewsExist) {
+        $ensure_views_exist = (bool) config('hybridly.testing.ensure_views_exist', Configuration::get()->testing->ensureViewsExist);
+
+        if ($shouldExist || \is_null($shouldExist) && $ensure_views_exist) {
             $this->ensureViewExists($value);
         }
 
@@ -80,7 +81,9 @@ class Assertable extends AssertableJson
         if ($view) {
             PHPUnit::assertSame($view, $this->dialog['component'], 'Unexpected dialog view component.');
 
-            if (Configuration::get()->testing->ensureViewsExist) {
+            $ensure_views_exist = (bool) config('hybridly.testing.ensure_views_exist', Configuration::get()->testing->ensureViewsExist);
+
+            if ($ensure_views_exist) {
                 $this->ensureViewExists($view);
             }
         }
@@ -204,9 +207,7 @@ class Assertable extends AssertableJson
 
     protected function ensureViewExists(string $identifier): void
     {
-        try {
-            resolve(Hybridly::class)->hasView($identifier);
-        } catch (InvalidArgumentException) {
+        if (! resolve(ComponentRepository::class)->has($identifier)) {
             PHPUnit::fail(\sprintf('Hybridly view [%s] is not registered.', $identifier));
         }
     }

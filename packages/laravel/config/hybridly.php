@@ -1,5 +1,6 @@
 <?php
 
+use Hybridly\Architecture\ResourcesComponentLoader;
 use Hybridly\Support\Configuration\Architecture;
 use Hybridly\Support\TypeScriptTransformer\GlobalPropertiesNamespaceTransformer;
 
@@ -38,11 +39,12 @@ return [
         'load_default_module' => true,
         'eager_load_views' => true,
         'root_directory' => 'resources',
-        'application_main' => Architecture::APPLICATION_MAIN,
+        'entrypoint' => Architecture::ENTRYPOINT,
         'root_view' => Architecture::ROOT_VIEW,
         'extensions' => ['vue', 'tsx'],
         'excluded_views_directories' => [],
         'generate_absolute_urls' => true,
+        'component_loader' => ResourcesComponentLoader::class,
     ],
     /*
      * |--------------------------------------------------------------------------

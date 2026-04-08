@@ -2,37 +2,31 @@
 
 namespace Hybridly\Concerns;
 
-use Hybridly\Support\Hybridable;
+use Hybridly\Support\Properties\Hybridable;
 use Illuminate\Contracts\Support\Arrayable;
 
 trait HasPersistentProperties
 {
-    protected array $persistent = [];
+    /**
+     * The properties marked as persistent.
+     */
+    private(set) array $persistedProperties = [];
 
     /**
-     * Marks the given properties as persisted, which means they will
-     * always be present, even in partial hybrid responses.
+     * Marks the given properties as persisted, which means they will always be present, even in partial hybrid responses.
      */
-    public function persist(string|array|Arrayable $properties): static
+    public function persist(string|iterable $properties): static
     {
         if (\is_array($properties)) {
-            $this->persistent = array_merge($this->persistent, $properties);
+            $this->persistedProperties = array_merge($this->persistedProperties, $properties);
         } elseif ($properties instanceof Hybridable) {
-            $this->persistent = array_merge($this->persistent, $properties->toHybridArray());
+            $this->persistedProperties = array_merge($this->persistedProperties, $properties->toHybridArray());
         } elseif ($properties instanceof Arrayable) {
-            $this->persistent = array_merge($this->persistent, $properties->toArray());
+            $this->persistedProperties = array_merge($this->persistedProperties, $properties->toArray());
         } else {
-            $this->persistent[] = $properties;
+            $this->persistedProperties[] = $properties;
         }
 
         return $this;
-    }
-
-    /**
-     * Gets data being persisted.
-     */
-    public function persisted(): array
-    {
-        return $this->persistent;
     }
 }
