@@ -26,31 +26,35 @@ use Illuminate\Foundation\Vite;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\ServiceProvider;
 use Illuminate\Testing\TestResponse;
 use Illuminate\View\Compilers\BladeCompiler;
 use Illuminate\View\Factory;
 use Laravel\Octane\Events\RequestReceived;
 use Laravel\Octane\Events\TaskReceived;
 use Laravel\Octane\Events\TickReceived;
-use Spatie\LaravelPackageTools\Package;
-use Spatie\LaravelPackageTools\PackageServiceProvider;
+use Spatie\LaravelData\Lazy;
+use Spatie\LaravelRay\Ray;
 
-class HybridlyServiceProvider extends PackageServiceProvider
+final class HybridlyServiceProvider extends ServiceProvider
 {
-    public function configurePackage(Package $package): void
+    public function register(): void
     {
-        $package
-            ->name('hybridly')
-            ->hasConfigFile()
-            ->hasCommand(InstallCommand::class)
-            ->hasCommand(I18nCommand::class)
-            ->hasCommand(PrintConfigurationCommand::class)
-            ->hasCommand(MakeTableCommand::class)
-            ->hasCommand(GenerateGlobalTypesCommand::class);
-    }
+        $this->mergeConfigFrom(
+            path: __DIR__ . '/../config/hybridly.php',
+            key: 'hybridly',
+        );
 
-    public function registeringPackage(): void
-    {
+        if ($this->app->runningInConsole()) {
+            $this->commands([
+                InstallCommand::class,
+                I18nCommand::class,
+                PrintConfigurationCommand::class,
+                MakeTableCommand::class,
+                GenerateGlobalTypesCommand::class,
+            ]);
+        }
+
         $this->registerBindings();
         $this->registerDirectives();
         $this->registerMacros();
@@ -59,29 +63,32 @@ class HybridlyServiceProvider extends PackageServiceProvider
         $this->registerAbout();
     }
 
-    public function bootingPackage(): void
+    public function boot(): void
     {
+        if ($this->app->runningInConsole()) {
+            $this->publishes([
+                __DIR__ . '/../config/hybridly.php' => config_path('hybridly.php'),
+            ], 'hybridly-config');
+        }
+
         $this->registerActionsEndpoint();
         $this->registerOctaneListener();
-    }
 
-    public function packageBooted(): void
-    {
-        if (class_exists(\Spatie\LaravelData\Lazy::class)) {
-            \Spatie\LaravelData\Lazy::macro('partial', function (\Closure $value): PartialLazy {
+        if (class_exists(Lazy::class)) {
+            Lazy::macro('partial', function (\Closure $value): PartialLazy {
                 return new PartialLazy($value);
             });
         }
 
-        if (class_exists(\Spatie\LaravelRay\Ray::class)) {
+        if (class_exists(Ray::class)) {
             $this->app->singleton(RayDumper::class);
             $dumper = $this->app->get(RayDumper::class);
 
-            \Spatie\LaravelRay\Ray::macro('showHybridRequests', function () use ($dumper) {
+            Ray::macro('showHybridRequests', function () use ($dumper) {
                 $dumper->showHybridRequests();
             });
 
-            \Spatie\LaravelRay\Ray::macro('stopShowingHybridRequests', function () use ($dumper) {
+            Ray::macro('stopShowingHybridRequests', function () use ($dumper) {
                 $dumper->stopShowingHybridRequests();
             });
         }
