@@ -1,12 +1,21 @@
+import { createPromiseWithResolvers, debug, hasFiles, match, mergeObject, objectToFormData, random, showResponseErrorModal, wrap } from '@hybridly/utils'
 import type { AxiosProgressEvent, AxiosResponse } from 'axios'
-import { debug, hasFiles, match, mergeObject, objectToFormData, promiseWithResolvers, random, showResponseErrorModal, wrap } from '@hybridly/utils'
+import {
+	DIALOG_KEY_HEADER,
+	DIALOG_REDIRECT_HEADER,
+	ERROR_BAG_HEADER,
+	EXCEPT_DATA_HEADER,
+	HYBRIDLY_HEADER,
+	ONLY_DATA_HEADER,
+	PARTIAL_COMPONENT_HEADER,
+	VERSION_HEADER,
+} from '../../constants'
 import { getInternalRouterContext, getRouterContext } from '../../context'
-import { DIALOG_KEY_HEADER, DIALOG_REDIRECT_HEADER, ERROR_BAG_HEADER, EXCEPT_DATA_HEADER, HYBRIDLY_HEADER, ONLY_DATA_HEADER, PARTIAL_COMPONENT_HEADER, VERSION_HEADER } from '../../constants'
+import { NavigationCancelledError } from '../../errors'
 import { runHooks } from '../../plugins'
 import { makeUrl } from '../../url'
-import { NavigationCancelledError } from '../../errors'
 import type { HybridRequestOptions, Method, NavigationResponse, PendingHybridRequest } from '../types'
-import { enqueueRequest, getRequestQueue, interruptInFlight } from './request-stack'
+import { enqueueRequest, interruptRequestIfNeeded } from './request-manager'
 
 export function createPendingHybridRequest(options: HybridRequestOptions): PendingHybridRequest {
 	const context = getRouterContext()
@@ -16,7 +25,7 @@ export function createPendingHybridRequest(options: HybridRequestOptions): Pendi
 	// optional transforms specified in `options.transformUrl`.
 	const url = makeUrl(options.url ?? context.url, options.transformUrl)
 
-	const { promise, resolve } = promiseWithResolvers<NavigationResponse>()
+	const { promise, resolve } = createPromiseWithResolvers<NavigationResponse>()
 
 	return {
 		url,
@@ -59,19 +68,22 @@ export async function sendHybridRequest(request: PendingHybridRequest): Promise<
 		responseType: 'arraybuffer',
 		validateStatus: () => true,
 		onUploadProgress: async (event: AxiosProgressEvent) => {
-			await runHooks('progress', request.options.hooks, {
-				event,
-				percentage: Math.round(event.loaded / (event.total ?? 0) * 100),
-			}, request, context)
+			await runHooks(
+				'progress',
+				request.options.hooks,
+				{
+					event,
+					percentage: Math.round(event.loaded / (event.total ?? 0) * 100),
+				},
+				request,
+				context,
+			)
 		},
 	})
 }
 
 export async function performHybridRequest(request: PendingHybridRequest): Promise<NavigationResponse> {
-	// TODO: preloading
-	const queue = getRequestQueue(request)
-
-	interruptInFlight(queue)
+	interruptRequestIfNeeded(request)
 	enqueueRequest(request)
 
 	return request.promise
@@ -99,7 +111,6 @@ export async function performHybridNavigation(options: HybridRequestOptions): Pr
 		debug.router('Making request with axios.')
 
 		return await performHybridRequest(request)
-	//
 	} catch (error: any) {
 		await match(error.constructor.name, {
 			NavigationCancelledError: async () => {
@@ -165,6 +176,8 @@ export async function transformOptions(options: HybridRequestOptions) {
 		options.progress = false
 	}
 
+	// Async requests are follow-up data fetches and should not create
+	// extra history entries unless explicitly requested by the user
 	if (options.async === true && options.replace === undefined) {
 		options.replace = true
 	}
@@ -193,7 +206,7 @@ export async function transformOptions(options: HybridRequestOptions) {
 			options.data.append('_method', options.method)
 		} else if (typeof options.data === 'undefined') {
 			options.data = { _method: options.method }
-		}	else if (options.data instanceof Object && Object.keys(options.data).length >= 0) {
+		} else if (options.data instanceof Object && Object.keys(options.data).length >= 0) {
 			Object.assign(options.data!, { _method: options.method })
 		} else {
 			debug.router('Could not spoof method because body type is not supported.', options.data)

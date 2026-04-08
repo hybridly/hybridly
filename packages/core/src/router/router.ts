@@ -8,7 +8,7 @@ import { generateRouteFromName, getRouteDefinition } from '../routing/route'
 import { makeUrl, sameUrls } from '../url'
 import { getHistoryMemo, handleBackForwardNavigation, isBackForwardNavigation, registerEventListeners, remember } from './history'
 import { performHybridNavigation } from './request/request'
-import { cancelSyncRequest } from './request/request-stack'
+import { cancelNavigationRequest } from './request/request-manager'
 import { handleExternalNavigation, isExternalNavigation, navigateToExternalUrl } from './response/external'
 import type { Router } from './types'
 import { navigate, performLocalNavigation } from './view'
@@ -23,10 +23,9 @@ import { navigate, performLocalNavigation } from './view'
  * router.get('/posts/edit', { post })
  */
 export const router = {
-	abort: () => cancelSyncRequest(),
+	abort: () => cancelNavigationRequest(),
 	navigate: async (options) => await performHybridNavigation(options),
-	reload: async (options) =>
-		await performHybridNavigation({ preserveScroll: true, preserveState: true, replace: true, async: true, ...options }),
+	reload: async (options) => await performHybridNavigation({ preserveScroll: true, preserveState: true, replace: true, async: true, ...options }),
 	get: async (url, options = {}) => await performHybridNavigation({ ...options, url, method: 'GET' }),
 	post: async (url, options = {}) => await performHybridNavigation({ preserveState: true, ...options, url, method: 'POST' }),
 	put: async (url, options = {}) => await performHybridNavigation({ preserveState: true, ...options, url, method: 'PUT' }),

@@ -2,9 +2,9 @@ import baseMerge from 'deepmerge'
 // @ts-expect-error due to moduleresolution
 import { isPlainObject } from 'is-plain-object'
 
-export { setByPath, getByPath, type PathValue, type Path, type SearchableObject } from '@clickbar/dot-diver'
-export { debounce, throttle } from 'throttle-debounce'
+export { getByPath, type Path, type PathValue, type SearchableObject, setByPath } from '@clickbar/dot-diver'
 export { default as clone } from 'lodash.clonedeep'
+export { debounce, throttle } from 'throttle-debounce'
 
 export function random(length: number = 10): string {
 	const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
@@ -24,8 +24,7 @@ export function match<TValue extends string | number = string, TReturnValue = un
 	...args: TArgs
 ): TReturnValue | Promise<TReturnValue> {
 	if (value in lookup || 'default' in lookup) {
-		const returnValue = (value in lookup ? lookup[value] : lookup.default) as
-			TReturnValue | ((...args: TArgs) => TReturnValue | Promise<TReturnValue>)
+		const returnValue = (value in lookup ? lookup[value] : lookup.default) as TReturnValue | ((...args: TArgs) => TReturnValue | Promise<TReturnValue>)
 
 		return typeof returnValue === 'function'
 			? (returnValue as (...args: TArgs) => TReturnValue | Promise<TReturnValue>)(...args)
@@ -69,8 +68,8 @@ export function merge<T>(x: Partial<T>, y: Partial<T>, options: MergeOptions = {
 	const arrayMerge = typeof options?.arrayMerge === 'function'
 		? options.arrayMerge
 		: options?.overwriteArray !== false
-			? (_: any, s: any) => s
-			: undefined
+		? (_: any, s: any) => s
+		: undefined
 
 	const isMergeableObject = options?.mergePlainObjects
 		? isPlainObject
@@ -147,7 +146,7 @@ export function unsetPropertyAtPath(obj: any, path: string): void {
 	}
 }
 
-export function promiseWithResolvers<T>(): PromiseWithResolvers<T> {
+export function createPromiseWithResolvers<T>(): PromiseWithResolvers<T> {
 	let resolve: any
 	let reject: any
 	const promise = new Promise<T>((_resolve, _reject) => {

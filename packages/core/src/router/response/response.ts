@@ -7,10 +7,10 @@ import { EXTERNAL_NAVIGATION_HEADER, HYBRIDLY_HEADER } from '../../constants'
 import { handleDownloadResponse, isDownloadResponse } from '../../download'
 import { NotAHybridResponseError } from '../../errors'
 import { saveScrollPositions } from '../../scroll'
-import type { Errors, HybridPayload, HybridRequestOptions, NavigationResponse, View } from '../types'
+import type { Errors, HybridPayload, HybridRequestOptions, NavigationResponse, Properties, View } from '../types'
 import { navigate } from '../view'
 import { isExternalResponse, performExternalNavigation } from './external'
-import type { HybridRequestResponse } from './response-stack'
+import type { HybridRequestResponse } from './response-manager'
 
 // TODO: errors in a dedicated property
 
@@ -41,6 +41,7 @@ export async function handleHybridRequestResponse(requestResponse: HybridRequest
 		await performExternalNavigation({
 			url: fillHash(request.url, response.headers[EXTERNAL_NAVIGATION_HEADER]!),
 			preserveScroll: options.preserveScroll === true,
+			target: 'current',
 		})
 
 		return { response }
@@ -155,7 +156,7 @@ function resolveProperties(original: Properties, payload: View, errorBag?: strin
 		}
 
 		if (originalValue instanceof Object) {
-			setByPath(mergedPayloadProperties, mergeableProperty, merge(originalValue, newValue, { overwriteArray: false }))
+			setByPath(mergedPayloadProperties, mergeableProperty, merge(originalValue as any, newValue as any, { overwriteArray: false }) as any)
 			return
 		}
 
