@@ -12,7 +12,6 @@ exports[`performs hybrid navigations > context after navigation 1`] = `
   "memo": {},
   "pendingNavigation": undefined,
   "plugins": [],
-  "preloadCache": Map {},
   "responseErrorModals": undefined,
   "routing": undefined,
   "scrollRegions": [

@@ -4,12 +4,12 @@ import { SCROLL_REGION_ATTRIBUTE } from '../constants'
 import type { InternalRouterContext, RouterContextOptions, Serializer } from '../context'
 import { getInternalRouterContext, getRouterContext, setContext } from '../context'
 import { runHooks } from '../plugins'
+import type { HybridPayload } from '../router'
 import { saveScrollPositions } from '../scroll'
 import { makeUrl } from '../url'
-import type { HybridPayload } from '../router'
 import { navigate } from './router'
 
-type SerializedContext = Omit<InternalRouterContext, 'adapter' | 'serializer' | 'plugins' | 'hooks' | 'axios' | 'routes' | 'preloadCache'>
+type SerializedContext = Omit<InternalRouterContext, 'adapter' | 'serializer' | 'plugins' | 'hooks' | 'axios' | 'routes'>
 
 /** Puts the given context into the history state. */
 export function setHistoryState(options: HistoryOptions = {}) {
@@ -33,7 +33,9 @@ export function setHistoryState(options: HistoryOptions = {}) {
 	try {
 		window.history[method](serialized, '', context.url)
 	} catch (error) {
-		console.error('Hybridly could not save its current state in the history. This is most likely due to a property being non-serializable, such as a proxy or a reference.')
+		console.error(
+			'Hybridly could not save its current state in the history. This is most likely due to a property being non-serializable, such as a proxy or a reference.',
+		)
 		throw error
 	}
 }
@@ -103,11 +105,12 @@ export async function registerEventListeners() {
 
 	// On scroll, we want to save the positions of all scrollbars.
 	// This is needed in order to restore them upon navigation.
-	window?.addEventListener('scroll', (event) => debounce(100, () => {
-		if ((event?.target as Element)?.hasAttribute?.(SCROLL_REGION_ATTRIBUTE)) {
-			saveScrollPositions()
-		}
-	}), true)
+	window?.addEventListener('scroll', (event) =>
+		debounce(100, () => {
+			if ((event?.target as Element)?.hasAttribute?.(SCROLL_REGION_ATTRIBUTE)) {
+				saveScrollPositions()
+			}
+		}), true)
 }
 
 /** Checks if the current navigation was made by going back or forward. */

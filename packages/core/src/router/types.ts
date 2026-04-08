@@ -1,7 +1,7 @@
 import type { RequestData } from '@hybridly/utils'
 import type { AxiosProgressEvent, AxiosResponse } from 'axios'
-import type { MountedHookOptions, RequestHooks } from '../plugins/hooks'
 import type { CloseDialogOptions } from '../dialog'
+import type { MountedHookOptions, RequestHooks } from '../plugins/hooks'
 import type { RouteName, RouteParameters } from '../routing/types'
 import type { UrlResolvable, UrlTransformable } from '../url'
 
@@ -130,7 +130,11 @@ export interface Router {
 	/** Reloads the current page. */
 	reload: (options?: HybridRequestOptions) => Promise<NavigationResponse>
 	/** Makes a request to given named route. The HTTP verb is determined automatically but can be overriden. */
-	to: <T extends RouteName>(name: T, parameters?: RouteParameters<T>, options?: Omit<HybridRequestOptions, 'url'>) => Promise<NavigationResponse>
+	to: <T extends RouteName>(
+		name: T,
+		parameters?: RouteParameters<T>,
+		options?: Omit<HybridRequestOptions, 'url'>,
+	) => Promise<NavigationResponse>
 	/** Makes a GET request to the given URL. */
 	get: (url: UrlResolvable, options?: Omit<HybridRequestOptions, 'method' | 'url'>) => Promise<NavigationResponse>
 	/** Makes a POST request to the given URL. */
@@ -145,8 +149,6 @@ export interface Router {
 	external: (url: UrlResolvable, data?: HybridRequestOptions['data']) => void
 	/** Navigates to the given URL without a server round-trip. */
 	local: (url: UrlResolvable, options: ComponentNavigationOptions) => Promise<void>
-	/** Preloads the given URL. The next time this URL is navigated to, it will be loaded from the cache. */
-	preload: (url: UrlResolvable, options?: Omit<HybridRequestOptions, 'method' | 'url'>) => Promise<boolean>
 	/** Determines if the given route name and parameters matches the current route. */
 	matches: <T extends RouteName>(name: T, parameters?: RouteParameters<T>) => boolean
 	/** Gets the current route name. Returns `undefined` is unknown. */

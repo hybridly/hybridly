@@ -1,12 +1,12 @@
 import { debug } from '@hybridly/utils'
 import type { Axios } from 'axios'
 import axios from 'axios'
-import { createSerializer } from '../router/history'
-import { makeUrl } from '../url'
-import type { HybridPayload } from '../router'
-import { updateRoutingConfiguration } from '../routing'
-import { runHooks } from '../plugins'
 import { isDownloadResponse } from '../download'
+import { runHooks } from '../plugins'
+import type { HybridPayload } from '../router'
+import { createSerializer } from '../router/history'
+import { updateRoutingConfiguration } from '../routing'
+import { makeUrl } from '../url'
 import type { InternalRouterContext, RouterContext, RouterContextOptions, SetContextOptions } from './types'
 
 const state = {
@@ -44,7 +44,6 @@ export async function initializeContext(options: RouterContextOptions): Promise<
 		plugins: options.plugins ?? [],
 		axios: registerAxios(options.axios ?? axios.create()),
 		routing: options.routing,
-		preloadCache: new Map(),
 		hooks: {},
 		memo: {},
 	}

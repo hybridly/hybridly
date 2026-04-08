@@ -1,21 +1,54 @@
-import type { AxiosProgressEvent, AxiosResponse } from 'axios'
 import { debug, hasFiles, match, merge, objectToFormData, random, showResponseErrorModal, when } from '@hybridly/utils'
-import { DIALOG_KEY_HEADER, DIALOG_REDIRECT_HEADER, ERROR_BAG_HEADER, EXCEPT_DATA_HEADER, EXTERNAL_NAVIGATION_HEADER, EXTERNAL_NAVIGATION_TARGET_HEADER, HYBRIDLY_HEADER, ONLY_DATA_HEADER, PARTIAL_COMPONENT_HEADER, VERSION_HEADER } from '../constants'
-import { NavigationCancelledError, NotAHybridResponseError } from '../errors'
+import type { AxiosProgressEvent, AxiosResponse } from 'axios'
+import {
+	DIALOG_KEY_HEADER,
+	DIALOG_REDIRECT_HEADER,
+	ERROR_BAG_HEADER,
+	EXCEPT_DATA_HEADER,
+	EXTERNAL_NAVIGATION_HEADER,
+	EXTERNAL_NAVIGATION_TARGET_HEADER,
+	HYBRIDLY_HEADER,
+	ONLY_DATA_HEADER,
+	PARTIAL_COMPONENT_HEADER,
+	VERSION_HEADER,
+} from '../constants'
 import type { InternalRouterContext, RouterContextOptions } from '../context'
 import { getInternalRouterContext, getRouterContext, initializeContext, payloadFromContext, setContext } from '../context'
-import { handleExternalNavigation, isExternalNavigation, isExternalResponse, navigateToExternalUrl, performExternalNavigation } from '../external'
+import { closeDialog } from '../dialog'
+import { handleDownloadResponse, isDownloadResponse } from '../download'
+import { NavigationCancelledError, NotAHybridResponseError } from '../errors'
+import {
+	handleExternalNavigation,
+	isExternalNavigation,
+	isExternalResponse,
+	navigateToExternalUrl,
+	performExternalNavigation,
+} from '../external'
+import { runHooks } from '../plugins'
+import { currentRouteMatches, getCurrentRouteName } from '../routing/current'
+import { generateRouteFromName, getRouteDefinition } from '../routing/route'
 import { resetScrollPositions, restoreScrollPositions, saveScrollPositions } from '../scroll'
 import type { UrlResolvable } from '../url'
 import { fillHash, makeUrl, normalizeUrl, sameHashes, sameUrls } from '../url'
-import { runHooks } from '../plugins'
-import { generateRouteFromName, getRouteDefinition } from '../routing/route'
-import { closeDialog } from '../dialog'
-import { currentRouteMatches, getCurrentRouteName } from '../routing/current'
-import { handleDownloadResponse, isDownloadResponse } from '../download'
-import { getHistoryMemo, handleBackForwardNavigation, isBackForwardNavigation, registerEventListeners, remember, setHistoryState } from './history'
-import type { ComponentNavigationOptions, ConditionalNavigationOption, Errors, HybridPayload, HybridRequestOptions, InternalNavigationOptions, Method, NavigationResponse, Router } from './types'
-import { discardPreloadedRequest, getPreloadedRequest, performPreloadRequest } from './preload'
+import {
+	getHistoryMemo,
+	handleBackForwardNavigation,
+	isBackForwardNavigation,
+	registerEventListeners,
+	remember,
+	setHistoryState,
+} from './history'
+import type {
+	ComponentNavigationOptions,
+	ConditionalNavigationOption,
+	Errors,
+	HybridPayload,
+	HybridRequestOptions,
+	InternalNavigationOptions,
+	Method,
+	NavigationResponse,
+	Router,
+} from './types'
 
 /**
  * The hybridly router.
@@ -37,7 +70,6 @@ export const router: Router = {
 	patch: async (url, options = {}) => await performHybridNavigation({ preserveState: true, ...options, url, method: 'PATCH' }),
 	delete: async (url, options = {}) => await performHybridNavigation({ preserveState: true, ...options, url, method: 'DELETE' }),
 	local: async (url, options = {}) => await performLocalNavigation(url, options),
-	preload: async (url, options = {}) => await performPreloadRequest({ ...options, url, method: 'GET' }),
 	external: (url, data = {}) => navigateToExternalUrl(url, data),
 	to: async (name, parameters, options) => {
 		const url = generateRouteFromName(name, parameters)
@@ -103,7 +135,7 @@ export async function performHybridNavigation(options: HybridRequestOptions): Pr
 				options.data.append('_method', options.method)
 			} else if (typeof options.data === 'undefined') {
 				options.data = { _method: options.method }
-			}	else if (options.data instanceof Object && Object.keys(options.data).length >= 0) {
+			} else if (options.data instanceof Object && Object.keys(options.data).length >= 0) {
 				Object.assign(options.data!, { _method: options.method })
 			} else {
 				debug.router('Could not spoof method because body type is not supported.', options.data)
@@ -203,7 +235,7 @@ export async function performHybridNavigation(options: HybridRequestOptions): Pr
 			// Overwrite errors with the errors coming in from the response instead of deeply merging them
 			// which prevents errors from being removed when they are not present in the response.
 			if (options.errorBag) {
-				(mergedPayloadProperties.errors as any)[options.errorBag] = (payload.view.properties.errors as any)[options.errorBag] ?? {}
+				;(mergedPayloadProperties.errors as any)[options.errorBag] = (payload.view.properties.errors as any)[options.errorBag] ?? {}
 			} else {
 				mergedPayloadProperties.errors = payload.view.properties.errors
 			}
@@ -223,7 +255,8 @@ export async function performHybridNavigation(options: HybridRequestOptions): Pr
 			preserveScroll: options.preserveScroll,
 			preserveState: options.preserveState,
 			preserveUrl: options.preserveUrl,
-			replace: options.replace === true || options.preserveUrl || (sameUrls(payload.url, window.location.href) && !sameHashes(payload.url, window.location.href)),
+			replace: options.replace === true || options.preserveUrl
+				|| (sameUrls(payload.url, window.location.href) && !sameHashes(payload.url, window.location.href)),
 		})
 
 		// If the new view's properties has errors, userland expects an event
@@ -260,7 +293,7 @@ export async function performHybridNavigation(options: HybridRequestOptions): Pr
 		}
 
 		return { response }
-	//
+		//
 	} catch (error: any) {
 		await match(error.constructor.name, {
 			NavigationCancelledError: async () => {
@@ -429,18 +462,12 @@ export async function navigate(options: InternalNavigationOptions) {
 	await runHooks('navigated', {}, options, context)
 }
 
-export async function performHybridRequest(targetUrl: URL, options: HybridRequestOptions, abortController?: AbortController): Promise<AxiosResponse> {
+export async function performHybridRequest(
+	targetUrl: URL,
+	options: HybridRequestOptions,
+	abortController?: AbortController,
+): Promise<AxiosResponse> {
 	const context = getInternalRouterContext()
-	const preloaded = options.method === 'GET'
-		?	getPreloadedRequest(targetUrl)
-		: false
-
-	if (preloaded) {
-		debug.router(`Found a pre-loaded request for [${targetUrl}]`)
-		discardPreloadedRequest(targetUrl)
-
-		return preloaded
-	}
 
 	return await context.axios.request({
 		url: targetUrl.toString(),
