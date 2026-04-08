@@ -1,11 +1,10 @@
-import '@fontsource-variable/rubik'
 import type { Theme } from 'vitepress'
 import DefaultTheme from 'vitepress/theme'
 import impactHeader from './components/impact-header.vue'
-import '@fontsource-variable/rubik'
-import './tailwind.css'
-import './brand.css'
-import './global.css'
+import '@fontsource/ia-writer-quattro'
+import '@fontsource-variable/noto-serif/wght.css'
+import '@fontsource-variable/jetbrains-mono/wght.css'
+import './theme.css'
 
 export default {
 	extends: DefaultTheme,

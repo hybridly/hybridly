@@ -1,3 +1,4 @@
+import { createCssVariablesTheme } from '@shikijs/core'
 import tailwindcss from '@tailwindcss/vite'
 import { execSync } from 'node:child_process'
 import { existsSync, readFileSync } from 'node:fs'
@@ -227,10 +228,12 @@ export default defineConfig({
 	},
 
 	markdown: {
-		theme: {
-			dark: 'material-theme-palenight',
-			light: 'github-light',
-		},
+		theme: createCssVariablesTheme({
+			name: 'css-variables',
+			variablePrefix: '--shiki-',
+			variableDefaults: {},
+			fontStyle: true,
+		}),
 	},
 
 	vite: {

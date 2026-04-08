@@ -15,7 +15,10 @@
 		"ci": "bun run build && bun run test"
 	},
 	"devDependencies": {
+		"@fontsource-variable/jetbrains-mono": "^5.2.8",
+		"@fontsource-variable/noto-serif": "^5.2.9",
 		"@fontsource-variable/rubik": "^5.2.8",
+		"@fontsource/ia-writer-quattro": "^5.2.5",
 		"@hybridly/core": "workspace:*",
 		"@hybridly/utils": "workspace:*",
 		"@hybridly/vite": "workspace:*",
@@ -37,7 +40,7 @@
 		"type-fest": "catalog:",
 		"typescript": "catalog:",
 		"vite": "catalog:",
-		"vitepress": "https://pkg.pr.new/vitepress@f8d8c0d",
+		"vitepress": "2.0.0-alpha.17",
 		"vitepress-plugin-llms": "^1.11.1",
 		"vitest": "catalog:",
 		"vue": "catalog:"
