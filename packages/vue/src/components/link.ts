@@ -1,4 +1,4 @@
-import type { HybridRequestOptions, Method } from '@hybridly/core'
+import type { HybridRequestOptions, Method, RequestMode } from '@hybridly/core'
 import { makeUrl, router } from '@hybridly/core'
 import type { RequestData } from '@hybridly/utils'
 import { debug, merge } from '@hybridly/utils'
@@ -10,6 +10,7 @@ export interface RouterLinkProps {
 	href?: string
 	as?: string | object
 	method?: Method | Lowercase<Method>
+	mode?: RequestMode
 	data?: RequestData
 	external?: boolean
 	disabled?: boolean
@@ -25,7 +26,7 @@ export const RouterLink: DefineComponent<RouterLinkProps> = defineComponent({
 	setup(_, { slots, attrs }) {
 		return (props: typeof _) => {
 			let data = props.data ?? {}
-			const async = props.async
+			const mode = props.mode
 			const preloads = props.preload ?? false
 			const preserveScroll = props.preserveScroll
 			const preserveState = props.preserveState
@@ -121,7 +122,7 @@ export const RouterLink: DefineComponent<RouterLinkProps> = defineComponent({
 						url,
 						data,
 						method,
-						async,
+						mode,
 						preserveState: (method !== 'GET'),
 						...props.options,
 					})
@@ -176,8 +177,8 @@ export const RouterLink: DefineComponent<RouterLinkProps> = defineComponent({
 			type: Boolean,
 			default: undefined,
 		},
-		async: {
-			type: Boolean,
+		mode: {
+			type: String as PropType<RequestMode>,
 			default: undefined,
 		},
 	},

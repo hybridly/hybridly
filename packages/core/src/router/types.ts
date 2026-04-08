@@ -81,12 +81,28 @@ export interface InternalNavigationOptions extends NavigationOptions {
 }
 
 export type Method = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE'
+export type RequestMode = 'navigation' | 'async'
+export type AsyncInterruptionScope = 'none' | 'all' | 'same-group'
 
 export interface HybridRequestOptions extends Omit<NavigationOptions, 'payload'> {
 	/** The URL to navigation. */
 	url?: UrlResolvable
-	/** Whether the request is asynchronous. */
-	async?: boolean
+	/** Defines how this request should be executed. */
+	mode?: RequestMode
+	/**
+	 * Group identifier used to interrupt asynchronous requests.
+	 * @see interruptAsyncOnStart
+	 */
+	group?: string
+	/** Whether this asynchronous request should be interrupted whenever a new navigation request starts. */
+	cancelOnNavigation?: boolean
+	/**
+	 * Defines which asynchronous requests should be interrupted when this request starts.
+	 * `none` (default): does not interrupt any request
+	 * `same-group` (default if `group` is specified): interrupts requests that share the same group identifier
+	 * `all`: interrupts all asynchronous requests
+	 */
+	interruptAsyncOnStart?: AsyncInterruptionScope
 	/** HTTP verb to use for the request. */
 	method?: Method | Lowercase<Method>
 	/** Body of the request. */

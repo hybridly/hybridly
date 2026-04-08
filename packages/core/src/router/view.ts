@@ -1,12 +1,12 @@
 import { debug, merge } from '@hybridly/utils'
-import { resetScrollPositions, restoreScrollPositions } from '../scroll'
-import { runHooks } from '../plugins'
 import { getRouterContext, payloadFromContext, setContext } from '../context'
+import { runHooks } from '../plugins'
+import { resetScrollPositions, restoreScrollPositions } from '../scroll'
 import type { UrlResolvable } from '../url'
 import { normalizeUrl } from '../url'
 import { getHistoryMemo, setHistoryState } from './history'
-import type { ComponentNavigationOptions, ConditionalNavigationOption, HybridPayload, InternalNavigationOptions } from './types'
 import { performHybridNavigation } from './request/request'
+import type { ComponentNavigationOptions, ConditionalNavigationOption, HybridPayload, InternalNavigationOptions } from './types'
 
 /**
  * Makes an internal navigation that swaps the view and updates the context.
@@ -88,15 +88,17 @@ export async function navigate(options: InternalNavigationOptions) {
 	if (Object.entries(context.view.deferred ?? {}).length) {
 		debug.router('Request has deferred properties, queueing a partial reload:', context.view.deferred)
 		context.adapter.executeOnMounted(async () => {
-			return Promise.all(Object.entries(context.view.deferred).map(async ([_, properties]) => {
-				await performHybridNavigation({
-					preserveScroll: true,
-					preserveState: true,
-					replace: true,
-					async: true,
-					only: properties,
-				})
-			}))
+			return Promise.all(
+				Object.entries(context.view.deferred).map(async ([_, properties]) => {
+					await performHybridNavigation({
+						preserveScroll: true,
+						preserveState: true,
+						replace: true,
+						mode: 'async',
+						only: properties,
+					})
+				}),
+			)
 		})
 	}
 

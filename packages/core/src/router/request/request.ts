@@ -15,7 +15,7 @@ import { NavigationCancelledError } from '../../errors'
 import { runHooks } from '../../plugins'
 import { makeUrl } from '../../url'
 import type { HybridRequestOptions, Method, NavigationResponse, PendingHybridRequest } from '../types'
-import { enqueueRequest, interruptRequestIfNeeded } from './request-manager'
+import { enqueueRequest } from './request-manager'
 
 export function createPendingHybridRequest(options: HybridRequestOptions): PendingHybridRequest {
 	const context = getRouterContext()
@@ -83,7 +83,6 @@ export async function sendHybridRequest(request: PendingHybridRequest): Promise<
 }
 
 export async function performHybridRequest(request: PendingHybridRequest): Promise<NavigationResponse> {
-	interruptRequestIfNeeded(request)
 	enqueueRequest(request)
 
 	return request.promise
@@ -170,15 +169,18 @@ export async function transformOptions(options: HybridRequestOptions) {
 	// Force uppercase method because we accept lowercase methods,
 	// *angry look at Hassan*
 	options.method = options.method.toUpperCase() as Method
+	options.mode ??= 'navigation'
+	options.cancelOnNavigation ??= false
+	options.interruptAsyncOnStart ??= options.group ? 'same-group' : 'none'
 
 	// By default, don't show progress when a request is asynchronous.
-	if (options.async === true && options.progress === undefined) {
+	if (options.mode === 'async' && options.progress === undefined) {
 		options.progress = false
 	}
 
 	// Async requests are follow-up data fetches and should not create
 	// extra history entries unless explicitly requested by the user
-	if (options.async === true && options.replace === undefined) {
+	if (options.mode === 'async' && options.replace === undefined) {
 		options.replace = true
 	}
 

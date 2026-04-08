@@ -25,7 +25,7 @@ import { navigate, performLocalNavigation } from './view'
 export const router = {
 	abort: () => cancelNavigationRequest(),
 	navigate: async (options) => await performHybridNavigation(options),
-	reload: async (options) => await performHybridNavigation({ preserveScroll: true, preserveState: true, replace: true, async: true, ...options }),
+	reload: async (options) => await performHybridNavigation({ preserveScroll: true, preserveState: true, replace: true, mode: 'async', ...options }),
 	get: async (url, options = {}) => await performHybridNavigation({ ...options, url, method: 'GET' }),
 	post: async (url, options = {}) => await performHybridNavigation({ preserveState: true, ...options, url, method: 'POST' }),
 	put: async (url, options = {}) => await performHybridNavigation({ preserveState: true, ...options, url, method: 'PUT' }),

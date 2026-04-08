@@ -1,12 +1,12 @@
 import { debug, getByPath, merge, setByPath, wrap } from '@hybridly/utils'
 import type { AxiosResponse } from 'axios'
-import { runHooks } from '../../plugins'
-import { getInternalRouterContext } from '../../context'
-import { fillHash, sameHashes, sameUrls } from '../../url'
 import { EXTERNAL_NAVIGATION_HEADER, HYBRIDLY_HEADER } from '../../constants'
+import { getInternalRouterContext } from '../../context'
 import { handleDownloadResponse, isDownloadResponse } from '../../download'
 import { NotAHybridResponseError } from '../../errors'
+import { runHooks } from '../../plugins'
 import { saveScrollPositions } from '../../scroll'
+import { fillHash, sameHashes, sameUrls } from '../../url'
 import type { Errors, HybridPayload, HybridRequestOptions, NavigationResponse, Properties, View } from '../types'
 import { navigate } from '../view'
 import { isExternalResponse, performExternalNavigation } from './external'
@@ -67,7 +67,7 @@ export async function handleHybridRequestResponse(requestResponse: HybridRequest
 
 	// We only want to make a page navigation if the request was synchronous
 	// or if we didn't navigate during the request and the response.
-	if (!options.async || (context.view.component === request.view.component)) {
+	if (options.mode !== 'async' || (context.view.component === request.view.component)) {
 		const properties = (() => {
 			if (!payload.view && !isPartial(options)) {
 				return undefined
@@ -95,7 +95,7 @@ export async function handleHybridRequestResponse(requestResponse: HybridRequest
 			replace: options.replace === true || options.preserveUrl || (sameUrls(payload.url, window.location.href) && !sameHashes(payload.url, window.location.href)),
 		})
 	} else {
-		debug.router('Discarding navigation from an async request initiated on a previous page.')
+		debug.router('Discarding navigation from an asynchronous request initiated on a previous page.')
 	}
 
 	// If the new view's properties has errors, userland expects an event
@@ -136,12 +136,12 @@ function resolveProperties(original: Properties, payload: View, errorBag?: strin
 	// Overwrite errors with the errors coming in from the response instead of deeply merging them
 	// which prevents errors from being removed when they are not present in the response.
 	if (errorBag) {
-		(mergedPayloadProperties.errors as any)[errorBag] = (payload.properties.errors as any)[errorBag] ?? {}
+		;(mergedPayloadProperties.errors as any)[errorBag] = (payload.properties.errors as any)[errorBag] ?? {}
 	} else {
 		mergedPayloadProperties.errors = payload.properties.errors
 	}
 
-	(payload.mergeable ?? []).forEach(([mergeableProperty, unique]) => {
+	;(payload.mergeable ?? []).forEach(([mergeableProperty, unique]) => {
 		const originalValue = getByPath(original, mergeableProperty) as Properties
 		const newValue = getByPath(payload.properties, mergeableProperty) as Properties
 
