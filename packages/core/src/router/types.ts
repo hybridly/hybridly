@@ -108,10 +108,10 @@ export interface HybridRequestOptions extends Omit<NavigationOptions, 'payload'>
 	 * @see https://laravel.com/docs/master/routing#form-method-spoofing
 	 */
 	spoof?: boolean
-	/**
-	 * If `false`, does not trigger the progress bar for this request.
-	 */
+	/** If `false`, does not trigger the progress bar for this request. */
 	progress?: boolean
+	/** Abort controller for this request. */
+	abortController?: AbortController
 }
 
 export interface NavigationResponse {

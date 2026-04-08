@@ -125,6 +125,8 @@ export function useForm<
 	const progress = ref<Progress>()
 	/** The current request. */
 	const request = shallowRef<PendingHybridRequest>()
+	/** Abort controller for the current request. */
+	let abortController: AbortController | undefined
 
 	/**
 	 * Sets new initial values for the form, so subsequent resets will use thse values.
@@ -205,8 +207,11 @@ export function useForm<
 		const preserveState = optionsWithOverrides.preserveState ?? optionsWithOverrides.method !== 'GET'
 		const hooks = optionsWithOverrides.hooks ?? {}
 
+		abortController = optionsWithOverrides.abortController ?? new AbortController()
+
 		return router.navigate({
 			...optionsWithOverrides,
+			abortController,
 			url: url ?? state.context.value?.url,
 			method: optionsWithOverrides.method ?? 'POST',
 			data: safeClone(data),
@@ -300,7 +305,7 @@ export function useForm<
 	 * Aborts the submission.
 	 */
 	function abort() {
-		// TODO: cancel associated request
+		abortController?.abort()
 	}
 
 	watch([fields, processing, errors], () => {

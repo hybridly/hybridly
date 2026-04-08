@@ -33,7 +33,7 @@ export function createPendingHybridRequest(options: HybridRequestOptions): Pendi
 		promise,
 		resolve,
 		id: random(),
-		controller: new AbortController(),
+		controller: options.abortController ?? new AbortController(),
 		cancelled: false,
 		completed: false,
 		interrupted: false,
