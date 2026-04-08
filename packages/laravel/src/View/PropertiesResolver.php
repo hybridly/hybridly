@@ -177,7 +177,7 @@ final class PropertiesResolver
     {
         foreach ($properties as $key => $value) {
             if ($value instanceof Property) {
-                $value = $value->__invoke();
+                $value = $value->evaluate();
             }
 
             if (\is_object($value) && \is_callable($value)) {

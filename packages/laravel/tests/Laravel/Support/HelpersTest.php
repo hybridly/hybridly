@@ -4,7 +4,7 @@ use Hybridly\Exceptions\MissingViewComponentException;
 use Hybridly\Hybridly;
 use Hybridly\Support\Header;
 use Hybridly\Support\Properties\Deferred;
-use Hybridly\Support\Properties\Partial;
+use Hybridly\Support\Properties\OnDemand;
 use Hybridly\View\Factory;
 use Illuminate\Support\Facades\Route;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -14,7 +14,7 @@ use function Hybridly\deferred;
 use function Hybridly\dialog;
 use function Hybridly\is_hybrid;
 use function Hybridly\is_partial;
-use function Hybridly\partial;
+use function Hybridly\on_demand;
 use function Hybridly\properties;
 use function Hybridly\to_external_url;
 use function Hybridly\view;
@@ -59,16 +59,16 @@ describe('namespaced', function () {
     });
 
     test('`partial` returns a `Partial` instance', function () {
-        expect(partial(fn () => 'foo'))
-            ->toBeInstanceOf(Partial::class)
-            ->__invoke()
+        expect(on_demand(fn () => 'foo'))
+            ->toBeInstanceOf(OnDemand::class)
+            ->evaluate()
             ->toBe('foo');
     });
 
     test('`deferred` returns a `Deferred` instance', function () {
         expect(deferred(fn () => 'bar'))
             ->toBeInstanceOf(Deferred::class)
-            ->__invoke()
+            ->evaluate()
             ->toBe('bar');
     });
 

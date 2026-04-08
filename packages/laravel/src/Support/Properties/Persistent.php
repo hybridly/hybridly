@@ -14,10 +14,9 @@ final class Persistent implements Property, Mergeable
         private bool $merge = false,
         private bool $unique = false,
         private ?string $group = null,
-    ) {
-    }
+    ) {}
 
-    public function __invoke(): mixed
+    public function evaluate(): mixed
     {
         return app()->call($this->callback);
     }

@@ -2,6 +2,9 @@
 
 namespace Hybridly\Support\Properties;
 
+/**
+ * Represents a property that should merge itself with its current instance.
+ */
 final class Merge implements Property, Mergeable
 {
     use MergesProperties;
@@ -10,10 +13,9 @@ final class Merge implements Property, Mergeable
         private mixed $value,
         private bool $merge = true,
         private bool $unique = false,
-    ) {
-    }
+    ) {}
 
-    public function __invoke(): mixed
+    public function evaluate(): mixed
     {
         return \is_callable($this->value)
             ? app()->call($this->value)

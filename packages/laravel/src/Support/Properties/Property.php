@@ -4,5 +4,8 @@ namespace Hybridly\Support\Properties;
 
 interface Property
 {
-    public function __invoke(): mixed;
+    /**
+     * Evaluates the value of the property.
+     */
+    public function evaluate(): mixed;
 }

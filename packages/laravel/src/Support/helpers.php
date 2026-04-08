@@ -5,7 +5,7 @@ namespace Hybridly;
 use Hybridly\Support\Header;
 use Hybridly\Support\Properties\Deferred;
 use Hybridly\Support\Properties\Merge;
-use Hybridly\Support\Properties\Partial;
+use Hybridly\Support\Properties\OnDemand;
 use Hybridly\Support\Target;
 use Hybridly\View\Factory;
 use Illuminate\Contracts\Support\Arrayable;
@@ -84,15 +84,15 @@ if (! \function_exists('Hybridly\properties')) {
     }
 }
 
-if (! \function_exists('Hybridly\partial')) {
+if (! \function_exists('Hybridly\on_demand')) {
     /**
-     * Creates a partial-only property.
+     * Creates a property that is only evaluated when specified in a partial reload.
      *
      * @see https://hybridly.dev/api/laravel/functions.html#partial
      */
-    function partial(\Closure $callback): Partial
+    function on_demand(\Closure $callback): OnDemand
     {
-        return new Partial($callback);
+        return new OnDemand($callback);
     }
 }
 
