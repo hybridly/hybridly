@@ -57,7 +57,6 @@ final class HybridlyServiceProvider extends ServiceProvider
 
         $this->registerBindings();
         $this->registerDirectives();
-        $this->registerMacros();
         $this->registerTestingMacros();
         $this->registerArchitecture();
         $this->registerAbout();
@@ -163,23 +162,6 @@ final class HybridlyServiceProvider extends ServiceProvider
                 Vite::class,
                 $expression ?: ('"' . $this->getConfiguration()->architecture->applicationMainPath . '"'),
             ));
-        });
-    }
-
-    protected function registerMacros(): void
-    {
-        /** Checks if the request is hybrid. */
-        Request::macro('isHybrid', fn () => is_hybrid());
-
-        /** Checks if the request is partial. */
-        Request::macro('isPartial', fn () => is_partial());
-
-        /** Serves a hybrid route. */
-        Router::macro('hybridly', function (string $uri, string $component, array $properties = []) {
-            /** @var Router $this */
-            return $this->match(['GET', 'HEAD'], $uri, Controller::class)
-                ->defaults('component', $component)
-                ->defaults('properties', $properties);
         });
     }
 
