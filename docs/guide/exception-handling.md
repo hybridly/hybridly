@@ -1,89 +1,73 @@
 # Exception handling
 
-## Development
+<p class="preface">
+Learn how debug in development and how to customize the error pages for a better user experience.
+</p>
 
-In development, when a non-hybrid response is returned from a hybrid request, it will be displayed in a simple modal.
+## Overview
+
+During development, when a non-hybrid response is returned from a hybrid request, it will be displayed in a modal. The navigation will be cancelled, and the modal will be dismissible.
 
 In other words, Laravel's exception handling keeps working as expected, and the debugging experience is the same as usual.
 
 ## Production
 
-In production, it's necessary to extend the exception handler so it returns a valid hybrid response even when an exception has been thrown.
+By default, in production, exceptions have the same behavior. Presenting an error modal with no information is not particularly a good user experience, so you will probably want to handle them and return a proper response page.
 
-Usually, this consists of returning an `error` view component with the exception's details.
+Hybridly makes this fairly simple by providing a `renderExceptionsUsing` method on the `Hybridly` instance. It must be given a callback that is responsible for returning a response, which is usually a hybrid view.
 
-Hybridly makes this fairly simple by providing a `HandleHybridExceptions` class that can be used within the `withExceptions` method. The `renderUsing` method must be given a callback that will return a response when an exception occurs. Usually, a hybrid view should be returned.
+Typically, this is done in a service provider:
 
 :::code-group
-```php [bootstrap/app.php]
-use Hybridly\Exceptions\HandleHybridExceptions;
 
-return Application::configure(basePath: dirname(__DIR__))
-		// ...
-    ->withExceptions(
-        HandleHybridExceptions::register() // [!code focus:4]
-            ->renderUsing(fn (Response $response) => view('error', [
-                'status' => $response->getStatusCode()
-            ]))
-    )
-    ->create();
+```php [app/Providers/AppServiceProvider.php]
+use Hybridly\Hybridly;
+
+public function boot(Hybridly $hybridly): void
+{
+    $hybridly->renderExceptionsUsing(fn (Response $response) => view('error', [
+        'status' => $response->getStatusCode()
+    ]));
+}
 ```
+
 :::
 
-:::info Callback arguments
-Note that `renderUsing` accepts dependency injection, the `$response`, `$request` and `$exception` named arguments, as well as the `Symfony\Component\HttpFoundation\Response`, `\Illuminate\Http\Request` and `\Throwable` typed arguments.
-:::
-
-## Session expiration (419)
+## Session expiration
 
 By default, when a session expires, Laravel throws a `TokenMismatchException` that renders as an `HTTP 419` code.
 
-When using the `HandleHybridExceptions` class, the user will be redirected back to the previous page with a flash message.
+You can catch these exceptions by using the `handleSessionExpirationUsing` method on the `Hybridly` instance.
 
-This behavior is customizable through the `expireSessionUsing` method:
+```php [app/Providers/AppServiceProvider.php]
+use Hybridly\Hybridly;
 
-:::code-group
-```php [bootstrap/app.php]
-use Hybridly\Exceptions\HandleHybridExceptions;
-
-return Application::configure(basePath: dirname(__DIR__))
-		// ...
-    ->withExceptions(
-        HandleHybridExceptions::register()
-            ->renderUsing(fn (Response $response) => view('error', [
-                'status' => $response->getStatusCode()
-            ]))
-            ->expireSessionUsing(fn () => back()->with([ // [!code focus:3]
-                'error' => 'Your session has expired. Please refresh the page.',
-            ]))
-    )
-    ->create();
+public function boot(Hybridly $hybridly): void
+{
+    $hybridly->handleSessionExpirationUsing(fn () => back()->with([
+        'error' => 'Your session has expired. Please refresh the page.',
+    ]));
+}
 ```
-:::
-
-:::info CSRF protection
-Though you don't have to set it up, CSRF protection is still enabled in hybrid applications. This is because Axios automatically reads the `XSRF-TOKEN` cookie emitted by Laravel and sends it back in every request.
-:::
 
 ## Previewing exceptions locally
 
-In a local environment, even when using `HandleHybridExceptions`, Laravel's exception handler keeps behaving as usual.
+When working on your exception page, you might not want to receive the default error modal that Hybridly uses during development.
 
-To work on `renderUsing`'s implementation or simply preview the error page, you may use the `inEnvironments` method. By default, it is set to only `production`.
+You can instruct Hybridly to render your exception defined using `renderExceptionsUsing` by using `renderExceptionsInDevelopment`:
 
 :::code-group
-```php [bootstrap/app.php]
-use Hybridly\Exceptions\HandleHybridExceptions;
 
-return Application::configure(basePath: dirname(__DIR__))
-		// ...
-    ->withExceptions(
-        HandleHybridExceptions::register() // [!code focus:5]
-            ->inEnvironments('local') // [!code highlight]
-            ->renderUsing(fn (Response $response) => view('error', [
-                'status' => $response->getStatusCode()
-            ]))
-    )
-    ->create();
+```php [app/Providers/AppServiceProvider.php]
+use Hybridly\Hybridly;
+
+public function boot(Hybridly $hybridly): void
+{
+    $hybridly->renderExceptionsInDevelopment(); // [!code hl]
+    $hybridly->renderExceptionsUsing(fn (Response $response) => view('error', [
+        'status' => $response->getStatusCode()
+    ]));
+}
 ```
+
 :::
