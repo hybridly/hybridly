@@ -268,6 +268,7 @@ class Factory implements HybridResponse
                 component: $this->view->component,
                 properties: Arr::except($this->view->properties, array_keys($this->hybridly->shared())),
                 deferred: [],
+                mergeable: [],
             ),
         );
     }
@@ -277,12 +278,13 @@ class Factory implements HybridResponse
      */
     protected function resolveView(View $view, Request $request): View
     {
-        [$properties, $deferred] = $this->resolveProperties($view, $request);
+        [$properties, $deferred, $mergeable] = $this->resolveProperties($view, $request);
 
         return new View(
             component: $view->component,
             properties: $properties,
             deferred: $deferred,
+            mergeable: $mergeable,
         );
     }
 
@@ -298,7 +300,7 @@ class Factory implements HybridResponse
         return $resolver->resolve(
             component: $view->component,
             properties: $includeSharedProperties ? [...$this->hybridly->shared(), ...$view->properties] : $view->properties,
-            persisted: $this->hybridly->persisted(),
+            persistedByPath: $this->hybridly->persisted(),
         );
     }
 

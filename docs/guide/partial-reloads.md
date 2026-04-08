@@ -2,7 +2,7 @@
 
 ## Overview
 
-Partial reloads are repeated requests to the same page which purpose is to update or fetch specific properties, but not all of them. 
+Partial reloads are repeated requests to the same page which purpose is to update or fetch specific properties, but not all of them.
 
 As an example, consider a page that includes a list of users, as well as an option to filter the users by their company. On the first request to the page, both the `users` and `companies` properties are passed to the view component.
 
@@ -10,12 +10,12 @@ However, on subsequent requests to the same page—maybe to filter the users—y
 
 ## Making partial reloads
 
-Hybrid requests are "partial" when the [`only`](../api/router/options.md#only) or [`except`](../api/router/options.md#except) property is defined in its options. 
+Hybrid requests are "partial" when the [`only`](../api/router/options.md#only) or [`except`](../api/router/options.md#except) property is defined in its options.
 
 ```ts
 defineProps<{
-  users: Paginator<App.Data.UserData>
-  companies: Paginator<App.Data.CompanyData>
+	users: Paginator<App.Data.UserData>
+	companies: Paginator<App.Data.CompanyData>
 }>()
 
 // ...
@@ -38,13 +38,13 @@ Note that there is no way to un-persist a persistent property.
 
 ## Partial-only properties
 
-It's often desirable to not evaluate a property until specifically needed—that is, included in a partial reload. To achieve this, you can use the [`partial`](../api/laravel/functions.md#partial) function:
+It's often desirable to not evaluate a property until specifically needed, that is, included in a partial reload. To achieve this, you can use the [`on_demand`](../api/laravel/functions.md#on_demand) function:
 
 ```php
-use function Hybridly\partial;
+use function Hybridly\on_demand;
 
 return hybridly('foo', [
-  'filters' => partial(fn () => $filters)
+  'filters' => on_demand(fn () => $filters)
 ]);
 ```
 
@@ -64,7 +64,7 @@ You may use the [`deferred`](../api/laravel/functions.md#deferred) function to a
 use function Hybridly\deferred;
 
 return hybridly('foo', [
-	'slowProperty' => deferred(fn () => $fetchDataFromThirdParty())
+  'slowProperty' => deferred(fn () => $fetchDataFromThirdParty())
 ])
 ```
 
@@ -82,14 +82,38 @@ onMounted(() => {
 
 Deferred properties are the exact same as [partial properties](#partial-only-properties), except they also trigger an automatic partial reload specifically for them after the view component has loaded.
 
+You may group deferred properties so they reload together:
+
+```php
+return hybridly('foo', [
+  'stats' => deferred(fn () => $stats, group: 'dashboard'),
+  'chart' => deferred(fn () => $chart, group: 'dashboard'),
+])
+```
+
+## Mergeable properties
+
+By default, incoming properties replace the previous value on the frontend.
+
+If you want a property to merge into its existing value instead, use [`merge`](../api/laravel/functions.md#merge):
+
+```php
+use function Hybridly\merge;
+
+return hybridly('feed.index', [
+  'items' => merge(fn () => FeedItemData::collection($items)),
+]);
+```
+
+This is useful for incremental updates such as activity feeds and infinite lists.
+
 :::warning Reloading
 Note that using [`router.reload()`](../api/router/utils.md#reload) will clear deferred properties from the page component state. To avoid this behavior, you may simulate a partial reload using `router.reload({ except: [] })`.
 :::
 
-
 ## Lazy evaluation
 
-It is possible to delay the evaluation of a property by using a closure. 
+It is possible to delay the evaluation of a property by using a closure.
 
 This property will still be evaluated on first page load and subsequent hybrid requests, but **only when the response is actually being sent**.
 

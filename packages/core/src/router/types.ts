@@ -73,13 +73,36 @@ export interface InternalNavigationOptions extends NavigationOptions {
 	 * @internal
 	 */
 	hasDialog?: boolean
+	/**
+	 * Final properties object for the view.
+	 * @internal
+	 */
+	properties?: Properties
 }
 
 export type Method = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE'
+export type RequestMode = 'navigation' | 'async'
+export type AsyncInterruptionScope = 'none' | 'all' | 'same-group'
 
 export interface HybridRequestOptions extends Omit<NavigationOptions, 'payload'> {
 	/** The URL to navigation. */
 	url?: UrlResolvable
+	/** Defines how this request should be executed. */
+	mode?: RequestMode
+	/**
+	 * Group identifier used to interrupt asynchronous requests.
+	 * @see interruptAsyncOnStart
+	 */
+	group?: string
+	/** Whether this asynchronous request should be interrupted whenever a new navigation request starts. */
+	cancelOnNavigation?: boolean
+	/**
+	 * Defines which asynchronous requests should be interrupted when this request starts.
+	 * `none` (default): does not interrupt any request
+	 * `same-group` (default if `group` is specified): interrupts requests that share the same group identifier
+	 * `all`: interrupts all asynchronous requests
+	 */
+	interruptAsyncOnStart?: AsyncInterruptionScope
 	/** HTTP verb to use for the request. */
 	method?: Method | Lowercase<Method>
 	/** Body of the request. */
@@ -101,10 +124,10 @@ export interface HybridRequestOptions extends Omit<NavigationOptions, 'payload'>
 	 * @see https://laravel.com/docs/master/routing#form-method-spoofing
 	 */
 	spoof?: boolean
-	/**
-	 * If `false`, does not trigger the progress bar for this request.
-	 */
+	/** If `false`, does not trigger the progress bar for this request. */
 	progress?: boolean
+	/** Abort controller for this request. */
+	abortController?: AbortController
 }
 
 export interface NavigationResponse {
@@ -121,10 +144,7 @@ export interface DialogRouter {
 }
 
 export interface Router {
-	/** Aborts the currently pending navigate, if any. */
-	abort: () => Promise<void>
-	/** Checks if there is an active navigate. */
-	active: () => boolean
+	abort: () => void
 	/** Makes a navigate with the given options. */
 	navigate: (options: HybridRequestOptions) => Promise<NavigationResponse>
 	/** Reloads the current page. */
@@ -164,8 +184,8 @@ export interface Router {
 	}
 }
 
-/** A navigation being made. */
-export interface PendingNavigation {
+/** A hybrid request being made. */
+export interface PendingHybridRequest {
 	/** The URL to which the request is being made. */
 	url: URL
 	/** Abort controller associated to this request. */
@@ -174,8 +194,18 @@ export interface PendingNavigation {
 	options: HybridRequestOptions
 	/** Navigation identifier. */
 	id: string
-	/** Current status. */
-	status: 'pending' | 'success' | 'error'
+	/** Whether the request has completed. */
+	completed: boolean
+	/** Whether the request has been gracefully interrupted. */
+	cancelled: boolean
+	/** Whether the request has been forcefully interrupted. */
+	interrupted: boolean
+	/** Promise for the request. */
+	promise: Promise<NavigationResponse>
+	/** Callback that resolves the request promise. */
+	resolve: (response: NavigationResponse) => void
+	/** The view from which the request has started. */
+	view: View
 }
 
 /*
@@ -191,7 +221,9 @@ export interface View {
 	/** Properties to apply to the component. */
 	properties: Properties
 	/** Deferred properties for this view. */
-	deferred: string[]
+	deferred: Record<string, string | string[]>
+	/** Properties that should be merged with the existing payload. */
+	mergeable: Array<[string, boolean]>
 }
 
 export interface Dialog extends Required<View> {

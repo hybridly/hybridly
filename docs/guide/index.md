@@ -16,10 +16,6 @@ Hybridly is essentially very similar to Inertia, but it has a different philosop
 
 In other words, Hybridly is more like a framework built on top of Laravel and Vue, focusing specifically on being the perfect glue between the two.
 
-:::info Differences with Inertia
-To get an idea about their differences, head over to the [comparison page](../guide/comparison-with-inertia.md).
-:::
-
 ## What it looks like
 
 Working with Hybridly is pretty similar to working with basic Laravel. The main difference is how you render views, since Hybridly uses Vue.
@@ -33,6 +29,7 @@ Below are some basic examples of what Hybridly code looks like:
 Controllers look the same as what you are used to with Laravel. The main difference is that you return [hybrid responses](./responses.md) using the [`Hybridly\view`](../api/laravel/functions.md#view) function instead of Laravel's built-in `view`.
 
 :::code-group
+
 ```php [UserProfileController.php]
 use App\Data\UserData;
 use App\Models\User;
@@ -57,6 +54,7 @@ final class UserProfileController
     }
 }
 ```
+
 ```php [routes.php]
 Route::get('/users/{user}', [UserProfileController::class, 'show'])
   ->name('users.show');
@@ -64,6 +62,7 @@ Route::get('/users/{user}', [UserProfileController::class, 'show'])
 Route::put('/users/{user}/update', [UserProfileController::class, 'update'])
   ->name('users.update');
 ```
+
 :::
 
 ### Templates
@@ -82,12 +81,12 @@ const form = useForm({
 	fields: {
 		name: $props.user.name,
 		email: $props.user.email,
-	}
+	},
 })
 </script>
 
 <template layout="user-profile">
-	<user-card :user="user" />
+	<user-card :user />
 	<form @submit="form.submit">
 		<base-input v-model="form.fields.name" label="Name" />
 		<base-input v-model="form.fields.email" label="Email" type="email" />
@@ -112,6 +111,7 @@ There are a few things going on there:
 ### Beyonds the basics
 
 Rendering a single page with a form is cool, but real-world applications are more complex. After learning about essential features using the sidebar to your left, you may want to learn about:
+
 - [How to render dialogs](./dialogs.md)
 - [How to implement filters and sorts](./refining.md)
 - [How to implement data tables](./tables.md)

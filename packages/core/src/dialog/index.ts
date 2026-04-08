@@ -1,6 +1,7 @@
 import { getInternalRouterContext } from '../context'
 import type { HybridRequestOptions } from '../router'
-import { performHybridNavigation, performLocalNavigation } from '../router'
+import { performHybridNavigation } from '../router/request/request'
+import { performLocalNavigation } from '../router/view'
 
 export interface CloseDialogOptions extends HybridRequestOptions {
 	/**

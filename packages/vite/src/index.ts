@@ -1,16 +1,16 @@
 import type { DynamicConfiguration } from '@hybridly/core'
-import laravel from './laravel'
 import initialize from './config'
-import layout from './layout'
-import type { ViteOptions } from './types'
-import { getRunOptions, run } from './integrations/run'
-import { getVueOptions, vue } from './integrations/vue'
 import { loadConfiguration } from './config/load'
-import { killSwitch } from './kill-switch'
-import { warnOnLocalBuilds } from './local-build'
+import { getRunOptions, run } from './integrations/run'
 import { hybridlyImports } from './integrations/unplugins'
+import { getVueOptions, vue } from './integrations/vue'
+import { killSwitch } from './kill-switch'
+import laravel from './laravel'
+import layout from './layout'
+import { warnOnLocalBuilds } from './local-build'
+import type { ViteOptions } from './types'
 
-type Options = ViteOptions | ((config: DynamicConfiguration) => (ViteOptions | Promise<ViteOptions>))
+type Options = ViteOptions | ((config: DynamicConfiguration) => ViteOptions | Promise<ViteOptions>)
 
 export default async function plugin(options: Options = {}) {
 	const config = await loadConfiguration()
@@ -29,4 +29,4 @@ export default async function plugin(options: Options = {}) {
 	]
 }
 
-export { layout, ViteOptions as Options, hybridlyImports }
+export { hybridlyImports, layout, ViteOptions as Options }

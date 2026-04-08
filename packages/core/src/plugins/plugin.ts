@@ -26,7 +26,7 @@ export async function runPluginHooks<T extends keyof Hooks>(hook: T, ...args: Pa
 	await forEachPlugin(async (plugin) => {
 		if (plugin[hook]) {
 			debug.plugin(plugin.name, `Calling "${hook}" hook.`)
-			result &&= await plugin[hook]?.(...args as [any, any]) !== false
+			result &&= await plugin[hook]?.(...args as [any, any, any]) !== false
 		}
 	})
 
@@ -55,7 +55,7 @@ export async function runHooks<T extends keyof Hooks>(
 	...args: Parameters<Hooks[T]>
 ): Promise<boolean> {
 	const result = await Promise.all<boolean>([
-		requestHooks?.[hook]?.(...args as [any, any]),
+		requestHooks?.[hook]?.(...args as [any, any, any]),
 		runGlobalHooks(hook, ...args),
 		runPluginHooks(hook, ...args),
 	])

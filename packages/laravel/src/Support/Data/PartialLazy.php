@@ -2,10 +2,10 @@
 
 namespace Hybridly\Support\Data;
 
-use Hybridly\Support\Partial;
+use Hybridly\Support\Properties\OnDemand;
 use Spatie\LaravelData\Support\Lazy\ConditionalLazy;
 
-use function Hybridly\partial;
+use function Hybridly\on_demand;
 
 class PartialLazy extends ConditionalLazy
 {
@@ -15,8 +15,8 @@ class PartialLazy extends ConditionalLazy
         parent::__construct(fn () => true, $closure);
     }
 
-    public function resolve(): Partial
+    public function resolve(): OnDemand
     {
-        return partial($this->value);
+        return on_demand($this->value);
     }
 }

@@ -2,9 +2,10 @@
 
 namespace Hybridly;
 
-use Hybridly\Support\Deferred;
 use Hybridly\Support\Header;
-use Hybridly\Support\Partial;
+use Hybridly\Support\Properties\Deferred;
+use Hybridly\Support\Properties\Merge;
+use Hybridly\Support\Properties\OnDemand;
 use Hybridly\Support\Target;
 use Hybridly\View\Factory;
 use Illuminate\Contracts\Support\Arrayable;
@@ -61,12 +62,6 @@ if (! \function_exists('Hybridly\dialog')) {
     /**
      * Returns a dialog with the given properties and base view.
      *
-     * @param string $component The component to render in the dialog.
-     * @param array|Arrayable|TransformableData $properties The properties to pass to the component.
-     * @param string $base The URL to the base page to load in the background of the dialog.
-     * @param bool $force Whether to force the base page to load even if the current page is the same as the base page.
-     * @param bool $keep Whether to keep the current state of the page in the background instead of updating properties. Useful for performance.
-     *
      * @see https://hybridly.dev/api/laravel/functions.html#dialog
      */
     function dialog(?string $component = null, array|Arrayable|TransformableData $properties = [], string $base = '', bool $force = false, bool $keep = false): Factory
@@ -89,15 +84,27 @@ if (! \function_exists('Hybridly\properties')) {
     }
 }
 
-if (! \function_exists('Hybridly\partial')) {
+if (! \function_exists('Hybridly\on_demand')) {
     /**
-     * Creates a partial-only property.
+     * Creates a property that is only evaluated when specified in a partial reload.
      *
      * @see https://hybridly.dev/api/laravel/functions.html#partial
      */
-    function partial(\Closure $callback): Partial
+    function on_demand(\Closure $callback): OnDemand
     {
-        return new Partial($callback);
+        return new OnDemand($callback);
+    }
+}
+
+if (! \function_exists('Hybridly\merge')) {
+    /**
+     * Specifies that a property should merge itself with its current instance.
+     *
+     * @see https://hybridly.dev/api/laravel/functions.html#merge
+     */
+    function merge(\Closure $callback): Merge
+    {
+        return new Merge($callback);
     }
 }
 
@@ -108,9 +115,9 @@ if (! \function_exists('Hybridly\deferred')) {
      *
      * @see https://hybridly.dev/api/laravel/functions.html#deferred
      */
-    function deferred(\Closure $callback): Deferred
+    function deferred(\Closure $callback, ?string $group = null): Deferred
     {
-        return new Deferred($callback);
+        return new Deferred($callback, group: $group);
     }
 }
 

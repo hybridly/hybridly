@@ -1,8 +1,8 @@
 <?php
 
 use Hybridly\Support\CaseConverter;
-use Hybridly\Support\Deferred;
-use Hybridly\Support\Partial;
+use Hybridly\Support\Properties\Deferred;
+use Hybridly\Support\Properties\OnDemand;
 use Hybridly\View\Factory;
 use Hybridly\View\PropertiesResolver;
 use Illuminate\Contracts\Support\Arrayable;
@@ -21,7 +21,7 @@ it('finds deferred properties', function () {
 
     [$properties, $deferred] = $resolver->resolve('foo.bar', [
         'normal' => 'yes',
-        'partial' => new Partial(fn () => 'partial'),
+        'partial' => new OnDemand(fn () => 'partial'),
         'deferred' => new Deferred(fn () => 'deferred'),
         'nested' => [
             'foo' => 'bar',
@@ -30,7 +30,7 @@ it('finds deferred properties', function () {
     ]);
 
     expect($properties)->toBe(['normal' => 'yes', 'nested' => ['foo' => 'bar']]);
-    expect($deferred)->toBe(['deferred', 'nested.deferred']);
+    expect($deferred)->toBe(['default' => ['deferred', 'nested.deferred']]);
 });
 
 it('resolves functions', function () {
@@ -52,7 +52,7 @@ it('resolves callables', function () {
         {
             return ['name' => 'Makise Kurisu'];
         }
-    };
+    }; 
 
     $payload = resolve(Factory::class)
         ->view('users.edit', ['user' => $callable, 'type' => 'app'])
@@ -107,7 +107,7 @@ it('does not evaluate lazy properties when they are excluded', function () {
 it('does not resolve partials by default', function () {
     $payload = resolve(Factory::class)
         ->view('users.edit', [
-            'full_name' => new Partial(fn () => 'Jon Doe'),
+            'full_name' => new OnDemand(fn () => 'Jon Doe'),
             'email' => 'jon@example.org',
         ])
         ->toResponse(mock_request())
@@ -122,7 +122,7 @@ it('does not resolve nested partials by default', function () {
     $payload = resolve(Factory::class)
         ->view('users.edit', [
             'user' => [
-                'full_name' => new Partial(fn () => 'Jon Doe'),
+                'full_name' => new OnDemand(fn () => 'Jon Doe'),
                 'email' => 'jon@doe.example',
             ],
         ])
@@ -137,7 +137,7 @@ it('does not resolve nested partials by default', function () {
 it('resolves partials', function () {
     $payload = resolve(Factory::class)
         ->view('users.edit', [
-            'full_name' => new Partial(fn () => 'Jon Doe'),
+            'full_name' => new OnDemand(fn () => 'Jon Doe'),
             'email' => 'jon@example.org',
         ])
         ->toResponse(mock_request(headers: partial_headers(
@@ -172,7 +172,7 @@ it('resolves nested partials', function () {
     $payload = resolve(Factory::class)
         ->view('users.edit', [
             'user' => [
-                'full_name' => new Partial(fn () => 'Jon Doe'),
+                'full_name' => new OnDemand(fn () => 'Jon Doe'),
                 'email' => 'jon@example.org',
             ],
         ])

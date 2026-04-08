@@ -2,8 +2,9 @@ import baseMerge from 'deepmerge'
 // @ts-expect-error due to moduleresolution
 import { isPlainObject } from 'is-plain-object'
 
-export { debounce, throttle } from 'throttle-debounce'
+export { getByPath, type Path, type PathValue, type SearchableObject, setByPath } from '@clickbar/dot-diver'
 export { default as clone } from 'lodash.clonedeep'
+export { debounce, throttle } from 'throttle-debounce'
 
 export function random(length: number = 10): string {
 	const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
@@ -23,8 +24,7 @@ export function match<TValue extends string | number = string, TReturnValue = un
 	...args: TArgs
 ): TReturnValue | Promise<TReturnValue> {
 	if (value in lookup || 'default' in lookup) {
-		const returnValue = (value in lookup ? lookup[value] : lookup.default) as
-			TReturnValue | ((...args: TArgs) => TReturnValue | Promise<TReturnValue>)
+		const returnValue = (value in lookup ? lookup[value] : lookup.default) as TReturnValue | ((...args: TArgs) => TReturnValue | Promise<TReturnValue>)
 
 		return typeof returnValue === 'function'
 			? (returnValue as (...args: TArgs) => TReturnValue | Promise<TReturnValue>)(...args)
@@ -38,6 +38,10 @@ export function match<TValue extends string | number = string, TReturnValue = un
 	throw new Error(`Tried to handle "${value}" but there is no handler defined. Only defined handlers are: ${handlers}.`)
 }
 
+export function wrap<T>(value: T | T[]): T[] {
+	return Array.isArray(value) ? value : [value]
+}
+
 export function value<T>(value: T | (() => T)): T {
 	if (typeof value === 'function') {
 		return (value as any)?.() as T
@@ -46,9 +50,9 @@ export function value<T>(value: T | (() => T)): T {
 	return value
 }
 
-export function when<T, D>(condition: any, data: T, _default?: D): T | D | undefined {
+export function mergeObject<T extends object>(condition: any, data: T): T | object {
 	if (!condition) {
-		return _default
+		return {}
 	}
 
 	return data
@@ -64,8 +68,8 @@ export function merge<T>(x: Partial<T>, y: Partial<T>, options: MergeOptions = {
 	const arrayMerge = typeof options?.arrayMerge === 'function'
 		? options.arrayMerge
 		: options?.overwriteArray !== false
-			? (_: any, s: any) => s
-			: undefined
+		? (_: any, s: any) => s
+		: undefined
 
 	const isMergeableObject = options?.mergePlainObjects
 		? isPlainObject
@@ -140,4 +144,14 @@ export function unsetPropertyAtPath(obj: any, path: string): void {
 	if (Object.keys(nestedObject).length === 0) {
 		unsetPropertyAtPath(obj, segments.slice(0, -1).join('.'))
 	}
+}
+
+export function createPromiseWithResolvers<T>(): PromiseWithResolvers<T> {
+	let resolve: any
+	let reject: any
+	const promise = new Promise<T>((_resolve, _reject) => {
+		resolve = _resolve
+		reject = _reject
+	})
+	return { promise, resolve, reject }
 }

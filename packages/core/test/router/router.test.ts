@@ -1,5 +1,6 @@
 import { beforeEach, test } from 'vitest'
-import { performHybridNavigation, router } from '../../src/router/router'
+import { router } from '../../src/router'
+import { performHybridNavigation } from '../../src/router/request/request'
 import { getRouterContext, registerHook } from '../../src'
 import { fakePayload, fakeRouterContext, mockSuccessfulUrl } from '../utils'
 import { server } from '../server'

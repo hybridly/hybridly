@@ -1,5 +1,16 @@
 export { createRouter, router } from './router/router'
-export type { Router, HybridRequestOptions, NavigationResponse, HybridPayload, ResolveComponent, Method, Progress } from './router/types'
+export type {
+	AsyncInterruptionScope,
+	HybridPayload,
+	HybridRequestOptions,
+	Method,
+	NavigationResponse,
+	PendingHybridRequest,
+	Progress,
+	RequestMode,
+	ResolveComponent,
+	Router,
+} from './router/types'
 
 export { getRouterContext } from './context'
 export type { RouterContext, RouterContextOptions } from './context'
@@ -14,7 +25,7 @@ export { can } from './authorization'
 export type { Authorizable } from './authorization'
 
 export { route } from './routing'
-export type { RouteDefinition, GlobalRouteCollection, RoutingConfiguration, RouteName, RouteParameters } from './routing'
+export type { GlobalRouteCollection, RouteDefinition, RouteName, RouteParameters, RoutingConfiguration } from './routing'
 
 export type { DynamicConfiguration } from './config'
 

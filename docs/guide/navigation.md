@@ -12,11 +12,11 @@ This can be done using a link component in the templates, or programmatically by
 
 ```vue
 <template>
-  <div>
-    <router-link href="/"> // [!code focus:3]
-      Home
-    </router-link>
-  </div>
+	<div>
+		<router-link href="/">
+			// [!code focus:3] Home
+		</router-link>
+	</div>
 </template>
 ```
 
@@ -31,31 +31,43 @@ router.get(url, options)
 router.post(url, options)
 router.delete(url, options)
 router.external(url, options)
-router.preload(url, options)
 router.reload(options)
 router.navigate(options)
 ```
 
 Learn more about the functions and options available in their [API documentation](../api/router/utils).
 
-## Preloading requests
+## Asynchronous requests
 
-Preloading views will perform the usual underlying AJAX request, but instead of following-up with the navigation, Hybridly will cache the request result until the navigation is actually required.
+Hybridly supports asynchronous requests with `mode: 'async'`.
 
-This results in a smoother, snappy user experience that may make your application more enjoyable to use.
+Async requests are useful for background refreshes where you don't want to create extra history entries or show a progress bar.
 
-### Using the link component
-
-`<router-link>` supports the [`preload` attribute](../api/components/router-link.md#preload), which will preload the corresponding URL when the link component is hovered or mounted, depending on its value.
-
-```vue-html
-<!-- Preloads when the link is hovered -->
-<router-link href="/" preload>Home</router-link>
-
-<!-- Preloads when the link mounts (on page load) -->
-<router-link href="/" preload="mount">Home</router-link>
+```ts
+router.get({
+	only: ['users'],
+	mode: 'async',
+})
 ```
 
-### Programmatically
+:::tip Partial reloads
+`router.reload()` already defaults to async mode, with `replace: true`, `preserveState: true`, and `preserveScroll: true`.
+:::
 
-Alternatively, you may use the [`router.preload(url, options)`](../api/router/utils.md#preload) function. As for the link component, the navigation will be cached until the next navigation, programmatic or not.
+## Cancelling and interrupting async requests
+
+When multiple async requests can overlap, you can control interruption behavior using request options:
+
+```ts
+router.reload({
+	only: ['notifications'],
+	mode: 'async',
+	group: 'navbar',
+	interruptAsyncOnStart: 'same-group',
+	cancelOnNavigation: true,
+})
+```
+
+- `group` lets you scope async requests.
+- `interruptAsyncOnStart` can interrupt `none`, `same-group`, or `all` requests.
+- `cancelOnNavigation` interrupts the async request when a full navigation starts.

@@ -7,7 +7,8 @@ import { runHooks } from '../plugins'
 import type { HybridPayload } from '../router'
 import { saveScrollPositions } from '../scroll'
 import { makeUrl } from '../url'
-import { navigate } from './router'
+import { cancelNavigationRequest } from './request/request-manager'
+import { navigate } from './view'
 
 type SerializedContext = Omit<InternalRouterContext, 'adapter' | 'serializer' | 'plugins' | 'hooks' | 'axios' | 'routes'>
 
@@ -65,11 +66,9 @@ export async function registerEventListeners() {
 	window?.addEventListener('popstate', async (event) => {
 		debug.history('Navigation detected (popstate event). State:', { state: event.state })
 
-		// Abort any active navigation.
-		if (context.pendingNavigation) {
-			debug.router('Aborting current navigation.', context.pendingNavigation)
-			context.pendingNavigation?.controller?.abort()
-		}
+		// The browser selected a new history entry: drop in-flight synchronous
+		// requests so stale responses cannot overwrite the restored view.
+		cancelNavigationRequest()
 
 		const state = context.serializer.unserialize<SerializedContext>(event.state)
 		await runHooks('backForward', {}, state, context)

@@ -9,6 +9,7 @@ outline: 'deep'
 Refining is the concept of filtering and sorting data. Hybridly offers a first-party, declarative API for refining queries.
 
 The refining process happens as follows:
+
 - The available filters and sorts are declared using a `Refine` instance
 - The `Refine` instance runs the query according to the current request
 - The query result and the refinements are shared to the view as properties
@@ -23,12 +24,14 @@ This feature has not been dogfed yet and is considered experimental. Its API may
 The `Refine` class can be instanciated using a model class name or an Eloquent builder instance.
 
 :::code-group
+
 ```php [Model]
 use App\Models\Chirp;
 use Hybridly\Refining\Refine;
 
 Refine::model(Chirp::class);
 ```
+
 ```php [Eloquent builder]
 use App\Models\Chirp;
 use Hybridly\Refining\Refine;
@@ -37,6 +40,7 @@ Refine::query(
   Chirp::query()->where('author_id', $user->id)
 );
 ```
+
 :::
 
 This `Refine` instance will update the query according to the specified refiners and the current request.
@@ -74,6 +78,7 @@ The result of the query can be obtained by calling any valid Eloquent builder me
 These two objects should be shared as properties to the view:
 
 :::code-group
+
 ```php [ChirpController.php]
 public function index()
 {
@@ -90,6 +95,7 @@ public function index()
     ]);
 }
 ```
+
 ```vue [index.vue]
 <script setup lang="ts">
 const $props = defineProps<{ // [!code focus:4]
@@ -100,6 +106,7 @@ const $props = defineProps<{ // [!code focus:4]
 const refine = useRefinements($props, 'refinements') // [!code focus]
 </script>
 ```
+
 :::
 
 ## Applying filters and sorts
@@ -125,10 +132,7 @@ const refine = useRefinements($props, 'refinements') // [!code focus]
 	<div v-for="filter in refine.filters" :key="filter.name">
 		<!-- Shows a `text` input for the filter named `body` -->
 		<template v-if="filter.name === 'body'">
-			<input
-				type="text"
-				@change="filter.apply($event.target.value)"
-			/>
+			<input type="text" @change="filter.apply($event.target.value)" />
 		</template>
 
 		<!-- Shows a `select` input for the "trashed" filter -->
@@ -170,7 +174,7 @@ Filters have basic relationship filtering capabilities, which means you may use 
 
 ```php
 // ?filters[user]=jon
-Filters\Filter::make('user.full_name', alias: 'user');
+Filters\TextFilter::make('user.full_name', alias: 'user');
 ```
 
 It is recommended to specify an alias when filtering relationship properties, otherwise the filter name will have its `.` replaced by underscores.
@@ -196,58 +200,37 @@ Note that certain refiners, like `TrashedFilter` or `CallbackFilter`, cannot hav
 
 ## Available filters
 
-### `Filter`
+### `TextFilter`
 
-This filter will use the provided column to find a match using a `WHERE column = ?` or a `WHERE column LIKE ?` statement.
-
-#### Strict comparisons
-
-By default, `Filter` will do a strict comparison using a `WHERE column ?` statement:
+Use `TextFilter` for string columns.
 
 ```php
-// ?filters[user_id]=1  ->  WHERE user_id = 1
-Filters\Filter::make('user_id');
+Filters\TextFilter::make('full_name');
 ```
 
-#### Loose comparisons
+### `NumericFilter`
 
-You may call the `loose`, `beginsWithStrict` or `endsWithStrict` methods to specify which kind of comparison the filter should use.
+Use `NumericFilter` for numeric columns.
 
 ```php
-// ?filters[full_name]=Jon  ->  WHERE full_name LIKE %jon%
-Filters\Filter::make('full_name')->loose();
-
-// ?filters[full_name]=Jon  ->  WHERE full_name LIKE Jon%
-Filters\Filter::make('full_name')->beginsWithStrict();
-
-// ?filters[full_name]=Doe  ->  WHERE full_name LIKE %Doe
-Filters\Filter::make('full_name')->endsWithStrict();
+Filters\NumericFilter::make('price');
 ```
 
-#### Using another operator
+### `DateFilter`
 
-You may change the operator by specifying it through the `operator` method:
+Use `DateFilter` for date and datetime values.
 
 ```php
-// ?filters[full_name]=Jon  ->  WHERE full_name NOT LIKE %jon%
-Filters\Filter::make('full_name')
-	->operator('NOT LIKE')
-	->loose();
-
-// ?filters[user_id]=1      ->  WHERE user_id != 1
-Filters\Filter::make('user_id')->operator('!=');
+Filters\DateFilter::make('published_at');
 ```
 
-#### Using an enum
-
-You may call the `enum` method to specify a backed enum class that will validate the property. If the property doesn't match one of the enum values, the filter will not apply.
+`DateFilter` also supports timeframe filtering:
 
 ```php
-// ?filters[company]=apple   ->  Filter applies
-Filters\Filter::make('company')->enum(Company::class);
-
-// ?filters[company]=foobar  ->  Filter will not apply
-Filters\Filter::make('company')->enum(Company::class);
+Filters\DateFilter::make('period')->timeframe(
+    start: 'starts_at',
+    end: 'ends_at',
+);
 ```
 
 ### `SelectFilter`
@@ -309,6 +292,19 @@ This filter will convert the request's value to a boolean value to perform a boo
 // ?filters[is_active]=1
 // ?filters[is_active]=y
 Filters\BooleanFilter::make('is_active');
+```
+
+### `TernaryFilter`
+
+Use `TernaryFilter` when you need three states (`true`, `false`, and blank):
+
+```php
+Filters\TernaryFilter::make('is_active', alias: 'status')
+	->queries(
+		true: fn (Builder $query) => $query,
+		false: fn (Builder $query) => $query->where('is_active', false),
+		blank: fn (Builder $query) => $query->where('is_active', true),
+	);
 ```
 
 ## Available sorts

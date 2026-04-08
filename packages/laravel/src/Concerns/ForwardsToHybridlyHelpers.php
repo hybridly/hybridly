@@ -2,8 +2,8 @@
 
 namespace Hybridly\Concerns;
 
-use Hybridly\Support\Deferred;
-use Hybridly\Support\Partial;
+use Hybridly\Support\Properties\Deferred;
+use Hybridly\Support\Properties\OnDemand;
 use Hybridly\View\Factory;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\Response;
 use function Hybridly\deferred;
 use function Hybridly\is_hybrid;
 use function Hybridly\is_partial;
-use function Hybridly\partial;
+use function Hybridly\on_demand;
 use function Hybridly\properties;
 use function Hybridly\to_external_url;
 use function Hybridly\view;
@@ -58,9 +58,9 @@ trait ForwardsToHybridlyHelpers
      *
      * @see https://hybridly.dev/api/laravel/hybridly.html#partial
      */
-    public function partial(\Closure $callback): Partial
+    public function onDemand(\Closure $callback): OnDemand
     {
-        return partial($callback);
+        return on_demand($callback);
     }
 
     /**
