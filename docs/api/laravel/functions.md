@@ -52,19 +52,34 @@ return dialog(
 );
 ```
 
-### `partial`
+### `on_demand`
 
 Creates a [partial-only](../../guide/partial-reloads.md#partial-only-properties) property.
 
-> See also: [partial properties](../../guide/partial-reloads.md#partial-only-properties)
+> See also: [partial-only properties](../../guide/partial-reloads.md#partial-only-properties)
 
 ```php
 use function Hybridly\view;
-use function Hybridly\partial;
+use function Hybridly\on_demand;
 
 return view('user.show', [
     'user' => $user,
-    'posts' => partial(fn () => Post::forUser($user)->paginate()),
+  'posts' => on_demand(fn () => Post::forUser($user)->paginate()),
+]);
+```
+
+### `merge`
+
+Creates a mergeable property.
+
+When this property is included in a subsequent response, it is merged with the current frontend value instead of replacing it.
+
+```php
+use function Hybridly\merge;
+use function Hybridly\view;
+
+return view('users.index', [
+  'users' => merge(fn () => UserData::collection(User::latest()->limit(20)->get())),
 ]);
 ```
 
@@ -82,6 +97,12 @@ return view('user.show', [
     'user' => $user,
     'posts' => deferred(fn () => Post::forUser($user)->paginate()),
 ]);
+```
+
+You may optionally provide a group name to defer properties together:
+
+```php
+deferred(fn () => MetricsData::from($metrics), group: 'metrics')
 ```
 
 ### `to_external_url`

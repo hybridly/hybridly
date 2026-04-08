@@ -78,12 +78,9 @@ At its simplest, the template for a table may look like that:
 <template>
 	<table>
 		<tbody>
-			<tr v-for="{ key, value } in users.records" :key="key"> <!-- [!code focus:6] -->
-				<td
-					v-for="column in users.columns"
-					:key="column.name"
-					v-text="value(column)"
-				/>
+			<tr v-for="({ key, value }) in users.records" :key>
+				<!-- [!code focus:6] -->
+				<td v-for="column in users.columns" :key="column.name" v-text="value(column)" />
 			</tr>
 		</tbody>
 	</table>
@@ -101,6 +98,7 @@ It is possible to work with multiple tables in the same view, but for filters an
 This can be done by specifying the `$scope` class property:
 
 :::code-group
+
 ```php [UsersTable.php]
 use App\Models\User;
 use Hybridly\Tables\Table;
@@ -113,6 +111,7 @@ final class UsersTable extends Table
     // ...
 }
 ```
+
 ```php [ProjectsTable.php]
 use App\Models\Project;
 use Hybridly\Tables\Table;
@@ -125,6 +124,7 @@ final class ProjectsTable extends Table
     // ...
 }
 ```
+
 ```php [Controller.php]
 use function Hytbridly\view;
 
@@ -133,6 +133,7 @@ return view('dashboard', [
 	'projects' => ProjectsTable::make(),
 ]);
 ```
+
 ```ts [dashboard.vue]
 const $props = defineProps<{
 	users: Table<App.Data.UserData>
@@ -142,6 +143,7 @@ const $props = defineProps<{
 const users = useTable($props, 'users')
 const projects = useTable($props, 'projects')
 ```
+
 :::
 
 When scoping tables, refining records and pagination will automatically work through the utilities provided by [`useTable`](../api/utils/use-table.md).
@@ -223,11 +225,13 @@ Hidden columns **are not transmitted to the front-end at all**, and their corres
 You may pass any information to a column by passing an array to the `metadata` function. Note that the metadata applies to the actual column object, not the properties of the records.
 
 :::code-group
+
 ```php [UsersTable.php]
 TextColumn::make('full_name')->metadata([
     'color' => 'primary'
 ])
 ```
+
 ```vue-html [index.vue]
 <tr v-for="{ key, value } in users.records" :key="key">
 	<td
@@ -240,6 +244,7 @@ TextColumn::make('full_name')->metadata([
 	/>
 </tr>
 ```
+
 :::
 
 ## Refining records
@@ -257,7 +262,7 @@ protected function defineRefiners(): array  // [!code focus:7]
 {
 		return [
 				Sorts\Sort::make('id'),
-				Filters\Filter::make('full_name'),
+				Filters\TextFilter::make('full_name'),
 		];
 }
 ```
@@ -271,9 +276,9 @@ For instance, you may generate the user interface for a [similarity filter](./re
 ```vue-html
 <!-- Loop through existing filters -->
 <div v-for="filter in users.filters" :key="filter.name">
-	<!-- Find the filter by its type ("similar:loose" here) and build it -->
+	<!-- Find text filters and build their inputs -->
 	<input
-		v-if="filter.type.startsWith('similar')"
+		v-if="filter.type === 'text'"
 		type="text"
 		@input="filter.apply(($event.target as HTMLInputElement).value)"
 	/>
@@ -390,6 +395,7 @@ Hidden actions are not sent to the front-end and cannot be executed, even when m
 Actions work by making a `POST` hybrid request to a dedicated endpoint. The [`useTable`](../api/utils/use-table.md) util returns dedicated functions to access and execute inline and bulk actions:
 
 :::code-group
+
 ```vue-html [bulk-actions.vue]
 <div v-for="action in users.bulkActions" :key="action.name">
 	<button
@@ -397,6 +403,7 @@ Actions work by making a `POST` hybrid request to a dedicated endpoint. The [`us
 	/>
 </div>
 ```
+
 ```vue-html [inline-actions.vue]
 <tr v-for="{ key, actions } in users.records" :key="key">
 	<!-- ... -->
@@ -410,6 +417,7 @@ Actions work by making a `POST` hybrid request to a dedicated endpoint. The [`us
 	</td>
 </tr>
 ```
+
 :::
 
 You may learn about all utilities in [their documentation](../api/utils/use-table.md#actions).
@@ -495,12 +503,14 @@ protected function transformRecords(Paginator $paginator): Paginator
 You may pass any arbitrary data to a cell by passing a callback to the `extra` method.
 
 :::code-group
+
 ```php [UsersTable.php]
 TextColumn::make('first_name')
 	->extra(fn (User $user) => [
 		'tooltip' => "{$user->full_name}"
 	])
 ```
+
 ```vue-html [index.vue]
 <tr v-for="{ key, value, extra } in users.records" :key="key">
 	<td
@@ -511,6 +521,7 @@ TextColumn::make('first_name')
 	/>
 </tr>
 ```
+
 :::
 
 ## Using different paginators

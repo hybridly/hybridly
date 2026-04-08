@@ -6,178 +6,124 @@ outline: 'deep'
 
 ## Overview
 
-By default, Hybridly will load views, layouts and components from the `views`, `layouts` and `components` directories in `resources`.
+Hybridly resolves view and layout files through its components resolver.
 
-This behavior is suitable for most applications, but Hybridly supports any kind of architecture.
+By default, it loads files from your configured `architecture.root_directory` (usually `resources`) and expects:
+
+- views named with `.view.<ext>`
+- layouts named with `.layout.<ext>`
+
+Supported extensions come from `architecture.extensions`.
 
 ## Default architecture
 
-By default, Hybridly uses the following file structure:
+By default, Hybridly uses this structure:
 
-```
+```text
 resources/
 ├── application/
 │   ├── main.ts
 │   └── root.blade.php
-├── layouts/
-│   └── default.vue
 ├── views/
-│   ├── index.vue
+│   ├── index.view.vue
 │   └── security/
-│       ├── register.vue
-│       └── login.vue
-├── utils/
-└── composables/
+│       ├── register.view.vue
+│       └── login.view.vue
+└── layouts/
+    └── default.layout.vue
 ```
 
-- View components are located in `resources/views` and may be nested.
-- Layout components are located in `resources/layouts`.
-- Utility functions and composables (`*.ts`) are auto-imported.
-- The base Blade template is located at `resources/application/root.blade.php`.
+If `architecture.load_default_module` is enabled, Hybridly registers this root directory as the `default` namespace.
 
-This convention is generally good, but you may use a module-based or completely custom architecture if your application needs that.
+## Custom architecture
 
-## Other architectures
+If the default layout is not suitable, disable it in `config/hybridly.php`:
 
-If the default architecture isn't suited for your application, you may disable it by setting the `architecture.load_default_module` configuration option to `false` in `config/hybridly.php`.
-
-Instead, you may use a modular architecture, or a a completely custom one.
-
-### Modular
-
-When using a modular architecture, views and layouts will be loaded from the `views` and `layouts` subdirectories, while TypeScript files will be auto-imported from `utils` and `composables`. Components will also be auto-imported using hyphens.
-
-You may use the `loadModulesFrom` method to load modules in `resources/domains` or any other directory of your choice:
-
-:::code-group
-```php [AppServiceProvider.php]
-final class AppServiceProvider extends ServiceProvider
-{
-    public function boot(Hybridly $hybridly): void
-    {
-        $hybridly->loadModulesFrom(base_path('resources/domains'));
-    }
-}
+```php
+'architecture' => [
+    'load_default_module' => false,
+]
 ```
-``` [Example architecture]
-resources/
-├── applications/
-│   ├── main.ts
-│   └── root.blade.php
-└── domains/ // [!code hl]
-    └── authentication/
-        ├── layouts/
-        │   └── default.vue
-        ├── views/
-        │   ├── login.vue
-        │   └── register.vue
-        ├── components/
-        │   ├── login-container.vue
-        │   └── login-button.vue
-        ├── utils/
-        └── composables/
-```
-:::
 
+Then register your own directories in a service provider.
 
-### Custom
+### Load a module directory
 
-If you need more flexibility, you may load views, layouts, components or modules using the more advanced architecture API.
+`loadModuleFrom` recursively registers both views and layouts from a directory.
 
-Generally, this is done in the `boot` method of a service provider:
+```php
+use Hybridly\Hybridly;
+use Illuminate\Support\ServiceProvider;
 
-:::code-group
-```php [BillingServiceProvider.php]
 final class BillingServiceProvider extends ServiceProvider
 {
     public function boot(Hybridly $hybridly): void
     {
         $hybridly->loadModuleFrom(
-          directory: __DIR__,
-          namespace: 'billing'
+            directory: base_path('src/Billing'),
+            namespace: 'billing',
         );
     }
 }
 ```
-``` [Example architecture]
-src/
-└── Billing/
-    ├── BillingServiceProvider.php // [!code hl]
-    ├── Actions/
-    │   ├── CreateInvoice.php
-    │   └── ProcessPayment.php
-    ├── Models/
-    │   └── Invoice.php
-    ├── views/  // [!code hl:8]
-    │   ├── index.vue
-    │   └── invoices/
-    │       ├── index.vue
-    │       ├── create.vue
-    │       └── edit.vue
-    └── components/
-        └── invoice.vue
-```
-:::
 
-Alternatively, you may register individual views, layouts or components:
+### Load views and layouts separately
 
 ```php
 public function boot(Hybridly $hybridly): void
 {
-    // Loads Vue files as views inside the given directory
-    // and registers them using the given namespace
-    $hybridly->loadViewsFrom($directory, $namespace);
+    $hybridly->loadViewsFrom(
+        directory: resource_path('domains/billing/views'),
+        namespace: 'billing',
+    );
 
-    // Loads Vue files as layouts inside the given directory
-    // and registers them using the given namespace
-    $hybridly->loadLayoutsFrom($directory, $namespace);
-
-    // Loads Vue files as components inside the given directory
-    // and registers them using the given namespace
-    $hybridly->loadComponentsFrom($directory, $namespace);
+    $hybridly->loadLayoutsFrom(
+        directory: resource_path('domains/billing/layouts'),
+        namespace: 'billing',
+    );
 }
 ```
 
-You can read about the available methods in the [API documentation](../api/laravel/hybridly.md#loadmodule).
+### Register explicit files
+
+For full control, register specific files using `addView` and `addLayout`.
+
+```php
+public function boot(Hybridly $hybridly): void
+{
+    $hybridly->addView(
+        path: resource_path('domains/billing/views/invoices/show.view.vue'),
+        namespace: 'billing',
+        identifier: 'billing::invoices.show',
+    );
+
+    $hybridly->addLayout(
+        path: resource_path('domains/billing/layouts/default.layout.vue'),
+        namespace: 'billing',
+        identifier: 'billing::default',
+    );
+}
+```
 
 ## Namespaces
 
-When loading modules using `loadModulesFrom` or `loadModuleFrom`, the views, layouts and components will be namespaced.
+When you load files with a namespace, use the `namespace::identifier` format.
 
-Views and layouts can be referred to using the `module-name::path.to.view` syntax. 
-
-Components may be auto-imported by concatenating the module name and the component name with hyphens.
-
-&nbsp;
-
-:::code-group
-```php [Views]
-return hybridly('authentication::login');
+```php
+return hybridly()->view('billing::invoices.show');
 ```
-```html [Layouts and components]
-<template layout="authentication::default">
-	<!-- ... -->
-	<authentication-login-container>
-		<!-- ... -->
-	</authentication-login-container>
+
+```vue
+<template layout="billing::default">
+	<h1>Invoice</h1>
 </template>
 ```
-``` [Example architecture]
-resources/
-├── applications/
-│   ├── main.ts
-│   └── root.blade.php
-└── domains/
-    └── authentication/
-        ├── layouts/
-        │   └── default.vue // [!code hl]
-        ├── views/
-        │   ├── login.vue // [!code hl]
-        │   └── register.vue
-        ├── components/
-        │   ├── login-container.vue // [!code hl]
-        │   └── login-button.vue
-        ├── utils/
-        └── composables/
-```
-:::
+
+## Identifier generation
+
+Identifiers are kebab-cased and path-based.
+
+- `views/MyPage.view.vue` becomes `my-page` in the `default` namespace.
+- `views/admin/Users.view.vue` becomes `admin.users` in the `default` namespace.
+
+For custom behavior, you can provide your own identifier generator with `setIdentifierGenerator`.

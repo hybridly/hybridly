@@ -8,7 +8,7 @@ When a `url` argument is accepted, its type is the same as the `url` property of
 
 ## `get`, `post`, `put`, `patch`, `delete`
 
-This function initiates a programmatic navigation to the given URL using the corresponding method. 
+This function initiates a programmatic navigation to the given URL using the corresponding method.
 
 When performing non-`GET` requests, by default, the `preserveState` option will be set to `true`.
 
@@ -20,9 +20,21 @@ router.patch(url, options)
 router.delete(url, options)
 ```
 
+## `to`
+
+This function initiates a request to a named route.
+
+The HTTP method is inferred from the route definition and can still be overridden in options.
+
+```ts
+router.to(name, parameters, options)
+```
+
 ## `reload`
 
-This function initiates a programmatic navigation to the current URL. By default, the navigation will preserve the scroll position and the component's state.
+This function initiates a request to the current URL.
+
+By default, it preserves state and scroll and runs in `async` mode, which is ideal for background refreshes.
 
 ```ts
 router.reload(options)
@@ -33,7 +45,7 @@ router.reload(options)
 This function initiates a local-only navigation. This navigation will not reach the server — it will only re-render the specified (or current) component with the specified properties.
 
 ```ts
-router.local(options)
+router.local(url, options)
 ```
 
 Its `options` argument is different from the other navigation functions: only the `replace`, `preserveScroll` and `preserveState` options are available. Additionally, a `component` and a `properties` options are also available.
@@ -61,21 +73,12 @@ If provided, the `data` object will be converted to query parameters.
 router.external(url, data)
 ```
 
-
 ## `navigate`
 
 This function initiates a programmatic navigation without any specific default.
 
 ```ts
 router.navigate(options)
-```
-
-## `preload`
-
-This function preloads the given URL. Note that you may only preload `GET` hybrid requests.
-
-```ts
-router.preload(url, options)
 ```
 
 ## `abort`

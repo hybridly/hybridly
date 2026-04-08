@@ -15,8 +15,9 @@ const discord = 'https://discord.gg/uZ8eC7kRFV'
 const github = 'https://github.com/hybridly/hybridly'
 
 const { version } = JSON.parse(readFileSync(resolve('package.json'), { encoding: 'utf-8' }))
-const majorVersion = String(version).replace(/\.\d+$/, '.0')
-const cleanVersion = String(version).replace(/\.\d+$/, '.x')
+const [major = '0', minor = '0'] = String(version).split('-')[0].split('.')
+const majorVersion = `${major}.${minor}.0`
+const cleanVersion = `${major}.${minor}.x`
 const branch = execSync('echo $BRANCH | grep . || git rev-parse --abbrev-ref HEAD')
 const hasReleaseNotes = existsSync(resolve(`./docs/releases/v${majorVersion}.md`))
 const hasUpgradeGuide = existsSync(resolve(`./docs/guide/upgrade/v${cleanVersion}.md`))
@@ -159,8 +160,6 @@ export default defineConfig({
 						{ text: 'Case conversion', link: '/guide/case-conversion' },
 						{ text: 'Server-side rendering', link: '/guide/ssr' },
 						{ text: 'Architecture', link: '/guide/architecture' },
-						{ text: 'Migrating from Inertia', link: '/guide/migrating-from-inertia' },
-						{ text: 'Comparison with Inertia', link: '/guide/comparison-with-inertia' },
 					],
 				},
 			],
