@@ -71,7 +71,6 @@
 			"defu": "^6.1.4",
 			"fast-glob": "^3.3.3",
 			"happy-dom": "^20.8.4",
-			"local-pkg": "^1.1.1",
 			"magic-string": "^0.30.17",
 			"msw": "^2.12.13",
 			"nprogress": "^0.2.0",

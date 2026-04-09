@@ -1,8 +1,8 @@
 import type { DynamicConfiguration } from '@hybridly/core'
+import { debug } from '@hybridly/utils'
 import fs from 'node:fs'
 import path from 'node:path'
 import type { ViteOptions } from '../types'
-import { debug } from '../utils'
 
 export function generateTsConfig(options: ViteOptions, config: DynamicConfiguration) {
 	const tsconfig = {

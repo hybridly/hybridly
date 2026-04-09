@@ -50,7 +50,6 @@
 		"@hybridly/core": "workspace:*",
 		"@vitejs/plugin-vue": "catalog:",
 		"fast-glob": "catalog:",
-		"local-pkg": "catalog:",
 		"magic-string": "catalog:",
 		"picocolors": "catalog:",
 		"vite-plugin-run": "catalog:"

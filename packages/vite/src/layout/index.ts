@@ -1,9 +1,9 @@
 import type { DynamicConfiguration } from '@hybridly/core'
+import { debug } from '@hybridly/utils'
 import MagicString from 'magic-string'
 import type { Plugin } from 'vite'
 import { LAYOUT_PLUGIN_NAME } from '../constants'
 import type { ViteOptions } from '../types'
-import { debug } from '../utils'
 
 const TEMPLATE_LAYOUT_REGEX = /<template +layout(?: *= *['"]((?:[\w\/\-_,:.](?:,\ )?)+)['"] *)?>/
 const LANG_REGEX = /lang=['"](\w+)['"]/

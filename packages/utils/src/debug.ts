@@ -9,6 +9,8 @@ export const debug = {
 	scroll: makeDebugger('hybridly:core:scroll'),
 	hook: makeDebugger('hybridly:core:hook'),
 	queue: makeDebugger('hybridly:core:queue'),
+	layout: makeDebugger('hybridly:plugin:layout'),
+	config: makeDebugger('hybridly:vite:config'),
 	plugin: (name: string, ...args: any[]) => makeDebugger('hybridly:plugin').extend(name.replace('hybridly:', ''))(args.shift(), ...args),
 	adapter: (name: string, ...args: any[]) => makeDebugger('hybridly:adapter').extend(name)(args.shift(), ...args),
 }
