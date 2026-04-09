@@ -116,13 +116,6 @@ describe('namespaced', function () {
 });
 
 describe('global', function () {
-    test('`hybridly` returns a view when called with parameters', function () {
-        expect(hybridly('foo.bar'))
-            ->toBeInstanceOf(Factory::class)
-            ->render()
-            ->toMatchSnapshot();
-    });
-
     test('`hybridly` returns the singleton when called with no parameters', function () {
         expect(hybridly())->toBeInstanceOf(Hybridly::class);
     });

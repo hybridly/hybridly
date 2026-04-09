@@ -69,7 +69,7 @@ final class Hybridly
      *
      * @see https://hybridly.dev/api/laravel/hybridly.html#view
      */
-    public function view(?string $component = null, iterable $properties = []): Factory
+    public function view(string $component, iterable $properties = []): Factory
     {
         return view($component, $properties);
     }

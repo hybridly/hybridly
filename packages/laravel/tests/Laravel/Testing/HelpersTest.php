@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 
 use function Hybridly\on_demand;
 use function Hybridly\Testing\partial_headers;
+use function Hybridly\view;
 use function Pest\Laravel\get;
 
 test('the `partial_headers` helper generates headers for partial requests', function () {
@@ -49,7 +50,7 @@ test('the `partial_headers` helper generates headers for partial requests', func
 
 test('the `partial_headers` works for actual requests', function () {
     Route::middleware(StartSession::class, \Hybridly\HandleHybridRequests::class)
-        ->get('/', fn () => hybridly('foo.component', [
+        ->get('/', fn () => view('foo.component', [
             'partial' => on_demand(fn () => 'Partial property'),
             'normal' => 'Normal property',
         ]));

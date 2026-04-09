@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Testing\TestResponse;
 
+use function Hybridly\view;
 use function Pest\Laravel\get;
 
 uses(TestCase::class)
@@ -68,7 +69,7 @@ function make_mock_request(mixed $response, string $url = '/mock-url', array $he
 function make_hybrid_mock_request(string $component = 'test', mixed $properties = [], string $url = '/hybrid-mock-url'): TestResponse
 {
     return make_mock_request(
-        response: hybridly($component, $properties),
+        response: view($component, $properties),
         url: $url,
     );
 }

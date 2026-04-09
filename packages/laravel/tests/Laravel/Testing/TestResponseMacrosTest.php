@@ -4,6 +4,7 @@ use Hybridly\Testing\Assertable;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Testing\TestResponse;
 
+use function Hybridly\view;
 use function Pest\Laravel\get;
 
 test('the `assertHybrid` method runs its callback', function () {
@@ -18,8 +19,8 @@ test('the `assertHybrid` method runs its callback', function () {
 });
 
 test('the `assertHybridDialog` method asserts dialog view component & base url & properties', function () {
-    Route::get('/test/view', fn () => hybridly('test.view'))->name('test.view');
-    Route::get('/test/dialog', fn () => hybridly('test.dialog', ['foo' => 'bar'])->base('test.view'))->name('test.dialog');
+    Route::get('/test/view', fn () => view('test.view'))->name('test.view');
+    Route::get('/test/dialog', fn () => view('test.dialog', ['foo' => 'bar'])->configureDialog(route('test.view')))->name('test.dialog');
 
     get('/test/dialog')
         ->assertHybridView('test.view')

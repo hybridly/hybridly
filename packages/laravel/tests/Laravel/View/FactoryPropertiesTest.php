@@ -35,7 +35,7 @@ it('finds deferred properties', function () {
 
 it('resolves functions', function () {
     $payload = resolve(Factory::class)
-        ->view('users.edit', [
+        ->withView('users.edit', [
             'user' => fn () => 'Makise Kurisu',
             'errors' => [],
         ])
@@ -55,7 +55,7 @@ it('resolves callables', function () {
     };
 
     $payload = resolve(Factory::class)
-        ->view('users.edit', ['user' => $callable, 'type' => 'app'])
+        ->withView('users.edit', ['user' => $callable, 'type' => 'app'])
         ->toResponse(mock_request())
         ->getData();
 
@@ -73,7 +73,7 @@ it('resolves arrayable properties', function () {
     };
 
     $payload = resolve(Factory::class)
-        ->view('users.edit', ['user' => $callable])
+        ->withView('users.edit', ['user' => $callable])
         ->toResponse(mock_request())
         ->getData();
 
@@ -84,7 +84,7 @@ it('resolves arrayable properties', function () {
 it('does not evaluate lazy properties when they are excluded', function () {
     $evaluated = false;
     $payload = resolve(Factory::class)
-        ->view('users.edit', [
+        ->withView('users.edit', [
             'full_name' => function () use (&$evaluated) {
                 $evaluated = true;
 
@@ -106,7 +106,7 @@ it('does not evaluate lazy properties when they are excluded', function () {
 
 it('does not resolve partials by default', function () {
     $payload = resolve(Factory::class)
-        ->view('users.edit', [
+        ->withView('users.edit', [
             'full_name' => new OnDemand(fn () => 'Jon Doe'),
             'email' => 'jon@example.org',
         ])
@@ -120,7 +120,7 @@ it('does not resolve partials by default', function () {
 
 it('does not resolve nested partials by default', function () {
     $payload = resolve(Factory::class)
-        ->view('users.edit', [
+        ->withView('users.edit', [
             'user' => [
                 'full_name' => new OnDemand(fn () => 'Jon Doe'),
                 'email' => 'jon@doe.example',
@@ -136,7 +136,7 @@ it('does not resolve nested partials by default', function () {
 
 it('resolves partials', function () {
     $payload = resolve(Factory::class)
-        ->view('users.edit', [
+        ->withView('users.edit', [
             'full_name' => new OnDemand(fn () => 'Jon Doe'),
             'email' => 'jon@example.org',
         ])
@@ -153,7 +153,7 @@ it('resolves partials', function () {
 
 it('resolves deferred', function () {
     $payload = resolve(Factory::class)
-        ->view('users.edit', [
+        ->withView('users.edit', [
             'full_name' => new Deferred(fn () => 'Jon Doe'),
             'email' => 'jon@example.org',
         ])
@@ -170,7 +170,7 @@ it('resolves deferred', function () {
 
 it('resolves nested partials', function () {
     $payload = resolve(Factory::class)
-        ->view('users.edit', [
+        ->withView('users.edit', [
             'user' => [
                 'full_name' => new OnDemand(fn () => 'Jon Doe'),
                 'email' => 'jon@example.org',
@@ -189,7 +189,7 @@ it('resolves nested partials', function () {
 
 it('resolves nested deferred', function () {
     $payload = resolve(Factory::class)
-        ->view('users.edit', [
+        ->withView('users.edit', [
             'user' => [
                 'full_name' => new Deferred(fn () => 'Jon Doe'),
                 'email' => 'jon@example.org',

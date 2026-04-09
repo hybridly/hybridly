@@ -8,9 +8,7 @@ use Hybridly\Support\Properties\Merge;
 use Hybridly\Support\Properties\OnDemand;
 use Hybridly\Support\Target;
 use Hybridly\View\Factory;
-use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
-use Spatie\LaravelData\Contracts\TransformableData;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -52,9 +50,9 @@ if (! \function_exists('Hybridly\view')) {
      *
      * @see https://hybridly.dev/api/laravel/functions.html#view
      */
-    function view(?string $component = null, array|Arrayable|TransformableData $properties = []): Factory
+    function view(string $component, iterable $properties = []): Factory
     {
-        return resolve(Factory::class)->view($component, $properties);
+        return resolve(Factory::class)->withView($component, $properties);
     }
 }
 
@@ -62,25 +60,28 @@ if (! \function_exists('Hybridly\dialog')) {
     /**
      * Returns a dialog with the given properties and base view.
      *
+     * Setting `redirectToBase` to `true` will always force a redirect to the base view when rendering the dialog instead of opening it in the current page.
+     * Setting `preserveCurrentBase` to `true` will prevent returning an updated base view when rendering the dialog from.
+     *
      * @see https://hybridly.dev/api/laravel/functions.html#dialog
      */
-    function dialog(?string $component = null, array|Arrayable|TransformableData $properties = [], string $base = '', bool $force = false, bool $keep = false): Factory
+    function dialog(string $component, iterable $properties, string $baseUrl, bool $alwaysRedirectToBase = false, bool $preserveBaseOnClose = false): Factory
     {
         return resolve(Factory::class)
-            ->view($component, $properties)
-            ->base($base, force: $force, keep: $keep);
+            ->withView($component, $properties)
+            ->configureDialog($baseUrl, $alwaysRedirectToBase, $preserveBaseOnClose);
     }
 }
 
 if (! \function_exists('Hybridly\properties')) {
     /**
-     * Returns properties for an existing view.
+     * Updates the properties for an existing view.
      *
      * @see https://hybridly.dev/api/laravel/functions.html#properties
      */
-    function properties(array|Arrayable|TransformableData $properties): Factory
+    function properties(iterable $properties): Factory
     {
-        return resolve(Factory::class)->properties($properties);
+        return resolve(Factory::class)->withProperties($properties);
     }
 }
 
