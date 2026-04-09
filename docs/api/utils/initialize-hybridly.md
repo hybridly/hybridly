@@ -7,8 +7,8 @@ This function must be invoked in an entry file to initialize Hybridly's context 
 The following snippet is a typical example of how Hybridly could be set up.
 
 ```ts
-import { createApp } from 'vue'
 import { initializeHybridly } from 'virtual:hybridly/setup'
+import { createApp } from 'vue'
 
 initializeHybridly()
 ```
@@ -24,15 +24,17 @@ This can be used to register additionnal Vue plugins, directives or components.
 ### Example
 
 ```ts
-import { createApp } from 'vue'
-import { createHead } from '@unhead/vue/client'
 import { autoAnimatePlugin as autoAnimate } from '@formkit/auto-animate/vue'
+import { createHead } from '@unhead/vue/client'
 import { initializeHybridly } from 'virtual:hybridly/setup'
+import { createApp } from 'vue'
 
 initializeHybridly({
-	enhanceVue: (vue) => vue // [!code focus:3]
-		.use(createHead())
-		.use(autoAnimate),
+	enhanceVue: (vue) => { // [!code focus:5]
+		vue
+			.use(createHead())
+			.use(autoAnimate)
+	},
 })
 ```
 
@@ -82,6 +84,20 @@ Defines the plugins that should be registered. Refer to the [plugin documentatio
 
 Specifies default options that will be applied to all `useForm` instances. More specific options will take precedence.
 
+## `layout`
+
+- **Type**: `Component | Component[] | (() => Component | Component[])`
+
+Defines a default layout that is applied to every view that does not already define its own `layout` option.
+
+```ts
+import { initializeHybridly } from 'virtual:hybridly/setup'
+
+initializeHybridly({ layout: UApp })
+initializeHybridly({ layout: () => UApp })
+initializeHybridly({ layout: [UApp, CustomLayout] })
+```
+
 ## `axios`
 
 - **Type**: `Axios`
@@ -89,8 +105,8 @@ Specifies default options that will be applied to all `useForm` instances. More 
 Defines a custom Axios instance that will replace the one Hybridly would internally use otherwise.
 
 ```ts
-import { initializeHybridly } from 'virtual:hybridly/setup'
 import axios from 'axios'
+import { initializeHybridly } from 'virtual:hybridly/setup'
 
 initializeHybridly({
 	axios: axios.create({ // [!code focus:5]
@@ -118,13 +134,14 @@ By default, `setup` is optional because the Vue application is created under the
 ### Example
 
 ```ts
-import { createApp } from 'vue'
 import { initializeHybridly } from 'virtual:hybridly/setup'
+import { createApp } from 'vue'
 
 initializeHybridly({
-	setup: ({ render, element, hybridly }) => createApp({ render }) // [!code focus:3]
-		.use(hybridly)
-		.mount(element),
+	setup: ({ render, element, hybridly }) =>
+		createApp({ render })
+			.use(hybridly)
+			.mount(element),
 })
 ```
 

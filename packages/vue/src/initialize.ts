@@ -1,18 +1,19 @@
-import type { App, DefineComponent, Plugin as VuePlugin } from 'vue'
-import { createApp, h } from 'vue'
 import type { DynamicConfiguration, Plugin, RouterContext, RouterContextOptions } from '@hybridly/core'
 import { createRouter } from '@hybridly/core'
 import { debug, random, showViewComponentErrorModal } from '@hybridly/utils'
 import type { Axios } from 'axios'
-import { type ProgressOptions, progress } from './plugins/progress'
+import type { App, DefineComponent, Plugin as VuePlugin } from 'vue'
+import { createApp, h } from 'vue'
 import { wrapper } from './components/wrapper'
-import { state } from './stores/state'
-import { devtools } from './devtools'
-import { dialogStore } from './stores/dialog'
-import { onMountedCallbacks } from './stores/mount'
-import { viewTransition } from './plugins/view-transition'
 import type { DefaultFormOptions } from './composables'
+import { applyDefaultLayout, type DefaultLayout, resolveDefaultLayout } from './default-layout'
+import { devtools } from './devtools'
+import { progress, type ProgressOptions } from './plugins/progress'
+import { viewTransition } from './plugins/view-transition'
+import { dialogStore } from './stores/dialog'
 import { formStore } from './stores/form'
+import { onMountedCallbacks } from './stores/mount'
+import { state } from './stores/state'
 
 /**
  * Initializes Hybridly's router and context.
@@ -25,48 +26,50 @@ export async function initializeHybridly(options: InitializeOptions = {}) {
 		throw new Error('Could not find an HTML element to initialize Vue on.')
 	}
 
-	state.setContext(await createRouter({
-		axios: resolved.axios,
-		plugins: resolved.plugins,
-		serializer: resolved.serializer,
-		responseErrorModals: resolved.responseErrorModals ?? process.env.NODE_ENV === 'development',
-		routing: resolved.routing,
-		adapter: {
-			resolveComponent: resolve,
-			executeOnMounted: (callback) => {
-				onMountedCallbacks.push(callback)
-			},
-			onDialogClose: async () => {
-				dialogStore.hide()
-			},
-			onContextUpdate: (context) => {
-				state.setContext(context)
-			},
-			onViewSwap: async (options) => {
-				if (options.component) {
-					onMountedCallbacks.push(() => options.onMounted?.({ isDialog: false }))
-					state.setView(options.component)
-				}
-
-				state.setProperties(options.properties)
-
-				if (!options.preserveState && !options.dialog) {
-					state.setViewKey(random())
-				}
-
-				if (options.dialog) {
-					onMountedCallbacks.push(() => options.onMounted?.({ isDialog: true }))
-					dialogStore.setComponent(await resolve(options.dialog.component) as any)
-					dialogStore.setProperties(options.dialog.properties)
-					dialogStore.setKey(options.dialog.key)
-					dialogStore.show()
-				} else {
+	state.setContext(
+		await createRouter({
+			axios: resolved.axios,
+			plugins: resolved.plugins,
+			serializer: resolved.serializer,
+			responseErrorModals: resolved.responseErrorModals ?? process.env.NODE_ENV === 'development',
+			routing: resolved.routing,
+			adapter: {
+				resolveComponent: resolve,
+				executeOnMounted: (callback) => {
+					onMountedCallbacks.push(callback)
+				},
+				onDialogClose: async () => {
 					dialogStore.hide()
-				}
+				},
+				onContextUpdate: (context) => {
+					state.setContext(context)
+				},
+				onViewSwap: async (options) => {
+					if (options.component) {
+						onMountedCallbacks.push(() => options.onMounted?.({ isDialog: false }))
+						state.setView(options.component)
+					}
+
+					state.setProperties(options.properties)
+
+					if (!options.preserveState && !options.dialog) {
+						state.setViewKey(random())
+					}
+
+					if (options.dialog) {
+						onMountedCallbacks.push(() => options.onMounted?.({ isDialog: true }))
+						dialogStore.setComponent(await resolve(options.dialog.component) as any)
+						dialogStore.setProperties(options.dialog.properties)
+						dialogStore.setKey(options.dialog.key)
+						dialogStore.show()
+					} else {
+						dialogStore.hide()
+					}
+				},
 			},
-		},
-		payload,
-	}))
+			payload,
+		}),
+	)
 
 	const render = () => h(wrapper as any)
 
@@ -135,6 +138,8 @@ function prepare(options: ResolvedInitializeOptions) {
 		formStore.setDefaultConfig(options.defaultFormOptions)
 	}
 
+	options.layout = resolveDefaultLayout(options.layout)
+
 	return {
 		isServer,
 		element,
@@ -164,6 +169,7 @@ async function resolveViewComponent(name: string, options: ResolvedInitializeOpt
 		: components[path]
 
 	component = component.default ?? component
+	component = applyDefaultLayout(component, options.layout)
 
 	return component
 }
@@ -206,6 +212,8 @@ export interface InitializeOptions {
 	viewTransition?: boolean
 	/** Options that will apply to all forms by default. Specific forms' options will override them. */
 	defaultFormOptions?: DefaultFormOptions
+	/** Default layout applied to views that do not define one. */
+	layout?: DefaultLayout
 }
 
 interface SetupArguments {

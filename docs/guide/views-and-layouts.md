@@ -124,6 +124,21 @@ In the example above, the `resources/default.layout.vue` layout will be used.
 Persistent layouts also have their own drawbacks. Specifically, it is not possible to use named slots with them. Instead, use properties or basic single-file component layouts.
 :::
 
+## Default layout
+
+You can configure a default persistent layout in your client entrypoint. This layout will be used for every view that does not explicitly define one.
+
+```ts
+import { initializeHybridly } from 'virtual:hybridly/setup'
+import DefaultLayout from './default-layout.vue'
+
+initializeHybridly({ layout: DefaultLayout })
+initializeHybridly({ layout: () => DefaultLayout })
+initializeHybridly({ layout: [DefaultLayout, CustomLayout] })
+```
+
+If a view defines its own `layout`, that layout takes precedence over the default one.
+
 ## Default conventions
 
 By default, Hybridly expects view and layout files to be stored somewhere in the `resources` directory.
