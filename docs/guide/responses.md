@@ -1,45 +1,41 @@
 # Responses
 
+<p class="preface">
+Learn how the Hybridly protocol works and how to return different kinds of responses to the front-end.
+</p>
+
 ## Overview
 
 Hybrid responses respect a protocol to which the front-end adapter must adhere. A response contains, among other things, the name of the view component and its properties.
 
-To send a response, use the [`hybridly`](../api/laravel/functions.md#hybridly) or the [`Hybridly\view`](../api/laravel/functions.md#view) functions the same way you would use `view`:
+To send a response, you would typically use the [`Hybridly\view`](../api/laravel/functions.md#view) function, which renders a view and its properties just like Laravel's own `view` function:
 
 ```php
-use App\Data\ChirpData;
-use App\Models\Chirp;
+use App\Users\User;
+use App\Users\UserData;
 
-class ChirpController extends Controller  // [!code focus:4]
+final readonly class ShowUserController
 {
-    public function index()
+    public function show(User $user): HybridResponse
     {
-        $this->authorize('viewAny', Chirp::class);
+        Gate::authorize('view', $user);
 
-        $chirps = Chirp::query()
-            ->forHomePage()
-            ->paginate();
-
-        return hybridly('chirps.index', [ // [!code focus:5]
-            'chirps' => ChirpData::collection($chirps),
+        return view('users.show', [
+            'user' => UserData::fromModel($user),
         ]);
     }
-}   // [!code focus]
+}
 ```
 
-In the example above, the corresponding single-file component would simply accept a `chirps` property of the type `ChirpData`:
+In the example above, the corresponding single-file component would simply accept a `user` property of the type `UserData`:
 
 ```vue
 <script setup lang="ts">
 defineProps<{ // [!code focus:3]
-	chirps: Paginator<App.Data.ChirpData>
+	user: App.Users.UserData
 }>()
 </script>
 ```
-
-:::info Paginator
-Since paginators are so common, Hybridly provides typings for them. You don't need any setup, the `Paginator` type is global. When using paginators without a `meta` property, you may use `UnwrappedPaginator` instead.
-:::
 
 ## Updating properties
 
@@ -48,22 +44,24 @@ It is a common pattern to have a `POST` or `PUT` hybrid request that ends up red
 ```php
 public function store(UpdateUserRequest $request): HybridResponse
 {
-    User::update($request->validate());
+    User::query()->update($request->validate());
 
     return back();
 }
 ```
 
-Such a redirection, though, implies an additional server round-trip and the re-execution of the server-side controller responsible for the view, which may slow down the response.
+Such a redirection, though, implies an additional server round-trip and the re-execution of the server-side controller responsible for the view, which might slow down the response, depending on the complexity of the page.
 
-Instead, you may return only properties from the `POST` or `PUT` controller:
+If you need a performance boost, you may return only properties from the `POST` or `PUT` controller:
 
 ```php
+use function Hybridly\properties;
+
 public function store(UpdateUserRequest $request): HybridResponse
 {
-    $user = User::update($request->validate());
+    $user = User::query()->update($request->validate());
 
-    return hybridly(properties: [
+    return properties([
         'user' => $user,
     ]);
 }
@@ -76,18 +74,18 @@ In that situation, the returned properties will be merged with the current ones,
 When making non-get hybrid requests, you may use redirects to a standard `GET` hybrid endpoint. Hybridly will follow the redirect and update the page accordingly.
 
 ```php
-class UsersController extends Controller
+final readonly class UsersController
 {
-    public function index() // [!code focus:8]
+    public function index(): HybridResponse // [!code focus:8]
     {
-        $users = User::paginate();
+        $users = User::query()->paginate();
 
-        return hybridly('users.index', [
+        return view('users.index', [
             'users' => UserData::collection($users),
         ]);
     }
 
-    public function store(CreateUserData $data, CreateUser $createUser) // [!code focus:6]
+    public function store(CreateUserData $data, CreateUser $createUser): RedirectResponse // [!code focus:6]
     {
         $createUser->execute($data);
 
@@ -100,11 +98,11 @@ In the example above, using `router.post('/users', { data: user })` would redire
 
 ## External redirects
 
-It's often necessary to redirect to an external website, or an internal page that doesn't use Hybridly.
+It's often necessary to redirect to an external website, or sometimes even an internal page that doesn't use Hybridly, such as a Filament panel.
 
-If you redirect using a classic server-side redirection, the front-end adapter will not understand the response and will display an error modal.
+If you use a classic server-side redirection, the front-end adapter will not understand the response and will display an error modal.
 
-Instead, you may use `Hybridly\to_external_url($url)` to iniate a client-side redirect using `window.location`:
+Instead, you may use [`Hybridly\to_external_url($url)`](../api/laravel/functions.md#to_external_url) to iniate a client-side redirect using `window.location`:
 
 ```php
 use function Hybridly\to_external_url;
@@ -112,7 +110,7 @@ use function Hybridly\to_external_url;
 to_external_url('https://google.com');
 ```
 
-You may open the URL in a new tab by specifying a target:
+You may also open the URL in a new tab by specifying a target:
 
 ```php
 use Hybridly\Support\Target;
@@ -121,7 +119,11 @@ use function Hybridly\to_external_url;
 to_external_url('https://google.com', target: Target::NEW_TAB);
 ```
 
-This method can also be used when dealing with potentially non-hybrid request. In such cases, a normal `RedirectResponse` will be returned instead.
+### Potentially non-hybrid requests
+
+If you are not sure whether the current request expects a hybrid response, you may still use [`to_external_url`](../api/laravel/functions.md#to_external_url).
+
+Under the hood, it will detect if the request is hybrid and use a normal `RedirectResponse` instead if necessary.
 
 ## File downloads
 
@@ -134,67 +136,3 @@ return response()->download($invoice->file_path, 'invoice.pdf');
 ```
 
 However, [in-browser file responses](https://laravel.com/docs/master/responses#file-responses) are not supported, as there is no way for Hybridly to differentiate it from a normal response.
-
-## The view-model pattern
-
-A component of the [model-view-viewmodel](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93viewmodel) pattern, the view-model, is particularly useful when developing hybrid applications.
-
-Aside from its obvious benefits in terms of separation of concerns, the class representing the view-model may be analyzed to be converted to a TypeScript interface.
-
-In other terms, you may create a view-model that extends [Data](https://github.com/spatie/laravel-data) in order to get its typings for free:
-
-```php
-// app/ViewModels/ChirpViewModel
-class ChirpViewModel extends Data
-{
-    public function __construct(
-        public readonly ChirpData $chirp,
-        #[DataCollectionOf(ChirpData::class)]
-        public readonly PaginatedDataCollection $comments,
-        public readonly string $previous,
-    ) {
-    }
-}
-```
-
-The `hybridly` function can use a data object (or any `Arrayable` object, for that matter) in place of an array of properties:
-
-```php
-// app/Http/Controllers/ChirpsController // [!code focus]
-use App\Data\ChirpData;
-use App\Models\Chirp;
-use App\ViewModels\ChirpViewModel; // [!code focus:6]
-
-class ChirpController extends Controller
-{
-    public function show(Chirp $chirp)
-    {
-        $this->authorize('view', $chirp);
-
-        $comments = $chirp->comments()
-          ->withLikeAndCommentCounts()
-          ->paginate();
-
-        return hybridly('chirps.show', new ChirpViewModel( // [!code focus:9]
-            chirp: ChirpData::from($chirp),
-            comments: ChirpData::collection($comments),
-            previous: $chirp->parent_id
-                ? url()->route('chirp.show', $chirp->parent_id)
-                : url()->route('index'),
-        ));
-    }
-}
-
-```
-
-Unfortunately, since Vue [doesn't have support](https://vuejs.org/api/sfc-script-setup.html#typescript-only-features) for `defineProps`'s generic parameter to be a global type, you will have to manually type the property keys:
-
-```vue
-<script setup lang="ts">
-const $props = defineProps<{ // [!code focus:5]
-	chirp: App.ViewModels.ChirpViewModel['chirp']
-	comments: App.ViewModels.ChirpViewModel['comments']
-	previous: App.ViewModels.ChirpViewModel['previous']
-}>()
-</script>
-```
