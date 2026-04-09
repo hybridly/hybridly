@@ -1,14 +1,22 @@
+---
+outline: "deep"
+---
+
 # Navigation
+
+<p class="preface">
+Learn how to navigate between pages on the client side, how to use different HTTP methods, and how to update data transparently.
+</p>
 
 ## Overview
 
 Because Hybridly creates a single-page application, a special navigation needs to be made to avoid reloading the whole framework to load a page.
 
-This can be done using a link component in the templates, or programmatically by using the [routing API](../api/router/utils.md).
+This is done using the [`<RouterLink>`](../api/components/router-link.md) component, or programmatically by using the [routing API](../api/router/utils.md).
 
 ## Using the component
 
-`RouterLink` is a simple component that acts as an anchor tag, except it catches navigations to make hybrid requests.
+[`<RouterLink>`](../api/components/router-link.md) is a simple component that acts as an anchor tag, except it catches navigations to transform them into hybrid requests.
 
 ```vue
 <template>
@@ -24,14 +32,19 @@ Learn more about the options available on its [API documentation](../api/compone
 
 ## Programmatically
 
-It's often necessary to make navigations programmatically. This can be done using the [`router` API](../api/router/utils).
+In many cases, such as when submitting forms, handling refreshes from WebSocket, or for any other reason, you will need to trigger navigations programmatically.
+
+This is done using the [`router` API](../api/router/utils).
 
 ```ts
+router.to(route, parameters, options)
+router.reload(options)
 router.get(url, options)
 router.post(url, options)
+router.put(url, options)
+router.patch(url, options)
 router.delete(url, options)
 router.external(url, options)
-router.reload(options)
 router.navigate(options)
 ```
 
@@ -39,24 +52,22 @@ Learn more about the functions and options available in their [API documentation
 
 ## Asynchronous requests
 
-Hybridly supports asynchronous requests with `mode: 'async'`.
+By default, there can only be one navigation. When attempting a navigation while another is still pending, the previous one will be cancelled.
 
-Async requests are useful for background refreshes where you don't want to create extra history entries or show a progress bar.
+However, it is possible to make an asynchronous request that will not be prevented by a subsequent navigation. This is useful for reloading or fetching data, which is typically done using [partial reloads](./partial-reloads.md).
 
 ```ts
 router.get({
 	only: ['users'],
-	mode: 'async',
+	mode: 'async', // [!code hl]
 })
 ```
 
-:::tip Partial reloads
-`router.reload()` already defaults to async mode, with `replace: true`, `preserveState: true`, and `preserveScroll: true`.
-:::
+Note that partial reloads (hybrid requests using `only` or `except`) already use async mode by default. In most cases, you won't need to specify the `mode`.
 
-## Cancelling and interrupting async requests
+### Cancelling and interrupting async requests
 
-When multiple async requests can overlap, you can control interruption behavior using request options:
+When multiple asynchronous requests can overlap, you may control their interruption behavior.
 
 ```ts
 router.reload({
@@ -68,6 +79,18 @@ router.reload({
 })
 ```
 
-- `group` lets you scope async requests.
-- `interruptAsyncOnStart` can interrupt `none`, `same-group`, or `all` requests.
-- `cancelOnNavigation` interrupts the async request when a full navigation starts.
+#### `group`
+
+This option allows for grouping asynchronous request together. This setting interracts with other requests in the same group that use `interruptAsyncOnStart`.
+
+#### `interruptAsyncOnStart`
+
+This option configures whether that request should interrupt other requests.
+
+- `none` (default) — does not interrupt any request.
+- `same-group` — interrupts requests that share the same `group`.
+- `all` — interrupts all requests.
+
+#### `cancelOnNavigation`
+
+This option configures whether the request should be cancelled when a full navigation starts. This is useful to prevent race conditions.
