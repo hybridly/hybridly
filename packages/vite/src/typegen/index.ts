@@ -1,6 +1,6 @@
-import path from 'node:path'
-import fs from 'node:fs'
 import type { DynamicConfiguration } from '@hybridly/core'
+import fs from 'node:fs'
+import path from 'node:path'
 import type { ViteOptions } from '../types'
 import { debug } from '../utils'
 
@@ -26,16 +26,15 @@ export function generateTsConfig(options: ViteOptions, config: DynamicConfigurat
 				'hybridly/client',
 				...(options.tsconfig?.types ?? []),
 			],
-			baseUrl: '..',
 			paths: {
 				'#/*': [
-					'.hybridly/*',
-				],
-				'~/*': [
 					'./*',
 				],
+				'~/*': [
+					'../*',
+				],
 				'@/*': [
-					`./${config.architecture.root_directory}/*`,
+					`../${config.architecture.root_directory}/*`,
 				],
 			},
 		},
@@ -117,18 +116,20 @@ export async function generateRouteDefinitionFile(options: ViteOptions, config?:
 
 	debug.config('Writing types for routing:', routing)
 
-	const routes = Object.fromEntries(Object.entries(routing!.routes).map(([key, route]) => {
-		const bindings = route.bindings
-			? Object.fromEntries(Object.entries(route.bindings).map(([key]) => [key, '__key_placeholder__']))
-			: undefined
+	const routes = Object.fromEntries(
+		Object.entries(routing!.routes).map(([key, route]) => {
+			const bindings = route.bindings
+				? Object.fromEntries(Object.entries(route.bindings).map(([key]) => [key, '__key_placeholder__']))
+				: undefined
 
-		return [key, {
-			...(route.uri ? { uri: route.uri } : {}),
-			...(route.domain ? { domain: route.domain } : {}),
-			...(route.wheres ? { wheres: route.wheres } : {}),
-			...(route.bindings ? { bindings } : {}),
-		}]
-	}))
+			return [key, {
+				...(route.uri ? { uri: route.uri } : {}),
+				...(route.domain ? { domain: route.domain } : {}),
+				...(route.wheres ? { wheres: route.wheres } : {}),
+				...(route.bindings ? { bindings } : {}),
+			}]
+		}),
+	)
 
 	const definitions = `
 		/* eslint-disable */
