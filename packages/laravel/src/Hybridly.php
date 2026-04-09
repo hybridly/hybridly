@@ -124,9 +124,9 @@ final class Hybridly
      *
      * @see https://hybridly.dev/api/laravel/hybridly.html#deferred
      */
-    public function deferred(Closure $callback): Deferred
+    public function deferred(Closure $callback, ?string $group = null, bool $prepend = false, ?string $uniqueBy = null): Deferred
     {
-        return deferred($callback);
+        return deferred($callback, $group, $prepend, $uniqueBy);
     }
 
     /**

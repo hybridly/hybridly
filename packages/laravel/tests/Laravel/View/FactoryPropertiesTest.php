@@ -7,6 +7,7 @@ use Hybridly\View\Factory;
 use Hybridly\View\PropertiesResolver;
 use Illuminate\Contracts\Support\Arrayable;
 
+use function Hybridly\merge;
 use function Hybridly\Testing\partial_headers;
 
 it('finds deferred properties', function () {
@@ -204,4 +205,84 @@ it('resolves nested deferred', function () {
     expect($payload->view->component)->toBe('users.edit');
     expect($payload->view->properties->user)->full_name->toBe('Jon Doe');
     expect($payload->view->properties->user)->email->toBe('jon@example.org');
+});
+
+it('does not include deferred mergeable properties in mergeable config on initial loads', function () {
+    $payload = resolve(Factory::class)
+        ->withView('users.edit', [
+            'feed' => new Deferred(fn () => [
+                ['id' => 1, 'label' => 'First'],
+            ]),
+        ])
+        ->toResponse(mock_request())
+        ->getData();
+
+    expect($payload->view->deferred)
+        ->toMatchArray([
+            'default' => ['feed'],
+        ]);
+
+    expect($payload->view->mergeable)->toBe([]);
+});
+
+it('includes deferred mergeable properties in mergeable config on partial loads', function () {
+    $payload = resolve(Factory::class)
+        ->withView('users.edit', [
+            'feed' => new Deferred(
+                fn () => [
+                    ['id' => 1, 'label' => 'First'],
+                ],
+                prepend: true,
+                uniqueBy: 'id',
+            ),
+            'nested' => [
+                'items' => new Deferred(fn () => [
+                    ['id' => 2, 'label' => 'Second'],
+                ]),
+            ],
+        ])
+        ->toResponse(mock_request(headers: partial_headers(
+            component: 'users.edit',
+            only: ['feed', 'nested.items'],
+        )))
+        ->getData();
+
+    expect($payload->view->mergeable)
+        ->toContain(['feed', true, 'id'])
+        ->not->toContain(['nested.items', false, null]);
+});
+
+it('includes mergeable properties configuration in the payload', function () {
+    $payload = resolve(Factory::class)
+        ->withView('users.edit', [
+            'users' => merge([['id' => 1]], uniqueBy: 'id'),
+            'priority_users' => merge([['id' => 2]], prepend: true, uniqueBy: 'id'),
+            'messages' => merge(['hello']),
+            'nested' => [
+                'items' => merge([['meta' => ['id' => 3]]], uniqueBy: 'meta.id'),
+            ],
+        ])
+        ->toResponse(mock_request())
+        ->getData();
+
+    expect($payload->view->mergeable)
+        ->toHaveCount(4)
+        ->toContain(['users', false, 'id'])
+        ->toContain(['priority_users', true, 'id'])
+        ->toContain(['messages', false, null])
+        ->toContain(['nested.items', false, 'meta.id']);
+});
+
+it('includes mergeable properties configuration in non-hybrid payload responses', function () {
+    $response = resolve(Factory::class)
+        ->withView('users.edit', [
+            'users' => merge([['id' => 1]], prepend: true, uniqueBy: 'id'),
+        ])
+        ->toResponse(mock_request(hybrid: false));
+
+    $payload = $response->getOriginalContent()->getData()['payload'];
+
+    expect($payload['view']['mergeable'])
+        ->toHaveCount(1)
+        ->toContain(['users', true, 'id']);
 });

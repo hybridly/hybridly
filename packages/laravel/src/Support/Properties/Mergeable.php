@@ -2,11 +2,23 @@
 
 namespace Hybridly\Support\Properties;
 
+/**
+ * Represents a property that will be merged with the previous value of the property, if any.
+ */
 interface Mergeable
 {
-    public function merge(): static;
-
+    /**
+     * Whether this instance should be merged with its previous value.
+     */
     public function shouldMerge(): bool;
 
-    public function shouldBeUnique(): bool;
+    /**
+     * Whether this instance should be merged with its previous value.
+     */
+    public function shouldPrepend(): bool;
+
+    /**
+     * This instance will replace the previous value if it matches the property at the specified path. Otherwise, it will be merged normally.
+     */
+    public function uniqueBy(): ?string;
 }

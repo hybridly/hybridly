@@ -111,6 +111,8 @@ export interface HybridRequestOptions extends Omit<NavigationOptions, 'payload'>
 	only?: string | string[]
 	/** Which properties not to update for this navigation. Other properties will be updated. */
 	except?: string | string[]
+	/** Which properties to clear before the update. */
+	reset?: string | string[]
 	/** Specific headers to add to the request. */
 	headers?: Record<string, string>
 	/** The bag in which to put potential errors. */

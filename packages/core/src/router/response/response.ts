@@ -1,5 +1,6 @@
-import { debug, getByPath, merge, setByPath, wrap } from '@hybridly/utils'
+import { debug, getByPath, merge } from '@hybridly/utils'
 import type { AxiosResponse } from 'axios'
+import { get, set, uniqBy } from 'es-toolkit/compat'
 import { EXTERNAL_NAVIGATION_HEADER, HYBRIDLY_HEADER } from '../../constants'
 import { getInternalRouterContext } from '../../context'
 import { handleDownloadResponse, isDownloadResponse } from '../../download'
@@ -139,28 +140,68 @@ function resolveProperties(original: Properties, payload: View, errorBag?: strin
 		;(mergedPayloadProperties.errors as any)[errorBag] = (payload.properties.errors as any)[errorBag] ?? {}
 	} else {
 		mergedPayloadProperties.errors = payload.properties.errors
-	}
+	}// We then need to loop through each "mergeable" property, and merge the
+	// received input into the original one. We need to respect the given settings:
+	// - prepends = true, we prepend data
+	// - prepends = false, we append data
+	// - if uniqueBy is a string, we dedupe based its dot-notated path (eg. `id`)
 
-	;(payload.mergeable ?? []).forEach(([mergeableProperty, unique]) => {
-		const originalValue = getByPath(original, mergeableProperty) as Properties
-		const newValue = getByPath(payload.properties, mergeableProperty) as Properties
+	;(payload.mergeable ?? []).forEach(([mergeableProperty, prepends, uniqueBy]) => {
+		const originalValue = getByPath(original, mergeableProperty) as unknown
+		const newValue = getByPath(payload.properties, mergeableProperty) as unknown
+
+		const mergeArrays = (current: unknown[], incoming: unknown[]) => {
+			const merged = prepends === true
+				? [...incoming, ...current]
+				: [...current, ...incoming]
+
+			if (typeof uniqueBy !== 'string') {
+				return merged
+			}
+
+			const getUniqueKey = (entry: unknown) => {
+				const key = get(entry, uniqueBy)
+				return key === undefined ? Symbol() : key
+			}
+
+			if (prepends === true) {
+				return uniqBy(merged, getUniqueKey)
+			}
+
+			const orderedKeys: unknown[] = []
+			const valuesByKey = new Map<unknown, unknown>()
+
+			for (const entry of merged) {
+				const key = getUniqueKey(entry)
+
+				if (!valuesByKey.has(key)) {
+					orderedKeys.push(key)
+				}
+
+				valuesByKey.set(key, entry)
+			}
+
+			return orderedKeys.map((key) => valuesByKey.get(key)!)
+		}
+
+		let value = newValue
 
 		if (Array.isArray(originalValue)) {
-			const array = [
-				...originalValue,
-				...wrap(newValue),
-			]
+			const incoming = Array.isArray(newValue)
+				? newValue
+				: newValue === undefined
+				? []
+				: [newValue]
 
-			setByPath(mergedPayloadProperties, mergeableProperty, unique ? [...new Set(array)] : array)
-			return
+			value = mergeArrays(originalValue, incoming)
+		} else if (originalValue instanceof Object && newValue instanceof Object) {
+			value = merge(originalValue as Properties, newValue as Properties, {
+				overwriteArray: false,
+				arrayMerge: (current, incoming) => mergeArrays(current, incoming),
+			})
 		}
 
-		if (originalValue instanceof Object) {
-			setByPath(mergedPayloadProperties, mergeableProperty, merge(originalValue as any, newValue as any, { overwriteArray: false }) as any)
-			return
-		}
-
-		setByPath(mergedPayloadProperties, mergeableProperty, newValue)
+		set(mergedPayloadProperties, mergeableProperty, value)
 	})
 
 	return mergedPayloadProperties

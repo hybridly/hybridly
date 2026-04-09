@@ -307,17 +307,17 @@ it('resolves grouped `Deferred` properties', function (array $parameters, array 
 it('resolves `Mergeable` properties', function (array $parameters, array $expectedMergeable) {
     [$properties, $deferred, $mergeable] = get_properties_resolver(...$parameters)
         ->resolve('foo', [
-            'mergeable' => new Merge(['foo', 'bar'], unique: false),
+            'mergeable' => new Merge(['foo', 'bar']),
             'nested' => [
                 'normal' => true,
-                'mergeable' => new Merge(['foo', 'bar'], unique: true),
+                'mergeable' => new Merge(['foo', 'bar'], prepend: true, uniqueBy: 'id'),
             ],
         ]);
 
     expect($mergeable)->toBe($expectedMergeable);
 })->with([
-    [['partial' => false], [['mergeable', false], ['nested.mergeable', true]]],
-    [['partial' => true], [['mergeable', false], ['nested.mergeable', true]]],
+    [['partial' => false], [['mergeable', false, null], ['nested.mergeable', true, 'id']]],
+    [['partial' => true], [['mergeable', false, null], ['nested.mergeable', true, 'id']]],
 ]);
 
 it('resolves `Partial` properties', function (string $class, array $parameters, array $expectedProperties) {

@@ -56,12 +56,23 @@ final class PropertiesResolver
             $properties = Arr::filterRecursive($properties, static fn ($property) => ! ($property instanceof IgnoreFirstLoad));
         }
 
+        // During partial requests, the client may send a reset intent to prevent mergeable
+        // properties to be merged on their previous values. This will effectively reset its state.
+        // TODO: tests
+        $reset = $partial && $this->request->hasHeader(Header::RESET)
+            ? array_filter(json_decode($this->request->header(Header::RESET, default: ''), associative: true) ?? [])
+            : [];
+
         // Mergeable properties are then resolved. These are special properties
         // that will have a special merge treatment when merging on the front-end.
-        $mergeable = $this->filterToPropertyPaths($properties, function (mixed $value, string $path) {
+        $mergeable = $this->filterToPropertyPaths($properties, function (mixed $value, string $path) use ($reset) {
+            if (in_array($path, $reset, strict: true)) {
+                return false;
+            }
+
             if ($value instanceof Mergeable) {
                 return $value->shouldMerge()
-                    ? [$path, $value->shouldBeUnique()]
+                    ? [$path, $value->shouldPrepend(), $value->uniqueBy()]
                     : false;
             }
 

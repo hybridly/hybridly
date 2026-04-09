@@ -8,6 +8,7 @@ import {
 	HYBRIDLY_HEADER,
 	ONLY_DATA_HEADER,
 	PARTIAL_COMPONENT_HEADER,
+	RESET_HEADER,
 	VERSION_HEADER,
 } from '../../constants'
 import { getInternalRouterContext, getRouterContext } from '../../context'
@@ -55,8 +56,9 @@ export async function sendHybridRequest(request: PendingHybridRequest): Promise<
 			...request.options.headers,
 			...(context.dialog ? { [DIALOG_KEY_HEADER]: context.dialog!.key } : {}),
 			...(context.dialog ? { [DIALOG_REDIRECT_HEADER]: context.dialog!.redirectUrl ?? '' } : {}),
-			...mergeObject(request.options.only !== undefined || request.options.except !== undefined, {
+			...mergeObject(request.options.only || request.options.except || request.options.reset, {
 				[PARTIAL_COMPONENT_HEADER]: context.view.component,
+				...mergeObject(request.options.reset, { [RESET_HEADER]: JSON.stringify(wrap(request.options.reset)) }),
 				...mergeObject(request.options.only, { [ONLY_DATA_HEADER]: JSON.stringify(wrap(request.options.only)) }),
 				...mergeObject(request.options.except, { [EXCEPT_DATA_HEADER]: JSON.stringify(wrap(request.options.except)) }),
 			}),

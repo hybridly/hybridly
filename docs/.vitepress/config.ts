@@ -132,7 +132,6 @@ export default defineConfig({
 						{ text: 'Refining', link: '/guide/refining' },
 						{ text: 'Tables', link: '/guide/tables' },
 						{ text: 'Global properties', link: '/guide/global-properties' },
-						{ text: 'Persistent properties', link: '/guide/persistent-properties' },
 						{ text: 'Progress indicator', link: '/guide/progress-indicator' },
 						{ text: 'Hooks', link: '/guide/hooks' },
 					],
