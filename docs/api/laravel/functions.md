@@ -147,9 +147,7 @@ These functions are available globally when `hybridly/laravel` is installed.
 
 ### `hybridly`
 
-When called without a parameter, this functions returns the [`Hybridly\Hybridly`](./hybridly.md) singleton instance.
-
-Otherwise, it is an alias of [`hybridly()->view()`](./hybridly.md#view).
+This functions returns the [`Hybridly\Hybridly`](./hybridly.md) singleton instance.
 
 ## Namespaced testing functions
 
