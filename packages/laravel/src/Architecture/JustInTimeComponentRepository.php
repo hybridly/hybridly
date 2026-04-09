@@ -15,7 +15,7 @@ final class JustInTimeComponentRepository implements ComponentRepository
 
     public function list(ComponentType $type): array
     {
-        return array_filter($this->components, static fn (Component $component) => $component->type === $type);
+        return array_values(array_filter($this->components, static fn (Component $component) => $component->type === $type));
     }
 
     public function add(Component $component): static
