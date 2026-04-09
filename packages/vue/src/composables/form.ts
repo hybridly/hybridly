@@ -2,9 +2,11 @@ import type { Path, SearchableObject } from '@clickbar/dot-diver'
 import { getByPath } from '@clickbar/dot-diver'
 import type { HybridRequestOptions, PendingHybridRequest, Progress, UrlResolvable } from '@hybridly/core'
 import { router } from '@hybridly/core'
-import { clone, merge, setValueAtPath, unsetPropertyAtPath } from '@hybridly/utils'
-import isEqual from 'lodash.isequal'
-import type { ComputedRef, DeepReadonly, Ref } from 'vue'
+import { merge } from '@hybridly/utils'
+import { set, unset } from 'es-toolkit/compat'
+import { cloneDeep } from 'es-toolkit/object'
+import { isEqual } from 'es-toolkit/predicate'
+import type { DeepReadonly } from 'vue'
 import { computed, reactive, ref, shallowRef, toRaw, watch } from 'vue'
 import { formStore } from '../stores/form'
 import { state } from '../stores/state'
@@ -84,7 +86,7 @@ export interface FormReturn<T extends SearchableObject, P extends Path<T> & stri
 }
 
 function safeClone<T>(obj: T): T {
-	return clone(toRaw(obj))
+	return cloneDeep(toRaw(obj))
 }
 
 export function useForm<
@@ -288,7 +290,7 @@ export function useForm<
 	 * Clears the given field's error.
 	 */
 	function clearError(key: P) {
-		unsetPropertyAtPath(errors.value, key)
+		unset(errors.value, key)
 	}
 
 	/**
@@ -297,7 +299,7 @@ export function useForm<
 	function setErrors(incoming: Errors<T>) {
 		clearErrors()
 		Object.entries(incoming).forEach(([path, value]) => {
-			setValueAtPath(errors.value, path, value)
+			set(errors.value, path, value)
 		})
 	}
 

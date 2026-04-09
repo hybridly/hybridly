@@ -43,11 +43,6 @@
 		"@clickbar/dot-diver": "catalog:",
 		"debug": "catalog:",
 		"deepmerge": "catalog:",
-		"is-plain-object": "catalog:",
-		"lodash.clonedeep": "catalog:",
-		"throttle-debounce": "catalog:"
-	},
-	"devDependencies": {
-		"@types/lodash.clonedeep": "catalog:"
+		"es-toolkit": "catalog:"
 	}
 }

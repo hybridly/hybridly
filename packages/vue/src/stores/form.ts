@@ -1,4 +1,4 @@
-import { clone } from '@hybridly/utils'
+import { clone } from 'es-toolkit/object'
 import type { DefaultFormOptions } from '../composables/form'
 
 export const formStore = {

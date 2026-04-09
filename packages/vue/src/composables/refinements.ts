@@ -1,6 +1,7 @@
 import type { HybridRequestOptions, NavigationResponse } from '@hybridly/core'
 import { router } from '@hybridly/core'
-import { debounce, type FormDataConvertible } from '@hybridly/utils'
+import { type FormDataConvertible } from '@hybridly/utils'
+import { debounce } from 'es-toolkit/function'
 import type { ComputedRef, MaybeRefOrGetter, Ref } from 'vue'
 import { computed, nextTick, ref, toValue, watch } from 'vue'
 
@@ -883,20 +884,24 @@ export function useRefinements<T extends Refinements>(
 		let proxyIsBeingUpdated = false
 
 		// This debounced function applies the filter.
-		const debouncedApplyFilter = debounce(options.debounce ?? 250, async (value: T) => {
+		const debouncedApplyFilter = debounce(async (value: T) => {
 			await applyFilter(name, transform(value), options)
 			nextTick(() => filterIsBeingApplied = false)
-		})
+		}, options.debounce ?? 250)
 
 		// This debounced function updates the `ref` value
 		// according to the most recent associated value.
-		const debounceUpdateProxyValue = debounce(options.syncDebounce ?? 250, () => {
-			const filter = refinements.value.filters.find((f) => f.name === name)
-			if (filter) {
-				_proxy.value = transform(filter?.value)
-			}
-			nextTick(() => proxyIsBeingUpdated = false)
-		}, { atBegin: true })
+		const debounceUpdateProxyValue = debounce(
+			() => {
+				const filter = refinements.value.filters.find((f) => f.name === name)
+				if (filter) {
+					_proxy.value = transform(filter?.value)
+				}
+				nextTick(() => proxyIsBeingUpdated = false)
+			},
+			options.syncDebounce ?? 250,
+			{ edges: ['leading'] },
+		)
 
 		// We watch refinements instead of using the `success`
 		// hook so we can handle situations where the filter

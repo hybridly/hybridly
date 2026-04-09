@@ -1,53 +1,54 @@
 {
-  "name": "@hybridly/core",
-  "type": "module",
-  "version": "0.10.0-beta.14",
-  "description": "Core functionality of Hybridly",
-  "author": "Enzo Innocenzi <enzo@innocenzi.dev>",
-  "license": "MIT",
-  "funding": "https://github.com/sponsors/innocenzi",
-  "homepage": "https://github.com/hybridly/hybridly#readme",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/hybridly/hybridly.git"
-  },
-  "bugs": {
-    "url": "https://github.com/hybridly/hybridly/issues"
-  },
-  "keywords": [
-    "hybridly",
-    "inertiajs"
-  ],
-  "publishConfig": {
-    "provenance": true,
-    "access": "public"
-  },
-  "sideEffects": false,
-  "exports": {
-    ".": {
-      "types": "./dist/index.d.mts",
-      "import": "./dist/index.mjs"
-    }
-  },
-  "module": "dist/index.mjs",
-  "types": "dist/index.d.mts",
-  "files": [
-    "*.d.ts",
-    "dist"
-  ],
-  "scripts": {
-    "build": "obuild",
-    "build:stub": "obuild --stub"
-  },
-  "peerDependencies": {
-    "axios": "^1.7.2"
-  },
-  "dependencies": {
-    "@hybridly/utils": "workspace:*",
-    "qs": "catalog:",
-    "superjson": "catalog:"
-  },
-  "devDependencies": {
-    "defu": "catalog:"
-  }
+	"name": "@hybridly/core",
+	"type": "module",
+	"version": "0.10.0-beta.14",
+	"description": "Core functionality of Hybridly",
+	"author": "Enzo Innocenzi <enzo@innocenzi.dev>",
+	"license": "MIT",
+	"funding": "https://github.com/sponsors/innocenzi",
+	"homepage": "https://github.com/hybridly/hybridly#readme",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/hybridly/hybridly.git"
+	},
+	"bugs": {
+		"url": "https://github.com/hybridly/hybridly/issues"
+	},
+	"keywords": [
+		"hybridly",
+		"inertiajs"
+	],
+	"publishConfig": {
+		"provenance": true,
+		"access": "public"
+	},
+	"sideEffects": false,
+	"exports": {
+		".": {
+			"types": "./dist/index.d.mts",
+			"import": "./dist/index.mjs"
+		}
+	},
+	"module": "dist/index.mjs",
+	"types": "dist/index.d.mts",
+	"files": [
+		"*.d.ts",
+		"dist"
+	],
+	"scripts": {
+		"build": "obuild",
+		"build:stub": "obuild --stub"
+	},
+	"peerDependencies": {
+		"axios": "^1.7.2"
+	},
+	"dependencies": {
+		"@hybridly/utils": "workspace:*",
+		"qs": "catalog:",
+		"superjson": "catalog:",
+		"es-toolkit": "catalog:"
+	},
+	"devDependencies": {
+		"defu": "catalog:"
+	}
 }

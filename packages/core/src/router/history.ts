@@ -1,4 +1,5 @@
-import { debounce, debug } from '@hybridly/utils'
+import { debug } from '@hybridly/utils'
+import { debounce } from 'es-toolkit/function'
 import { parse, stringify } from 'superjson'
 import { SCROLL_REGION_ATTRIBUTE } from '../constants'
 import type { InternalRouterContext, RouterContextOptions, Serializer } from '../context'
@@ -102,14 +103,15 @@ export async function registerEventListeners() {
 		})
 	})
 
+	const onScroll = debounce((event: Event) => {
+		if ((event?.target as Element)?.hasAttribute?.(SCROLL_REGION_ATTRIBUTE)) {
+			saveScrollPositions()
+		}
+	}, 100)
+
 	// On scroll, we want to save the positions of all scrollbars.
 	// This is needed in order to restore them upon navigation.
-	window?.addEventListener('scroll', (event) =>
-		debounce(100, () => {
-			if ((event?.target as Element)?.hasAttribute?.(SCROLL_REGION_ATTRIBUTE)) {
-				saveScrollPositions()
-			}
-		}), true)
+	window?.addEventListener('scroll', (event) => onScroll(event), true)
 }
 
 /** Checks if the current navigation was made by going back or forward. */

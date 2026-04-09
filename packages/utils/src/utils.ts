@@ -1,10 +1,6 @@
 import baseMerge from 'deepmerge'
-// @ts-expect-error due to moduleresolution
-import { isPlainObject } from 'is-plain-object'
-
+import { isPlainObject } from 'es-toolkit/predicate'
 export { getByPath, type Path, type PathValue, type SearchableObject, setByPath } from '@clickbar/dot-diver'
-export { default as clone } from 'lodash.clonedeep'
-export { debounce, throttle } from 'throttle-debounce'
 
 export function random(length: number = 10): string {
 	const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
@@ -42,14 +38,9 @@ export function wrap<T>(value: T | T[]): T[] {
 	return Array.isArray(value) ? value : [value]
 }
 
-export function value<T>(value: T | (() => T)): T {
-	if (typeof value === 'function') {
-		return (value as any)?.() as T
-	}
-
-	return value
-}
-
+/**
+ * Returns the object only if the condition is true. Useful for conditionally merging in an object using the spread operator.
+ */
 export function mergeObject<T extends object>(condition: any, data: T): T | object {
 	if (!condition) {
 		return {}
@@ -79,79 +70,4 @@ export function merge<T>(x: Partial<T>, y: Partial<T>, options: MergeOptions = {
 		arrayMerge,
 		isMergeableObject,
 	})
-}
-
-export function removeTrailingSlash(string: string): string {
-	return string.replace(/\/+$/, '')
-}
-
-/**
- * Sets a value at a path in an object
- *
- * This function will set a value at a path in an object, creating any missing
- * objects along the way. The object is modified in place.
- *
- * @param obj the object to set the value in
- * @param path a dot-separated path to the property to set
- * @param value the value to set
- */
-export function setValueAtPath(obj: any, path: string, value: any): void {
-	// If the path doesn't contain a dot, then we can just set the value.
-	if (!path.includes('.')) {
-		obj[path] = value
-		return
-	}
-
-	// Otherwise, we need to split the path into segments and walk down the
-	// object tree until we find the right place to set the value.
-	const segments = path.split('.')
-	let nestedObject = obj
-	for (let i = 0; i < segments.length - 1; i++) {
-		const key = segments[i]
-		nestedObject = nestedObject[key] = nestedObject[key] || {}
-	}
-	nestedObject[segments[segments.length - 1]] = value
-}
-
-/**
- * Unsets a property at a path in an object
- *
- * This function will unset a property at a path in an object, deleting any
- * objects along the way that are empty. The object is modified in place.
- *
- * @param obj the object to unset the property in
- * @param path a dot-separated path to the property to unset
- */
-export function unsetPropertyAtPath(obj: any, path: string): void {
-	// If the path doesn't contain a dot, then we can just delete the property.
-	if (!path.includes('.')) {
-		delete obj[path]
-		return
-	}
-
-	// Otherwise, we need to split the path into segments and walk down the
-	// object tree until we find the right place to delete the property.
-	const segments = path.split('.')
-	let nestedObject = obj
-	for (let i = 0; i < segments.length - 1; i++) {
-		const key = segments[i]
-		nestedObject = nestedObject[key] = nestedObject[key] || {}
-	}
-
-	delete nestedObject[segments[segments.length - 1]]
-
-	// If the nested object is now empty, delete it.
-	if (Object.keys(nestedObject).length === 0) {
-		unsetPropertyAtPath(obj, segments.slice(0, -1).join('.'))
-	}
-}
-
-export function createPromiseWithResolvers<T>(): PromiseWithResolvers<T> {
-	let resolve: any
-	let reject: any
-	const promise = new Promise<T>((_resolve, _reject) => {
-		resolve = _resolve
-		reject = _reject
-	})
-	return { promise, resolve, reject }
 }

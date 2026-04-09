@@ -2,6 +2,7 @@
 
 namespace Hybridly;
 
+use Closure;
 use Hybridly\Support\Header;
 use Hybridly\Support\Properties\Deferred;
 use Hybridly\Support\Properties\Merge;
@@ -91,7 +92,7 @@ if (! \function_exists('Hybridly\on_demand')) {
      *
      * @see https://hybridly.dev/api/laravel/functions.html#partial
      */
-    function on_demand(\Closure $callback): OnDemand
+    function on_demand(Closure $callback): OnDemand
     {
         return new OnDemand($callback);
     }
@@ -103,9 +104,9 @@ if (! \function_exists('Hybridly\merge')) {
      *
      * @see https://hybridly.dev/api/laravel/functions.html#merge
      */
-    function merge(\Closure $callback): Merge
+    function merge(Closure|iterable $value): Merge
     {
-        return new Merge($callback);
+        return new Merge($value);
     }
 }
 
@@ -116,7 +117,7 @@ if (! \function_exists('Hybridly\deferred')) {
      *
      * @see https://hybridly.dev/api/laravel/functions.html#deferred
      */
-    function deferred(\Closure $callback, ?string $group = null): Deferred
+    function deferred(Closure $callback, ?string $group = null): Deferred
     {
         return new Deferred($callback, group: $group);
     }

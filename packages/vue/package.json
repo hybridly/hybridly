@@ -46,17 +46,15 @@
 	},
 	"dependencies": {
 		"@clickbar/dot-diver": "catalog:",
+		"es-toolkit": "catalog:",
 		"@hybridly/core": "workspace:*",
 		"@hybridly/utils": "workspace:*",
 		"@vue/devtools-api": "catalog:",
 		"defu": "catalog:",
-		"lodash.isequal": "catalog:",
 		"nprogress": "catalog:",
 		"qs": "catalog:"
 	},
 	"devDependencies": {
-		"@types/lodash": "catalog:",
-		"@types/lodash.isequal": "catalog:",
 		"@types/nprogress": "catalog:",
 		"@vue/test-utils": "catalog:",
 		"axios": "catalog:",

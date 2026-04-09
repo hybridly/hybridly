@@ -1,5 +1,6 @@
+import { merge } from '@hybridly/utils'
+import { trimEnd } from 'es-toolkit/string'
 import qs from 'qs'
-import { merge, removeTrailingSlash } from '@hybridly/utils'
 
 export type UrlResolvable = string | URL | Location
 export type UrlTransformable = BaseUrlTransformable | ((string: URL) => BaseUrlTransformable)
@@ -46,7 +47,7 @@ export function makeUrl(href: UrlResolvable, transformations: UrlTransformable =
 		})
 
 		if (transformations.trailingSlash === false) {
-			const _url = removeTrailingSlash(url.toString().replace(/\/\?/, '?'))
+			const _url = trimEnd(url.toString().replace(/\/\?/, '?'), '/')
 			url.toString = () => _url
 		}
 
