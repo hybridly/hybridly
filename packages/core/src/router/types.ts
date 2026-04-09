@@ -56,6 +56,12 @@ export interface NavigationOptions {
 	 * @internal
 	 */
 	updateHistoryState?: boolean
+	/**
+	 * Defines the type of view transition to use. If a string or array is given, uses it as the transition type.
+	 *
+	 * @see https://developer.mozilla.org/en-US/docs/Web/API/View_Transition_API/Using_types
+	 */
+	viewTransition?: string | string[] | boolean
 }
 
 export interface InternalNavigationOptions extends NavigationOptions {

@@ -94,6 +94,7 @@ export async function handleHybridRequestResponse(requestResponse: HybridRequest
 			preserveState: options.preserveState,
 			preserveUrl: options.preserveUrl,
 			replace: options.replace === true || options.preserveUrl || (sameUrls(payload.url, window.location.href) && !sameHashes(payload.url, window.location.href)),
+			viewTransition: options.viewTransition,
 		})
 	} else {
 		debug.router('Discarding navigation from an asynchronous request initiated on a previous page.')
@@ -140,7 +141,7 @@ function resolveProperties(original: Properties, payload: View, errorBag?: strin
 		;(mergedPayloadProperties.errors as any)[errorBag] = (payload.properties.errors as any)[errorBag] ?? {}
 	} else {
 		mergedPayloadProperties.errors = payload.properties.errors
-	}// We then need to loop through each "mergeable" property, and merge the
+	} // We then need to loop through each "mergeable" property, and merge the
 	// received input into the original one. We need to respect the given settings:
 	// - prepends = true, we prepend data
 	// - prepends = false, we append data

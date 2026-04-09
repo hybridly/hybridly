@@ -9,15 +9,20 @@ export function viewTransition(): Plugin {
 
 	return {
 		name: 'view-transition',
-		navigating: async ({ type, hasDialog }) => {
-			if (type === 'initial' || hasDialog) {
+		navigating: async ({ type, hasDialog, viewTransition }) => {
+			if (type === 'initial' || hasDialog || viewTransition === false) {
 				return
 			}
 
-			return new Promise((confirmTransitionStarted) => document.startViewTransition!(() => {
-				confirmTransitionStarted(true)
-				return new Promise<void>((resolve) => domUpdated = resolve)
-			}))
+			return new Promise((confirmTransitionStarted) =>
+				document.startViewTransition({
+					update: () => {
+						confirmTransitionStarted(true)
+						return new Promise<void>((resolve) => domUpdated = resolve)
+					},
+					types: getViewTransitionType(viewTransition),
+				})
+			)
 		},
 		mounted: () => {
 			domUpdated?.()
@@ -32,12 +37,14 @@ export function viewTransition(): Plugin {
 	}
 }
 
-declare global {
-	interface Document {
-		startViewTransition?: (callback: () => Promise<void>) => {
-			finished: Promise<void>
-			updateCallbackDone: Promise<void>
-			ready: Promise<void>
-		}
+function getViewTransitionType(viewTransition?: string | boolean | string[]): null | string[] {
+	if (viewTransition === false || viewTransition === undefined || viewTransition === true) {
+		return null
 	}
+
+	if (Array.isArray(viewTransition)) {
+		return viewTransition
+	}
+
+	return [viewTransition]
 }
