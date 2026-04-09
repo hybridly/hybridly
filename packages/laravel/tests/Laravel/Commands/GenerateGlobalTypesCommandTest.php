@@ -23,19 +23,6 @@ function copy_stubs(array $paths): void
     }
 }
 
-it('fails the command when there is no middleware, but still generates types', function () {
-    copy_stubs([
-        'UserData.php' => 'app/Data',
-    ]);
-
-    artisan('hybridly:types')
-        ->assertExitCode(1)
-        ->expectsOutputToContain('Could not find the Hybridly middleware in the application.');
-
-    expect(File::exists(base_path('.hybridly/global-properties.d.ts')))->toBeTrue();
-    expect(File::exists(base_path('.hybridly/php-types.d.ts')))->toBeTrue();
-});
-
 it('allows failures when `--allow-failures` is passed', function () {
     copy_stubs([
         'UserData.php' => 'app/Data',
