@@ -2,66 +2,47 @@
 
 ## Overview
 
-In most applications, some data needs to be available globally. This is generally the case, for instance, of the logged-in user, but it could be anything else. To answer to this need, you may use global properties. 
+In most applications, some data needs to be available globally. This is generally the case, for instance, of the logged-in user, but it could be anything else. To answer to this need, you may use global properties.
 
 Global properties are shared in every hybrid request — unless it's a [partial reload](./partial-reloads.md) — and can be accessed in the front-end using [`useProperty`](../api/utils/use-property.md) or [`useProperties`](../api/utils/use-properties.md).
 
-## From the middleware
+## From a middleware
 
-The most common way of defining global properties is to define them in the `HandleHybridRequests` middleware. It has a `share` method specifically for this purpose.
+The idiomatic way of defining global properties is to create a dedicated middleware and to share properties from there.
 
 ```php
-public function share(): SharedData
-{
-    return SharedData::from([
-        'security' => [
-            'user' => UserData::optional(auth()->user()),
-        ],
-    ]);
-}
-```
-
-Though this method can return any serializable property, such as a `Collection`, an array, a `Resource`, or anything `Arrayable`, a data object class is preferred in order to benefit from automatically-generated TypeScript definitions.
-
-In the example above, `SharedData` is a simple data object that takes a `SecurityData`, which accepts a `UserData`.
-
-:::code-group
-```php [app/Data/SharedData.php]
-final class SharedData extends Data
+final readonly class ShareNavigation
 {
     public function __construct(
-        public readonly SecurityData $security,
-    ) {
+        private Hybridly $hybridly,
+        private NavigationBuilder $navigation,
+    ) {}
+
+    public function __invoke(Request $request, Closure $next): Response
+    {
+        $this->hybridly->persist(['navigation']);
+        $this->hybridly->share('navigation', $this->navigation->getSidebarItems());
+
+        return $next($request);
     }
 }
 ```
 
-```php [app/Data/SecurityData.php]
-final class SecurityData extends Data
-{
-    public function __construct(
-        public readonly ?UserData $user,
-        public readonly int $characters,
-    ) {
-    }
+It is generally a good idea to create a TypeScript declaration file to inform TypeScript about the properties that are shared globally. For instance, the declaration file for the example above could look like that:
+
+```ts
+import 'hybridly'
+
+declare module 'hybridly' {
+	export interface GlobalHybridlyProperties {
+		navigation: App.Navigation.SharedNavigationItem[]
+	}
 }
+
+export {}
 ```
 
-```php [app/Data/UserData.php]
-final class UserData extends Data
-{
-    public function __construct(
-        public readonly ?int $id,
-        public readonly string $username,
-        public readonly string $display_name,
-        public readonly ?string $profile_picture_url,
-        public readonly ?Carbon $identity_verified_at,
-        public readonly string $email,
-    ) {
-    }
-}
-```
-:::
+This makes [`useProperty`](../api/utils/use-property.md) type-safe and provides your editor with autocompletion.
 
 ## From anywhere
 
@@ -73,13 +54,13 @@ hybridly()->share([
 ]);
 ```
 
-While this is a useful escape hatch, it is not recommended. This way of sharing data being dynamic by nature, it is not possible to completely type it. 
+While this is a useful escape hatch, it is not recommended. This way of sharing data being dynamic by nature, it is not possible to completely type it.
 
 If possible, consider using the middleware instead.
 
 ## Accessing global properties
 
-The `useProperty` function provides typed dot-notation support for accessing global properties.
+The [`useProperty`](../api/utils/use-property.md) function provides typed dot-notation support for accessing global properties.
 
 For instance, using the `user` property in the `security` array as shown in the earlier example would look like that:
 
@@ -87,4 +68,4 @@ For instance, using the `user` property in the `security` array as shown in the 
 const user = useProperty('security.user')
 ```
 
-`useProperty` returns a `ref` that will be updated if the data is changed.
+[`useProperty`](../api/utils/use-property.md) returns a `ref` that will be updated if the data is changed.
