@@ -1,23 +1,25 @@
 {
 	"useTabs": true,
 	"typescript": {
-		"lineWidth": 180,
 		"semiColons": "asi",
-		"quoteStyle": "preferSingle"
+		"quoteStyle": "preferSingle",
+		"arrowFunction.useParentheses": "force",
+		"lineWidth": 180
 	},
 	"markup": {
-		"printWidth": 100,
+		"printWidth": 120,
 		"preferAttrsSingleLine": true,
 		"vBindStyle": "short",
 		"vOnStyle": "short",
 		"vForDelimiterStyle": "in",
-		"vSlotStyle": "vSlot",
+		"vSlotStyle": "short",
 		"vBindSameNameShortHand": true,
 		"component.selfClosing": true,
 		"html.normal.selfClosing": true,
 		"html.void.selfClosing": true,
 		"svg.selfClosing": true,
-		"formatComments": true
+		"formatComments": true,
+		"vueComponentCase": "kebabCase"
 	},
 	"exec": {
 		"cwd": "${configDir}",
@@ -28,11 +30,12 @@
 	},
 	"excludes": [
 		"**/.tempest",
-		"**/composer.json",
-		"**/composer-lock.json",
-		"**/bun.lock",
 		"**/node_modules",
-		"**/vendor"
+		"**/*-lock.json",
+		"**/vendor",
+		"**/Fixtures/**/*.json",
+		"**/public/",
+		"**/.github"
 	],
 	"plugins": [
 		"https://plugins.dprint.dev/typescript-0.95.15.wasm",
