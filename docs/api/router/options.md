@@ -57,7 +57,7 @@ Defines which async requests are interrupted when this request starts:
 
 - Type: `string` or `string[]`
 
-Defines the properties that will be included in the response. All other properties except the [persistent ones](../../guide/persistent-properties.md) will be excluded.
+Defines the properties that will be included in the response. All other properties except the [persistent ones](../../guide/partial-reloads.md#persistent-properties) will be excluded.
 
 Read the documentation on [partial reloads](../../guide/partial-reloads.md) for more information.
 
@@ -65,7 +65,7 @@ Read the documentation on [partial reloads](../../guide/partial-reloads.md) for 
 
 - Type: `string` or `string[]`
 
-Defines the properties that will be excluded from the response. Specified [persistent properties](../../guide/persistent-properties.md) will also be excluded.
+Defines the properties that will be excluded from the response. Specified [persistent properties](../../guide/partial-reloads.md#persistent-properties) will also be excluded.
 
 Read the documentation on [partial reloads](../../guide/partial-reloads.md) for more information.
 
