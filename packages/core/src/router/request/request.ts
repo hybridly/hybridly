@@ -152,7 +152,7 @@ export async function performHybridNavigation(options: HybridRequestOptions): Pr
 			},
 		}
 	} finally {
-		debug.router('Ending navigation.')
+		debug.router('Ended navigation.', request)
 		await runHooks('after', options.hooks, request, context)
 	}
 }
