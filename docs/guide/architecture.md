@@ -1,129 +1,103 @@
 ---
-outline: 'deep'
+outline: "deep"
 ---
 
 # Architecture configuration
 
+<p class="preface">
+Learn how to configure Hybridly to find view and layout files anywhere in your codebase.
+</p>
+
 ## Overview
 
-Hybridly resolves view and layout files through its components resolver.
+By default, Hybridly expects view and layout files to be stored somewhere in the `resources` directory or its subdirectories.
 
-By default, it loads files from your configured `architecture.root_directory` (usually `resources`) and expects:
+However, storing view files far apart from their related code can be inconvenient. For instance, if you have a `Billing` domain, you might want to store its views and layouts in `src/Billing` instead of `resources`.
 
-- views named with `.view.<ext>`
-- layouts named with `.layout.<ext>`
-
-Supported extensions come from `architecture.extensions`.
+For this reason, Hybridly provides the ability to configure where it looks for view and layout files.
 
 ## Default architecture
 
-By default, Hybridly uses this structure:
+By default, Hybridly uses the following file structure:
 
 ```text
 resources/
-├── application/
-│   ├── main.ts
-│   └── root.blade.php
-├── views/
-│   ├── index.view.vue
-│   └── security/
-│       ├── register.view.vue
-│       └── login.view.vue
-└── layouts/
-    └── default.layout.vue
+├── main.ts
+├── root.blade.php
+├── index.view.vue
+├── security/
+│  ├── register.view.vue
+│  └── login.view.vue
+└── default.layout.vue
 ```
 
-If `architecture.load_default_module` is enabled, Hybridly registers this root directory as the `default` namespace.
+As you can see, the front-end lives in `resources`, including the root Blade layout and the `main.ts` entrypoint.
 
-## Custom architecture
+There is no `resources/views` or `resources/layouts` subdirectory, as this would affect the identifiers for these components.
 
-If the default layout is not suitable, disable it in `config/hybridly.php`:
+## Modular architecture
+
+If the default architecture is not suitable, you may update the `architecture` configuration in `config/hybridly.php`:
 
 ```php
 'architecture' => [
-    'load_default_module' => false,
-]
+    // ...
+    'root_directory' => 'resources', // [!code --]
+    'component_loader' => ResourcesComponentLoader::class, // [!code --]
+    'root_directory' => 'app', // [!code ++]
+    'component_loader' => ModulesComponentLoader::class, // [!code ++]
+],
 ```
 
-Then register your own directories in a service provider.
+- The `component_loader` option accepts a class name that implements the `ComponentLoader` interface. This class is responsible for finding view and layout files in the file system and registering them.
 
-### Load a module directory
+- The `root_directory` option defines the directory in which Hybridly expects to find the `main.ts` and `root.blade.php` files.
 
-`loadModuleFrom` recursively registers both views and layouts from a directory.
+### Example
 
-```php
-use Hybridly\Hybridly;
-use Illuminate\Support\ServiceProvider;
+Using the configuration above, you would typically organize your code by modules or vertical slices in your main namespace:
 
-final class BillingServiceProvider extends ServiceProvider
-{
-    public function boot(Hybridly $hybridly): void
-    {
-        $hybridly->loadModuleFrom(
-            directory: base_path('src/Billing'),
-            namespace: 'billing',
-        );
-    }
-}
+```text
+app/
+├── main.ts
+├── root.blade.php
+├── default.layout.vue
+└── Authentication/
+    ├── User.php
+    ├── RegisterUserController.php
+    └── register.view.vue
 ```
 
-### Load views and layouts separately
+In this example, the `register.view.vue` file would be identifier by `authentication.register`.
 
-```php
-public function boot(Hybridly $hybridly): void
-{
-    $hybridly->loadViewsFrom(
-        directory: resource_path('domains/billing/views'),
-        namespace: 'billing',
-    );
+## Configuration reference
 
-    $hybridly->loadLayoutsFrom(
-        directory: resource_path('domains/billing/layouts'),
-        namespace: 'billing',
-    );
-}
-```
+The following options are available for the `architecture` configuration in `config/hybridly.php`:
 
-### Register explicit files
+### `root_directory`
 
-For full control, register specific files using `addView` and `addLayout`.
+Defines the directory in which Hybridly expects to find the `main.ts` and `root.blade.php` files.
 
-```php
-public function boot(Hybridly $hybridly): void
-{
-    $hybridly->addView(
-        path: resource_path('domains/billing/views/invoices/show.view.vue'),
-        namespace: 'billing',
-        identifier: 'billing::invoices.show',
-    );
+### `component_loader`
 
-    $hybridly->addLayout(
-        path: resource_path('domains/billing/layouts/default.layout.vue'),
-        namespace: 'billing',
-        identifier: 'billing::default',
-    );
-}
-```
+Defines the class responsible for finding view and layout files in the file system and registering them.
 
-## Namespaces
+By default, it is `ResourcesComponentLoader`, which looks for files in the `resources` directory.
 
-When you load files with a namespace, use the `namespace::identifier` format.
+Another available option is `ModulesComponentLoader`, which looks for files in the `src` directory.
 
-```php
-return hybridly()->view('billing::invoices.show');
-```
+### `eager_load_views`
 
-```vue
-<template layout="billing::default">
-	<h1>Invoice</h1>
-</template>
-```
+Defines whether to enable code-splitting. When enabled, all view and layout files will be loaded on the first request. This is a good default for small to medium applications.
 
-## Identifier generation
+### `generate_absolute_urls`
 
-Identifiers are kebab-cased and path-based.
+Defines whether to generate absolute URLs when using the [`route`](../api/utils/route.md) util.
 
-- `views/MyPage.view.vue` becomes `my-page` in the `default` namespace.
-- `views/admin/Users.view.vue` becomes `admin.users` in the `default` namespace.
+### `entrypoint`
 
-For custom behavior, you can provide your own identifier generator with `setIdentifierGenerator`.
+Defines the name of the entrypoint file. By default, it is `main.ts`.
+
+### `root_view`
+
+Defines the name of the root view. By default, it is `root`.
