@@ -19,6 +19,7 @@ return [
      * | `exclude` array. Filters in the `exclude` array support wildcards (*).
      */
     'router' => [
+        'generate_absolute_urls' => false,
         'allowed_vendors' => [
             'laravel/fortify',
         ],
@@ -42,7 +43,6 @@ return [
         'root_directory' => 'resources',
         'component_loader' => ResourcesComponentLoader::class,
         'eager_load_views' => true,
-        'generate_absolute_urls' => true,
         'entrypoint' => Architecture::ENTRYPOINT,
         'root_view' => Architecture::ROOT_VIEW,
     ],
