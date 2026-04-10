@@ -95,7 +95,7 @@ const dialogForm = useForm<App.KitchenSink.Forms.Validation.SpellDiscoveryReques
 					variant="subtle"
 					label="Submit and don't reset"
 					:loading="dialogForm.processing"
-					@click="dialogForm.submitWith({ reset: false })"
+					@click="dialogForm.submit({ reset: false })"
 				/>
 				<u-button type="submit" color="primary" variant="subtle" label="Submit" :loading="dialogForm.processing" />
 			</div>

@@ -1,5 +1,5 @@
 ---
-outline: 'deep'
+outline: "deep"
 ---
 
 # `useForm`
@@ -97,32 +97,18 @@ A reactive variable containing the fields of the form. You can, for instance, us
 
 ```vue
 <template>
-  <input type="text" v-model="form.fields.name" />
+	<input type="text" v-model="form.fields.name" />
 </template>
 ```
 
 ### `submit`
-
-- **Type**: `() => Promise<NavigationResponse>`
-
-A function that submits the form. This function does not accept options because its purpose is to be used directly in a template when the form has been configured during its initialization.
-
-```vue
-<template>
-  <form @submit.prevent="form.submit">
-    <!-- ... -->
-  </form>
-</template>
-```
-
-### `submitWith`
 
 - **Type**: `(options?: HybridRequestOptions) => Promise<NavigationResponse>`
 
 A function that submits the form with the given options. These will override the options defined in the form's initialization.
 
 ```ts
-form.submitWith({ url: '/login' })
+form.submit({ url: '/login' })
 ```
 
 ### `hasErrors`

@@ -1,9 +1,8 @@
 import type { Path, SearchableObject } from '@clickbar/dot-diver'
-import { getByPath } from '@clickbar/dot-diver'
 import type { HybridRequestOptions, PendingHybridRequest, Progress, UrlResolvable } from '@hybridly/core'
 import { router } from '@hybridly/core'
 import { merge } from '@hybridly/utils'
-import { set, unset } from 'es-toolkit/compat'
+import { get, set, unset } from 'es-toolkit/compat'
 import { cloneDeep } from 'es-toolkit/object'
 import { isEqual } from 'es-toolkit/predicate'
 import type { DeepReadonly } from 'vue'
@@ -69,9 +68,7 @@ export interface FormReturn<T extends SearchableObject, P extends Path<T> & stri
 	clearError: (key: P) => void
 	setInitial: (newInitial: Partial<T>) => void
 	hasDirty: (...keys: P[]) => boolean
-	submitWith: (optionsOverrides?: Omit<FormOptions<T>, 'fields' | 'key'>) => Promise<any>
-	submitWithOptions: (optionsOverrides?: Omit<FormOptions<T>, 'fields' | 'key'>) => Promise<any>
-	submit: () => Promise<any>
+	submit: (optionsOverrides?: Omit<FormOptions<T>, 'fields' | 'key'>) => Promise<any>
 	hasErrors: boolean
 	initial: DeepReadonly<T>
 	loaded: DeepReadonly<T>
@@ -293,7 +290,7 @@ export function useForm<
 			return isDirty.value
 		}
 
-		return keys.some((key) => !isEqual(toRaw(getByPath(fields, key)), toRaw(getByPath(initial, key))))
+		return keys.some((key) => !isEqual(toRaw(get(fields, key)), toRaw(get(initial, key))))
 	}
 
 	/**
@@ -343,10 +340,7 @@ export function useForm<
 		clearError,
 		setInitial,
 		hasDirty,
-		submitWith: submit,
-		/** @deprecated Use `submitWith` instead */
-		submitWithOptions: submit,
-		submit: () => submit(),
+		submit,
 		hasErrors: computed(() => Object.values(errors.value ?? {}).length > 0),
 		initial: initial as DeepReadonly<typeof initial>,
 		loaded: loaded as DeepReadonly<typeof loaded>,

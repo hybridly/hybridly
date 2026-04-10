@@ -16,7 +16,7 @@ Since most forms share the same kind of boilerplate code, Hybridly comes with a 
 
 ```vue
 <script setup lang="ts">
-const login = useForm({ // [!code focus:8]
+const login = useForm({
 	method: 'POST',
 	url: route('login'),
 	fields: {
@@ -27,13 +27,13 @@ const login = useForm({ // [!code focus:8]
 </script>
 
 <template>
-	<form @submit.prevent="login.submit">  // [!code focus:14]
+	<form @submit.prevent="login.submit()">
 		<!-- Email -->
-		<input v-model="login.fields.email" type="email"/>
+		<input v-model="login.fields.email" type="email" />
 		<span v-if="login.errors.email" v-text="login.errors.email" />
 
 		<!-- Password -->
-		<input v-model="login.fields.password" type="password"/>
+		<input v-model="login.fields.password" type="password" />
 		<span v-if="login.errors.password" v-text="login.errors.password" />
 
 		<!-- Submit -->
@@ -58,7 +58,7 @@ useForm({
 	method: 'PATCH',
 	fields: {
 		body: '',
-	}
+	},
 })
 ```
 
@@ -68,10 +68,10 @@ Other [visit options](../api/router/utils.md) are also available. Alternatively,
 const edit = useForm({
 	fields: {
 		body: '',
-	}
+	},
 })
 
-edit.submitWith({
+edit.submit({
 	url: route('chirps.update'),
 	method: 'PATCH',
 })
@@ -81,7 +81,7 @@ Read about the [form composable](../api/utils/use-form.md) for more information.
 
 ## Request lifecycle
 
-Sometimes, some custom logic needs to be executed during a request's  lifecycle. The form util has a `hook` property that can be used to catch these events.
+Sometimes, some custom logic needs to be executed during a request's lifecycle. The form util has a `hook` property that can be used to catch these events.
 
 ```ts
 useForm({
@@ -92,7 +92,7 @@ useForm({
 		start: () => console.log('The request has started.'),
 		fail: () => console.log('The request has failed.'),
 		after: () => console.log('The request has finished.'),
-	}
+	},
 })
 ```
 
@@ -113,25 +113,25 @@ useForm({
 	},
 	transform: (fields) => ({
 		...fields,
-		remember: fields.remember ? 'on' : ''
-	})
+		remember: fields.remember ? 'on' : '',
+	}),
 })
 ```
 
 ## Transforming URLs
 
-A convenient way of transforming URLs is provided through the [visit options](../api/router/utils.md). 
+A convenient way of transforming URLs is provided through the [visit options](../api/router/utils.md).
 
 For instance, clearing the query parameters is as simple as passing an empty string to the `search` property:
 
 ```ts
 useForm({
-	url: '/filter?sort=asc',  // [!code focus]
+	url: '/filter?sort=asc', // [!code focus]
 	fields: {
 		// ...
 	},
 	transformUrl: { // [!code focus:3]
-		search: ''
-	}
+		search: '',
+	},
 })
 ```

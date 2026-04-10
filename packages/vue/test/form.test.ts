@@ -1,8 +1,8 @@
-import { beforeEach, test, vi } from 'vitest'
 import { useForm } from '@hybridly/vue'
+import { beforeEach, test, vi } from 'vitest'
 import { nextTick } from 'vue'
-import { delay, fakeRouterContext, mockInvalidUrl, mockSuccessfulUrl } from '../../core/test/utils'
 import { server } from '../../core/test/server'
+import { delay, fakeRouterContext, mockInvalidUrl, mockSuccessfulUrl } from '../../core/test/utils'
 
 beforeEach(async () => {
 	await fakeRouterContext()
@@ -62,8 +62,7 @@ test('it updates failed and successful', async ({ expect }) => {
 	const form = useForm({
 		url: 'http://localhost.test/navigation',
 		timeout: 10,
-		fields: {
-		},
+		fields: {},
 		reset: false,
 	})
 
@@ -73,7 +72,7 @@ test('it updates failed and successful', async ({ expect }) => {
 	expect(form.recentlyFailed).toBe(false)
 	expect(form.processing).toBe(false)
 
-	await form.submitWith({
+	await form.submit({
 		hooks: {
 			start() {
 				expect(form.processing).toBe(true)
@@ -100,7 +99,7 @@ test('it updates failed and successful', async ({ expect }) => {
 
 	server.resetHandlers(mockInvalidUrl('http://localhost.test/navigation', 'post'))
 
-	await form.submitWith({
+	await form.submit({
 		hooks: {
 			before() {
 				expect(form.successful).toBe(false)
@@ -147,7 +146,7 @@ test('it can override all options', async ({ expect }) => {
 	await nextTick()
 
 	// When
-	await form.submitWith({
+	await form.submit({
 		url: () => 'http://localhost.test/navigation',
 		method: 'POST',
 		updateInitials: false,

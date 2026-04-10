@@ -11,7 +11,7 @@ const data = new FormData()
 // ...
 
 router.post(url, {
-	data
+	data,
 })
 ```
 
@@ -20,7 +20,7 @@ router.post(url, {
 When using the form util, a `progress` object is exposed. It contains the current progress `percentage` and the associated `AxiosProgressEvent`.
 
 ```ts
-const form = useForm(/* ... */)
+const form = useForm() /* ... */
 // form.progress?.percentage
 // form.progress?.event
 ```
@@ -34,7 +34,7 @@ const form = useForm<App.Data.UpdateProfileData>({
 	url: '/upload',
 	fields: {
 		first_name: '',
-		profile_picture: undefined
+		profile_picture: undefined,
 	},
 })
 
@@ -47,7 +47,7 @@ function onFileChange(event: Event) {
 </script>
 
 <template>
-	<form @submit.prevent="form.submit">
+	<form @submit.prevent="form.submit()">
 		{{ form.progress?.percentage ?? 0 }}%
 
 		<input v-model="form.fields.first_name" type="text" />
@@ -59,7 +59,7 @@ function onFileChange(event: Event) {
 
 ## Limitations
 
-It is not natively supported by PHP to upload files using `multipart/form-data` and the `PUT`, `PATCH` or `DELETE` methods. 
+It is not natively supported by PHP to upload files using `multipart/form-data` and the `PUT`, `PATCH` or `DELETE` methods.
 
 Fortunately, Laravel supports [method spoofing](https://laravel.com/docs/9.x/routing#form-method-spoofing), which means one can add a `_method` field with `PUT`, `PATCH` or `DELETE` and send the request using `POST`.
 
@@ -72,7 +72,7 @@ const avatar = new File()
 router.post(url, {
 	data: {
 		_method: 'PUT',
-		avatar
-	}
+		avatar,
+	},
 })
 ```

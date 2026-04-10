@@ -1,5 +1,5 @@
 ---
-outline: 'deep'
+outline: "deep"
 ---
 
 # Introduction
@@ -87,7 +87,7 @@ const form = useForm({
 
 <template layout="user-profile">
 	<user-card :user />
-	<form @submit="form.submit">
+	<form @submit="form.submit()">
 		<base-input v-model="form.fields.name" label="Name" />
 		<base-input v-model="form.fields.email" label="Email" type="email" />
 
