@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { RouterLink } from 'hybridly/vue'
 import Card from '~/app/Components/card.vue'
-import { formatTime } from '~/app/utils'
+import InfoText from '~/app/Components/info-text.vue'
+import { formatDateTime } from '~/app/utils'
 
 const UButton = resolveComponent('UButton')
 
@@ -30,8 +31,9 @@ onUnmounted(() => {
 
 <template layout>
 	<!-- playground -->
-	<div class="gap-4 grid grid-cols-2">
-		<card title="Scroll container" class="h-96" preserve-sroll>
+	<div class="items-start gap-4 grid grid-cols-3">
+		<!-- scroll container -->
+		<Card title="Scroll container" class="h-96" preserve-sroll>
 			<template #description>
 				<p>
 					Navigating clears scrolling state by default, but it can be preserved using the
@@ -48,60 +50,64 @@ onUnmounted(() => {
 				>
 					<div class="flex gap-x-4 text-sm">
 						<div class="w-18 text-muted shrink-0">
-							{{ formatTime(item.sent_at) }}
+							{{ formatDateTime(item.sent_at, { withoutDate: true }) }}
 						</div>
 						<div v-text="item.content" class="grow" />
 					</div>
 				</u-scroll-area>
 			</div>
-		</card>
-		<div class="flex flex-col justify-between gap-4">
-			<!-- server state -->
-			<Card title="Server state" description="This state is fetched from the server each time you reload.">
-				{{ time }}
-			</Card>
-			<!-- actions -->
-			<div class="flex flex-col gap-2">
-				<u-button
-					variant="subtle"
-					label="Use router.get()"
-					color="error"
-					@click="router.get(route('kitchen-sink.navigation.preserve-scroll.index'))"
-					class="block"
-				/>
-				<u-button
-					variant="subtle"
-					label="Use router.get() with preserveScroll"
-					color="success"
-					@click="router.get(route('kitchen-sink.navigation.preserve-scroll.index'), { preserveScroll: true })"
-					class="block"
-				/>
-				<u-button
-					variant="subtle"
-					color="success"
-					label="Use router.reload()"
-					@click="router.reload({})"
-					class="block"
-				/>
-				<router-link
-					color="error"
-					variant="subtle"
-					:as="UButton"
-					text="Click on a <RouterLink />"
-					:href="route('kitchen-sink.navigation.preserve-scroll.index')"
-					class="block"
-				/>
-				<router-link
-					variant="subtle"
-					:as="UButton"
-					color="success"
-					preserve-scroll
-					text="Click on a <RouterLink preserve-scroll />"
-					:href="route('kitchen-sink.navigation.preserve-scroll.index')"
-					class="block"
-				/>
+		</Card>
+		<!-- server state -->
+		<Card title="Server state" description="This state is fetched from the server each time you reload."> </Card>
+		<Card
+			title="Requests"
+			description="Use these buttons to navigate and observe how the scroll positions of the container and the page are affected."
+		>
+			<info-text :date="{ timeStyle: 'medium' }" label="Date" :content="time" />
+			<div class="flex flex-col justify-between gap-4">
+				<!-- actions -->
+				<div class="flex flex-col gap-2">
+					<u-button
+						variant="subtle"
+						label="Use router.get()"
+						color="error"
+						@click="router.get(route('kitchen-sink.navigation.preserve-scroll.index'))"
+						class="block"
+					/>
+					<u-button
+						variant="subtle"
+						label="Use router.get() with preserveScroll"
+						color="success"
+						@click="router.get(route('kitchen-sink.navigation.preserve-scroll.index'), { preserveScroll: true })"
+						class="block"
+					/>
+					<u-button
+						variant="subtle"
+						color="success"
+						label="Use router.reload()"
+						@click="router.reload({})"
+						class="block"
+					/>
+					<router-link
+						color="error"
+						variant="subtle"
+						:as="UButton"
+						text="Click on a <RouterLink />"
+						:href="route('kitchen-sink.navigation.preserve-scroll.index')"
+						class="block"
+					/>
+					<router-link
+						variant="subtle"
+						:as="UButton"
+						color="success"
+						preserve-scroll
+						text="Click on a <RouterLink preserve-scroll />"
+						:href="route('kitchen-sink.navigation.preserve-scroll.index')"
+						class="block"
+					/>
+				</div>
 			</div>
-		</div>
+		</Card>
 	</div>
 	<!-- artificial scrolling -->
 	<div class="flex flex-col items-center gap-4 my-50">

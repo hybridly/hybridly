@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { RouterLink } from 'hybridly/vue'
 import Card from '~/app/Components/card.vue'
+import InfoText from '~/app/Components/info-text.vue'
 
 const UButton = resolveComponent('UButton')
 
@@ -19,7 +20,8 @@ const state = reactive({ input, select, slider, number, checkbox, color })
 </script>
 
 <template layout>
-	<div class="gap-4 grid grid-cols-2">
+	<div class="flex items-start gap-4">
+		<!-- local state -->
 		<card title="Local state">
 			<template #description>
 				<p>
@@ -55,12 +57,18 @@ const state = reactive({ input, select, slider, number, checkbox, color })
 			<!-- values -->
 			<pre class="mt-4" v-text="JSON.stringify(state, null, 2)" />
 		</card>
-		<div class="flex flex-col justify-between gap-4">
-			<!-- server state -->
-			<Card title="Server state" description="This state is fetched from the server each time you reload.">
-				{{ time }}
-			</Card>
-			<!-- actions -->
+		<!-- server state -->
+		<Card title="Server state" description="This state is fetched from the server each time you reload.">
+			<info-text :date="{ timeStyle: 'medium' }" label="Date" :content="time" />
+		</Card>
+		<!-- actions -->
+		<Card title="Requests">
+			<template #description>
+				<p>
+					Use these buttons to send different types of requests and observe how state is preserved or not based on the
+					options used.
+				</p>
+			</template>
 			<div class="flex flex-col gap-2">
 				<u-button
 					variant="subtle"
@@ -101,6 +109,6 @@ const state = reactive({ input, select, slider, number, checkbox, color })
 					class="block"
 				/>
 			</div>
-		</div>
+		</Card>
 	</div>
 </template>

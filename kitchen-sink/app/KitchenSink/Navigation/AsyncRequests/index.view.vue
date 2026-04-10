@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { HybridRequestOptions } from 'hybridly'
 import Card from '~/app/Components/card.vue'
+import InfoText from '~/app/Components/info-text.vue'
 
 defineProps<{
 	time: string
@@ -85,7 +86,7 @@ function sendLoggableRequest(mode: 'navigation' | 'async', options: HybridReques
 </script>
 
 <template layout>
-	<div class="gap-4 grid grid-cols-2 grow">
+	<div class="items-start gap-4 grid grid-cols-2 grow">
 		<card title="Request log" class="h-full">
 			<template #description>
 				<p>
@@ -111,12 +112,13 @@ function sendLoggableRequest(mode: 'navigation' | 'async', options: HybridReques
 				</span>
 			</div>
 		</card>
-		<div class="flex flex-col justify-between gap-4">
-			<!-- server state -->
-			<Card title="Server state" description="This state is fetched from the server each time you reload.">
-				{{ time }}
-			</Card>
-			<!-- actions -->
+		<Card title="Requests">
+			<template #description>
+				<p>
+					Use these buttons to send different types of requests and observe how requests behave.
+				</p>
+			</template>
+			<info-text class="mb-4" :date="{ timeStyle: 'medium' }" label="Date" :content="time" />
 			<div class="flex flex-col gap-2">
 				<span class="mt-3 mb-1 text-muted text-sm">Normal behavior</span>
 				<div class="gap-2 grid grid-cols-2">
@@ -204,6 +206,6 @@ function sendLoggableRequest(mode: 'navigation' | 'async', options: HybridReques
 					/>
 				</div>
 			</div>
-		</div>
+		</Card>
 	</div>
 </template>

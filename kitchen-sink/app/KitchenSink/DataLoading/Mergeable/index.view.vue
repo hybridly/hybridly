@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { router } from 'hybridly/vue'
 import Card from '~/app/Components/card.vue'
-import { formatTime } from '~/app/utils'
+import { formatDateTime } from '~/app/utils'
 
 defineProps<{
 	append: App.KitchenSink.DataLoading.Mergeable.Message[]
@@ -40,7 +40,7 @@ useHead({
 								<p v-text="item.content" />
 								<div class="flex justify-between items-center text-muted text-xs">
 									<span v-text="item.id" />
-									<span v-text="formatTime(item.sent_at)" />
+									<span v-text="formatDateTime(item.sent_at)" />
 								</div>
 							</div>
 						</template>
@@ -79,7 +79,7 @@ useHead({
 				>
 					<div class="flex gap-x-4 text-sm">
 						<div class="w-18 text-muted shrink-0">
-							{{ formatTime(item.sent_at) }}
+							{{ formatDateTime(item.sent_at, { timeStyle: 'medium', withoutDate: true }) }}
 						</div>
 						<div v-text="item.content" class="grow" />
 					</div>

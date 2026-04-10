@@ -3,6 +3,7 @@ import { HybridRequestOptions } from 'hybridly'
 import Card from '~/app/Components/card.vue'
 import '@andypf/json-viewer'
 import { match } from '@hybridly/utils'
+import InfoText from '~/app/Components/info-text.vue'
 
 defineProps<{
 	time: string
@@ -233,75 +234,79 @@ const theme = {
 		<div class="flex flex-col gap-4">
 			<!-- server state -->
 			<Card title="Server state" description="This state is fetched from the server each time you reload.">
-				{{ time }}
+				<info-text :date="{ timeStyle: 'medium' }" label="Date" :content="time" />
 			</Card>
 			<!-- actions -->
-			<div class="flex flex-col gap-2">
-				<u-button
-					variant="subtle"
-					label="Successful request"
-					color="success"
-					@click="sendSuccessRequest()"
-					class="block"
-				/>
-				<u-button
-					variant="subtle"
-					label="Successful file upload request"
-					color="success"
-					@click="sendFileUploadRequest('lightweight')"
-					class="block"
-				/>
-				<u-button
-					variant="subtle"
-					label="Successful large file upload request"
-					color="success"
-					@click="sendFileUploadRequest('heavy')"
-					class="block"
-				/>
-				<u-button
-					variant="subtle"
-					label="Aborted via AbortController"
-					color="warning"
-					@click="sendAbortRequest('abort-controller')"
-					class="block"
-				/>
-				<u-button
-					variant="subtle"
-					label="Prevented via before hook"
-					color="warning"
-					@click="sendAbortRequest('before-hook')"
-					class="block"
-				/>
-				<u-button
-					variant="subtle"
-					label="Prevented via data hook"
-					color="warning"
-					@click="sendAbortRequest('data-hook')"
-					class="block"
-				/>
-				<u-button
-					variant="subtle"
-					label="Invalid (eg. HTTP 500)"
-					color="error"
-					@click="sendExceptionRequest()"
-					class="block"
-				/>
-				<u-checkbox
-					class="mt-2"
-					v-model="preventNonHybridModal"
-					label="Prevent exception modal"
-					description="When checked, the exception hook will return false, preventing the default behavior of showing a modal when an exception occurs."
-				/>
-				<u-alert class="mt-4" color="neutral" variant="subtle" :ui="{ description: 'text-muted' }">
-					<template #description>
-						To observe an <span class="text-error">exception</span> event, you can open the <span
-							class="text-highlighted"
-						>DevTools</span> and set the throttling to <span class="text-highlighted">Offline</span> in the <span
-							class="text-highlighted"
-						>Network</span> tab.
-					</template>
-				</u-alert>
-			</div>
+			<Card title="Requests">
+				<template #description>
+					<p>
+						Use these buttons to send different types of requests and observe the lifecycle hooks being triggered in the
+						log.
+					</p>
+					<p class="mt-2">
+						To observe an <span class="text-error">exception</span> event, you can open the
+						<span class="text-highlighted">DevTools</span> and set the throttling to
+						<span class="text-highlighted">Offline</span> in the <span class="text-highlighted">Network</span> tab.
+					</p>
+				</template>
+				<div class="flex flex-col gap-2">
+					<u-button
+						variant="subtle"
+						label="Successful request"
+						color="success"
+						@click="sendSuccessRequest()"
+						class="block"
+					/>
+					<u-button
+						variant="subtle"
+						label="Successful file upload request"
+						color="success"
+						@click="sendFileUploadRequest('lightweight')"
+						class="block"
+					/>
+					<u-button
+						variant="subtle"
+						label="Successful large file upload request"
+						color="success"
+						@click="sendFileUploadRequest('heavy')"
+						class="block"
+					/>
+					<u-button
+						variant="subtle"
+						label="Aborted via AbortController"
+						color="warning"
+						@click="sendAbortRequest('abort-controller')"
+						class="block"
+					/>
+					<u-button
+						variant="subtle"
+						label="Prevented via before hook"
+						color="warning"
+						@click="sendAbortRequest('before-hook')"
+						class="block"
+					/>
+					<u-button
+						variant="subtle"
+						label="Prevented via data hook"
+						color="warning"
+						@click="sendAbortRequest('data-hook')"
+						class="block"
+					/>
+					<u-button
+						variant="subtle"
+						label="Invalid (eg. HTTP 500)"
+						color="error"
+						@click="sendExceptionRequest()"
+						class="block"
+					/>
+					<u-checkbox class="mt-2" v-model="preventNonHybridModal" label="Prevent exception modal">
+						<template #description>
+							When checked, the <span class="text-toned">exception</span> hook will return false, preventing the default
+							behavior of showing a modal when an exception occurs.
+						</template>
+					</u-checkbox>
+				</div>
+			</Card>
 		</div>
 	</div>
 </template>

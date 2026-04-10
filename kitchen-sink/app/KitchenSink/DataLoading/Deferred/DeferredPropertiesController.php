@@ -21,7 +21,7 @@ final class DeferredPropertiesController
         return view('kitchen-sink::data-loading.deferred.index', [
             'instant' => [
                 'This was loaded with the page',
-                sprintf('Requested at at %s', $requested_at->toTimeString()),
+                sprintf('Requested at %s', $requested_at->toTimeString()),
                 sprintf('Sent at %s', CarbonImmutable::now()->toTimeString()),
             ],
             'deferred' => deferred(function () use ($requested_at) {
@@ -29,7 +29,7 @@ final class DeferredPropertiesController
 
                 return [
                     'This property is artificially delayed by 2 seconds.',
-                    sprintf('Requested at at %s', $requested_at->toTimeString()),
+                    sprintf('Requested at %s', $requested_at->toTimeString()),
                     sprintf('Sent at %s', CarbonImmutable::now()->toTimeString()),
                 ];
             }),
@@ -38,7 +38,7 @@ final class DeferredPropertiesController
 
                 return [
                     'This property is artificially delayed by 4 seconds.',
-                    sprintf('Requested at at %s', $requested_at->toTimeString()),
+                    sprintf('Requested at %s', $requested_at->toTimeString()),
                     sprintf('Sent at %s', CarbonImmutable::now()->toTimeString()),
                 ];
             }, group: 'named'),

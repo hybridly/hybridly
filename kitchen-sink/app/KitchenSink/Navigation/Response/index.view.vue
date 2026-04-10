@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { HybridRequestOptions } from 'hybridly'
 import Card from '~/app/Components/card.vue'
+import InfoList from '~/app/Components/info-list.vue'
+import InfoText from '~/app/Components/info-text.vue'
 
 const props = defineProps<{
 	time: string
@@ -53,7 +55,7 @@ function sendPropertiesUpdateRequest(method: 'POST' | 'PUT') {
 </script>
 
 <template layout>
-	<div class="gap-4 grid grid-cols-2">
+	<div class="flex items-start gap-4">
 		<card
 			title="Response actions"
 			description="Use these actions to test the different response types supported by Hybridly."
@@ -117,25 +119,13 @@ function sendPropertiesUpdateRequest(method: 'POST' | 'PUT') {
 				/>
 			</div>
 		</card>
-		<div class="flex flex-col justify-between gap-4">
-			<card title="Server state" description="This state is fetched from the server each time you reload.">
-				<p>
-					<strong>Time:</strong>
-					{{ props.time }}
-				</p>
-				<p>
-					<strong>Update count:</strong>
-					{{ props.propertiesUpdateCount }}
-				</p>
-				<p>
-					<strong>Last method:</strong>
-					{{ props.propertiesUpdateMethod ?? 'Not updated yet' }}
-				</p>
-				<p>
-					<strong>Last updated at:</strong>
-					{{ props.propertiesUpdatedAt ?? 'Not updated yet' }}
-				</p>
-			</card>
-		</div>
+		<card title="Server state" description="This state is fetched from the server each time you reload.">
+			<info-list>
+				<info-text date label="Time" :content="time" />
+				<info-text label="Update count" :content="propertiesUpdateCount" />
+				<info-text label="Last method" :content="propertiesUpdateMethod ?? 'Not updated yet'" />
+				<info-text label="Last updated at" :content="propertiesUpdatedAt ?? 'Not updated yet'" />
+			</info-list>
+		</card>
 	</div>
 </template>

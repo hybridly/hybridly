@@ -81,7 +81,7 @@ final readonly class ShareNavigation
                     label: 'Responses',
                     icon: 'lucide:reply',
                     href: action(ResponsesController::class, absolute: false),
-                    route_patterns: ['kitchen-sink.response*'],
+                    route_patterns: ['kitchen-sink.navigation.response*'],
                 ),
                 new NavigationItem(
                     label: 'Preserve state',
