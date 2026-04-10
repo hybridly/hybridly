@@ -14,7 +14,7 @@
 	"require": {
 		"php": "^8.5",
 		"hybridly/laravel": "*",
-		"innocenzi/discovery-for-laravel": "^0.3.0",
+		"innocenzi/discovery-for-laravel": "^0.3.1",
 		"laravel/framework": "^13.0",
 		"laravel/tinker": "^3.0"
 	},

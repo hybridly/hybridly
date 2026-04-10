@@ -11,6 +11,7 @@ use App\KitchenSink\Navigation\AsyncRequests\AsyncRequestsController;
 use App\KitchenSink\Navigation\Lifecycle\LifecycleController;
 use App\KitchenSink\Navigation\PreserveScroll\PreserveScrollController;
 use App\KitchenSink\Navigation\PreserveState\PreserveStateController;
+use App\KitchenSink\Navigation\Response\ResponsesController;
 use App\KitchenSink\Navigation\ViewTransitions\ViewTransitionsController;
 use App\ShowIndexController;
 use Closure;
@@ -75,6 +76,12 @@ final readonly class ShareNavigation
                     icon: 'lucide:repeat',
                     href: action(LifecycleController::class, absolute: false),
                     route_patterns: ['kitchen-sink.navigation.lifecycle*'],
+                ),
+                new NavigationItem(
+                    label: 'Responses',
+                    icon: 'lucide:reply',
+                    href: action(ResponsesController::class, absolute: false),
+                    route_patterns: ['kitchen-sink.response*'],
                 ),
                 new NavigationItem(
                     label: 'Preserve state',

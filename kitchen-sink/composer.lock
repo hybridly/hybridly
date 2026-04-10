@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c8c582131b1f049031e795907a3aba22",
+    "content-hash": "7078bd81fadac8e886dbec2611bf759e",
     "packages": [
         {
             "name": "brick/math",
@@ -1129,16 +1129,16 @@
         },
         {
             "name": "innocenzi/discovery-for-laravel",
-            "version": "v0.3.0",
+            "version": "v0.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/innocenzi/discovery-for-laravel.git",
-                "reference": "01f7ccf31ec9096441bf54864ac51b783df48e53"
+                "reference": "418e37a4ff60bb411fc55e16168021214ed1ea42"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/innocenzi/discovery-for-laravel/zipball/01f7ccf31ec9096441bf54864ac51b783df48e53",
-                "reference": "01f7ccf31ec9096441bf54864ac51b783df48e53",
+                "url": "https://api.github.com/repos/innocenzi/discovery-for-laravel/zipball/418e37a4ff60bb411fc55e16168021214ed1ea42",
+                "reference": "418e37a4ff60bb411fc55e16168021214ed1ea42",
                 "shasum": ""
             },
             "require": {
@@ -1148,7 +1148,6 @@
             },
             "require-dev": {
                 "carthage-software/mago": "^1.17",
-                "hybridly/laravel": "0.10.0-beta.14",
                 "orchestra/testbench": "^11.0",
                 "phpunit/phpunit": "^12.5.15"
             },
@@ -1178,7 +1177,7 @@
             "description": "Discover code anywhere in your Laravel codebase without relying on path conventions",
             "support": {
                 "issues": "https://github.com/innocenzi/discovery-for-laravel/issues",
-                "source": "https://github.com/innocenzi/discovery-for-laravel/tree/v0.3.0"
+                "source": "https://github.com/innocenzi/discovery-for-laravel/tree/v0.3.1"
             },
             "funding": [
                 {
@@ -1186,7 +1185,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-04-01T19:57:52+00:00"
+            "time": "2026-04-10T19:01:21+00:00"
         },
         {
             "name": "laravel/framework",
@@ -7320,16 +7319,16 @@
         },
         {
             "name": "phpdocumentor/reflection",
-            "version": "6.4.4",
+            "version": "6.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpDocumentor/Reflection.git",
-                "reference": "5e5db15b34e6eae755cb97beaa7fe076ae9e8d4c"
+                "reference": "70ad4ae38901a1c71623d29192983274671e9113"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpDocumentor/Reflection/zipball/5e5db15b34e6eae755cb97beaa7fe076ae9e8d4c",
-                "reference": "5e5db15b34e6eae755cb97beaa7fe076ae9e8d4c",
+                "url": "https://api.github.com/repos/phpDocumentor/Reflection/zipball/70ad4ae38901a1c71623d29192983274671e9113",
+                "reference": "70ad4ae38901a1c71623d29192983274671e9113",
                 "shasum": ""
             },
             "require": {
@@ -7386,9 +7385,9 @@
             ],
             "support": {
                 "issues": "https://github.com/phpDocumentor/Reflection/issues",
-                "source": "https://github.com/phpDocumentor/Reflection/tree/6.4.4"
+                "source": "https://github.com/phpDocumentor/Reflection/tree/6.5.0"
             },
-            "time": "2025-11-25T21:21:18+00:00"
+            "time": "2026-04-10T12:00:48+00:00"
         },
         {
             "name": "phpdocumentor/reflection-common",
