@@ -76,29 +76,26 @@ function unregisterAsyncRequest(request: PendingHybridRequest): void {
 	}
 }
 
-function processRequest(request: PendingHybridRequest, onFinally: () => void): Promise<void> {
+async function processRequest(request: PendingHybridRequest, onFinally: () => void): Promise<void> {
 	debug.queue('Processing request', request)
 
-	return sendHybridRequest(request)
-		.then((response) => {
-			enqueueResponse({
-				request,
-				response,
-			})
+	try {
+		enqueueResponse({
+			request,
+			response: await sendHybridRequest(request),
 		})
-		.catch((error: unknown) => {
-			if (!(error instanceof Error)) {
-				error = new Error('Unknown error during request processing.')
-			}
+	} catch (error) {
+		if (!(error instanceof Error)) {
+			error = new Error('Unknown error during request processing.')
+		}
 
-			handleTransportError(request, error as Error)
-		})
-		.finally(async () => {
-			request.completed = true
-			debug.router('Ended navigation.', request)
-			await runHooks('after', request.options.hooks, request, getRouterContext())
-			onFinally()
-		})
+		await handleTransportError(request, error as Error)
+	} finally {
+		request.completed = true
+		debug.router('Ended navigation.', request)
+		await runHooks('after', request.options.hooks, request, getRouterContext())
+		onFinally()
+	}
 }
 
 async function handleTransportError(request: PendingHybridRequest, error: Error): Promise<void> {
