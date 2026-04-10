@@ -7,7 +7,7 @@ use Spatie\TypeScriptTransformer\Structures\TransformedType;
 use Spatie\TypeScriptTransformer\TypeScriptTransformer;
 use Spatie\TypeScriptTransformer\TypeScriptTransformerConfig;
 
-class GenerateGlobalTypesCommand extends Command
+final class GenerateGlobalTypesCommand extends Command
 {
     protected const PHP_TYPES_PATH = '.hybridly/php-types.d.ts';
 
