@@ -27,7 +27,6 @@ export const RouterLink: DefineComponent<RouterLinkProps> = defineComponent({
 		return (props: typeof _) => {
 			let data = props.data ?? {}
 			const mode = props.mode
-			const preloads = props.preload ?? false
 			const preserveScroll = props.preserveScroll
 			const preserveState = props.preserveState
 			const url = makeUrl(props.href ?? '')
@@ -54,47 +53,10 @@ export const RouterLink: DefineComponent<RouterLinkProps> = defineComponent({
 				)
 			}
 
-			function performPreload(type: 'hover' | 'mount') {
-				if (!preloads) {
-					return
-				}
-
-				if (props.external) {
-					return
-				}
-
-				if (method !== 'GET') {
-					return
-				}
-
-				if (type !== 'mount' && props.disabled) {
-					return
-				}
-
-				if (type === 'hover' && preloads === 'mount') {
-					return
-				}
-
-				if (type === 'mount' && preloads !== 'mount') {
-					// eslint-disable-next-line no-useless-return
-					return
-				}
-
-				// router.preload(url, {
-				// 	data,
-				// 	preserveScroll,
-				// 	preserveState,
-				// 	...props.options,
-				// })
-			}
-
-			performPreload('mount')
-
 			return h(props.as as any, {
 				...attrs,
 				...as === 'a' ? { href: url } : {},
 				...props.disabled ? { disabled: props.disabled } : {},
-				onMouseenter: () => performPreload('hover'),
 				onAuxclick: (event: PointerEvent) => {
 					if (props.disabled) {
 						event.preventDefault()
@@ -123,7 +85,8 @@ export const RouterLink: DefineComponent<RouterLinkProps> = defineComponent({
 						data,
 						method,
 						mode,
-						preserveState: (method !== 'GET'),
+						preserveState: preserveState ?? method !== 'GET',
+						preserveScroll,
 						...props.options,
 					})
 				},

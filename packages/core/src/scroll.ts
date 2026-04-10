@@ -34,10 +34,12 @@ export function getScrollRegions(): Element[] {
  */
 export function resetScrollPositions(): void {
 	debug.scroll('Resetting scroll positions.')
-	getScrollRegions().forEach((element) => element.scrollTo({
-		top: 0,
-		left: 0,
-	}))
+	getScrollRegions().forEach((element) =>
+		element.scrollTo({
+			top: 0,
+			left: 0,
+		})
+	)
 
 	saveScrollPositions()
 
@@ -51,6 +53,8 @@ export function resetScrollPositions(): void {
 
 /** Restores the scroll positions stored in the context. */
 export async function restoreScrollPositions(): Promise<void> {
+	debug.scroll('Restoring scroll positions.')
+
 	const context = getRouterContext()
 	const regions = getScrollRegions()
 
@@ -61,9 +65,11 @@ export async function restoreScrollPositions(): Promise<void> {
 
 	context.adapter.executeOnMounted(() => {
 		debug.scroll(`Restoring ${regions.length}/${context.scrollRegions.length} region(s).`)
-		regions.forEach((el: Element, i) => el.scrollTo({
-			top: context.scrollRegions.at(i)?.top ?? el.scrollTop,
-			left: context.scrollRegions.at(i)?.top ?? el.scrollLeft,
-		}))
+		regions.forEach((el: Element, i) =>
+			el.scrollTo({
+				top: context.scrollRegions.at(i)?.top ?? el.scrollTop,
+				left: context.scrollRegions.at(i)?.top ?? el.scrollLeft,
+			})
+		)
 	})
 }

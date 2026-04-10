@@ -119,7 +119,7 @@ export async function navigate(options: InternalNavigationOptions) {
 		onMounted: (hookOptions) => runHooks('mounted', {}, { ...options, ...hookOptions }, context),
 	})
 
-	if (options.type === 'back-forward') {
+	if (options.type === 'back-forward' || shouldPreserveScroll) {
 		restoreScrollPositions()
 	} else if (!shouldPreserveScroll) {
 		resetScrollPositions()
