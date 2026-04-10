@@ -102,7 +102,6 @@ function processRequest(request: PendingHybridRequest, onFinally: () => void): P
 
 async function handleTransportError(request: PendingHybridRequest, error: Error | AxiosError): Promise<void> {
 	const context = getRouterContext()
-	const response = error instanceof AxiosError ? error.response : undefined
 
 	await match(error.constructor.name, {
 		NavigationCancelledError: async () => {
@@ -112,16 +111,6 @@ async function handleTransportError(request: PendingHybridRequest, error: Error 
 		AbortError: async () => {
 			debug.router('The request was aborted.', error)
 			await runHooks('abort', request.options.hooks, request, context)
-		},
-		NotAHybridResponseError: async () => {
-			debug.router('The response was not hybrid.')
-			console.error(error)
-
-			await runHooks('invalid', request.options.hooks, request, response!, context)
-
-			if (context.responseErrorModals) {
-				showResponseErrorModal(response!.data)
-			}
 		},
 		default: async () => {
 			if (error?.name === 'CanceledError') {

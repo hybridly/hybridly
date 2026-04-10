@@ -105,7 +105,13 @@ export async function performHybridNavigation(options: HybridRequestOptions): Pr
 	// there was no user-specified handler returning "false".
 	if (!await runHooks('before', options.hooks, request, context)) {
 		debug.router('"before" event returned false, aborting the navigation.')
-		throw new NavigationCancelledError('The navigation was cancelled by the "before" event.')
+
+		return {
+			error: {
+				type: 'NavigationCancelledError',
+				actual: new NavigationCancelledError('The navigation was cancelled by the "before" event.'),
+			},
+		}
 	}
 
 	await runHooks('start', options.hooks, request, context)

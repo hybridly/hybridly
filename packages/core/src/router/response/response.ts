@@ -1,4 +1,4 @@
-import { debug, getByPath, merge } from '@hybridly/utils'
+import { debug, getByPath, merge, showResponseErrorModal } from '@hybridly/utils'
 import type { AxiosResponse } from 'axios'
 import { get, set, uniqBy } from 'es-toolkit/compat'
 import { EXTERNAL_NAVIGATION_HEADER, HYBRIDLY_HEADER } from '../../constants'
@@ -59,7 +59,16 @@ export async function handleHybridRequestResponse(requestResponse: HybridRequest
 	// the protocole header.
 	// In such cases, we want to throw to handler it later.
 	if (!isHybridResponse(response)) {
-		throw new NotAHybridResponseError(response)
+		debug.router('The response was not hybrid.')
+		console.warn('Hybridly received an invalid response.', response)
+
+		const prevented = !await runHooks('invalid', request.options.hooks, request, response!, context)
+
+		if (context.responseErrorModals && !prevented) {
+			showResponseErrorModal(response!.data)
+		}
+
+		return { response }
 	}
 
 	// At this point, we know the response respects the hybridly protocol.
