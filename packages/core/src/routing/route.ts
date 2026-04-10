@@ -1,6 +1,6 @@
-import qs from 'qs'
 import { getInternalRouterContext } from '../context'
 import { MissingRouteParameter, RouteNotFound, RoutingNotInitialized } from '../errors'
+import { stringifyQueryString } from '../query'
 import type { UrlTransformable } from '../url'
 import { makeUrl } from '../url'
 import type { RouteDefinition, RouteName, RouteParameters, RoutingConfiguration } from './types'
@@ -207,8 +207,7 @@ function getRouteTransformable(routeName: string, routeParameters?: any, shouldT
 	return {
 		...domain && { hostname: domain },
 		pathname: path,
-		search: qs.stringify(remaining, {
-			encodeValuesOnly: true,
+		search: stringifyQueryString(remaining, {
 			arrayFormat: 'indices',
 			addQueryPrefix: true,
 		}),

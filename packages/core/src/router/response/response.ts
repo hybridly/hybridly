@@ -1,10 +1,10 @@
 import { debug, getByPath, merge, showResponseErrorModal } from '@hybridly/utils'
-import type { AxiosResponse } from 'axios'
 import { get, set, uniqBy } from 'es-toolkit/compat'
 import { EXTERNAL_NAVIGATION_HEADER, HYBRIDLY_HEADER } from '../../constants'
 import { getInternalRouterContext } from '../../context'
 import { handleDownloadResponse, isDownloadResponse } from '../../download'
-import { NotAHybridResponseError } from '../../errors'
+import { InvalidResponseError } from '../../errors'
+import type { HttpResponse } from '../../http'
 import { runHooks } from '../../plugins'
 import { saveScrollPositions } from '../../scroll'
 import { fillHash, sameHashes, sameUrls } from '../../url'
@@ -15,12 +15,10 @@ import type { HybridRequestResponse } from './response-manager'
 
 // TODO: errors in a dedicated property
 
-export async function handleHybridRequestResponse(requestResponse: HybridRequestResponse): Promise<NavigationResponse> {
-	debug.router('Handling response', requestResponse)
+export async function handleHybridRequestResponse({ request, response }: HybridRequestResponse): Promise<NavigationResponse> {
+	debug.router('Handling response', response)
 	const context = getInternalRouterContext()
-	const request = requestResponse.request
-	const response = requestResponse.response
-	const options = requestResponse.request.options
+	const options = request.options
 
 	// Before making the navigation, we need to make sure the scroll positions are
 	// saved, so we can restore them later.
@@ -40,7 +38,7 @@ export async function handleHybridRequestResponse(requestResponse: HybridRequest
 	if (isExternalResponse(response)) {
 		debug.router('The response is explicitely external.')
 		await performExternalNavigation({
-			url: fillHash(request.url, response.headers[EXTERNAL_NAVIGATION_HEADER]!),
+			url: fillHash(request.url, response.headers.get(EXTERNAL_NAVIGATION_HEADER)!),
 			preserveScroll: options.preserveScroll === true,
 			target: 'current',
 		})
@@ -62,10 +60,15 @@ export async function handleHybridRequestResponse(requestResponse: HybridRequest
 		debug.router('The response was not hybrid.')
 		console.warn('Hybridly received an invalid response.', response)
 
+		await runHooks('fail', request.options.hooks, new InvalidResponseError(), request, context)
 		const prevented = !await runHooks('invalid', request.options.hooks, request, response!, context)
 
 		if (context.responseErrorModals && !prevented) {
-			showResponseErrorModal(response!.data)
+			showResponseErrorModal(
+				typeof response!.data === 'string'
+					? response.data
+					: JSON.stringify(response!.data, null, 2),
+			)
 		}
 
 		return { response }
@@ -125,15 +128,15 @@ export async function handleHybridRequestResponse(requestResponse: HybridRequest
 		debug.router('The request returned validation errors.', errors)
 		await runHooks('error', options.hooks, request, errors, context)
 	} else {
-		await runHooks('success', options.hooks, payload, request, context)
+		await runHooks('success', options.hooks, payload, request, response, context)
 	}
 
 	return { response }
 }
 
 /** Checks if the response contains a hybrid header. */
-export function isHybridResponse(response: AxiosResponse): boolean {
-	return !!response?.headers[HYBRIDLY_HEADER]
+export function isHybridResponse(response: HttpResponse): boolean {
+	return response.headers.has(HYBRIDLY_HEADER)
 }
 
 function isPartial(options: HybridRequestOptions) {

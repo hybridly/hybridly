@@ -1,7 +1,6 @@
-import type { DynamicConfiguration, Plugin, RouterContext, RouterContextOptions } from '@hybridly/core'
+import type { DynamicConfiguration, HttpClient, Plugin, RouterContext, RouterContextOptions } from '@hybridly/core'
 import { createRouter } from '@hybridly/core'
 import { debug, random, showViewComponentErrorModal } from '@hybridly/utils'
-import type { Axios } from 'axios'
 import type { App, DefineComponent, Plugin as VuePlugin } from 'vue'
 import { createApp, h } from 'vue'
 import { wrapper } from './components/wrapper'
@@ -28,7 +27,7 @@ export async function initializeHybridly(options: InitializeOptions = {}) {
 
 	state.setContext(
 		await createRouter({
-			axios: resolved.axios,
+			http: resolved.http,
 			plugins: resolved.plugins,
 			serializer: resolved.serializer,
 			responseErrorModals: resolved.responseErrorModals ?? process.env.NODE_ENV === 'development',
@@ -203,8 +202,8 @@ export interface InitializeOptions {
 	setup?: (options: SetupArguments) => any
 	/** List of Hybridly plugins. */
 	plugins?: Plugin[]
-	/** Custom Axios instance. */
-	axios?: Axios
+	/** Custom HTTP client instance. */
+	http?: HttpClient
 	/**
 	 * Enables the View Transition API, if supported.
 	 * @see https://developer.mozilla.org/en-US/docs/Web/API/ViewTransition

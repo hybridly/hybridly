@@ -98,22 +98,17 @@ initializeHybridly({ layout: () => UApp })
 initializeHybridly({ layout: [UApp, CustomLayout] })
 ```
 
-## `axios`
+## `http`
 
-- **Type**: `Axios`
+- **Type**: `HttpClient`
 
-Defines a custom Axios instance that will replace the one Hybridly would internally use otherwise.
+Defines a custom HTTP client instance that will replace the one Hybridly would internally use otherwise.
 
 ```ts
-import axios from 'axios'
-import { initializeHybridly } from 'virtual:hybridly/setup'
+import { createXhrHttpClient, initializeHybridly } from 'hybridly'
 
 initializeHybridly({
-	axios: axios.create({ // [!code focus:5]
-		headers: {
-			'X-Custom-Header': 'value',
-		},
-	}),
+	http: createXhrHttpClient(), // [!code focus]
 })
 ```
 

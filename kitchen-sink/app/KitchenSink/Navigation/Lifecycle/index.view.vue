@@ -50,11 +50,15 @@ function sendSuccessRequest() {
 	sendLifecycleRequest()
 }
 
-function sendFileUploadRequest() {
+function sendFileUploadRequest(type: 'lightweight' | 'heavy') {
 	sendLifecycleRequest({
 		method: 'POST',
 		data: {
-			file: new File(['Hello, world!'], 'hello.txt', { type: 'text/plain' }),
+			file: type === 'lightweight'
+				? new File(['Hello, world!'], 'hello.txt', { type: 'text/plain' })
+				: new File([new Blob(['a'.repeat(100 * 1024 * 1024)], { type: 'text/plain' })], 'heavy.txt', {
+					type: 'text/plain',
+				}),
 		},
 	})
 }
@@ -129,10 +133,10 @@ function sendLifecycleRequest(options: HybridRequestOptions = {}) {
 					serialized: { errors, request },
 				})
 			},
-			fail(request) {
+			fail(error, request) {
 				hooks.value?.push({
 					type: 'fail',
-					serialized: { request },
+					serialized: { error, request },
 				})
 			},
 			exception(error, request) {
@@ -141,7 +145,7 @@ function sendLifecycleRequest(options: HybridRequestOptions = {}) {
 					serialized: { error, request },
 				})
 			},
-			progress(progress, request, context) {
+			progress(progress, request) {
 				hooks.value?.push({
 					type: 'progress',
 					serialized: { progress, request },
@@ -153,10 +157,10 @@ function sendLifecycleRequest(options: HybridRequestOptions = {}) {
 					serialized: { request },
 				})
 			},
-			success(payload, request) {
+			success(payload, request, response) {
 				hooks.value?.push({
 					type: 'success',
-					serialized: { payload, request },
+					serialized: { payload, request, response },
 				})
 			},
 			abort(request) {
@@ -244,7 +248,14 @@ const theme = {
 					variant="subtle"
 					label="Successful file upload request"
 					color="success"
-					@click="sendFileUploadRequest()"
+					@click="sendFileUploadRequest('lightweight')"
+					class="block"
+				/>
+				<u-button
+					variant="subtle"
+					label="Successful large file upload request"
+					color="success"
+					@click="sendFileUploadRequest('heavy')"
 					class="block"
 				/>
 				<u-button

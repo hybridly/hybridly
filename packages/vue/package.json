@@ -51,13 +51,11 @@
 		"@hybridly/utils": "workspace:*",
 		"@vue/devtools-api": "catalog:",
 		"defu": "catalog:",
-		"nprogress": "catalog:",
-		"qs": "catalog:"
+		"nprogress": "catalog:"
 	},
 	"devDependencies": {
 		"@types/nprogress": "catalog:",
 		"@vue/test-utils": "catalog:",
-		"axios": "catalog:",
 		"vue": "catalog:"
 	}
 }

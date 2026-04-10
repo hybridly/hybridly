@@ -11,7 +11,7 @@ import { makeUrl } from '../url'
 import { cancelNavigationRequest } from './request/request-manager'
 import { navigate } from './view'
 
-type SerializedContext = Omit<InternalRouterContext, 'adapter' | 'serializer' | 'plugins' | 'hooks' | 'axios' | 'routes'>
+type SerializedContext = Omit<InternalRouterContext, 'adapter' | 'serializer' | 'plugins' | 'hooks' | 'http' | 'routes'>
 
 /** Puts the given context into the history state. */
 export function setHistoryState(options: HistoryOptions = {}) {

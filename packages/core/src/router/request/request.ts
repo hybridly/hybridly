@@ -1,5 +1,4 @@
-import { debug, hasFiles, match, mergeObject, objectToFormData, random, showResponseErrorModal, wrap } from '@hybridly/utils'
-import type { AxiosProgressEvent, AxiosResponse } from 'axios'
+import { debug, hasFiles, mergeObject, objectToFormData, random, wrap } from '@hybridly/utils'
 import {
 	DIALOG_KEY_HEADER,
 	DIALOG_REDIRECT_HEADER,
@@ -13,6 +12,7 @@ import {
 } from '../../constants'
 import { getInternalRouterContext, getRouterContext } from '../../context'
 import { NavigationCancelledError } from '../../errors'
+import type { HttpResponse, HttpUploadProgressEvent } from '../../http'
 import { runHooks } from '../../plugins'
 import { makeUrl } from '../../url'
 import { createPromiseWithResolvers } from '../../utils'
@@ -43,10 +43,10 @@ export function createPendingHybridRequest(options: HybridRequestOptions): Pendi
 	} satisfies PendingHybridRequest
 }
 
-export async function sendHybridRequest(request: PendingHybridRequest): Promise<AxiosResponse> {
+export async function sendHybridRequest(request: PendingHybridRequest): Promise<HttpResponse> {
 	const context = getInternalRouterContext()
 
-	return await context.axios.request({
+	return await context.http.request({
 		url: request.url.toString(),
 		method: request.options.method,
 		data: request.options.method === 'GET' ? {} : request.options.data,
@@ -64,23 +64,12 @@ export async function sendHybridRequest(request: PendingHybridRequest): Promise<
 			}),
 			...mergeObject(request.options.errorBag, { [ERROR_BAG_HEADER]: request.options.errorBag }),
 			...mergeObject(context.version, { [VERSION_HEADER]: context.version }),
-			[HYBRIDLY_HEADER]: true,
+			[HYBRIDLY_HEADER]: 'true',
 			'X-Requested-With': 'XMLHttpRequest',
 			'Accept': 'text/html, application/xhtml+xml',
 		},
-		responseType: 'arraybuffer',
-		validateStatus: () => true,
-		onUploadProgress: async (event: AxiosProgressEvent) => {
-			await runHooks(
-				'progress',
-				request.options.hooks,
-				{
-					event,
-					percentage: Math.round(event.loaded / (event.total ?? 0) * 100),
-				},
-				request,
-				context,
-			)
+		onUploadProgress: async (progress: HttpUploadProgressEvent) => {
+			await runHooks('progress', request.options.hooks, progress, request, context)
 		},
 	})
 }
@@ -107,15 +96,12 @@ export async function performHybridNavigation(options: HybridRequestOptions): Pr
 		debug.router('"before" event returned false, aborting the navigation.')
 
 		return {
-			error: {
-				type: 'NavigationCancelledError',
-				actual: new NavigationCancelledError('The navigation was cancelled by the "before" event.'),
-			},
+			error: new NavigationCancelledError('The navigation was cancelled by the "before" event.'),
 		}
 	}
 
 	await runHooks('start', options.hooks, request, context)
-	debug.router('Making request with axios.')
+	debug.router('Making request with the configured HTTP client.')
 
 	return await performHybridRequest(request)
 }

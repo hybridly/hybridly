@@ -12,6 +12,9 @@ export type {
 	Router,
 } from './router/types'
 
+export { createXhrHttpClient, isHttpAbortError, isHttpError } from './http'
+export type { HttpClient, HttpErrorCode, HttpErrorKind, HttpRequest, HttpResponse, HttpUploadProgressEvent } from './http'
+
 export { getRouterContext } from './context'
 export type { RouterContext, RouterContextOptions } from './context'
 
@@ -20,6 +23,9 @@ export type { Plugin } from './plugins'
 
 export { makeUrl, sameUrls } from './url'
 export type { UrlResolvable } from './url'
+
+export { parseQueryString, stringifyQueryString } from './query'
+export type { QueryArrayFormat, StringifyQueryOptions } from './query'
 
 export { can } from './authorization'
 export type { Authorizable } from './authorization'

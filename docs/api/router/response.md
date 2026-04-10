@@ -1,37 +1,22 @@
-
 # Router response
 
 Router utils that perform a hybrid request return a promise with an object described below. Note that navigations are asynchronous and awaitable.
 
 ```ts
 interface NavigationResponse {
-	response?: AxiosResponse
-	error?: {
-		type: string
-		actual: Error
-	}
+	response?: HttpResponse
+	error?: Error
 }
 ```
 
 ## `response`
 
-- Type: `AxiosResponse`
+- Type: `HttpResponse`
 
-Contains the object returned by Axios.
+Contains the object returned by Hybridly's configured HTTP client.
 
 ## `error`
 
-- Type: `{ type: string, actual: Error }`
+- Type: `Error`
 
-Contains the details of the navigation errors, if any.
-
-### `type`
-
-The error type is the name of the constructor of the actual error instance:
-- `NavigationCancelledError`
-- `AbortError`
-- `NotAHybridResponseError`
-
-### `actual`
-
-The actual error instance.
+Contains the error, if there was one. Hybridly exports `isHybridlyError`, `isNavigationCancelledError`, `isHttpAbortError` and `isHttpError` type guards to help you determine the type of error.

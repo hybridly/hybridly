@@ -1,11 +1,11 @@
 import { debug } from '@hybridly/utils'
-import type { AxiosResponse } from 'axios'
+import type { HttpResponse } from '../../http'
 import type { PendingHybridRequest } from '../types'
 import { handleHybridRequestResponse } from './response'
 
 export interface HybridRequestResponse {
 	request: PendingHybridRequest
-	response: AxiosResponse
+	response: HttpResponse
 }
 
 const queue: HybridRequestResponse[] = []

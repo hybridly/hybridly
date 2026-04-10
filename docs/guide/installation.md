@@ -79,23 +79,23 @@ This section is a summary of what's needed client-side, so that you can convenie
 :::code-group
 
 ```bash [ni]
-ni hybridly vue axios -D
+ni hybridly vue -D
 ```
 
 ```bash [pnpm]
-pnpm i hybridly vue axios -D
+pnpm i hybridly vue -D
 ```
 
 ```bash [bun]
-bun i hybridly vue axios -D
+bun i hybridly vue -D
 ```
 
 ```bash [npm]
-npm i hybridly vue axios -D
+npm i hybridly vue -D
 ```
 
 ```bash [yarn]
-yarn add hybridly vue axios -D
+yarn add hybridly vue -D
 ```
 
 :::
@@ -200,10 +200,10 @@ Proceed to delete `resources/views`, and create `resources/application/root.blad
 
 The next step is to install and register the Vite plugin. It is, along with the Vue adapter, distributed in the `hybridly` package on npm.
 
-We also need to install Vue and the latest version of Axios.
+We also need to install Vue.
 
 ```bash
-npm install hybridly vue axios -D
+npm install hybridly vue -D
 ```
 
 At this point, your `package.json` should look like the following:
@@ -216,7 +216,6 @@ At this point, your `package.json` should look like the following:
 		"build": "vite build"
 	},
 	"devDependencies": {
-		"axios": "^1.7.2",
 		"hybridly": "0.7.3",
 		"lodash": "^4.17.19",
 		"postcss": "^8.1.14",

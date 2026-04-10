@@ -1,8 +1,7 @@
 import type { HybridRequestOptions, Method, RequestMode } from '@hybridly/core'
-import { makeUrl, router } from '@hybridly/core'
+import { makeUrl, parseQueryString, router, stringifyQueryString } from '@hybridly/core'
 import type { RequestData } from '@hybridly/utils'
 import { debug, merge } from '@hybridly/utils'
-import qs from 'qs'
 import type { DefineComponent, PropType } from 'vue'
 import { defineComponent, h } from 'vue'
 
@@ -39,8 +38,7 @@ export const RouterLink: DefineComponent<RouterLinkProps> = defineComponent({
 			// query string.
 			if (method === 'GET') {
 				debug.adapter('vue', 'Moving data object to URL parameters.')
-				url.search = qs.stringify(merge(data as any, qs.parse(url.search, { ignoreQueryPrefix: true })), {
-					encodeValuesOnly: true,
+				url.search = stringifyQueryString(merge(data as any, parseQueryString(url.search)), {
 					arrayFormat: 'indices',
 				})
 				data = {}

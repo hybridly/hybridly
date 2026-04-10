@@ -1,8 +1,8 @@
-import type { AxiosResponse } from 'axios'
-import qs from 'qs'
 import { debug } from '@hybridly/utils'
 import { EXTERNAL_NAVIGATION_HEADER, STORAGE_EXTERNAL_KEY } from '../../constants'
 import { getRouterContext, setContext } from '../../context'
+import type { HttpResponse } from '../../http'
+import { stringifyQueryString } from '../../query'
 import type { UrlResolvable } from '../../url'
 import { makeUrl, sameUrls } from '../../url'
 import type { HybridRequestOptions } from '../types'
@@ -41,16 +41,15 @@ export async function performExternalNavigation(options: ExternalNavigationOptio
 /** Navigates to the given URL without the hybrid protocol. */
 export function navigateToExternalUrl(url: UrlResolvable, data?: HybridRequestOptions['data']) {
 	document.location.href = makeUrl(url, {
-		search: qs.stringify(data, {
-			encodeValuesOnly: true,
+		search: stringifyQueryString(data, {
 			arrayFormat: 'brackets',
 		}),
 	}).toString()
 }
 
 /** Checks if the response wants to redirect to an external URL. */
-export function isExternalResponse(response: AxiosResponse): boolean {
-	return response?.status === 409 && !!response?.headers?.[EXTERNAL_NAVIGATION_HEADER]
+export function isExternalResponse(response: HttpResponse): boolean {
+	return response.status === 409 && response.headers.has(EXTERNAL_NAVIGATION_HEADER)
 }
 
 /**

@@ -1,9 +1,10 @@
 import { beforeEach, test } from 'vitest'
+import { getRouterContext, registerHook } from '../../src'
+import { isNavigationCancelledError } from '../../src/errors'
 import { router } from '../../src/router'
 import { performHybridNavigation } from '../../src/router/request/request'
-import { getRouterContext, registerHook } from '../../src'
-import { fakePayload, fakeRouterContext, mockSuccessfulUrl } from '../utils'
 import { server } from '../server'
+import { fakePayload, fakeRouterContext, mockSuccessfulUrl } from '../utils'
 
 beforeEach(async () => {
 	await fakeRouterContext()
@@ -47,7 +48,9 @@ test('supports global "before" event cancellation', async ({ expect }) => {
 	const options = { url: 'http://localhost.test/navigation' }
 	registerHook('before', () => false)
 
-	expect((await performHybridNavigation(options)).error?.type).toBe('NavigationCancelledError')
+	const response = await performHybridNavigation(options)
+	expect(response.error?.name).toBe('NavigationCancelledError')
+	expect(isNavigationCancelledError(response.error)).toBeTruthy()
 })
 
 test('supports scoped "before" event cancellation', async ({ expect }) => {
@@ -56,5 +59,7 @@ test('supports scoped "before" event cancellation', async ({ expect }) => {
 		hooks: { before: () => false },
 	}
 
-	expect((await performHybridNavigation(options)).error?.type).toBe('NavigationCancelledError')
+	const response = await performHybridNavigation(options)
+	expect(response.error?.name).toBe('NavigationCancelledError')
+	expect(isNavigationCancelledError(response.error)).toBeTruthy()
 })

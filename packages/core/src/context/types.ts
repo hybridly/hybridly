@@ -1,4 +1,4 @@
-import type { Axios } from 'axios'
+import type { HttpClient } from '../http'
 import type { Hooks } from '../plugins/hooks'
 import type { Plugin } from '../plugins/plugin'
 import type { Dialog, HybridPayload, ResolveComponent, SwapView, View } from '../router'
@@ -14,8 +14,8 @@ export interface RouterContextOptions {
 	serializer?: Serializer
 	/** List of plugins. */
 	plugins?: Plugin[]
-	/** The Axios instance. */
-	axios?: Axios
+	/** The HTTP client instance. */
+	http?: HttpClient
 	/** Initial routing configuration. */
 	routing?: RoutingConfiguration
 	/** Whether to display response error modals. */
@@ -44,8 +44,8 @@ export interface InternalRouterContext {
 	plugins: Plugin[]
 	/** Global hooks. */
 	hooks: Partial<Record<keyof Hooks, Array<Function>>>
-	/** The Axios instance. */
-	axios: Axios
+	/** The HTTP client instance. */
+	http: HttpClient
 	/** Routing configuration. */
 	routing?: RoutingConfiguration
 	/** Whether to display response error modals. */

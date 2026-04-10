@@ -1,7 +1,5 @@
 import { debug } from '@hybridly/utils'
-import type { Axios } from 'axios'
-import axios from 'axios'
-import { isDownloadResponse } from '../download'
+import { createXhrHttpClient } from '../http'
 import { runHooks } from '../plugins'
 import type { HybridPayload } from '../router'
 import { createSerializer } from '../router/history'
@@ -42,7 +40,7 @@ export async function initializeContext(options: RouterContextOptions): Promise<
 		},
 		scrollRegions: [],
 		plugins: options.plugins ?? [],
-		axios: registerAxios(options.axios ?? axios.create()),
+		http: options.http ?? createXhrHttpClient(),
 		routing: options.routing,
 		hooks: {},
 		memo: {},
@@ -52,32 +50,6 @@ export async function initializeContext(options: RouterContextOptions): Promise<
 
 	return getInternalRouterContext()
 }
-
-/**
- * Registers an interceptor that assumes `arraybuffer`
- * responses and converts responses to JSON or text.
- */
-export function registerAxios(axios: Axios) {
-	axios.interceptors.response.use(
-		(response) => {
-			if (!isDownloadResponse(response)) {
-				const text = new TextDecoder().decode(response.data)
-
-				try {
-					response.data = JSON.parse(text)
-				} catch {
-					response.data = text
-				}
-			}
-
-			return response
-		},
-		(error) => Promise.reject(error),
-	)
-
-	return axios
-}
-
 /**
  * Mutates properties at the top-level of the context.
  */

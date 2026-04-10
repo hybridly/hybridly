@@ -1,6 +1,7 @@
 import type { RequestData } from '@hybridly/utils'
-import type { AxiosProgressEvent, AxiosResponse } from 'axios'
 import type { CloseDialogOptions } from '../dialog'
+import type { HybridlyError } from '../errors'
+import type { HttpError, HttpResponse, HttpUploadProgressEvent } from '../http'
 import type { MountedHookOptions, RequestHooks } from '../plugins/hooks'
 import type { RouteName, RouteParameters } from '../routing/types'
 import type { UrlResolvable, UrlTransformable } from '../url'
@@ -139,11 +140,8 @@ export interface HybridRequestOptions extends Omit<NavigationOptions, 'payload'>
 }
 
 export interface NavigationResponse {
-	response?: AxiosResponse
-	error?: {
-		type: string
-		actual: Error
-	}
+	response?: HttpResponse
+	error?: Error
 }
 
 export interface DialogRouter {
@@ -301,7 +299,7 @@ export interface HybridPayload {
 
 export interface Progress {
 	/** Base event. */
-	event: AxiosProgressEvent
+	event: HttpUploadProgressEvent
 	/** Computed percentage. */
 	percentage: Readonly<number>
 }

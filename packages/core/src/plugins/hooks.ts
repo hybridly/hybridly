@@ -1,7 +1,7 @@
 /* eslint-disable jsdoc/check-alignment */
-import type { AxiosResponse } from 'axios'
 import type { InternalRouterContext } from '../context'
 import { getRouterContext } from '../context'
+import type { HttpResponse, HttpUploadProgressEvent } from '../http'
 import type { Errors, HybridPayload, InternalNavigationOptions, PendingHybridRequest, Progress } from '../router'
 import type { MaybePromise } from '../types'
 
@@ -21,20 +21,20 @@ export interface RequestHooks {
 	/**
 	 * Called when progress on the request is being made.
 	 */
-	progress: (progress: Progress, request: PendingHybridRequest, context: InternalRouterContext) => MaybePromise<any>
+	progress: (progress: HttpUploadProgressEvent, request: PendingHybridRequest, context: InternalRouterContext) => MaybePromise<any>
 
 	/**
 	 * Called when data is received after a request for a navigation.
 	 */
-	data: (request: PendingHybridRequest, response: AxiosResponse, context: InternalRouterContext) => MaybePromise<any>
+	data: (request: PendingHybridRequest, response: HttpResponse, context: InternalRouterContext) => MaybePromise<any>
 
 	/**
 	 * Called when a request is successful and there is no error.
 	 */
-	success: (payload: HybridPayload, request: PendingHybridRequest, context: InternalRouterContext) => MaybePromise<any>
+	success: (payload: HybridPayload, request: PendingHybridRequest, response: HttpResponse, context: InternalRouterContext) => MaybePromise<any>
 
 	/**
-	 * Called when a request is successful but there were errors.
+	 * Called when a request is successful but there were validation errors.
 	 */
 	error: (errors: Errors, request: PendingHybridRequest, context: InternalRouterContext) => MaybePromise<any>
 
@@ -46,17 +46,17 @@ export interface RequestHooks {
 	/**
 	 * Called when a response to a request is not a valid hybrid response.
 	 */
-	invalid: (request: PendingHybridRequest, response: AxiosResponse, context: InternalRouterContext) => MaybePromise<any>
+	invalid: (request: PendingHybridRequest, response: HttpResponse, context: InternalRouterContext) => MaybePromise<any>
 
 	/**
-	 * Called when an unknowne exception was triggered.
+	 * Called when an unknown exception was triggered.
 	 */
 	exception: (error: Error, request: PendingHybridRequest, context: InternalRouterContext) => MaybePromise<any>
 
 	/**
 	 * Called whenever the request failed, for any reason, in addition to other hooks.
 	 */
-	fail: (request: PendingHybridRequest, context: InternalRouterContext) => MaybePromise<any>
+	fail: (error: Error, request: PendingHybridRequest, context: InternalRouterContext) => MaybePromise<any>
 
 	/**
 	 * Called after a request has been made, even if it didn't succeed.
@@ -135,7 +135,7 @@ export function appendCallbackToHooks<T extends keyof Hooks>(hook: T, fn: Hooks[
 export function registerHook<T extends keyof Hooks>(hook: T, fn: Hooks[T], options?: HookOptions): () => void {
 	if (options?.once) {
 		const unregister = appendCallbackToHooks(hook, async (...args: any[]) => {
-			await fn(...args as [any, any, any])
+			await fn(...args as [any, any, any, any])
 			unregister()
 		})
 

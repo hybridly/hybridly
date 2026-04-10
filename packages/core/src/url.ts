@@ -1,6 +1,6 @@
 import { merge } from '@hybridly/utils'
 import { trimEnd } from 'es-toolkit/string'
-import qs from 'qs'
+import { parseQueryString, stringifyQueryString } from './query'
 
 export type UrlResolvable = string | URL | Location
 export type UrlTransformable = BaseUrlTransformable | ((string: URL) => BaseUrlTransformable)
@@ -30,16 +30,14 @@ export function makeUrl(href: UrlResolvable, transformations: UrlTransformable =
 		Object.entries(transformations).forEach(([key, value]) => {
 			if (key === 'query') {
 				const currentQueryParameters = merge(
-					qs.parse(url.search, { ignoreQueryPrefix: true }),
+					parseQueryString(url.search),
 					value,
 					{ mergePlainObjects: true },
 				)
 
 				key = 'search'
-				value = qs.stringify(currentQueryParameters, {
-					encodeValuesOnly: true,
+				value = stringifyQueryString(currentQueryParameters, {
 					arrayFormat: 'brackets',
-					filter: (_, object) => object instanceof Set ? [...object] : object,
 				})
 			}
 

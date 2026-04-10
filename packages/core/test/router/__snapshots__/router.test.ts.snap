@@ -7,8 +7,10 @@ exports[`performs hybrid navigations > context after navigation 1`] = `
     "resolveComponent": [Function],
     "updateRoutingConfiguration": [Function],
   },
-  "axios": [Function],
   "hooks": {},
+  "http": {
+    "request": [Function],
+  },
   "memo": {},
   "plugins": [],
   "responseErrorModals": undefined,
