@@ -4,6 +4,7 @@
 	"private": true,
 	"packageManager": "bun@1.3.10",
 	"scripts": {
+		"dev": "cd kitchen-sink && pnpm run dev",
 		"release": "bumpp package.json packages/*/package.json --all --execute \"bun run build/bump-php-packages.ts\" --commit \"release: v\"",
 		"build": "bun run --filter '*' build",
 		"build:stub": "bun run --filter '*' build:stub",

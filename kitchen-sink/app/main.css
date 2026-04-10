@@ -1,0 +1,51 @@
+@import "tailwindcss";
+@import "@nuxt/ui";
+
+@theme {
+	--font-sans: "JetBrains Mono Variable", monospace;
+	--font-mono: "JetBrains Mono Variable", monospace;
+}
+
+:root::view-transition-old(*),
+:root::view-transition-new(*) {
+	animation: none;
+}
+
+/*
+|--------------------------------------------------------------------------
+| Scrollbars
+|--------------------------------------------------------------------------
+*/
+
+/* Scrollbar width */
+::-webkit-scrollbar {
+	width: 8px;
+	height: 8px;
+}
+
+/* Scrollbar track */
+::-webkit-scrollbar-track {
+	background: transparent;
+	border-radius: 4px;
+}
+
+/* Scrollbar thumb (the draggable part) */
+::-webkit-scrollbar-thumb {
+	background: var(--ui-border);
+	border-radius: 4px;
+}
+
+/* Scrollbar thumb on hover */
+::-webkit-scrollbar-thumb:hover {
+	background: var(--ui-text-dimmed);
+}
+
+/* Firefox */
+* {
+	scrollbar-width: thin;
+	scrollbar-color: var(--ui-border) transparent;
+}
+
+pre {
+	line-height: 1.65em;
+}
