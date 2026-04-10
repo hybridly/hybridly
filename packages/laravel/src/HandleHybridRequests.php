@@ -3,7 +3,6 @@
 namespace Hybridly;
 
 use Closure;
-use Hybridly\Concerns;
 use Hybridly\Hybridly;
 use Hybridly\Support\Header;
 use Illuminate\Http\Request;
