@@ -46,6 +46,7 @@ test('the `getPayload` method returns the payload', function () {
                 'dialog',
                 'url',
                 'version',
+                'validation',
             ]);
     });
 });
@@ -76,6 +77,7 @@ test('the `toArray` function converts the Assertable instance to an array', func
                 'dialog',
                 'url',
                 'version',
+                'validation',
             ]);
     });
 });

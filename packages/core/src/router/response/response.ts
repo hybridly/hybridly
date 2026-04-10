@@ -8,12 +8,10 @@ import type { HttpResponse } from '../../http'
 import { runHooks } from '../../plugins'
 import { saveScrollPositions } from '../../scroll'
 import { fillHash, sameHashes, sameUrls } from '../../url'
-import type { Errors, HybridPayload, HybridRequestOptions, NavigationResponse, Properties, View } from '../types'
+import type { Errors, HybridPayload, HybridRequestOptions, NavigationResponse, Properties, Validation, View } from '../types'
 import { navigate } from '../view'
 import { isExternalResponse, performExternalNavigation } from './external'
 import type { HybridRequestResponse } from './response-manager'
-
-// TODO: errors in a dedicated property
 
 export async function handleHybridRequestResponse({ request, response }: HybridRequestResponse): Promise<NavigationResponse> {
 	debug.router('Handling response', response)
@@ -78,6 +76,9 @@ export async function handleHybridRequestResponse({ request, response }: HybridR
 	debug.router('The response respects the Hybridly protocol.')
 	const payload = response.data as HybridPayload
 
+	const mergedValidation = mergeValidation(context.validation, payload.validation, options.errorBag)
+	const incomingErrors = resolveErrors(payload.validation, options.errorBag)
+
 	// We only want to make a page navigation if the request was synchronous
 	// or if we didn't navigate during the request and the response.
 	if (options.mode !== 'async' || (context.view.component === request.view.component)) {
@@ -87,7 +88,7 @@ export async function handleHybridRequestResponse({ request, response }: HybridR
 			}
 
 			if (!payload.view.component || (payload.view.component === context.view.component)) {
-				return resolveProperties(context.view.properties, payload.view, options.errorBag)
+				return resolveProperties(context.view.properties, payload.view)
 			}
 		})()
 
@@ -100,6 +101,7 @@ export async function handleHybridRequestResponse({ request, response }: HybridR
 			properties,
 			payload: {
 				...payload,
+				validation: mergedValidation,
 				url: fillHash(request.url, payload.url),
 			},
 			preserveScroll: options.preserveScroll,
@@ -112,21 +114,15 @@ export async function handleHybridRequestResponse({ request, response }: HybridR
 		debug.router('Discarding navigation from an asynchronous request initiated on a previous page.')
 	}
 
-	// If the new view's properties has errors, userland expects an event
-	// with said errors to be emitted. However, errors can be scoped with
-	// an error bag, and if the given error bag is missing, the event data
-	// will be empty.
-	if (Object.keys(context.view.properties.errors ?? {}).length > 0) {
-		const errors = (() => {
-			if (options.errorBag && typeof context.view.properties.errors === 'object') {
-				return (context.view.properties.errors as any)[options.errorBag] ?? {}
-			}
+	if (Object.keys(incomingErrors).length > 0) {
+		debug.router('The request returned validation errors.', incomingErrors)
 
-			return context.view.properties.errors
-		})() as Errors
+		const errors = resolveErrors(context.validation, options.errorBag)
+		const resolvedErrors = Object.keys(errors).length > 0
+			? errors
+			: incomingErrors
 
-		debug.router('The request returned validation errors.', errors)
-		await runHooks('error', options.hooks, request, errors, context)
+		await runHooks('validation-error', options.hooks, resolvedErrors, request, context)
 	} else {
 		await runHooks('success', options.hooks, payload, request, response, context)
 	}
@@ -143,22 +139,12 @@ function isPartial(options: HybridRequestOptions) {
 	return options.only !== undefined || options.except !== undefined
 }
 
-function resolveProperties(original: Properties, payload: View, errorBag?: string) {
-	const mergedPayloadProperties = merge(original, payload.properties)
-
-	// TODO: errors in their own property
-	// Overwrite errors with the errors coming in from the response instead of deeply merging them
-	// which prevents errors from being removed when they are not present in the response.
-	if (errorBag) {
-		;(mergedPayloadProperties.errors as any)[errorBag] = (payload.properties.errors as any)[errorBag] ?? {}
-	} else {
-		mergedPayloadProperties.errors = payload.properties.errors
-	} // We then need to loop through each "mergeable" property, and merge the
-	// received input into the original one. We need to respect the given settings:
+function resolveProperties(original: Properties, payload: View) {
+	const mergedPayloadProperties = merge(original, payload.properties) // We then need to loop through each "mergeable" property, and merge the
+	 // received input into the original one. We need to respect the given settings:
 	// - prepends = true, we prepend data
 	// - prepends = false, we append data
 	// - if uniqueBy is a string, we dedupe based its dot-notated path (eg. `id`)
-
 	;(payload.mergeable ?? []).forEach(([mergeableProperty, prepends, uniqueBy]) => {
 		const originalValue = getByPath(original, mergeableProperty) as unknown
 		const newValue = getByPath(payload.properties, mergeableProperty) as unknown
@@ -218,4 +204,23 @@ function resolveProperties(original: Properties, payload: View, errorBag?: strin
 	})
 
 	return mergedPayloadProperties
+}
+
+function mergeValidation(current: Validation, next: Validation, errorBag?: string): Validation {
+	if (!errorBag) {
+		return next
+	}
+
+	return {
+		...current,
+		[errorBag]: next[errorBag] ?? {},
+	}
+}
+
+function resolveErrors(validation: Validation, errorBag?: string): Errors {
+	if (errorBag) {
+		return validation[errorBag] ?? {}
+	}
+
+	return validation.default ?? {}
 }

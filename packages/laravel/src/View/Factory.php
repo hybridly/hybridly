@@ -15,6 +15,8 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\MessageBag;
+use Illuminate\Support\ViewErrorBag;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 final class Factory implements HybridResponse
@@ -123,6 +125,7 @@ final class Factory implements HybridResponse
             dialog: $this->resolveDialog($request),
             url: $this->resolveUrl($request),
             version: $this->hybridly->version,
+            validation: $this->resolveValidation($request),
         );
 
         if ($payload->dialog) {
@@ -174,6 +177,7 @@ final class Factory implements HybridResponse
                 ),
             url: $payload->url,
             version: $payload->version,
+            validation: $payload->validation,
             dialog: new Dialog(
                 component: $payload->dialog->component,
                 properties: $properties,
@@ -296,6 +300,45 @@ final class Factory implements HybridResponse
         }
 
         return $request->fullUrl();
+    }
+
+    /**
+     * Resolves validation errors grouped by bag name.
+     */
+    private function resolveValidation(Request $request): array
+    {
+        if (! $request->hasSession()) {
+            return [];
+        }
+
+        if (! ($errors = $request->session()->get('errors'))) {
+            return [];
+        }
+
+        if (! ($errors instanceof ViewErrorBag)) {
+            return [];
+        }
+
+        $resolved = collect($errors->getBags())
+            ->map(fn (MessageBag $bag) => array_map(fn (array $messages) => $messages[0], $bag->messages()))
+            ->toArray();
+
+        if (! ($error_bag = $request->header(Header::ERROR_BAG))) {
+            return $resolved;
+        }
+
+        if (! array_key_exists('default', $resolved)) {
+            return $resolved;
+        }
+
+        if (array_key_exists($error_bag, $resolved)) {
+            return $resolved;
+        }
+
+        $resolved[$error_bag] = $resolved['default'];
+        unset($resolved['default']);
+
+        return $resolved;
     }
 
     private function transformProperties(iterable $properties): array

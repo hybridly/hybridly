@@ -291,6 +291,8 @@ export interface HybridPayload {
 	view: View
 	/** An optional dialog. */
 	dialog?: Dialog
+	/** Validation errors grouped by error bag. */
+	validation: Validation
 	/** The current page URL. */
 	url: string
 	/** The current asset version. */
@@ -304,4 +306,5 @@ export interface Progress {
 	percentage: Readonly<number>
 }
 
-export type Errors = any
+export type Errors = Record<string, any>
+export type Validation = Record<string, Errors>

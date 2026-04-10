@@ -167,6 +167,7 @@ export function serializeContext(context: InternalRouterContext): string {
 	return context.serializer.serialize<SerializedContext>({
 		url: context.url,
 		version: context.version,
+		validation: context.validation,
 		view: context.view,
 		dialog: context.dialog,
 		scrollRegions: context.scrollRegions,

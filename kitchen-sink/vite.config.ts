@@ -48,6 +48,20 @@ export default defineConfig({
 						variant: 'ghost',
 					},
 				},
+				modal: {
+					slots: {
+						overlay: 'backdrop-blur-xs z-15',
+						content: 'z-20',
+						wrapper: 'w-full',
+					},
+					variants: {
+						overlay: {
+							true: {
+								overlay: 'bg-[black]/25',
+							},
+						},
+					},
+				},
 			},
 		}),
 		hybridly(),

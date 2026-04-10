@@ -1,5 +1,5 @@
-import { setupDevtoolsPlugin } from '@vue/devtools-api'
 import { registerHook } from '@hybridly/core'
+import { setupDevtoolsPlugin } from '@vue/devtools-api'
 import type { App, Plugin } from 'vue'
 import { state } from './stores/state'
 
@@ -31,6 +31,12 @@ export function setupDevtools(app: App) {
 				key: 'properties',
 				value: state.context.value?.view.properties,
 				editable: true,
+			})
+
+			payload.instanceData.state.push({
+				type: hybridlyStateType,
+				key: 'validation',
+				value: state.context.value?.validation,
 			})
 
 			payload.instanceData.state.push({
@@ -95,7 +101,7 @@ export function setupDevtools(app: App) {
 			'navigating',
 			'navigated',
 			'progress',
-			'error',
+			'validation-error',
 			'abort',
 			'success',
 			'invalid',
@@ -119,28 +125,30 @@ export function setupDevtools(app: App) {
 				},
 			})
 
-			listen.forEach((event) => registerHook(event, (data: any) => {
-				api.addTimelineEvent({
-					layerId: hybridlyEventsTimelineLayerId,
-					event: {
-						groupId,
-						title: event,
-						time: api.now(),
-						data,
-					},
-				})
+			listen.forEach((event) =>
+				registerHook(event, (data: any) => {
+					api.addTimelineEvent({
+						layerId: hybridlyEventsTimelineLayerId,
+						event: {
+							groupId,
+							title: event,
+							time: api.now(),
+							data,
+						},
+					})
 
-				if (event === 'after') {
-					setTimeout(() => {
-						api.notifyComponentUpdate()
-					}, 100)
-				}
-			}, { once: true }))
+					if (event === 'after') {
+						setTimeout(() => {
+							api.notifyComponentUpdate()
+						}, 100)
+					}
+				}, { once: true })
+			)
 		})
 	})
 }
 
-export const devtools = <Plugin>{
+export const devtools = <Plugin> {
 	install(app) {
 		if (process.env.NODE_ENV === 'development' || __VUE_PROD_DEVTOOLS__) {
 			setupDevtools(app)

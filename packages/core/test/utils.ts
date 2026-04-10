@@ -1,12 +1,12 @@
 import defu from 'defu'
-import type { PartialDeep } from 'type-fest'
 import type { HttpResponseInit, RequestHandler } from 'msw'
 import { HttpResponse } from 'msw'
-import type { RouterContext, RouterContextOptions } from '../src/context'
+import type { PartialDeep } from 'type-fest'
 import { HYBRIDLY_HEADER } from '../src/constants'
+import type { RouterContext, RouterContextOptions } from '../src/context'
 import { initializeContext } from '../src/context'
-import { createRouter } from '../src/router/router'
 import type { HybridPayload } from '../src/router'
+import { createRouter } from '../src/router/router'
 import { http } from './server'
 
 export const noop = () => ({} as any)
@@ -16,6 +16,7 @@ export function fakePayload(payload: PartialDeep<HybridPayload> = {}): HybridPay
 	return defu(payload as HybridPayload, {
 		url: 'https://bluebird.test',
 		version: 'abc123',
+		validation: {},
 		view: {
 			component: 'default.view',
 			properties: {},
@@ -54,11 +55,9 @@ export function mockInvalidUrl(url: string, method: keyof typeof http, options: 
 	return mockUrl(url, method, {
 		status: 422,
 		json: {
-			view: {
-				properties: {
-					errors: {
-						foo: 'Invalid foo value',
-					},
+			validation: {
+				default: {
+					foo: 'Invalid foo value',
 				},
 			},
 		},

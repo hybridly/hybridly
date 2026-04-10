@@ -36,7 +36,7 @@ export interface RequestHooks {
 	/**
 	 * Called when a request is successful but there were validation errors.
 	 */
-	error: (errors: Errors, request: PendingHybridRequest, context: InternalRouterContext) => MaybePromise<any>
+	'validation-error': (errors: Errors, request: PendingHybridRequest, context: InternalRouterContext) => MaybePromise<any>
 
 	/**
 	 * Called when a request has been aborted.

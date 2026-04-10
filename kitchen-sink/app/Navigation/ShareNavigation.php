@@ -8,6 +8,7 @@ use App\Http404Controller;
 use App\Http500Controller;
 use App\KitchenSink\DataLoading\Deferred\DeferredPropertiesController;
 use App\KitchenSink\DataLoading\Mergeable\MergeablePropertiesController;
+use App\KitchenSink\Forms\Validation\ValidationController;
 use App\KitchenSink\Navigation\AsyncRequests\AsyncRequestsController;
 use App\KitchenSink\Navigation\Lifecycle\LifecycleController;
 use App\KitchenSink\Navigation\PreserveScroll\PreserveScrollController;
@@ -117,6 +118,19 @@ final readonly class ShareNavigation
                     label: 'HTTP 500',
                     icon: 'lucide:x',
                     href: action(Http500Controller::class, absolute: false),
+                ),
+            ],
+        ));
+
+        $builder->addSidebarItem(new NavigationItem(
+            label: 'Forms',
+            icon: 'lucide:form-input',
+            children: [
+                new NavigationItem(
+                    label: 'Validation',
+                    icon: 'lucide:shield-check',
+                    href: action(ValidationController::class, absolute: false),
+                    route_patterns: ['kitchen-sink.forms.validation*'],
                 ),
             ],
         ));

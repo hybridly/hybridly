@@ -1,5 +1,5 @@
-import { GlobalHybridlyProperties } from '@hybridly/core'
-import { getByPath, setByPath } from '@hybridly/utils'
+import type { GlobalHybridlyProperties } from '@hybridly/core'
+import { getByPath } from '@hybridly/utils'
 import type { Path, PathValue, SearchableObject } from '@hybridly/utils'
 import { set } from 'es-toolkit/compat'
 import type { ComputedRef } from 'vue'

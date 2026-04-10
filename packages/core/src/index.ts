@@ -1,6 +1,7 @@
 export { createRouter, router } from './router/router'
 export type {
 	AsyncInterruptionScope,
+	Errors,
 	HybridPayload,
 	HybridRequestOptions,
 	Method,
@@ -10,6 +11,7 @@ export type {
 	RequestMode,
 	ResolveComponent,
 	Router,
+	Validation,
 } from './router/types'
 
 export { createXhrHttpClient, isHttpAbortError, isHttpError } from './http'

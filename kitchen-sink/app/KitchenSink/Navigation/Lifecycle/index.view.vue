@@ -1,9 +1,9 @@
 <script setup lang="ts">
+import { match } from '@hybridly/utils'
 import { HybridRequestOptions } from 'hybridly'
 import Card from '~/app/Components/card.vue'
-import '@andypf/json-viewer'
-import { match } from '@hybridly/utils'
 import InfoText from '~/app/Components/info-text.vue'
+import JsonViewer from '~/app/Components/json-viewer.vue'
 
 defineProps<{
 	time: string
@@ -13,7 +13,7 @@ type Type =
 	| 'before'
 	| 'data'
 	| 'invalid'
-	| 'error'
+	| 'validation-error'
 	| 'fail'
 	| 'exception'
 	| 'progress'
@@ -35,7 +35,7 @@ function getColorByType(type: Type) {
 		before: 'text-muted',
 		data: 'text-info',
 		invalid: 'text-warning',
-		error: 'text-error',
+		'validation-error': 'text-error',
 		fail: 'text-error',
 		exception: 'text-error',
 		progress: 'text-info',
@@ -147,9 +147,9 @@ function sendLifecycleRequest(options: HybridRequestOptions = {}) {
 					return false
 				}
 			},
-			error(errors, request) {
+			'validation-error'(errors, request) {
 				hooks.value?.push({
-					type: 'error',
+					type: 'validation-error',
 					serialized: { errors, request },
 				})
 			},
@@ -198,25 +198,6 @@ function sendLifecycleRequest(options: HybridRequestOptions = {}) {
 		},
 	})
 }
-
-const theme = {
-	base00: 'transparent',
-	base01: '#282828',
-	base02: '#383838',
-	base03: '#585858',
-	base04: '#b8b8b8',
-	base05: '#d8d8d8',
-	base06: '#e8e8e8',
-	base07: '#f8f8f8',
-	base08: '#ab4642',
-	base09: '#dc9656',
-	base0A: '#f7ca88',
-	base0B: '#a1b56c',
-	base0C: '#86c1b9',
-	base0D: '#7cafc2',
-	base0E: '#ba8baf',
-	base0F: '#a16946',
-}
 </script>
 
 <template layout>
@@ -234,18 +215,7 @@ const theme = {
 						<span :class="getColorByType(item.type)" v-text="item.type" />
 					</template>
 					<template #content="{ item, open }">
-						<andypf-json-viewer
-							v-if="open"
-							show-data-types="false"
-							show-copy="false"
-							show-size="false"
-							show-toolbar="false"
-							expand-icon-type="square"
-							expanded="2"
-							:theme="JSON.stringify(theme)"
-						>
-							{{ item.serialized }}
-						</andypf-json-viewer>
+						<json-viewer v-if="open" :data="item.serialized" />
 					</template>
 				</u-accordion>
 			</div>

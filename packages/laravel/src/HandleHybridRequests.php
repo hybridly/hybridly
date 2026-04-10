@@ -16,9 +16,6 @@ final class HandleHybridRequests
 
     public function handle(Request $request, Closure $next): Response
     {
-        // TODO: migrate to its own protocol-level property
-        $this->shareValidationErrors($request);
-
         $response = $next($request);
 
         // Browsers need the Vary header in order to properly cache the response
@@ -46,56 +43,5 @@ final class HandleHybridRequests
         }
 
         return $response;
-    }
-
-    /**
-     * Shares validation errors to all requests.
-     *
-     * @deprecated
-     */
-    private function shareValidationErrors(Request $request): void
-    {
-        $this->hybridly->persist('errors');
-
-        $this->hybridly->share([
-            'errors' => function () use ($request) {
-                return $this->resolveValidationErrors($request);
-            },
-        ]);
-    }
-
-    /**
-     * Resolves and prepares validation errors in such
-     * a way that they are easier to use client-side.
-     *
-     * @deprecated
-     */
-    public function resolveValidationErrors(Request $request): object
-    {
-        if (! $request->hasSession()) {
-            return (object) [];
-        }
-
-        if (! ($errors = $request->session()->get('errors'))) {
-            return (object) [];
-        }
-
-        return (object) collect($errors->getBags())
-            ->map(function ($bag) {
-                return (object) collect($bag->messages())
-                    ->map(fn ($errors) => $errors[0])
-                    ->toArray();
-            })
-            ->pipe(function ($bags) use ($request) {
-                if ($bags->has('default') && $request->header(Header::ERROR_BAG)) {
-                    return [$request->header(Header::ERROR_BAG) => $bags->get('default')];
-                }
-
-                if ($bags->has('default')) {
-                    return $bags->get('default');
-                }
-
-                return $bags->toArray();
-            });
     }
 }

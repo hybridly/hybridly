@@ -145,6 +145,8 @@ test('the `getHybridPayload` method returns the payload of the hybrid response',
         expect($view['dialog'])->toBeNull();
         expect($view['url'])->toBe(config('app.url') . '/hybrid-mock-url');
         expect($view['version'])->toBeNull();
+        expect($view['validation'])->toBeArray();
+        expect($view['validation'])->toBeEmpty();
     });
 });
 

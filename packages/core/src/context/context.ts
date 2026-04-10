@@ -31,6 +31,7 @@ export async function initializeContext(options: RouterContextOptions): Promise<
 	state.initialized = true
 	state.context = {
 		...options.payload,
+		validation: options.payload.validation ?? {},
 		responseErrorModals: options.responseErrorModals,
 		serializer: createSerializer(options),
 		url: makeUrl(options.payload.url).toString(),
@@ -70,6 +71,7 @@ export function payloadFromContext(): HybridPayload {
 	return {
 		url: getRouterContext().url,
 		version: getRouterContext().version,
+		validation: getRouterContext().validation,
 		view: getRouterContext().view,
 		dialog: getRouterContext().dialog,
 	}

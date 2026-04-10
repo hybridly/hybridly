@@ -65,6 +65,7 @@ export async function navigate(options: InternalNavigationOptions) {
 			},
 			url: context.url,
 			version: options.payload.version,
+			validation: options.payload.validation,
 			dialog: context.dialog,
 		} satisfies HybridPayload
 		: options.payload
@@ -138,6 +139,7 @@ export async function performLocalNavigation(targetUrl: UrlResolvable, options?:
 		type: 'local',
 		payload: {
 			version: context.version,
+			validation: context.validation,
 			dialog: options?.dialog === false ? undefined : (options?.dialog ?? context.dialog),
 			url,
 			view: {

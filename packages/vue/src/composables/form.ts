@@ -33,7 +33,7 @@ export type DefaultFormOptions = Pick<
 	| 'useFormData'
 >
 
-interface FormOptions<T extends SearchableObject> extends Omit<HybridRequestOptions, 'data' | 'url'> {
+interface FormOptions<T extends SearchableObject> extends Omit<HybridRequestOptions, 'data' | 'url' | 'reset'> {
 	fields: T
 	url?: UrlResolvable | (() => UrlResolvable)
 	key?: string | false
@@ -197,25 +197,32 @@ export function useForm<
 			: optionsWithoutFields
 
 		const optionsWithOverrides = merge<FormOptions<T>>(formStore.getDefaultConfig(), resolvedOptions, { mergePlainObjects: true })
+		const {
+			timeout,
+			reset,
+			updateInitials,
+			transform,
+			...requestOptions
+		} = optionsWithOverrides
 
-		const url = typeof optionsWithOverrides.url === 'function'
-			? optionsWithOverrides.url()
-			: optionsWithOverrides.url
+		const url = typeof requestOptions.url === 'function'
+			? requestOptions.url()
+			: requestOptions.url
 
-		const data = typeof optionsWithOverrides.transform === 'function'
-			? optionsWithOverrides.transform(fields)
+		const data = typeof transform === 'function'
+			? transform(fields)
 			: fields
 
-		const preserveState = optionsWithOverrides.preserveState ?? optionsWithOverrides.method !== 'GET'
-		const hooks = optionsWithOverrides.hooks ?? {}
+		const preserveState = requestOptions.preserveState ?? requestOptions.method !== 'GET'
+		const hooks = requestOptions.hooks ?? {}
 
-		abortController = optionsWithOverrides.abortController ?? new AbortController()
+		abortController = requestOptions.abortController ?? new AbortController()
 
 		return router.navigate({
-			...optionsWithOverrides,
+			...requestOptions,
 			abortController,
 			url: url ?? state.context.value?.url,
-			method: optionsWithOverrides.method ?? 'POST',
+			method: requestOptions.method ?? 'POST',
 			data: safeClone(data),
 			preserveState,
 			hooks: {
@@ -229,28 +236,31 @@ export function useForm<
 					return hooks.start?.(request, context)
 				},
 				progress: (incoming, request, context) => {
-					progress.value = incoming
+					progress.value = {
+						event: incoming,
+						percentage: incoming.percentage,
+					}
 					return hooks.progress?.(incoming, request, context)
 				},
-				error: (incoming, request, context) => {
+				'validation-error': (incoming, request, context) => {
 					setErrors(incoming)
 					failed.value = true
 					recentlyFailed.value = true
-					timeoutIds.recentlyFailed = setTimeout(() => recentlyFailed.value = false, optionsWithOverrides.timeout ?? 5000)
-					return hooks.error?.(incoming, request, context)
+					timeoutIds.recentlyFailed = setTimeout(() => recentlyFailed.value = false, timeout ?? 5000)
+					return hooks['validation-error']?.(incoming, request, context)
 				},
-				success: (payload, request, context) => {
+				success: (payload, request, response, context) => {
 					clearErrors()
-					if (optionsWithOverrides.updateInitials) {
+					if (updateInitials) {
 						setInitial(fields)
 					}
-					if (optionsWithOverrides.reset !== false) {
+					if (reset !== false) {
 						resetFields()
 					}
 					successful.value = true
 					recentlySuccessful.value = true
-					timeoutIds.recentlySuccessful = setTimeout(() => recentlySuccessful.value = false, optionsWithOverrides.timeout ?? 5000)
-					return hooks.success?.(payload, request, context)
+					timeoutIds.recentlySuccessful = setTimeout(() => recentlySuccessful.value = false, timeout ?? 5000)
+					return hooks.success?.(payload, request, response, context)
 				},
 				after: (_request, context) => {
 					request.value = undefined

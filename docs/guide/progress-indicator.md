@@ -29,6 +29,6 @@ The underlying progress indicator uses [nprogress](https://ricostacruz.com/nprog
 
 ## Using a custom indicator
 
-Under the hood, the built-in progress indicator is actually a [plugin](./plugins.md). It hooks into the `start`, `progress`, `error`, `fail` and `after` [lifecycle events](./hooks.md).
+Under the hood, the built-in progress indicator is actually a [plugin](./plugins.md). It hooks into the `start`, `progress`, `validation-error`, `fail` and `after` [lifecycle events](./hooks.md).
 
 To build your own custom indicator, disable the built-in one and [create your own plugin](./plugins.md).

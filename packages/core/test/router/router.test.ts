@@ -33,6 +33,57 @@ test('performs hybrid navigations', async ({ expect }) => {
 	expect(getRouterContext()).toMatchSnapshot('context after navigation')
 })
 
+test('keeps validation bags isolated when using errorBag', async ({ expect }) => {
+	await fakeRouterContext({
+		payload: {
+			validation: {
+				company: {
+					name: 'Company name is required',
+				},
+			},
+		},
+	})
+
+	server.resetHandlers(
+		mockSuccessfulUrl('https://bluebird.test/validation-bag', 'post', {
+			json: fakePayload({
+				url: 'https://bluebird.test/validation-bag',
+				validation: {
+					user: {
+						email: 'Invalid email address',
+					},
+				},
+			}),
+		}),
+	)
+
+	let captured: Record<string, unknown> | undefined
+
+	await performHybridNavigation({
+		url: 'https://bluebird.test/validation-bag',
+		method: 'POST',
+		errorBag: 'user',
+		hooks: {
+			'validation-error': (errors) => {
+				captured = errors
+			},
+		},
+	})
+
+	expect(captured).toEqual({
+		email: 'Invalid email address',
+	})
+
+	expect(getRouterContext().validation).toEqual({
+		company: {
+			name: 'Company name is required',
+		},
+		user: {
+			email: 'Invalid email address',
+		},
+	})
+})
+
 test('performs external navigations', async ({ expect }) => {
 	router.external('http://localhost.test/navigation', {
 		owo: 'uwu',

@@ -21,6 +21,7 @@ exports[`creates a valid router context > context 1`] = `
     "unserialize": [Function],
   },
   "url": "https://localhost/",
+  "validation": {},
   "version": "123",
   "view": {
     "component": "my-owo-view",
@@ -52,6 +53,7 @@ exports[`updates the context > base context 1`] = `
     "unserialize": [Function],
   },
   "url": "https://localhost/",
+  "validation": {},
   "version": "abc123",
   "view": {
     "component": "default.view",
@@ -81,6 +83,7 @@ exports[`updates the context > updated context 1`] = `
     "unserialize": [Function],
   },
   "url": "https://localhost/foo/bar",
+  "validation": {},
   "version": "new-version-string",
   "view": {
     "component": "default.view",
@@ -119,6 +122,7 @@ exports[`updates the context > updated context with dialog 1`] = `
     "unserialize": [Function],
   },
   "url": "https://localhost/foo/bar/dialog",
+  "validation": {},
   "version": "new-version-string",
   "view": {
     "component": "default.view",
@@ -149,6 +153,7 @@ exports[`updates the context > updated context with no dialog 1`] = `
     "unserialize": [Function],
   },
   "url": "https://localhost/foo",
+  "validation": {},
   "version": "new-version-string",
   "view": {
     "component": "default.view",

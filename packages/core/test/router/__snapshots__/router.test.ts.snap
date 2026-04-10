@@ -30,6 +30,7 @@ exports[`performs hybrid navigations > context after navigation 1`] = `
     "unserialize": [Function],
   },
   "url": "https://bluebird.test/navigation",
+  "validation": {},
   "version": "abc123",
   "view": {
     "component": "target.view",
@@ -43,6 +44,7 @@ exports[`performs hybrid navigations > context after navigation 1`] = `
 exports[`performs hybrid navigations > navigation response 1`] = `
 {
   "url": "https://bluebird.test/navigation",
+  "validation": {},
   "version": "abc123",
   "view": {
     "component": "target.view",
