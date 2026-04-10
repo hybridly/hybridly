@@ -31,19 +31,6 @@ it('allows failures when `--allow-failures` is passed', function () {
     artisan('hybridly:types --allow-failures')->assertExitCode(0);
 });
 
-it('succeeds when the middleware exists and generates types', function () {
-    copy_stubs([
-        'UserData.php' => 'app/Data',
-        'SharedData.php' => 'app/Data',
-        'HandleHybridRequests.php' => 'app/Http/Middleware',
-    ]);
-
-    artisan('hybridly:types')->assertExitCode(0);
-
-    expect(File::exists(base_path('.hybridly/php-types.d.ts')))->toBeTrue();
-    expect(File::exists(base_path('.hybridly/global-properties.d.ts')))->toBeTrue();
-})->skip('Does not work, probably due to where the Laravel skeleton is');
-
 it('generates php types', function () {
     copy_stubs([
         'UserData.php' => 'app/Data',

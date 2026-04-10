@@ -10,7 +10,6 @@ use Spatie\TypeScriptTransformer\TypeScriptTransformerConfig;
 class GenerateGlobalTypesCommand extends Command
 {
     protected const PHP_TYPES_PATH = '.hybridly/php-types.d.ts';
-    protected const GLOBAL_PROPERTIES_PATH = '.hybridly/global-properties.d.ts';
 
     protected $signature = 'hybridly:types {--allow-failures}';
     protected $description = 'Generates the global types definitions for the front-end.';
