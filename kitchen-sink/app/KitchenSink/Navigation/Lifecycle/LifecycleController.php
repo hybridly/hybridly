@@ -8,7 +8,10 @@ use Discovery\Routing\Post;
 use Discovery\Routing\Prefix;
 use Discovery\Routing\Web;
 use Hybridly\Contracts\HybridResponse;
+use Hybridly\Hybridly;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Exceptions;
 use RuntimeException;
 
 use function Hybridly\view;
@@ -34,6 +37,18 @@ final class LifecycleController
     #[Get('/exception', name: 'exception')]
     public function exception(): never
     {
+        throw new RuntimeException('This is an exception thrown from the server.');
+    }
+
+    #[Get('/http500', name: 'http500')]
+    public function http500(Request $request, Hybridly $hybridly): never
+    {
+        Exceptions::fake();
+
+        if (! $request->boolean('modal', default: true)) {
+            $hybridly->renderExceptionsInDevelopment();
+        }
+
         throw new RuntimeException('This is an exception thrown from the server.');
     }
 }

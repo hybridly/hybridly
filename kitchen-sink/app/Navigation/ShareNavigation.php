@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Navigation;
 
+use App\Http404Controller;
 use App\Http500Controller;
 use App\KitchenSink\DataLoading\Deferred\DeferredPropertiesController;
 use App\KitchenSink\DataLoading\Mergeable\MergeablePropertiesController;
@@ -110,7 +111,7 @@ final readonly class ShareNavigation
                 new NavigationItem(
                     label: 'HTTP 404',
                     icon: 'tabler:error-404',
-                    href: '/this-page-does-not-exist',
+                    href: action(Http404Controller::class, absolute: false),
                 ),
                 new NavigationItem(
                     label: 'HTTP 500',

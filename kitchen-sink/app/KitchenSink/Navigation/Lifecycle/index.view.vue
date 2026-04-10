@@ -70,6 +70,25 @@ function sendExceptionRequest() {
 	})
 }
 
+function sendHttp500Request(type: 'modal' | 'actual') {
+	const wasPreventingNonHybridModal = preventNonHybridModal.value
+
+	if (type === 'modal') {
+		preventNonHybridModal.value = false
+	}
+
+	sendLifecycleRequest({
+		url: route('kitchen-sink.navigation.lifecycle.http500'),
+		replace: false,
+		data: {
+			modal: type === 'modal',
+		},
+		hooks: {
+			after: () => useTimeoutFn(() => preventNonHybridModal.value = wasPreventingNonHybridModal, 1000),
+		},
+	})
+}
+
 function sendAbortRequest(method: 'abort-controller' | 'before-hook' | 'data-hook') {
 	const abortController = new AbortController()
 
@@ -294,9 +313,23 @@ const theme = {
 					/>
 					<u-button
 						variant="subtle"
-						label="Invalid (eg. HTTP 500)"
+						label="Invalid (eg. exception thrown)"
 						color="error"
 						@click="sendExceptionRequest()"
+						class="block"
+					/>
+					<u-button
+						variant="subtle"
+						label="HTTP 500 (actual)"
+						color="error"
+						@click="sendHttp500Request('actual')"
+						class="block"
+					/>
+					<u-button
+						variant="subtle"
+						label="HTTP 500 (modal)"
+						color="error"
+						@click="sendHttp500Request('modal')"
 						class="block"
 					/>
 					<u-checkbox class="mt-2" v-model="preventNonHybridModal" label="Prevent exception modal">

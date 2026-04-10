@@ -12,9 +12,8 @@ final class AppServiceProvider extends ServiceProvider
 {
     public function boot(Hybridly $hybridly): void
     {
-        // $hybridly->renderExceptionsUsing(fn (Response $response) => view('error', [
-        //     'status' => $response->getStatusCode(),
-        // ]));
-        // $hybridly->renderExceptionsInDevelopment();
+        $hybridly->renderExceptionsUsing(fn (Response $response) => view('error', [
+            'status' => $response->getStatusCode(),
+        ]));
     }
 }
