@@ -164,13 +164,9 @@ final class HybridlyServiceProvider extends ServiceProvider
             'Version (composer)' => Version::getPrettyComposerVersion(),
             'Version (npm)' => Version::getPrettyNpmVersion(),
             'Application main' => $this->configuration->architecture->applicationMainPath,
-            'Extensions' => implode(', ', $this->configuration->architecture->extensions),
             'Eager view loading' => $this->configuration->architecture->eagerLoadViews
                 ? '<fg=yellow;options=bold>ENABLED</>'
                 : '<fg=yellow;options=bold>DISABLED</>',
-            'Architecture' => $this->configuration->architecture->loadDefaultModule
-                ? '<fg=green;options=bold>DEFAULT</>'
-                : '<fg=blue;options=bold>CUSTOM</>',
         ]);
     }
 
