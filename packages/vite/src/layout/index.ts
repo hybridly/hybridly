@@ -28,6 +28,20 @@ export default (options: ViteOptions, config: DynamicConfiguration): Plugin => {
 			const updatedCode = source.replace(templateRegExp, (_, layoutName) => {
 				const [hasLang, lang] = code.match(LANG_REGEX) ?? []
 				const layouts: string[] = layoutName?.toString()?.replaceAll(' ', '').split(',') ?? [defaultLayoutName]
+
+				if (layouts.length === 1 && layouts.at(0) === 'false') {
+					debug.layout(`User opted out of layouts`, {
+						layouts,
+					})
+
+					return `
+            <script${hasLang ? ` lang="${lang}"` : ''}>
+            export default { layout: [] }
+            </script>
+            <template>
+          `.replace(/^\s+/gm, '')
+				}
+
 				const importName = (i: number) => `__hybridly_layout_${i}`
 				const exports = layouts.map((_, i) => importName(i))
 				const imports = layouts.reduce((imports, layoutName, i) => `
