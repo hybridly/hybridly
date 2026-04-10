@@ -1,4 +1,7 @@
-import { debug } from '@hybridly/utils'
+import { debug, match, showResponseErrorModal } from '@hybridly/utils'
+import { AxiosError } from 'axios'
+import { getRouterContext } from 'hybridly'
+import { runHooks } from '../../plugins'
 import { enqueueResponse } from '../response/response-manager'
 import type { PendingHybridRequest } from '../types'
 import { sendHybridRequest } from './request'
@@ -83,24 +86,61 @@ function processRequest(request: PendingHybridRequest, onFinally: () => void): P
 			})
 		})
 		.catch((error: unknown) => {
-			handleTransportError(request, error)
+			if (!(error instanceof Error)) {
+				error = new Error('Unknown error during request processing.')
+			}
+
+			handleTransportError(request, error as Error)
 		})
-		.finally(() => {
+		.finally(async () => {
 			request.completed = true
+			debug.router('Ended navigation.', request)
+			await runHooks('after', request.options.hooks, request, getRouterContext())
 			onFinally()
 		})
 }
 
-function handleTransportError(request: PendingHybridRequest, error: unknown): void {
-	const actual = error instanceof Error
-		? error
-		: new Error('Unknown request transport error.')
+async function handleTransportError(request: PendingHybridRequest, error: Error | AxiosError): Promise<void> {
+	const context = getRouterContext()
+	const response = error instanceof AxiosError ? error.response : undefined
 
-	// TODO: might need revisiting
+	await match(error.constructor.name, {
+		NavigationCancelledError: async () => {
+			debug.router('The request was cancelled through the "before" hook.', error)
+			await runHooks('abort', request.options.hooks, request, context)
+		},
+		AbortError: async () => {
+			debug.router('The request was aborted.', error)
+			await runHooks('abort', request.options.hooks, request, context)
+		},
+		NotAHybridResponseError: async () => {
+			debug.router('The response was not hybrid.')
+			console.error(error)
+
+			await runHooks('invalid', request.options.hooks, request, response!, context)
+
+			if (context.responseErrorModals) {
+				showResponseErrorModal(response!.data)
+			}
+		},
+		default: async () => {
+			if (error?.name === 'CanceledError') {
+				debug.router('The request was cancelled.', error)
+				await runHooks('abort', request.options.hooks, request, context)
+			} else {
+				debug.router('An unknown error occured.', error)
+				console.error(error)
+				await runHooks('exception', request.options.hooks, error, request, context)
+			}
+		},
+	})
+
+	await runHooks('fail', request.options.hooks, request, context)
+
 	request.resolve({
 		error: {
-			type: actual.constructor.name,
-			actual,
+			type: error.constructor.name,
+			actual: error,
 		},
 	})
 }
