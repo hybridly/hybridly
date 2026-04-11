@@ -1,4 +1,4 @@
-import { registerHook } from '@hybridly/core'
+import { parseQueryString, registerHook } from '@hybridly/core'
 import type { MaybeRefOrGetter, Ref } from 'vue'
 import { reactive, ref, toValue, watch } from 'vue'
 
@@ -11,15 +11,14 @@ export function useQueryParameters<T extends Record<string, any> = Record<string
 	const state: Record<string, any> = reactive({})
 
 	function updateState() {
-		const params = new URLSearchParams(window.location.search)
+		const params = parseQueryString(window.location.search)
 		const unusedKeys = new Set(Object.keys(state))
-		for (const key of params.keys()) {
-			const paramsForKey = params.getAll(key)
-			state[key] = paramsForKey.length > 1
-				? paramsForKey
-				: (params.get(key) || '')
+
+		for (const [key, value] of Object.entries(params)) {
+			state[key] = value
 			unusedKeys.delete(key)
 		}
+
 		Array.from(unusedKeys).forEach((key) => delete state[key])
 	}
 
@@ -31,13 +30,12 @@ export function useQueryParameters<T extends Record<string, any> = Record<string
 
 type RouteParameter = string | number | boolean | null | undefined
 type TransformFunction<V extends RouteParameter, R> = (val: V) => R
-type TransformType<T extends RouteParameter, O> =
-	O extends { transform: 'number' } ? number :
-		O extends { transform: 'bool' } ? boolean :
-			O extends { transform: 'string' } ? string :
-				O extends { transform: 'date' } ? Date :
-					O extends { transform: TransformFunction<T, infer R> } ? R :
-						T
+type TransformType<T extends RouteParameter, O> = O extends { transform: 'number' } ? number
+	: O extends { transform: 'bool' } ? boolean
+	: O extends { transform: 'string' } ? string
+	: O extends { transform: 'date' } ? Date
+	: O extends { transform: TransformFunction<T, infer R> } ? R
+	: T
 
 interface UseQueryParameterOptions<V extends RouteParameter, R> {
 	/**
@@ -57,8 +55,8 @@ interface UseQueryParameterOptions<V extends RouteParameter, R> {
  * @see https://hybridly.dev/api/utils/use-query-parameter.html
  */
 export function useQueryParameter<
-  ParameterType extends RouteParameter = RouteParameter,
-  Options extends UseQueryParameterOptions<ParameterType, any> = UseQueryParameterOptions<ParameterType, ParameterType>,
+	ParameterType extends RouteParameter = RouteParameter,
+	Options extends UseQueryParameterOptions<ParameterType, any> = UseQueryParameterOptions<ParameterType, ParameterType>,
 >(
 	name: string,
 	options: Options = {} as Options,

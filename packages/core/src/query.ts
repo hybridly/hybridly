@@ -1,6 +1,16 @@
-import { parse, stringify } from 'picoquery'
+import { isPlainObject } from 'es-toolkit/predicate'
+import { parse, stringify } from 'neoqs'
 
 export type QueryArrayFormat = 'indices' | 'brackets'
+export type QueryValue =
+	| string
+	| number
+	| boolean
+	| null
+	| undefined
+	| QueryValue[]
+	| Set<QueryValue>
+	| { [key: string]: QueryValue }
 
 export interface StringifyQueryOptions {
 	arrayFormat?: QueryArrayFormat
@@ -16,63 +26,28 @@ export function parseQueryString(query: string): Record<string, any> {
 		return {}
 	}
 
-	return parse(source, {
-		nesting: true,
-		nestingSyntax: 'index',
-		arrayRepeat: true,
-		arrayRepeatSyntax: 'bracket',
-	}) as Record<string, any>
+	return parse(source) as Record<string, any>
 }
 
-export function stringifyQueryString(value: unknown, options: StringifyQueryOptions = {}): string {
+export function stringifyQueryString(value: QueryValue, options: StringifyQueryOptions = {}): string {
 	const source = normalizeQueryValue(value)
 	const arrayFormat = options.arrayFormat ?? 'brackets'
-	const query = stringify(source as Record<string, any>, {
-		nesting: true,
-		nestingSyntax: 'index',
-		arrayRepeat: arrayFormat === 'brackets',
-		arrayRepeatSyntax: 'bracket',
-	})
-	const normalizedQuery = unescapeBracketSyntaxInKeys(query)
 
-	if (!normalizedQuery) {
+	const query = stringify(source as Record<string, unknown>, {
+		arrayFormat,
+		encodeValuesOnly: true,
+	})
+
+	if (!query) {
 		return ''
 	}
 
 	return options.addQueryPrefix
-		? `?${normalizedQuery}`
-		: normalizedQuery
+		? `?${query}`
+		: query
 }
 
-function unescapeBracketSyntaxInKeys(query: string): string {
-	if (!query) {
-		return query
-	}
-
-	return query
-		.split('&')
-		.map((entry) => {
-			const separator = entry.indexOf('=')
-
-			if (separator < 0) {
-				return decodeBracketSyntax(entry)
-			}
-
-			const key = entry.slice(0, separator)
-			const value = entry.slice(separator)
-
-			return `${decodeBracketSyntax(key)}${value}`
-		})
-		.join('&')
-}
-
-function decodeBracketSyntax(value: string): string {
-	return value
-		.replace(/%5B/gi, '[')
-		.replace(/%5D/gi, ']')
-}
-
-function normalizeQueryValue(value: unknown): unknown {
+function normalizeQueryValue(value: QueryValue): QueryValue {
 	if (value instanceof Set) {
 		return [...value].map((entry) => normalizeQueryValue(entry))
 	}
@@ -84,18 +59,9 @@ function normalizeQueryValue(value: unknown): unknown {
 	if (isPlainObject(value)) {
 		return Object.entries(value).reduce((result, [key, entry]) => ({
 			...result,
-			[key]: normalizeQueryValue(entry),
-		}), {})
+			[key]: normalizeQueryValue(entry as QueryValue),
+		}), {} as { [key: string]: QueryValue })
 	}
 
 	return value
-}
-
-function isPlainObject(value: unknown): value is Record<string, unknown> {
-	if (typeof value !== 'object' || value === null) {
-		return false
-	}
-
-	const prototype = Object.getPrototypeOf(value)
-	return prototype === null || prototype === Object.prototype
 }

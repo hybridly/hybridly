@@ -41,6 +41,7 @@ export const RouterLink: DefineComponent<RouterLinkProps> = defineComponent({
 				url.search = stringifyQueryString(merge(data as any, parseQueryString(url.search)), {
 					arrayFormat: 'indices',
 				})
+
 				data = {}
 			}
 

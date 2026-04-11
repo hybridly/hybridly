@@ -1,11 +1,12 @@
 import { merge } from '@hybridly/utils'
 import { trimEnd } from 'es-toolkit/string'
+import type { QueryValue } from './query'
 import { parseQueryString, stringifyQueryString } from './query'
 
 export type UrlResolvable = string | URL | Location
 export type UrlTransformable = BaseUrlTransformable | ((string: URL) => BaseUrlTransformable)
 type BaseUrlTransformable = Partial<Omit<URL, 'searchParams' | 'toJSON' | 'toString'>> & {
-	query?: any
+	query?: Record<string, QueryValue>
 	trailingSlash?: boolean
 }
 
@@ -23,22 +24,18 @@ export function makeUrl(href: UrlResolvable, transformations: UrlTransformable =
 		// to double slashes, which breaks URL instanciation.
 		const base = document?.location?.href === '//' ? undefined : document.location.href
 		const url = new URL(String(href), base)
+
 		transformations = typeof transformations === 'function'
 			? transformations(url) ?? {}
 			: transformations ?? {}
 
 		Object.entries(transformations).forEach(([key, value]) => {
 			if (key === 'query') {
-				const currentQueryParameters = merge(
-					parseQueryString(url.search),
-					value,
-					{ mergePlainObjects: true },
-				)
-
 				key = 'search'
-				value = stringifyQueryString(currentQueryParameters, {
-					arrayFormat: 'brackets',
-				})
+				value = stringifyQueryString(
+					merge(parseQueryString(url.search), value as Record<string, QueryValue>, { mergePlainObjects: true }),
+					{ arrayFormat: 'brackets' },
+				)
 			}
 
 			Reflect.set(url, key, value)

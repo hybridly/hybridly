@@ -34,11 +34,11 @@
     },
     "packages/core": {
       "name": "@hybridly/core",
-      "version": "0.10.0-beta.14",
+      "version": "0.10.0-beta.16",
       "dependencies": {
         "@hybridly/utils": "workspace:*",
         "es-toolkit": "catalog:",
-        "picoquery": "catalog:",
+        "neoqs": "catalog:",
         "superjson": "catalog:",
       },
       "devDependencies": {
@@ -47,7 +47,7 @@
     },
     "packages/hybridly": {
       "name": "hybridly",
-      "version": "0.10.0-beta.14",
+      "version": "0.10.0-beta.16",
       "dependencies": {
         "@hybridly/core": "workspace:*",
         "@hybridly/vite": "workspace:*",
@@ -56,7 +56,7 @@
     },
     "packages/utils": {
       "name": "@hybridly/utils",
-      "version": "0.10.0-beta.14",
+      "version": "0.10.0-beta.16",
       "dependencies": {
         "@clickbar/dot-diver": "catalog:",
         "debug": "catalog:",
@@ -66,7 +66,7 @@
     },
     "packages/vite": {
       "name": "@hybridly/vite",
-      "version": "0.10.0-beta.14",
+      "version": "0.10.0-beta.16",
       "dependencies": {
         "@hybridly/core": "workspace:*",
         "@vitejs/plugin-vue": "catalog:",
@@ -88,7 +88,7 @@
     },
     "packages/vue": {
       "name": "@hybridly/vue",
-      "version": "0.10.0-beta.14",
+      "version": "0.10.0-beta.16",
       "dependencies": {
         "@clickbar/dot-diver": "catalog:",
         "@hybridly/core": "workspace:*",
@@ -128,16 +128,16 @@
     "happy-dom": "^20.8.4",
     "magic-string": "^0.30.17",
     "msw": "^2.12.13",
+    "neoqs": "^6.13.0",
     "nprogress": "^0.2.0",
     "picocolors": "^1.1.1",
-    "picoquery": "^2.5.0",
     "rollup": "^4.59.0",
     "superjson": "^2.2.2",
     "tailwindcss": "^3.4.17",
     "type-fest": "^5.4.4",
     "typescript": "^5.8.3",
     "vite": "^8.0.0",
-    "vite-plugin-run": "0.8.0",
+    "vite-plugin-run": "^0.8.0",
     "vitest": "^4.1.0",
     "vue": "^3.5.30",
   },
@@ -900,6 +900,8 @@
 
     "nanoid": ["nanoid@3.3.11", "", { "bin": { "nanoid": "bin/nanoid.cjs" } }, "sha512-N8SpfPUnUp1bK+PMYW8qSWdl9U+wwNWI4QKxOYDy9JAro3WMX7p2OeVRF9v+347pnakNevPmiHhNmZ2HbFA76w=="],
 
+    "neoqs": ["neoqs@6.13.0", "", {}, "sha512-IysBpjrEG9qiUb/IT6XrXSz2ASzBxLebp4s8/GBm7STYC315vMNqH0aWdRR+f7KvXK4aRlLcf5r2Z6dOTxQSrQ=="],
+
     "node-fetch-native": ["node-fetch-native@1.6.7", "", {}, "sha512-g9yhqoedzIUm0nTnTqAQvueMPVOuIY16bqgAJJC8XOOubYFNwz6IER9qs0Gq2Xd0+CecCKFjtdDTMA4u4xG06Q=="],
 
     "nopt": ["nopt@7.2.1", "", { "dependencies": { "abbrev": "^2.0.0" }, "bin": { "nopt": "bin/nopt.js" } }, "sha512-taM24ViiimT/XntxbPyJQzCG+p4EKOpgD3mxFwW38mGjVUrfERQOeY4EDHjdnptttfHuHQXFx+lTP08Q+mLa/w=="],
@@ -937,8 +939,6 @@
     "picocolors": ["picocolors@1.1.1", "", {}, "sha512-xceH2snhtb5M9liqDsmEw56le376mTZkEX/jEb/RxNFyegNul7eNslCXP9FDj/Lcu0X8KEyMceP2ntpaHrDEVA=="],
 
     "picomatch": ["picomatch@4.0.3", "", {}, "sha512-5gTmgEY/sqK6gFXLIsQNH19lWb4ebPDLA4SdLP7dsWkIXHWlG66oPuVvXSGFPppYZz8ZDZq0dYYrbHfBCVUb1Q=="],
-
-    "picoquery": ["picoquery@2.5.0", "", {}, "sha512-j1kgOFxtaCyoFCkpoYG2Oj3OdGakadO7HZ7o5CqyRazlmBekKhbDoUnNnXASE07xSY4nDImWZkrZv7toSxMi/g=="],
 
     "pkg-types": ["pkg-types@2.3.0", "", { "dependencies": { "confbox": "^0.2.2", "exsolve": "^1.0.7", "pathe": "^2.0.3" } }, "sha512-SIqCzDRg0s9npO5XQ3tNZioRY1uK06lA41ynBC1YmFTmnY6FjUjVt6s4LoADmwoig1qqD0oK8h1p/8mlMx8Oig=="],
 

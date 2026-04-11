@@ -71,7 +71,7 @@
 			"magic-string": "^0.30.17",
 			"msw": "^2.12.13",
 			"nprogress": "^0.2.0",
-			"picoquery": "^2.5.0",
+			"neoqs": "^6.13.0",
 			"picocolors": "^1.1.1",
 			"rollup": "^4.59.0",
 			"superjson": "^2.2.2",

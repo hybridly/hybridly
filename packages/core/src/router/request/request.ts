@@ -14,6 +14,7 @@ import { getInternalRouterContext, getRouterContext } from '../../context'
 import { NavigationCancelledError } from '../../errors'
 import type { HttpResponse, HttpUploadProgressEvent } from '../../http'
 import { runHooks } from '../../plugins'
+import { QueryValue } from '../../query'
 import { makeUrl } from '../../url'
 import { createPromiseWithResolvers } from '../../utils'
 import type { HybridRequestOptions, Method, NavigationResponse, PendingHybridRequest } from '../types'
@@ -145,10 +146,12 @@ export async function transformOptions(options: HybridRequestOptions) {
 	// Converts data to query parameters if the method is GET
 	// and some non-FormData data is provided.
 	if (!(options.data instanceof FormData) && options.method === 'GET' && Object.keys(options.data ?? {}).length) {
-		debug.router('Transforming data to query parameters.', options.data)
 		options.url = makeUrl(options.url ?? context.url, {
-			query: options.data,
+			query: options.data as Record<string, QueryValue>,
 		})
+
+		debug.router('Transforming data to query parameters.', options.data, options.url)
+
 		options.data = {}
 	}
 

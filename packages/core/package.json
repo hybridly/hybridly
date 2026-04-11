@@ -41,7 +41,7 @@
 	},
 	"dependencies": {
 		"@hybridly/utils": "workspace:*",
-		"picoquery": "catalog:",
+		"neoqs": "catalog:",
 		"superjson": "catalog:",
 		"es-toolkit": "catalog:"
 	},

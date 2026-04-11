@@ -13,6 +13,36 @@ describe('makeUrl', () => {
 			expect(makeUrl(expected).toString()).toBe(actual)
 		})
 	})
+
+	it('removes existing query values when overriding with undefined', () => {
+		expect(
+			makeUrl('https://wingman.test/notices-to-airmen?filters[search][value]=LFMA', {
+				query: {
+					filters: {
+						search: {
+							value: undefined,
+							search: undefined,
+						},
+					},
+				},
+			}).toString(),
+		).toBe('https://wingman.test/notices-to-airmen')
+	})
+
+	it('does not keep trailing ampersands when merged query branches are empty', () => {
+		expect(
+			makeUrl('https://wingman.test/notices-to-airmen?filters[search][value]=LFMA', {
+				query: {
+					filters: {
+						something: {
+							value: undefined,
+							search: undefined,
+						},
+					},
+				},
+			}).toString(),
+		).toBe('https://wingman.test/notices-to-airmen?filters[search][value]=LFMA')
+	})
 })
 
 describe('sameOrigin', () => {
