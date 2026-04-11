@@ -1,16 +1,15 @@
+import type { DynamicConfiguration } from '@hybridly/core'
 import path from 'node:path'
 import { type Plugin } from 'vite'
-import type { DynamicConfiguration } from '@hybridly/core'
 import { CONFIG_PLUGIN_NAME, CONFIG_VIRTUAL_MODULE_ID, RESOLVED_CONFIG_VIRTUAL_MODULE_ID } from '../constants'
+import { generateLaravelIdeaHelper, generateTsConfig, generateVueExtensionFile } from '../typegen'
 import type { ViteOptions } from '../types'
-import { generateLaravelIdeaHelper, generateRouteDefinitionFile, generateTsConfig, generateVueExtensionFile } from '../typegen'
-import { loadConfiguration } from './load'
 import { getClientCode } from './client'
+import { loadConfiguration } from './load'
 
 export default (options: ViteOptions, config: DynamicConfiguration): Plugin => {
 	generateTsConfig(options, config)
 	generateLaravelIdeaHelper(config)
-	generateRouteDefinitionFile(options, config)
 	generateVueExtensionFile()
 
 	return {
@@ -50,13 +49,7 @@ export default (options: ViteOptions, config: DynamicConfiguration): Plugin => {
 					return await forceRestart('Configuration file changed')
 				}
 
-				// When routing changes, write route definitions
-				// to the disk and force-reload the dev server
-				if (/routes\/.*\.php/.test(file) || /routes\.php/.test(file)) {
-					return await forceRestart('Routing changed')
-				}
-
-				// Force-reload the server when the routing or components change
+				// Force-reload the server when components change
 				if (/.*\.vue$/.test(file)) {
 					loadConfiguration()
 						.then((updatedConfig) => {

@@ -1,7 +1,7 @@
 import run from 'vite-plugin-run'
 import type { Runner } from 'vite-plugin-run'
-import type { ViteOptions } from '../types'
 import { getPhpExecutable } from '../config/env'
+import type { ViteOptions } from '../types'
 
 async function getRunOptions(options: ViteOptions): Promise<Runner[]> {
 	if (options.run === false) {
@@ -13,12 +13,10 @@ async function getRunOptions(options: ViteOptions): Promise<Runner[]> {
 
 	return [
 		{
-			name: 'Generate TypeScript types',
+			name: 'Generate TypeScript definitions',
 			run: [...php, 'artisan', 'hybridly:types', (options.allowTypeGenerationFailures !== false) ? '--allow-failures' : ''].filter(Boolean),
 			pattern: [
-				'+(app|src)/**/*Data.php',
-				'+(app|src)/**/Enums/*.php',
-				'+(app|src)/**/Middleware/HandleHybridRequests.php',
+				'+(app|config|routes|src)/**/*.php',
 			],
 		},
 		{
@@ -30,4 +28,4 @@ async function getRunOptions(options: ViteOptions): Promise<Runner[]> {
 	]
 }
 
-export { Runner, getRunOptions, run }
+export { getRunOptions, run, Runner }

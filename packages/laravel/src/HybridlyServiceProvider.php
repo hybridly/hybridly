@@ -4,7 +4,6 @@ namespace Hybridly;
 
 use Hybridly\Architecture\ComponentRepository;
 use Hybridly\Architecture\JustInTimeComponentRepository;
-use Hybridly\Architecture\ResourcesComponentLoader;
 use Hybridly\Commands\GenerateGlobalTypesCommand;
 use Hybridly\Commands\I18nCommand;
 use Hybridly\Commands\MakeTableCommand;
