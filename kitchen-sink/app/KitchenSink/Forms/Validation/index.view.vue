@@ -234,7 +234,7 @@ function removeKnownSpellField(index: number) {
 						variant="subtle"
 						label="Submit and don't reset form"
 						:loading="mageRegistrationForm.processing"
-						@click="mageRegistrationForm.submit({ reset: false })"
+						@click="mageRegistrationForm.submit({ resetOnSuccess: false })"
 					/>
 					<u-button
 						type="submit"
@@ -315,7 +315,7 @@ function removeKnownSpellField(index: number) {
 						variant="subtle"
 						label="Submit and don't reset form"
 						:loading="spellDiscoveryForm.processing"
-						@click="spellDiscoveryForm.submit({ reset: false })"
+						@click="spellDiscoveryForm.submit({ resetOnSuccess: false })"
 					/>
 					<u-button
 						type="submit"

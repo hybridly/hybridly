@@ -18,8 +18,8 @@ type Errors<T extends SearchableObject> = {
 export type DefaultFormOptions = Pick<
 	FormOptions<object>,
 	| 'timeout'
-	| 'reset'
-	| 'updateInitials'
+	| 'resetOnSuccess'
+	| 'setDefaultOnSuccess'
 	| 'progress'
 	| 'preserveScroll'
 	| 'preserveState'
@@ -41,15 +41,15 @@ interface FormOptions<T extends SearchableObject> extends Omit<HybridRequestOpti
 	 */
 	timeout?: number
 	/**
-	 * Resets the fields of the form to their initial value after a successful submission.
+	 * Resets the fields of the form to their default value after a successful submission.
 	 * @default true
 	 */
-	reset?: boolean
+	resetOnSuccess?: boolean
 	/**
-	 * Updates the initial values from the form after a successful submission.
+	 * Updates the default values from the form after a successful submission.
 	 * @default false
 	 */
-	updateInitials?: boolean
+	setDefaultOnSuccess?: boolean
 	/**
 	 * Callback executed before the form submission for transforming the fields.
 	 */
@@ -66,11 +66,11 @@ export interface FormReturn<T extends SearchableObject, P extends Path<T> & stri
 	setErrors: (incoming: Errors<T>) => void
 	clearErrors: (...keys: P[]) => void
 	clearError: (key: P) => void
-	setInitial: (newInitial: Partial<T>) => void
+	setDefault: (newDefault: Partial<T>) => void
 	hasDirty: (...keys: P[]) => boolean
 	submit: (optionsOverrides?: Omit<FormOptions<T>, 'fields' | 'key'>) => Promise<any>
 	hasErrors: boolean
-	initial: DeepReadonly<T>
+	defaults: DeepReadonly<T>
 	loaded: DeepReadonly<T>
 	progress: Progress | undefined
 	isDirty: boolean
@@ -101,7 +101,7 @@ export function useForm<
 	}
 
 	/** Fields that were initially set up. */
-	const initial = safeClone(options.fields)
+	const defaults = safeClone(options.fields)
 	/** Fields as they were when loaded. */
 	const loaded = safeClone(historyData?.fields ?? options.fields)
 	/** Current fields. */
@@ -128,11 +128,11 @@ export function useForm<
 	let abortController: AbortController | undefined
 
 	/**
-	 * Sets new initial values for the form, so subsequent resets will use thse values.
+	 * Sets new default values for the form, so subsequent resets will use these values.
 	 */
-	function setInitial(newInitial: Partial<T>) {
-		Object.entries(newInitial).forEach(([key, value]) => {
-			Reflect.set(initial, key, safeClone(value))
+	function setDefault(newDefault: Partial<T>) {
+		Object.entries(newDefault).forEach(([key, value]) => {
+			Reflect.set(defaults, key, safeClone(value))
 		})
 	}
 
@@ -159,7 +159,7 @@ export function useForm<
 	}
 
 	/**
-	 * Resets the fields to their initial values.
+	 * Resets the fields to their default values.
 	 */
 	function resetFields(...keys: P[]) {
 		if (keys.length === 0) {
@@ -167,7 +167,7 @@ export function useForm<
 		}
 
 		keys.forEach((key) => {
-			Reflect.set(fields, key, safeClone(Reflect.get(initial, key)))
+			Reflect.set(fields, key, safeClone(Reflect.get(defaults, key)))
 		})
 	}
 
@@ -196,8 +196,8 @@ export function useForm<
 		const optionsWithOverrides = merge<FormOptions<T>>(formStore.getDefaultConfig(), resolvedOptions, { mergePlainObjects: true })
 		const {
 			timeout,
-			reset,
-			updateInitials,
+			resetOnSuccess,
+			setDefaultOnSuccess,
 			transform,
 			...requestOptions
 		} = optionsWithOverrides
@@ -226,10 +226,12 @@ export function useForm<
 				before: (_request, context) => {
 					request.value = _request
 					resetSubmissionState()
+
 					return hooks.before?.(_request, context)
 				},
 				start: (request, context) => {
 					processing.value = true
+
 					return hooks.start?.(request, context)
 				},
 				progress: (incoming, request, context) => {
@@ -237,6 +239,7 @@ export function useForm<
 						event: incoming,
 						percentage: incoming.percentage,
 					}
+
 					return hooks.progress?.(incoming, request, context)
 				},
 				'validation-error': (incoming, request, context) => {
@@ -244,25 +247,31 @@ export function useForm<
 					failed.value = true
 					recentlyFailed.value = true
 					timeoutIds.recentlyFailed = setTimeout(() => recentlyFailed.value = false, timeout ?? 5000)
+
 					return hooks['validation-error']?.(incoming, request, context)
 				},
 				success: (payload, request, response, context) => {
 					clearErrors()
-					if (updateInitials) {
-						setInitial(fields)
+
+					if (setDefaultOnSuccess) {
+						setDefault(fields)
 					}
-					if (reset !== false) {
+
+					if (resetOnSuccess !== false) {
 						resetFields()
 					}
+
 					successful.value = true
 					recentlySuccessful.value = true
 					timeoutIds.recentlySuccessful = setTimeout(() => recentlySuccessful.value = false, timeout ?? 5000)
+
 					return hooks.success?.(payload, request, response, context)
 				},
 				after: (_request, context) => {
 					request.value = undefined
 					progress.value = undefined
 					processing.value = false
+
 					return hooks.after?.(_request, context)
 				},
 			},
@@ -290,7 +299,7 @@ export function useForm<
 			return isDirty.value
 		}
 
-		return keys.some((key) => !isEqual(toRaw(get(fields, key)), toRaw(get(initial, key))))
+		return keys.some((key) => !isEqual(toRaw(get(fields, key)), toRaw(get(defaults, key))))
 	}
 
 	/**
@@ -318,7 +327,7 @@ export function useForm<
 	}
 
 	watch([fields, processing, errors], () => {
-		isDirty.value = !isEqual(toRaw(initial), toRaw(fields))
+		isDirty.value = !isEqual(toRaw(defaults), toRaw(fields))
 
 		if (shouldRemember) {
 			router.history.remember(historyKey, {
@@ -338,11 +347,11 @@ export function useForm<
 		setErrors,
 		clearErrors,
 		clearError,
-		setInitial,
+		setDefault,
 		hasDirty,
 		submit,
 		hasErrors: computed(() => Object.values(errors.value ?? {}).length > 0),
-		initial: initial as DeepReadonly<typeof initial>,
+		defaults: defaults as DeepReadonly<typeof defaults>,
 		loaded: loaded as DeepReadonly<typeof loaded>,
 		progress: progress as DeepReadonly<typeof progress>,
 		isDirty: isDirty as DeepReadonly<typeof isDirty>,

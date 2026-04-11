@@ -18,7 +18,8 @@ interface FormOptions<T> extends HybridRequestOptions {
 	fields: T
 	key?: string | false
 	timeout?: number
-	reset?: boolean
+	resetOnSuccess?: boolean
+	setDefaultOnSuccess?: boolean
 	transform?: (fields: T) => T
 }
 ```
@@ -51,14 +52,14 @@ const login = useForm({
 
 Defines the shape of the form data. It is mandatory and provides typings for other form functionality, such as `errors` or `transform`.
 
-### `reset`
+### `resetOnSuccess`
 
 - **Type**: `boolean`
 - **Default**: `true`
 
 Defines whether the fields should be reset when the submission is successful.
 
-### `updateInitials`
+### `setDefaultOnSuccess`
 
 - **Type**: `boolean`
 - **Default**: `false`

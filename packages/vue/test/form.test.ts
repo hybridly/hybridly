@@ -1,11 +1,17 @@
-import { useForm } from '@hybridly/vue'
+import { router } from '@hybridly/core'
+import { Form, useForm } from '@hybridly/vue'
+import { mount } from '@vue/test-utils'
 import { beforeEach, test, vi } from 'vitest'
-import { nextTick } from 'vue'
+import { defineComponent, nextTick } from 'vue'
 import { server } from '../../core/test/server'
 import { delay, fakeRouterContext, mockInvalidUrl, mockSuccessfulUrl } from '../../core/test/utils'
 
 beforeEach(async () => {
-	await fakeRouterContext()
+	await fakeRouterContext({
+		adapter: {
+			executeOnMounted: (callback) => callback(),
+		},
+	})
 })
 
 test('it resets dirty state after successful form submission', async ({ expect }) => {
@@ -63,7 +69,7 @@ test('it updates failed and successful', async ({ expect }) => {
 		url: 'http://localhost.test/navigation',
 		timeout: 10,
 		fields: {},
-		reset: false,
+		resetOnSuccess: false,
 	})
 
 	expect(form.successful).toBe(false)
@@ -127,8 +133,8 @@ test('it can override all options', async ({ expect }) => {
 	const notToCall = vi.fn()
 	const toCall = vi.fn()
 	const form = useForm({
-		updateInitials: true,
-		reset: false,
+		setDefaultOnSuccess: true,
+		resetOnSuccess: false,
 		url: notToCall,
 		method: 'PATCH',
 		fields: {
@@ -149,8 +155,8 @@ test('it can override all options', async ({ expect }) => {
 	await form.submit({
 		url: () => 'http://localhost.test/navigation',
 		method: 'POST',
-		updateInitials: false,
-		reset: true,
+		setDefaultOnSuccess: false,
+		resetOnSuccess: true,
 		hooks: {
 			success: toCall,
 		},
@@ -162,4 +168,215 @@ test('it can override all options', async ({ expect }) => {
 	expect(form.fields.foo).toBe('bar')
 	expect(notToCall).toBeCalledTimes(0)
 	expect(toCall).toBeCalledTimes(3)
+})
+
+test('it submits nested data from native form inputs', async ({ expect }) => {
+	server.resetHandlers(mockSuccessfulUrl('http://localhost.test/users', 'post'))
+
+	const navigateSpy = vi.spyOn(router, 'navigate')
+
+	const TestComponent = defineComponent({
+		components: { Form },
+		template: `
+			<Form action="http://localhost.test/users" method="post">
+				<input type="text" name="user.name" value="John Doe" />
+				<input type="text" name="user.skills[]" value="JavaScript" />
+				<input type="text" name="address.street" value="123 Main St" />
+				<button type="submit">Submit</button>
+			</Form>
+		`,
+	})
+
+	const wrapper = mount(TestComponent)
+
+	await wrapper.find('form').trigger('submit')
+	await nextTick()
+
+	const [options] = navigateSpy.mock.calls.at(0) ?? []
+
+	expect(options?.data).toEqual({
+		user: {
+			name: 'John Doe',
+			skills: ['JavaScript'],
+		},
+		address: {
+			street: '123 Main St',
+		},
+	})
+})
+
+test('it exposes slot utilities and disables form while processing', async ({ expect }) => {
+	server.resetHandlers(mockSuccessfulUrl('http://localhost.test/users', 'post'))
+
+	const navigateSpy = vi.spyOn(router, 'navigate')
+	const startHook = vi.fn(async () => {
+		await delay(80)
+	})
+
+	const TestComponent = defineComponent({
+		components: { Form },
+		setup() {
+			return {
+				startHook,
+			}
+		},
+		template: `
+			<Form
+				action="http://localhost.test/users"
+				method="post"
+				disable-while-processing
+				:options="{ preserveScroll: true, hooks: { start: startHook } }"
+				v-slot="{ submit, processing }"
+			>
+				<input type="text" name="user.name" value="John Doe" />
+				<button id="submit" type="button" @click="submit()">Submit</button>
+				<span id="processing">{{ processing }}</span>
+			</Form>
+		`,
+	})
+
+	const wrapper = mount(TestComponent)
+
+	await wrapper.find('#submit').trigger('click')
+
+	await vi.waitFor(() => {
+		expect(wrapper.find('form').attributes('inert')).toBe('')
+	})
+
+	await vi.waitFor(() => {
+		expect(wrapper.find('form').attributes('inert')).toBeUndefined()
+	})
+
+	const [options] = navigateSpy.mock.calls.at(0) ?? []
+
+	expect(options?.preserveScroll).toBe(true)
+	expect(startHook).toBeCalledTimes(1)
+})
+
+test('it resets native controls through slot reset helper', async ({ expect }) => {
+	const TestComponent = defineComponent({
+		components: { Form },
+		template: `
+			<Form action="http://localhost.test/users" method="post" v-slot="{ reset }">
+				<input id="spell" type="text" name="spell_name" value="Zoltraak" />
+				<button id="reset" type="button" @click="reset()">Reset</button>
+			</Form>
+		`,
+	})
+
+	const wrapper = mount(TestComponent)
+	const input = wrapper.find('#spell')
+
+	await input.setValue('Flamme')
+	expect((input.element as HTMLInputElement).value).toBe('Flamme')
+
+	await wrapper.find('#reset').trigger('click')
+	await nextTick()
+
+	expect((wrapper.find('#spell').element as HTMLInputElement).value).toBe('Zoltraak')
+})
+
+test('it can set defaults on success before reset-on-success', async ({ expect }) => {
+	server.resetHandlers(mockSuccessfulUrl('http://localhost.test/users', 'post'))
+
+	const TestComponent = defineComponent({
+		components: { Form },
+		template: `
+			<Form
+				action="http://localhost.test/users"
+				method="post"
+				:set-default-on-success="true"
+				:reset-on-success="true"
+				v-slot="{ submit }"
+			>
+				<input id="spell" type="text" name="spell_name" value="Zoltraak" />
+				<button id="submit" type="button" @click="submit()">Submit</button>
+			</Form>
+		`,
+	})
+
+	const wrapper = mount(TestComponent)
+	const input = wrapper.find('#spell')
+
+	await input.setValue('Flamme')
+	await wrapper.find('#submit').trigger('click')
+	await delay(20)
+
+	expect((wrapper.find('#spell').element as HTMLInputElement).value).toBe('Flamme')
+})
+
+test('it supports convenience props and merges with options', async ({ expect }) => {
+	server.resetHandlers(mockSuccessfulUrl('http://localhost.test/users', 'post'))
+
+	const navigateSpy = vi.spyOn(router, 'navigate')
+
+	const TestComponent = defineComponent({
+		components: { Form },
+		template: `
+			<Form
+				action="http://localhost.test/users"
+				method="post"
+				error-bag="spell_discovery"
+				:show-progress="false"
+				:options="{ preserveScroll: true }"
+				v-slot="{ submit }"
+			>
+				<input id="spell" type="text" name="spell_name" value="Zoltraak" />
+				<button id="submit" type="button" @click="submit()">Submit</button>
+			</Form>
+		`,
+	})
+
+	const wrapper = mount(TestComponent)
+
+	await wrapper.find('#submit').trigger('click')
+	await delay(20)
+
+	const [options] = navigateSpy.mock.calls.at(0) ?? []
+
+	expect(options?.errorBag).toBe('spell_discovery')
+	expect(options?.progress).toBe(false)
+	expect(options?.preserveScroll).toBe(true)
+})
+
+test('it exposes getError with dot notation in slot', async ({ expect }) => {
+	const TestComponent = defineComponent({
+		components: { Form },
+		template: `
+			<Form action="http://localhost.test/users" method="post" v-slot="{ setErrors, getError }">
+				<button id="set" type="button" @click="setErrors({ user: { name: 'Required' } })">Set</button>
+				<span id="error">{{ getError('user.name') }}</span>
+			</Form>
+		`,
+	})
+
+	const wrapper = mount(TestComponent)
+
+	await wrapper.find('#set').trigger('click')
+	await nextTick()
+
+	expect(wrapper.find('#error').text()).toBe('Required')
+})
+
+test('it keeps field values after validation errors', async ({ expect }) => {
+	server.resetHandlers(mockInvalidUrl('http://localhost.test/users', 'post'))
+
+	const TestComponent = defineComponent({
+		components: { Form },
+		template: `
+			<Form action="http://localhost.test/users" method="post" v-slot="{ submit }">
+				<input id="spell" type="text" name="spell_name" value="Zoltraak" />
+				<button id="submit" type="button" @click="submit()">Submit</button>
+			</Form>
+		`,
+	})
+
+	const wrapper = mount(TestComponent)
+	const input = wrapper.find('#spell')
+
+	await input.setValue('Flamme')
+	await wrapper.find('#submit').trigger('click')
+	await delay(20)
+
+	expect((wrapper.find('#spell').element as HTMLInputElement).value).toBe('Flamme')
 })

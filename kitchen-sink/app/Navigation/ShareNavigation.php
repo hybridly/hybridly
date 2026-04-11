@@ -8,6 +8,7 @@ use App\Http404Controller;
 use App\Http500Controller;
 use App\KitchenSink\DataLoading\Deferred\DeferredPropertiesController;
 use App\KitchenSink\DataLoading\Mergeable\MergeablePropertiesController;
+use App\KitchenSink\Forms\FormComponent\FormComponentController;
 use App\KitchenSink\Forms\Validation\ValidationController;
 use App\KitchenSink\Navigation\AsyncRequests\AsyncRequestsController;
 use App\KitchenSink\Navigation\Lifecycle\LifecycleController;
@@ -131,6 +132,12 @@ final readonly class ShareNavigation
                     icon: 'lucide:shield-check',
                     href: action(ValidationController::class, absolute: false),
                     route_patterns: ['kitchen-sink.forms.validation*'],
+                ),
+                new NavigationItem(
+                    label: 'Form component',
+                    icon: 'lucide:file-pen-line',
+                    href: action(FormComponentController::class, absolute: false),
+                    route_patterns: ['kitchen-sink.forms.form-component*'],
                 ),
             ],
         ));
