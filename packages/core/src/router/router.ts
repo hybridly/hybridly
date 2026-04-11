@@ -25,7 +25,7 @@ import { navigate, performLocalNavigation } from './view'
 export const router = {
 	abort: () => cancelNavigationRequest(),
 	navigate: async (options) => await performHybridNavigation(options),
-	reload: async (options) => await performHybridNavigation({ preserveScroll: true, preserveState: true, replace: true, mode: 'async', ...options }),
+	reload: async (options = {}) => await performHybridNavigation({ preserveScroll: true, preserveState: true, replace: true, mode: 'async', ...options }),
 	get: async (url, options = {}) => await performHybridNavigation({ ...options, url, method: 'GET' }),
 	post: async (url, options = {}) => await performHybridNavigation({ preserveState: true, ...options, url, method: 'POST' }),
 	put: async (url, options = {}) => await performHybridNavigation({ preserveState: true, ...options, url, method: 'PUT' }),
@@ -33,12 +33,12 @@ export const router = {
 	delete: async (url, options = {}) => await performHybridNavigation({ preserveState: true, ...options, url, method: 'DELETE' }),
 	local: async (url, options = {}) => await performLocalNavigation(url, options),
 	external: (url, data = {}) => navigateToExternalUrl(url, data),
-	to: async (name, parameters, options) => {
+	to: async (name, parameters = undefined, options = {}) => {
 		const url = generateRouteFromName(name, parameters)
 		const method = getRouteDefinition(name).method.at(0)
 		return await performHybridNavigation({ url, ...options, method })
 	},
-	matches: (name, parameters) => currentRouteMatches(name, parameters),
+	matches: (name, parameters = undefined) => currentRouteMatches(name, parameters),
 	current: () => getCurrentRouteName(),
 	dialog: {
 		close: (options = {}) => closeDialog(options),
