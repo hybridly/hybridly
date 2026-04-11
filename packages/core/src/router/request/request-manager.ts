@@ -92,8 +92,6 @@ async function processRequest(request: PendingHybridRequest, onFinally: () => vo
 		await handleTransportError(request, error as Error)
 	} finally {
 		request.completed = true
-		debug.router('Ended navigation.', request)
-		await runHooks('after', request.options.hooks, request, getRouterContext())
 		onFinally()
 	}
 }

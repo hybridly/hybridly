@@ -1,4 +1,4 @@
-import { debug, getByPath, merge, showResponseErrorModal } from '@hybridly/utils'
+import { debug, merge, showResponseErrorModal } from '@hybridly/utils'
 import { get, set, uniqBy } from 'es-toolkit/compat'
 import { EXTERNAL_NAVIGATION_HEADER, HYBRIDLY_HEADER } from '../../constants'
 import { getInternalRouterContext } from '../../context'
@@ -140,14 +140,17 @@ function isPartial(options: HybridRequestOptions) {
 }
 
 function resolveProperties(original: Properties, payload: View) {
-	const mergedPayloadProperties = merge(original, payload.properties) // We then need to loop through each "mergeable" property, and merge the
-	 // received input into the original one. We need to respect the given settings:
+	const mergedPayloadProperties = merge(original, payload.properties)
+	const mergeable = payload.mergeable ?? []
+
+	// We then need to loop through each "mergeable" property, and merge the
+	// received input into the original one. We need to respect the given settings:
 	// - prepends = true, we prepend data
 	// - prepends = false, we append data
 	// - if uniqueBy is a string, we dedupe based its dot-notated path (eg. `id`)
-	;(payload.mergeable ?? []).forEach(([mergeableProperty, prepends, uniqueBy]) => {
-		const originalValue = getByPath(original, mergeableProperty) as unknown
-		const newValue = getByPath(payload.properties, mergeableProperty) as unknown
+	mergeable.forEach(([mergeableProperty, prepends, uniqueBy]) => {
+		const originalValue = get(original, mergeableProperty) as unknown
+		const newValue = get(payload.properties, mergeableProperty) as unknown
 
 		const mergeArrays = (current: unknown[], incoming: unknown[]) => {
 			const merged = prepends === true

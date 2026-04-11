@@ -1,5 +1,7 @@
 import { debug } from '@hybridly/utils'
+import { getInternalRouterContext } from '../../context'
 import type { HttpResponse } from '../../http'
+import { runHooks } from '../../plugins'
 import type { PendingHybridRequest } from '../types'
 import { handleHybridRequestResponse } from './response'
 
@@ -39,7 +41,13 @@ async function processNextResponse() {
 	}
 
 	debug.queue('Processing response', response)
-	response.request.resolve(await handleHybridRequestResponse(response))
+
+	try {
+		response.request.resolve(await handleHybridRequestResponse(response))
+	} finally {
+		debug.router('Ended navigation.', response.request)
+		await runHooks('after', response.request.options.hooks, response.request, getInternalRouterContext())
+	}
 
 	return await processNextResponse()
 }

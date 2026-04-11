@@ -59,7 +59,7 @@ export interface RequestHooks {
 	fail: (error: Error, request: PendingHybridRequest, context: InternalRouterContext) => MaybePromise<any>
 
 	/**
-	 * Called after a request has been made, even if it didn't succeed.
+	 * Called after a response has been received, even if it didn't succeed in a navigation.
 	 */
 	after: (request: PendingHybridRequest, context: InternalRouterContext) => MaybePromise<any>
 }
