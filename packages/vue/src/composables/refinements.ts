@@ -802,6 +802,7 @@ export function useRefinements<T extends Refinements>(
 		return await router.reload({
 			group: `query:${name}`,
 			interruptAsyncOnStart: 'same-group',
+			progress: true,
 			...defaultOptions,
 			...options,
 			data: {
