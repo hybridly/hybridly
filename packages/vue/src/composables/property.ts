@@ -1,7 +1,6 @@
 import type { GlobalHybridlyProperties } from '@hybridly/core'
-import { getByPath } from '@hybridly/utils'
 import type { Path, PathValue, SearchableObject } from '@hybridly/utils'
-import { set } from 'es-toolkit/compat'
+import { get, set } from 'es-toolkit/compat'
 import type { ComputedRef } from 'vue'
 import { computed, readonly, toValue } from 'vue'
 import { state } from '../stores/state'
@@ -28,7 +27,7 @@ export function useProperty<
 	path: [Override] extends [never] ? P
 		: string,
 ): ComputedRef<ReturnType> {
-	return computed(() => getByPath(state.properties.value as InternalProperties, path) as ReturnType)
+	return computed(() => get(state.properties.value as InternalProperties, path) as ReturnType)
 }
 
 /**
