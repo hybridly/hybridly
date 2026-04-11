@@ -1,3 +1,4 @@
 {
-	"extends": "./.hybridly/tsconfig.json"
+	"files": [],
+	"references": [{ "path": "./.hybridly/tsconfig.json" }]
 }

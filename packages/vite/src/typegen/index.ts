@@ -16,10 +16,12 @@ export function generateTsConfig(options: ViteOptions, config: DynamicConfigurat
 			sourceMap: true,
 			resolveJsonModule: true,
 			esModuleInterop: true,
+			rootDir: '../',
 			allowSyntheticDefaultImports: true,
 			lib: [
 				'esnext',
 				'dom',
+				'dom.iterable',
 			],
 			types: [
 				'vite/client',
