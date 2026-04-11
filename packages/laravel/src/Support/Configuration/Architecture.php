@@ -2,7 +2,6 @@
 
 namespace Hybridly\Support\Configuration;
 
-use Hybridly\Architecture\JustInTimeComponentRepository;
 use Hybridly\Architecture\ResourcesComponentLoader;
 
 /**
