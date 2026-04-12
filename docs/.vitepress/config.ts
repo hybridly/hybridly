@@ -68,7 +68,6 @@ export default defineConfig({
 						items: [
 							{ text: 'Discord', link: discord },
 							{ text: 'Repository', link: `${github}` },
-							{ text: 'Demonstration', link: 'https://github.com/hybridly/demo' },
 							{ text: 'Preset', link: 'https://github.com/hybridly/preset' },
 						],
 					},
@@ -102,7 +101,6 @@ export default defineConfig({
 					items: [
 						{ text: 'Introduction', link: '/guide/' },
 						{ text: 'Installation', link: '/guide/installation' },
-						{ text: 'Example application', link: '/guide/demonstration' },
 					],
 				},
 				{
