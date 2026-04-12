@@ -1,9 +1,8 @@
 # `route`
 
-This helper function generates a URL based on a route name and the provided arguments.
-
-| Related | [Routing](../../guide/routing.md), [`useRoute`](use-route.md) |
-| ------- | ------------------------------------------------------------- |
+<p class="preface">
+This helper function generates a URL from a route name and its arguments.
+</p>
 
 ## Usage
 
@@ -11,7 +10,7 @@ This helper function generates a URL based on a route name and the provided argu
 function route<T extends RouteName>(
 	name: T,
 	parameters?: RouteParameters<T>,
-	absolute?: boolean
+	absolute?: boolean,
 ): string
 ```
 
@@ -20,9 +19,10 @@ function route<T extends RouteName>(
 The route name and parameters have TypeScript support through the Vite plugin. To learn how to set it up, read the [routing documentation](../../guide/routing.md#generating-urls).
 
 :::info Notes
+
 - If the route has mandatory parameters and they are not provided, the `route` function will throw an error.
 - This function returns a non-reactive string. To make it reactive, wrap it in a computed property or use a watcher.
-:::
+  :::
 
 ## Example
 

@@ -9,24 +9,25 @@ Hybridly doesn't ship with any tool to manage the `title` or other `meta` tags o
 Add `@unhead/vue` to your dependencies:
 
 ```bash
-npm i -D @unhead/vue
+bun i -D @unhead/vue
 ```
 
 In `main.ts`, import `createHead` and register its return value as a plugin.
 
 ```ts
-import { createApp } from 'vue'
-import { initializeHybridly } from 'virtual:hybridly/config'
 import { createHead } from '@unhead/vue/client' // [!code hl]
+import { initializeHybridly } from 'virtual:hybridly/config'
+import { createApp } from 'vue'
 
 initializeHybridly({
 	enhanceVue: (vue) => {
-		vue.use(createHead({
-			init: [
-				{ titleTemplate: (title) => title ? `${title} - Blue Bird` : 'Blue Bird' }
-			]
-		}))
-	}
+		const head = createHead()
+		head.push({
+			titleTemplate: (title) => `${title ?? ''} — Hybridly`.replace(/^ — /, ''),
+		})
+
+		vue.use(head)
+	},
 })
 ```
 
@@ -39,10 +40,11 @@ The latest `useHead` call is persisted, which means you may override `titleTempl
 Page titles may be defined using the `title` property in view components.
 
 :::code-group
-```vue [layouts/default.vue]
+
+```vue [resources/default.layout.vue]
 <script setup lang="ts">
 useHead({
-	titleTemplate: (title) => `${title} - Blue Bird`, // [!code hl]
+	titleTemplate: (title) => `${title} - Your app`,
 })
 </script>
 
@@ -52,10 +54,10 @@ useHead({
 </template>
 ```
 
-```vue [chirps/index.vue]
+```vue [resources/users/index.view.vue]
 <script setup lang="ts">
 useHead({
-	title: 'Recent chirps', // Recent chirps - Blue Bird // [!code hl]
+	title: 'All users', // All users - Your app
 })
 </script>
 
@@ -63,6 +65,7 @@ useHead({
 	<!-- view component -->
 </template>
 ```
+
 :::
 
 For more information regarding the functionalities of `@unhead/vue`, refer to [its documentation](https://unhead.unjs.io/usage/composables/use-head).

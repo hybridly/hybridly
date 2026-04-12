@@ -4,21 +4,20 @@ outline: deep
 
 # `useTable`
 
-This composable is used to manipulate tables and build their user interface.
-
-| Related | [Tables](../../guide/tables.md) |
-| ------- | ------------------------------- |
+<p class="preface">
+This composable provides helpers to manipulate table data and build table interfaces.
+</p>
 
 ## Usage
 
 ```ts
 function useTable<
-  Properties extends Record<string, any>,
+	Properties extends Record<string, any>,
 	Paginator extends 'simple' | 'cursor' | 'length-aware',
 >(
 	properties: Properties,
 	tableKey: keyof Properties,
-	defaultOptions: HybridRequestOptions = {}
+	defaultOptions: HybridRequestOptions = {},
 )
 ```
 

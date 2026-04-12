@@ -23,10 +23,6 @@ initializeHybridly({
 })
 ```
 
-:::info Credits where due
-The underlying progress indicator uses [nprogress](https://ricostacruz.com/nprogress/). The original implementation is inspired from [`@inertiajs/progress`](https://github.com/inertiajs/progress).
-:::
-
 ## Using a custom indicator
 
 Under the hood, the built-in progress indicator is actually a [plugin](./plugins.md). It hooks into the `start`, `progress`, `validation-error`, `fail` and `after` [lifecycle events](./hooks.md).

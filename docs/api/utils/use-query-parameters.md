@@ -1,9 +1,8 @@
 # `useQueryParameters`
 
+<p class="preface">
 This function returns a reactive object containing the current query parameters.
-
-| Related | [`useQueryParameter`](./use-query-parameter.md) |
-| ------- | ----------------------------------------------- |
+</p>
 
 ## Usage
 

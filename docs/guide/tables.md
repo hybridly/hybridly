@@ -1,18 +1,18 @@
 ---
-outline: 'deep'
+outline: "deep"
 ---
 
 # Tables
+
+<p class="preface">
+Learn how to declare tables on the back-end and manipulate them on the front-end using the <code>useTable</code> composable.
+</p>
 
 ## Overview
 
 Hybridly provides a way to describe tables on the back-end and manipulate them through the [`useTable`](../api/utils/use-table.md) util on the front-end.
 
 Tables provide the ability to execute actions on one or multiple records, to filter and sort them using [refinements](./refining.md), have [data objects](#using-data-objects) integration, support pagination, scoping, and let you have full control over the user interface.
-
-:::info Experimental
-This feature has not been dogfed yet and is considered experimental. Its API may change at any time. Feel free to give feedback on our Discord server.
-:::
 
 ## Creating and using tables
 

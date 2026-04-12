@@ -102,13 +102,21 @@
 	--vp-c-brand-3: var(--vp-c-brand-lighter);
 	--vp-c-brand-soft: var(--vp-c-default-soft);
 
-	--vp-custom-block-tip-border: var(--vp-c-brand-1);
+	--vp-custom-block-tip-border: var(--ui-border);
 	--vp-custom-block-tip-bg: var(--vp-c-default-soft);
 	--vp-custom-block-tip-text: var(--vp-c-text-1);
-	--vp-custom-block-warning-border: var(--ui-color-warning-300);
+	--vp-custom-block-warning-border: color-mix(
+		in oklab,
+		var(--ui-color-warning-300) 50%,
+		transparent
+	);
 	--vp-custom-block-warning-bg: var(--vp-c-default-soft);
 	--vp-custom-block-warning-text: var(--vp-c-text-1);
-	--vp-custom-block-danger-border: var(--ui-color-error-300);
+	--vp-custom-block-danger-border: color-mix(
+		in oklab,
+		var(--ui-color-error-300) 50%,
+		transparent
+	);
 	--vp-custom-block-danger-bg: var(--vp-c-default-soft);
 	--vp-custom-block-danger-text: var(--vp-c-text-1);
 	--vp-custom-block-info-bg: var(--ui-bg-elevated);
@@ -348,10 +356,14 @@ footer {
 	}
 
 	.custom-block {
-		@apply pb-1.5;
+		@apply p-4 mb-4 mt-8;
+
+		p {
+			@apply m-0;
+		}
 
 		&:has(.custom-block-title) {
-			@apply pt-2.5;
+			@apply pt-3.5;
 		}
 
 		.custom-block-title {
@@ -376,23 +388,6 @@ footer {
 			@apply font-normal underline underline-offset-3;
 			color: var(--vp-c-text-1);
 			text-decoration-color: var(--vp-c-code-underline);
-		}
-
-		&.warning {
-			a {
-				color: var(--vp-custom-block-warning-border) !important;
-				text-decoration-color: var(--vp-custom-block-warning-border);
-			}
-		}
-
-		&.info {
-			a {
-				text-decoration-color: var(--vp-c-code-underline);
-			}
-
-			p {
-				@apply text-(--ui-text-muted);
-			}
 		}
 	}
 }

@@ -2,7 +2,11 @@
 
 ## Using Vue Devtools
 
-Hybridly comes with a built-in Vue plugin that integrates with Vue Devtools. You may read more about it on the [dedicated documentation](./devtools.md).
+The Vue plugin provided by Hybridly integrates with Vue DevTools. It makes debugging hybrid views convenient.
+
+Make sure the [Vue DevTools](https://devtools.vuejs.org/) extension is installed in your browser, and open the Vue tab in the developer tools. Selecting any component will show a `hybridly` section with the active component name, properties, asset version, url and the routes registered by the router.
+
+The Hybridly wrapper component shown below the root component displays the context, an object that contain the whole state of Hybridly's core.
 
 ## Using the console
 
@@ -30,24 +34,3 @@ When using `hdd` on non-hybrid responses, the response's body will be shown inst
   alt="hdd macro"
   class="mt-8"
 />
-
-## Using Ray
-
-:::warning
-This documentation is outdated.
-:::
-
-If you are using [Ray](https://spatie.be/docs/ray/v1/introduction) by Spatie, the `showHybridRequests` macro will automatically be registered.
-
-```php
-ray()->showHybridRequests();
-```
-
-This may be useful, for instance, to investigate which properties are sent to the front-end.
-
-<img
-  src="../assets/ray-debugging.webp"
-  alt="Ray debugging"
-/>
-
-To stop showing hybrid responses, you may also call `stopShowingHybridRequests`.

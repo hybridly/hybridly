@@ -1,8 +1,8 @@
 # `getRouterContext`
 
-This function returns the context of the current Hybridly instance. It is **not** reactive. 
-
-It is meant as an escape-hatch for advanced use cases, and not for your typical application.
+<p class="preface">
+This function returns the context of the current Hybridly instance. It is not reactive and intended as an escape hatch for advanced use cases.
+</p>
 
 ## Usage
 

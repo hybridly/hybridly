@@ -1,24 +1,22 @@
 ---
-outline: 'deep'
+outline: "deep"
 ---
 
 # `useDialog`
 
-This composable returns a few functions that control dialogs.
-
-| Related | [Dialogs](../../guide/dialogs.md) |
-| ------- | --------------------------------- |
+<p class="preface">
+This composable exposes reactive state and helper functions to control dialogs.
+</p>
 
 ## Usage
 
-`useDialog` doesn't accept any option. 
+`useDialog` doesn't accept any option.
 
 ```ts
 const { show, close, unmount } = useDialog()
 ```
 
 It returns a `close` and `unmount` function which control the currently displayed dialog, as well as a `show` property that defines whether the dialog should be shown.
-
 
 ## Options
 
