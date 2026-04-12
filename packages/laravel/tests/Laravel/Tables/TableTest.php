@@ -7,7 +7,6 @@ use Hybridly\Tables\InlineTable;
 use Hybridly\Tables\Table;
 use Hybridly\Tests\Fixtures\Database\Product;
 use Hybridly\Tests\Fixtures\Database\ProductFactory;
-use Hybridly\Tests\Fixtures\Database\UserFactory;
 use Hybridly\Tests\Fixtures\Vendor;
 use Hybridly\Tests\Laravel\Tables\Fixtures\BasicProductsTable;
 use Hybridly\Tests\Laravel\Tables\Fixtures\BasicProductsTableWithActions;
@@ -15,7 +14,6 @@ use Hybridly\Tests\Laravel\Tables\Fixtures\BasicProductsTableWithActionsAndFilte
 use Hybridly\Tests\Laravel\Tables\Fixtures\BasicProductsTableWithActionsThatSendResponses;
 use Hybridly\Tests\Laravel\Tables\Fixtures\BasicProductsTableWithConditionallyHiddenStuff;
 use Hybridly\Tests\Laravel\Tables\Fixtures\BasicProductsTableWithData;
-use Hybridly\Tests\Laravel\Tables\Fixtures\BasicProductsTableWithDataUsingFromModel;
 use Hybridly\Tests\Laravel\Tables\Fixtures\BasicProductsTableWithExtra;
 use Hybridly\Tests\Laravel\Tables\Fixtures\BasicProductsTableWithHiddenStuff;
 use Hybridly\Tests\Laravel\Tables\Fixtures\BasicProductsTableWithMetadata;
@@ -24,7 +22,6 @@ use Hybridly\Tests\Laravel\Tables\Fixtures\BasicScopedProductsTable;
 use Hybridly\Tests\Laravel\Tables\Fixtures\BasicTableWithConstructor;
 use Hybridly\Tests\Laravel\Tables\Fixtures\BasicTableWithDependencyInjection;
 use Hybridly\Tests\Laravel\Tables\Fixtures\BasicTableWithDependencyInjectionAndArguments;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Pest\Expectation;
 
@@ -51,47 +48,6 @@ it('serializes a basic scoped table', function () {
 it('can transform records using Laravel Data', function () {
     ProductFactory::createImmutable();
     expect(BasicProductsTableWithData::make())->toMatchSnapshot();
-});
-
-it('includes authorization on records by default', function () {
-    Auth::login(UserFactory::new()->create());
-    ProductFactory::createImmutable();
-
-    $result = BasicProductsTableWithData::make();
-    expect($result)->toMatchSnapshot();
-    expect($result->getRecords()[0])->toHaveKey('authorization');
-});
-
-it('includes authorization on records using custom `fromModel` by default', function () {
-    Auth::login(UserFactory::new()->create());
-    ProductFactory::createImmutable();
-
-    $result = BasicProductsTableWithDataUsingFromModel::make()->getRecords();
-    expect($result[0])->toHaveKey('authorization');
-    expect($result[0]['authorization']['returns-true'])->toBeTrue();
-    expect($result[0]['authorization']['returns-false'])->toBeFalse();
-});
-
-it('excludes authorization on records when specified', function () {
-    Auth::login(UserFactory::new()->create());
-    ProductFactory::createImmutable();
-
-    $result = BasicProductsTableWithData::make()
-        ->withoutResolvingAuthorizations()
-        ->getRecords();
-
-    expect($result[0])->not->toHaveKey('authorization');
-});
-
-it('excludes authorization on records using custom `fromModel` when specified', function () {
-    Auth::login(UserFactory::new()->create());
-    ProductFactory::createImmutable();
-
-    $result = BasicProductsTableWithDataUsingFromModel::make()
-        ->withoutResolvingAuthorizations()
-        ->getRecords();
-
-    expect($result[0])->not->toHaveKey('authorization');
 });
 
 it('hides hidden refinements, columns and actions in serialization', function () {

@@ -29,9 +29,6 @@ export type { UrlResolvable } from './url'
 export { parseQueryString, stringifyQueryString } from './query'
 export type { QueryArrayFormat, StringifyQueryOptions } from './query'
 
-export { can } from './authorization'
-export type { Authorizable } from './authorization'
-
 export { route } from './routing'
 export type { GlobalRouteCollection, RouteDefinition, RouteName, RouteParameters, RoutingConfiguration } from './routing'
 

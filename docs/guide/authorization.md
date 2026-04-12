@@ -1,172 +1,86 @@
 # Authorization
 
-## Overview
+<p class="preface">
+Learn how to handle authorization in your single-file components, and how to avoid it when not needed.
+</p>
 
-:::warning
-This documentation is outdated.
-:::
+## Overview
 
 Authorization is what ensures an entity has the ability to perform a given task. Laravel provides gates and policies — they are simple but powerful ways to answer this problem.
 
 Authorization needs to be performed on the server. This is usually done through `User#can` or `Gate::authorize`. Unfortunately, this is not accessible when working in single-file components.
 
-Hybridly solves this issue by providing a decorator around [data objects](./typescript.md#data-objects). This decorator makes policies' actions typeable, so they can be used in single-file component by the [`can`](../api/utils/can.md) function.
-
-## Using data resources
-
-First, a data object extending `Hybridly\Support\Data\DataResource` needs to be created. This class exposes an `$authorizations` array which should contain the names of the actions that need to be exposed.
-
-```php
-<?php
-
-namespace App\Data;
-
-use Carbon\Carbon;
-use Hybridly\Support\Data\DataResource;  // [!code focus]
-
-final class ChirpData extends DataResource  // [!code focus]
-{
-    public static array $authorizations = [  // [!code focus:6]
-      'comment',
-      'like',
-      'unlike',
-      'delete'
-    ];
-
-    public function __construct(
-        public readonly string $id,
-        public readonly ?string $body,
-        public readonly int $likes_count,
-        public readonly int $comments_count,
-        public readonly Carbon $created_at,
-    ) {}
-}
-```
-
-When [transforming](https://spatie.be/docs/laravel-data/v2/as-a-resource/from-data-to-resource) a data resource, a [lazy `authorization` property](https://spatie.be/docs/laravel-data/v2/as-a-resource/lazy-properties) will be appended to the resulting array.
-
-This property will contain a key for each defined policy action, and will be evaluated through `Gate::allows`:
-
-```json
-{
-	"id": "1514",
-	"body": "Ad nihil provident rem voluptatem quis modi harum ad. Tenetur sunt nisi libero qui debitis.",
-	"likes_count": 1,
-	"comments_count": 3,
-	"created_at": "2022-10-12T17:44:05+00:00",
-	"authorization": { // [!code focus:6]
-		"comment": false,
-		"like": false,
-		"unlike": true,
-		"delete": false
-	}
-}
-```
-
-The policy for the previous example could look like that:
-
-```php
-use App\Models\Chirp;
-use App\Models\User;
-use Illuminate\Auth\Access\HandlesAuthorization;
-
-class ChirpPolicy
-{
-    use HandlesAuthorization;
-
-    public function comment(User $user): bool  // [!code focus:4]
-    {
-        return true;
-    }
-
-    public function delete(User $user, Chirp $chirp): bool  // [!code focus:4]
-    {
-        return $chirp->author->is($user);
-    }
-
-    public function like(User $user, Chirp $chirp): bool  // [!code focus:4]
-    {
-        return !$user->hasLiked($chirp);
-    }
-
-    public function unlike(User $user, Chirp $chirp): bool  // [!code focus:4]
-    {
-        return $user->hasLiked($chirp);
-    }
-}
-```
-
 ## Authorizing on the front-end
 
-When sharing a property from a data resource to the front-end, authorizations could directly be checked against the data object, but the `can` util provides a better syntax.
+The recommend approach is to share authorization information as part of the shared data. This way, you can easily check for permissions on the front-end without having to make additional requests.
 
-```ts
-import { can } from 'hybridly' // [!code focus]
+:::code-group
 
-const $props = defineProps<{
-	chirp: App.Data.ChirpData
-}>()
-
-// With the `can` util (recommended) // [!code focus:2]
-const canComment = can($props.chirp, 'comment')
-
-// As-is  // [!code focus:2]
-const canComment = $props.chirp.authorization.comment
-```
-
-## Avoid processing authorizations
-
-The method Hybridly uses to provide automatic authorizations has a drawback: the gate is called for each action, each time the data object is serialized.
-
-Fortunately, this is built on top of `laravel-data`'s [lazy properties](https://spatie.be/docs/laravel-data/v2/as-a-resource/lazy-properties), which mean you can simply call `->exclude('authorization')` for them to not be processed.
-
-```php
-public function show(Chirp $chirp)
+```php [App/Users/ShowUsersController.php]
+final class ShowUsersController
 {
-    $this->authorize('view', $chirp);
-
-    return hybridly('chirps.show', [
-        'chirp' => ChirpData::from($chirp)->exclude('authorization'), // [!code focus]
-    ]);
-}
-```
-
-## Using custom creation methods
-
-When using a [custom `from` method](https://spatie.be/docs/laravel-data/v4/as-a-data-transfer-object/creating-a-data-object), the pipeline that resolves authorizations will not be used.
-
-Because of this, you will have to manually call the static `resolveAuthorizationArray` method when instanciating your data object:
-
-```php
-final class ChirpData extends DataResource
-{
-    public static array $authorizations = [  // [!code hl:6]
-		    'comment',
-		    'like',
-		    'unlike',
-		    'delete'
-		];
-    
-    public function __construct(
-        public readonly string $body,
-    ) {
-    }
-
-    public static function fromModel(Chirp $chirp): static
+    public function __invoke(): HybridResponse
     {
-        return self::factory()
-            ->withoutMagicalCreation()
-            ->from([
-                'body' => $chirp->body,
-                'authorization' => static::resolveAuthorizationArray($chirp),  // [!code hl]
-            ]);
+        $users = User::query()
+            ->where('active', true)
+            ->get();
+
+        return view('users.index', [
+            'can' => [
+                'create_user' => Auth::user()->can('create', User::class),
+            ],
+            'users' => UserData::collect($users, into: 'array'),
+        ]);
     }
 }
 ```
 
-You may wrap the authorization array in a `Lazy` property if needed:
+```php [App/Users/UserData.php]
+final class UserData extends Data
+{
+    public function __construct(
+        public readonly string $name,
+        public readonly string $email,
+        public readonly bool $can_update,
+    ) {}
+
+    public static function fromModel(User $user): self
+    {
+        return new self(
+            name: $user->name,
+            email: $user->email,
+            can_update: Auth::user()->can('update', $user),
+        );
+    }
+}
+```
+
+:::
+
+## Sharing authorizations globally
+
+If you need authorization information to be available globally, you can share it through a dedicated middleware.
 
 ```php
-Lazy::create(fn () => static::resolveAuthorizationArray($chirp))
-	->defaultIncluded();
+use Hybridly\Hybridly;
+
+final readonly class ShareAuthorizations
+{
+    public function __construct(
+        private Hybridly $hybridly,
+    ) {}
+
+    public function __invoke(Request $request, Closure $next): Response
+    {
+        $this->hybridly->persist('authorizations');
+        $this->hybridly->share('authorizations', new AuthorizationData(
+            can_create_user: $request->user()->can('create', User::class),
+            can_create_post: $request->user()->can('create', Post::class),
+        ));
+
+        return $next($request);
+    }
+}
 ```
+
+Learn more on the [global properties](../guide/global-properties.md) documentation.

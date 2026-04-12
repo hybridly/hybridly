@@ -1,10 +1,14 @@
 # Global properties
 
+<p class="preface">
+Learn how to share data globally across your application in a type-safe way, and how to access it in your views.
+</p>
+
 ## Overview
 
-In most applications, some data needs to be available globally. This is generally the case, for instance, of the logged-in user, but it could be anything else. To answer to this need, you may use global properties.
+In most applications, some data needs to be available globally. This is generally the case, for instance, of the logged-in user, for navigation data or for flash notifications.
 
-Global properties are shared in every hybrid request — unless it's a [partial reload](./partial-reloads.md) — and can be accessed in the front-end using [`useProperty`](../api/utils/use-property.md) or [`useProperties`](../api/utils/use-properties.md).
+You may achieve this by sharing properties globally, which may be accessed in the front-end using [`useProperty`](../api/utils/use-property.md) or [`useProperties`](../api/utils/use-properties.md).
 
 ## From a middleware
 
