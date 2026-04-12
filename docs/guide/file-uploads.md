@@ -1,5 +1,9 @@
 # File uploads
 
+<p class="preface">
+Learn how to upload files using Hybridly's form utilities and how to track their progress.
+</p>
+
 ## Overview
 
 When submitting data that include files, Hybridly will automatically convert the request data into a [`FormData` object](https://developer.mozilla.org/en-US/docs/Web/API/FormData/Using_FormData_Objects). This is necessary, as file uploads are only possible when a form encoding is set to `multipart/form-data`.
@@ -15,9 +19,9 @@ router.post(url, {
 })
 ```
 
-### Progress
+## Tracking upload progress
 
-When using the form util, a `progress` object is exposed. It contains the current progress `percentage` and the associated `AxiosProgressEvent`.
+When using the form util, a `progress` object is exposed. It contains the current progress `percentage` and the associated `HttpUploadProgressEvent`.
 
 ```ts
 const form = useForm() /* ... */
@@ -29,12 +33,12 @@ The example below shows how a file can be uploaded and its progress be displayed
 
 ```vue
 <script setup lang="ts">
-const form = useForm<App.Data.UpdateProfileData>({
+const form = useForm<App.Users.UpdateProfileData>({
 	method: 'POST',
 	url: '/upload',
 	fields: {
 		first_name: '',
-		profile_picture: undefined,
+		profile_picture: undefined as File | undefined,
 	},
 })
 

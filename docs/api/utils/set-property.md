@@ -4,15 +4,17 @@ outline: deep
 
 # `setProperty`
 
-This function updates the given property. The path is typed, provided [TypeScript support for global properties](../../guide/global-properties.md#typescript-support) is set up properly.
-
-| Related                                           | [`useProperty`](./use-property.md), [`useProperties`](./use-properties.md) |
-| ------------------------------------------------- | -------------------------------------------------------------------------- |
-| Experimental{class="font-medium text-orange-200"} | This function can be changed or removed at any point.                      |
+<p class="preface">
+This function updates the given property. The path is typed, provided <a href="../../guide/global-properties.md">TypeScript support for global properties</a> is set up properly.
+</p>
 
 ## Usage
 
 `setProperty` accepts the property name as its first parameter and the property value as its second. To update a nested property, you may use a dot-notated path.
+
+:::tip Advanced API
+In most cases, you should use [partial reloads](../../guide/partial-reloads.md) instead.
+:::
 
 ### Global properties
 

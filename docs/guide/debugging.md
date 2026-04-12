@@ -30,24 +30,3 @@ When using `hdd` on non-hybrid responses, the response's body will be shown inst
   alt="hdd macro"
   class="mt-8"
 />
-
-## Using Ray
-
-:::warning
-This documentation is outdated.
-:::
-
-If you are using [Ray](https://spatie.be/docs/ray/v1/introduction) by Spatie, the `showHybridRequests` macro will automatically be registered.
-
-```php
-ray()->showHybridRequests();
-```
-
-This may be useful, for instance, to investigate which properties are sent to the front-end.
-
-<img
-  src="../assets/ray-debugging.webp"
-  alt="Ray debugging"
-/>
-
-To stop showing hybrid responses, you may also call `stopShowingHybridRequests`.

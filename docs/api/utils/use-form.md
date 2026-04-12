@@ -4,10 +4,9 @@ outline: "deep"
 
 # `useForm`
 
-This composable helps with defining and submiting forms.
-
-| Related | [Forms](../../guide/forms.md) |
-| ------- | ----------------------------- |
+<p class="preface">
+This composable helps define and submit forms.
+</p>
 
 ## Usage
 

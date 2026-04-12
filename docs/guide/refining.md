@@ -1,8 +1,12 @@
 ---
-outline: 'deep'
+outline: "deep"
 ---
 
 # Refining
+
+<p class="preface">
+Learn how to declare filters and sorts for your queries and how to apply them in the view using the `useRefinements` composable.
+</p>
 
 ## Overview
 
@@ -14,10 +18,6 @@ The refining process happens as follows:
 - The `Refine` instance runs the query according to the current request
 - The query result and the refinements are shared to the view as properties
 - The view uses [`useRefinements`](../api/utils/use-refinements.md) to generate a user interface and apply sorts and filters
-
-:::info Experimental
-This feature has not been dogfed yet and is considered experimental. Its API may change at any time. Feel free to give feedback on our Discord server.
-:::
 
 ## Refining a query
 

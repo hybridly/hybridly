@@ -4,23 +4,19 @@ outline: deep
 
 # `useProperty`
 
-This function returns a property as a `Ref` given its dot-notated path. The path is typed, provided [TypeScript support for global properties](../../guide/global-properties.md#typescript-support) is set up properly.
-
-This function is specifically useful to access global properties, but it can also access component properties.
-
-| Related | [`setProperty`](./set-property.md), [`useProperties`](./use-properties.md) |
-| ------- | -------------------------------------------------------------------------- |
+<p class="preface">
+This function returns a property as a <code>Ref</code> from a dot-notated path, with typing support when global property typings are configured.
+</p>
 
 ## Usage
 
 `useProperty` accepts a dot-notated path as its first parameter and returns a `ComputedRef` with the value at the given path.
 
-
 ```ts
 const name = useProperty('security.user.full_name')
 
 useHead({
-  title: () => `${name.value}'s profile`
+	title: () => `${name.value}'s profile`,
 })
 ```
 

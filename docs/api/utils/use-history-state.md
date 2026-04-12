@@ -1,10 +1,12 @@
 # `useHistoryState`
 
-This function can reactively save the given value into the history state. The state is tied to a single [history entry](https://developer.mozilla.org/en-US/docs/Web/API/History).
+<p class="preface">
+This function reactively stores a value in the history state of the current <a href="https://developer.mozilla.org/en-US/docs/Web/API/History">history entry</a>.
+</p>
 
 ## Usage
 
-`useHistoryState` accepts a key as its first argument and an initial value as its second. The key is an identifier for storing the initial value. 
+`useHistoryState` accepts a key as its first argument and an initial value as its second. The key is an identifier for storing the initial value.
 
 The function returns the saved state if it exists, or the the initial value otherwise.
 
@@ -14,7 +16,7 @@ const name = useHistoryState('name', '')
 </script>
 
 <template>
-  <input type="text" v-model="name" />
+	<input type="text" v-model="name" />
 </template>
 ```
 

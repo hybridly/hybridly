@@ -4,10 +4,9 @@ outline: deep
 
 # `useRoute`
 
-This composable returns reactive utilities to work with the current route. These utilities are the reactive equivalents of [`router.matches`](../router/navigation.md#matches) and [`router.current`](../router/navigation.md#current).
-
-| Related | [Routing](../../guide/routing.md), [`route`](route.md) |
-| ------- | ------------------------------------------------------ |
+<p class="preface">
+This composable returns reactive utilities to work with the current route, including the reactive equivalents of <a href="../router/navigation.md#matches">router.matches</a> and <a href="../router/navigation.md#current">router.current</a>.
+</p>
 
 ## Usage
 

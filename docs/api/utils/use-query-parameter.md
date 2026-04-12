@@ -1,13 +1,12 @@
 ---
-outline: 'deep'
+outline: "deep"
 ---
 
 # `useQueryParameter`
 
-This composable returns a `Ref` that contains the specified query parameter.
-
-| Related | [`useQueryParameters`](./use-query-parameters.md) |
-| ------- | ------------------------------------------------- |
+<p class="preface">
+This composable returns a <code>Ref</code> that contains the specified query parameter, with optional transformation options for convenience.
+</p>
 
 ## Usage
 
@@ -105,7 +104,7 @@ If you have specific logic, you may pass a function as the `transform` option.
 // ?count=1
 const count = useQueryParameter('count', {
 	transform: (value) => value + 1,
-	defaultValue: 0
+	defaultValue: 0,
 })
 
 console.log(count.value) // 2

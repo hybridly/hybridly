@@ -4,21 +4,20 @@ outline: deep
 
 # `useRefinements`
 
-This composable is part of the refining feature. It takes a `Refinement` property as a parameter and exposes methods to refine a query using filters and sorts.
-
-| Related | [Refining](../../guide/refining.md) |
-| ------- | ----------------------------------- |
+<p class="preface">
+This composable takes a <code>Refinement</code> property and exposes methods to refine a query with filters and sorts.
+</p>
 
 ## Usage
 
 ```ts
 function useRefinements<
-  Properties extends object,
-  RefinementsKey extends keyof Properties
+	Properties extends object,
+	RefinementsKey extends keyof Properties,
 >(
-  properties: Properties,
-  refinementsKey: RefinementsKey,
-  defaultOptions: HybridRequestOptions = {}
+	properties: Properties,
+	refinementsKey: RefinementsKey,
+	defaultOptions: HybridRequestOptions = {},
 )
 ```
 
@@ -28,8 +27,8 @@ function useRefinements<
 
 ```ts
 const $props = defineProps<{
-  users: Paginator<App.Data.UserData>
-  refinements: Refinements
+	users: Paginator<App.Data.UserData>
+	refinements: Refinements
 }>()
 
 const refine = useRefinements($props, 'refinements')
@@ -37,7 +36,7 @@ const refine = useRefinements($props, 'refinements')
 
 ## Returned object
 
-The object returned by `useRefinements` contains a few functions and properties that are used to refine the affected query. 
+The object returned by `useRefinements` contains a few functions and properties that are used to refine the affected query.
 
 All of the functions below accept additional [request options](../router/options.md) as their last parameter.
 
@@ -103,7 +102,7 @@ Clears all active filters.
 
 - Type: `Function`
 
-Toggles the specified sort. The second parameter accepts a `direction` property that specifies the direction of the sort. 
+Toggles the specified sort. The second parameter accepts a `direction` property that specifies the direction of the sort.
 
 Additionnally, the `sortData` property can be used to define additionnal properties that will be added to the request only when the sort is active.
 
@@ -154,17 +153,17 @@ Resets all filters and sorts.
 
 ## The `sorts` array
 
-This array contains an entry for each available sort. 
+This array contains an entry for each available sort.
 
-Each entry extends [`SortRefinement`](#interfaces) and adds the `toggle`, `isSorting` and `clear` methods. 
+Each entry extends [`SortRefinement`](#interfaces) and adds the `toggle`, `isSorting` and `clear` methods.
 
 These methods are shorthands to [`toggleSort`](#togglesort), [`isSorting`](#issorting) and [`clearSort`](#clearsort) respectively, without the need for the sort name parameter.
 
 ## The `filters` array
 
-This array contains an entry for each available filter. 
+This array contains an entry for each available filter.
 
-Each entry extends [`FilterRefinement`](#interfaces) and adds the `apply` and `clear` methods. 
+Each entry extends [`FilterRefinement`](#interfaces) and adds the `apply` and `clear` methods.
 
 These methods are shorthands to [`applyFilter`](#applyfilter) and [`clearFilter`](#clearfilter) respectively, without the need for the filter name parameter.
 

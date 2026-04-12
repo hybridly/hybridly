@@ -136,14 +136,6 @@ export default defineConfig({
 					],
 				},
 				{
-					text: 'Tooling',
-					collapsed: true,
-					items: [
-						{ text: 'Vue DevTools', link: '/guide/devtools' },
-						{ text: 'Code extension', link: '/guide/visual-studio-code' },
-					],
-				},
-				{
 					text: 'Extra topics',
 					collapsed: true,
 					items: [
@@ -151,9 +143,7 @@ export default defineConfig({
 						{ text: 'Progress indicator', link: '/guide/progress-indicator' },
 						{ text: 'Hooks', link: '/guide/hooks' },
 						{ text: 'Title & meta', link: '/guide/title-and-meta' },
-						{ text: 'Preserving URLs', link: '/guide/preserving-urls' },
 						{ text: 'Scroll management', link: '/guide/scroll-management' },
-						{ text: 'Precognition', link: '/guide/precognition' },
 						{ text: 'Plugins', link: '/guide/plugins' },
 						{ text: 'Asset versioning', link: '/guide/asset-versioning' },
 						{ text: 'Internationalization', link: '/guide/i18n' },
@@ -173,7 +163,6 @@ export default defineConfig({
 						{ text: '&lt;Deferred&gt;', link: '/api/components/deferred' },
 						{ text: '&lt;WhenVisible&gt;', link: '/api/components/when-visible' },
 						{ text: 'initializeHybridly', link: '/api/utils/initialize-hybridly' },
-						{ text: 'can', link: '/api/utils/can' },
 						{ text: 'route', link: '/api/utils/route' },
 						{ text: 'useForm', link: '/api/utils/use-form' },
 						{ text: 'useDialog', link: '/api/utils/use-dialog' },

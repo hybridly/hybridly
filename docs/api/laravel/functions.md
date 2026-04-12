@@ -6,11 +6,9 @@ outline: deep
 
 Hybridly exposes a few global and namespaced utility functions.
 
-## Namespaced functions
-
 The functions live in the `\Hybridly` namespace and need to be imported before being used.
 
-### `view`
+## `view`
 
 Renders a view with the given component and optional properties. The properties can be an array, an `Arrayable` or a [data object](../../guide/typescript#data-objects).
 
@@ -22,7 +20,7 @@ use function Hybridly\view;
 return view('user.show', $user);
 ```
 
-### `properties`
+## `properties`
 
 Returns updated properties for an existing view.
 
@@ -36,7 +34,7 @@ return properties([
 ]);
 ```
 
-### `dialog`
+## `dialog`
 
 Returns a dialog with the given properties and base view.
 
@@ -52,7 +50,7 @@ return dialog(
 );
 ```
 
-### `on_demand`
+## `on_demand`
 
 Creates a [partial-only](../../guide/partial-reloads.md#partial-only-properties) property.
 
@@ -68,7 +66,7 @@ return view('user.show', [
 ]);
 ```
 
-### `merge`
+## `merge`
 
 Creates a mergeable property.
 
@@ -83,7 +81,7 @@ return view('users.index', [
 ]);
 ```
 
-### `deferred`
+## `deferred`
 
 Creates a partial property that will automatically be loaded in a subsequent partial reload when the page loads.
 
@@ -105,7 +103,7 @@ You may optionally provide a group name to defer properties together:
 deferred(fn () => MetricsData::from($metrics), group: 'metrics')
 ```
 
-### `to_external_url`
+## `to_external_url`
 
 Redirects to a non-hybrid view or an external domain.
 
@@ -117,7 +115,7 @@ use function Hybridly\to_external_url;
 return to_external_url('https://google.com');
 ```
 
-### `is_hybrid`
+## `is_hybrid`
 
 Determines whether the current request is hybrid. Optionally, a `Illuminate\Http\Request` instance can be given instead of using the current request.
 
@@ -129,7 +127,7 @@ if (is_hybrid()) {
 }
 ```
 
-### `is_partial`
+## `is_partial`
 
 Determines whether the current request is a [partial reload](../../guide/partial-reloads.md). Optionally, a `Illuminate\Http\Request` instance can be given instead of using the current request.
 
@@ -141,17 +139,7 @@ if (is_partial()) {
 }
 ```
 
-## Global functions
-
-These functions are available globally when `hybridly/laravel` is installed.
-
-### `hybridly`
-
-This functions returns the [`Hybridly\Hybridly`](./hybridly.md) singleton instance.
-
-## Namespaced testing functions
-
-### `partial_headers`
+## `partial_headers`
 
 Generates headers for testing partial requests. The first parameter is the view component name, and the second and third parameters are an array of `only` and `except` properties, respectively.
 
@@ -164,3 +152,7 @@ get('/', partial_headers('users.show', only: ['posts']))
     ->assertMissingHybridProperty('user')
     ->assertHybridProperty('posts');
 ```
+
+## `hybridly`
+
+This functions returns the [`Hybridly\Hybridly`](./hybridly.md) singleton instance. When possible, you should prefer dependency injection instead.

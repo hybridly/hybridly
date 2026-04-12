@@ -1,6 +1,8 @@
 # `initializeHybridly`
 
-This function must be invoked in an entry file to initialize Hybridly's context and router.
+<p class="preface">
+This function initializes Hybridly's context and router, and should be invoked in your application entry file.
+</p>
 
 ## Example
 

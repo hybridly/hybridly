@@ -1,246 +1,224 @@
 # Hybridly
 
-`Hybridly\Hybridly` is a singleton instance that contains convenience methods for common actions. It can be accessed by dependency injection or by service location using the [`hybridly()` global function](./functions.md#hybridly).
+<p class="preface">
+This is a singleton instance that contains convenience methods for common actions. Most response-oriented methods are shortcuts to <a href="./functions.md">namespaced functions</a>.
 
-Note that most of the methods here are shortcuts to [namespaced function](./functions.md#namespaced-functions).
+</p>
 
 ## `view`
 
-Generates a `HybridResponse` with the given component and optional properties. The properties can be an array, an `Arrayable` or a data object.
+Returns a `Hybridly\View\Factory` for the given component and optional properties.
 
-> See [responses](../../guide/responses.md) for more details.
+- See [responses](../../guide/responses.md) for more details.
+- For dialogs, use the [`dialog` namespaced function](./functions.md#dialog).
 
 ### Usage
 
 ```php
-return hybridly()->view('users.show', [
-  'user' => UserData::from($user)
+return $this->hybridly->view('users.show', [
+    'user' => UserData::from($user),
 ]);
 ```
 
 ## `properties`
 
-Generates a `HybridResponse` with the given properties. The properties can be an array, an `Arrayable` or a data object.
+Returns updated properties for the current view.
 
-> See [responses](../../guide/responses.md#updating-properties) for more details.
+- See [responses](../../guide/responses.md#updating-properties) for more details.
 
 ### Usage
 
 ```php
-return hybridly()->properties([
-  'user' => UserData::from($user)
+return $this->hybridly->properties([
+    'user' => UserData::from($user),
 ]);
 ```
 
-## `base`
+## `createExternalRedirect`
 
-Makes the view a [dialog](../../guide/dialogs.md) and defines its base view. It takes a route name and its parameters as its arguments.
+Generates a response that redirects to an external website or non-hybrid endpoint.
 
-> See [dialogs](../../guide/dialogs.md) for more details.
-
-### Usage
-
-```php
-return hybridly()
-  ->view('users.edit', [
-    'user' => UserData::from($user)
-  ])
-  ->base('users.show', $user);
-```
-
-## `external`
-
-Generates a response for redirecting to an external website, or a non-hybrid view.
-
-This can also be used to redirect to a hybrid view when it is not known whether the current request is hybrid or not.
-
-> See also: [`to_external_url`](./functions.md#to-external-url)
->
-> See [external redirects](../../guide/responses.md#external-redirects) for more details.
+- See also: [`to_external_url`](./functions.md#to-external-url)
+- See [external redirects](../../guide/responses.md#external-redirects) for details.
 
 ### Usage
 
 ```php
-return hybridly()->external('https://google.com');
+return $this->hybridly->createExternalRedirect('https://google.com');
 ```
 
 ## `onDemand`
 
-Creates a property that will only get evaluated and included when specifically requested through a partial reload.
+Creates a property that is only evaluated when explicitly requested through a partial reload.
 
-> See also: [`on_demand`](./functions.md#on_demand)
->
-> See [partial reloads](../../guide/partial-reloads.md) for more details.
+- See also: [`on_demand`](./functions.md#on_demand)
+- See [partial-only properties](../../guide/partial-reloads.md#partial-only-properties) for more details.
 
 ### Usage
 
 ```php
-return hybridly('booking.estimates.show', [
-  'booking' => BookingData::from($booking),
-  'estimates' => hybridly()->onDemand(function () { // [!code focus:3]
-    return SearchEstimates::run($booking);
-  }),
+return $this->hybridly->view('users.show', [
+    'user' => UserData::from($user),
+    'posts' => $this->hybridly->onDemand(fn () => PostData::collection($user->posts)),
 ]);
 ```
 
 ## `deferred`
 
-Creates a partial property that will automatically be loaded in a subsequent partial reload when the page loads.
+Creates a property that is not included in the initial load, but is automatically loaded in a subsequent partial reload.
 
-> See also: [`deferred`](./functions.md#deferred), [`on_demand`](./functions.md#on_demand)
->
-> See [deferred properties](../../guide/partial-reloads.md#deferred-properties) for more details.
+- See also: [`deferred`](./functions.md#deferred)
+
+- See [deferred properties](../../guide/partial-reloads.md#deferred-properties) for more details.
 
 ### Usage
 
 ```php
-return hybridly('booking.estimates.show', [
-  'booking' => BookingData::from($booking),
-  'estimates' => hybridly()->deferred(function () { // [!code focus:3]
-    return SearchEstimates::run($booking);
-  }),
+return $this->hybridly->view('users.show', [
+    'user' => UserData::from($user),
+    'stats' => $this->hybridly->deferred(
+        callback: fn () => UserStatsData::from($user),
+        group: 'sidebar',
+    ),
 ]);
 ```
 
 ## `isHybrid`
 
-> See also: [`is_hybrid`](./functions.md#is-hybrid)
+- See also: [`is_hybrid`](./functions.md#is-hybrid)
 
 Determines whether the current request is hybrid. Optionally, a `Illuminate\Http\Request` instance can be given instead of using the current request.
 
 ### Usage
 
 ```php
-if (hybridly()->isHybrid()) {
-  // ...
+if ($this->hybridly->isHybrid()) {
+    // ...
 }
 ```
 
 ## `isPartial`
 
-> See also: [`is_partial`](./functions.md#is-partial)
+- See also: [`is_partial`](./functions.md#is-partial)
 
 Determines whether the current request is a [partial reload](../../guide/partial-reloads.md). Optionally, a `Illuminate\Http\Request` instance can be given instead of using the current request.
 
 ### Usage
 
 ```php
-if (hybridly()->isPartial()) {
+if ($this->hybridly->isPartial()) {
   // ...
 }
 ```
 
-## `loadModule`
+## `share`
 
-> See also: [architecture](../../guide/architecture.md#custom)
-
-Loads views and layouts from the current directory.
+Shares properties globally across all Hybridly responses.
 
 ### Usage
 
 ```php
-public function boot(Hybridly $hybridly): void
-{
-    $hybridly->loadModule(namespace: 'billing');
-}
+$this->hybridly->share('auth.user', fn () => Auth::user());
+
+$this->hybridly->share([
+  'app.name' => config('app.name'),
+]);
 ```
 
-You may set the `deep` argument to `false` to avoid recursively loading nested views.
+## `flush`
 
-```php
-$hybridly->loadModule(namespace: 'billing', deep: false);
-```
-
-## `loadModuleFrom`
-
-> See also: [architecture](../../guide/architecture.md#custom)
-
-Loads views and layouts from the given directory.
+Clears all currently shared global properties.
 
 ### Usage
 
 ```php
-public function boot(Hybridly $hybridly): void
-{
-    $hybridly->loadModuleFrom(
-      directory: __DIR__,
-      namespace: 'billing'
-    );
-}
+$this->hybridly->flush();
 ```
 
-`loadModuleFrom` currently accepts only `directory` and `namespace`.
+## `persist`
 
-## `loadViewsFrom`
-
-> See also: [architecture](../../guide/architecture.md#custom)
-
-Deeply loads Vue files in the given directory and registers them as views for the given namespace (or no namespace if left empty).
+Marks one or more property paths as persisted so they are always included, even in partial responses.
 
 ### Usage
 
 ```php
-public function boot(Hybridly $hybridly): void
-{
-    $hybridly->loadViewsFrom(
-      directory: __DIR__.'/views',
-      namespace: 'billing',
-    );
-}
+$this->hybridly->persist([
+  'auth',
+  'flash',
+]);
 ```
 
-## `loadLayoutsFrom`
+## `resolveVersionUsing`
 
-> See also: [architecture](../../guide/architecture.md#custom)
-
-Loads Vue files in the given directory and registers them as layouts for the given namespace (or no namespace if left empty).
+Sets a callback used to resolve the asset version for responses.
 
 ### Usage
 
 ```php
-public function boot(Hybridly $hybridly): void
-{
-    $hybridly->loadLayoutsFrom(
-      directory: __DIR__.'/layouts',
-      namespace: 'billing',
-    );
-}
+$this->hybridly->resolveVersionUsing(fn () => md5_file(public_path('build/manifest.json')));
 ```
 
-## `addView`
+## `setUrlResolver`
 
-> See also: [architecture](../../guide/architecture.md#custom)
-
-Registers a single view with an explicit path, namespace and identifier.
+Defines how the URL is resolved for the next response.
 
 ### Usage
 
 ```php
-public function boot(Hybridly $hybridly): void
-{
-    $hybridly->addView(
-      path: resource_path('domains/billing/views/invoices/show.view.vue'),
-      namespace: 'billing',
-      identifier: 'billing::invoices.show',
-    );
-}
+use Illuminate\Http\Request;
+
+$this->hybridly->setUrlResolver(
+  fn (Request $request) => $request->fullUrl(),
+);
 ```
 
-## `addLayout`
+## `getUrlResolver`
 
-> See also: [architecture](../../guide/architecture.md#custom)
-
-Registers a single layout with an explicit path, namespace and identifier.
+Returns the currently configured URL resolver callback.
 
 ### Usage
 
 ```php
-public function boot(Hybridly $hybridly): void
-{
-    $hybridly->addLayout(
-      path: resource_path('domains/billing/layouts/default.layout.vue'),
-      namespace: 'billing',
-      identifier: 'billing::default',
-    );
-}
+$resolver = $this->hybridly->getUrlResolver();
+```
+
+## `renderExceptionsInDevelopment`
+
+Ensures Hybridly exception rendering is enabled in both `production` and `local` environments.
+
+### Usage
+
+```php
+$this->hybridly->renderExceptionsInDevelopment();
+```
+
+## `renderExceptionsUsing`
+
+Defines the response that should be rendered when a handled exception occurs.
+
+### Usage
+
+```php
+use Illuminate\Http\Request;
+use Throwable;
+
+$this->hybridly->renderExceptionsUsing(
+  fn (Throwable $exception, Request $request) => $this->hybridly->view('errors.server-error', [
+    'message' => $exception->getMessage(),
+  ]),
+);
+```
+
+## `handleSessionExpirationUsing`
+
+Defines the response that should be returned when a `419` session expiration occurs.
+
+### Usage
+
+```php
+$this->hybridly->handleSessionExpirationUsing(
+  fn () => redirect()
+    ->route('login')
+    ->with('error', 'Your session expired. Please login again.'),
+);
 ```
