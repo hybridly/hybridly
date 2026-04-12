@@ -1,23 +1,6 @@
-import { registerHook } from '@hybridly/core'
 import { wrap } from '@hybridly/utils'
-import { get } from 'es-toolkit/compat'
-import { defineComponent, onMounted, onUnmounted, PropType, ref, SlotsType } from 'vue'
-import { state } from '../stores/state'
-
-function keysAreBeingReloaded(only: undefined | string | string[], except: undefined | string | string[], keys: string[]): boolean {
-	only = wrap(only)
-	except = wrap(except)
-
-	if (only.length > 0) {
-		return keys.some((key) => only.includes(key))
-	}
-
-	if (except.length > 0) {
-		return !keys.some((key) => except.includes(key))
-	}
-
-	return true
-}
+import { defineComponent, PropType, SlotsType } from 'vue'
+import { LoadStateSlotProps, useLoadState } from './load-state'
 
 export const Deferred = defineComponent({
 	name: 'Deferred',
@@ -28,74 +11,20 @@ export const Deferred = defineComponent({
 		},
 	},
 	slots: Object as SlotsType<{
-		default: {
-			reloading: boolean
-			loading: boolean
-			loaded: boolean
-		}
-		fallback: {}
+		default: LoadStateSlotProps
+		fallback: LoadStateSlotProps
 	}>,
 	setup(props, { slots }) {
-		const hasLoadedOnce = ref(wrap(props.data).every((key) => get(state.properties.value, key) !== undefined))
-		const reloading = ref(false)
-		const activeReloads = new Set<string>()
-
-		let removeStartListener: (() => void) | null = null
-		let removeFinishListener: (() => void) | null = null
-
-		onMounted(() => {
-			const keys = (Array.isArray(props.data) ? props.data : [props.data]) as string[]
-
-			removeStartListener = registerHook('start', (request) => {
-				// if we haven't loaded at least once, `reloading`
-				// must stay `false` because `loading` will be true
-				if (hasLoadedOnce.value === false) {
-					return
-				}
-
-				if (request.options.preserveState !== true) {
-					return
-				}
-
-				if (!keysAreBeingReloaded(request.options.only, request.options.except, keys)) {
-					return
-				}
-
-				activeReloads.add(request.id)
-				reloading.value = true
-			})
-
-			removeFinishListener = registerHook('after', (request) => {
-				if (activeReloads.has(request.id)) {
-					activeReloads.delete(request.id)
-					reloading.value = activeReloads.size > 0
-				}
-			})
-		})
-
-		onUnmounted(() => {
-			removeStartListener?.()
-			removeFinishListener?.()
-			activeReloads.clear()
-		})
+		const { getSlotProps } = useLoadState(() => wrap(props.data) as string[])
 
 		return () => {
-			const hasRequiredProperties = wrap(props.data).every((key) => get(state.properties.value, key) !== undefined)
-			const currentlyLoading = !hasRequiredProperties || reloading.value
+			const slotProps = getSlotProps()
 
-			if (hasRequiredProperties) {
-				hasLoadedOnce.value = true
+			if (!slotProps.loaded && !!slots.fallback) {
+				return slots.fallback(slotProps)
 			}
 
-			if (!hasRequiredProperties && !!slots.fallback) {
-				return slots.fallback({})
-			}
-
-			return slots.default?.({
-				reloading: reloading.value,
-				loading: currentlyLoading,
-				loaded: hasRequiredProperties,
-			})
+			return slots.default?.(slotProps)
 		}
 	},
 })

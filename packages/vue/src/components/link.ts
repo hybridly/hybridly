@@ -84,7 +84,7 @@ export const RouterLink: DefineComponent<RouterLinkProps> = defineComponent({
 						data,
 						method,
 						mode,
-						preserveState: preserveState ?? method !== 'GET',
+						preserveState: preserveState ?? (method !== 'GET' ? true : undefined),
 						preserveScroll,
 						...props.options,
 					})

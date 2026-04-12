@@ -8,6 +8,7 @@ use App\Http404Controller;
 use App\Http500Controller;
 use App\KitchenSink\DataLoading\Deferred\DeferredPropertiesController;
 use App\KitchenSink\DataLoading\Mergeable\MergeablePropertiesController;
+use App\KitchenSink\DataLoading\WhenVisible\WhenVisibleController;
 use App\KitchenSink\Forms\FormComponent\FormComponentController;
 use App\KitchenSink\Forms\Validation\ValidationController;
 use App\KitchenSink\Navigation\AsyncRequests\AsyncRequestsController;
@@ -66,6 +67,12 @@ final readonly class ShareNavigation
                     icon: 'lucide:git-merge',
                     href: action(MergeablePropertiesController::class, absolute: false),
                     route_patterns: ['kitchen-sink.data-loading.mergeable*'],
+                ),
+                new NavigationItem(
+                    label: 'When visible',
+                    icon: 'lucide:eye',
+                    href: action(WhenVisibleController::class, absolute: false),
+                    route_patterns: ['kitchen-sink.data-loading.when-visible*'],
                 ),
             ],
         ));

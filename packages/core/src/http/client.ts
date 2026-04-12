@@ -1,4 +1,5 @@
 import type { RequestData } from '@hybridly/utils'
+import { QueryValue } from '../query'
 import { makeUrl } from '../url'
 
 export interface HttpUploadProgressEvent {
@@ -242,7 +243,7 @@ function buildUrl(url: string, params?: RequestData): string {
 	}
 
 	return makeUrl(url, {
-		query: params,
+		query: params as Record<string, QueryValue>,
 	}).toString()
 }
 
