@@ -15,10 +15,29 @@ useHead({
 	title: 'Form component',
 })
 
+const fieldBehaviorOptions = [
+	{ label: 'Yes', value: 'yes' } as const,
+	{ label: 'No', value: 'no' } as const,
+	{ label: 'Spell name field', value: 'spell_name' } as const,
+]
+
+function resolveFieldBehavior(value: 'yes' | 'no' | 'spell_name'): boolean | string[] {
+	if (value === 'yes') {
+		return true
+	}
+
+	if (value === 'no') {
+		return false
+	}
+
+	return [value]
+}
+
 const controls = reactive({
 	disableWhileProcessing: true,
-	setDefaultOnSuccess: false,
-	resetOnSuccess: true,
+	setDefaultOnSuccess: 'no' as 'yes' | 'no' | 'spell_name',
+	resetOnSuccess: 'yes' as 'yes' | 'no' | 'spell_name',
+	resetOnError: 'no' as 'yes' | 'no' | 'spell_name',
 })
 </script>
 
@@ -27,10 +46,38 @@ const controls = reactive({
 		<Card title="Form component" description="A native-field form powered by the new <Form> component.">
 			<info-text :date="{ timeStyle: 'medium' }" label="Last updated" :content="lastSpellDiscoveryAt" />
 
-			<div class="gap-3 grid grid-cols-1 sm:grid-cols-3 mt-6">
+			<div class="gap-3 grid grid-cols-1 sm:grid-cols-4 mt-6">
 				<u-checkbox v-model="controls.disableWhileProcessing" label="disable-while-processing" />
-				<u-checkbox v-model="controls.setDefaultOnSuccess" label="set-default-on-success" />
-				<u-checkbox v-model="controls.resetOnSuccess" label="reset-on-success" />
+
+				<u-form-field label="set-default-on-success">
+					<u-select
+						v-model="controls.setDefaultOnSuccess"
+						value-key="value"
+						label-key="label"
+						class="w-full"
+						:items="fieldBehaviorOptions"
+					/>
+				</u-form-field>
+
+				<u-form-field label="reset-on-success">
+					<u-select
+						v-model="controls.resetOnSuccess"
+						value-key="value"
+						label-key="label"
+						class="w-full"
+						:items="fieldBehaviorOptions"
+					/>
+				</u-form-field>
+
+				<u-form-field label="reset-on-error">
+					<u-select
+						v-model="controls.resetOnError"
+						value-key="value"
+						label-key="label"
+						class="w-full"
+						:items="fieldBehaviorOptions"
+					/>
+				</u-form-field>
 			</div>
 
 			<Form
@@ -39,8 +86,9 @@ const controls = reactive({
 				:action="route('kitchen-sink.forms.form-component.spell-discovery')"
 				method="post"
 				:disable-while-processing="controls.disableWhileProcessing"
-				:set-default-on-success="controls.setDefaultOnSuccess"
-				:reset-on-success="controls.resetOnSuccess"
+				:set-default-on-success="resolveFieldBehavior(controls.setDefaultOnSuccess)"
+				:reset-on-success="resolveFieldBehavior(controls.resetOnSuccess)"
+				:reset-on-error="resolveFieldBehavior(controls.resetOnError)"
 			>
 				<div class="gap-4 grid grid-cols-3">
 					<u-form-field label="Mage reference ID" name="mage_reference_id" :error="getError('mage_reference_id')">

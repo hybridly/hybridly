@@ -170,6 +170,75 @@ test('it can override all options', async ({ expect }) => {
 	expect(toCall).toBeCalledTimes(3)
 })
 
+test('it resets only selected fields on successful useForm submission', async ({ expect }) => {
+	server.resetHandlers(mockSuccessfulUrl('http://localhost.test/navigation', 'post'))
+
+	const form = useForm({
+		url: 'http://localhost.test/navigation',
+		resetOnSuccess: ['name'],
+		fields: {
+			name: 'Fern',
+			title: 'Mage',
+		},
+	})
+
+	form.fields.name = 'Frieren'
+	form.fields.title = 'Sorcerer'
+
+	await form.submit()
+
+	expect(form.fields.name).toBe('Fern')
+	expect(form.fields.title).toBe('Sorcerer')
+})
+
+test('it resets only selected fields on failed useForm submission', async ({ expect }) => {
+	server.resetHandlers(mockInvalidUrl('http://localhost.test/navigation', 'post'))
+
+	const form = useForm({
+		url: 'http://localhost.test/navigation',
+		resetOnSuccess: false,
+		resetOnError: ['name'],
+		fields: {
+			name: 'Fern',
+			title: 'Mage',
+		},
+	})
+
+	form.fields.name = 'Frieren'
+	form.fields.title = 'Sorcerer'
+
+	await form.submit()
+
+	expect(form.fields.name).toBe('Fern')
+	expect(form.fields.title).toBe('Sorcerer')
+})
+
+test('it can set defaults only for selected useForm fields on success', async ({ expect }) => {
+	server.resetHandlers(mockSuccessfulUrl('http://localhost.test/navigation', 'post'))
+
+	const form = useForm({
+		url: 'http://localhost.test/navigation',
+		resetOnSuccess: false,
+		setDefaultOnSuccess: ['name'],
+		fields: {
+			name: 'Fern',
+			title: 'Mage',
+		},
+	})
+
+	form.fields.name = 'Frieren'
+	form.fields.title = 'Sorcerer'
+
+	await form.submit()
+
+	form.fields.name = 'Flamme'
+	form.fields.title = 'Archmage'
+	form.resetFields()
+
+	expect(form.fields.name).toBe('Frieren')
+	expect(form.fields.title).toBe('Mage')
+})
+
 test('it submits nested data from native form inputs', async ({ expect }) => {
 	server.resetHandlers(mockSuccessfulUrl('http://localhost.test/users', 'post'))
 
@@ -305,6 +374,67 @@ test('it can set defaults on success before reset-on-success', async ({ expect }
 	expect((wrapper.find('#spell').element as HTMLInputElement).value).toBe('Flamme')
 })
 
+test('it can set defaults only for selected fields on success', async ({ expect }) => {
+	server.resetHandlers(mockSuccessfulUrl('http://localhost.test/users', 'post'))
+
+	const TestComponent = defineComponent({
+		components: { Form },
+		template: `
+			<Form
+				action="http://localhost.test/users"
+				method="post"
+				:set-default-on-success="['spell_name']"
+				:reset-on-success="true"
+				v-slot="{ submit }"
+			>
+				<input id="name" type="text" name="spell_name" value="Zoltraak" />
+				<input id="type" type="text" name="spell_type" value="Offensive" />
+				<button id="submit" type="button" @click="submit()">Submit</button>
+			</Form>
+		`,
+	})
+
+	const wrapper = mount(TestComponent)
+
+	await wrapper.find('#name').setValue('Flamme')
+	await wrapper.find('#type').setValue('Fire')
+	await wrapper.find('#submit').trigger('click')
+	await delay(20)
+
+	expect((wrapper.find('#name').element as HTMLInputElement).value).toBe('Flamme')
+	expect((wrapper.find('#type').element as HTMLInputElement).value).toBe('Offensive')
+})
+
+test('it can reset only selected fields on success', async ({ expect }) => {
+	server.resetHandlers(mockSuccessfulUrl('http://localhost.test/users', 'post'))
+
+	const TestComponent = defineComponent({
+		components: { Form },
+		template: `
+			<Form
+				action="http://localhost.test/users"
+				method="post"
+				:reset-on-success="['spell_name']"
+				v-slot="{ submit }"
+			>
+				<input id="name" type="text" name="spell_name" value="Zoltraak" />
+				<input id="type" type="text" name="spell_type" value="Offensive" />
+				<button id="submit" type="button" @click="submit()">Submit</button>
+			</Form>
+		`,
+	})
+
+	const wrapper = mount(TestComponent)
+
+	await wrapper.find('#name').setValue('Flamme')
+	await wrapper.find('#type').setValue('Fire')
+	await wrapper.find('#submit').trigger('click')
+	await delay(20)
+
+	expect((wrapper.find('#name').element as HTMLInputElement).value).toBe('Zoltraak')
+	expect((wrapper.find('#type').element as HTMLInputElement).value).toBe('Fire')
+})
+
 test('it supports convenience props and merges with options', async ({ expect }) => {
 	server.resetHandlers(mockSuccessfulUrl('http://localhost.test/users', 'post'))
 
@@ -379,4 +509,34 @@ test('it keeps field values after validation errors', async ({ expect }) => {
 	await delay(20)
 
 	expect((wrapper.find('#spell').element as HTMLInputElement).value).toBe('Flamme')
+})
+
+test('it can reset only selected fields after validation errors', async ({ expect }) => {
+	server.resetHandlers(mockInvalidUrl('http://localhost.test/users', 'post'))
+
+	const TestComponent = defineComponent({
+		components: { Form },
+		template: `
+			<Form
+				action="http://localhost.test/users"
+				method="post"
+				:reset-on-error="['spell_name']"
+				v-slot="{ submit }"
+			>
+				<input id="name" type="text" name="spell_name" value="Zoltraak" />
+				<input id="type" type="text" name="spell_type" value="Offensive" />
+				<button id="submit" type="button" @click="submit()">Submit</button>
+			</Form>
+		`,
+	})
+
+	const wrapper = mount(TestComponent)
+
+	await wrapper.find('#name').setValue('Flamme')
+	await wrapper.find('#type').setValue('Fire')
+	await wrapper.find('#submit').trigger('click')
+	await delay(20)
+
+	expect((wrapper.find('#name').element as HTMLInputElement).value).toBe('Zoltraak')
+	expect((wrapper.find('#type').element as HTMLInputElement).value).toBe('Fire')
 })

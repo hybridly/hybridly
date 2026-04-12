@@ -11,6 +11,7 @@ type FormFields = DefaultFormFields
 type FormControl = HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
 type SubmitterElement = HTMLButtonElement | HTMLInputElement
 type FormInternalSubmitOptions<T extends SearchableObject = DefaultFormFields> = NonNullable<Parameters<FormReturn<T>['submit']>[0]>
+type FormFieldBehavior = boolean | string[]
 
 type FormRequestOptions = Omit<HybridRequestOptions, 'url' | 'data' | 'method' | 'errorBag' | 'progress'>
 
@@ -31,8 +32,9 @@ export interface FormProps {
 	errorBag?: string
 	showProgress?: boolean
 	disableWhileProcessing?: boolean
-	resetOnSuccess?: boolean
-	setDefaultOnSuccess?: boolean
+	resetOnSuccess?: FormFieldBehavior
+	resetOnError?: FormFieldBehavior
+	setDefaultOnSuccess?: FormFieldBehavior
 }
 
 function isSubmitterElement(value: unknown): value is SubmitterElement {
@@ -98,8 +100,14 @@ function getControlFieldInfo(control: Element): { control: FormControl; path: st
 	}
 }
 
-function setCurrentValuesAsDefaults(form: HTMLFormElement) {
+function setCurrentValuesAsDefaults(form: HTMLFormElement, keys?: Set<string>) {
 	for (const element of Array.from(form.elements)) {
+		const field = getControlFieldInfo(element)
+
+		if (keys && (!field || !keys.has(field.path))) {
+			continue
+		}
+
 		if (element instanceof HTMLInputElement) {
 			if (element.type === 'checkbox' || element.type === 'radio') {
 				element.defaultChecked = element.checked
@@ -259,11 +267,15 @@ export const Form = defineComponent({
 			default: false,
 		},
 		resetOnSuccess: {
-			type: Boolean,
+			type: [Boolean, Array] as PropType<FormFieldBehavior>,
 			default: true,
 		},
+		resetOnError: {
+			type: [Boolean, Array] as PropType<FormFieldBehavior>,
+			default: false,
+		},
 		setDefaultOnSuccess: {
-			type: Boolean,
+			type: [Boolean, Array] as PropType<FormFieldBehavior>,
 			default: false,
 		},
 	} satisfies ComponentObjectPropsOptions<FormProps>,
@@ -280,6 +292,7 @@ export const Form = defineComponent({
 			errorBag: props.errorBag,
 			progress: props.showProgress,
 			resetOnSuccess: props.resetOnSuccess,
+			resetOnError: props.resetOnError,
 			setDefaultOnSuccess: props.setDefaultOnSuccess,
 		})
 
@@ -305,6 +318,86 @@ export const Form = defineComponent({
 			}
 
 			return fields
+		}
+
+		function collectDefaultFormFields(): FormFields {
+			if (!element.value) {
+				return {}
+			}
+
+			const fields: FormFields = {}
+
+			for (const control of Array.from(element.value.elements)) {
+				const field = getControlFieldInfo(control)
+
+				if (!field) {
+					continue
+				}
+
+				if (control instanceof HTMLInputElement) {
+					if (control.type === 'file') {
+						continue
+					}
+
+					if (control.type === 'checkbox' || control.type === 'radio') {
+						if (control.defaultChecked) {
+							appendFieldValue(fields, field.path, control.value, field.appendToArray)
+						}
+
+						continue
+					}
+
+					appendFieldValue(fields, field.path, control.defaultValue, field.appendToArray)
+					continue
+				}
+
+				if (control instanceof HTMLTextAreaElement) {
+					appendFieldValue(fields, field.path, control.defaultValue, field.appendToArray)
+					continue
+				}
+
+				if (control instanceof HTMLSelectElement) {
+					if (control.multiple) {
+						for (const option of Array.from(control.options)) {
+							if (option.defaultSelected) {
+								appendFieldValue(fields, field.path, option.value, field.appendToArray)
+							}
+						}
+
+						continue
+					}
+
+					const defaultOption = Array.from(control.options).find((option) => option.defaultSelected)
+						?? control.options.item(0)
+
+					if (defaultOption) {
+						appendFieldValue(fields, field.path, defaultOption.value, field.appendToArray)
+					}
+				}
+			}
+
+			return fields
+		}
+
+		function syncDefaultsFromNativeControls() {
+			if (!element.value) {
+				return
+			}
+
+			const defaultFields = collectDefaultFormFields()
+			const nextDefaults: Record<string, unknown> = {}
+
+			for (const control of Array.from(element.value.elements)) {
+				const field = getControlFieldInfo(control)
+
+				if (!field) {
+					continue
+				}
+
+				nextDefaults[field.path] = get(defaultFields, field.path)
+			}
+
+			form.setDefault(nextDefaults as Partial<FormFields>)
 		}
 
 		function syncFields(fields: FormFields) {
@@ -352,12 +445,14 @@ export const Form = defineComponent({
 		function submit(options?: FormSubmitOptions, submitter?: SubmitterElement) {
 			const fields = collectFormFields(submitter)
 			syncFields(fields)
+			syncDefaultsFromNativeControls()
 
 			const resolvedOptions = merge<FormSubmitOptions<FormFields>>(
 				{
 					errorBag: props.errorBag,
 					progress: props.showProgress,
 					resetOnSuccess: props.resetOnSuccess,
+					resetOnError: props.resetOnError,
 					setDefaultOnSuccess: props.setDefaultOnSuccess,
 				},
 				{ ...props.options, ...options },
@@ -382,15 +477,22 @@ export const Form = defineComponent({
 						return hooks?.['validation-error']?.(incoming, request, context)
 					},
 					success: (payload, request, response, context) => {
-						if (element.value && resolvedOptions.setDefaultOnSuccess) {
-							setCurrentValuesAsDefaults(element.value)
+						if (element.value && rest.setDefaultOnSuccess !== false) {
+							const selectedKeys = Array.isArray(rest.setDefaultOnSuccess)
+								? new Set(rest.setDefaultOnSuccess)
+								: undefined
+
+							setCurrentValuesAsDefaults(element.value, selectedKeys)
+							syncDefaultsFromNativeControls()
 						}
 
-						if (resolvedOptions.resetOnSuccess ?? props.resetOnSuccess) {
-							resetFields()
-						}
+						nextTick(() => {
+							if (!element.value) {
+								return
+							}
 
-						syncFields(collectFormFields())
+							syncControlsFromFields(element.value, form.fields as FormFields)
+						})
 
 						return hooks?.success?.(payload, request, response, context)
 					},

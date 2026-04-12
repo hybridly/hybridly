@@ -15,10 +15,13 @@ type Errors<T extends SearchableObject> = {
 		: string
 }
 
+type FormFieldBehavior = boolean | string[]
+
 export type DefaultFormOptions = Pick<
 	FormOptions<object>,
 	| 'timeout'
 	| 'resetOnSuccess'
+	| 'resetOnError'
 	| 'setDefaultOnSuccess'
 	| 'progress'
 	| 'preserveScroll'
@@ -44,12 +47,17 @@ interface FormOptions<T extends SearchableObject> extends Omit<HybridRequestOpti
 	 * Resets the fields of the form to their default value after a successful submission.
 	 * @default true
 	 */
-	resetOnSuccess?: boolean
+	resetOnSuccess?: FormFieldBehavior
+	/**
+	 * Resets the fields of the form to their default value after a failed submission.
+	 * @default false
+	 */
+	resetOnError?: FormFieldBehavior
 	/**
 	 * Updates the default values from the form after a successful submission.
 	 * @default false
 	 */
-	setDefaultOnSuccess?: boolean
+	setDefaultOnSuccess?: FormFieldBehavior
 	/**
 	 * Callback executed before the form submission for transforming the fields.
 	 */
@@ -132,8 +140,46 @@ export function useForm<
 	 */
 	function setDefault(newDefault: Partial<T>) {
 		Object.entries(newDefault).forEach(([key, value]) => {
-			Reflect.set(defaults, key, safeClone(value))
+			set(defaults as SearchableObject, key, safeClone(value))
 		})
+	}
+
+	function resolveFieldBehaviorKeys(option: FormFieldBehavior | undefined, fallback: boolean): P[] | undefined {
+		if (option === false) {
+			return undefined
+		}
+
+		if (Array.isArray(option)) {
+			return option.length > 0 ? option as P[] : undefined
+		}
+
+		if (option === true) {
+			return Object.keys(fields) as P[]
+		}
+
+		return fallback ? Object.keys(fields) as P[] : undefined
+	}
+
+	function setDefaultFromFields(option: FormFieldBehavior | undefined) {
+		const keys = resolveFieldBehaviorKeys(option, false)
+
+		if (!keys) {
+			return
+		}
+
+		keys.forEach((key) => {
+			set(defaults as SearchableObject, key, safeClone(get(fields as SearchableObject, key)))
+		})
+	}
+
+	function resetFieldsFromBehavior(option: FormFieldBehavior | undefined, fallback: boolean) {
+		const keys = resolveFieldBehaviorKeys(option, fallback)
+
+		if (!keys) {
+			return
+		}
+
+		resetFields(...keys)
 	}
 
 	/**
@@ -197,6 +243,7 @@ export function useForm<
 		const {
 			timeout,
 			resetOnSuccess,
+			resetOnError,
 			setDefaultOnSuccess,
 			transform,
 			...requestOptions
@@ -244,6 +291,7 @@ export function useForm<
 				},
 				'validation-error': (incoming, request, context) => {
 					setErrors(incoming)
+					resetFieldsFromBehavior(resetOnError, false)
 					failed.value = true
 					recentlyFailed.value = true
 					timeoutIds.recentlyFailed = setTimeout(() => recentlyFailed.value = false, timeout ?? 5000)
@@ -252,14 +300,8 @@ export function useForm<
 				},
 				success: (payload, request, response, context) => {
 					clearErrors()
-
-					if (setDefaultOnSuccess) {
-						setDefault(fields)
-					}
-
-					if (resetOnSuccess !== false) {
-						resetFields()
-					}
+					setDefaultFromFields(setDefaultOnSuccess)
+					resetFieldsFromBehavior(resetOnSuccess, true)
 
 					successful.value = true
 					recentlySuccessful.value = true
