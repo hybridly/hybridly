@@ -1,80 +1,59 @@
 <script setup lang="ts">
+import { type FunctionalComponent } from 'vue'
+import LucideDialog from '~icons/lucide/box'
+import LucideFilter from '~icons/lucide/filter'
+import LucideLayers from '~icons/lucide/layers'
+import LucideMap from '~icons/lucide/map'
+import LucideShield from '~icons/lucide/shield'
+import LucideTable from '~icons/lucide/table'
+
 interface Feature {
 	title: string
 	description: string
 	url?: string
-	icon?: string
+	icon?: FunctionalComponent
 }
 
 const features: Feature[] = [
 	{
-		icon: 'i-mdi:language-typescript',
-		title: 'TypeScript ready',
-		description:
-			"If it's typable, it's typed. Hybridly supports typing paginators, routes, authorizations and global properties.",
-		url: '/guide/typescript',
-	},
-	{
-		icon: 'i-mdi:dock-window',
-		title: 'Dialogs',
-		description:
-			'Effortlessly implement URL-based dialogs, just like you would implement a page component.',
+		icon: LucideDialog,
+		title: 'Server-side dialogs',
+		description: 'Effortlessly implement URL-based dialogs, just like you would implement a page component.',
 		url: '/guide/dialogs',
 	},
 	{
-		icon: 'i-mdi:lock-outline',
-		title: 'Authorization',
-		description:
-			'Hybridly extends <a href="https://github.com/spatie/laravel-data">data objects</a> to provide an interface for generating typings for authorizations.',
-		url: '/guide/authorization',
+		icon: LucideTable,
+		title: 'Tables',
+		description: 'Build data tables with full control over their appearance, with support for actions and refining.',
+		url: '/guide/tables',
 	},
 	{
-		icon: 'i-mdi:web',
+		icon: LucideFilter,
+		title: 'Refining',
+		description: 'Filter and sort queries using the built-in refinement tools, with your own UI.',
+		url: '/guide/refining',
+	},
+	{
+		icon: LucideMap,
 		title: 'Typed routes',
 		description:
 			"Define your routes server-side like you're used to, Hybridly takes care of generating types for them.",
 		url: '/guide/routing',
 	},
 	{
-		icon: 'i-heroicons:funnel',
-		title: 'Refining',
+		icon: LucideShield,
+		title: 'TypeScript ready',
 		description:
-			'Filter and sort queries using the built-in refinement tools and build your UI around the provided composable.',
-		url: '/guide/refining',
+			"If it's typable, it's typed. Hybridly supports typing paginators, routes, authorizations and global properties.",
+		url: '/guide/typescript',
 	},
 	{
-		icon: 'i-mdi:table-large',
-		title: 'Tables',
-		description:
-			'Build datatables with full control over their appearance, including inline and bulk actions, filtering, sorting and more.',
-		url: '/guide/tables',
-	},
-	{
-		icon: 'i-mdi:shape',
+		icon: LucideLayers,
 		title: 'Flexible architecture',
 		description:
-			"Whether you prefer Laravel's default architecture, modules, slices, or something custom, Hybridly supports it.",
+			"Whether you prefer Laravel's default architecture, modules, or vertical slices, Hybridly supports it.",
 		url: '/guide/architecture',
 	},
-	{
-		icon: 'i-mdi:microsoft-visual-studio-code',
-		title: 'Visual Studio Code',
-		description:
-			'Auto-complete component names, and navigate between controllers, layouts and views with a single click.',
-		url: '/guide/visual-studio-code',
-	},
-	{
-		icon: 'i-mdi:vuejs',
-		title: 'Vue DevTools',
-		description: 'Integrates with Vue DevTools for painless property inspection and debugging.',
-		url: '/guide/devtools',
-	},
-	// {
-	// 	icon: 'i-mdi:code-braces',
-	// 	title: 'Made for developers',
-	// 	description: 'Hybridly is packed with quality-of-life features that should drastically improve your developer experience.',
-	// 	url: '/guide/comparison-with-inertia',
-	// },
 ]
 </script>
 
@@ -95,8 +74,8 @@ const features: Feature[] = [
 					</p>
 					<!-- Description -->
 					<p class="opacity-60 mt-4 font-medium text-lg lg:text-xl lg:text-left text-center">
-						Build single-page applications the classic way. No API, no route duplication, no
-						front-end state. Fully server-driven.
+						Build single-page applications the classic way. No API, no route duplication, no front-end state. Fully
+						server-driven.
 					</p>
 					<!-- Actions -->
 					<div class="flex flex-wrap justify-center lg:justify-start gap-4 mt-10">
@@ -127,10 +106,7 @@ const features: Feature[] = [
 
 				<!-- Logo block -->
 				<div class="group relative flex justify-center items-center order-first lg:order-last lg:mt-20 lg:mr-20 mb-20 w-30 lg:w-55 h-30 lg:h-55 hover:scale-105 transition duration-300 shrink-0">
-					<img
-						class="z-1 absolute size-full group-hover:scale-85 transition duration-300"
-						src="/logo.svg"
-					/>
+					<img class="z-1 absolute size-full group-hover:scale-85 transition duration-300" src="/logo.svg" />
 					<div class="absolute -inset-5 opacity-40 dark:opacity-70 rotate-45 image-bg" />
 				</div>
 			</div>
@@ -144,10 +120,10 @@ const features: Feature[] = [
 						:class="{ 'cursor-pointer ': feature.url }"
 						:href="feature.url"
 					>
-						<div class="top-2 right-2 absolute flex justify-center items-center p-2 rounded w-18 h-18 shrink-0">
-							<div
-								:class="feature.icon"
-								class="opacity-20 dark:group-hover:opacity-20 group-hover:opacity-100 size-full text-(--ui-text-highlighted) transition"
+						<div class="top-1 right-1 absolute flex justify-center items-center p-2 rounded w-12 h-12 shrink-0">
+							<component
+								:is="feature.icon"
+								class="opacity-0 dark:group-hover:opacity-10 group-hover:opacity-100 size-full text-(--ui-text-highlighted) transition"
 							/>
 						</div>
 						<div>

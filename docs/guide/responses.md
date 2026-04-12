@@ -16,7 +16,7 @@ use App\Users\UserData;
 
 final readonly class ShowUserController
 {
-    public function show(User $user): HybridResponse
+    public function __invoke(User $user): HybridResponse
     {
         Gate::authorize('view', $user);
 

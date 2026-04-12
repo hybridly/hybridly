@@ -1,58 +1,68 @@
 # Authentication
 
+<p class="preface">
+Learn how to work with authentication and how to share user data across the application.
+</p>
+
 ## Overview
 
 One of the benefits of Hybridly is that it acts like a classic monolithic application. There is no need for a token-based authentication system like the one provided by [Laravel Sanctum](https://laravel.com/docs/9.x/sanctum), or an advanced authentication system like OAuth.
 
-Hybridly works best with session-based authentication systems, such as what Laravel provides by default. The demonstrations showcases [how authentication can be implemented](https://github.com/hybridly/demo/blob/main/app/Http/Controllers/Security/AuthenticationController.php).
+Hybridly works best with session-based authentication systems, such as what Laravel provides by default.
 
 ## Sharing user data
 
-Obtaining information regarding the currently logged-in user is usually done via [global properties](./global-properties.md). 
+In most application requiring authentication, you need to share some information regarding the currently logged-in user across the application. The [global properties documentation](./global-properties.md) explains how to achieve this by using a middleware.
 
-Ideally, avoid exposing the whole model — rather, select the properties you need and make them a data object.
+:::code-group
 
-```php
-// app/Http/Middleware/HandleHybridRequests.php
-public function share(): SharedData
-{
-    return SharedData::from([
-        'security' => [
-            'user' => UserData::optional(auth()->user()),
-        ],
-    ]);
-}
+```php [app/Users/ShareUserData.php]
+use Hybridly\Hybridly;
+use Illuminate\Auth\AuthManager;
 
-// App\Data\UserData
-final class UserData extends Data
+final readonly class ShareUserData
 {
     public function __construct(
-        public readonly string $hashid,
-        public readonly string $username,
-        public readonly string $display_name,
-        public readonly ?string $profile_picture_url,
-        public readonly ?Carbon $identity_verified_at,
-        public readonly string $email,
-    ) {
+        private Hybridly $hybridly,
+        private AuthManager $auth,
+    ) {}
+
+    public function __invoke(Request $request, Closure $next): Response
+    {
+        if (! $this->auth->check()) {
+            return $next($request);
+        }
+
+        $this->hybridly->persist('user');
+        $this->hybridly->share(new UserData(
+            name: $user->name,
+            email: $user->email,
+        ));
+
+        return $next($request);
     }
 }
 ```
 
-## Consuming user data
+:::
 
-Hybridly does not provide any specific tool to read user data, but you may simply use `useProperty` to get the `user` property.
+In this example, the `ShareUserData` middleware shares a `user` property with the client containing the name and email of the currently logged-in user.
 
-Optionally, you could write a wrapper around it:
+The shape of the `user` object is defined by the `UserData` data object, which types can be [automatically generated](./typescript.md).
 
-```ts
-// resources/composables/security.ts
-export default function useSecurity() {
-  const user = useProperty('security.user')
-  const authenticated = computed(() => !!user.value)
+On the front-end, you may use [`useProperty`](../api/utils/use-property.md) to read the `user` property and get the user data.
 
-  return {
-    user,
-    authenticated,
-  }
-}
+```vue [resources/default.layout.vue]
+<script setup lang="ts">
+import { useProperty } from 'hybridly/vue'
+
+const user = useProperty('user')
+</script>
+
+<template>
+	<main>
+		Hello, {{ user.name }}!
+		<slot />
+	</main>
+</template>
 ```

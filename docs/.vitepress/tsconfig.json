@@ -1,14 +1,14 @@
 {
-  "compilerOptions": {
-    "target": "esnext",
-    "lib": ["esnext", "dom", "dom.iterable"],
-    "module": "ESNext",
-    "moduleResolution": "bundler",
-    "resolveJsonModule": true,
-    "types": ["vite/client"],
-    "strict": true,
-    "strictNullChecks": true,
-    "esModuleInterop": true,
-    "skipDefaultLibCheck": true
-  }
+	"compilerOptions": {
+		"target": "esnext",
+		"lib": ["esnext", "dom", "dom.iterable"],
+		"module": "ESNext",
+		"moduleResolution": "bundler",
+		"resolveJsonModule": true,
+		"types": ["vite/client", "unplugin-icons/types/vue"],
+		"strict": true,
+		"strictNullChecks": true,
+		"esModuleInterop": true,
+		"skipDefaultLibCheck": true
+	}
 }

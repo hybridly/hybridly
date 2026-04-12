@@ -2,6 +2,10 @@
 
 ## Overview
 
+:::warning
+This documentation is outdated.
+:::
+
 Authorization is what ensures an entity has the ability to perform a given task. Laravel provides gates and policies — they are simple but powerful ways to answer this problem.
 
 Authorization needs to be performed on the server. This is usually done through `User#can` or `Gate::authorize`. Unfortunately, this is not accessible when working in single-file components.
@@ -51,11 +55,11 @@ This property will contain a key for each defined policy action, and will be eva
 	"comments_count": 3,
 	"created_at": "2022-10-12T17:44:05+00:00",
 	"authorization": { // [!code focus:6]
-    "comment": false,
-    "like": false,
-    "unlike": true,
-    "delete": false
-  }
+		"comment": false,
+		"like": false,
+		"unlike": true,
+		"delete": false
+	}
 }
 ```
 
@@ -100,7 +104,7 @@ When sharing a property from a data resource to the front-end, authorizations co
 import { can } from 'hybridly' // [!code focus]
 
 const $props = defineProps<{
-  chirp: App.Data.ChirpData
+	chirp: App.Data.ChirpData
 }>()
 
 // With the `can` util (recommended) // [!code focus:2]
@@ -109,7 +113,6 @@ const canComment = can($props.chirp, 'comment')
 // As-is  // [!code focus:2]
 const canComment = $props.chirp.authorization.comment
 ```
-
 
 ## Avoid processing authorizations
 

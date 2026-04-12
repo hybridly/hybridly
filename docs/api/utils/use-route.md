@@ -4,7 +4,7 @@ outline: deep
 
 # `useRoute`
 
-This composable returns reactive utilities to work with the current route. These utilities are the reactive equivalents of [`router.matches`](../router/utils.md#matches) and [`router.current`](../router/utils.md#current).
+This composable returns reactive utilities to work with the current route. These utilities are the reactive equivalents of [`router.matches`](../router/navigation.md#matches) and [`router.current`](../router/navigation.md#current).
 
 | Related | [Routing](../../guide/routing.md), [`route`](route.md) |
 | ------- | ------------------------------------------------------ |

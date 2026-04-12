@@ -1,4 +1,4 @@
-# Router utils
+# Navigation
 
 The `router` object contains a few utils that can be used to programmatically navigate through the application.
 

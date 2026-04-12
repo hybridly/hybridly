@@ -1,33 +1,41 @@
+---
+outline: [2, 3]
+---
+
 # `<router-link>`
 
 This built-in component can be used to replace [anchor tags](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a) to navigate from a hybrid view to another.
 
 This component is a wrapper around Vue's [`<Component>`](https://vuejs.org/api/built-in-special-elements.html#component). By default, it creates anchors elements but intercepts their click handlers to make [hybrid navigations](../../guide/navigation.md).
 
-## `href`
+## Usage
+
+`<RouterLink>` works the same as a normal anchor tag:
+
+```vue
+<template>
+	<router-link :href="route('index')">
+		Home
+	</router-link>
+</template>
+```
+
+## Attributes
+
+### `href`
 
 - **Required**: true
 - **Type**: `string`
 
 Similar to the `<a>` tag, accepts the hyperlink to navigate to. If this doesn't point to a hybrid view, set the [`external`](#external) property to `true`.
 
-### Usage
-
-```vue
-<template>
-	<router-link :href="route('index') /* [!code focus]*/">
-		Home
-	</router-link>
-</template>
-```
-
-## `external`
+### `external`
 
 - **Type**: boolean
 
 When set to `true`, disables the custom click handler. This must be used when navigating to external websites or non-hybrid views — otherwise, a hybrid request will be made and will result into an error.
 
-### Usage
+#### Usage
 
 ```vue
 <template>
@@ -35,63 +43,63 @@ When set to `true`, disables the custom click handler. This must be used when na
 		v-for="link in navigation"
 		:key="link.url"
 		:href="link.url"
-		:external="link.external /* [!code focus]*/"
+		:external="link.external /* [!code hl]*/"
 		v-text="link.label"
 	/>
 </template>
 ```
 
-## `as`
+### `as`
 
 - **Type**: `string` or `Component`
 
 Defines the tag or component to render as.
 
-### Usage
+#### Usage
 
 ```vue
 <script setup lang="ts">
-import BaseButton from '@/views/components/base-button.vue' // [!code focus]
+import BaseButton from '@/views/components/base-button.vue'
 </script>
 
 <template>
-	<router-link :as="BaseButton /* [!code focus]*/" method="POST" :href="route('chirps.delete')">
+	<router-link :as="BaseButton" method="POST" :href="route('chirps.delete')">
 		Delete
 	</router-link>
 </template>
 ```
 
-## `method`
+### `method`
 
 - **Type**: `GET`, `POST`, `PUT`, `PATCH` or `DELETE`
 
 Defines the method that will be used when making the hybrid request. May be lowercase or uppercase.
 
-## `mode`
+### `mode`
 
 - **Type**: `'navigation' | 'async'`
 
 Defines whether the request is a full navigation or an asynchronous background request.
 
-## `data`
+### `data`
 
 - **Type**: object
 
-Optional data to be sent with the hybrid request. This is the same as using `data` in a [programmatic navigation](../router/utils.md).
+Optional data to be sent with the hybrid request. This is the same as using `data` in a [programmatic navigation](../router/navigation.md).
 
-## `options`
+### `options`
 
 - **Type**: `HybridRequestOptions`
 
-Options for the hybrid request. This is the same as the `options` argument in [programmatic navigations](../router/utils.md).
+Options for the hybrid request. This is the same as the `options` argument in [programmatic navigations](../router/navigation.md).
 
-## `disabled`
+### `disabled`
 
 - **Type**: boolean
 
 When set to `true`, the click handler will not be triggered and the `disabled` HTML attribute will be added.
 
-## `preload`
+### `preload`
 
 - **Type**: `boolean | 'mount' | 'hover'`
 

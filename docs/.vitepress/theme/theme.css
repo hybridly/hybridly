@@ -63,18 +63,6 @@
 :root {
 	color-scheme: dark;
 
-	--shiki-foreground: var(--ui-text);
-	--shiki-background: var(--ui-bg-elevated);
-	--shiki-token-constant: #f09483;
-	--shiki-token-string: #f09483;
-	--shiki-token-comment: #6c6f93;
-	--shiki-token-keyword: #e95678;
-	--shiki-token-parameter: #fab795;
-	--shiki-token-function: #b877db;
-	--shiki-token-string-expression: #25b0bc;
-	--shiki-token-punctuation: #6c6f93;
-	--shiki-token-link: #25b0bc;
-
 	--vp-font-family-base: var(--font-sans);
 	--vp-c-bg: var(--ui-bg);
 	--vp-c-bg-soft: var(--ui-bg-muted);

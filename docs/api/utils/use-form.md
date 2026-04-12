@@ -218,4 +218,4 @@ Returns a read-only object containing the fields loaded when instanciating the f
 
 - **Type**: `() => void`
 
-A function that aborts the submission. This is the same as calling [`router.abort()`](../router/utils.md#abort).
+A function that aborts the submission. This is the same as calling [`router.abort()`](../router/navigation.md#abort).

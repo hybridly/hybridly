@@ -33,6 +33,10 @@ When using `hdd` on non-hybrid responses, the response's body will be shown inst
 
 ## Using Ray
 
+:::warning
+This documentation is outdated.
+:::
+
 If you are using [Ray](https://spatie.be/docs/ray/v1/introduction) by Spatie, the `showHybridRequests` macro will automatically be registered.
 
 ```php

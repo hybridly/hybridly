@@ -4,13 +4,13 @@ Most `router` functions accept an _options_ argument for configuring the request
 
 ## `url`
 
-- Type: `UrlResolvable | () => UrlResolvable`
+- Type: `UrlResolvable`
 
 The URL to navigate to. Can be a `string`, an [`URL`](https://developer.mozilla.org/en-US/docs/Web/API/URL) object or a [`Location`](https://developer.mozilla.org/en-US/docs/Web/API/Location) object.
 
 ## `method`
 
-- Type: `POST`, `GET`, `PUT`, `PATCH` or `DELETE`
+- Type: `GET`, `POST`, `PUT`, `PATCH` or `DELETE` (uppercase or lowercase)
 
 HTTP method that will be used for the request. When [uploading files](../../guide/file-uploads.md#limitations), do not use `POST` but instead add a `_method: 'POST'` property to the body of the request.
 
@@ -69,21 +69,29 @@ Defines the properties that will be excluded from the response. Specified [persi
 
 Read the documentation on [partial reloads](../../guide/partial-reloads.md) for more information.
 
+## `reset`
+
+- Type: `string` or `string[]`
+
+Defines properties that should be cleared before applying incoming data.
+
+This is useful when reloading [mergeable properties](../../guide/partial-reloads.md#mergeable-properties) that should be reset instead of merged.
+
 ## `preserveState`
 
-- Type: `boolean`
+- Type: `boolean | ((options: NavigationOptions) => boolean)`
 
-Defines whether the component should be fully re-rendered, thus preserving its internal state.
+Defines whether the current view component state should be preserved for this navigation.
 
 ## `preserveUrl`
 
-- Type: `boolean`
+- Type: `boolean | ((options: NavigationOptions) => boolean)`
 
 Defines whether the current URL should be preserved. This is an advanced option that should not be used often.
 
 ## `preserveScroll`
 
-- Type: `boolean`
+- Type: `boolean | ((options: NavigationOptions) => boolean)`
 
 Defines whether to preserve the position of the document element's and the scroll regions' scrollbars.
 
@@ -91,13 +99,21 @@ Read the documentation on [scroll management](../../guide/scroll-management.md) 
 
 ## `replace`
 
-- Type: `boolean`
+- Type: `boolean | ((options: NavigationOptions) => boolean)`
 
 Defines whether to replace the current history state instead of adding an entry. This affects the browser's "back" and "forward" behavior.
 
-## **`hooks`**
+## `viewTransition`
 
-- Type: `Record<HookName, Function>`
+- Type: `boolean | string | string[]`
+
+Defines whether to use a [View Transition](https://developer.mozilla.org/en-US/docs/Web/API/View_Transition_API/Using_types) for the navigation.
+
+When a `string` or `string[]` is given, these values are used as transition types.
+
+## `hooks`
+
+- Type: `Partial<RequestHooks>`
 
 Defines hooks for the [lifecycle of the request](../../guide/hooks.md#request-lifecycle-events). Read the documentation on [hooks](../../guide/hooks.md) for more information.
 
@@ -135,7 +151,7 @@ Abort controller used for this request. This can be used to manually cancel a sp
 
 - Type: `UrlTransformable`
 
-Object which properties will affect the provided `url`. Can also be a callback that returns an `UrlTransformable`.
+Object which properties will affect the provided `url`. Can also be a callback receiving the current `URL` and returning a `UrlTransformable` object.
 
 ## `progress`
 

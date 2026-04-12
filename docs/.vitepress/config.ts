@@ -1,8 +1,8 @@
-import { createCssVariablesTheme } from '@shikijs/core'
 import tailwindcss from '@tailwindcss/vite'
 import { execSync } from 'node:child_process'
 import { existsSync, readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
+import icons from 'unplugin-icons/vite'
 import { defineConfig } from 'vitepress'
 import llmstxt from 'vitepress-plugin-llms'
 
@@ -87,10 +87,13 @@ export default defineConfig({
 			{ icon: 'discord', link: discord },
 		],
 
-		algolia: {
-			appId: 'IBVT4QTDXF',
-			apiKey: '3b2e1c15434655a09ee419b7204ebd46',
-			indexName: 'hybridly',
+		search: {
+			provider: 'algolia',
+			options: {
+				appId: 'IBVT4QTDXF',
+				apiKey: '3b2e1c15434655a09ee419b7204ebd46',
+				indexName: 'hybridly',
+			},
 		},
 
 		sidebar: {
@@ -107,17 +110,10 @@ export default defineConfig({
 					text: 'Essentials',
 					collapsed: false,
 					items: [
-						{ text: 'Views & layouts', link: '/guide/views-and-layouts' },
 						{ text: 'Routing', link: '/guide/routing' },
-						{ text: 'Responses', link: '/guide/responses' },
+						{ text: 'Views & layouts', link: '/guide/views-and-layouts' },
 						{ text: 'Navigation', link: '/guide/navigation' },
-						{ text: 'Validation', link: '/guide/validation' },
-						{ text: 'Authentication', link: '/guide/authentication' },
-						{ text: 'Authorization', link: '/guide/authorization' },
-						{ text: 'File uploads', link: '/guide/file-uploads' },
-						{ text: 'Exception handling', link: '/guide/exception-handling' },
-						{ text: 'Testing', link: '/guide/testing' },
-						{ text: 'Debugging', link: '/guide/debugging' },
+						{ text: 'Responses', link: '/guide/responses' },
 					],
 				},
 				{
@@ -125,13 +121,18 @@ export default defineConfig({
 					collapsed: false,
 					items: [
 						{ text: 'Partial reloads', link: '/guide/partial-reloads' },
+						{ text: 'Validation', link: '/guide/validation' },
+						{ text: 'Authentication', link: '/guide/authentication' },
+						{ text: 'Authorization', link: '/guide/authorization' },
 						{ text: 'Forms', link: '/guide/forms' },
-						{ text: 'Dialogs', link: '/guide/dialogs' },
 						{ text: 'Refining', link: '/guide/refining' },
 						{ text: 'Tables', link: '/guide/tables' },
+						{ text: 'Dialogs', link: '/guide/dialogs' },
 						{ text: 'Global properties', link: '/guide/global-properties' },
-						{ text: 'Progress indicator', link: '/guide/progress-indicator' },
-						{ text: 'Hooks', link: '/guide/hooks' },
+						{ text: 'File uploads', link: '/guide/file-uploads' },
+						{ text: 'Exception handling', link: '/guide/exception-handling' },
+						{ text: 'Debugging', link: '/guide/debugging' },
+						{ text: 'Testing', link: '/guide/testing' },
 					],
 				},
 				{
@@ -147,6 +148,8 @@ export default defineConfig({
 					collapsed: true,
 					items: [
 						{ text: 'TypeScript', link: '/guide/typescript' },
+						{ text: 'Progress indicator', link: '/guide/progress-indicator' },
+						{ text: 'Hooks', link: '/guide/hooks' },
 						{ text: 'Title & meta', link: '/guide/title-and-meta' },
 						{ text: 'Preserving URLs', link: '/guide/preserving-urls' },
 						{ text: 'Scroll management', link: '/guide/scroll-management' },
@@ -162,35 +165,13 @@ export default defineConfig({
 			],
 			'/api/': [
 				{
-					text: 'Components',
+					text: 'Vue',
 					collapsed: false,
 					items: [
 						{ text: '&lt;RouterLink&gt;', link: '/api/components/router-link' },
-					],
-				},
-				{
-					text: 'Laravel',
-					collapsed: false,
-					items: [
-						{ text: 'Hybridly', link: '/api/laravel/hybridly' },
-						{ text: 'Functions', link: '/api/laravel/functions' },
-						{ text: 'Testing', link: '/api/laravel/testing' },
-						{ text: 'Directives', link: '/api/laravel/directives' },
-					],
-				},
-				{
-					text: 'Router',
-					collapsed: false,
-					items: [
-						{ text: 'Options', link: '/api/router/options' },
-						{ text: 'Utils', link: '/api/router/utils' },
-						{ text: 'Response', link: '/api/router/response' },
-					],
-				},
-				{
-					text: 'Utils',
-					collapsed: false,
-					items: [
+						{ text: '&lt;Form&gt;', link: '/api/components/form' },
+						{ text: '&lt;Deferred&gt;', link: '/api/components/deferred' },
+						{ text: '&lt;WhenVisible&gt;', link: '/api/components/when-visible' },
 						{ text: 'initializeHybridly', link: '/api/utils/initialize-hybridly' },
 						{ text: 'can', link: '/api/utils/can' },
 						{ text: 'route', link: '/api/utils/route' },
@@ -210,6 +191,25 @@ export default defineConfig({
 						{ text: 'getRouterContext', link: '/api/utils/get-router-context' },
 					],
 				},
+				{
+					text: 'Router',
+					collapsed: false,
+					items: [
+						{ text: 'Options', link: '/api/router/options' },
+						{ text: 'Navigation', link: '/api/router/navigation' },
+						{ text: 'Response', link: '/api/router/response' },
+					],
+				},
+				{
+					text: 'Laravel',
+					collapsed: false,
+					items: [
+						{ text: 'Hybridly', link: '/api/laravel/hybridly' },
+						{ text: 'Functions', link: '/api/laravel/functions' },
+						{ text: 'Testing', link: '/api/laravel/testing' },
+						{ text: 'Directives', link: '/api/laravel/directives' },
+					],
+				},
 			],
 			'/configuration/': [
 				{
@@ -224,16 +224,12 @@ export default defineConfig({
 	},
 
 	markdown: {
-		theme: createCssVariablesTheme({
-			name: 'css-variables',
-			variablePrefix: '--shiki-',
-			variableDefaults: {},
-			fontStyle: true,
-		}),
+		theme: 'vitesse-dark',
 	},
 
 	vite: {
 		plugins: [
+			icons({ autoInstall: true }),
 			tailwindcss(),
 			llmstxt(),
 		],

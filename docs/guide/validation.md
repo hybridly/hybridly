@@ -1,21 +1,32 @@
+---
+outline: [2, 3]
+---
+
 # Validation
 
-## Sharing errors
+<p class="preface">
+Learn how to work with validation errors globally, or scope them per form when multiple forms coexist on the same page.
+</p>
 
-By default, validation errors are automatically shared to the `errors` [global property](./global-properties.md).
+## Overview
 
-This behavior can be disabled by setting the `$shareValidationErrors` property to `false`. Alternatively, the `resolveValidationErrors` method of the middleware can be overriden to customize the behavior.
+Hybridly handles validation errors natively. On the front-end, you can access them in three main ways:
 
-## Displaying errors
+- [`useForm`](../api/utils/use-form.md) exposes an `errors` record and some utilities
+- [`<Form>`](../api/components/form.md) exposes the same utilities as `useForm`
+- `useValidation` and `useValidationBag` provide global access to validation errors
 
-When using [forms](./forms.md), validation errors are stored in the `errors` property. It will be properly typed according to the fields defined in the form.
+## Validation with `useForm`
+
+When using `useForm`, validation errors are automatically available in `form.errors` after a failed submission.
 
 ```vue
 <script setup lang="ts">
-const login = useForm({
+const register = useForm({
+	url: route('register'),
 	method: 'POST',
-	url: route('login'),
 	fields: {
+		name: '',
 		email: '',
 		password: '',
 	},
@@ -23,37 +34,73 @@ const login = useForm({
 </script>
 
 <template>
-  <!-- ..... -->
-  <span v-if="login.errors.email" v-text="login.errors.email" />
+	<form @submit.prevent="register.submit()">
+		<input v-model="register.fields.name" type="text" />
+		<!-- [!code hl] -->
+		<p v-if="register.errors.name" v-text="register.errors.name" />
+
+		<input v-model="register.fields.email" type="email" />
+		<!-- [!code hl] -->
+		<p v-if="register.errors.email" v-text="register.errors.email" />
+
+		<input v-model="register.fields.password" type="password" />
+		<!-- [!code hl] -->
+		<p v-if="register.errors.password" v-text="register.errors.password" />
+
+		<button type="submit" :disabled="register.processing">
+			Submit
+		</button>
+	</form>
 </template>
 ```
 
-If you are validating data without forms, you can access errors through global properties — though they won't be automatically typed.
+You may also control errors manually with `clearError`, `clearErrors` and `setErrors`. Read more in the [useForm documentation](../api/utils/use-form.md#validation-errors).
+
+## Validation with `<Form>`
+
+The [`<Form>`](../api/components/form.md) component exposes the same validation error utilities as `useForm` in its `#default` slot.
 
 ```vue
-<script setup lang="ts">
-const $props = defineProps<{
-  errors: Record<string, string>
-}>()
-
-const properties = useProperties()
-// properties.errors
-</script>
+<template>
+	<Form #default="{ errors, getError, processing, submit, clearErrors }">
+		<!-- ... -->
+	</Form>
+</template>
 ```
 
-## Errors bags
+In addition to `errors`, `<Form>` provides `getError(key)` to read nested paths and utility methods such as `clearErrors`, `reset`, and `resetFields`.
 
-When validating multiple fields with the same name on the same page, conflicts may arise. 
+## Validation bags
 
-For instance, a form that creates a company on the same page than a form that creates a user, both having a `name` field, will display the `errors.name` if the form that creates the user is submitted and the `name` field doesn't pass the validation.
+For pages with multiple forms, error bags prevent collisions between unrelated validation errors that could share the same property names.
 
-To avoid that, you may use an error bag when making a request:
+Set a bag on the form with the `errorBag` option:
 
 ```ts
-router.post(url, {
-  errorBag: 'create-company',
-  data,
+const spellDiscoveryForm = useForm({
+	url: route('spells.discover'),
+	method: 'POST',
+	errorBag: 'spell_discovery', // [!code hl]
+	fields: {
+		name: '',
+		risk_level: '',
+	},
 })
 ```
 
-This only happens when errors are accessed through global properties. The above does not apply when using [forms](./forms.md), because errors are automatically scoped to the form object.
+On the `<Form>` component, this option is also available using the `error-bag` attribute.
+
+## `useValidation` and `useValidationBag`
+
+If you need access to validation errors globally, you may use `useValidation` or `useValidationBag`.
+
+```ts
+const errors = useValidationBag()
+const spellDiscoveryErrors = useValidationBag('spell_discovery')
+```
+
+## Notes
+
+- If no bag is specified, Hybridly uses the `default` bag.
+- When `errorBag` is specified on a request, errors are scoped to that bag on the front-end.
+- `useForm` and `<Form>` are generally the most convenient way to keep field values, pending state, and validation in sync.

@@ -6,7 +6,7 @@ Hybridly's requests have their own lifecycle. It's sometimes necessary to hook i
 
 For instance, the progress bar is implemented using these hooks.
 
-There are a two main ways to catch Hybridly's events: globally, through [plugins](./plugins.md), or locally, through [visit options](../api/router/utils.md).
+There are a two main ways to catch Hybridly's events: globally, through [plugins](./plugins.md), or locally, through [visit options](../api/router/navigation.md).
 
 ## Plugins
 
@@ -34,7 +34,7 @@ registerHook('navigated', ({ type }) => { // [!code focus:5]
 
 When [navigating](./navigation.md) or using the [form util](./forms.md), it's possible to pass a `hook` object that accepts a callback for each lifecycle event.
 
-These callbacks will be executed just once for the current request. You can learn more about visit options in [their documentation](../api/router/utils.md).
+These callbacks will be executed just once for the current request. You can learn more about visit options in [their documentation](../api/router/navigation.md).
 
 ## Request lifecycle events
 

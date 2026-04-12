@@ -33,6 +33,57 @@ router.reload({ except: ['companies'] })
 router.reload({ only: ['user.full_name'] })
 ```
 
+### Asynchronous requests
+
+Partial reloads are "asynchronous": it means that they can be triggered in parallel, don't show a progress bar, and replace the current history entry instead of pushing a new one.
+
+Under the hood, partial requests set [`mode`](../api/router/options.md#mode) to `async`:
+
+```ts
+router.get({
+	only: ['users'],
+	mode: 'async', // [!code hl]
+})
+```
+
+#### Cancelling and interrupting async requests
+
+When multiple asynchronous requests can overlap, you may control their interruption behavior.
+
+```ts
+router.reload({
+	only: ['notifications'],
+	mode: 'async',
+	group: 'navbar',
+	interruptAsyncOnStart: 'same-group',
+	cancelOnNavigation: true,
+})
+```
+
+&nbsp;
+
+##### `group`
+
+This option allows for grouping asynchronous request together. This setting interracts with other requests in the same group that use `interruptAsyncOnStart`.
+
+&nbsp;
+
+##### `interruptAsyncOnStart`
+
+This option configures how that request should interrupt other in-flight asynchronous requests.
+
+- `none` (default) — does not interrupt any request.
+- `same-group` — interrupts requests that share the same `group`.
+- `all` — interrupts all requests.
+
+&nbsp;
+
+##### `cancelOnNavigation`
+
+This option configures whether the request should be cancelled when a full navigation starts. This is useful to prevent race conditions.
+
+&nbsp;
+
 ## Persistent properties
 
 When using partial reloads, any non-specified property will not be sent back to the front-end.
