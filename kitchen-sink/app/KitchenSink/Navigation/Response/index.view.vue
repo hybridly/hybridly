@@ -121,7 +121,7 @@ function sendPropertiesUpdateRequest(method: 'POST' | 'PUT') {
 		</card>
 		<card title="Server state" description="This state is fetched from the server each time you reload.">
 			<info-list>
-				<info-text date label="Time" :content="time" />
+				<info-text :date="{ timeStyle: 'medium' }" label="Time" :content="time" />
 				<info-text label="Update count" :content="propertiesUpdateCount" />
 				<info-text label="Last method" :content="propertiesUpdateMethod ?? 'Not updated yet'" />
 				<info-text label="Last updated at" :content="propertiesUpdatedAt ?? 'Not updated yet'" />

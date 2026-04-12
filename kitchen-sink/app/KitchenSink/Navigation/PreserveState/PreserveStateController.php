@@ -8,6 +8,7 @@ use Discovery\Routing\Prefix;
 use Discovery\Routing\Web;
 use Hybridly\Contracts\HybridResponse;
 
+use function Hybridly\on_demand;
 use function Hybridly\view;
 
 #[Web, Prefix(uri: '/kitchen-sink/navigation/preserve-state', name: 'kitchen-sink.navigation.preserve-state')]
@@ -18,6 +19,7 @@ final class PreserveStateController
     {
         return view('kitchen-sink::navigation.preserve-state.index', [
             'time' => CarbonImmutable::now(),
+            'onDemandTime' => on_demand(fn () => CarbonImmutable::now()),
         ]);
     }
 }

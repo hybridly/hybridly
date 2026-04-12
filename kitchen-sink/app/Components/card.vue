@@ -23,5 +23,8 @@ defineProps<{
 		<div class="overflow-auto grow" :scroll-region="preserveSroll">
 			<slot />
 		</div>
+		<template #footer v-if="$slots.footer">
+			<slot name="footer" />
+		</template>
 	</u-card>
 </template>

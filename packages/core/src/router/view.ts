@@ -4,6 +4,7 @@ import { runHooks } from '../plugins'
 import { resetScrollPositions, restoreScrollPositions } from '../scroll'
 import type { UrlResolvable } from '../url'
 import { normalizeUrl } from '../url'
+import { evaluateConditionalOption } from '../utils'
 import { getHistoryMemo, setHistoryState } from './history'
 import { performHybridNavigation } from './request/request'
 import type { ComponentNavigationOptions, ConditionalNavigationOption, HybridPayload, InternalNavigationOptions } from './types'
@@ -27,16 +28,10 @@ export async function navigate(options: InternalNavigationOptions) {
 	options.payload.view ??= payloadFromContext().view
 	options.payload.view.properties = options.properties ?? options.payload.view.properties
 
-	function evaluateConditionalOption<T extends boolean | string>(option?: ConditionalNavigationOption<T>) {
-		return typeof option === 'function'
-			? option(options)
-			: option
-	}
-
-	const shouldPreserveState = evaluateConditionalOption(options.preserveState)
-	const shouldPreserveScroll = evaluateConditionalOption(options.preserveScroll)
-	const shouldReplaceHistory = evaluateConditionalOption(options.replace)
-	const shouldReplaceUrl = evaluateConditionalOption(options.preserveUrl)
+	const shouldPreserveState = evaluateConditionalOption(options, options.preserveState)
+	const shouldPreserveScroll = evaluateConditionalOption(options, options.preserveScroll)
+	const shouldReplaceHistory = evaluateConditionalOption(options, options.replace)
+	const shouldReplaceUrl = evaluateConditionalOption(options, options.preserveUrl)
 	const shouldPreserveView = !options.payload.view.component
 
 	// If the navigation was asking to preserve the current state, we also need to

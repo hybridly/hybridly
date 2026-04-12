@@ -1,3 +1,5 @@
+import { ConditionalNavigationOption, HybridRequestOptions } from './router'
+
 export function createPromiseWithResolvers<T>(): PromiseWithResolvers<T> {
 	let resolve: any
 	let reject: any
@@ -6,4 +8,10 @@ export function createPromiseWithResolvers<T>(): PromiseWithResolvers<T> {
 		reject = _reject
 	})
 	return { promise, resolve, reject }
+}
+
+export function evaluateConditionalOption<T extends boolean | string>(options: HybridRequestOptions, option?: ConditionalNavigationOption<T>) {
+	return typeof option === 'function'
+		? option(options)
+		: option
 }

@@ -7,6 +7,7 @@ const UButton = resolveComponent('UButton')
 
 defineProps<{
 	time: string
+	onDemandTime?: string
 }>()
 
 const input = ref('')
@@ -60,6 +61,14 @@ const state = reactive({ input, select, slider, number, checkbox, color })
 		<!-- server state -->
 		<Card title="Server state" description="This state is fetched from the server each time you reload.">
 			<info-text :date="{ timeStyle: 'medium' }" label="Date" :content="time" />
+			<info-text class="mt-2" :date="{ timeStyle: 'medium' }" label="Date (on demand)" :content="onDemandTime" />
+			<u-button
+				variant="subtle"
+				label="Request time"
+				color="neutral"
+				@click="router.reload({ only: ['onDemandTime'] })"
+				class="block mt-4 w-full"
+			/>
 		</Card>
 		<!-- actions -->
 		<Card title="Requests">
@@ -73,15 +82,22 @@ const state = reactive({ input, select, slider, number, checkbox, color })
 				<u-button
 					variant="subtle"
 					label="Use router.get()"
-					color="error"
+					color="warning"
 					@click="router.get(route('kitchen-sink.navigation.preserve-state.index'))"
 					class="block"
 				/>
 				<u-button
 					variant="subtle"
-					label="Use router.get() with preserveState"
+					label="Use router.get() with preserveState: true"
 					color="success"
 					@click="router.get(route('kitchen-sink.navigation.preserve-state.index'), { preserveState: true })"
+					class="block"
+				/>
+				<u-button
+					variant="subtle"
+					label="Use router.get() with preserveState: false"
+					color="error"
+					@click="router.get(route('kitchen-sink.navigation.preserve-state.index'), { preserveState: false })"
 					class="block"
 				/>
 				<u-button
@@ -92,7 +108,7 @@ const state = reactive({ input, select, slider, number, checkbox, color })
 					class="block"
 				/>
 				<router-link
-					color="error"
+					color="warning"
 					variant="subtle"
 					:as="UButton"
 					text="Click on a <RouterLink />"
@@ -102,9 +118,18 @@ const state = reactive({ input, select, slider, number, checkbox, color })
 				<router-link
 					variant="subtle"
 					:as="UButton"
+					color="error"
+					:preserve-state="false"
+					text="Click on a <RouterLink preserve-state = false />"
+					:href="route('kitchen-sink.navigation.preserve-state.index')"
+					class="block"
+				/>
+				<router-link
+					variant="subtle"
+					:as="UButton"
 					color="success"
 					preserve-state
-					text="Click on a <RouterLink preserve-state />"
+					text="Click on a <RouterLink preserve-state = true />"
 					:href="route('kitchen-sink.navigation.preserve-state.index')"
 					class="block"
 				/>

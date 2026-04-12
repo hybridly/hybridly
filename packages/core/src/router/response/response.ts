@@ -8,6 +8,7 @@ import type { HttpResponse } from '../../http'
 import { runHooks } from '../../plugins'
 import { saveScrollPositions } from '../../scroll'
 import { fillHash, sameHashes, sameUrls } from '../../url'
+import { evaluateConditionalOption } from '../../utils'
 import type { Errors, HybridPayload, HybridRequestOptions, NavigationResponse, Properties, Validation, View } from '../types'
 import { navigate } from '../view'
 import { isExternalResponse, performExternalNavigation } from './external'
@@ -88,7 +89,9 @@ export async function handleHybridRequestResponse({ request, response }: HybridR
 			}
 
 			if (!payload.view.component || (payload.view.component === context.view.component)) {
-				return resolveProperties(context.view.properties, payload.view)
+				return resolveProperties(context.view.properties, payload.view, {
+					mergeWithOriginal: evaluateConditionalOption(options, options.preserveState) !== false,
+				})
 			}
 		})()
 
@@ -136,12 +139,14 @@ export function isHybridResponse(response: HttpResponse): boolean {
 }
 
 function isPartial(options: HybridRequestOptions) {
-	return options.only !== undefined || options.except !== undefined
+	return options.only !== undefined || options.except !== undefined || options.reset !== undefined
 }
 
-function resolveProperties(original: Properties, payload: View) {
-	const mergedPayloadProperties = merge(original, payload.properties)
+function resolveProperties(original: Properties, payload: View, options: { mergeWithOriginal: boolean }) {
 	const mergeable = payload.mergeable ?? []
+	const mergedPayloadProperties = options.mergeWithOriginal
+		? merge(original, payload.properties)
+		: payload.properties
 
 	// We then need to loop through each "mergeable" property, and merge the
 	// received input into the original one. We need to respect the given settings:
@@ -151,6 +156,10 @@ function resolveProperties(original: Properties, payload: View) {
 	mergeable.forEach(([mergeableProperty, prepends, uniqueBy]) => {
 		const originalValue = get(original, mergeableProperty) as unknown
 		const newValue = get(payload.properties, mergeableProperty) as unknown
+
+		if (!options.mergeWithOriginal && newValue === undefined) {
+			return
+		}
 
 		const mergeArrays = (current: unknown[], incoming: unknown[]) => {
 			const merged = prepends === true
