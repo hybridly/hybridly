@@ -8,6 +8,7 @@ use Hybridly\Hybridly;
 use Hybridly\Support\Arr as SupportArr;
 use Hybridly\Support\Configuration\Configuration;
 use Hybridly\Support\Header;
+use Hybridly\Support\Pagination\ScrollMetadata;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -157,7 +158,7 @@ final class Factory implements HybridResponse
     {
         // Dialogs do not need shared properties, as they are already part of the base view.
         // See: https://github.com/hybridly/hybridly/pull/153
-        [$properties] = $this->resolveProperties(
+        [$properties, $deferred, $mergeable, $paginators] = $this->resolveProperties(
             view: $payload->dialog,
             request: $request,
             includeSharedProperties: false,
@@ -186,6 +187,9 @@ final class Factory implements HybridResponse
                     ? $payload->dialog->baseUrl
                     : $payload->dialog->redirectUrl,
                 key: $payload->dialog->key,
+                deferred: $deferred,
+                mergeable: $mergeable,
+                paginators: $paginators,
             ),
         );
     }
@@ -262,13 +266,14 @@ final class Factory implements HybridResponse
      */
     private function resolveView(View $view, Request $request): View
     {
-        [$properties, $deferred, $mergeable] = $this->resolveProperties($view, $request);
+        [$properties, $deferred, $mergeable, $paginators] = $this->resolveProperties($view, $request);
 
         return new View(
             component: $view->component,
             properties: $properties,
             deferred: $deferred,
             mergeable: $mergeable,
+            paginators: $paginators,
         );
     }
 
@@ -281,11 +286,18 @@ final class Factory implements HybridResponse
         // could be different than the one given to `toResponse`.
         $resolver = resolve(PropertiesResolver::class, ['request' => $request]);
 
-        return $resolver->resolve(
+        [$properties, $deferred, $mergeable, $paginators] = $resolver->resolve(
             component: $view->component,
             properties: $includeSharedProperties ? [...$this->hybridly->sharedProperties, ...$view->properties] : $view->properties,
             persistedByPath: $this->hybridly->persistedProperties,
         );
+
+        return [
+            $properties,
+            $deferred,
+            $mergeable,
+            array_map(static fn (ScrollMetadata $metadata) => $metadata->toArray(), $paginators),
+        ];
     }
 
     /**

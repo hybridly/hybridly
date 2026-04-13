@@ -11,6 +11,7 @@ final class View implements Arrayable
         public array $properties,
         public array $deferred = [],
         public array $mergeable = [],
+        public array $paginators = [],
     ) {}
 
     public function toArray()
@@ -20,6 +21,7 @@ final class View implements Arrayable
             'properties' => $this->properties,
             'deferred' => $this->deferred,
             'mergeable' => $this->mergeable,
+            'paginators' => $this->paginators,
         ];
     }
 }

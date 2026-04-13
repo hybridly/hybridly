@@ -1,10 +1,12 @@
 <?php
 
 use Hybridly\Refining\Sorts\Sort;
+use Hybridly\Support\Properties\Scroll;
 use Hybridly\Tables\Columns\TextColumn;
 use Hybridly\Tables\Exceptions\InvalidTableException;
 use Hybridly\Tables\InlineTable;
 use Hybridly\Tables\Table;
+use Hybridly\Tables\TableScrollMetadata;
 use Hybridly\Tests\Fixtures\Database\Product;
 use Hybridly\Tests\Fixtures\Database\ProductFactory;
 use Hybridly\Tests\Fixtures\Vendor;
@@ -22,6 +24,7 @@ use Hybridly\Tests\Laravel\Tables\Fixtures\BasicScopedProductsTable;
 use Hybridly\Tests\Laravel\Tables\Fixtures\BasicTableWithConstructor;
 use Hybridly\Tests\Laravel\Tables\Fixtures\BasicTableWithDependencyInjection;
 use Hybridly\Tests\Laravel\Tables\Fixtures\BasicTableWithDependencyInjectionAndArguments;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Route;
 use Pest\Expectation;
 
@@ -43,6 +46,48 @@ it('serializes a basic table', function () {
 it('serializes a basic scoped table', function () {
     ProductFactory::createImmutable();
     expect(BasicScopedProductsTable::make())->toMatchSnapshot();
+});
+
+it('can create a scroll property from a table', function () {
+    ProductFactory::new()->count(21)->create();
+
+    $request = mock_request(
+        url: '/products?custom-scope-page=2',
+        query: ['custom-scope-page' => 2],
+        bind: true,
+    );
+
+    $scroll = BasicScopedProductsTable::scroll();
+    $table = $scroll->evaluate();
+    $payload = $table->jsonSerialize();
+    $metadata = $scroll->resolveMetadata($request);
+
+    expect($scroll)
+        ->toBeInstanceOf(Scroll::class)
+        ->mergePaths()
+        ->toBe(['records']);
+
+    expect($table)
+        ->toBeInstanceOf(BasicScopedProductsTable::class);
+
+    expect($payload['records'])
+        ->toBeArray();
+
+    expect($payload['paginator'])
+        ->toBeArray();
+
+    expect($payload['columns'])
+        ->toBeInstanceOf(Collection::class)
+        ->and($metadata)
+        ->toBeInstanceOf(TableScrollMetadata::class)
+        ->and($metadata->toArray())
+        ->toBe([
+            'type' => 'length-aware',
+            'queryKey' => 'custom-scope-page',
+            'current' => 2,
+            'previous' => 1,
+            'next' => 3,
+        ]);
 });
 
 it('can transform records using Laravel Data', function () {

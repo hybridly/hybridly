@@ -7,6 +7,7 @@ namespace App\Navigation;
 use App\Http404Controller;
 use App\Http500Controller;
 use App\KitchenSink\DataLoading\Deferred\DeferredPropertiesController;
+use App\KitchenSink\DataLoading\InfiniteScroll\InfiniteScrollController;
 use App\KitchenSink\DataLoading\Mergeable\MergeablePropertiesController;
 use App\KitchenSink\DataLoading\WhenVisible\WhenVisibleController;
 use App\KitchenSink\Forms\FormComponent\FormComponentController;
@@ -67,6 +68,12 @@ final readonly class ShareNavigation
                     icon: 'lucide:git-merge',
                     href: action(MergeablePropertiesController::class, absolute: false),
                     route_patterns: ['kitchen-sink.data-loading.mergeable*'],
+                ),
+                new NavigationItem(
+                    label: 'Infinite scroll',
+                    icon: 'lucide:panel-bottom-open',
+                    href: action(InfiniteScrollController::class, absolute: false),
+                    route_patterns: ['kitchen-sink.data-loading.infinite-scroll*'],
                 ),
                 new NavigationItem(
                     label: 'When visible',

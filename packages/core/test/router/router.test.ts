@@ -95,6 +95,49 @@ test('performs external navigations', async ({ expect }) => {
 	expect(document.location.href).toBe('http://localhost.test/navigation?owo=uwu&uwu[foo]=bar')
 })
 
+test('local navigation with explicit properties does not reuse view metadata', async ({ expect }) => {
+	await fakeRouterContext({
+		payload: {
+			url: 'http://localhost.test/current',
+			view: {
+				component: 'users.index',
+				properties: {
+					users: [{ id: 1, name: 'existing' }],
+				},
+				deferred: {
+					default: ['stats'],
+				},
+				mergeable: [['users', false, 'id', ['data']]],
+				paginators: {
+					users: {
+						type: 'length-aware',
+						queryKey: 'page',
+						current: 2,
+						previous: 1,
+						next: 3,
+					},
+				},
+			},
+		},
+	})
+
+	await router.local('http://localhost.test/local', {
+		properties: {
+			users: [{ id: 2, name: 'replacement' }],
+		},
+	})
+
+	expect(getRouterContext().view).toEqual({
+		component: 'users.index',
+		properties: {
+			users: [{ id: 2, name: 'replacement' }],
+		},
+		deferred: {},
+		mergeable: [],
+		paginators: {},
+	})
+})
+
 test('supports global "before" event cancellation', async ({ expect }) => {
 	const options = { url: 'http://localhost.test/navigation' }
 	registerHook('before', () => false)

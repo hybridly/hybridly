@@ -57,6 +57,7 @@ export async function navigate(options: InternalNavigationOptions) {
 				properties: merge(context.view.properties, options.payload.view.properties),
 				deferred: context.view.deferred,
 				mergeable: context.view.mergeable,
+				paginators: context.view.paginators,
 			},
 			url: context.url,
 			version: options.payload.version,
@@ -128,6 +129,9 @@ export async function navigate(options: InternalNavigationOptions) {
 export async function performLocalNavigation(targetUrl: UrlResolvable, options?: ComponentNavigationOptions) {
 	const context = getRouterContext()
 	const url = normalizeUrl(targetUrl)
+	const component = options?.component ?? context.view.component
+	const reusesCurrentView = component === context.view.component
+	const reusesCurrentViewState = reusesCurrentView && options?.properties === undefined
 
 	return await navigate({
 		...options,
@@ -138,10 +142,11 @@ export async function performLocalNavigation(targetUrl: UrlResolvable, options?:
 			dialog: options?.dialog === false ? undefined : (options?.dialog ?? context.dialog),
 			url,
 			view: {
-				component: options?.component ?? context.view.component,
-				properties: options?.properties ?? {},
-				deferred: {},
-				mergeable: [],
+				component,
+				properties: options?.properties ?? (reusesCurrentViewState ? context.view.properties : {}),
+				deferred: reusesCurrentViewState ? context.view.deferred : {},
+				mergeable: reusesCurrentViewState ? context.view.mergeable : [],
+				paginators: reusesCurrentViewState ? context.view.paginators : {},
 			},
 		},
 	})

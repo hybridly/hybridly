@@ -4,9 +4,11 @@ namespace Hybridly;
 
 use Closure;
 use Hybridly\Support\Header;
+use Hybridly\Support\Pagination\ScrollMetadata;
 use Hybridly\Support\Properties\Deferred;
 use Hybridly\Support\Properties\Merge;
 use Hybridly\Support\Properties\OnDemand;
+use Hybridly\Support\Properties\Scroll;
 use Hybridly\Support\Target;
 use Hybridly\View\Factory;
 use Illuminate\Http\Request;
@@ -104,9 +106,21 @@ if (! \function_exists('Hybridly\merge')) {
      *
      * @see https://hybridly.dev/api/laravel/functions.html#merge
      */
-    function merge(Closure|iterable $value, bool $prepend = false, ?string $uniqueBy = null): Merge
+    function merge(Closure|iterable $value, bool $prepend = false, ?string $uniqueBy = null, ?array $mergePaths = null): Merge
     {
-        return new Merge($value, $prepend, $uniqueBy);
+        return new Merge($value, $prepend, $uniqueBy, $mergePaths);
+    }
+}
+
+if (! \function_exists('Hybridly\scroll')) {
+    /**
+     * Specifies that a property should behave as a scrollable paginator wrapper.
+     *
+     * @see https://hybridly.dev/api/laravel/functions.html#scroll
+     */
+    function scroll(Closure|iterable $value, ?string $wrapper = null, Closure|ScrollMetadata|null $metadata = null): Scroll
+    {
+        return new Scroll($value, $wrapper, $metadata);
     }
 }
 
@@ -117,12 +131,13 @@ if (! \function_exists('Hybridly\deferred')) {
      *
      * @see https://hybridly.dev/api/laravel/functions.html#deferred
      */
-    function deferred(Closure $callback, ?string $group = null, bool $prepend = false, ?string $uniqueBy = null): Deferred
+    function deferred(Closure $callback, ?string $group = null, bool $prepend = false, ?string $uniqueBy = null, ?array $mergePaths = null): Deferred
     {
         return new Deferred(
             callback: $callback,
             prepend: $prepend,
             uniqueBy: $uniqueBy,
+            mergePaths: $mergePaths,
             group: $group,
         );
     }

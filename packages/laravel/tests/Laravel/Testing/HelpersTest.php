@@ -42,6 +42,13 @@ test('the `partial_headers` helper generates headers for partial requests', func
             Header::PARTIAL_EXCEPT => json_encode(['foo']),
         ]);
 
+    expect(partial_headers('foo.component', mergeIntent: ['feed' => 'prepend']))
+        ->toBe([
+            Header::HYBRID_REQUEST => true,
+            Header::PARTIAL_COMPONENT => 'foo.component',
+            Header::MERGE_INTENT => json_encode(['feed' => 'prepend']),
+        ]);
+
     expect(partial_headers('foo.component', hybrid: false))
         ->toBe([
             Header::PARTIAL_COMPONENT => 'foo.component',

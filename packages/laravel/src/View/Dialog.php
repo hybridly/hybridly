@@ -12,6 +12,9 @@ class Dialog implements Arrayable
         public string $baseUrl,
         public string $redirectUrl,
         public string $key,
+        public array $deferred = [],
+        public array $mergeable = [],
+        public array $paginators = [],
     ) {}
 
     public function withProperties(array $properties): self
@@ -22,6 +25,9 @@ class Dialog implements Arrayable
             baseUrl: $this->baseUrl,
             redirectUrl: $this->redirectUrl,
             key: $this->key,
+            deferred: $this->deferred,
+            mergeable: $this->mergeable,
+            paginators: $this->paginators,
         );
     }
 
@@ -30,6 +36,9 @@ class Dialog implements Arrayable
         return [
             'component' => $this->component,
             'properties' => $this->properties,
+            'deferred' => $this->deferred,
+            'mergeable' => $this->mergeable,
+            'paginators' => $this->paginators,
             'baseUrl' => $this->baseUrl,
             'redirectUrl' => $this->redirectUrl,
             'key' => $this->key,

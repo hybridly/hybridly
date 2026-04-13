@@ -19,6 +19,9 @@ export function fakePayload(payload: PartialDeep<HybridPayload> = {}): HybridPay
 		validation: {},
 		view: {
 			component: 'default.view',
+			deferred: {},
+			mergeable: [],
+			paginators: {},
 			properties: {},
 		},
 	})

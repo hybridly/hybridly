@@ -7,7 +7,7 @@ exports[`setHistoryState > pushes the context into the history > context 1`] = `
   {
     "type": "return",
     "value": [
-      "{"json":{"url":"https://bluebird.test/","version":"abc123","validation":{},"view":{"component":"default.view","properties":{}},"dialog":null,"scrollRegions":[],"memo":{}},"meta":{"values":{"dialog":["undefined"]},"v":1}}",
+      "{"json":{"url":"https://bluebird.test/","version":"abc123","validation":{},"view":{"component":"default.view","deferred":{},"mergeable":[],"paginators":{},"properties":{}},"dialog":null,"scrollRegions":[],"memo":{}},"meta":{"values":{"dialog":["undefined"]},"v":1}}",
       "",
       "https://bluebird.test/",
     ],
@@ -20,7 +20,7 @@ exports[`setHistoryState > replaces the context in the current history state > c
   {
     "type": "return",
     "value": [
-      "{"json":{"url":"https://bluebird.test/","version":"abc123","validation":{},"view":{"component":"default.view","properties":{}},"dialog":null,"scrollRegions":[],"memo":{}},"meta":{"values":{"dialog":["undefined"]},"v":1}}",
+      "{"json":{"url":"https://bluebird.test/","version":"abc123","validation":{},"view":{"component":"default.view","deferred":{},"mergeable":[],"paginators":{},"properties":{}},"dialog":null,"scrollRegions":[],"memo":{}},"meta":{"values":{"dialog":["undefined"]},"v":1}}",
       "",
       "https://bluebird.test/",
     ],

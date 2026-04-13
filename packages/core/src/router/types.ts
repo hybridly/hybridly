@@ -190,6 +190,31 @@ export interface Router {
 	}
 }
 
+export type MergeIntent = 'append' | 'prepend'
+
+export type MergeableProperty = [
+	string,
+	boolean,
+	string | null,
+	(string[] | null)?,
+]
+
+export type ProtocolPaginatorType = 'length-aware' | 'simple' | 'cursor'
+export type ProtocolPaginatorValue = string | number | null
+
+export interface ProtocolPaginator {
+	/** Kind of pagination represented by this metadata. */
+	type: ProtocolPaginatorType
+	/** Query parameter that controls the paginator position. */
+	queryKey: string
+	/** Current query value represented by the loaded page. */
+	current: ProtocolPaginatorValue
+	/** Previous query value, if any. */
+	previous: ProtocolPaginatorValue
+	/** Next query value, if any. */
+	next: ProtocolPaginatorValue
+}
+
 /** A hybrid request being made. */
 export interface PendingHybridRequest {
 	/** The URL to which the request is being made. */
@@ -229,11 +254,9 @@ export interface View {
 	/** Deferred properties for this view. */
 	deferred: Record<string, string | string[]>
 	/** Properties that should be merged with the existing payload. */
-	mergeable: Array<[
-		string, // property name
-		boolean, // true = prepend, false = append
-		string | null,
-	]>
+	mergeable: MergeableProperty[]
+	/** Pagination metadata indexed by property path. */
+	paginators: Record<string, ProtocolPaginator>
 }
 
 export interface Dialog extends Required<View> {

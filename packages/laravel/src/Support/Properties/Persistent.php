@@ -13,6 +13,7 @@ final class Persistent implements Property, Mergeable
         private \Closure $callback,
         private(set) bool $prepend = false,
         private(set) ?string $uniqueBy = null,
+        private(set) ?array $mergePaths = null,
     ) {}
 
     public function shouldMerge(): bool
@@ -28,6 +29,11 @@ final class Persistent implements Property, Mergeable
     public function uniqueBy(): ?string
     {
         return $this->uniqueBy;
+    }
+
+    public function mergePaths(): ?array
+    {
+        return $this->mergePaths;
     }
 
     public function evaluate(): mixed

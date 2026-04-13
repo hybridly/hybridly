@@ -13,6 +13,7 @@ use Hybridly\Support\Properties\IgnoreFirstLoad;
 use Hybridly\Support\Properties\Mergeable;
 use Hybridly\Support\Properties\Persistent;
 use Hybridly\Support\Properties\Property;
+use Hybridly\Support\Properties\Scroll;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -56,29 +57,6 @@ final class PropertiesResolver
             $properties = Arr::filterRecursive($properties, static fn ($property) => ! ($property instanceof IgnoreFirstLoad));
         }
 
-        // During partial requests, the client may send a reset intent to prevent mergeable
-        // properties to be merged on their previous values. This will effectively reset its state.
-        // TODO: tests
-        $reset = $partial && $this->request->hasHeader(Header::RESET)
-            ? array_filter(json_decode($this->request->header(Header::RESET, default: ''), associative: true) ?? [])
-            : [];
-
-        // Mergeable properties are then resolved. These are special properties
-        // that will have a special merge treatment when merging on the front-end.
-        $mergeable = $this->filterToPropertyPaths($properties, function (mixed $value, string $path) use ($reset) {
-            if (in_array($path, $reset, strict: true)) {
-                return false;
-            }
-
-            if ($value instanceof Mergeable) {
-                return $value->shouldMerge()
-                    ? [$path, $value->shouldPrepend(), $value->uniqueBy()]
-                    : false;
-            }
-
-            return false;
-        });
-
         // Next up, we want to know which properties should always be present on
         // the response. These properties are either `Persistent` instances,
         // or they were mentionned in the `$persisted` array.
@@ -114,6 +92,38 @@ final class PropertiesResolver
             $properties = Arr::exceptDot($properties, $except);
         }
 
+        // During partial requests, the client may send a reset intent to prevent mergeable
+        // properties from reusing their previous value. We resolve mergeable metadata
+        // after partial filtering so excluded properties are left untouched.
+        $reset = $partial && $this->request->hasHeader(Header::RESET)
+            ? array_filter(json_decode($this->request->header(Header::RESET, default: ''), associative: true) ?? [])
+            : [];
+
+        $mergeIntent = $partial && $this->request->hasHeader(Header::MERGE_INTENT)
+            ? array_filter(json_decode($this->request->header(Header::MERGE_INTENT, default: ''), associative: true) ?? [], static fn (mixed $value) => \is_string($value))
+            : [];
+
+        $mergeable = $this->filterToPropertyPaths($properties, function (mixed $value, string $path) use ($mergeIntent, $reset) {
+            if (in_array($path, $reset, strict: true)) {
+                return false;
+            }
+
+            if ($value instanceof Mergeable) {
+                $prepend = match ($mergeIntent[$path] ?? null) {
+                    'append' => false,
+                    'prepend' => true,
+                    default => $value->shouldPrepend(),
+                };
+
+                return $value->shouldMerge()
+                    ? [$path, $prepend, $value->uniqueBy(), $value->mergePaths()]
+                    : false;
+            }
+
+            return false;
+        });
+
+        $paginators = $this->resolveScrollMetadata($properties);
         $properties = $this->convertOutputCase(
             // Only when we only have the properties we need, we can
             // evaluated the lazy ones. If we did it earlier, we
@@ -121,7 +131,7 @@ final class PropertiesResolver
             array: $this->evaluatePropertyInstances($properties),
         );
 
-        return [$properties, $deferred ?? [], $mergeable];
+        return [$properties, $deferred ?? [], $mergeable, $paginators];
     }
 
     /**
@@ -181,6 +191,28 @@ final class PropertiesResolver
         return $properties;
     }
 
+    protected function resolveScrollMetadata(array $properties, string $path = ''): array
+    {
+        $paginators = [];
+
+        foreach ($properties as $key => $value) {
+            $current_path = $path ? "{$path}.{$key}" : $key;
+
+            if ($value instanceof Scroll && ($metadata = $value->resolveMetadata($this->request)) !== null) {
+                $paginators[$current_path] = $metadata;
+            }
+
+            if (\is_array($value)) {
+                $paginators = [
+                    ...$paginators,
+                    ...$this->resolveScrollMetadata($value, $current_path),
+                ];
+            }
+        }
+
+        return $paginators;
+    }
+
     /**
      * Evaluates all properties recursively.
      */
@@ -203,6 +235,14 @@ final class PropertiesResolver
             // This could potentially be in `resolvePropertyInstances`. Feel free to PR if needed.
             if ($value instanceof ResourceResponse || $value instanceof JsonResource) {
                 $value = $value->toResponse($this->request)->getData(true);
+            }
+
+            if ($value instanceof Hybridable) {
+                $value = $value->toHybridArray();
+            }
+
+            if ($value instanceof Arrayable) {
+                $value = $value->toArray();
             }
 
             if (\is_array($value)) {

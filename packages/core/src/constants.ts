@@ -4,6 +4,7 @@ export const EXTERNAL_NAVIGATION_HEADER = `${HYBRIDLY_HEADER}-external`
 export const EXTERNAL_NAVIGATION_TARGET_HEADER = `${HYBRIDLY_HEADER}-external-target`
 export const PARTIAL_COMPONENT_HEADER = `${HYBRIDLY_HEADER}-partial-component`
 export const RESET_HEADER = `${HYBRIDLY_HEADER}-reset`
+export const MERGE_INTENT_HEADER = `${HYBRIDLY_HEADER}-merge-intent`
 export const ONLY_DATA_HEADER = `${HYBRIDLY_HEADER}-only-data`
 export const DIALOG_KEY_HEADER = `${HYBRIDLY_HEADER}-dialog-key`
 export const DIALOG_REDIRECT_HEADER = `${HYBRIDLY_HEADER}-dialog-redirect`

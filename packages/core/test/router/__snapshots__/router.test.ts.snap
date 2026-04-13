@@ -34,6 +34,9 @@ exports[`performs hybrid navigations > context after navigation 1`] = `
   "version": "abc123",
   "view": {
     "component": "target.view",
+    "deferred": {},
+    "mergeable": [],
+    "paginators": {},
     "properties": {
       "foo": "bar",
     },
@@ -48,6 +51,9 @@ exports[`performs hybrid navigations > navigation response 1`] = `
   "version": "abc123",
   "view": {
     "component": "target.view",
+    "deferred": {},
+    "mergeable": [],
+    "paginators": {},
     "properties": {
       "foo": "bar",
     },

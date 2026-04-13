@@ -6,12 +6,14 @@ use Hybridly\Support\Properties\Hybridable;
 use Hybridly\View\Factory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Route;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 
 use function Hybridly\dialog;
 use function Hybridly\properties;
+use function Hybridly\scroll;
 use function Hybridly\view;
 
 test('external responses to non-hybridly requests', function () {
@@ -100,6 +102,7 @@ test('hybridly responses to non-hybridly requests', function () {
                 ],
                 'deferred' => [],
                 'mergeable' => [],
+                'paginators' => [],
             ],
         ]);
 });
@@ -134,6 +137,7 @@ test('`Hybridable` classes are serialized', function () {
                 ],
                 'deferred' => [],
                 'mergeable' => [],
+                'paginators' => [],
             ],
         ]);
 });
@@ -160,6 +164,38 @@ test('hybridly responses to hybridly requests', function () {
                 ],
                 'deferred' => [],
                 'mergeable' => [],
+                'paginators' => [],
+            ],
+        ]);
+});
+
+test('hybridly responses serialize paginator metadata', function () {
+    $request = mock_request(url: '/feed?feedPage=3', hybrid: true, bind: true);
+    $response = view('feed.index', [
+        'feed' => scroll(fn () => new LengthAwarePaginator(
+            items: [['id' => 5], ['id' => 6]],
+            total: 12,
+            perPage: 2,
+            currentPage: 3,
+            options: [
+                'pageName' => 'feedPage',
+                'path' => '/feed',
+            ],
+        )),
+    ])->toResponse($request);
+    $payload = $response->getOriginalContent();
+
+    expect($response)
+        ->toBeInstanceOf(JsonResponse::class);
+
+    expect($payload['view']['paginators'])
+        ->toBe([
+            'feed' => [
+                'type' => 'length-aware',
+                'queryKey' => 'feedPage',
+                'current' => 3,
+                'previous' => 2,
+                'next' => 4,
             ],
         ]);
 });
@@ -189,6 +225,7 @@ test('properties can be added on-the-fly on the factory instance', function () {
                 ],
                 'deferred' => [],
                 'mergeable' => [],
+                'paginators' => [],
             ],
         ]);
 });
@@ -222,6 +259,7 @@ test('dialogs and their properties can be resolved', function () {
                 ],
                 'deferred' => [],
                 'mergeable' => [],
+                'paginators' => [],
             ],
             'dialog' => [
                 'component' => 'users.edit',
@@ -229,6 +267,9 @@ test('dialogs and their properties can be resolved', function () {
                     'user' => 'Makise Kurisu',
                     'email' => 'makise@gadgetlab.jp',
                 ],
+                'deferred' => [],
+                'mergeable' => [],
+                'paginators' => [],
                 'baseUrl' => 'http://localhost',
                 'redirectUrl' => 'http://localhost',
                 'key' => data_get($payload, 'dialog.key'),
@@ -274,6 +315,7 @@ test('hybridly responses without a view component', function () {
                 ],
                 'deferred' => [],
                 'mergeable' => [],
+                'paginators' => [],
             ],
         ]);
 });
@@ -309,6 +351,9 @@ test('base view may be omitted on dialog responses coming from hybrid requests',
                     'user' => 'Makise Kurisu',
                     'email' => 'makise@gadgetlab.jp',
                 ],
+                'deferred' => [],
+                'mergeable' => [],
+                'paginators' => [],
                 'baseUrl' => 'http://localhost',
                 'redirectUrl' => 'http://localhost',
                 'key' => data_get($payload, 'dialog.key'),
@@ -341,6 +386,7 @@ test('base view may not be omitted on dialog responses coming from non-hybrid re
                 ],
                 'deferred' => [],
                 'mergeable' => [],
+                'paginators' => [],
             ],
             'dialog' => [
                 'component' => 'users.edit',
@@ -348,6 +394,9 @@ test('base view may not be omitted on dialog responses coming from non-hybrid re
                     'user' => 'Makise Kurisu',
                     'email' => 'makise@gadgetlab.jp',
                 ],
+                'deferred' => [],
+                'mergeable' => [],
+                'paginators' => [],
                 'baseUrl' => 'http://localhost',
                 'redirectUrl' => 'http://localhost',
                 'key' => data_get($payload['payload'], 'dialog.key'),
@@ -389,6 +438,7 @@ test('a redirect to the base view may be forced', function () {
                 ],
                 'deferred' => [],
                 'mergeable' => [],
+                'paginators' => [],
             ],
             'dialog' => [
                 'component' => 'users.edit',
@@ -396,6 +446,9 @@ test('a redirect to the base view may be forced', function () {
                     'user' => 'Makise Kurisu',
                     'email' => 'makise@gadgetlab.jp',
                 ],
+                'deferred' => [],
+                'mergeable' => [],
+                'paginators' => [],
                 'baseUrl' => 'http://localhost',
                 'redirectUrl' => 'http://localhost',
                 'key' => data_get($payload, 'dialog.key'),

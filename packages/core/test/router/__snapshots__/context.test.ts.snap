@@ -25,6 +25,9 @@ exports[`creates a valid router context > context 1`] = `
   "version": "123",
   "view": {
     "component": "my-owo-view",
+    "deferred": {},
+    "mergeable": [],
+    "paginators": {},
     "properties": {
       "foo": "bar",
     },
@@ -57,6 +60,9 @@ exports[`updates the context > base context 1`] = `
   "version": "abc123",
   "view": {
     "component": "default.view",
+    "deferred": {},
+    "mergeable": [],
+    "paginators": {},
     "properties": {},
   },
 }
@@ -87,6 +93,9 @@ exports[`updates the context > updated context 1`] = `
   "version": "new-version-string",
   "view": {
     "component": "default.view",
+    "deferred": {},
+    "mergeable": [],
+    "paginators": {},
     "properties": {},
   },
 }
@@ -126,6 +135,9 @@ exports[`updates the context > updated context with dialog 1`] = `
   "version": "new-version-string",
   "view": {
     "component": "default.view",
+    "deferred": {},
+    "mergeable": [],
+    "paginators": {},
     "properties": {},
   },
 }
@@ -157,6 +169,9 @@ exports[`updates the context > updated context with no dialog 1`] = `
   "version": "new-version-string",
   "view": {
     "component": "default.view",
+    "deferred": {},
+    "mergeable": [],
+    "paginators": {},
     "properties": {},
   },
 }

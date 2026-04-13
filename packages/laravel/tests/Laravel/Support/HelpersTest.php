@@ -3,8 +3,10 @@
 use Hybridly\Exceptions\MissingViewComponentException;
 use Hybridly\Hybridly;
 use Hybridly\Support\Header;
+use Hybridly\Support\Pagination\ScrollMetadata;
 use Hybridly\Support\Properties\Deferred;
 use Hybridly\Support\Properties\OnDemand;
+use Hybridly\Support\Properties\Scroll;
 use Hybridly\View\Factory;
 use Illuminate\Support\Facades\Route;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -16,6 +18,7 @@ use function Hybridly\is_hybrid;
 use function Hybridly\is_partial;
 use function Hybridly\on_demand;
 use function Hybridly\properties;
+use function Hybridly\scroll;
 use function Hybridly\to_external_url;
 use function Hybridly\view;
 
@@ -70,6 +73,55 @@ describe('namespaced', function () {
             ->toBeInstanceOf(Deferred::class)
             ->evaluate()
             ->toBe('bar');
+    });
+
+    test('`scroll` returns a `Scroll` instance', function () {
+        $metadata = new class() implements ScrollMetadata {
+            public function type(): string
+            {
+                return 'length-aware';
+            }
+
+            public function queryKey(): string
+            {
+                return 'page';
+            }
+
+            public function current(): ?int
+            {
+                return 2;
+            }
+
+            public function previous(): ?int
+            {
+                return 1;
+            }
+
+            public function next(): ?int
+            {
+                return 3;
+            }
+
+            public function toArray(): array
+            {
+                return [
+                    'type' => $this->type(),
+                    'queryKey' => $this->queryKey(),
+                    'current' => $this->current(),
+                    'previous' => $this->previous(),
+                    'next' => $this->next(),
+                ];
+            }
+        };
+
+        expect(scroll(
+            value: fn () => ['data' => [['id' => 1]]],
+            wrapper: 'data',
+            metadata: $metadata,
+        ))
+            ->toBeInstanceOf(Scroll::class)
+            ->evaluate()
+            ->toBe(['data' => [['id' => 1]]]);
     });
 
     test('`to_external_url` returns a `RedirectResponse` on non-hybrid requests', function () {

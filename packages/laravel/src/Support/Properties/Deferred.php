@@ -14,6 +14,7 @@ final class Deferred implements Property, IgnoreFirstLoad, Mergeable
         private(set) bool $append = false,
         private(set) bool $prepend = false,
         private(set) ?string $uniqueBy = null,
+        private(set) ?array $mergePaths = null,
         private ?string $group = null,
     ) {}
 
@@ -30,6 +31,11 @@ final class Deferred implements Property, IgnoreFirstLoad, Mergeable
     public function uniqueBy(): ?string
     {
         return $this->uniqueBy;
+    }
+
+    public function mergePaths(): ?array
+    {
+        return $this->mergePaths;
     }
 
     public function evaluate(): mixed

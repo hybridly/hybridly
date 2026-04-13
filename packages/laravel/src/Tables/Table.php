@@ -4,8 +4,13 @@ namespace Hybridly\Tables;
 
 use Hybridly\Components;
 use Hybridly\Support\Configuration\Configuration;
+use Hybridly\Support\Properties\Scroll;
+use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Http\Request;
 
-abstract class Table extends Components\Component
+use function Hybridly\scroll;
+
+abstract class Table extends Components\Component implements Arrayable
 {
     use Components\Concerns\HasScope;
     use Concerns\HasActions;
@@ -17,6 +22,15 @@ abstract class Table extends Components\Component
     public static function make(array $parameters = []): static
     {
         return resolve(static::class, $parameters);
+    }
+
+    public static function scroll(array $parameters = []): Scroll
+    {
+        return scroll(
+            value: static fn (): static => static::make($parameters),
+            wrapper: 'records',
+            metadata: static fn (Request $request, self $value): TableScrollMetadata => TableScrollMetadata::fromTable($request, $value),
+        );
     }
 
     public function jsonSerialize(): mixed
@@ -33,5 +47,10 @@ abstract class Table extends Components\Component
             'bulkActions' => $this->getBulkActions()->values(),
             'scope' => $this->formatScope(),
         ];
+    }
+
+    public function toArray()
+    {
+        return $this->jsonSerialize();
     }
 }

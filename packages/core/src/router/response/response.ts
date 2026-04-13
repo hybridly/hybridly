@@ -153,69 +153,119 @@ function resolveProperties(original: Properties, payload: View, options: { merge
 	// - prepends = true, we prepend data
 	// - prepends = false, we append data
 	// - if uniqueBy is a string, we dedupe based its dot-notated path (eg. `id`)
-	mergeable.forEach(([mergeableProperty, prepends, uniqueBy]) => {
+	for (const [mergeableProperty, prepend, uniqueBy, mergePaths] of mergeable) {
 		const originalValue = get(original, mergeableProperty) as unknown
 		const newValue = get(payload.properties, mergeableProperty) as unknown
 
 		if (!options.mergeWithOriginal && newValue === undefined) {
-			return
+			continue
 		}
 
-		const mergeArrays = (current: unknown[], incoming: unknown[]) => {
-			const merged = prepends === true
-				? [...incoming, ...current]
-				: [...current, ...incoming]
-
-			if (typeof uniqueBy !== 'string') {
-				return merged
-			}
-
-			const getUniqueKey = (entry: unknown) => {
-				const key = get(entry, uniqueBy)
-				return key === undefined ? Symbol() : key
-			}
-
-			if (prepends === true) {
-				return uniqBy(merged, getUniqueKey)
-			}
-
-			const orderedKeys: unknown[] = []
-			const valuesByKey = new Map<unknown, unknown>()
-
-			for (const entry of merged) {
-				const key = getUniqueKey(entry)
-
-				if (!valuesByKey.has(key)) {
-					orderedKeys.push(key)
-				}
-
-				valuesByKey.set(key, entry)
-			}
-
-			return orderedKeys.map((key) => valuesByKey.get(key)!)
-		}
-
-		let value = newValue
-
-		if (Array.isArray(originalValue)) {
-			const incoming = Array.isArray(newValue)
-				? newValue
-				: newValue === undefined
-				? []
-				: [newValue]
-
-			value = mergeArrays(originalValue, incoming)
-		} else if (originalValue instanceof Object && newValue instanceof Object) {
-			value = merge(originalValue as Properties, newValue as Properties, {
-				overwriteArray: false,
-				arrayMerge: (current, incoming) => mergeArrays(current, incoming),
-			})
-		}
+		const value = mergeMergeableProperty(
+			originalValue,
+			newValue,
+			get(mergedPayloadProperties, mergeableProperty) as unknown,
+			mergePaths,
+			{ prepend, uniqueBy },
+		)
 
 		set(mergedPayloadProperties, mergeableProperty, value)
-	})
+	}
 
 	return mergedPayloadProperties
+}
+
+function mergeMergeableProperty(
+	originalValue: unknown,
+	newValue: unknown,
+	currentValue: unknown,
+	mergePaths: string[] | null | undefined,
+	options: { prepend: boolean; uniqueBy: string | null },
+) {
+	if (!mergePaths?.length) {
+		return mergeMergeableValue(originalValue, newValue, options)
+	}
+
+	const value = currentValue instanceof Object
+		? currentValue as Properties
+		: {}
+
+	for (const mergePath of mergePaths) {
+		set(
+			value,
+			mergePath,
+			mergeMergeableValue(
+				get(originalValue, mergePath) as unknown,
+				get(newValue, mergePath) as unknown,
+				options,
+			),
+		)
+	}
+
+	return value
+}
+
+function mergeMergeableValue(
+	originalValue: unknown,
+	newValue: unknown,
+	options: { prepend: boolean; uniqueBy: string | null },
+) {
+	if (Array.isArray(originalValue)) {
+		const incoming = Array.isArray(newValue)
+			? newValue
+			: newValue === undefined
+			? []
+			: [newValue]
+
+		return mergeMergeableArrays(originalValue, incoming, options)
+	}
+
+	if (originalValue instanceof Object && newValue instanceof Object) {
+		return merge(originalValue as Properties, newValue as Properties, {
+			overwriteArray: false,
+			arrayMerge: (current, incoming) => mergeMergeableArrays(current, incoming, options),
+		})
+	}
+
+	return newValue
+}
+
+function mergeMergeableArrays(
+	current: unknown[],
+	incoming: unknown[],
+	options: { prepend: boolean; uniqueBy: string | null },
+) {
+	const merged = options.prepend
+		? [...incoming, ...current]
+		: [...current, ...incoming]
+
+	if (typeof options.uniqueBy !== 'string') {
+		return merged
+	}
+
+	const getUniqueKey = (entry: unknown) => {
+		const key = get(entry, options.uniqueBy!)
+		return key === undefined ? Symbol() : key
+	}
+
+	if (options.prepend) {
+		return uniqBy(merged, getUniqueKey)
+	}
+
+	const orderedKeys: unknown[] = []
+	const valuesByKey = new Map<unknown, unknown>()
+
+	for (const entry of merged) {
+		const key = getUniqueKey(entry)
+
+		if (!valuesByKey.has(key)) {
+			orderedKeys.push(key)
+		}
+
+		valuesByKey.set(key, entry)
+	}
+
+	return orderedKeys.map((key) => valuesByKey.get(key)!)
 }
 
 function mergeValidation(current: Validation, next: Validation, errorBag?: string): Validation {

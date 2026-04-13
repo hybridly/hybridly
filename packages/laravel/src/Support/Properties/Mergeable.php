@@ -21,4 +21,11 @@ interface Mergeable
      * This instance will replace the previous value if it matches the property at the specified path. Otherwise, it will be merged normally.
      */
     public function uniqueBy(): ?string;
+
+    /**
+     * Relative paths within the wrapped property that should receive merge semantics.
+     *
+     * @return array<int, string>|null
+     */
+    public function mergePaths(): ?array;
 }

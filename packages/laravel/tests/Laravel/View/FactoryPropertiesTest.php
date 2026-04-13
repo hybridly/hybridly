@@ -248,8 +248,8 @@ it('includes deferred mergeable properties in mergeable config on partial loads'
         ->getData();
 
     expect($payload->view->mergeable)
-        ->toContain(['feed', true, 'id'])
-        ->not->toContain(['nested.items', false, null]);
+        ->toContain(['feed', true, 'id', null])
+        ->not->toContain(['nested.items', false, null, null]);
 });
 
 it('includes mergeable properties configuration in the payload', function () {
@@ -267,10 +267,10 @@ it('includes mergeable properties configuration in the payload', function () {
 
     expect($payload->view->mergeable)
         ->toHaveCount(4)
-        ->toContain(['users', false, 'id'])
-        ->toContain(['priority_users', true, 'id'])
-        ->toContain(['messages', false, null])
-        ->toContain(['nested.items', false, 'meta.id']);
+        ->toContain(['users', false, 'id', null])
+        ->toContain(['priority_users', true, 'id', null])
+        ->toContain(['messages', false, null, null])
+        ->toContain(['nested.items', false, 'meta.id', null]);
 });
 
 it('includes mergeable properties configuration in non-hybrid payload responses', function () {
@@ -284,5 +284,5 @@ it('includes mergeable properties configuration in non-hybrid payload responses'
 
     expect($payload['view']['mergeable'])
         ->toHaveCount(1)
-        ->toContain(['users', true, 'id']);
+        ->toContain(['users', true, 'id', null]);
 });

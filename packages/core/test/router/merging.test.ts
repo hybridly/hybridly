@@ -1,6 +1,6 @@
 import { beforeEach, test } from 'vitest'
 import { getRouterContext } from '../../src'
-import { Properties } from '../../src/router'
+import { MergeableProperty, Properties } from '../../src/router'
 import { performHybridNavigation } from '../../src/router/request/request'
 import { server } from '../server'
 import { fakePayload, fakeRouterContext, mockSuccessfulUrl } from '../utils'
@@ -14,7 +14,7 @@ beforeEach(() => {
 async function performMergeNavigation(parameters: {
 	initialProperties: Properties
 	incomingProperties: Properties
-	mergeable: Array<[string, boolean, string | null]>
+	mergeable: MergeableProperty[]
 }) {
 	await fakeRouterContext({
 		payload: {
@@ -154,6 +154,83 @@ test('merges objects recursively and applies uniqueBy on nested arrays', async (
 			{ id: 1, label: 'incoming-1' },
 			{ id: 2, label: 'existing-2' },
 			{ id: 3, label: 'incoming-3' },
+		],
+		meta: { page: 2 },
+	})
+})
+
+test('merges only configured nested merge paths inside wrapper objects', async ({ expect }) => {
+	const properties = await performMergeNavigation({
+		initialProperties: {
+			feed: {
+				data: [
+					{ id: 1, label: 'existing-1' },
+					{ id: 2, label: 'existing-2' },
+				],
+				meta: { page: 2 },
+				links: [{ label: '2', active: true }],
+			},
+		},
+		incomingProperties: {
+			feed: {
+				data: [
+					{ id: 2, label: 'incoming-2' },
+					{ id: 3, label: 'incoming-3' },
+				],
+				meta: { page: 3 },
+				links: [{ label: '3', active: true }],
+			},
+		},
+		mergeable: [['feed', false, 'id', ['data']]],
+	})
+
+	expect(properties.feed).toEqual({
+		data: [
+			{ id: 1, label: 'existing-1' },
+			{ id: 2, label: 'incoming-2' },
+			{ id: 3, label: 'incoming-3' },
+		],
+		meta: { page: 3 },
+		links: [{ label: '3', active: true }],
+	})
+})
+
+test('merges multiple configured nested merge paths inside wrapper objects', async ({ expect }) => {
+	const properties = await performMergeNavigation({
+		initialProperties: {
+			feed: {
+				data: [
+					{ id: 1, label: 'existing-1' },
+				],
+				included: [
+					{ id: 'a', label: 'existing-a' },
+				],
+				meta: { page: 1 },
+			},
+		},
+		incomingProperties: {
+			feed: {
+				data: [
+					{ id: 2, label: 'incoming-2' },
+				],
+				included: [
+					{ id: 'a', label: 'incoming-a' },
+					{ id: 'b', label: 'incoming-b' },
+				],
+				meta: { page: 2 },
+			},
+		},
+		mergeable: [['feed', false, 'id', ['data', 'included']]],
+	})
+
+	expect(properties.feed).toEqual({
+		data: [
+			{ id: 1, label: 'existing-1' },
+			{ id: 2, label: 'incoming-2' },
+		],
+		included: [
+			{ id: 'a', label: 'incoming-a' },
+			{ id: 'b', label: 'incoming-b' },
 		],
 		meta: { page: 2 },
 	})

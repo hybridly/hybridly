@@ -8,12 +8,12 @@ use Hybridly\Support\Arr;
 use Hybridly\Support\Configuration\Configuration;
 use Hybridly\Tables\Columns\BaseColumn;
 use Hybridly\Tables\Table;
-use Illuminate\Contracts\Pagination\CursorPaginator;
-use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\CursorPaginator;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Collection;
 use Spatie\LaravelData\Contracts\BaseDataCollectable;
 use Spatie\LaravelData\Data;
@@ -27,6 +27,7 @@ trait RefinesAndPaginatesRecords
     private ?Refine $refine = null;
     private mixed $cachedRecords = null;
     private mixed $cachedRefiners = null;
+    private LengthAwarePaginator|Paginator|CursorPaginator|null $cachedPaginator = null;
 
     public function getRefiners(): Collection
     {
@@ -37,6 +38,11 @@ trait RefinesAndPaginatesRecords
     public function getRecords(): array
     {
         return data_get($this->getPaginatedRecords(), 'data', []);
+    }
+
+    public function getPaginator(): LengthAwarePaginator|Paginator|CursorPaginator
+    {
+        return $this->cachedPaginator ??= $this->paginateRecords($this->getRefinedQuery());
     }
 
     public function getRefinedQuery(): Builder
@@ -96,7 +102,7 @@ trait RefinesAndPaginatesRecords
         return $this->getRefineInstance()->getRequest();
     }
 
-    protected function transformRecords(Paginator|CursorPaginator $paginator): Paginator|CursorPaginator|BaseDataCollectable
+    protected function transformRecords(LengthAwarePaginator|Paginator|CursorPaginator $paginator): LengthAwarePaginator|Paginator|CursorPaginator|BaseDataCollectable
     {
         return $paginator;
     }
@@ -104,7 +110,7 @@ trait RefinesAndPaginatesRecords
     /**
      * Determines how the query will be paginated.
      */
-    protected function paginateRecords(Builder $query): Paginator|CursorPaginator
+    protected function paginateRecords(Builder $query): LengthAwarePaginator|Paginator|CursorPaginator
     {
         $paginator = match ($this->getPaginatorType()) {
             LengthAwarePaginator::class => $query->paginate(
@@ -197,9 +203,9 @@ trait RefinesAndPaginatesRecords
         return $this->cachedRecords ??= $this->transformPaginatedRecords()->toArray();
     }
 
-    private function transformPaginatedRecords(): Paginator|CursorPaginator|BaseDataCollectable
+    private function transformPaginatedRecords(): LengthAwarePaginator|Paginator|CursorPaginator
     {
-        $paginatedRecords = $this->paginateRecords($this->getRefinedQuery());
+        $paginatedRecords = $this->getPaginator();
 
         /** @var Collection<BaseColumn> */
         $columns = $this->getTableColumns()->mapWithKeys(static fn (BaseColumn $column) => [$column->getName() => $column]);
