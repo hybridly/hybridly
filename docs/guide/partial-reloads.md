@@ -213,11 +213,9 @@ By default, incoming properties replace the previous value on the front-end. You
 use function Hybridly\merge;
 
 return view('feed.index', [
-  'items' => merge(fn () => FeedItemData::collection($items)),
+  'items' => merge(FeedItemData::collection($items)),
 ]);
 ```
-
-Note that `merge` also accepts an array.
 
 ### Prepending
 
@@ -241,6 +239,19 @@ return view('feed.index', [
   'items' => merge(
       value: fn () => FeedItemData::collection($items),
       uniqueBy: 'meta.id'
+  ),
+]);
+```
+
+### Specifying merge paths
+
+By default, the root value is merged. When working with paginators or other nested data structures, you may specify the paths to merge instead:
+
+```php
+return view('feed.index', [
+  'items' => merge(
+      value: fn () => FeedItemData::collection($items),
+      paths: ['data.items']
   ),
 ]);
 ```

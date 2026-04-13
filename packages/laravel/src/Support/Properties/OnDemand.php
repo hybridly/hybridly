@@ -2,6 +2,8 @@
 
 namespace Hybridly\Support\Properties;
 
+use Illuminate\Support\Facades\App;
+
 /**
  * Represents a property that will get evaluated only when specified.
  */
@@ -13,6 +15,6 @@ readonly class OnDemand implements Property, IgnoreFirstLoad
 
     public function evaluate(): mixed
     {
-        return app()->call($this->callback);
+        return App::call($this->callback);
     }
 }

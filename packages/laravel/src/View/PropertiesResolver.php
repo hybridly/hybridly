@@ -21,8 +21,8 @@ use Illuminate\Http\Resources\Json\ResourceResponse;
 final class PropertiesResolver
 {
     public function __construct(
-        protected readonly Request $request,
-        protected readonly CaseConverter $caseConverter,
+        private readonly Request $request,
+        private readonly CaseConverter $caseConverter,
     ) {}
 
     public function resolve(?string $component = null, array $properties = [], array $persistedByPath = []): array
@@ -35,11 +35,11 @@ final class PropertiesResolver
         // This is needed so we can work with nested properties and dot-notation.
         $properties = $this->resolveArrayableProperties($properties);
 
-        // When the request is not partial, there are specified computation to do.
+        // When the request is not partial, there are specific computation to do.
         if (! $partial) {
             // If the request is not a partial hybrid request, we want to resolve deferred properties,
             // because they will be automatically loaded back with a subsequent partial request.
-            $deferred = collect($this->filterToPropertyPaths($properties, function (mixed $value, string $path) {
+            $deferred = $this->extractPropertyPaths($properties, function (mixed $value, string $path) {
                 if ($value instanceof Deferred) {
                     return [
                         'key' => $path,
@@ -48,7 +48,9 @@ final class PropertiesResolver
                 }
 
                 return false;
-            }))
+            });
+
+            $deferred = collect($deferred)
                 ->groupBy('group')
                 ->map->pluck('key')->toArray();
 
@@ -60,19 +62,22 @@ final class PropertiesResolver
         // properties to be merged on their previous values. This will effectively reset its state.
         // TODO: tests
         $reset = $partial && $this->request->hasHeader(Header::RESET)
-            ? array_filter(json_decode($this->request->header(Header::RESET, default: ''), associative: true) ?? [])
+            ? $this->decodeHeader(Header::RESET)
             : [];
 
         // Mergeable properties are then resolved. These are special properties
         // that will have a special merge treatment when merging on the front-end.
-        $mergeable = $this->filterToPropertyPaths($properties, function (mixed $value, string $path) use ($reset) {
+        $mergeable = $this->extractPropertyPaths($properties, function (mixed $value, string $path) use ($reset) {
+            // If a mergeable property is present in the reset array, it means that the client explicitly
+            // wants to reset its state instead of merging it with its previous one. In that case,
+            // we don't want to treat it as a mergeable property, but rather as a regular one.
             if (in_array($path, $reset, strict: true)) {
                 return false;
             }
 
             if ($value instanceof Mergeable) {
                 return $value->shouldMerge()
-                    ? [$path, $value->shouldPrepend(), $value->uniqueBy()]
+                    ? [$path, $value->shouldPrepend(), $value->uniqueBy(), $value->paths()]
                     : false;
             }
 
@@ -82,7 +87,7 @@ final class PropertiesResolver
         // Next up, we want to know which properties should always be present on
         // the response. These properties are either `Persistent` instances,
         // or they were mentionned in the `$persisted` array.
-        $persisted = $this->filterToPropertyPaths($properties, function (mixed $value, string $path) use ($persistedByPath) {
+        $persisted = $this->extractPropertyPaths($properties, function (mixed $value, string $path) use ($persistedByPath) {
             if (\in_array($path, $persistedByPath, strict: true)) {
                 return $path;
             }
@@ -103,13 +108,13 @@ final class PropertiesResolver
         // retrieve the properties whose paths they describe using dot-notation.
         // We only do that when the request is specifically for partial data though.
         if ($partial && $this->request->hasHeader(Header::PARTIAL_ONLY)) {
-            $only = array_filter(json_decode($this->request->header(Header::PARTIAL_ONLY, default: ''), associative: true) ?? []);
+            $only = $this->decodeHeader(Header::PARTIAL_ONLY);
             $only = $this->convertPartialPropertiesCase($only);
             $properties = Arr::onlyDot($properties, array_merge($only, $persisted));
         }
 
         if ($partial && $this->request->hasHeader(Header::PARTIAL_EXCEPT)) {
-            $except = array_filter(json_decode($this->request->header(Header::PARTIAL_EXCEPT, default: ''), associative: true) ?? []);
+            $except = $this->decodeHeader(Header::PARTIAL_EXCEPT);
             $except = $this->convertPartialPropertiesCase($except);
             $properties = Arr::exceptDot($properties, $except);
         }
@@ -127,7 +132,7 @@ final class PropertiesResolver
     /**
      * Returns an array of property paths, filtered by the specified callback.
      */
-    protected function filterToPropertyPaths(array $properties, \Closure $callback, string $path = ''): array
+    private function extractPropertyPaths(array $properties, \Closure $callback, string $path = ''): array
     {
         $selected = [];
 
@@ -141,7 +146,7 @@ final class PropertiesResolver
             }
 
             if (\is_array($value)) {
-                $selected = array_merge($selected, $this->filterToPropertyPaths($value, $callback, $path ? "{$path}.{$key}" : $key));
+                $selected = array_merge($selected, $this->extractPropertyPaths($value, $callback, $path ? "{$path}.{$key}" : $key));
             }
 
             if ($result = $callback($value, $path ? "{$path}.{$key}" : $key, $path)) {
@@ -155,7 +160,7 @@ final class PropertiesResolver
     /**
      * Resolves properties that can be converted to an array.
      */
-    protected function resolveArrayableProperties(array $properties, bool $unpackDotProps = true): array
+    private function resolveArrayableProperties(array $properties, bool $unpackDotProps = true): array
     {
         foreach ($properties as $key => $value) {
             if ($value instanceof Hybridable) {
@@ -184,7 +189,7 @@ final class PropertiesResolver
     /**
      * Evaluates all properties recursively.
      */
-    protected function evaluatePropertyInstances(array $properties): array
+    private function evaluatePropertyInstances(array $properties): array
     {
         foreach ($properties as $key => $value) {
             if ($value instanceof Property) {
@@ -215,7 +220,7 @@ final class PropertiesResolver
         return $properties;
     }
 
-    protected function convertPartialPropertiesCase(array $array): array
+    private function convertPartialPropertiesCase(array $array): array
     {
         return match (Configuration::get()->properties->forceInputCase) {
             Properties::CAMEL => collect($array)->map(fn ($property) => (string) str()->camel($property))->toArray(),
@@ -224,12 +229,20 @@ final class PropertiesResolver
         };
     }
 
-    protected function convertOutputCase(array $array): array
+    private function convertOutputCase(array $array): array
     {
         return match (Configuration::get()->properties->forceOutputCase) {
             Properties::SNAKE => $this->caseConverter->convert($array, 'snake'),
             Properties::CAMEL => $this->caseConverter->convert($array, 'camel'),
             default => $array,
         };
+    }
+
+    /**
+     * Decodes the specified JSON-encoded header if present.
+     */
+    private function decodeHeader(string $header): array
+    {
+        return array_filter(json_decode($this->request->header($header, default: ''), associative: true) ?? []);
     }
 }

@@ -1,6 +1,6 @@
 import { beforeEach, test } from 'vitest'
 import { getRouterContext } from '../../src'
-import { Properties } from '../../src/router'
+import { MergeableProperty, Properties } from '../../src/router'
 import { performHybridNavigation } from '../../src/router/request/request'
 import { server } from '../server'
 import { fakePayload, fakeRouterContext, mockSuccessfulUrl } from '../utils'
@@ -14,7 +14,7 @@ beforeEach(() => {
 async function performMergeNavigation(parameters: {
 	initialProperties: Properties
 	incomingProperties: Properties
-	mergeable: Array<[string, boolean, string | null]>
+	mergeable: MergeableProperty[]
 }) {
 	await fakeRouterContext({
 		payload: {
@@ -61,7 +61,7 @@ test('appending mergeable arrays with uniqueBy gives precedence to incoming entr
 				{ meta: { id: 3 }, name: 'incoming-3' },
 			],
 		},
-		mergeable: [['users', false, 'meta.id']],
+		mergeable: [['users', false, 'meta.id', []]],
 	})
 
 	expect(properties.users).toEqual([
@@ -85,7 +85,7 @@ test('prepending mergeable arrays with uniqueBy keeps incoming entries first', a
 				{ id: 3, name: 'incoming-3' },
 			],
 		},
-		mergeable: [['users', true, 'id']],
+		mergeable: [['users', true, 'id', []]],
 	})
 
 	expect(properties.users).toEqual([
@@ -103,7 +103,7 @@ test('append mode with uniqueBy keeps entries that do not expose the unique key'
 		incomingProperties: {
 			users: [{ name: 'incoming' }],
 		},
-		mergeable: [['users', false, 'id']],
+		mergeable: [['users', false, 'id', []]],
 	})
 
 	expect(properties.users).toEqual([
@@ -120,7 +120,7 @@ test('appends mergeable arrays without uniqueBy', async ({ expect }) => {
 		incomingProperties: {
 			ids: [2, 3],
 		},
-		mergeable: [['ids', false, null]],
+		mergeable: [['ids', false, null, []]],
 	})
 
 	expect(properties.ids).toEqual([1, 2, 2, 3])
@@ -146,7 +146,7 @@ test('merges objects recursively and applies uniqueBy on nested arrays', async (
 				meta: { page: 2 },
 			},
 		},
-		mergeable: [['feed', false, 'id']],
+		mergeable: [['feed', false, 'id', []]],
 	})
 
 	expect(properties.feed).toEqual({
@@ -154,6 +154,83 @@ test('merges objects recursively and applies uniqueBy on nested arrays', async (
 			{ id: 1, label: 'incoming-1' },
 			{ id: 2, label: 'existing-2' },
 			{ id: 3, label: 'incoming-3' },
+		],
+		meta: { page: 2 },
+	})
+})
+
+test('merges only configured nested merge paths inside wrapper objects', async ({ expect }) => {
+	const properties = await performMergeNavigation({
+		initialProperties: {
+			feed: {
+				data: [
+					{ id: 1, label: 'existing-1' },
+					{ id: 2, label: 'existing-2' },
+				],
+				meta: { page: 2 },
+				links: [{ label: '2', active: true }],
+			},
+		},
+		incomingProperties: {
+			feed: {
+				data: [
+					{ id: 2, label: 'incoming-2' },
+					{ id: 3, label: 'incoming-3' },
+				],
+				meta: { page: 3 },
+				links: [{ label: '3', active: true }],
+			},
+		},
+		mergeable: [['feed', false, 'id', ['data']]],
+	})
+
+	expect(properties.feed).toEqual({
+		data: [
+			{ id: 1, label: 'existing-1' },
+			{ id: 2, label: 'incoming-2' },
+			{ id: 3, label: 'incoming-3' },
+		],
+		meta: { page: 3 },
+		links: [{ label: '3', active: true }],
+	})
+})
+
+test('merges multiple configured nested merge paths inside wrapper objects', async ({ expect }) => {
+	const properties = await performMergeNavigation({
+		initialProperties: {
+			feed: {
+				data: [
+					{ id: 1, label: 'existing-1' },
+				],
+				included: [
+					{ id: 'a', label: 'existing-a' },
+				],
+				meta: { page: 1 },
+			},
+		},
+		incomingProperties: {
+			feed: {
+				data: [
+					{ id: 2, label: 'incoming-2' },
+				],
+				included: [
+					{ id: 'a', label: 'incoming-a' },
+					{ id: 'b', label: 'incoming-b' },
+				],
+				meta: { page: 2 },
+			},
+		},
+		mergeable: [['feed', false, 'id', ['data', 'included']]],
+	})
+
+	expect(properties.feed).toEqual({
+		data: [
+			{ id: 1, label: 'existing-1' },
+			{ id: 2, label: 'incoming-2' },
+		],
+		included: [
+			{ id: 'a', label: 'incoming-a' },
+			{ id: 'b', label: 'incoming-b' },
 		],
 		meta: { page: 2 },
 	})

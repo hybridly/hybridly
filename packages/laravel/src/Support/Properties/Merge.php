@@ -3,6 +3,7 @@
 namespace Hybridly\Support\Properties;
 
 use Closure;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\App;
 
 /**
@@ -14,6 +15,7 @@ final class Merge implements Property, Mergeable
         private Closure|iterable $value,
         private(set) bool $prepend = false,
         private(set) ?string $uniqueBy = null,
+        private(set) array|string $path = [],
     ) {}
 
     public function shouldMerge(): bool
@@ -29,6 +31,11 @@ final class Merge implements Property, Mergeable
     public function uniqueBy(): ?string
     {
         return $this->uniqueBy;
+    }
+
+    public function paths(): array
+    {
+        return Arr::wrap($this->path);
     }
 
     public function evaluate(): mixed

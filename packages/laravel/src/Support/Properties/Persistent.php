@@ -2,6 +2,7 @@
 
 namespace Hybridly\Support\Properties;
 
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\App;
 
 /**
@@ -13,6 +14,7 @@ final class Persistent implements Property, Mergeable
         private \Closure $callback,
         private(set) bool $prepend = false,
         private(set) ?string $uniqueBy = null,
+        private(set) ?array $path = null,
     ) {}
 
     public function shouldMerge(): bool
@@ -28,6 +30,11 @@ final class Persistent implements Property, Mergeable
     public function uniqueBy(): ?string
     {
         return $this->uniqueBy;
+    }
+
+    public function paths(): array
+    {
+        return Arr::wrap($this->path);
     }
 
     public function evaluate(): mixed

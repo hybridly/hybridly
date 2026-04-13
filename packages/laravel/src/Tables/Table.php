@@ -4,8 +4,9 @@ namespace Hybridly\Tables;
 
 use Hybridly\Components;
 use Hybridly\Support\Configuration\Configuration;
+use Illuminate\Contracts\Support\Arrayable;
 
-abstract class Table extends Components\Component
+abstract class Table extends Components\Component implements Arrayable
 {
     use Components\Concerns\HasScope;
     use Concerns\HasActions;
@@ -19,7 +20,12 @@ abstract class Table extends Components\Component
         return resolve(static::class, $parameters);
     }
 
-    public function jsonSerialize(): mixed
+    public function jsonSerialize(): array
+    {
+        return $this->toArray();
+    }
+
+    public function toArray(): array
     {
         return [
             'id' => self::encodeId($this->getId()),

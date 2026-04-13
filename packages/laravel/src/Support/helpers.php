@@ -104,9 +104,9 @@ if (! \function_exists('Hybridly\merge')) {
      *
      * @see https://hybridly.dev/api/laravel/functions.html#merge
      */
-    function merge(Closure|iterable $value, bool $prepend = false, ?string $uniqueBy = null): Merge
+    function merge(Closure|iterable $value, bool $prepend = false, ?string $uniqueBy = null, string|array $path = []): Merge
     {
-        return new Merge($value, $prepend, $uniqueBy);
+        return new Merge($value, $prepend, $uniqueBy, $path);
     }
 }
 
@@ -117,12 +117,10 @@ if (! \function_exists('Hybridly\deferred')) {
      *
      * @see https://hybridly.dev/api/laravel/functions.html#deferred
      */
-    function deferred(Closure $callback, ?string $group = null, bool $prepend = false, ?string $uniqueBy = null): Deferred
+    function deferred(Closure $callback, ?string $group = null): Deferred
     {
         return new Deferred(
             callback: $callback,
-            prepend: $prepend,
-            uniqueBy: $uniqueBy,
             group: $group,
         );
     }

@@ -81,6 +81,12 @@ return view('users.index', [
 ]);
 ```
 
+The merge semantics may be configured:
+
+- `uniqueBy` specifies a unique key to deduplicate items.
+- `prepend` specifies whether new items should be prepended instead of appended.
+- `paths` specifies the paths to merge instead of the root value.
+
 ## `deferred`
 
 Creates a partial property that will automatically be loaded in a subsequent partial reload when the page loads.

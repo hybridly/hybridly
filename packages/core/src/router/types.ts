@@ -229,11 +229,7 @@ export interface View {
 	/** Deferred properties for this view. */
 	deferred: Record<string, string | string[]>
 	/** Properties that should be merged with the existing payload. */
-	mergeable: Array<[
-		string, // property name
-		boolean, // true = prepend, false = append
-		string | null,
-	]>
+	mergeable: MergeableProperty[]
 }
 
 export interface Dialog extends Required<View> {
@@ -245,6 +241,13 @@ export interface Dialog extends Required<View> {
 	key: string
 }
 
+export type MergeableProperty = [
+	string, // property name
+	boolean, // true = prepend, false = append
+	string | null,
+	string[], // merge paths
+]
+
 export type Property =
 	| null
 	| string
@@ -252,6 +255,7 @@ export type Property =
 	| boolean
 	| Property[]
 	| { [name: string]: Property }
+
 export type Properties = Record<string | number, Property>
 
 /*

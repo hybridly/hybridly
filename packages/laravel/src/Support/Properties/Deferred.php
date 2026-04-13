@@ -2,6 +2,7 @@
 
 namespace Hybridly\Support\Properties;
 
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\App;
 
 /**
@@ -9,17 +10,29 @@ use Illuminate\Support\Facades\App;
  */
 final class Deferred implements Property, IgnoreFirstLoad, Mergeable
 {
+    private ?array $paths = [];
+    private bool $merge = false;
+    private bool $prepend = false;
+    private ?string $uniqueBy = null;
+
     public function __construct(
         private \Closure $callback,
-        private(set) bool $append = false,
-        private(set) bool $prepend = false,
-        private(set) ?string $uniqueBy = null,
         private ?string $group = null,
     ) {}
 
+    public function merge(?string $uniqueBy = null, bool $prepend = false, string|array $paths = []): self
+    {
+        $this->merge = true;
+        $this->prepend = $prepend;
+        $this->uniqueBy = $uniqueBy;
+        $this->paths = $paths;
+
+        return $this;
+    }
+
     public function shouldMerge(): bool
     {
-        return $this->append || $this->prepend;
+        return $this->merge;
     }
 
     public function shouldPrepend(): bool
@@ -30,6 +43,11 @@ final class Deferred implements Property, IgnoreFirstLoad, Mergeable
     public function uniqueBy(): ?string
     {
         return $this->uniqueBy;
+    }
+
+    public function paths(): array
+    {
+        return Arr::wrap($this->paths);
     }
 
     public function evaluate(): mixed

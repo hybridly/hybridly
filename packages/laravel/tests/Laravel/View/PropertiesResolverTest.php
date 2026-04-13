@@ -316,8 +316,8 @@ it('resolves `Mergeable` properties', function (array $parameters, array $expect
 
     expect($mergeable)->toBe($expectedMergeable);
 })->with([
-    [['partial' => false], [['mergeable', false, null], ['nested.mergeable', true, 'id']]],
-    [['partial' => true], [['mergeable', false, null], ['nested.mergeable', true, 'id']]],
+    [['partial' => false], [['mergeable', false, null, []], ['nested.mergeable', true, 'id', []]]],
+    [['partial' => true], [['mergeable', false, null, []], ['nested.mergeable', true, 'id', []]]],
 ]);
 
 it('resolves `Partial` properties', function (string $class, array $parameters, array $expectedProperties) {
