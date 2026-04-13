@@ -43,6 +43,8 @@ test('updates the context', async () => {
 			redirectUrl: 'https://base.test/dialog',
 			component: 'some.dialog',
 			key: 'abc',
+			deferred: {},
+			mergeable: [],
 			properties: {
 				foo: 'bar',
 			},

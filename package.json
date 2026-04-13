@@ -7,13 +7,13 @@
 		"dev": "cd kitchen-sink && pnpm run dev --force",
 		"release": "bumpp package.json packages/*/package.json --all --execute \"bun run build/bump-php-packages.ts\" --commit \"release: v\"",
 		"build": "bun run --filter '*' build",
-		"build:stub": "bun run --filter '*' build:stub",
 		"test": "vitest --run",
 		"test:all": "bun run test && composer test",
 		"docs:dev": "vitepress dev docs",
 		"docs:build": "vitepress build docs",
 		"docs:serve": "vitepress serve docs",
-		"ci": "bun run build && bun run test"
+		"typecheck": "bunx tsc -p tsconfig.json --noEmit",
+		"ci": "bun run typecheck && bun run build && bun run test"
 	},
 	"devDependencies": {
 		"@fontsource-variable/jetbrains-mono": "^5.2.8",
@@ -82,7 +82,7 @@
 			"type-fest": "^5.4.4",
 			"typescript": "^5.8.3",
 			"vite": "^8.0.0",
-			"vite-plugin-run": "^0.8.0",
+			"vite-plugin-run": "^0.9.0",
 			"vitest": "^4.1.0",
 			"vue": "^3.5.30",
 			"es-toolkit": "^1.45.1"

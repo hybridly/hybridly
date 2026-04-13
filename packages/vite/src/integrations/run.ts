@@ -1,5 +1,4 @@
-import run from 'vite-plugin-run'
-import type { Runner } from 'vite-plugin-run'
+import { run, type Runner } from 'vite-plugin-run'
 import { getPhpExecutable } from '../config/env'
 import type { ViteOptions } from '../types'
 

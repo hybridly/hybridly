@@ -2,7 +2,7 @@ import { debug } from '@hybridly/utils'
 import { EXTERNAL_NAVIGATION_HEADER, STORAGE_EXTERNAL_KEY } from '../../constants'
 import { getRouterContext, setContext } from '../../context'
 import type { HttpResponse } from '../../http'
-import { stringifyQueryString } from '../../query'
+import { QueryValue, stringifyQueryString } from '../../query'
 import type { UrlResolvable } from '../../url'
 import { makeUrl, sameUrls } from '../../url'
 import type { HybridRequestOptions } from '../types'
@@ -41,7 +41,7 @@ export async function performExternalNavigation(options: ExternalNavigationOptio
 /** Navigates to the given URL without the hybrid protocol. */
 export function navigateToExternalUrl(url: UrlResolvable, data?: HybridRequestOptions['data']) {
 	document.location.href = makeUrl(url, {
-		search: stringifyQueryString(data, {
+		search: stringifyQueryString(data as QueryValue, {
 			arrayFormat: 'brackets',
 		}),
 	}).toString()

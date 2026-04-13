@@ -84,7 +84,8 @@
         "qa": [
             "@monorepo:validate",
             "@fmt",
-            "@test"
+            "@test",
+            "bun run ci"
         ]
     }
 }

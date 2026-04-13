@@ -1,6 +1,6 @@
 import { beforeEach, test } from 'vitest'
 import { getRouterContext } from '../../src'
-import { HybridRequestOptions, Properties } from '../../src/router'
+import { HybridRequestOptions, MergeableProperty, Properties } from '../../src/router'
 import { performHybridNavigation } from '../../src/router/request/request'
 import { server } from '../server'
 import { fakePayload, fakeRouterContext, mockSuccessfulUrl } from '../utils'
@@ -14,7 +14,7 @@ beforeEach(() => {
 async function performPreserveStateNavigation(parameters: {
 	initialProperties: Properties
 	incomingProperties: Properties
-	mergeable?: Array<[string, boolean, string | null]>
+	mergeable?: MergeableProperty[]
 	preserveState?: boolean | ((options: HybridRequestOptions) => boolean)
 }) {
 	await fakeRouterContext({
@@ -137,7 +137,7 @@ test('keeps mergeable array behavior when preserveState is false', async ({ expe
 			],
 			status: 'updated',
 		},
-		mergeable: [['users', false, 'id']],
+		mergeable: [['users', false, 'id', []]],
 		preserveState: false,
 	})
 

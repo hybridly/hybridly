@@ -1,26 +1,27 @@
 {
-  "compilerOptions": {
-    "target": "es2017",
-    "lib": ["esnext", "dom", "dom.iterable"],
-    "module": "ESNext",
-    "moduleResolution": "Bundler",
-    "paths": {
-      "hybridly": ["./packages/hybridly/src/index.ts"],
-      "hybridly/vite": ["./packages/hybridly/src/vite.ts"],
-      "@hybridly/core": ["./packages/core/src/index.ts"],
-      "@hybridly/vite": ["./packages/vite/src/index.ts"],
-      "@hybridly/vue": ["./packages/vue/src/index.ts"],
-      "@hybridly/utils": ["./packages/utils/src/index.ts"]
-    },
-    "resolveJsonModule": true,
-    "types": ["vite/client", "node"],
-    "strict": true,
-    "strictNullChecks": true,
-    "esModuleInterop": true,
-    "skipDefaultLibCheck": true
-  },
-  "exclude": [
-    "**/dist/**",
-    "**/node_modules/**"
-  ]
+	"compilerOptions": {
+		"target": "es2017",
+		"lib": ["esnext", "dom", "dom.iterable"],
+		"module": "ESNext",
+		"moduleResolution": "Bundler",
+		"paths": {
+			"hybridly": ["./packages/hybridly/src/index.ts"],
+			"hybridly/vite": ["./packages/hybridly/src/vite.ts"],
+			"@hybridly/core": ["./packages/core/src/index.ts"],
+			"@hybridly/vite": ["./packages/vite/src/index.ts"],
+			"@hybridly/vue": ["./packages/vue/src/index.ts"],
+			"@hybridly/utils": ["./packages/utils/src/index.ts"]
+		},
+		"resolveJsonModule": true,
+		"types": ["vite/client", "node"],
+		"strict": true,
+		"strictNullChecks": true,
+		"esModuleInterop": true,
+		"skipLibCheck": true
+	},
+	"exclude": [
+		"**/dist/**",
+		"node_modules/**",
+		"kitchen-sink"
+	]
 }
