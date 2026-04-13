@@ -44,18 +44,3 @@ it('generates php types', function () {
         ->toContain('UserData')
         ->toContain('SharedData');
 })->skip('Does not work, probably due to where the Laravel skeleton is');
-
-it('accepts custom transformers', function () {
-    Configuration::get()->typescript->namespaceTransformer = CustomTransformer::class;
-
-    copy_stubs([
-        'UserData.php' => 'app/Data',
-    ]);
-
-    artisan('hybridly:types');
-
-    expect(File::exists(base_path('.hybridly/php-types.d.ts')))->toBeTrue();
-    expect(File::get(base_path('.hybridly/php-types.d.ts')))
-        ->toContain('Data.UserData')
-        ->not->toContain('App.Data.UserData');
-})->skip('Does not work, probably due to where the Laravel skeleton is');

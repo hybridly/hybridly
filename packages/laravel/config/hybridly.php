@@ -3,7 +3,6 @@
 use Hybridly\Architecture\ModulesComponentLoader;
 use Hybridly\Architecture\ResourcesComponentLoader;
 use Hybridly\Support\Configuration\Architecture;
-use Hybridly\Support\TypeScriptTransformer\GlobalPropertiesNamespaceTransformer;
 
 return [
     /*
@@ -85,17 +84,5 @@ return [
      */
     'testing' => [
         'ensure_views_exist' => true,
-    ],
-    /*
-     * |--------------------------------------------------------------------------
-     * | TypeScript
-     * |--------------------------------------------------------------------------
-     */
-    'typescript' => [
-        'namespace_transformer' => GlobalPropertiesNamespaceTransformer::class,
-        'base_paths' => [
-            base_path('app'),
-            base_path('src'),
-        ],
     ],
 ];

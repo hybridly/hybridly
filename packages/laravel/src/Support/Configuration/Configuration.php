@@ -13,7 +13,6 @@ final class Configuration
         public readonly Internationalization $internationalization,
         public readonly Properties $properties,
         public readonly Testing $testing,
-        public readonly TypeScript $typescript,
     ) {}
 
     public static function fromArray(array $config): static
@@ -26,7 +25,6 @@ final class Configuration
             internationalization: Internationalization::fromArray($config['internationalization'] ?? []),
             properties: Properties::fromArray($config['properties'] ?? []),
             testing: Testing::fromArray($config['testing'] ?? []),
-            typescript: TypeScript::fromArray($config['typescript'] ?? []),
         );
     }
 

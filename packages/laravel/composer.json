@@ -1,67 +1,60 @@
 {
-    "name": "hybridly/laravel",
-    "description": "Server-driven, client-rendered application.",
-    "license": "MIT",
-    "homepage": "https://github.com/hybridly/hybridly",
-    "support": {
-        "issues": "https://github.com/hybridly/hybridly/issues",
-        "source": "https://github.com/hybridly/hybridly"
-    },
-    "keywords": [
-        "laravel",
-        "hybridly",
-        "inertiajs",
-        "vite",
-        "vuejs"
-    ],
-    "authors": [
-        {
-            "name": "Enzo Innocenzi",
-            "email": "enzo@innocenzi.dev",
-            "role": "Developer"
-        }
-    ],
-    "require": {
-        "php": "^8.4",
-        "illuminate/contracts": "^12.0|^13.0",
-        "laravel/prompts": "^0.1|^0.2|^0.3",
-        "spatie/php-structure-discoverer": "^2.0"
-    },
-    "autoload": {
-        "psr-4": {
-            "Hybridly\\": "src"
-        },
-        "files": [
-            "src/Support/global_helpers.php",
-            "src/Support/helpers.php",
-            "src/Testing/helpers.php"
-        ]
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "Hybridly\\Tests\\": "tests"
-        }
-    },
-    "config": {
-        "sort-packages": true
-    },
-    "extra": {
-        "laravel": {
-            "providers": [
-                "Hybridly\\HybridlyServiceProvider"
-            ],
-            "aliases": {
-                "Hybridly": "Hybridly\\Facades\\Hybridly"
-            }
-        },
-        "tempest": {
-            "can-discover": true,
-            "ignore": [
-                "src/Support/TypeScriptTransformer/DataResourceTypeScriptCollector.php",
-                "src/Support/TypeScriptTransformer/DataResourceTypeScriptTransformer.php"
-            ]
-        }
-    },
-    "minimum-stability": "stable",
-    "prefer-stable": true
+	"name": "hybridly/laravel",
+	"description": "Server-driven, client-rendered application.",
+	"license": "MIT",
+	"homepage": "https://github.com/hybridly/hybridly",
+	"support": {
+		"issues": "https://github.com/hybridly/hybridly/issues",
+		"source": "https://github.com/hybridly/hybridly"
+	},
+	"keywords": [
+		"laravel",
+		"hybridly",
+		"inertiajs",
+		"vite",
+		"vuejs"
+	],
+	"authors": [
+		{
+			"name": "Enzo Innocenzi",
+			"email": "enzo@innocenzi.dev",
+			"role": "Developer"
+		}
+	],
+	"require": {
+		"php": "^8.4",
+		"illuminate/contracts": "^12.0|^13.0",
+		"laravel/prompts": "^0.1|^0.2|^0.3",
+		"spatie/php-structure-discoverer": "^2.0"
+	},
+	"autoload": {
+		"psr-4": {
+			"Hybridly\\": "src"
+		},
+		"files": [
+			"src/Support/global_helpers.php",
+			"src/Support/helpers.php",
+			"src/Testing/helpers.php"
+		]
+	},
+	"autoload-dev": {
+		"psr-4": {
+			"Hybridly\\Tests\\": "tests"
+		}
+	},
+	"config": {
+		"sort-packages": true
+	},
+	"extra": {
+		"laravel": {
+			"providers": [
+				"Hybridly\\HybridlyServiceProvider"
+			],
+			"aliases": {
+				"Hybridly": "Hybridly\\Facades\\Hybridly"
+			}
+		}
+	},
+	"minimum-stability": "stable",
+	"prefer-stable": true
 }
