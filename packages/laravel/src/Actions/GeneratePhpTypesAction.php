@@ -2,26 +2,29 @@
 
 namespace Hybridly\Actions;
 
-use Illuminate\Support\Collection;
-use Spatie\TypeScriptTransformer\Structures\TransformedType;
-use Spatie\TypeScriptTransformer\TypeScriptTransformer;
-use Spatie\TypeScriptTransformer\TypeScriptTransformerConfig;
+use Psr\Container\ContainerInterface;
+use Tempest\Generation\TypeScript\TypeScriptGenerationConfig;
+use Tempest\Generation\TypeScript\TypeScriptGenerator;
 
 final class GeneratePhpTypesAction
 {
     public const PHP_TYPES_PATH = '.hybridly/php-types.d.ts';
 
+    public function __construct(
+        private ContainerInterface $container,
+        private TypeScriptGenerator $generator,
+        private TypeScriptGenerationConfig $config,
+    ) {}
+
     /**
      * @return array<string, TransformedType>
      */
-    public function __invoke(TypeScriptTransformerConfig $config): array
+    public function __invoke(): array
     {
-        if (! class_exists(TypeScriptTransformer::class)) {
-            return [];
-        }
+        $output = $this->generator->generate();
+        $writer = $this->container->get($this->config->writer);
+        $writer->write($output);
 
-        $config->outputFile(base_path(self::PHP_TYPES_PATH));
-
-        return Collection::make((new TypeScriptTransformer($config))->transform())->all();
+        return $output->getAllDefinitions();
     }
 }
