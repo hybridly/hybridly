@@ -4,6 +4,6 @@ export { RouterLink } from './components/link'
 export { WhenVisible } from './components/when-visible'
 export { initializeHybridly, type InitializeOptions } from './initialize'
 
-export { can, route, router } from '@hybridly/core'
+export { route, router } from '@hybridly/core'
 
 export * from './composables'
