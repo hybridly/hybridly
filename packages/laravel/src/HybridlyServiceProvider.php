@@ -2,6 +2,7 @@
 
 namespace Hybridly;
 
+use Hybridly\Actions\GeneratePhpTypesAction;
 use Hybridly\Architecture\ComponentRepository;
 use Hybridly\Architecture\JustInTimeComponentRepository;
 use Hybridly\Commands\GenerateGlobalTypesCommand;
@@ -28,6 +29,12 @@ use Illuminate\View\Factory;
 use Laravel\Octane\Events\RequestReceived;
 use Laravel\Octane\Events\TaskReceived;
 use Laravel\Octane\Events\TickReceived;
+use Tempest\Generation\TypeScript\GenericTypeScriptGenerator;
+use Tempest\Generation\TypeScript\StructureResolvers\ClassStructureResolver;
+use Tempest\Generation\TypeScript\StructureResolvers\EnumStructureResolver;
+use Tempest\Generation\TypeScript\TypeScriptGenerationConfig;
+use Tempest\Generation\TypeScript\TypeScriptGenerator;
+use Tempest\Generation\TypeScript\Writers\NamespacedTypeScriptGenerationConfig;
 
 final class HybridlyServiceProvider extends ServiceProvider
 {
@@ -105,6 +112,14 @@ final class HybridlyServiceProvider extends ServiceProvider
             abstract: Configuration::class,
             concrete: fn (Application $app) => Configuration::fromArray($app->make(Repository::class)->get('hybridly', default: [])),
         );
+
+        $this->app->singleton(NamespacedTypeScriptGenerationConfig::class, fn () => new NamespacedTypeScriptGenerationConfig(GeneratePhpTypesAction::PHP_TYPES_PATH));
+        $this->app->singleton(TypeScriptGenerationConfig::class, fn (Application $app) => $app->get(NamespacedTypeScriptGenerationConfig::class));
+        $this->app->singleton(TypeScriptGenerator::class, fn (Application $app) => new GenericTypeScriptGenerator(
+            config: $app->get(TypeScriptGenerationConfig::class),
+            classResolver: $app->get(ClassStructureResolver::class),
+            enumResolver: $app->get(EnumStructureResolver::class),
+        ));
 
         // The component repository is responsible for providing the components available to the front-end,
         // by default we provide a just-in-time repository that only loads components when they are
