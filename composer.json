@@ -40,8 +40,8 @@
             "Hybridly\\Tests\\": "packages/laravel/tests"
         },
         "files": [
-            "packages/laravel/src/Testing/functions.php",
             "packages/laravel/src/Support/functions.php",
+            "packages/laravel/src/Testing/functions.php",
             "packages/laravel/src/functions.php",
             "packages/laravel/src/global_functions.php"
         ]
