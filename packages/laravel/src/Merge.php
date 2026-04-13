@@ -1,20 +1,21 @@
 <?php
 
-namespace Hybridly\Support\Properties;
+namespace Hybridly;
 
+use Closure;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\App;
 
 /**
- * Represents a property that will always be loaded.
+ * Represents a property that should merge itself with its current instance.
  */
-final class Persistent implements Property, Mergeable
+final class Merge implements Property, Mergeable
 {
     public function __construct(
-        private \Closure $callback,
+        private Closure|iterable $value,
         private(set) bool $prepend = false,
         private(set) ?string $uniqueBy = null,
-        private(set) ?array $path = null,
+        private(set) array|string $path = [],
     ) {}
 
     public function shouldMerge(): bool
@@ -39,6 +40,8 @@ final class Persistent implements Property, Mergeable
 
     public function evaluate(): mixed
     {
-        return App::call($this->callback);
+        return \is_callable($this->value)
+            ? App::call($this->value)
+            : $this->value;
     }
 }

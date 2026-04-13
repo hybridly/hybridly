@@ -1,10 +1,10 @@
 <?php
 
+use Hybridly\Deferred;
+use Hybridly\HybridResponseFactory;
+use Hybridly\OnDemand;
+use Hybridly\PropertiesResolver;
 use Hybridly\Support\CaseConverter;
-use Hybridly\Support\Properties\Deferred;
-use Hybridly\Support\Properties\OnDemand;
-use Hybridly\View\Factory;
-use Hybridly\View\PropertiesResolver;
 use Illuminate\Contracts\Support\Arrayable;
 
 use function Hybridly\merge;
@@ -35,7 +35,7 @@ it('finds deferred properties', function () {
 });
 
 it('resolves functions', function () {
-    $payload = resolve(Factory::class)
+    $payload = resolve(HybridResponseFactory::class)
         ->withView('users.edit', [
             'user' => fn () => 'Makise Kurisu',
             'errors' => [],
@@ -55,7 +55,7 @@ it('resolves callables', function () {
         }
     };
 
-    $payload = resolve(Factory::class)
+    $payload = resolve(HybridResponseFactory::class)
         ->withView('users.edit', ['user' => $callable, 'type' => 'app'])
         ->toResponse(mock_request())
         ->getData();
@@ -73,7 +73,7 @@ it('resolves arrayable properties', function () {
         }
     };
 
-    $payload = resolve(Factory::class)
+    $payload = resolve(HybridResponseFactory::class)
         ->withView('users.edit', ['user' => $callable])
         ->toResponse(mock_request())
         ->getData();
@@ -84,7 +84,7 @@ it('resolves arrayable properties', function () {
 
 it('does not evaluate lazy properties when they are excluded', function () {
     $evaluated = false;
-    $payload = resolve(Factory::class)
+    $payload = resolve(HybridResponseFactory::class)
         ->withView('users.edit', [
             'full_name' => function () use (&$evaluated) {
                 $evaluated = true;
@@ -106,7 +106,7 @@ it('does not evaluate lazy properties when they are excluded', function () {
 });
 
 it('does not resolve partials by default', function () {
-    $payload = resolve(Factory::class)
+    $payload = resolve(HybridResponseFactory::class)
         ->withView('users.edit', [
             'full_name' => new OnDemand(fn () => 'Jon Doe'),
             'email' => 'jon@example.org',
@@ -120,7 +120,7 @@ it('does not resolve partials by default', function () {
 });
 
 it('does not resolve nested partials by default', function () {
-    $payload = resolve(Factory::class)
+    $payload = resolve(HybridResponseFactory::class)
         ->withView('users.edit', [
             'user' => [
                 'full_name' => new OnDemand(fn () => 'Jon Doe'),
@@ -136,7 +136,7 @@ it('does not resolve nested partials by default', function () {
 });
 
 it('resolves partials', function () {
-    $payload = resolve(Factory::class)
+    $payload = resolve(HybridResponseFactory::class)
         ->withView('users.edit', [
             'full_name' => new OnDemand(fn () => 'Jon Doe'),
             'email' => 'jon@example.org',
@@ -153,7 +153,7 @@ it('resolves partials', function () {
 });
 
 it('resolves deferred', function () {
-    $payload = resolve(Factory::class)
+    $payload = resolve(HybridResponseFactory::class)
         ->withView('users.edit', [
             'full_name' => new Deferred(fn () => 'Jon Doe'),
             'email' => 'jon@example.org',
@@ -170,7 +170,7 @@ it('resolves deferred', function () {
 });
 
 it('resolves nested partials', function () {
-    $payload = resolve(Factory::class)
+    $payload = resolve(HybridResponseFactory::class)
         ->withView('users.edit', [
             'user' => [
                 'full_name' => new OnDemand(fn () => 'Jon Doe'),
@@ -189,7 +189,7 @@ it('resolves nested partials', function () {
 });
 
 it('resolves nested deferred', function () {
-    $payload = resolve(Factory::class)
+    $payload = resolve(HybridResponseFactory::class)
         ->withView('users.edit', [
             'user' => [
                 'full_name' => new Deferred(fn () => 'Jon Doe'),
@@ -208,7 +208,7 @@ it('resolves nested deferred', function () {
 });
 
 it('does not include deferred mergeable properties in mergeable config on initial loads', function () {
-    $payload = resolve(Factory::class)
+    $payload = resolve(HybridResponseFactory::class)
         ->withView('users.edit', [
             'feed' => new Deferred(fn () => [
                 ['id' => 1, 'label' => 'First'],
@@ -226,7 +226,7 @@ it('does not include deferred mergeable properties in mergeable config on initia
 });
 
 it('includes deferred mergeable properties in mergeable config on partial loads', function () {
-    $payload = resolve(Factory::class)
+    $payload = resolve(HybridResponseFactory::class)
         ->withView('users.edit', [
             'feed' => (new Deferred(
                 fn () => [
@@ -251,7 +251,7 @@ it('includes deferred mergeable properties in mergeable config on partial loads'
 });
 
 it('includes mergeable properties configuration in the payload', function () {
-    $payload = resolve(Factory::class)
+    $payload = resolve(HybridResponseFactory::class)
         ->withView('users.edit', [
             'users' => merge([['id' => 1]], uniqueBy: 'id'),
             'priority_users' => merge([['id' => 2]], prepend: true, uniqueBy: 'id'),
@@ -272,7 +272,7 @@ it('includes mergeable properties configuration in the payload', function () {
 });
 
 it('includes mergeable properties configuration in non-hybrid payload responses', function () {
-    $response = resolve(Factory::class)
+    $response = resolve(HybridResponseFactory::class)
         ->withView('users.edit', [
             'users' => merge([['id' => 1]], prepend: true, uniqueBy: 'id'),
         ])

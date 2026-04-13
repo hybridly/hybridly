@@ -4,7 +4,7 @@ namespace Hybridly;
 
 use Closure;
 use Hybridly\Components\Concerns\EvaluatesClosures;
-use Hybridly\Contracts\HybridResponse;
+use Hybridly\HybridResponse;
 use Illuminate\Contracts\Debug\ExceptionHandler as ExceptionHandlerContract;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;

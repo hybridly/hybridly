@@ -2,7 +2,7 @@
 
 namespace Hybridly\Tables\Actions\Http;
 
-use Hybridly\Contracts\HybridResponse;
+use Hybridly\HybridResponse;
 use Hybridly\Tables\Actions\BaseAction;
 use Hybridly\Tables\Actions\BulkAction;
 use Hybridly\Tables\Actions\BulkSelected;

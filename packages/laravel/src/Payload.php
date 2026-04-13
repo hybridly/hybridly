@@ -1,6 +1,6 @@
 <?php
 
-namespace Hybridly\View;
+namespace Hybridly;
 
 use Illuminate\Contracts\Support\Arrayable;
 

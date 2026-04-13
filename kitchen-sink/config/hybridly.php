@@ -1,7 +1,7 @@
 <?php
 
 use Hybridly\Architecture\ModulesComponentLoader;
-use Hybridly\Support\Configuration\Architecture;
+use Hybridly\Configuration\Architecture;
 use Hybridly\Support\TypeScriptTransformer\GlobalPropertiesNamespaceTransformer;
 
 return [

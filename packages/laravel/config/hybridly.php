@@ -2,7 +2,7 @@
 
 use Hybridly\Architecture\ModulesComponentLoader;
 use Hybridly\Architecture\ResourcesComponentLoader;
-use Hybridly\Support\Configuration\Architecture;
+use Hybridly\Configuration\Architecture;
 
 return [
     /*

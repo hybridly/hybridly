@@ -1,6 +1,6 @@
 <?php
 
-use Hybridly\Support\Configuration\Configuration;
+use Hybridly\Configuration\Configuration;
 use Hybridly\Support\RouteExtractor;
 use Illuminate\Broadcasting\BroadcastController;
 use Illuminate\Support\Facades\Route;

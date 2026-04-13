@@ -1,10 +1,10 @@
 <?php
 
-namespace Hybridly\View;
+namespace Hybridly;
 
 use Illuminate\Contracts\Support\Arrayable;
 
-class Dialog implements Arrayable
+final class Dialog implements Arrayable
 {
     public function __construct(
         public string $component,

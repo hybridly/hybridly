@@ -40,9 +40,10 @@
             "Hybridly\\Tests\\": "packages/laravel/tests"
         },
         "files": [
-            "packages/laravel/src/Support/global_helpers.php",
-            "packages/laravel/src/Support/helpers.php",
-            "packages/laravel/src/Testing/helpers.php"
+            "packages/laravel/src/Testing/functions.php",
+            "packages/laravel/src/Support/functions.php",
+            "packages/laravel/src/functions.php",
+            "packages/laravel/src/global_functions.php"
         ]
     },
     "autoload-dev": {
@@ -53,7 +54,7 @@
             "Hybridly\\Tests\\": "packages/laravel/tests"
         },
         "files": [
-            "packages/laravel/src/Testing/helpers.php"
+            "packages/laravel/src/Testing/functions.php"
         ]
     },
     "config": {

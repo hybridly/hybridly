@@ -1,6 +1,6 @@
 <?php
 
-namespace Hybridly\View;
+namespace Hybridly;
 
 use Hybridly\Hybridly;
 use Hybridly\Support\Header;

@@ -1,6 +1,6 @@
 <?php
 
-namespace Hybridly\Support\Configuration;
+namespace Hybridly\Configuration;
 
 final class Internationalization
 {

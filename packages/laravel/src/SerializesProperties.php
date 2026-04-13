@@ -1,6 +1,6 @@
 <?php
 
-namespace Hybridly\Support\Properties;
+namespace Hybridly;
 
 /**
  * Similar to `Arrayable`, but only for hybrid responses.
@@ -8,10 +8,10 @@ namespace Hybridly\Support\Properties;
  * @template TKey of array-key
  * @template TValue
  */
-interface Hybridable
+interface SerializesProperties
 {
     /**
-     * Get the instance as an array.
+     * Get the instance as an array for hybrid responses.
      *
      * @return array<TKey, TValue>
      */

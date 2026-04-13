@@ -4,7 +4,7 @@ namespace Hybridly\Commands;
 
 use Hybridly\Architecture\ComponentRepository;
 use Hybridly\Architecture\ComponentType;
-use Hybridly\Support\Configuration\Configuration;
+use Hybridly\Configuration\Configuration;
 use Hybridly\Support\Version;
 use Illuminate\Console\Command;
 

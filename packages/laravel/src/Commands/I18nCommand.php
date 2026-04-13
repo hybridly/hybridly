@@ -2,7 +2,7 @@
 
 namespace Hybridly\Commands;
 
-use Hybridly\Support\Configuration\Configuration;
+use Hybridly\Configuration\Configuration;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;

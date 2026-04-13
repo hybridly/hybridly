@@ -7,7 +7,7 @@ use Discovery\Routing\Get;
 use Discovery\Routing\Post;
 use Discovery\Routing\Prefix;
 use Discovery\Routing\Web;
-use Hybridly\Contracts\HybridResponse;
+use Hybridly\HybridResponse;
 
 use function Hybridly\properties;
 use function Hybridly\view;

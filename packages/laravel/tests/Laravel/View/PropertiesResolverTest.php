@@ -2,17 +2,17 @@
 
 namespace Hybridly\Tests\Laravel\View;
 
+use Hybridly\Deferred;
+use Hybridly\IgnoreFirstLoad;
+use Hybridly\Lazy;
+use Hybridly\Merge;
+use Hybridly\OnDemand;
+use Hybridly\Optional;
+use Hybridly\Persistent;
+use Hybridly\PropertiesResolver;
+use Hybridly\Property;
+use Hybridly\SerializesProperties;
 use Hybridly\Support\CaseConverter;
-use Hybridly\Support\Properties\Deferred;
-use Hybridly\Support\Properties\Hybridable;
-use Hybridly\Support\Properties\IgnoreFirstLoad;
-use Hybridly\Support\Properties\Lazy;
-use Hybridly\Support\Properties\Merge;
-use Hybridly\Support\Properties\OnDemand;
-use Hybridly\Support\Properties\Optional;
-use Hybridly\Support\Properties\Persistent;
-use Hybridly\Support\Properties\Property;
-use Hybridly\View\PropertiesResolver;
 
 use function Hybridly\Testing\partial_headers;
 
@@ -24,9 +24,9 @@ function get_properties_resolver(bool $partial = false, ?array $only = [], ?arra
     );
 }
 
-function make_hybridable(array $properties): Hybridable
+function make_hybridable(array $properties): SerializesProperties
 {
-    return new class($properties) implements Hybridable {
+    return new class($properties) implements SerializesProperties {
         public function __construct(
             private $properties,
         ) {}

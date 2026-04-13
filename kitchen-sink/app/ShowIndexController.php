@@ -4,7 +4,7 @@ namespace App;
 
 use Discovery\Routing\Get;
 use Discovery\Routing\Web;
-use Hybridly\Contracts\HybridResponse;
+use Hybridly\HybridResponse;
 
 use function Hybridly\view;
 

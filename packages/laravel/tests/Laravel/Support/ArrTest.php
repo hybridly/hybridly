@@ -1,9 +1,11 @@
 <?php
 
-use Hybridly\Support\Arr;
+use function Hybridly\Support\except_dot;
+use function Hybridly\Support\filter_recursive;
+use function Hybridly\Support\only_dot;
 
 it('filters arrays recursively', function ($array, $filter, $expected) {
-    expect(Arr::filterRecursive($array, $filter))->toBe($expected);
+    expect(filter_recursive($array, $filter))->toBe($expected);
 })->with([
     [
         [
@@ -44,7 +46,7 @@ it('filters arrays recursively', function ($array, $filter, $expected) {
 ]);
 
 it('gets only subsets of an array using dot notation', function ($array, $only, $expected) {
-    expect(Arr::onlyDot($array, $only))->toBe($expected);
+    expect(only_dot($array, $only))->toBe($expected);
 })->with([
     [
         [
@@ -89,7 +91,7 @@ it('gets only subsets of an array using dot notation', function ($array, $only, 
 ]);
 
 it('gets all of an array except the given subsets using dot notation', function ($array, $except, $expected) {
-    expect(Arr::exceptDot($array, $except))->toBe($expected);
+    expect(except_dot($array, $except))->toBe($expected);
 })->with([
     [
         ['key1' => 'value1'],

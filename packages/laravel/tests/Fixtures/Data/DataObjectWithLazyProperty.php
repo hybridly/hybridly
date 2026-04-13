@@ -2,7 +2,7 @@
 
 namespace Hybridly\Tests\Fixtures\Data;
 
-use Hybridly\Support\Properties\OnDemand;
+use Hybridly\OnDemand;
 use Spatie\LaravelData\Data;
 use Spatie\LaravelData\Lazy;
 

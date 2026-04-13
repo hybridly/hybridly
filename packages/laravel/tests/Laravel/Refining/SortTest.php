@@ -1,8 +1,8 @@
 <?php
 
+use Hybridly\Configuration\Configuration;
 use Hybridly\Refining\Sorts\BaseSort;
 use Hybridly\Refining\Sorts\Sort;
-use Hybridly\Support\Configuration\Configuration;
 use Hybridly\Tests\Fixtures\Database\ProductFactory;
 use Illuminate\Database\Events\QueryExecuted;
 use Illuminate\Support\Facades\DB;

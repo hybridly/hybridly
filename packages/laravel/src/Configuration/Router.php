@@ -1,6 +1,6 @@
 <?php
 
-namespace Hybridly\Support\Configuration;
+namespace Hybridly\Configuration;
 
 use Hybridly\Support\RouteExtractor;
 

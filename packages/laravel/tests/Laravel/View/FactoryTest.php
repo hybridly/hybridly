@@ -1,9 +1,9 @@
 <?php
 
 use Hybridly\Exceptions\MissingViewComponentException;
+use Hybridly\HybridResponseFactory;
+use Hybridly\SerializesProperties;
 use Hybridly\Support\Header;
-use Hybridly\Support\Properties\Hybridable;
-use Hybridly\View\Factory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -86,7 +86,7 @@ test('hybridly responses to non-hybridly requests', function () {
     $response = $factory->toResponse($request);
     $payload = $response->getOriginalContent()->getData()['payload'];
 
-    expect($factory)->toBeInstanceOf(Factory::class);
+    expect($factory)->toBeInstanceOf(HybridResponseFactory::class);
     expect($response)->toBeInstanceOf(Response::class);
     expect($payload)
         ->toMatchArray([
@@ -108,7 +108,7 @@ test('`Hybridable` classes are serialized', function () {
     hybridly()->resolveVersionUsing(fn () => '123');
 
     $request = mock_request(url: '/users/makise', hybrid: true, bind: true);
-    $factory = view('users.edit', ['user' => new class() implements Hybridable {
+    $factory = view('users.edit', ['user' => new class() implements SerializesProperties {
         public function toHybridArray(): array
         {
             return ['full_name' => 'Makise Kurisu'];
@@ -118,7 +118,7 @@ test('`Hybridable` classes are serialized', function () {
     $response = $factory->toResponse($request);
     $payload = $response->getOriginalContent();
 
-    expect($factory)->toBeInstanceOf(Factory::class);
+    expect($factory)->toBeInstanceOf(HybridResponseFactory::class);
     expect($response)->toBeInstanceOf(JsonResponse::class);
     expect($payload)
         ->toMatchArray([
@@ -146,7 +146,7 @@ test('hybridly responses to hybridly requests', function () {
     $response = $factory->toResponse($request);
     $payload = $response->getOriginalContent();
 
-    expect($factory)->toBeInstanceOf(Factory::class);
+    expect($factory)->toBeInstanceOf(HybridResponseFactory::class);
     expect($response)->toBeInstanceOf(JsonResponse::class);
     expect($payload)
         ->toMatchArray([
@@ -174,7 +174,7 @@ test('properties can be added on-the-fly on the factory instance', function () {
     $response = $factory->toResponse($request);
     $payload = $response->getOriginalContent();
 
-    expect($factory)->toBeInstanceOf(Factory::class);
+    expect($factory)->toBeInstanceOf(HybridResponseFactory::class);
     expect($response)->toBeInstanceOf(JsonResponse::class);
     expect($payload)
         ->toMatchArray([
@@ -210,7 +210,7 @@ test('dialogs and their properties can be resolved', function () {
     $response = $factory->toResponse($request);
     $payload = $response->getOriginalContent();
 
-    expect($factory)->toBeInstanceOf(Factory::class);
+    expect($factory)->toBeInstanceOf(HybridResponseFactory::class);
     expect($response)->toBeInstanceOf(JsonResponse::class);
     expect($payload)
         ->toMatchArray([
@@ -260,7 +260,7 @@ test('hybridly responses without a view component', function () {
     $response = $factory->toResponse($request);
     $payload = $response->getOriginalContent();
 
-    expect($factory)->toBeInstanceOf(Factory::class);
+    expect($factory)->toBeInstanceOf(HybridResponseFactory::class);
     expect($response)->toBeInstanceOf(JsonResponse::class);
     expect($payload)
         ->toMatchArray([
@@ -298,7 +298,7 @@ test('base view may be omitted on dialog responses coming from hybrid requests',
     $response = $factory->toResponse($request);
     $payload = $response->getOriginalContent();
 
-    expect($factory)->toBeInstanceOf(Factory::class);
+    expect($factory)->toBeInstanceOf(HybridResponseFactory::class);
     expect($response)->toBeInstanceOf(JsonResponse::class);
     expect($payload)
         ->toMatchArray([
@@ -330,7 +330,7 @@ test('base view may not be omitted on dialog responses coming from non-hybrid re
     $response = $factory->toResponse($request);
     $payload = $response->getOriginalContent()->getData();
 
-    expect($factory)->toBeInstanceOf(Factory::class);
+    expect($factory)->toBeInstanceOf(HybridResponseFactory::class);
     expect($response)->not->toBeInstanceOf(JsonResponse::class);
     expect($payload['payload'])
         ->toMatchArray([
@@ -378,7 +378,7 @@ test('a redirect to the base view may be forced', function () {
     $response = $factory->toResponse($request);
     $payload = $response->getOriginalContent();
 
-    expect($factory)->toBeInstanceOf(Factory::class);
+    expect($factory)->toBeInstanceOf(HybridResponseFactory::class);
     expect($response)->toBeInstanceOf(JsonResponse::class);
     expect($payload)
         ->toMatchArray([

@@ -2,9 +2,9 @@
 
 namespace Hybridly\Concerns;
 
-use Hybridly\Support\Arr;
-use Hybridly\Support\Properties\Hybridable;
+use Hybridly\SerializesProperties;
 use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Support\Arr;
 
 trait HasSharedProperties
 {
@@ -20,7 +20,7 @@ trait HasSharedProperties
     {
         if (\is_array($key)) {
             $this->sharedProperties = array_merge($this->sharedProperties, $key);
-        } elseif ($key instanceof Hybridable) {
+        } elseif ($key instanceof SerializesProperties) {
             $this->sharedProperties = array_merge($this->sharedProperties, $key->toHybridArray());
         } elseif ($key instanceof Arrayable) {
             $this->sharedProperties = array_merge($this->sharedProperties, $key->toArray());

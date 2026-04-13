@@ -1,6 +1,6 @@
 <?php
 
-use Hybridly\Support\Configuration\Architecture;
+use Hybridly\Configuration\Architecture;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Support\Facades\Route;
 

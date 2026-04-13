@@ -1,22 +1,25 @@
 <?php
 
-namespace Hybridly\View;
+namespace Hybridly;
 
-use Hybridly\Support\Arr;
+use Hybridly\Configuration\Configuration;
+use Hybridly\Configuration\Properties;
+use Hybridly\Deferred;
+use Hybridly\IgnoreFirstLoad;
+use Hybridly\Mergeable;
+use Hybridly\Persistent;
+use Hybridly\Property;
+use Hybridly\SerializesProperties;
 use Hybridly\Support\CaseConverter;
-use Hybridly\Support\Configuration\Configuration;
-use Hybridly\Support\Configuration\Properties;
 use Hybridly\Support\Header;
-use Hybridly\Support\Properties\Deferred;
-use Hybridly\Support\Properties\Hybridable;
-use Hybridly\Support\Properties\IgnoreFirstLoad;
-use Hybridly\Support\Properties\Mergeable;
-use Hybridly\Support\Properties\Persistent;
-use Hybridly\Support\Properties\Property;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\Json\ResourceResponse;
+
+use function Hybridly\Support\except_dot;
+use function Hybridly\Support\filter_recursive;
+use function Hybridly\Support\only_dot;
 
 final class PropertiesResolver
 {
@@ -55,7 +58,7 @@ final class PropertiesResolver
                 ->map->pluck('key')->toArray();
 
             // Additionally, we want to exclude properties that should not be loaded on first load.
-            $properties = Arr::filterRecursive($properties, static fn ($property) => ! ($property instanceof IgnoreFirstLoad));
+            $properties = filter_recursive($properties, static fn ($property) => ! ($property instanceof IgnoreFirstLoad));
         }
 
         // During partial requests, the client may send a reset intent to prevent mergeable
@@ -110,13 +113,13 @@ final class PropertiesResolver
         if ($partial && $this->request->hasHeader(Header::PARTIAL_ONLY)) {
             $only = $this->decodeHeader(Header::PARTIAL_ONLY);
             $only = $this->convertPartialPropertiesCase($only);
-            $properties = Arr::onlyDot($properties, array_merge($only, $persisted));
+            $properties = only_dot($properties, array_merge($only, $persisted));
         }
 
         if ($partial && $this->request->hasHeader(Header::PARTIAL_EXCEPT)) {
             $except = $this->decodeHeader(Header::PARTIAL_EXCEPT);
             $except = $this->convertPartialPropertiesCase($except);
-            $properties = Arr::exceptDot($properties, $except);
+            $properties = except_dot($properties, $except);
         }
 
         $properties = $this->convertOutputCase(
@@ -137,7 +140,7 @@ final class PropertiesResolver
         $selected = [];
 
         foreach ($properties as $key => $value) {
-            if ($value instanceof Hybridable) {
+            if ($value instanceof SerializesProperties) {
                 $value = $value->toHybridArray();
             }
 
@@ -163,7 +166,7 @@ final class PropertiesResolver
     private function resolveArrayableProperties(array $properties, bool $unpackDotProps = true): array
     {
         foreach ($properties as $key => $value) {
-            if ($value instanceof Hybridable) {
+            if ($value instanceof SerializesProperties) {
                 $value = $value->toHybridArray();
             }
 

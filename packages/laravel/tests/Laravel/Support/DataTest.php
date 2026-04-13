@@ -1,7 +1,7 @@
 <?php
 
+use Hybridly\PropertiesResolver;
 use Hybridly\Tests\Fixtures\Data\DataObjectWithLazyProperty;
-use Hybridly\View\PropertiesResolver;
 use Illuminate\Http\Request;
 use Spatie\LaravelData\Lazy;
 

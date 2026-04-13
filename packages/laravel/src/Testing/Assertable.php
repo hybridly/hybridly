@@ -3,7 +3,7 @@
 namespace Hybridly\Testing;
 
 use Hybridly\Architecture\ComponentRepository;
-use Hybridly\Support\Configuration\Configuration;
+use Hybridly\Configuration\Configuration;
 use Hybridly\Support\Header;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Testing\Fluent\AssertableJson;

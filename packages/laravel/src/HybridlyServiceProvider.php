@@ -8,7 +8,7 @@ use Hybridly\Commands\GenerateGlobalTypesCommand;
 use Hybridly\Commands\I18nCommand;
 use Hybridly\Commands\MakeTableCommand;
 use Hybridly\Commands\PrintConfigurationCommand;
-use Hybridly\Support\Configuration\Configuration;
+use Hybridly\Configuration\Configuration;
 use Hybridly\Support\Version;
 use Hybridly\Tables\Actions\DataTransferObjects\BulkSelection;
 use Hybridly\Tables\Actions\Http\InvokedActionController;

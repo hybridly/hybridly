@@ -2,7 +2,7 @@
 
 namespace Hybridly\Actions;
 
-use Hybridly\Support\Configuration\Configuration;
+use Hybridly\Configuration\Configuration;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Support\Facades\File;
 use RuntimeException;

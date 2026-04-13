@@ -1,6 +1,6 @@
 <?php
 
-namespace Hybridly\Support\Properties;
+namespace Hybridly;
 
 /**
  * Represents a property that will be merged with the previous value of the property, if any.

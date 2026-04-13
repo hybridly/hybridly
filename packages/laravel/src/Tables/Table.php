@@ -3,7 +3,7 @@
 namespace Hybridly\Tables;
 
 use Hybridly\Components;
-use Hybridly\Support\Configuration\Configuration;
+use Hybridly\Configuration\Configuration;
 use Illuminate\Contracts\Support\Arrayable;
 
 abstract class Table extends Components\Component implements Arrayable

@@ -6,7 +6,7 @@ use Carbon\CarbonImmutable;
 use Discovery\Routing\Get;
 use Discovery\Routing\Prefix;
 use Discovery\Routing\Web;
-use Hybridly\Contracts\HybridResponse;
+use Hybridly\HybridResponse;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 

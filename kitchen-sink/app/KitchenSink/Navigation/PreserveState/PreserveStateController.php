@@ -6,7 +6,7 @@ use Carbon\CarbonImmutable;
 use Discovery\Routing\Get;
 use Discovery\Routing\Prefix;
 use Discovery\Routing\Web;
-use Hybridly\Contracts\HybridResponse;
+use Hybridly\HybridResponse;
 
 use function Hybridly\on_demand;
 use function Hybridly\view;

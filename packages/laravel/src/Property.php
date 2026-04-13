@@ -1,6 +1,6 @@
 <?php
 
-namespace Hybridly\Support\Properties;
+namespace Hybridly;
 
 interface Property
 {

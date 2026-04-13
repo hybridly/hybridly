@@ -30,6 +30,7 @@
 	},
 	"excludes": [
 		"**/.tempest",
+		"**/composer.json",
 		"**/node_modules",
 		"**/*-lock.json",
 		"**/vendor",

@@ -1,11 +1,11 @@
 <?php
 
+use Hybridly\Deferred;
 use Hybridly\Exceptions\MissingViewComponentException;
 use Hybridly\Hybridly;
+use Hybridly\HybridResponseFactory;
+use Hybridly\OnDemand;
 use Hybridly\Support\Header;
-use Hybridly\Support\Properties\Deferred;
-use Hybridly\Support\Properties\OnDemand;
-use Hybridly\View\Factory;
 use Illuminate\Support\Facades\Route;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,12 +21,12 @@ use function Hybridly\view;
 
 describe('namespaced', function () {
     beforeEach(function () {
-        app()->forgetInstance(Factory::class);
+        app()->forgetInstance(HybridResponseFactory::class);
     });
 
     test('`view` returns a view', function () {
         expect(view('users.index', ['foo' => 'bar']))
-            ->toBeInstanceOf(Factory::class)
+            ->toBeInstanceOf(HybridResponseFactory::class)
             ->render()
             ->toMatchSnapshot();
     });
@@ -41,7 +41,7 @@ describe('namespaced', function () {
         );
 
         expect(dialog('users.show', ['user' => 'Jon Doe'], route('users.index')))
-            ->toBeInstanceOf(Factory::class)
+            ->toBeInstanceOf(HybridResponseFactory::class)
             ->render()
             ->toMatchSnapshot();
     });
@@ -54,7 +54,7 @@ describe('namespaced', function () {
         mock_request(hybrid: true, bind: true);
 
         expect(properties(['foo' => 'bar']))
-            ->toBeInstanceOf(Factory::class)
+            ->toBeInstanceOf(HybridResponseFactory::class)
             ->render();
     });
 

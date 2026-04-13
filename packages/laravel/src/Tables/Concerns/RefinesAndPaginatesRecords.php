@@ -2,10 +2,9 @@
 
 namespace Hybridly\Tables\Concerns;
 
+use Hybridly\Configuration\Configuration;
 use Hybridly\Refining\Contracts\Refiner;
 use Hybridly\Refining\Refine;
-use Hybridly\Support\Arr;
-use Hybridly\Support\Configuration\Configuration;
 use Hybridly\Tables\Columns\BaseColumn;
 use Hybridly\Tables\Table;
 use Illuminate\Contracts\Pagination\CursorPaginator;
@@ -17,6 +16,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Spatie\LaravelData\Contracts\BaseDataCollectable;
 use Spatie\LaravelData\Data;
+
+use function Hybridly\Support\resolve_arrayable_properties;
 
 /**
  * @mixin Table
@@ -173,7 +174,7 @@ trait RefinesAndPaginatesRecords
                 $record->excludePermanently('authorization');
             }
 
-            return Arr::resolveArrayableProperties($record->all());
+            return resolve_arrayable_properties($record->all());
         }
 
         return $model->toArray();

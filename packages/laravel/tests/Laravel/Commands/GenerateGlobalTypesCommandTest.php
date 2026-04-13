@@ -1,6 +1,6 @@
 <?php
 
-use Hybridly\Support\Configuration\Configuration;
+use Hybridly\Configuration\Configuration;
 use Hybridly\Tests\Laravel\Commands\Fixtures\CustomTransformer;
 use Illuminate\Support\Facades\File;
 

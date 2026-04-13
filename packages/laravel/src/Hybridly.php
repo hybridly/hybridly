@@ -3,10 +3,10 @@
 namespace Hybridly;
 
 use Closure;
+use Hybridly\Deferred;
 use Hybridly\HybridExceptionHandler;
-use Hybridly\Support\Properties\Deferred;
-use Hybridly\Support\Properties\OnDemand;
-use Hybridly\View\Factory;
+use Hybridly\HybridResponseFactory;
+use Hybridly\OnDemand;
 use Illuminate\Http\Request;
 use Illuminate\Support\Traits\Conditionable;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -69,7 +69,7 @@ final class Hybridly
      *
      * @see https://hybridly.dev/api/laravel/hybridly.html#view
      */
-    public function view(string $component, iterable $properties = []): Factory
+    public function view(string $component, iterable $properties = []): HybridResponseFactory
     {
         return view($component, $properties);
     }
@@ -79,7 +79,7 @@ final class Hybridly
      *
      * @see https://hybridly.dev/api/laravel/hybridly.html#properties
      */
-    public function properties(iterable $properties): Factory
+    public function properties(iterable $properties): HybridResponseFactory
     {
         return properties($properties);
     }

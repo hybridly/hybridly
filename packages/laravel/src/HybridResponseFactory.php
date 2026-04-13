@@ -1,12 +1,11 @@
 <?php
 
-namespace Hybridly\View;
+namespace Hybridly;
 
-use Hybridly\Contracts\HybridResponse;
+use Hybridly\Configuration\Configuration;
 use Hybridly\Exceptions\MissingViewComponentException;
 use Hybridly\Hybridly;
-use Hybridly\Support\Arr as SupportArr;
-use Hybridly\Support\Configuration\Configuration;
+use Hybridly\HybridResponse;
 use Hybridly\Support\Header;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\JsonResponse;
@@ -19,7 +18,9 @@ use Illuminate\Support\MessageBag;
 use Illuminate\Support\ViewErrorBag;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
-final class Factory implements HybridResponse
+use function Hybridly\Support\resolve_arrayable_properties;
+
+final class HybridResponseFactory implements HybridResponse
 {
     protected ?View $view = null;
     protected ?View $dialogView = null;
@@ -343,6 +344,6 @@ final class Factory implements HybridResponse
 
     private function transformProperties(iterable $properties): array
     {
-        return SupportArr::resolveArrayableProperties($properties);
+        return resolve_arrayable_properties($properties);
     }
 }

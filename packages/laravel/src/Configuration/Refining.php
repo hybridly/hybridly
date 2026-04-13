@@ -1,6 +1,6 @@
 <?php
 
-namespace Hybridly\Support\Configuration;
+namespace Hybridly\Configuration;
 
 /** @see https://hybridly.dev/guide/refining.html */
 final class Refining

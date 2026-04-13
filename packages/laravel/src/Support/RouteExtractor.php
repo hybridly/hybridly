@@ -2,7 +2,7 @@
 
 namespace Hybridly\Support;
 
-use Hybridly\Support\Configuration\Configuration;
+use Hybridly\Configuration\Configuration;
 use Illuminate\Contracts\Routing\UrlRoutable;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Database\Eloquent\Model;

@@ -2,7 +2,7 @@
 
 namespace Hybridly\Refining\Concerns;
 
-use Hybridly\Support\Configuration\Configuration;
+use Hybridly\Configuration\Configuration;
 
 trait ConfiguresKeys
 {

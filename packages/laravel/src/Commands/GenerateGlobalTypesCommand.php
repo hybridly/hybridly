@@ -4,7 +4,7 @@ namespace Hybridly\Commands;
 
 use Hybridly\Actions\GeneratePhpTypesAction;
 use Hybridly\Actions\GenerateRoutesDefinitionsAction;
-use Hybridly\Support\Configuration\Configuration;
+use Hybridly\Configuration\Configuration;
 use Illuminate\Console\Command;
 use Spatie\TypeScriptTransformer\Structures\TransformedType;
 use Spatie\TypeScriptTransformer\TypeScriptTransformerConfig;

@@ -1,9 +1,9 @@
 <?php
 
+use Hybridly\Configuration\Configuration;
 use Hybridly\Refining\Filters\BaseFilter;
 use Hybridly\Refining\Filters\CallbackFilter;
 use Hybridly\Refining\Filters\TextFilter;
-use Hybridly\Support\Configuration\Configuration;
 use Hybridly\Tests\Fixtures\Database\ProductFactory;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 

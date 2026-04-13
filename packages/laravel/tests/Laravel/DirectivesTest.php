@@ -1,7 +1,7 @@
 <?php
 
-use Hybridly\View\Payload;
-use Hybridly\View\View;
+use Hybridly\Payload;
+use Hybridly\View;
 use Illuminate\Support\Facades\Blade;
 
 beforeEach(function () {

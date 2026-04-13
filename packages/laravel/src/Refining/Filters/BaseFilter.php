@@ -8,7 +8,6 @@ use Hybridly\Refining\Contracts\Filter;
 use Hybridly\Refining\Contracts\Refiner;
 use Hybridly\Refining\Refine;
 use Illuminate\Contracts\Database\Eloquent\Builder;
-use Illuminate\Validation\ValidationException;
 
 abstract class BaseFilter extends Components\Component implements Refiner, Filter
 {
