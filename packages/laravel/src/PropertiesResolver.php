@@ -16,6 +16,7 @@ use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\Json\ResourceResponse;
+use Illuminate\Support\Str;
 
 use function Hybridly\Support\except_dot;
 use function Hybridly\Support\filter_recursive;
@@ -74,7 +75,7 @@ final class PropertiesResolver
             // If a mergeable property is present in the reset array, it means that the client explicitly
             // wants to reset its state instead of merging it with its previous one. In that case,
             // we don't want to treat it as a mergeable property, but rather as a regular one.
-            if (in_array($path, $reset, strict: true)) {
+            if (Str::is($reset, $path)) {
                 return false;
             }
 
