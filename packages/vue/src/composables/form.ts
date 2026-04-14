@@ -90,7 +90,7 @@ export interface FormReturn<T extends SearchableObject, P extends Path<T> & stri
 	recentlyFailed: boolean
 }
 
-function safeClone<T>(obj: T): T {
+function deepCloneRaw<T>(obj: T): T {
 	return cloneDeep(toRaw(obj))
 }
 
@@ -109,11 +109,11 @@ export function useForm<
 	}
 
 	/** Fields that were initially set up. */
-	const defaults = safeClone(options.fields)
+	const defaults = ref(deepCloneRaw(options.fields))
 	/** Fields as they were when loaded. */
-	const loaded = safeClone(historyData?.fields ?? options.fields)
+	const loaded = deepCloneRaw(historyData?.fields ?? options.fields)
 	/** Current fields. */
-	const fields = reactive<T>(safeClone(loaded)) as T
+	const fields = reactive<T>(deepCloneRaw(loaded)) as T
 	/** Validation errors for each field. */
 	const errors = ref<Errors<T>>(historyData?.errors ?? {})
 	/** Whether the form is dirty. */
@@ -140,7 +140,7 @@ export function useForm<
 	 */
 	function setDefault(newDefault: Partial<T>) {
 		Object.entries(newDefault).forEach(([key, value]) => {
-			set(defaults as SearchableObject, key, safeClone(value))
+			set(defaults.value, key, deepCloneRaw(value))
 		})
 	}
 
@@ -168,7 +168,7 @@ export function useForm<
 		}
 
 		keys.forEach((key) => {
-			set(defaults as SearchableObject, key, safeClone(get(fields as SearchableObject, key)))
+			set(defaults.value, key, deepCloneRaw(get(fields, key)))
 		})
 	}
 
@@ -213,7 +213,7 @@ export function useForm<
 		}
 
 		keys.forEach((key) => {
-			Reflect.set(fields, key, safeClone(Reflect.get(defaults, key)))
+			set(fields, key, deepCloneRaw(get(defaults.value, key)))
 		})
 	}
 
@@ -267,7 +267,7 @@ export function useForm<
 			abortController,
 			url: url ?? state.context.value?.url,
 			method: requestOptions.method ?? 'POST',
-			data: safeClone(data),
+			data: deepCloneRaw(data),
 			preserveState,
 			hooks: {
 				before: (_request, context) => {
@@ -341,7 +341,7 @@ export function useForm<
 			return isDirty.value
 		}
 
-		return keys.some((key) => !isEqual(toRaw(get(fields, key)), toRaw(get(defaults, key))))
+		return keys.some((key) => !isEqual(toRaw(get(fields, key)), toRaw(get(defaults.value, key))))
 	}
 
 	/**
@@ -369,7 +369,7 @@ export function useForm<
 	}
 
 	watch([fields, processing, errors], () => {
-		isDirty.value = !isEqual(toRaw(defaults), toRaw(fields))
+		isDirty.value = !isEqual(toRaw(defaults.value), toRaw(fields))
 
 		if (shouldRemember) {
 			router.history.remember(historyKey, {

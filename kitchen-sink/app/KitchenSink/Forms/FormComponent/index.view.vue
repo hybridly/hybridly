@@ -81,7 +81,7 @@ const controls = reactive({
 			</div>
 
 			<Form
-				#default="{ fields, errors, getError, processing, submit, clearErrors, reset }"
+				#default="{ fields, errors, getError, processing, submit, clearErrors, reset, defaults }"
 				class="flex flex-col gap-4 my-8"
 				:action="route('kitchen-sink.forms.form-component.spell-discovery')"
 				method="post"
@@ -143,6 +143,7 @@ const controls = reactive({
 						form,
 						fields,
 						validation: errors,
+						defaults,
 					}"
 				/>
 			</Form>
