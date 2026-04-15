@@ -48,7 +48,7 @@ final class HybridlyServiceProvider extends ServiceProvider
         $this->registerVersion();
 
         if ($this->app->runningUnitTests()) {
-            $this->registerTestingMacros();
+            $this->configureTesting();
         }
 
         if ($this->app->runningInConsole()) {
@@ -152,9 +152,16 @@ final class HybridlyServiceProvider extends ServiceProvider
         });
     }
 
-    private function registerTestingMacros(): void
+    private function configureTesting(): void
     {
         TestResponse::mixin(new TestResponseMacros());
+
+        // If a user has a made a local build, the middleware will detect its
+        // version and make hard redirects on requests made with x-hybrid.
+        // To prevent that, we should disable versioning during tests.
+        if ($this->configuration->testing->disableVersioning) {
+            $this->app->get(Hybridly::class)->resolveVersionUsing(fn () => null);
+        }
     }
 
     private function registerAbout(): void

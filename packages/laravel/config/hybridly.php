@@ -83,6 +83,7 @@ return [
      * | actually exist on the disk when hybrid testing utilities are used.
      */
     'testing' => [
+        'disable_versioning' => true,
         'ensure_views_exist' => true,
     ],
 ];
