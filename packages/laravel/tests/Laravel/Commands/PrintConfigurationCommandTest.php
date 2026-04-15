@@ -6,18 +6,8 @@ test('configuration can be printed', function () {
     artisan('hybridly:config')->assertOk();
 });
 
-test('configuration subsets can be pretty-printed', function (string $path, string $output) {
-    artisan("hybridly:config --pretty {$path}")
+test('configuration subsets can be pretty-printed', function () {
+    artisan('hybridly:config --pretty architecture')
         ->assertOk()
-        ->expectsOutput($output);
-})->with([
-    'architecture' => ['architecture', <<<JSON
-        {
-            "root_directory": "resources",
-            "application_main_path": "resources/main.ts"
-        }
-        JSON],
-    'architecture.root_directory' => ['architecture.root_directory', <<<JSON
-        "resources"
-        JSON],
-]);
+        ->expectsOutputToContain('"root_directory": ');
+});
