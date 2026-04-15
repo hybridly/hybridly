@@ -3,20 +3,26 @@ import fs from 'node:fs'
 import path from 'node:path'
 import type { ViteOptions } from '../types'
 
-export function generateTsConfig(options: ViteOptions, config: DynamicConfiguration) {
+const COMPILER_OPTIONS = {
+	target: 'esnext',
+	module: 'esnext',
+	moduleResolution: 'bundler',
+	strict: true,
+	skipLibCheck: true,
+	sourceMap: true,
+	resolveJsonModule: true,
+	esModuleInterop: true,
+	rootDir: '../',
+	noImplicitThis: true,
+	noUncheckedIndexedAccess: true,
+	allowSyntheticDefaultImports: true,
+}
+
+export function generateAppTsConfig(options: ViteOptions, config: DynamicConfiguration) {
 	const tsconfig = {
 		compilerOptions: {
-			target: 'esnext',
-			module: 'esnext',
-			moduleResolution: 'bundler',
-			strict: true,
-			skipLibCheck: true,
+			...COMPILER_OPTIONS,
 			jsx: 'preserve',
-			sourceMap: true,
-			resolveJsonModule: true,
-			esModuleInterop: true,
-			rootDir: '../',
-			allowSyntheticDefaultImports: true,
 			lib: [
 				'esnext',
 				'dom',
@@ -40,10 +46,10 @@ export function generateTsConfig(options: ViteOptions, config: DynamicConfigurat
 			},
 		},
 		include: [
+			'./*.d.ts',
+			...config.architecture.namespaces.flatMap((directory) => `../${directory}`),
 			...config.components.views.map(({ path }) => `../${path}`),
 			...config.components.layouts.map(({ path }) => `../${path}`),
-			`../${config.architecture.root_directory}/**/*`,
-			'./**/*.d.ts',
 			...(options.tsconfig?.include ?? []),
 		],
 		exclude: [
@@ -53,6 +59,17 @@ export function generateTsConfig(options: ViteOptions, config: DynamicConfigurat
 	}
 
 	write(JSON.stringify(tsconfig, null, 2), 'tsconfig.json')
+}
+
+export function generateNodeTsConfig(options: ViteOptions, config: DynamicConfiguration) {
+	const tsconfig = {
+		compilerOptions: COMPILER_OPTIONS,
+		include: [
+			'../*.config.ts',
+		],
+	}
+
+	write(JSON.stringify(tsconfig, null, 2), 'tsconfig.node.json')
 }
 
 export function generateLaravelIdeaHelper(config: DynamicConfiguration) {

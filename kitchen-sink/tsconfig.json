@@ -1,4 +1,7 @@
 {
 	"files": [],
-	"references": [{ "path": "./.hybridly/tsconfig.json" }]
+	"references": [
+		{ "path": "./.hybridly/tsconfig.json" },
+		{ "path": "./.hybridly/tsconfig.node.json" }
+	]
 }

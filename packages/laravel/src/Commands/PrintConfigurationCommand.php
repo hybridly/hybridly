@@ -7,6 +7,8 @@ use Hybridly\Architecture\ComponentType;
 use Hybridly\Configuration\Configuration;
 use Hybridly\Support\Version;
 use Illuminate\Console\Command;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 
 final class PrintConfigurationCommand extends Command
 {
@@ -26,6 +28,7 @@ final class PrintConfigurationCommand extends Command
                 'latest' => Version::getLatestVersion(),
             ],
             'architecture' => [
+                'namespaces' => $this->getNamespacesDirectories(),
                 'root_directory' => $config->architecture->rootDirectory,
                 'application_main_path' => $config->architecture->applicationMainPath,
             ],
@@ -56,5 +59,21 @@ final class PrintConfigurationCommand extends Command
         ));
 
         return self::SUCCESS;
+    }
+
+    private function getNamespacesDirectories(): array
+    {
+        $directories = [];
+        $composer = json_decode(file_get_contents(base_path('composer.json')), true);
+
+        foreach (data_get($composer, 'autoload.psr-4', default: []) as $namespace => $paths) {
+            foreach (Arr::wrap($paths) as $path) {
+                if (realpath(base_path($path)) !== false) {
+                    $directories[] = Str::chopStart(base_path($path), base_path('/'));
+                }
+            }
+        }
+
+        return $directories;
     }
 }

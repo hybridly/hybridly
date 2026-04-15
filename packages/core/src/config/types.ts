@@ -8,6 +8,7 @@ export interface DynamicConfiguration {
 		is_latest: boolean
 	}
 	architecture: {
+		namespaces: string[]
 		root_directory: string
 		application_main_path: string
 	}

@@ -2,13 +2,14 @@ import type { DynamicConfiguration } from '@hybridly/core'
 import path from 'node:path'
 import { type Plugin } from 'vite'
 import { CONFIG_PLUGIN_NAME, CONFIG_VIRTUAL_MODULE_ID, RESOLVED_CONFIG_VIRTUAL_MODULE_ID } from '../constants'
-import { generateLaravelIdeaHelper, generateTsConfig, generateVueExtensionFile } from '../typegen'
+import { generateAppTsConfig, generateLaravelIdeaHelper, generateNodeTsConfig, generateVueExtensionFile } from '../typegen'
 import type { ViteOptions } from '../types'
 import { getClientCode } from './client'
 import { loadConfiguration } from './load'
 
 export default (options: ViteOptions, config: DynamicConfiguration): Plugin => {
-	generateTsConfig(options, config)
+	generateAppTsConfig(options, config)
+	generateNodeTsConfig(options, config)
 	generateLaravelIdeaHelper(config)
 	generateVueExtensionFile()
 

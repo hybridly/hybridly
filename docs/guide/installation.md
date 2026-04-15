@@ -180,7 +180,10 @@ Use [`enhanceVue`](../api/utils/initialize-hybridly.md#enhancevue) to register p
 ```json
 {
 	"files": [],
-	"references": [{ "path": "./.hybridly/tsconfig.json" }]
+	"references": [
+		{ "path": "./.hybridly/tsconfig.json" },
+		{ "path": "./.hybridly/tsconfig.node.json" }
+	]
 }
 ```
 
@@ -314,7 +317,10 @@ Your project needs a `tsconfig.json` file to understand objects such as `import.
 ```json
 {
 	"files": [],
-	"references": [{ "path": "./.hybridly/tsconfig.json" }]
+	"references": [
+		{ "path": "./.hybridly/tsconfig.json" },
+		{ "path": "./.hybridly/tsconfig.node.json" }
+	]
 }
 ```
 
