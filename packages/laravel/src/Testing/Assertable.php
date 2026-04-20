@@ -54,9 +54,13 @@ class Assertable extends AssertableJson
         return $instance;
     }
 
-    public function assertViewComponent(string $value = null, bool $shouldExist = null): self
+    public function assertViewComponent(?string $value = null, ?bool $shouldExist = null): self
     {
-        PHPUnit::assertSame($value, $this->view, 'Unexpected hybrid view component.');
+        if (! $value) {
+            $value = $this->view;
+        } else {
+            PHPUnit::assertSame($value, $this->view, 'Unexpected hybrid view component.');
+        }
 
         $ensure_views_exist = (bool) config('hybridly.testing.ensure_views_exist', Configuration::get()->testing->ensureViewsExist);
 
@@ -67,7 +71,7 @@ class Assertable extends AssertableJson
         return $this;
     }
 
-    public function assertDialog(array $properties = null, string $view = null, string $baseUrl = null, string $redirectUrl = null): self
+    public function assertDialog(?array $properties = null, ?string $view = null, ?string $baseUrl = null, ?string $redirectUrl = null): self
     {
         PHPUnit::assertNotNull($this->dialog, 'There is no dialog.');
 
@@ -110,7 +114,7 @@ class Assertable extends AssertableJson
         return $this;
     }
 
-    public function hasProperties(array $keys, string $scope = null): self
+    public function hasProperties(array $keys, ?string $scope = null): self
     {
         $scope ??= 'view.properties';
         $properties = data_get($this->payload, $scope);

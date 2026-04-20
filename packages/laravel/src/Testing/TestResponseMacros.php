@@ -144,6 +144,19 @@ class TestResponseMacros
     }
 
     /**
+     * Asserts that the hybrid response's view exists.
+     */
+    public function assertHybridViewExists(): Closure
+    {
+        return function (): TestResponse {
+            /** @var TestResponse $this */
+            Assertable::fromTestResponse($this)->assertViewComponent(shouldExist: true);
+
+            return $this;
+        };
+    }
+
+    /**
      * Asserts that the hybrid response's dialog view is the expected value.
      */
     public function assertHybridDialog(): Closure
