@@ -10,25 +10,23 @@ import { useQueryParameters } from './query-parameters'
 import type { AvailableHybridRequestOptions, Refinements, SortDirection, ToggleSortOptions, UseRefinements } from './refinements'
 import { useRefinements } from './refinements'
 
-declare global {
-	interface Table<
-		T extends Record<string, any> = any,
-		PaginatorKind extends 'cursor' | 'length-aware' | 'simple' = 'length-aware',
-	> {
-		id: string
-		keyName: string
-		scope?: string
-		columns: Column<T>[]
-		inlineActions: InlineAction[]
-		bulkActions: BulkAction[]
-		records: Array<T>
-		paginator: Omit<
-			PaginatorKind extends 'cursor' ? CursorPaginator<T> : (PaginatorKind extends 'simple' ? SimplePaginator<T> : Paginator<T>),
-			'data'
-		>
-		refinements: Refinements
-		endpoint: string
-	}
+export interface Table<
+	T extends Record<string, any> = any,
+	PaginatorKind extends 'cursor' | 'length-aware' | 'simple' = 'length-aware',
+> {
+	id: string
+	keyName: string
+	scope?: string
+	columns: Column<T>[]
+	inlineActions: InlineAction[]
+	bulkActions: BulkAction[]
+	records: Array<T>
+	paginator: Omit<
+		PaginatorKind extends 'cursor' ? CursorPaginator<T> : (PaginatorKind extends 'simple' ? SimplePaginator<T> : Paginator<T>),
+		'data'
+	>
+	refinements: Refinements
+	endpoint: string
 }
 
 export interface Column<T extends object = never> {
