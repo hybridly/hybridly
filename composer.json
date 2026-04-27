@@ -15,7 +15,7 @@
         "spatie/php-structure-discoverer": "^2.0"
     },
     "require-dev": {
-        "carthage-software/mago": "^0.24.5",
+        "carthage-software/mago": "0.24.5",
         "guzzlehttp/promises": "^2.3.0",
         "laravel/octane": "^2.13.5",
         "nunomaduro/collision": "^8.8.3",
