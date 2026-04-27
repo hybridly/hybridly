@@ -239,6 +239,58 @@ test('it can set defaults only for selected useForm fields on success', async ({
 	expect(form.fields.title).toBe('Mage')
 })
 
+test('it can automatically submit useForm on field changes', async ({ expect }) => {
+	server.resetHandlers(mockSuccessfulUrl('http://localhost.test/navigation', 'post'))
+
+	const navigateSpy = vi.spyOn(router, 'navigate')
+
+	const form = useForm({
+		url: 'http://localhost.test/navigation',
+		automaticallySubmit: true,
+		fields: {
+			foo: 'bar',
+		},
+	})
+
+	await delay(120)
+	expect(navigateSpy).toBeCalledTimes(0)
+
+	form.fields.foo = 'baz'
+	await delay(120)
+
+	expect(navigateSpy).toBeCalledTimes(1)
+	const [request] = navigateSpy.mock.calls.at(0) ?? []
+	expect(request?.data).toEqual({ foo: 'baz' })
+})
+
+test('it can automatically submit useForm with option overrides', async ({ expect }) => {
+	server.resetHandlers(mockSuccessfulUrl('http://localhost.test/navigation', 'post'))
+
+	const navigateSpy = vi.spyOn(router, 'navigate')
+
+	const form = useForm({
+		url: 'http://localhost.test/navigation',
+		method: 'POST',
+		automaticallySubmit: {
+			method: 'PATCH',
+			resetOnSuccess: false,
+			debounce: 10,
+		},
+		fields: {
+			foo: 'bar',
+		},
+	})
+
+	form.fields.foo = 'baz'
+	await delay(40)
+
+	expect(navigateSpy).toBeCalledTimes(1)
+	const [request] = navigateSpy.mock.calls.at(0) ?? []
+	expect(request?.method).toBe('POST')
+	expect(request?.data).toEqual({ foo: 'baz', _method: 'PATCH' })
+	expect(form.fields.foo).toBe('baz')
+})
+
 test('it submits nested data from native form inputs', async ({ expect }) => {
 	server.resetHandlers(mockSuccessfulUrl('http://localhost.test/users', 'post'))
 

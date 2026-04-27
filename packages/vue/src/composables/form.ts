@@ -3,6 +3,7 @@ import type { HybridRequestOptions, PendingHybridRequest, Progress, UrlResolvabl
 import { router } from '@hybridly/core'
 import { merge } from '@hybridly/utils'
 import { get, set, unset } from 'es-toolkit/compat'
+import { debounce } from 'es-toolkit/function'
 import { cloneDeep } from 'es-toolkit/object'
 import { isEqual } from 'es-toolkit/predicate'
 import type { DeepReadonly } from 'vue'
@@ -35,10 +36,8 @@ export type DefaultFormOptions = Pick<
 	| 'useFormData'
 >
 
-interface FormOptions<T extends SearchableObject> extends Omit<HybridRequestOptions, 'data' | 'url' | 'reset'> {
-	fields: T
+export type FormSubmitOptions<T extends SearchableObject> = Omit<HybridRequestOptions, 'data' | 'url' | 'reset'> & {
 	url?: UrlResolvable | (() => UrlResolvable)
-	key?: string | false
 	/**
 	 * Defines the delay after which the `recentlySuccessful` and `recentlyFailed` variables are reset to `false`.
 	 */
@@ -64,6 +63,32 @@ interface FormOptions<T extends SearchableObject> extends Omit<HybridRequestOpti
 	transform?: (fields: T) => any
 }
 
+type FormAutomaticallySubmitOptions<T extends SearchableObject> =
+	| true
+	| (FormSubmitOptions<T> & {
+		/**
+		 * Debounce delay in milliseconds before submitting automatically.
+		 * @default 100
+		 */
+		debounce?: number
+
+		/**
+		 * Whether to immediately submit the form on any change. If `false`, submits after the `debounce` delay.
+		 * @default true
+		 */
+		immediate?: boolean
+	})
+
+interface FormOptions<T extends SearchableObject> extends FormSubmitOptions<T> {
+	fields: T
+	key?: string | false
+	/**
+	 * Automatically submits the form when fields change.
+	 * Pass `true` to use defaults or an object to customize submit overrides and debounce delay.
+	 */
+	automaticallySubmit?: FormAutomaticallySubmitOptions<T>
+}
+
 export interface FormReturn<T extends SearchableObject, P extends Path<T> & string = Path<T> & string> {
 	resetFields: (...keys: P[]) => void
 	reset: () => void
@@ -76,7 +101,7 @@ export interface FormReturn<T extends SearchableObject, P extends Path<T> & stri
 	clearError: (key: P) => void
 	setDefault: (newDefault: Partial<T>) => void
 	hasDirty: (...keys: P[]) => boolean
-	submit: (optionsOverrides?: Omit<FormOptions<T>, 'fields' | 'key'>) => Promise<any>
+	submit: (optionsOverrides?: FormSubmitOptions<T>) => Promise<any>
 	hasErrors: boolean
 	defaults: DeepReadonly<T>
 	loaded: DeepReadonly<T>
@@ -233,13 +258,13 @@ export function useForm<
 	/**
 	 * Submits the form.
 	 */
-	function submit(optionsOverrides?: Omit<FormOptions<T>, 'fields' | 'key'>) {
-		const { fields: _f, key: _k, ...optionsWithoutFields } = options
+	function submit(optionsOverrides?: FormSubmitOptions<T>) {
+		const { fields: _f, key: _k, automaticallySubmit: _as, ...optionsWithoutFields } = options
 		const resolvedOptions = optionsOverrides
 			? merge(optionsWithoutFields, optionsOverrides, { mergePlainObjects: true })
 			: optionsWithoutFields
 
-		const optionsWithOverrides = merge<FormOptions<T>>(formStore.getDefaultConfig(), resolvedOptions, { mergePlainObjects: true })
+		const optionsWithOverrides = merge<FormSubmitOptions<T>>(formStore.getDefaultConfig(), resolvedOptions, { mergePlainObjects: true })
 		const {
 			timeout,
 			resetOnSuccess,
@@ -318,6 +343,29 @@ export function useForm<
 				},
 			},
 		})
+	}
+
+	if (options.automaticallySubmit) {
+		const submitOptions: FormSubmitOptions<T> | undefined = options.automaticallySubmit === true
+			? undefined
+			: (() => {
+				const { debounce: _debounce, ...submitOptions } = options.automaticallySubmit
+				return submitOptions
+			})()
+
+		const automaticallySubmitOptions: FormAutomaticallySubmitOptions<T> = options.automaticallySubmit === true
+			? { debounce: 100, immediate: true }
+			: options.automaticallySubmit
+
+		const submitDebounced = debounce(() => {
+			if (!isDirty.value) {
+				return
+			}
+
+			submit(submitOptions)
+		}, automaticallySubmitOptions.debounce ?? 100)
+
+		watch(() => fields, submitDebounced, { deep: true, immediate: automaticallySubmitOptions.immediate ?? true })
 	}
 
 	/**
