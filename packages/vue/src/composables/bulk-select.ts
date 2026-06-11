@@ -12,6 +12,36 @@ export interface BulkSelection<T = any> {
 }
 // #endregion bulk-selection
 
+/**
+ * Returns the inclusive range between two records in the given order.
+ *
+ * This is useful for implementing shift-click bulk selection: keep track of the last selected anchor,
+ * then pass the currently visible record identifiers and the clicked target identifier to this helper.
+ * If the target is not in the list, an empty range is returned. If the anchor is missing, only the target is returned.
+ */
+export function getBulkSelectionRange<T>(records: readonly T[], anchor: T | undefined, target: T): T[] {
+	const targetIndex = records.indexOf(target)
+
+	if (targetIndex === -1) {
+		return []
+	}
+
+	if (anchor === undefined) {
+		return [target]
+	}
+
+	const anchorIndex = records.indexOf(anchor)
+
+	if (anchorIndex === -1) {
+		return [target]
+	}
+
+	return records.slice(
+		Math.min(anchorIndex, targetIndex),
+		Math.max(anchorIndex, targetIndex) + 1,
+	)
+}
+
 export function useBulkSelect<T = any>() {
 	const selection = ref<BulkSelection<T>>({
 		all: false,
