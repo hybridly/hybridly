@@ -147,7 +147,7 @@ final class HybridlyServiceProvider extends ServiceProvider
             $compiler->directive('vite', fn (?string $expression = null) => \sprintf(
                 '<?php echo app(%s::class)(%s); ?>',
                 \Illuminate\Foundation\Vite::class,
-                $expression ?: ('"' . $this->configuration->architecture->applicationMainPath . '"'),
+                $expression ?: '"' . $this->configuration->architecture->applicationMainPath . '"',
             ));
         });
     }

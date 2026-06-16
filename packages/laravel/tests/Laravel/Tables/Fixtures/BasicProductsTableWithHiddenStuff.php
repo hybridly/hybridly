@@ -26,8 +26,12 @@ class BasicProductsTableWithHiddenStuff extends Table
     public function defineActions(): array
     {
         return [
-            BulkAction::make('say_our_names')->action(fn (Collection $records) => $records->each(fn (Product $record) => $record->name))->hidden(),
-            InlineAction::make('say_my_name')->action(fn (Product $record) => $record->name)->hidden(),
+            BulkAction::make('say_our_names')
+                ->action(fn (Collection $records) => $records->each(fn (Product $record) => $record->name))
+                ->hidden(),
+            InlineAction::make('say_my_name')
+                ->action(fn (Product $record) => $record->name)
+                ->hidden(),
         ];
     }
 

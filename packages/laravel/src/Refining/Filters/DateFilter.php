@@ -26,18 +26,21 @@ class DateFilter extends BaseFilter
     {
         $this->type('date');
 
-        $this->supportedOperators(fn () => $this->isTimeframe
-            ? [
-                Operator::BETWEEN,
-                Operator::NOT_BETWEEN,
-            ] : [
-                Operator::EQUALS,
-                Operator::NOT_EQUALS,
-                Operator::AFTER,
-                Operator::BEFORE,
-                Operator::IS_NULL,
-                Operator::IS_NOT_NULL,
-            ]);
+        $this->supportedOperators(fn () => (
+            $this->isTimeframe
+                ? [
+                    Operator::BETWEEN,
+                    Operator::NOT_BETWEEN,
+                ]
+                : [
+                    Operator::EQUALS,
+                    Operator::NOT_EQUALS,
+                    Operator::AFTER,
+                    Operator::BEFORE,
+                    Operator::IS_NULL,
+                    Operator::IS_NOT_NULL,
+                ]
+        ));
 
         $this->defaultOperator(fn () => $this->isTimeframe ? Operator::BETWEEN : Operator::EQUALS);
 
@@ -313,7 +316,7 @@ class DateFilter extends BaseFilter
             ['start' => $startDate, 'end' => $endDate] = $dates;
 
             foreach ($this->suggestions as $suggestion) {
-                if (! ($suggestion instanceof TimeframeSuggestion)) {
+                if (! $suggestion instanceof TimeframeSuggestion) {
                     continue;
                 }
 

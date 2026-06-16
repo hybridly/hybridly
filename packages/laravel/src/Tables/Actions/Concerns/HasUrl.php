@@ -6,10 +6,10 @@ use Closure;
 
 trait HasUrl
 {
-    protected null|array|string|\Closure $url = null;
+    protected array|string|\Closure|null $url = null;
     protected mixed $parameters = [];
 
-    public function url(null|string|array|\Closure $url, mixed $parameters = []): static
+    public function url(string|array|\Closure|null $url, mixed $parameters = []): static
     {
         $this->url = $url;
         $this->parameters = $parameters;

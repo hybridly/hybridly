@@ -4,7 +4,7 @@ namespace Hybridly\Refining\Filters\Concerns;
 
 trait HasType
 {
-    protected null|string|\Closure $type = null;
+    protected string|\Closure|null $type = null;
 
     public function type(string|\Closure $type): static
     {

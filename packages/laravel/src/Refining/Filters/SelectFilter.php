@@ -18,12 +18,12 @@ class SelectFilter extends BaseFilter
 
     protected ?Closure $query = null;
     protected array $searchColumns = [];
-    protected null|Closure|bool $isMultiple = false;
+    protected Closure|bool|null $isMultiple = false;
     protected false|Closure|int $preloadQueryBuilderOptionsUsing = false;
     protected ?Closure $formatSelectedOptionsLabelUsing = null;
     protected ?Closure $formatSelectedOptionLabelUsing = null;
     protected ?Closure $resolveBuilderOptionFromKeyUsing = null;
-    protected null|Closure|string $selectedOptionsLabel = null;
+    protected Closure|string|null $selectedOptionsLabel = null;
     protected Closure|false $searchBuilderOptionsUsing = false;
     protected Closure|bool $preventProvidingOptions = false;
     protected ?Closure $formatOptionLabelUsing = null;
@@ -38,8 +38,8 @@ class SelectFilter extends BaseFilter
     protected ?Closure $relationshipQuery = null;
     protected bool $hasEmptyRelationshipOption = false;
     protected Closure|string $emptyRelationshipOptionLabel = 'None';
-    protected null|Closure|string $emptyLabel = null;
-    protected null|Closure|string $noSearchResultLabel = null;
+    protected Closure|string|null $emptyLabel = null;
+    protected Closure|string|null $noSearchResultLabel = null;
 
     /**
      * List of all available options.
@@ -736,7 +736,7 @@ class SelectFilter extends BaseFilter
         return true;
     }
 
-    protected function getSelectedOptionsLabel(): null|array|string
+    protected function getSelectedOptionsLabel(): array|string|null
     {
         if (! $this->filter) {
             return null;
@@ -755,14 +755,14 @@ class SelectFilter extends BaseFilter
         ]);
     }
 
-    protected function parseQueryValue(null|int|string|array $values): array
+    protected function parseQueryValue(int|string|array|null $values): array
     {
         if (! is_array($values)) {
             $values = [$values];
         }
 
         return collect($values)
-            ->mapWithKeys(function (null|int|string|Model|UnitEnum $key) {
+            ->mapWithKeys(function (int|string|Model|UnitEnum|null $key) {
                 if ($key === null) {
                     return [];
                 }

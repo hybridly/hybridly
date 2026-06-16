@@ -55,7 +55,7 @@ final class PrintConfigurationCommand extends Command
 
         $this->output->write(json_encode(
             value: $configuration,
-            flags: $pretty ? (\JSON_PRETTY_PRINT | \JSON_UNESCAPED_SLASHES) : 0,
+            flags: $pretty ? \JSON_PRETTY_PRINT | \JSON_UNESCAPED_SLASHES : 0,
         ));
 
         return self::SUCCESS;

@@ -75,7 +75,10 @@ it('filters according to the given callback', function () {
 
     expect($filters)
         ->first()
-        ->name->toBe('AirPods (2nd generation)')->count()->toBe(2);
+        ->name
+        ->toBe('AirPods (2nd generation)')
+        ->count()
+        ->toBe(2);
 });
 
 it('injects parameters by type and by name', function () {
@@ -106,7 +109,10 @@ it('injects parameters by type and by name', function () {
 
     expect($filters)
         ->first()
-        ->name->toBe('AirPods (2nd generation)')->count()->toBe(2);
+        ->name
+        ->toBe('AirPods (2nd generation)')
+        ->count()
+        ->toBe(2);
 });
 
 it('accepts invokable classes by fqcn', function () {
@@ -123,7 +129,10 @@ it('accepts invokable classes by fqcn', function () {
 
     expect($filters)
         ->first()
-        ->name->toBe('AirPods Pro')->count()->toBe(1);
+        ->name
+        ->toBe('AirPods Pro')
+        ->count()
+        ->toBe(1);
 });
 
 it('uses the type of the invokable class', function () {

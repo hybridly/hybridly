@@ -45,7 +45,10 @@ test('it can filter with equals operator', function () {
 
     expect($filters)
         ->first()
-        ->price->toBe(300)->count()->toBe(1);
+        ->price
+        ->toBe(300)
+        ->count()
+        ->toBe(1);
 });
 
 test('it can filter with not equals operator', function () {
@@ -56,12 +59,15 @@ test('it can filter with not equals operator', function () {
         ],
     );
 
-    expect($filters->get())->sequence(
-        fn (Expectation $product) => $product->price->toBe(100),
-        fn (Expectation $product) => $product->price->toBe(200),
-        fn (Expectation $product) => $product->price->toBe(400),
-        fn (Expectation $product) => $product->price->toBe(500),
-    )->count()->toBe(4);
+    expect($filters->get())
+        ->sequence(
+            fn (Expectation $product) => $product->price->toBe(100),
+            fn (Expectation $product) => $product->price->toBe(200),
+            fn (Expectation $product) => $product->price->toBe(400),
+            fn (Expectation $product) => $product->price->toBe(500),
+        )
+        ->count()
+        ->toBe(4);
 });
 
 test('it can filter with greater than operator', function () {
@@ -72,10 +78,13 @@ test('it can filter with greater than operator', function () {
         ],
     );
 
-    expect($filters->get())->sequence(
-        fn (Expectation $product) => $product->price->toBe(400),
-        fn (Expectation $product) => $product->price->toBe(500),
-    )->count()->toBe(2);
+    expect($filters->get())
+        ->sequence(
+            fn (Expectation $product) => $product->price->toBe(400),
+            fn (Expectation $product) => $product->price->toBe(500),
+        )
+        ->count()
+        ->toBe(2);
 });
 
 test('it can filter with greater than or equal operator', function () {
@@ -86,11 +95,14 @@ test('it can filter with greater than or equal operator', function () {
         ],
     );
 
-    expect($filters->get())->sequence(
-        fn (Expectation $product) => $product->price->toBe(300),
-        fn (Expectation $product) => $product->price->toBe(400),
-        fn (Expectation $product) => $product->price->toBe(500),
-    )->count()->toBe(3);
+    expect($filters->get())
+        ->sequence(
+            fn (Expectation $product) => $product->price->toBe(300),
+            fn (Expectation $product) => $product->price->toBe(400),
+            fn (Expectation $product) => $product->price->toBe(500),
+        )
+        ->count()
+        ->toBe(3);
 });
 
 test('it can filter with less than operator', function () {
@@ -101,10 +113,13 @@ test('it can filter with less than operator', function () {
         ],
     );
 
-    expect($filters->get())->sequence(
-        fn (Expectation $product) => $product->price->toBe(100),
-        fn (Expectation $product) => $product->price->toBe(200),
-    )->count()->toBe(2);
+    expect($filters->get())
+        ->sequence(
+            fn (Expectation $product) => $product->price->toBe(100),
+            fn (Expectation $product) => $product->price->toBe(200),
+        )
+        ->count()
+        ->toBe(2);
 });
 
 test('it can filter with less than or equal operator', function () {
@@ -115,11 +130,14 @@ test('it can filter with less than or equal operator', function () {
         ],
     );
 
-    expect($filters->get())->sequence(
-        fn (Expectation $product) => $product->price->toBe(100),
-        fn (Expectation $product) => $product->price->toBe(200),
-        fn (Expectation $product) => $product->price->toBe(300),
-    )->count()->toBe(3);
+    expect($filters->get())
+        ->sequence(
+            fn (Expectation $product) => $product->price->toBe(100),
+            fn (Expectation $product) => $product->price->toBe(200),
+            fn (Expectation $product) => $product->price->toBe(300),
+        )
+        ->count()
+        ->toBe(3);
 });
 
 test('it can filter with between operator', function () {
@@ -130,11 +148,14 @@ test('it can filter with between operator', function () {
         ],
     );
 
-    expect($filters->get())->sequence(
-        fn (Expectation $product) => $product->price->toBe(200),
-        fn (Expectation $product) => $product->price->toBe(300),
-        fn (Expectation $product) => $product->price->toBe(400),
-    )->count()->toBe(3);
+    expect($filters->get())
+        ->sequence(
+            fn (Expectation $product) => $product->price->toBe(200),
+            fn (Expectation $product) => $product->price->toBe(300),
+            fn (Expectation $product) => $product->price->toBe(400),
+        )
+        ->count()
+        ->toBe(3);
 });
 
 test('it can filter with not between operator', function () {
@@ -145,10 +166,13 @@ test('it can filter with not between operator', function () {
         ],
     );
 
-    expect($filters->get())->sequence(
-        fn (Expectation $product) => $product->price->toBe(100),
-        fn (Expectation $product) => $product->price->toBe(500),
-    )->count()->toBe(2);
+    expect($filters->get())
+        ->sequence(
+            fn (Expectation $product) => $product->price->toBe(100),
+            fn (Expectation $product) => $product->price->toBe(500),
+        )
+        ->count()
+        ->toBe(2);
 });
 
 test('it can filter with is null operator', function () {
@@ -163,7 +187,10 @@ test('it can filter with is null operator', function () {
 
     expect($filters)
         ->first()
-        ->price->toBeNull()->count()->toBe(1);
+        ->price
+        ->toBeNull()
+        ->count()
+        ->toBe(1);
 });
 
 test('it can filter with is not null operator', function () {

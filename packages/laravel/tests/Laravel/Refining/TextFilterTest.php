@@ -45,10 +45,13 @@ test('it can use a different operator', function () {
         ],
     );
 
-    expect($filters->get())->sequence(
-        fn (Expectation $product) => $product->name->toBe('AirPods Pro'),
-        fn (Expectation $product) => $product->name->toBe('Macbook Pro M1'),
-    )->count()->toBe(2);
+    expect($filters->get())
+        ->sequence(
+            fn (Expectation $product) => $product->name->toBe('AirPods Pro'),
+            fn (Expectation $product) => $product->name->toBe('Macbook Pro M1'),
+        )
+        ->count()
+        ->toBe(2);
 });
 
 test('it only includes records that begin with the specified value', function () {
@@ -61,7 +64,10 @@ test('it only includes records that begin with the specified value', function ()
 
     expect($filters)
         ->first()
-        ->name->toBe('Macbook Pro M1')->count()->toBe(1);
+        ->name
+        ->toBe('Macbook Pro M1')
+        ->count()
+        ->toBe(1);
 });
 
 test('it only includes records that end with the specified value', function () {
@@ -74,7 +80,10 @@ test('it only includes records that end with the specified value', function () {
 
     expect($filters)
         ->first()
-        ->name->toBe('Macbook Pro M1')->count()->toBe(1);
+        ->name
+        ->toBe('Macbook Pro M1')
+        ->count()
+        ->toBe(1);
 });
 
 test('it only includes records that contain the specified value', function () {
@@ -85,10 +94,13 @@ test('it only includes records that contain the specified value', function () {
         ],
     );
 
-    expect($filters->get())->sequence(
-        fn (Expectation $product) => $product->name->toBe('AirPods'),
-        fn (Expectation $product) => $product->name->toBe('AirPods Pro'),
-    )->count()->toBe(2);
+    expect($filters->get())
+        ->sequence(
+            fn (Expectation $product) => $product->name->toBe('AirPods'),
+            fn (Expectation $product) => $product->name->toBe('AirPods Pro'),
+        )
+        ->count()
+        ->toBe(2);
 });
 
 test('it can use a not contains operator', function () {
@@ -101,7 +113,10 @@ test('it can use a not contains operator', function () {
 
     expect($filters->get())
         ->first()
-        ->name->toBe('Macbook Pro M1')->count()->toBe(1);
+        ->name
+        ->toBe('Macbook Pro M1')
+        ->count()
+        ->toBe(1);
 });
 
 test('order by statements can be unqualified', function () {
@@ -128,7 +143,10 @@ test('it can filter with is null operator', function () {
 
     expect($filters)
         ->first()
-        ->name->toBeNull()->count()->toBe(1);
+        ->name
+        ->toBeNull()
+        ->count()
+        ->toBe(1);
 });
 
 test('it can filter with is not null operator', function () {

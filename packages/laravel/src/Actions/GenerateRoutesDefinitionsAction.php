@@ -76,8 +76,8 @@ final readonly class GenerateRoutesDefinitionsAction
             }
 
             $routes[$name] = [
-                ...(($route['uri'] ?? null) ? ['uri' => $route['uri']] : []),
-                ...(($route['domain'] ?? null) ? ['domain' => $route['domain']] : []),
+                ...($route['uri'] ?? null ? ['uri' => $route['uri']] : []),
+                ...($route['domain'] ?? null ? ['domain' => $route['domain']] : []),
                 'wheres' => $route['wheres'] ?? [],
                 'bindings' => $bindings,
             ];

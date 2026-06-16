@@ -221,7 +221,7 @@ final class HybridResponseFactory implements HybridResponse
 
         App::instance('request', $request);
 
-        $response = (new SubstituteBindings($this->router))->handle(
+        $response = new SubstituteBindings($this->router)->handle(
             request: $request,
             next: fn () => $route->run(),
         );
@@ -230,7 +230,7 @@ final class HybridResponseFactory implements HybridResponse
             return $this->resolveBaseView($response->getTargetUrl(), $request);
         }
 
-        if (! ($response instanceof self)) {
+        if (! $response instanceof self) {
             throw new \LogicException(\sprintf('Target URL [%s] does not return a hybrid response.', $targetUrl));
         }
 
@@ -316,7 +316,7 @@ final class HybridResponseFactory implements HybridResponse
             return [];
         }
 
-        if (! ($errors instanceof ViewErrorBag)) {
+        if (! $errors instanceof ViewErrorBag) {
             return [];
         }
 

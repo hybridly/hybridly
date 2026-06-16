@@ -228,11 +228,11 @@ it('does not include deferred mergeable properties in mergeable config on initia
 it('includes deferred mergeable properties in mergeable config on partial loads', function () {
     $payload = resolve(HybridResponseFactory::class)
         ->withView('users.edit', [
-            'feed' => (new Deferred(
+            'feed' => new Deferred(
                 fn () => [
                     ['id' => 1, 'label' => 'First'],
                 ],
-            ))->merge(uniqueBy: 'id', prepend: true),
+            )->merge(uniqueBy: 'id', prepend: true),
             'nested' => [
                 'items' => new Deferred(fn () => [
                     ['id' => 2, 'label' => 'Second'],

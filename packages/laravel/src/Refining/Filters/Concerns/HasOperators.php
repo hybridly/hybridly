@@ -17,7 +17,7 @@ trait HasOperators
      */
     public function supportedOperators(Closure|array|Operator $operators): static
     {
-        $this->supportedOperators = ($operators instanceof Operator) ? [$operators] : $operators;
+        $this->supportedOperators = $operators instanceof Operator ? [$operators] : $operators;
 
         return $this;
     }

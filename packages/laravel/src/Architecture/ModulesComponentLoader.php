@@ -56,7 +56,7 @@ final class ModulesComponentLoader implements ComponentLoader
                 default => null,
             };
 
-            if (! ($type instanceof ComponentType)) {
+            if (! $type instanceof ComponentType) {
                 continue;
             }
 

@@ -17,7 +17,7 @@ class TestResponseMacros
      */
     public function hdd(): Closure
     {
-        return function (null|string|int $path = null): TestResponse {
+        return function (string|int|null $path = null): TestResponse {
             /** @var TestResponse $this */
             try {
                 $response = Assertable::fromTestResponse($this);

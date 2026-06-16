@@ -56,10 +56,12 @@ final class PropertiesResolver
 
             $deferred = collect($deferred)
                 ->groupBy('group')
-                ->map->pluck('key')->toArray();
+                ->map
+                ->pluck('key')
+                ->toArray();
 
             // Additionally, we want to exclude properties that should not be loaded on first load.
-            $properties = filter_recursive($properties, static fn ($property) => ! ($property instanceof IgnoreFirstLoad));
+            $properties = filter_recursive($properties, static fn ($property) => ! $property instanceof IgnoreFirstLoad);
         }
 
         // During partial requests, the client may send a reset intent to prevent mergeable
@@ -80,9 +82,11 @@ final class PropertiesResolver
             }
 
             if ($value instanceof Mergeable) {
-                return $value->shouldMerge()
-                    ? [$path, $value->shouldPrepend(), $value->uniqueBy(), $value->paths()]
-                    : false;
+                return (
+                    $value->shouldMerge()
+                        ? [$path, $value->shouldPrepend(), $value->uniqueBy(), $value->paths()]
+                        : false
+                );
             }
 
             return false;

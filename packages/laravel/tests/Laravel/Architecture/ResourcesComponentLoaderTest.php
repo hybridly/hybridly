@@ -17,7 +17,7 @@ test('resources component loader discovers views and layouts recursively', funct
             'ignored.ts',
         ],
         function () {
-            $components = (new ResourcesComponentLoader())->load();
+            $components = new ResourcesComponentLoader()->load();
 
             expect($components[0])->identifier->toBe('plain');
             expect($components[0])->type->toBe(ComponentType::VIEW);

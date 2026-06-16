@@ -126,7 +126,7 @@ class TernaryFilter extends BaseFilter
     /**
      * Defines the labels for the true and false states.
      */
-    public function labels(null|string|\Closure $true = null, null|string|\Closure $false = null, null|string|\Closure $placeholder = null): static
+    public function labels(string|\Closure|null $true = null, string|\Closure|null $false = null, string|\Closure|null $placeholder = null): static
     {
         if ($true !== null) {
             $this->trueLabel($true);

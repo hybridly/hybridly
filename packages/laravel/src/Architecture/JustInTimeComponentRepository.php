@@ -25,7 +25,7 @@ final class JustInTimeComponentRepository implements ComponentRepository
 
     public function has(Component|string $component): bool
     {
-        $identifier = ($component instanceof Component)
+        $identifier = $component instanceof Component
             ? $component->identifier
             : $component;
 

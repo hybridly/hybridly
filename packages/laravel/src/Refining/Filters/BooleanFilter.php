@@ -121,7 +121,7 @@ class BooleanFilter extends BaseFilter
     /**
      * Defines the labels for the true and false states.
      */
-    public function labels(null|string|\Closure $true = null, null|string|\Closure $false = null): static
+    public function labels(string|\Closure|null $true = null, string|\Closure|null $false = null): static
     {
         if ($true !== null) {
             $this->trueLabel($true);

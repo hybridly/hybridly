@@ -86,7 +86,10 @@ function mock_refiner(array $refiners, ?array $query = null, ?\Closure $callback
         $request->query->add($query);
     }
 
-    app()->when(Refine::class)->needs(Request::class)->give(fn () => $request);
+    app()
+        ->when(Refine::class)
+        ->needs(Request::class)
+        ->give(fn () => $request);
 
     $refine = Refine::query($classOrQuery)->with($refiners);
 

@@ -4,6 +4,4 @@ namespace Hybridly\Exceptions;
 
 use Throwable;
 
-interface HybridlyException extends Throwable
-{
-}
+interface HybridlyException extends Throwable {}

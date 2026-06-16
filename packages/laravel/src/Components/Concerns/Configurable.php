@@ -24,7 +24,7 @@ trait Configurable
         $this->setUp();
 
         foreach (static::$configurations as $classToConfigure => $configurationCallbacks) {
-            if (! ($this instanceof $classToConfigure)) {
+            if (! $this instanceof $classToConfigure) {
                 continue;
             }
 

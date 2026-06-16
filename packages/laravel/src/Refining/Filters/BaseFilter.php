@@ -98,9 +98,7 @@ abstract class BaseFilter extends Components\Component implements Refiner, Filte
 
     protected function resolveDefaultClosureDependencyForEvaluationByType(string $parameterType): array
     {
-        return match ($parameterType) {
-            default => [],
-        };
+        return match ($parameterType) { default => [] };
     }
 
     protected function resolveDefaultClosureDependencyForEvaluationByName(string $parameterName): array

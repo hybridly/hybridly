@@ -38,7 +38,10 @@ it('filters out deleted products when `trashed` is not set', function () {
 
     expect($filters)
         ->first()
-        ->deleted_at->toBeNull()->count()->toBe(1);
+        ->deleted_at
+        ->toBeNull()
+        ->count()
+        ->toBe(1);
 });
 
 it('filters out non-deleted products when `trashed` is set to `only`', function () {
@@ -54,7 +57,10 @@ it('filters out non-deleted products when `trashed` is set to `only`', function 
 
     expect($filters)
         ->first()
-        ->deleted_at->toBeInstanceOf(CarbonInterface::class)->count()->toBe(1);
+        ->deleted_at
+        ->toBeInstanceOf(CarbonInterface::class)
+        ->count()
+        ->toBe(1);
 });
 
 it('includes deleted products when `trashed` is set to `with`', function () {
@@ -84,5 +90,8 @@ it('ignores the filter when `trashed` is set to an unknown value', function () {
 
     expect($filters)
         ->first()
-        ->deleted_at->toBeNull()->count()->toBe(1);
+        ->deleted_at
+        ->toBeNull()
+        ->count()
+        ->toBe(1);
 });

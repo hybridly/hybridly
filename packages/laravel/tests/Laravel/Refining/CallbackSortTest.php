@@ -26,7 +26,10 @@ test('sorts according to the given callback', function () {
 
     expect($sorts)
         ->first()
-        ->name->toBe('AirPods Pro')->count()->toBe(3);
+        ->name
+        ->toBe('AirPods Pro')
+        ->count()
+        ->toBe(3);
 });
 
 it('accepts invokable classes', function () {
@@ -39,5 +42,8 @@ it('accepts invokable classes', function () {
 
     expect($sorts)
         ->first()
-        ->name->toBe('AirPods Pro')->count()->toBe(3);
+        ->name
+        ->toBe('AirPods Pro')
+        ->count()
+        ->toBe(3);
 });

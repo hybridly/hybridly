@@ -116,7 +116,10 @@ test('sorts key is globally configurable', function () {
 
     expect($sorts)
         ->first()
-        ->name->toBe('Macbook Pro M1')->count()->toBe(3);
+        ->name
+        ->toBe('Macbook Pro M1')
+        ->count()
+        ->toBe(3);
 });
 
 test('sorts key is locally configurable', function () {
@@ -129,7 +132,10 @@ test('sorts key is locally configurable', function () {
 
     expect($sorts)
         ->first()
-        ->name->toBe('Macbook Pro M1')->count()->toBe(3);
+        ->name
+        ->toBe('Macbook Pro M1')
+        ->count()
+        ->toBe(3);
 });
 
 test('sorts keys respect the scope', function () {
@@ -144,7 +150,10 @@ test('sorts keys respect the scope', function () {
 
     expect($sorts)
         ->first()
-        ->name->toBe('Macbook Pro M1')->count()->toBe(3);
+        ->name
+        ->toBe('Macbook Pro M1')
+        ->count()
+        ->toBe(3);
 });
 
 test('`next` toggles between possible sorts', function (?string $query, ?string $next) {

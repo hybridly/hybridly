@@ -21,7 +21,9 @@ test('external responses to non-hybridly requests', function () {
         ->toBeInstanceOf(RedirectResponse::class)
         ->getStatusCode()
         ->toBe(Response::HTTP_FOUND)
-        ->headers->all()->toMatchArray([
+        ->headers
+        ->all()
+        ->toMatchArray([
             'location' => ['https://google.fr/'],
         ]);
 });
@@ -33,7 +35,9 @@ test('external responses to non-hybridly requests with custom headers', function
         ->toBeInstanceOf(RedirectResponse::class)
         ->getStatusCode()
         ->toBe(Response::HTTP_FOUND)
-        ->headers->all()->toMatchArray([
+        ->headers
+        ->all()
+        ->toMatchArray([
             'location' => ['https://google.fr/'],
             'x-robots-tag' => ['noindex, nofollow'],
         ]);
@@ -46,7 +50,9 @@ test('external responses to hybridly requests', function () {
         ->toBeInstanceOf(Response::class)
         ->getStatusCode()
         ->toBe(Response::HTTP_CONFLICT)
-        ->headers->all()->toMatchArray([
+        ->headers
+        ->all()
+        ->toMatchArray([
             Header::EXTERNAL => ['https://google.fr/'],
         ]);
 });
@@ -58,7 +64,9 @@ test('external responses to hybridly requests with custom headers', function () 
         ->toBeInstanceOf(Response::class)
         ->getStatusCode()
         ->toBe(Response::HTTP_CONFLICT)
-        ->headers->all()->toMatchArray([
+        ->headers
+        ->all()
+        ->toMatchArray([
             Header::EXTERNAL => ['https://google.fr/'],
             'x-robots-tag' => ['noindex, nofollow'],
         ]);
@@ -73,7 +81,9 @@ test('external responses with redirect responses as input', function () {
         ->toBeInstanceOf(Response::class)
         ->getStatusCode()
         ->toBe(Response::HTTP_CONFLICT)
-        ->headers->all()->toMatchArray([
+        ->headers
+        ->all()
+        ->toMatchArray([
             Header::EXTERNAL => ['https://google.fr/'],
         ]);
 });

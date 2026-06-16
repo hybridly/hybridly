@@ -86,7 +86,7 @@ final class HybridExceptionHandler
      */
     public function handleStatusCodes(Closure|string|array $codes): static
     {
-        if (! ($codes instanceof Closure)) {
+        if (! $codes instanceof Closure) {
             $codes = fn () => Arr::wrap($codes);
         }
 
@@ -100,7 +100,7 @@ final class HybridExceptionHandler
      */
     public function renderExceptionsIn(Closure|string|array $environments): static
     {
-        if (! ($environments instanceof Closure)) {
+        if (! $environments instanceof Closure) {
             $environments = fn () => Arr::wrap($environments);
         }
 
@@ -126,7 +126,8 @@ final class HybridExceptionHandler
         }
 
         if ($this->shouldRenderHybridResponse($response, $request, $e)) {
-            return $this->renderHybridResponse($response, $request, $e)
+            return $this
+                ->renderHybridResponse($response, $request, $e)
                 ->toResponse($request)
                 ->setStatusCode($response->getStatusCode());
         }
@@ -137,8 +138,8 @@ final class HybridExceptionHandler
     private function onSessionExpired(Response $response, Request $request, \Throwable $e): mixed
     {
         $callback =
-            $this->handleSessionExpirationUsing ??
-            fn () => redirect()
+            $this->handleSessionExpirationUsing
+            ?? fn () => redirect()
                 ->back()
                 ->with([
                     'error' => 'Your session has expired. Please refresh the page.',

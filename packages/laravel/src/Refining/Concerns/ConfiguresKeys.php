@@ -6,8 +6,8 @@ use Hybridly\Configuration\Configuration;
 
 trait ConfiguresKeys
 {
-    protected null|\Closure|string $sortsKey;
-    protected null|\Closure|string $filtersKey;
+    protected \Closure|string|null $sortsKey;
+    protected \Closure|string|null $filtersKey;
 
     /**
      * Sets the sorts key for this refinement.

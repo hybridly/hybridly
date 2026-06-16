@@ -34,7 +34,10 @@ test('filters can have a default value', function () {
 
     expect($filters)
         ->first()
-        ->name->toBe('AirPods Pro')->count()->toBe(1);
+        ->name
+        ->toBe('AirPods Pro')
+        ->count()
+        ->toBe(1);
 });
 
 test('filters are applied using their property', function () {
@@ -47,7 +50,10 @@ test('filters are applied using their property', function () {
 
     expect($filters)
         ->first()
-        ->name->toBe('AirPods Pro')->count()->toBe(1);
+        ->name
+        ->toBe('AirPods Pro')
+        ->count()
+        ->toBe(1);
 });
 
 test('filters are not applied when their property is used but an alias is defined', function () {
@@ -133,7 +139,10 @@ test('filters key is globally configurable', function () {
 
     expect($filters)
         ->first()
-        ->name->toBe('AirPods Pro')->count()->toBe(1);
+        ->name
+        ->toBe('AirPods Pro')
+        ->count()
+        ->toBe(1);
 });
 
 test('filters key is locally configurable', function () {
@@ -146,7 +155,10 @@ test('filters key is locally configurable', function () {
 
     expect($filters)
         ->first()
-        ->name->toBe('AirPods Pro')->count()->toBe(1);
+        ->name
+        ->toBe('AirPods Pro')
+        ->count()
+        ->toBe(1);
 });
 
 test('filters key respects the scope', function () {
@@ -161,5 +173,8 @@ test('filters key respects the scope', function () {
 
     expect($filters)
         ->first()
-        ->name->toBe('AirPods Pro')->count()->toBe(1);
+        ->name
+        ->toBe('AirPods Pro')
+        ->count()
+        ->toBe(1);
 });

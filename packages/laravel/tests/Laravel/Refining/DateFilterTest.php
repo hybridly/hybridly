@@ -95,11 +95,12 @@ test('it can filter with after operator', function () {
     );
 
     expect($filters)->count()->toBe(3);
-    expect($filters->get())->sequence(
-        fn (Expectation $product) => $product->published_at->format('Y-m-d')->toBe('2024-03-10'),
-        fn (Expectation $product) => $product->published_at->format('Y-m-d')->toBe('2024-04-05'),
-        fn (Expectation $product) => $product->published_at->format('Y-m-d')->toBe('2024-05-25'),
-    );
+    expect($filters->get())
+        ->sequence(
+            fn (Expectation $product) => $product->published_at->format('Y-m-d')->toBe('2024-03-10'),
+            fn (Expectation $product) => $product->published_at->format('Y-m-d')->toBe('2024-04-05'),
+            fn (Expectation $product) => $product->published_at->format('Y-m-d')->toBe('2024-05-25'),
+        );
 });
 
 test('it can filter with before operator', function () {
@@ -111,10 +112,11 @@ test('it can filter with before operator', function () {
     );
 
     expect($filters)->count()->toBe(2);
-    expect($filters->get())->sequence(
-        fn (Expectation $product) => $product->published_at->format('Y-m-d')->toBe('2024-01-15'),
-        fn (Expectation $product) => $product->published_at->format('Y-m-d')->toBe('2024-02-20'),
-    );
+    expect($filters->get())
+        ->sequence(
+            fn (Expectation $product) => $product->published_at->format('Y-m-d')->toBe('2024-01-15'),
+            fn (Expectation $product) => $product->published_at->format('Y-m-d')->toBe('2024-02-20'),
+        );
 });
 
 test('it can filter with timeframe between operator', function () {
@@ -167,12 +169,13 @@ test('it can use custom query callback', function () {
     );
 
     expect($filters)->count()->toBe(4);
-    expect($filters->get())->sequence(
-        fn (Expectation $product) => $product->published_at->format('Y-m-d')->toBe('2024-02-20'),
-        fn (Expectation $product) => $product->published_at->format('Y-m-d')->toBe('2024-03-10'),
-        fn (Expectation $product) => $product->published_at->format('Y-m-d')->toBe('2024-04-05'),
-        fn (Expectation $product) => $product->published_at->format('Y-m-d')->toBe('2024-05-25'),
-    );
+    expect($filters->get())
+        ->sequence(
+            fn (Expectation $product) => $product->published_at->format('Y-m-d')->toBe('2024-02-20'),
+            fn (Expectation $product) => $product->published_at->format('Y-m-d')->toBe('2024-03-10'),
+            fn (Expectation $product) => $product->published_at->format('Y-m-d')->toBe('2024-04-05'),
+            fn (Expectation $product) => $product->published_at->format('Y-m-d')->toBe('2024-05-25'),
+        );
 });
 
 test('it can use custom query callback for timeframe', function () {

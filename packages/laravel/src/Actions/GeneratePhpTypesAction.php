@@ -22,6 +22,6 @@ final class GeneratePhpTypesAction
 
         $config->outputFile(base_path(self::PHP_TYPES_PATH));
 
-        return Collection::make((new TypeScriptTransformer($config))->transform())->all();
+        return Collection::make(new TypeScriptTransformer($config)->transform())->all();
     }
 }

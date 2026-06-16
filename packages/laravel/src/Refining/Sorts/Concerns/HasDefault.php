@@ -4,7 +4,7 @@ namespace Hybridly\Refining\Sorts\Concerns;
 
 trait HasDefault
 {
-    protected null|\Closure|string $defaultDirection = null;
+    protected \Closure|string|null $defaultDirection = null;
     protected \Closure|bool $sole = true;
 
     /**

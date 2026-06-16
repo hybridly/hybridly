@@ -4,9 +4,9 @@ namespace Hybridly\Components\Concerns;
 
 trait HasScope
 {
-    protected null|\Closure|string $scope;
+    protected \Closure|string|null $scope;
 
-    public function scope(null|\Closure|string $scope): static
+    public function scope(\Closure|string|null $scope): static
     {
         $this->scope = $scope;
 

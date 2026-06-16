@@ -53,7 +53,7 @@ class CallbackFilter extends BaseFilter
     /**
      * Attempts to cast the value to the type expected by the closure's $value parameter.
      */
-    protected function castValueToExpectedType(null|array|string|int $value): mixed
+    protected function castValueToExpectedType(array|string|int|null $value): mixed
     {
         if ($value === null) {
             return $value;
@@ -61,7 +61,7 @@ class CallbackFilter extends BaseFilter
 
         $filter = $this->getFilter();
 
-        $reflection = ($filter instanceof \Closure)
+        $reflection = $filter instanceof \Closure
             ? new \ReflectionFunction($filter)
             : new \ReflectionMethod($filter, '__invoke');
 
@@ -96,7 +96,7 @@ class CallbackFilter extends BaseFilter
             'int' => (int) $value,
             'float' => (float) $value,
             'string' => (string) $value,
-            'bool' => filter_var($value, \FILTER_VALIDATE_BOOLEAN, \FILTER_NULL_ON_FAILURE) ?? ((bool) $value),
+            'bool' => filter_var($value, \FILTER_VALIDATE_BOOLEAN, \FILTER_NULL_ON_FAILURE) ?? (bool) $value,
             'array' => \is_array($value) ? $value : [$value],
             default => $value,
         };

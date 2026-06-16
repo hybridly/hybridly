@@ -4,7 +4,7 @@ namespace Hybridly\Components\Concerns;
 
 trait HasIcon
 {
-    protected null|string|\Closure $icon = null;
+    protected string|\Closure|null $icon = null;
 
     public function icon(string|\Closure $icon): static
     {

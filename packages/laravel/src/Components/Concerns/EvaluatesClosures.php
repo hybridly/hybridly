@@ -22,13 +22,13 @@ trait EvaluatesClosures
             $value = $value->__invoke(...);
         }
 
-        if (! ($value instanceof Closure)) {
+        if (! $value instanceof Closure) {
             return $value;
         }
 
         $dependencies = [];
 
-        foreach ((new ReflectionFunction($value))->getParameters() as $parameter) {
+        foreach (new ReflectionFunction($value)->getParameters() as $parameter) {
             $dependencies[] = $this->resolveClosureDependencyForEvaluation($parameter, $named, $typed, $positional);
         }
 
@@ -134,7 +134,7 @@ trait EvaluatesClosures
     {
         $type = $parameter->getType();
 
-        if (! ($type instanceof ReflectionNamedType)) {
+        if (! $type instanceof ReflectionNamedType) {
             return null;
         }
 

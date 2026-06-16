@@ -4,7 +4,7 @@ namespace Hybridly\Refining\Filters\Concerns;
 
 trait HasPreviewLabel
 {
-    protected null|string|\Closure $previewLabel = null;
+    protected string|\Closure|null $previewLabel = null;
 
     public function previewLabel(string|\Closure $previewLabel): static
     {

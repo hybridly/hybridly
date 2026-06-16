@@ -14,7 +14,7 @@ use Illuminate\Support\Collection;
 class BasicScopedProductsTable extends Table
 {
     protected string $model = Product::class;
-    protected null|\Closure|string $scope = 'custom-scope';
+    protected \Closure|string|null $scope = 'custom-scope';
 
     public function defineRefiners(): array
     {

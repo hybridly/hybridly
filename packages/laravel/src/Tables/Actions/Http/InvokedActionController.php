@@ -49,7 +49,7 @@ final class InvokedActionController
             throw CouldNotResolveTableException::with($tableId);
         }
 
-        if (! ($table instanceof Table)) {
+        if (! $table instanceof Table) {
             throw InvalidTableException::with($tableId);
         }
 
