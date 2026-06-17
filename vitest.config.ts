@@ -17,7 +17,7 @@ export default defineConfig({
 		},
 	},
 	test: {
-		isolate: false,
+		isolate: true,
 		mockReset: true,
 		restoreMocks: true,
 		unstubGlobals: true,
