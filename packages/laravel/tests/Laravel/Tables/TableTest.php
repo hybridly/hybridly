@@ -16,6 +16,7 @@ use Hybridly\Tests\Laravel\Tables\Fixtures\BasicProductsTableWithConditionallyHi
 use Hybridly\Tests\Laravel\Tables\Fixtures\BasicProductsTableWithData;
 use Hybridly\Tests\Laravel\Tables\Fixtures\BasicProductsTableWithExtra;
 use Hybridly\Tests\Laravel\Tables\Fixtures\BasicProductsTableWithHiddenStuff;
+use Hybridly\Tests\Laravel\Tables\Fixtures\BasicProductsTableWithKeylessDataAndActions;
 use Hybridly\Tests\Laravel\Tables\Fixtures\BasicProductsTableWithMetadata;
 use Hybridly\Tests\Laravel\Tables\Fixtures\BasicProductsTableWithSoftDeleteAction;
 use Hybridly\Tests\Laravel\Tables\Fixtures\BasicScopedProductsTable;
@@ -48,6 +49,42 @@ it('serializes a basic scoped table', function () {
 it('can transform records using Laravel Data', function () {
     ProductFactory::createImmutable();
     expect(BasicProductsTableWithData::make())->toMatchSnapshot();
+});
+
+it('serializes table records as plain data and cells separately', function () {
+    ProductFactory::new()->create(['id' => 1, 'name' => 'Product 1']);
+
+    $table = BasicProductsTable::make()->toArray();
+
+    expect($table['keyName'])
+        ->toBe('id')
+        ->and($table['records'][0])
+        ->toHaveKey('id', 1)
+        ->and($table['records'][0])
+        ->toHaveKey('name', 'Product 1')
+        ->and($table['records'][0])
+        ->not->toHaveKey('__hybridId')->and($table['records'][0]['name'])
+        ->not->toBeArray()->and($table['cells'][0]['key'])->toBe(1)->and($table['cells'][0]['columns']['name']['value'])->toBe('Product 1')->and(
+            $table['cells'][0]['columns']['name']['extra'],
+        )->toBe([]);
+});
+
+it('serializes keyless tables as display-only', function () {
+    ProductFactory::createImmutable();
+
+    $table = BasicProductsTableWithKeylessDataAndActions::make()->toArray();
+
+    expect($table['keyName'])
+        ->toBeNull()
+        ->and($table['records'][0])
+        ->not
+        ->toHaveKey('id')
+        ->and($table['cells'][0]['key'])
+        ->toBeNull()
+        ->and($table['inlineActions'])
+        ->toBe([])
+        ->and($table['bulkActions'])
+        ->toBe([]);
 });
 
 it('hides hidden refinements, columns and actions in serialization', function () {
@@ -221,7 +258,7 @@ it('supports dependency injection on the constructor', function () {
 
     expect($table->getRecords())
         ->toHaveCount(1)
-        ->sequence(fn ($expect) => $expect->name->value->toBe('Product 2'));
+        ->sequence(fn ($expect) => $expect->name->toBe('Product 2'));
 });
 
 it('supports custom arguments on the constructor', function () {
@@ -232,7 +269,7 @@ it('supports custom arguments on the constructor', function () {
 
     expect($table->getRecords())
         ->toHaveCount(1)
-        ->sequence(fn ($expect) => $expect->name->value->toBe('Product 2'));
+        ->sequence(fn ($expect) => $expect->name->toBe('Product 2'));
 });
 
 it('supports custom arguments on `make`', function () {
@@ -245,7 +282,7 @@ it('supports custom arguments on `make`', function () {
 
     expect($table->getRecords())
         ->toHaveCount(1)
-        ->sequence(fn ($expect) => $expect->name->value->toBe('Product 2'));
+        ->sequence(fn ($expect) => $expect->name->toBe('Product 2'));
 });
 
 it('supports dependency injection and custom arguments on `make`', function () {
@@ -263,7 +300,7 @@ it('supports dependency injection and custom arguments on `make`', function () {
 
     expect($table->getRecords())
         ->toHaveCount(1)
-        ->sequence(fn ($expect) => $expect->name->value->toBe('Product bar'));
+        ->sequence(fn ($expect) => $expect->name->toBe('Product bar'));
 });
 
 it('may have cell metadata', function () {
@@ -272,7 +309,7 @@ it('may have cell metadata', function () {
 
     $table = BasicProductsTableWithExtra::make();
 
-    expect($table->getRecords())->toMatchSnapshot();
+    expect($table->getCells())->toMatchSnapshot();
 });
 
 it('may have column metadata', function () {

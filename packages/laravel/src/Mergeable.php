@@ -28,4 +28,11 @@ interface Mergeable
      * @return array<int, string>
      */
     public function paths(): array;
+
+    /**
+     * Unique keys to use for specific paths.
+     *
+     * @return array<string, string|null>
+     */
+    public function uniqueByPath(): array;
 }

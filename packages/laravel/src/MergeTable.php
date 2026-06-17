@@ -2,19 +2,16 @@
 
 namespace Hybridly;
 
-use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\App;
+use Hybridly\Tables\Table;
 
 /**
- * Represents a property that will always be loaded.
+ * Represents a table property that should merge records and cells together.
  */
-final class Persistent implements Property, Mergeable
+final class MergeTable implements Property, Mergeable
 {
     public function __construct(
-        private \Closure $callback,
+        private Table $table,
         private(set) bool $prepend = false,
-        private(set) ?string $uniqueBy = null,
-        private(set) ?array $path = null,
     ) {}
 
     public function shouldMerge(): bool
@@ -29,21 +26,30 @@ final class Persistent implements Property, Mergeable
 
     public function uniqueBy(): ?string
     {
-        return $this->uniqueBy;
+        return null;
     }
 
     public function paths(): array
     {
-        return Arr::wrap($this->path);
+        return ['records', 'cells'];
     }
 
     public function uniqueByPath(): array
     {
-        return [];
+        $keyName = $this->table->getRecordKeyName();
+
+        if (! $keyName) {
+            return [];
+        }
+
+        return [
+            'records' => $keyName,
+            'cells' => 'key',
+        ];
     }
 
     public function evaluate(): mixed
     {
-        return App::call($this->callback);
+        return $this->table;
     }
 }

@@ -84,7 +84,7 @@ final class PropertiesResolver
             if ($value instanceof Mergeable) {
                 return (
                     $value->shouldMerge()
-                        ? [$path, $value->shouldPrepend(), $value->uniqueBy(), $value->paths()]
+                        ? [$path, $value->shouldPrepend(), $value->uniqueBy(), $value->paths(), $value->uniqueByPath()]
                         : false
                 );
             }

@@ -15,12 +15,13 @@ export interface Table<
 	PaginatorKind extends 'cursor' | 'length-aware' | 'simple' = 'length-aware',
 > {
 	id: string
-	keyName: string
+	keyName: keyof T | null
 	scope?: string
 	columns: Column<T>[]
 	inlineActions: InlineAction[]
 	bulkActions: BulkAction[]
 	records: Array<T>
+	cells: TableCellRow<T>[]
 	paginator: Omit<
 		PaginatorKind extends 'cursor' ? CursorPaginator<T> : (PaginatorKind extends 'simple' ? SimplePaginator<T> : Paginator<T>),
 		'data'
@@ -38,6 +39,16 @@ export interface Column<T extends object = never> {
 	type: string
 	/** Metadata of this column. */
 	metadata: Record<string, any>
+}
+
+export interface TableCell<T extends object = never> {
+	value: any
+	extra: Record<string, any>
+}
+
+export interface TableCellRow<T extends object = never> {
+	key: RecordIdentifier | null
+	columns: Partial<Record<keyof T | string, TableCell<T>>>
 }
 
 // #region action
@@ -74,13 +85,6 @@ export interface InlineAction extends Action {
 
 export type RecordIdentifier = string | number
 
-type AsRecordTypeWithExtra<T extends Record<string, any>> = {
-	[K in keyof T]: {
-		extra: Record<string, any>
-		value: T[K]
-	}
-}
-
 export interface TableDefaultOptions extends AvailableHybridRequestOptions {
 	/**
 	 * Whether to include existing query parameters in the request.
@@ -100,10 +104,9 @@ type ExtractRefValue<T> = T extends { value: infer Value } ? Value
 
 export interface UseTableInlineActionItem<
 	RecordType extends Record<string, any>,
-	RecordTypeWithExtra extends Record<string, any>,
 > extends InlineAction {
 	/** Executes the action. */
-	execute: (record: RecordTypeWithExtra | RecordIdentifier | RecordType) => UseTableNavigationResponse
+	execute: (record: RecordIdentifier | RecordType) => UseTableNavigationResponse
 }
 
 export interface UseTableBulkActionItem extends BulkAction {
@@ -111,7 +114,7 @@ export interface UseTableBulkActionItem extends BulkAction {
 	execute: (options?: BulkActionOptions) => UseTableNavigationResponse
 }
 
-export interface UseTableColumn<RecordTypeWithExtra extends Record<string, any>> extends Column<RecordTypeWithExtra> {
+export interface UseTableColumn<RecordType extends Record<string, any>> extends Column<RecordType> {
 	/** Toggles sorting for this column. */
 	toggleSort: (options?: ToggleSortOptions) => UseTableNavigationResponse
 	/** Checks whether the column is being sorted. */
@@ -128,12 +131,15 @@ export interface UseTableColumn<RecordTypeWithExtra extends Record<string, any>>
 
 export interface UseTableRecordItem<
 	RecordType extends Record<string, any>,
-	RecordTypeWithExtra extends Record<string, any>,
 > {
 	/** The actual record. */
 	record: RecordType
-	/** The key of the record. Use this instead of `id`. */
+	/** Local key of the record. Use this as a rendering key. */
 	key: RecordIdentifier
+	/** Server-side key of the record, if any. */
+	recordKey: RecordIdentifier | undefined
+	/** Whether this record has a server-side key. */
+	hasKey: boolean
 	/** Executes the given inline action. */
 	execute: (action: string | InlineAction) => UseTableNavigationResponse
 	/** Gets the available inline actions. */
@@ -147,16 +153,15 @@ export interface UseTableRecordItem<
 	/** Checks whether this record is selected. */
 	selected: boolean
 	/** Gets the value of the record for the specified column. */
-	value: (column: string | Column<RecordTypeWithExtra>) => any
+	value: (column: string | Column<RecordType>) => any
 	/** Gets the extra object of the record for the specified column. */
-	extra: (column: string | Column<RecordTypeWithExtra>, path: string) => any
+	extra: (column: string | Column<RecordType>, path: string) => any
 }
 
 export interface UseTableReturn<
 	T extends Table<any, any>,
 	RecordType extends Record<string, any> = T extends Table<infer R, any> ? R : any,
 	PaginatorKind extends 'cursor' | 'length-aware' | 'simple' = T extends Table<any, infer P> ? P : 'length-aware',
-	RecordTypeWithExtra extends Record<string, any> = AsRecordTypeWithExtra<RecordType>,
 > extends Omit<UseRefinements, 'filters' | 'sorts' | 'filtersKey' | 'sortsKey'> {
 	/** Selects all records. */
 	selectAll: () => void
@@ -169,7 +174,7 @@ export interface UseTableReturn<
 	/** Whether all records on the current page are selected. */
 	isPageSelected: boolean
 	/** Checks if the given record is selected. */
-	isSelected: (record: RecordTypeWithExtra | RecordType) => boolean
+	isSelected: (record: RecordType) => boolean
 	/** Whether all records are selected. */
 	allSelected: boolean
 	/** Whether any records are selected. */
@@ -179,33 +184,33 @@ export interface UseTableReturn<
 	/** Binds a checkbox to its selection state. */
 	bindCheckbox: (key: RecordIdentifier) => { onChange: (event: Event) => void; checked: boolean; value: RecordIdentifier }
 	/** Toggles selection for the given record. */
-	toggle: (record: RecordTypeWithExtra | RecordType, force?: boolean) => void
+	toggle: (record: RecordType, force?: boolean) => void
 	/** Toggles selection for all records. */
 	toggleAll: (force?: boolean) => void
 	/** Selects selection for the given record. */
-	select: (record: RecordTypeWithExtra | RecordType) => void
+	select: (record: RecordType) => void
 	/** Deselects selection for the given record. */
-	deselect: (record: RecordTypeWithExtra | RecordType) => void
+	deselect: (record: RecordType) => void
 
 	/** List of inline actions for this table. */
-	inlineActions: Array<UseTableInlineActionItem<RecordType, RecordTypeWithExtra>>
+	inlineActions: Array<UseTableInlineActionItem<RecordType>>
 	/** List of bulk actions for this table. */
 	bulkActions: Array<UseTableBulkActionItem>
 	/** Executes the given inline action for the given record. */
 	executeInlineAction: (
 		action: InlineAction | string,
-		options: { record: RecordTypeWithExtra | RecordIdentifier | RecordType } & Omit<HybridRequestOptions, 'url'>,
+		options: { record: RecordIdentifier | RecordType } & Omit<HybridRequestOptions, 'url'>,
 	) => UseTableNavigationResponse
 	/** Executes the given bulk action. */
 	executeBulkAction: (action: BulkAction | string, options?: Omit<HybridRequestOptions, 'url'> & { deselect?: boolean }) => UseTableNavigationResponse
 	/** List of columns for this table. */
-	columns: Array<UseTableColumn<RecordTypeWithExtra>>
+	columns: Array<UseTableColumn<RecordType>>
 	/** List of records for this table. */
 	data: RecordType[]
 	/** List of records for this table. */
-	records: Array<UseTableRecordItem<RecordType, RecordTypeWithExtra>>
+	records: Array<UseTableRecordItem<RecordType>>
 	/** Paginated meta and links. */
-	paginator: PaginatorResult<RecordTypeWithExtra, Table<RecordTypeWithExtra, PaginatorKind>['paginator']>
+	paginator: PaginatorResult<RecordType, Table<RecordType, PaginatorKind>['paginator']>
 	/** Available filters. */
 	filters: ExtractRefValue<UseRefinements['filters']>
 	/** Available sorts. */
@@ -223,9 +228,8 @@ export function useTable<
 	T extends Table<any, any>,
 	RecordType extends Record<string, any> = T extends Table<infer R, any> ? R : any,
 	PaginatorKind extends 'cursor' | 'length-aware' | 'simple' = T extends Table<any, infer P> ? P : 'length-aware',
-	RecordTypeWithExtra extends Record<string, any> = AsRecordTypeWithExtra<RecordType>,
->(input: MaybeRefOrGetter<T>, defaultOptions: TableDefaultOptions = {}): UseTableReturn<T, RecordType, PaginatorKind, RecordTypeWithExtra> {
-	const table = computed(() => toValue(input) as unknown as Table<RecordTypeWithExtra, PaginatorKind>)
+>(input: MaybeRefOrGetter<T>, defaultOptions: TableDefaultOptions = {}): UseTableReturn<T, RecordType, PaginatorKind> {
+	const table = computed(() => toValue(input) as unknown as Table<RecordType, PaginatorKind>)
 	const bulk = useBulkSelect<RecordIdentifier>()
 	const refinements = useRefinements(() => toValue(input).refinements, defaultOptions)
 
@@ -253,26 +257,40 @@ export function useTable<
 	/**
 	 * Gets the actual identifier for a record.
 	 */
-	function getRecordKey(record: RecordTypeWithExtra | RecordIdentifier | RecordType): RecordIdentifier {
+	function getRecordKey(record: RecordIdentifier | RecordType): RecordIdentifier | undefined {
 		if (typeof record !== 'object') {
 			return record
 		}
 
-		if (Reflect.has(record, '__hybridId')) {
-			return Reflect.get(record, '__hybridId') as RecordIdentifier
-		}
-
 		if (!table.value.keyName) {
-			throw new Error('Record key cannot be fetched because the table has no defined key.')
+			return undefined
 		}
 
 		const value = Reflect.get(record, table.value.keyName)
 
-		if (typeof value === 'object' && Reflect.has(value, 'value')) {
-			return (value as RecordTypeWithExtra).value
+		if (typeof value === 'string' || typeof value === 'number') {
+			return value
 		}
 
-		return value as RecordIdentifier
+		return undefined
+	}
+
+	function getPageRecordKeys(): RecordIdentifier[] {
+		return table.value.records
+			.map((record) => getRecordKey(record))
+			.filter((key): key is RecordIdentifier => key !== undefined)
+	}
+
+	function warnMissingRecordKey(action: string): void {
+		console.warn(`Cannot ${action} because this table record has no key.`)
+	}
+
+	function getColumnName(column: string | Column<RecordType>): string {
+		return typeof column === 'string' ? column : column.name as string
+	}
+
+	function getCell(index: number, column: string | Column<RecordType>): TableCell<RecordType> {
+		return table.value.cells[index]?.columns[getColumnName(column)] ?? { value: undefined, extra: {} }
 	}
 
 	function resolveInlineAction(action: InlineAction | string): undefined | InlineAction {
@@ -291,7 +309,7 @@ export function useTable<
 		return table.value.bulkActions.find(({ name }) => name === action)
 	}
 
-	function getActionUrl(action: Action, table: Table<RecordTypeWithExtra, PaginatorKind>) {
+	function getActionUrl(action: Action, table: Table<RecordType, PaginatorKind>) {
 		if (action.url) {
 			return action.url
 		}
@@ -304,12 +322,18 @@ export function useTable<
 	 */
 	async function executeInlineAction(
 		action: InlineAction | string,
-		options: InlineActionOptions<RecordTypeWithExtra | RecordIdentifier | RecordType>,
+		options: InlineActionOptions<RecordIdentifier | RecordType>,
 	) {
 		const resolvedAction = resolveInlineAction(action)
+		const recordKey = getRecordKey(options.record)
 
 		if (!resolvedAction) {
 			console.warn(`Action [${action}] is not defined`)
+			return
+		}
+
+		if (recordKey === undefined) {
+			warnMissingRecordKey('execute an inline action')
 			return
 		}
 
@@ -322,7 +346,7 @@ export function useTable<
 				type: 'action:inline',
 				action: resolvedAction.name,
 				tableId: table.value.id,
-				recordId: getRecordKey(options.record),
+				recordId: recordKey,
 			},
 		})
 	}
@@ -371,20 +395,25 @@ export function useTable<
 
 	return reactive({
 		/** Selects all records. */
-		selectAll: bulk.selectAll,
+		selectAll: () => table.value.keyName ? bulk.selectAll() : warnMissingRecordKey('select all records'),
 		/** Deselects all records. */
 		deselectAll: bulk.deselectAll,
 		/** Selects records on the current page. */
-		selectPage: () => bulk.select(...table.value.records.map((record: RecordTypeWithExtra | RecordType) => getRecordKey(record))),
+		selectPage: () => bulk.select(...getPageRecordKeys()),
 		/** Deselects records on the current page. */
-		deselectPage: () => bulk.deselect(...table.value.records.map((record: RecordTypeWithExtra | RecordType) => getRecordKey(record))),
+		deselectPage: () => bulk.deselect(...getPageRecordKeys()),
 		/** Whether all records on the current page are selected. */
-		isPageSelected: computed(() =>
-			table.value.records.length > 0
-			&& table.value.records.every((record: RecordTypeWithExtra | RecordType) => bulk.selected(getRecordKey(record)))
-		),
+		isPageSelected: computed(() => {
+			const keys = getPageRecordKeys()
+
+			return keys.length > 0 && keys.every((key) => bulk.selected(key))
+		}),
 		/** Checks if the given record is selected. */
-		isSelected: (record: RecordTypeWithExtra | RecordType) => bulk.selected(getRecordKey(record)),
+		isSelected: (record: RecordType) => {
+			const key = getRecordKey(record)
+
+			return key === undefined ? false : bulk.selected(key)
+		},
 		/** Whether all records are selected. */
 		allSelected: bulk.allSelected,
 		/** Whether any records is selected. */
@@ -394,19 +423,31 @@ export function useTable<
 		/** Binds a checkbox to its selection state. */
 		bindCheckbox: (key: RecordIdentifier) => bulk.bindCheckbox(key),
 		/** Toggles selection for the given record. */
-		toggle: (record: RecordTypeWithExtra | RecordType, force?: boolean) => bulk.toggle(getRecordKey(record), force),
+		toggle: (record: RecordType, force?: boolean) => {
+			const key = getRecordKey(record)
+
+			return key === undefined ? warnMissingRecordKey('toggle record selection') : bulk.toggle(key, force)
+		},
 		/** Toggles selection for all records. */
-		toggleAll: (force?: boolean) => bulk.toggleAll(force),
+		toggleAll: (force?: boolean) => table.value.keyName ? bulk.toggleAll(force) : warnMissingRecordKey('toggle all records'),
 		/** Selects selection for the given record. */
-		select: (record: RecordTypeWithExtra | RecordType) => bulk.select(getRecordKey(record)),
+		select: (record: RecordType) => {
+			const key = getRecordKey(record)
+
+			return key === undefined ? warnMissingRecordKey('select this record') : bulk.select(key)
+		},
 		/** Deselects selection for the given record. */
-		deselect: (record: RecordTypeWithExtra | RecordType) => bulk.deselect(getRecordKey(record)),
+		deselect: (record: RecordType) => {
+			const key = getRecordKey(record)
+
+			return key === undefined ? warnMissingRecordKey('deselect this record') : bulk.deselect(key)
+		},
 
 		/** List of inline actions for this table. */
 		inlineActions: computed(() =>
 			table.value.inlineActions.map((action) => ({
 				/** Executes the action. */
-				execute: (record: RecordTypeWithExtra | RecordIdentifier | RecordType) => executeInlineAction(action, { record }),
+				execute: (record: RecordIdentifier | RecordType) => executeInlineAction(action, { record }),
 				...action,
 			}))
 		),
@@ -441,55 +482,43 @@ export function useTable<
 			}))
 		),
 		/** List of records for this table. */
-		data: computed(() => {
-			return table.value.records.map((record) => {
-				const entries = Object.entries(record)
-					.map(([key, value]) => [key, value.value])
-					.filter(([key]) => key !== '__hybridId')
-
-				if (entries.length === 0) {
-					return undefined
-				}
-
-				return Object.fromEntries(entries)
-			}).filter(Boolean) as RecordType[]
-		}),
+		data: computed(() => table.value.records),
 		/** List of records for this table. */
 		records: computed(() =>
-			table.value.records.map((record) => {
-				const entries = Object.entries(record)
-					.map(([key, value]) => [key, value.value])
-					.filter(([key]) => key !== '__hybridId')
-
-				const typedRecord: RecordType = entries.length > 0
-					? Object.fromEntries(entries)
-					: {}
+			table.value.records.map((record, index) => {
+				const recordKey = getRecordKey(record)
+				const localKey = recordKey ?? `row-${index}`
+				const selected = recordKey === undefined ? false : bulk.selected(recordKey)
 
 				return {
 					/** The actual record. */
-					record: typedRecord,
-					/** The key of the record. Use this instead of `id`. */
-					key: getRecordKey(record),
+					record,
+					/** Local key of the record. Use this as a rendering key. */
+					key: localKey,
+					/** Server-side key of the record, if any. */
+					recordKey,
+					/** Whether this record has a server-side key. */
+					hasKey: recordKey !== undefined,
 					/** Executes the given inline action. */
-					execute: (action: string | InlineAction) => executeInlineAction(action, { record: getRecordKey(record) }),
+					execute: (action: string | InlineAction) => executeInlineAction(action, { record }),
 					/** Gets the available inline actions. */
 					actions: table.value.inlineActions.map((action) => ({
 						...action,
 						/** Executes the action. */
-						execute: () => executeInlineAction(action.name, { record: getRecordKey(record) }),
+						execute: () => executeInlineAction(action.name, { record }),
 					})),
 					/** Selects this record. */
-					select: () => bulk.select(getRecordKey(record)),
+					select: () => recordKey === undefined ? warnMissingRecordKey('select this record') : bulk.select(recordKey),
 					/** Deselects this record. */
-					deselect: () => bulk.deselect(getRecordKey(record)),
+					deselect: () => recordKey === undefined ? warnMissingRecordKey('deselect this record') : bulk.deselect(recordKey),
 					/** Toggles the selection for this record. */
-					toggle: (force?: boolean) => bulk.toggle(getRecordKey(record), force),
+					toggle: (force?: boolean) => recordKey === undefined ? warnMissingRecordKey('toggle record selection') : bulk.toggle(recordKey, force),
 					/** Checks whether this record is selected. */
-					selected: bulk.selected(getRecordKey(record)),
+					selected,
 					/** Gets the value of the record for the specified column. */
-					value: (column: string | Column<RecordTypeWithExtra>) => record[typeof column === 'string' ? column : column.name].value,
+					value: (column: string | Column<RecordType>) => getCell(index, column).value,
 					/** Gets the extra object of the record for the specified column. */
-					extra: (column: string | Column<RecordTypeWithExtra>, path: string) => getByPath(record[typeof column === 'string' ? column : column.name].extra, path),
+					extra: (column: string | Column<RecordType>, path: string) => getByPath(getCell(index, column).extra, path),
 				}
 			})
 		),
@@ -501,5 +530,5 @@ export function useTable<
 		 * Available refinements.
 		 */
 		...refinements,
-	}) as UseTableReturn<T, RecordType, PaginatorKind, RecordTypeWithExtra>
+	}) as UseTableReturn<T, RecordType, PaginatorKind>
 }

@@ -50,6 +50,11 @@ final class Deferred implements Property, IgnoreFirstLoad, Mergeable
         return Arr::wrap($this->paths);
     }
 
+    public function uniqueByPath(): array
+    {
+        return [];
+    }
+
     public function evaluate(): mixed
     {
         return App::call($this->callback);

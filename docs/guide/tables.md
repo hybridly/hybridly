@@ -59,6 +59,14 @@ return view('users.index', [
 ]);
 ```
 
+For tables using infinite scrolling, return the table through `merge()`. This keeps records and cell metadata synchronized during partial reloads:
+
+```php
+return view('users.index', [
+	'users' => UsersTable::make()->merge(),
+]);
+```
+
 The table property can be typed using the global `Table` type, which also accepts a generic that describes the table shape:
 
 ```ts
@@ -356,11 +364,14 @@ The `useTable` function returns utilities to select records. The selected record
 
 To let users select records, you may use the `bindCheckbox` function. It takes the record key as the parameter and returns the necessary properties and event listeners to support all selection states.
 
+Records without a scalar primary key are display-only. They can be rendered normally, but they cannot be selected or used with server-side actions.
+
 ```vue-html
-<tr v-for="{ key, value, actions } in users.records" :key="key">
+<tr v-for="{ key, recordKey, hasKey, value, actions } in users.records" :key="key">
 	<td>
 		<input
-			v-model="users.bindCheckbox(key)/* [!code hl] */"
+			v-if="hasKey"
+			v-model="users.bindCheckbox(recordKey)/* [!code hl] */"
 			type="checkbox"
 		/>
 	</td>

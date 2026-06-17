@@ -65,7 +65,19 @@ Gets the extra data of the record for the specified column. The second parameter
 
 - Type: `string | int`
 
-The key of the record. Generally, it is the value of the `id` column. It is used for executing actions, but may be missing if [actions are disabled](../../guide/tables.md#disabling-actions-globally).
+The local rendering key of the record. It can always be used as the `:key` in a `v-for`.
+
+### `recordKey`
+
+- Type: `string | int | undefined`
+
+The server-side key of the record. It is used for executing actions and selecting records. It may be `undefined` when the table records do not expose a scalar primary key.
+
+### `hasKey`
+
+- Type: `bool`
+
+Whether the record has a server-side key.
 
 ### `execute`
 

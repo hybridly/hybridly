@@ -55,11 +55,28 @@
     },
     "records": [
         {
-            "name": {
-                "extra": [],
-                "value": "AirPods"
-            },
-            "__hybridId": 1
+            "id": 1,
+            "name": "AirPods",
+            "vendor": "apple",
+            "description": "Nice headphones tbh",
+            "price": 250,
+            "stock_count": 42,
+            "is_active": true,
+            "published_at": "2021-01-01T00:00:00.000000Z",
+            "created_at": "2021-01-01T00:00:00.000000Z",
+            "updated_at": "2021-01-01T00:00:00.000000Z",
+            "deleted_at": null
+        }
+    ],
+    "cells": [
+        {
+            "key": 1,
+            "columns": {
+                "name": {
+                    "extra": [],
+                    "value": "AirPods"
+                }
+            }
         }
     ],
     "paginator": {

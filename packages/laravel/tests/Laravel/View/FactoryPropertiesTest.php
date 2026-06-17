@@ -5,6 +5,9 @@ use Hybridly\HybridResponseFactory;
 use Hybridly\OnDemand;
 use Hybridly\PropertiesResolver;
 use Hybridly\Support\CaseConverter;
+use Hybridly\Tests\Fixtures\Database\ProductFactory;
+use Hybridly\Tests\Laravel\Tables\Fixtures\BasicProductsTable;
+use Hybridly\Tests\Laravel\Tables\Fixtures\BasicProductsTableWithKeylessDataAndActions;
 use Illuminate\Contracts\Support\Arrayable;
 
 use function Hybridly\merge;
@@ -246,8 +249,8 @@ it('includes deferred mergeable properties in mergeable config on partial loads'
         ->getData();
 
     expect($payload->view->mergeable)
-        ->toContain(['feed', true, 'id', []])
-        ->not->toContain(['nested.items', false, null, []]);
+        ->toContain(['feed', true, 'id', [], []])
+        ->not->toContain(['nested.items', false, null, [], []]);
 });
 
 it('includes mergeable properties configuration in the payload', function () {
@@ -265,10 +268,28 @@ it('includes mergeable properties configuration in the payload', function () {
 
     expect($payload->view->mergeable)
         ->toHaveCount(4)
-        ->toContain(['users', false, 'id', []])
-        ->toContain(['priority_users', true, 'id', []])
-        ->toContain(['messages', false, null, []])
-        ->toContain(['nested.items', false, 'meta.id', []]);
+        ->toContain(['users', false, 'id', [], []])
+        ->toContain(['priority_users', true, 'id', [], []])
+        ->toContain(['messages', false, null, [], []])
+        ->toContain(['nested.items', false, 'meta.id', [], []]);
+});
+
+it('includes table mergeable properties configuration in the payload', function () {
+    ProductFactory::createImmutable();
+
+    $payload = resolve(HybridResponseFactory::class)
+        ->withView('users.edit', [
+            'products' => BasicProductsTable::make()->merge(),
+            'keyless_products' => BasicProductsTableWithKeylessDataAndActions::make()->merge(),
+        ])
+        ->toResponse(mock_request())
+        ->getData();
+
+    $mergeable = json_decode(json_encode($payload->view->mergeable), associative: true);
+
+    expect($mergeable)
+        ->toContain(['products', false, null, ['records', 'cells'], ['records' => 'id', 'cells' => 'key']])
+        ->toContain(['keyless_products', false, null, ['records', 'cells'], []]);
 });
 
 it('includes mergeable properties configuration in non-hybrid payload responses', function () {
@@ -282,5 +303,5 @@ it('includes mergeable properties configuration in non-hybrid payload responses'
 
     expect($payload['view']['mergeable'])
         ->toHaveCount(1)
-        ->toContain(['users', true, 'id', []]);
+        ->toContain(['users', true, 'id', [], []]);
 });

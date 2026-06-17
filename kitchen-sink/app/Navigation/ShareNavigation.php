@@ -17,6 +17,7 @@ use App\KitchenSink\Navigation\PreserveScroll\PreserveScrollController;
 use App\KitchenSink\Navigation\PreserveState\PreserveStateController;
 use App\KitchenSink\Navigation\Response\ResponsesController;
 use App\KitchenSink\Navigation\ViewTransitions\ViewTransitionsController;
+use App\KitchenSink\Tables\Mergeable\MergeableTableController;
 use App\ShowIndexController;
 use Closure;
 use Discovery\Routing\Middleware;
@@ -126,6 +127,19 @@ final readonly class ShareNavigation
                     label: 'HTTP 500',
                     icon: 'lucide:x',
                     href: action(Http500Controller::class, absolute: false),
+                ),
+            ],
+        ));
+
+        $builder->addSidebarItem(new NavigationItem(
+            label: 'Tables',
+            icon: 'lucide:table-2',
+            children: [
+                new NavigationItem(
+                    label: 'Mergeable table',
+                    icon: 'lucide:git-merge',
+                    href: action(MergeableTableController::class, absolute: false),
+                    route_patterns: ['kitchen-sink.tables.mergeable*'],
                 ),
             ],
         ));

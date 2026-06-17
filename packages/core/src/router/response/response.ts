@@ -150,7 +150,7 @@ function resolveProperties(original: Properties, payload: View, options: { merge
 
 	// Mergeable properties are properties that will be merged with the original ones instead
 	// of replacing them. They can be merged at the root level or at a specific path.
-	for (const [property, shouldPrepend, uniqueBy, mergePaths] of mergeable) {
+	for (const [property, shouldPrepend, uniqueBy, mergePaths, uniqueByPath] of mergeable) {
 		const originalValue = get(original, property) as unknown
 		const newValue = get(payload.properties, property) as unknown
 
@@ -163,7 +163,7 @@ function resolveProperties(original: Properties, payload: View, options: { merge
 			newValue,
 			get(mergedPayloadProperties, property) as unknown,
 			mergePaths,
-			{ prepend: shouldPrepend, uniqueBy },
+			{ prepend: shouldPrepend, uniqueBy, uniqueByPath },
 		)
 
 		set(mergedPayloadProperties, property, value)
@@ -177,7 +177,7 @@ function mergeMergeableProperty(
 	newValue: unknown,
 	currentValue: unknown,
 	mergePaths: string[] | null | undefined,
-	options: { prepend: boolean; uniqueBy: string | null },
+	options: { prepend: boolean; uniqueBy: string | null; uniqueByPath?: Record<string, string | null> },
 ) {
 	if (!mergePaths?.length) {
 		return mergeMergeableValue(originalValue, newValue, options)
@@ -188,13 +188,18 @@ function mergeMergeableProperty(
 		: {}
 
 	for (const mergePath of mergePaths) {
+		const mergePathOptions = {
+			...options,
+			uniqueBy: options.uniqueByPath?.[mergePath] ?? options.uniqueBy,
+		}
+
 		set(
 			value,
 			mergePath,
 			mergeMergeableValue(
 				get(originalValue, mergePath) as unknown,
 				get(newValue, mergePath) as unknown,
-				options,
+				mergePathOptions,
 			),
 		)
 	}

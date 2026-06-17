@@ -38,6 +38,11 @@ final class Merge implements Property, Mergeable
         return Arr::wrap($this->path);
     }
 
+    public function uniqueByPath(): array
+    {
+        return [];
+    }
+
     public function evaluate(): mixed
     {
         return \is_callable($this->value)

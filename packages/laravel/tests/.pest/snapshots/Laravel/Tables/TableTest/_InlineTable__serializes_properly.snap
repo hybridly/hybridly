@@ -1,6 +1,6 @@
 {
     "id": "products-table",
-    "keyName": "id",
+    "keyName": null,
     "refinements": {
         "sorts": [
             {
@@ -24,6 +24,7 @@
         }
     },
     "records": [],
+    "cells": [],
     "paginator": {
         "links": [
             {

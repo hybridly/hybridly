@@ -1,6 +1,6 @@
 {
     "id": "products-table",
-    "keyName": "id",
+    "keyName": null,
     "refinements": {
         "sorts": [],
         "filters": [],
@@ -12,15 +12,23 @@
     },
     "records": [
         {
-            "name": {
-                "extra": [],
-                "value": "AirPods"
-            },
-            "created_at": {
-                "extra": [],
-                "value": "2021-01-01T00:00:00.000000Z"
-            },
-            "__hybridId": 1
+            "name": "AirPods",
+            "created_at": "2021-01-01T00:00:00.000000Z"
+        }
+    ],
+    "cells": [
+        {
+            "key": null,
+            "columns": {
+                "name": {
+                    "extra": [],
+                    "value": "AirPods"
+                },
+                "created_at": {
+                    "extra": [],
+                    "value": "2021-01-01T00:00:00.000000Z"
+                }
+            }
         }
     ],
     "paginator": {

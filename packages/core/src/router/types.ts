@@ -246,6 +246,7 @@ export type MergeableProperty = [
 	boolean, // true = prepend, false = append
 	string | null,
 	string[], // merge paths
+	Record<string, string | null>?, // path-specific unique keys
 ]
 
 export type Property =

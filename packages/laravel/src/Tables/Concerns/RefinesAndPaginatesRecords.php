@@ -28,6 +28,7 @@ trait RefinesAndPaginatesRecords
     private ?Refine $refine = null;
     private mixed $cachedRecords = null;
     private mixed $cachedRefiners = null;
+    private mixed $cachedRows = null;
 
     public function getRefiners(): Collection
     {
@@ -37,7 +38,29 @@ trait RefinesAndPaginatesRecords
 
     public function getRecords(): array
     {
-        return data_get($this->getPaginatedRecords(), 'data', []);
+        return $this
+            ->getRows()
+            ->pluck('record')
+            ->all();
+    }
+
+    public function getCells(): array
+    {
+        return $this
+            ->getRows()
+            ->pluck('cells')
+            ->all();
+    }
+
+    public function getRecordKeyName(): ?string
+    {
+        $keyName = $this->getKeyName();
+
+        if ($this->getRows()->contains(fn (array $row) => \is_scalar(data_get($row['record'], $keyName)))) {
+            return $keyName;
+        }
+
+        return null;
     }
 
     public function getRefinedQuery(): Builder
@@ -202,78 +225,70 @@ trait RefinesAndPaginatesRecords
     {
         $paginatedRecords = $this->paginateRecords($this->getRefinedQuery());
 
-        /** @var Collection<BaseColumn> */
-        $columns = $this->getTableColumns()->mapWithKeys(static fn (BaseColumn $column) => [$column->getName() => $column]);
-
-        $keyName = $this->getKeyName();
-        $modelClass = $this->getModelClass();
-
-        // These are the columns we may include, if requested, in the record object.
-        $columnsToInclude = [...$columns->keys(), $keyName, '__hybridId', 'authorization'];
-
-        // We need to know if the record key is included in the columns, because it may be used for actions.
-        // If it's included but transformed, we consider it's not included and we will force-include it.
-        $hasKeyAsColumn = $columns->has($keyName) && ! $columns->get($keyName)->canTransformValue();
-
-        // If we need the original record ID for actions, we may force-include it if it's not already in the columns.
-        $forceIncludeOriginalRecordId = Configuration::get()->tables->enableActions && ! $hasKeyAsColumn;
-
-        return $paginatedRecords->through(function (Model $model, int $fakeId) use ($forceIncludeOriginalRecordId, $hasKeyAsColumn, $modelClass, $columns, $columnsToInclude) {
+        return $paginatedRecords->through(function (Model $model) {
             $record = $this->getRecordArrayFromModel($model);
 
-            // If actions are enabled but the record's key is not included in the
-            // columns or is transformed, ensure we still return it because
-            // it is needed to identify records when performing actions
-            if (! $hasKeyAsColumn) {
-                $record['__hybridId'] = $forceIncludeOriginalRecordId
-                    ? $model->getKey()
-                    : $fakeId;
-            }
-
-            return collect($columnsToInclude)
-                ->mapWithKeys(static function (string $key) use ($columns, $model, $record, $modelClass) {
-                    /** @var ?BaseColumn */
-                    $column = $columns[$key] ?? null;
-                    $value = $record[$key] ?? null;
-
-                    // These are special columns that shouldn't be nested as a {value, extra} object.
-                    if (\in_array($key, ['__hybridId', 'authorization'], strict: true)) {
-                        return [$key => $value];
-                    }
-
-                    // If we don't have a column for this property, we don't send it to the front-end.
-                    if (! $columns->has($key)) {
-                        return [];
-                    }
-
-                    return [
-                        $key => [
-                            'extra' => \is_null($column) || ! $column->hasExtra()
-                                ? []
-                                : $column->getExtra(
-                                    named: [
-                                        'record' => $model,
-                                        'model' => $model,
-                                    ],
-                                    typed: [
-                                        $modelClass => $model,
-                                    ],
-                                ),
-                            'value' => \is_null($column) || ! $column->canTransformValue()
-                                ? $value
-                                : $column->getTransformedValue(
-                                    named: [
-                                        'column' => $column,
-                                        'record' => $record,
-                                    ],
-                                    typed: [
-                                        $modelClass => $model,
-                                    ],
-                                ),
-                        ],
-                    ];
-                })
-                ->filter(fn (mixed $value, string $key) => \in_array($key, $columnsToInclude, strict: true) && ! \is_null($value));
+            return [
+                'record' => $record,
+                'cells' => [
+                    'key' => $this->getRecordKey($record),
+                    'columns' => $this->getRecordCells($record, $model),
+                ],
+            ];
         });
+    }
+
+    /**
+     * @return Collection<int,array{record: array, cells: array{key: string|int|null, columns: array}}>
+     */
+    private function getRows(): Collection
+    {
+        return $this->cachedRows ??= collect(data_get($this->getPaginatedRecords(), 'data', []))
+            ->values();
+    }
+
+    private function getRecordKey(array $record): int|string|null
+    {
+        $key = data_get($record, $this->getKeyName());
+
+        return \is_scalar($key) ? $key : null;
+    }
+
+    private function getRecordCells(array $record, Model $model): array
+    {
+        return $this
+            ->getTableColumns()
+            ->mapWithKeys(function (BaseColumn $column) use ($model, $record) {
+                $key = $column->getName();
+                $value = data_get($record, $key);
+
+                return [
+                    $key => [
+                        'extra' => ! $column->hasExtra()
+                            ? []
+                            : $column->getExtra(
+                                named: [
+                                    'record' => $model,
+                                    'model' => $model,
+                                ],
+                                typed: [
+                                    $this->getModelClass() => $model,
+                                ],
+                            ),
+                        'value' => ! $column->canTransformValue()
+                            ? $value
+                            : $column->getTransformedValue(
+                                named: [
+                                    'column' => $column,
+                                    'record' => $record,
+                                ],
+                                typed: [
+                                    $this->getModelClass() => $model,
+                                ],
+                            ),
+                    ],
+                ];
+            })
+            ->all();
     }
 }

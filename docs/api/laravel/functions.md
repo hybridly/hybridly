@@ -87,6 +87,8 @@ The merge semantics may be configured:
 - `prepend` specifies whether new items should be prepended instead of appended.
 - `paths` specifies the paths to merge instead of the root value.
 
+For tables using infinite scrolling, use the table's `merge()` method instead. It keeps the table's `records` and `cells` payloads synchronized while deduplicating keyed records.
+
 ## `deferred`
 
 Creates a partial property that will automatically be loaded in a subsequent partial reload when the page loads.

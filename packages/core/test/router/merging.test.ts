@@ -235,3 +235,46 @@ test('merges multiple configured nested merge paths inside wrapper objects', asy
 		meta: { page: 2 },
 	})
 })
+
+test('merges configured nested paths with path-specific unique keys', async ({ expect }) => {
+	const properties = await performMergeNavigation({
+		initialProperties: {
+			users: {
+				records: [
+					{ id: 1, name: 'existing-1' },
+					{ id: 2, name: 'existing-2' },
+				],
+				cells: [
+					{ key: 1, columns: { name: { value: 'existing-1' } } },
+					{ key: 2, columns: { name: { value: 'existing-2' } } },
+				],
+			},
+		},
+		incomingProperties: {
+			users: {
+				records: [
+					{ id: 2, name: 'incoming-2' },
+					{ id: 3, name: 'incoming-3' },
+				],
+				cells: [
+					{ key: 2, columns: { name: { value: 'incoming-2' } } },
+					{ key: 3, columns: { name: { value: 'incoming-3' } } },
+				],
+			},
+		},
+		mergeable: [['users', false, null, ['records', 'cells'], { records: 'id', cells: 'key' }]],
+	})
+
+	expect(properties.users).toEqual({
+		records: [
+			{ id: 1, name: 'existing-1' },
+			{ id: 2, name: 'incoming-2' },
+			{ id: 3, name: 'incoming-3' },
+		],
+		cells: [
+			{ key: 1, columns: { name: { value: 'existing-1' } } },
+			{ key: 2, columns: { name: { value: 'incoming-2' } } },
+			{ key: 3, columns: { name: { value: 'incoming-3' } } },
+		],
+	})
+})
