@@ -31,6 +31,34 @@ Most `router.reload()` calls use `async` mode by default.
 
 Body of the request. Can be or contain a `FormData` object.
 
+## `updateImmediately`
+
+- Type: `(properties: Readonly<T>) => Partial<T> | undefined`
+
+Defines a pure optimistic property transform that runs before the request is sent.
+
+Return only the top-level properties that should be replaced. The callback receives the currently rendered view properties and may run more than once while pending requests settle, so it should not mutate its argument or rely on side effects.
+
+```ts
+const liked = !character.liked
+
+router.post(route('characters.like'), {
+	data: {
+		id: character.id,
+		liked,
+	},
+	updateImmediately: (properties) => ({
+		characters: properties.characters.map((current) =>
+			current.id === character.id
+				? { ...current, liked }
+				: current
+		),
+	}),
+})
+```
+
+Read the documentation on [optimistic responses](../../guide/optimistic-responses.md) for more information.
+
 ## `group`
 
 - Type: `string`
