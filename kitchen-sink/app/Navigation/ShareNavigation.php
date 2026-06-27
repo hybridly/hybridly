@@ -149,6 +149,12 @@ final readonly class ShareNavigation
                     href: action(MergeableTableController::class, absolute: false),
                     route_patterns: ['kitchen-sink.tables.mergeable*'],
                 ),
+                new NavigationItem(
+                    label: 'Optimistic table row removal',
+                    icon: 'lucide:users',
+                    href: action(OptimisticMergeTableController::class, absolute: false),
+                    route_patterns: ['kitchen-sink.tables.optimistic-merge*'],
+                ),
             ],
         ));
 
