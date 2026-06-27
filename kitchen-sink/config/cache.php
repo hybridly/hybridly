@@ -1,5 +1,6 @@
 <?php
 
+use App\KitchenSink\DataLoading\Optimistic\Character;
 use Illuminate\Support\Str;
 
 return [
@@ -125,6 +126,8 @@ return [
     |
     */
 
-    'serializable_classes' => false,
+    'serializable_classes' => [
+        Character::class,
+    ],
 
 ];

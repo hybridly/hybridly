@@ -6,6 +6,7 @@ import type { UrlResolvable } from '../url'
 import { normalizeUrl } from '../url'
 import { evaluateConditionalOption } from '../utils'
 import { getHistoryMemo, setHistoryState } from './history'
+import { commitResponseProperties, getCommittedViewProperties, resetViewProperties } from './optimistic'
 import { performHybridNavigation } from './request/request'
 import type { ComponentNavigationOptions, ConditionalNavigationOption, HybridPayload, InternalNavigationOptions } from './types'
 
@@ -26,7 +27,6 @@ export async function navigate(options: InternalNavigationOptions) {
 	// If no request was given, we use the current context instead.
 	options.payload ??= payloadFromContext()
 	options.payload.view ??= payloadFromContext().view
-	options.payload.view.properties = options.properties ?? options.payload.view.properties
 
 	const shouldPreserveState = evaluateConditionalOption(options, options.preserveState)
 	const shouldPreserveScroll = evaluateConditionalOption(options, options.preserveScroll)
@@ -54,7 +54,7 @@ export async function navigate(options: InternalNavigationOptions) {
 		? {
 			view: {
 				component: context.view.component,
-				properties: merge(context.view.properties, options.payload.view.properties),
+				properties: merge(getCommittedViewProperties(), options.properties ?? options.payload.view.properties),
 				deferred: context.view.deferred,
 				mergeable: context.view.mergeable,
 			},
@@ -65,10 +65,22 @@ export async function navigate(options: InternalNavigationOptions) {
 		} satisfies HybridPayload
 		: options.payload
 
+	if (options.type === 'server' && options.optimisticRequest && options.properties) {
+		payload.view.properties = commitResponseProperties(options.optimisticRequest, options.properties, {
+			failed: options.optimisticFailed ?? false,
+		}) ?? payload.view.properties
+	} else if (!shouldPreserveView && options.properties) {
+		payload.view.properties = options.properties
+	}
+
+	if (options.type !== 'server' || payload.view.component !== context.view.component) {
+		payload.view.properties = resetViewProperties(payload.view.component, payload.view.properties)
+	}
+
 	// We merge the new request into the current context. That will replace
 	// view, dialog, url and version, so the context is in sync with the
 	// navigation that took place.
-	setContext({ ...payload, memo: {} })
+	setContext({ ...payload, memo: {} }, { propagate: false })
 
 	// History state must be updated to preserve the expected, native browser behavior.
 	// However, in some cases, we just want to swap the views without making an
@@ -110,10 +122,12 @@ export async function navigate(options: InternalNavigationOptions) {
 	await context.adapter.onViewSwap({
 		component: viewComponent,
 		dialog: context.dialog,
-		properties: options.payload?.view?.properties,
+		properties: payload.view.properties,
 		preserveState: shouldPreserveState,
 		onMounted: (hookOptions) => runHooks('mounted', {}, { ...options, ...hookOptions }, context),
 	})
+
+	context.adapter.onContextUpdate?.(context)
 
 	if (options.type === 'back-forward' || shouldPreserveScroll) {
 		restoreScrollPositions()

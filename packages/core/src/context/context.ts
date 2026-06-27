@@ -68,11 +68,13 @@ export function setContext(merge: Partial<InternalRouterContext> = {}, options: 
 
 /** Gets a payload from the current context. */
 export function payloadFromContext(): HybridPayload {
+	const view = getRouterContext().view
+
 	return {
 		url: getRouterContext().url,
 		version: getRouterContext().version,
 		validation: getRouterContext().validation,
-		view: getRouterContext().view,
+		view,
 		dialog: getRouterContext().dialog,
 	}
 }

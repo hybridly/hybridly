@@ -20,7 +20,9 @@ import { createPromiseWithResolvers } from '../../utils'
 import type { HybridRequestOptions, Method, NavigationResponse, PendingHybridRequest } from '../types'
 import { enqueueRequest } from './request-manager'
 
-export function createPendingHybridRequest(options: HybridRequestOptions): PendingHybridRequest {
+export function createPendingHybridRequest<TProperties extends object = Record<string, any>>(
+	options: HybridRequestOptions<TProperties>,
+): PendingHybridRequest {
 	const context = getRouterContext()
 
 	// Define the target URL by taking the URL given in the navigation
@@ -82,7 +84,9 @@ export async function performHybridRequest(request: PendingHybridRequest): Promi
 }
 
 /** Performs every action necessary to make a hybrid navigation. */
-export async function performHybridNavigation(options: HybridRequestOptions): Promise<NavigationResponse> {
+export async function performHybridNavigation<TProperties extends object = Record<string, any>>(
+	options: HybridRequestOptions<TProperties>,
+): Promise<NavigationResponse> {
 	const context = getRouterContext()
 	debug.router('Making a hybrid navigation:', { context, options })
 
@@ -110,7 +114,7 @@ export async function performHybridNavigation(options: HybridRequestOptions): Pr
 /**
  * Transform the options object with convenience changes.
  */
-export async function transformOptions(options: HybridRequestOptions) {
+export async function transformOptions<TProperties extends object = Record<string, any>>(options: HybridRequestOptions<TProperties>) {
 	const context = getRouterContext()
 
 	// Sets the method if not specifically defined.

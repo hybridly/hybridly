@@ -3,6 +3,7 @@ import { getRouterContext } from 'hybridly'
 import { isNavigationCancelledError } from '../../errors'
 import { isHttpAbortError } from '../../http'
 import { runHooks } from '../../plugins'
+import { beginOptimisticRequest, rejectOptimisticRequest } from '../optimistic'
 import { enqueueResponse } from '../response/response-manager'
 import type { PendingHybridRequest } from '../types'
 import { sendHybridRequest } from './request'
@@ -80,6 +81,8 @@ async function processRequest(request: PendingHybridRequest, onFinally: () => vo
 	debug.queue('Processing request', request)
 
 	try {
+		beginOptimisticRequest(request)
+
 		enqueueResponse({
 			request,
 			response: await sendHybridRequest(request),
@@ -98,6 +101,7 @@ async function processRequest(request: PendingHybridRequest, onFinally: () => vo
 
 async function handleTransportError(request: PendingHybridRequest, error: Error): Promise<void> {
 	const context = getRouterContext()
+	rejectOptimisticRequest(request)
 
 	if (isHttpAbortError(error)) {
 		debug.router('The request was aborted.', error)
@@ -212,5 +216,6 @@ function cancelRequest(request: PendingHybridRequest, options: CancelRequestOpti
 	request.completed = false
 	request.cancelled = options.cancelled ?? false
 	request.interrupted = options.interrupted ?? false
+	rejectOptimisticRequest(request)
 	request.controller.abort()
 }

@@ -9,6 +9,7 @@ import { runHooks } from '../../plugins'
 import { saveScrollPositions } from '../../scroll'
 import { fillHash, sameHashes, sameUrls } from '../../url'
 import { evaluateConditionalOption } from '../../utils'
+import { rejectOptimisticRequest, resolveResponseMergeBase } from '../optimistic'
 import type { Errors, HybridPayload, HybridRequestOptions, NavigationResponse, Properties, Validation, View } from '../types'
 import { navigate } from '../view'
 import { isExternalResponse, performExternalNavigation } from './external'
@@ -28,6 +29,7 @@ export async function handleHybridRequestResponse({ request, response }: HybridR
 	// If one of the `data` hook decided to cancel the,
 	// response we stop processing it and return early.
 	if (result === false) {
+		rejectOptimisticRequest(request)
 		return { response }
 	}
 
@@ -36,6 +38,7 @@ export async function handleHybridRequestResponse({ request, response }: HybridR
 	// case a full page refresh will be performed.
 	if (isExternalResponse(response)) {
 		debug.router('The response is explicitely external.')
+		rejectOptimisticRequest(request)
 		await performExternalNavigation({
 			url: fillHash(request.url, response.headers.get(EXTERNAL_NAVIGATION_HEADER)!),
 			preserveScroll: options.preserveScroll === true,
@@ -47,6 +50,7 @@ export async function handleHybridRequestResponse({ request, response }: HybridR
 
 	if (isDownloadResponse(response)) {
 		debug.router('The response returns a file to download.')
+		rejectOptimisticRequest(request)
 		await handleDownloadResponse(response)
 
 		return { response }
@@ -58,6 +62,7 @@ export async function handleHybridRequestResponse({ request, response }: HybridR
 	if (!isHybridResponse(response)) {
 		debug.router('The response was not hybrid.')
 		console.warn('Hybridly received an invalid response.', response)
+		rejectOptimisticRequest(request)
 
 		await runHooks('fail', request.options.hooks, new InvalidResponseError(), request, context)
 		const prevented = !await runHooks('invalid', request.options.hooks, request, response!, context)
@@ -79,6 +84,7 @@ export async function handleHybridRequestResponse({ request, response }: HybridR
 
 	const mergedValidation = mergeValidation(context.validation, payload.validation, options.errorBag)
 	const incomingErrors = resolveErrors(payload.validation, options.errorBag)
+	const hasValidationErrors = Object.keys(incomingErrors).length > 0
 
 	// We only want to make a page navigation if the request was synchronous
 	// or if we didn't navigate during the request and the response.
@@ -89,11 +95,19 @@ export async function handleHybridRequestResponse({ request, response }: HybridR
 			}
 
 			if (!payload.view.component || (payload.view.component === context.view.component)) {
-				return resolveProperties(context.view.properties, payload.view, {
-					mergeWithOriginal: evaluateConditionalOption(options, options.preserveState) !== false,
-				})
+				return resolveProperties(
+					resolveResponseMergeBase(request, payload.view.mergeable, {
+						includeOptimisticMergeables: !hasValidationErrors,
+					}),
+					payload.view,
+					{ mergeWithOriginal: evaluateConditionalOption(options, options.preserveState) !== false },
+				)
 			}
 		})()
+
+		if (!properties && (!payload.view?.component || payload.view.component === context.view.component)) {
+			rejectOptimisticRequest(request)
+		}
 
 		if (properties) {
 			debug.router('Merged properties:', properties)
@@ -102,6 +116,8 @@ export async function handleHybridRequestResponse({ request, response }: HybridR
 		await navigate({
 			type: 'server',
 			properties,
+			optimisticRequest: request,
+			optimisticFailed: hasValidationErrors,
 			payload: {
 				...payload,
 				validation: mergedValidation,
@@ -115,9 +131,10 @@ export async function handleHybridRequestResponse({ request, response }: HybridR
 		})
 	} else {
 		debug.router('Discarding navigation from an asynchronous request initiated on a previous page.')
+		rejectOptimisticRequest(request)
 	}
 
-	if (Object.keys(incomingErrors).length > 0) {
+	if (hasValidationErrors) {
 		debug.router('The request returned validation errors.', incomingErrors)
 
 		const errors = resolveErrors(context.validation, options.errorBag)

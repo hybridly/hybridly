@@ -1,8 +1,8 @@
 import type { RequestData } from '@hybridly/utils'
 import type { CloseDialogOptions } from '../dialog'
-import type { HybridlyError } from '../errors'
-import type { HttpError, HttpResponse, HttpUploadProgressEvent } from '../http'
+import type { HttpResponse, HttpUploadProgressEvent } from '../http'
 import type { MountedHookOptions, RequestHooks } from '../plugins/hooks'
+import type { GlobalHybridlyProperties } from '../properties'
 import type { RouteName, RouteParameters } from '../routing/types'
 import type { UrlResolvable, UrlTransformable } from '../url'
 
@@ -85,13 +85,27 @@ export interface InternalNavigationOptions extends NavigationOptions {
 	 * @internal
 	 */
 	properties?: Properties
+	/**
+	 * Request whose response is being installed.
+	 * @internal
+	 */
+	optimisticRequest?: PendingHybridRequest
+	/**
+	 * Whether the response being installed failed validation.
+	 * @internal
+	 */
+	optimisticFailed?: boolean
 }
 
 export type Method = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE'
 export type RequestMode = 'navigation' | 'async'
 export type AsyncInterruptionScope = 'none' | 'all' | 'same-group'
+export type OptimisticProperties<TProperties extends object = Record<string, any>> = GlobalHybridlyProperties & TProperties
+export type OptimisticUpdateCallback<TProperties extends object = Record<string, any>> = (
+	properties: Readonly<OptimisticProperties<TProperties>>,
+) => Partial<OptimisticProperties<TProperties>> | undefined
 
-export interface HybridRequestOptions extends Omit<NavigationOptions, 'payload'> {
+export interface HybridRequestOptions<TProperties extends object = Record<string, any>> extends Omit<NavigationOptions, 'payload'> {
 	/** The URL to navigation. */
 	url?: UrlResolvable
 	/** Defines how this request should be executed. */
@@ -114,6 +128,12 @@ export interface HybridRequestOptions extends Omit<NavigationOptions, 'payload'>
 	method?: Method | Lowercase<Method>
 	/** Body of the request. */
 	data?: RequestData
+	/**
+	 * Defines a pure optimistic property transform that runs before the request is sent.
+	 * Return only the top-level properties that should be replaced. This callback may
+	 * run more than once while pending requests settle.
+	 */
+	updateImmediately?: OptimisticUpdateCallback<TProperties>
 	/** Which properties to update for this navigation. Other properties will be ignored. */
 	only?: string | string[]
 	/** Which properties not to update for this navigation. Other properties will be updated. */
@@ -152,25 +172,40 @@ export interface DialogRouter {
 export interface Router {
 	abort: () => void
 	/** Makes a navigate with the given options. */
-	navigate: (options: HybridRequestOptions) => Promise<NavigationResponse>
+	navigate: <TProperties extends object = Record<string, any>>(options: HybridRequestOptions<TProperties>) => Promise<NavigationResponse>
 	/** Reloads the current page. */
-	reload: (options?: HybridRequestOptions) => Promise<NavigationResponse>
+	reload: <TProperties extends object = Record<string, any>>(options?: HybridRequestOptions<TProperties>) => Promise<NavigationResponse>
 	/** Makes a request to given named route. The HTTP verb is determined automatically but can be overriden. */
-	to: <T extends RouteName>(
+	to: <T extends RouteName, TProperties extends object = Record<string, any>>(
 		name: T,
 		parameters?: RouteParameters<T>,
-		options?: Omit<HybridRequestOptions, 'url'>,
+		options?: Omit<HybridRequestOptions<TProperties>, 'url'>,
 	) => Promise<NavigationResponse>
 	/** Makes a GET request to the given URL. */
-	get: (url: UrlResolvable, options?: Omit<HybridRequestOptions, 'method' | 'url'>) => Promise<NavigationResponse>
+	get: <TProperties extends object = Record<string, any>>(
+		url: UrlResolvable,
+		options?: Omit<HybridRequestOptions<TProperties>, 'method' | 'url'>,
+	) => Promise<NavigationResponse>
 	/** Makes a POST request to the given URL. */
-	post: (url: UrlResolvable, options?: Omit<HybridRequestOptions, 'method' | 'url'>) => Promise<NavigationResponse>
+	post: <TProperties extends object = Record<string, any>>(
+		url: UrlResolvable,
+		options?: Omit<HybridRequestOptions<TProperties>, 'method' | 'url'>,
+	) => Promise<NavigationResponse>
 	/** Makes a PUT request to the given URL. */
-	put: (url: UrlResolvable, options?: Omit<HybridRequestOptions, 'method' | 'url'>) => Promise<NavigationResponse>
+	put: <TProperties extends object = Record<string, any>>(
+		url: UrlResolvable,
+		options?: Omit<HybridRequestOptions<TProperties>, 'method' | 'url'>,
+	) => Promise<NavigationResponse>
 	/** Makes a PATCH request to the given URL. */
-	patch: (url: UrlResolvable, options?: Omit<HybridRequestOptions, 'method' | 'url'>) => Promise<NavigationResponse>
+	patch: <TProperties extends object = Record<string, any>>(
+		url: UrlResolvable,
+		options?: Omit<HybridRequestOptions<TProperties>, 'method' | 'url'>,
+	) => Promise<NavigationResponse>
 	/** Makes a DELETE request to the given URL. */
-	delete: (url: UrlResolvable, options?: Omit<HybridRequestOptions, 'method' | 'url'>) => Promise<NavigationResponse>
+	delete: <TProperties extends object = Record<string, any>>(
+		url: UrlResolvable,
+		options?: Omit<HybridRequestOptions<TProperties>, 'method' | 'url'>,
+	) => Promise<NavigationResponse>
 	/** Navigates to the given external URL. Convenience method using `document.location.href`. */
 	external: (url: UrlResolvable, data?: HybridRequestOptions['data']) => void
 	/** Navigates to the given URL without a server round-trip. */
@@ -197,7 +232,7 @@ export interface PendingHybridRequest {
 	/** Abort controller associated to this request. */
 	controller: AbortController
 	/** Options for the associated hybrid request. */
-	options: HybridRequestOptions
+	options: HybridRequestOptions<any>
 	/** Navigation identifier. */
 	id: string
 	/** Whether the request has completed. */

@@ -121,6 +121,7 @@ export default defineConfig({
 					collapsed: false,
 					items: [
 						{ text: 'Partial reloads', link: '/guide/partial-reloads' },
+						{ text: 'Optimistic responses', link: '/guide/optimistic-responses' },
 						{ text: 'Validation', link: '/guide/validation' },
 						{ text: 'Authentication', link: '/guide/authentication' },
 						{ text: 'Authorization', link: '/guide/authorization' },
