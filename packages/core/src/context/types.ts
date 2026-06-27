@@ -1,7 +1,7 @@
 import type { HttpClient } from '../http'
 import type { Hooks } from '../plugins/hooks'
 import type { Plugin } from '../plugins/plugin'
-import type { Dialog, Errors, HybridPayload, ResolveComponent, SwapView, View } from '../router'
+import type { Dialog, Errors, HybridPayload, Properties, ResolveComponent, SwapView, View } from '../router'
 import type { RoutingConfiguration } from '../routing/types'
 
 /** Options for creating a router context. */
@@ -63,6 +63,8 @@ export interface Adapter {
 	resolveComponent: ResolveComponent
 	/** Called when the view is swapped. */
 	onViewSwap: SwapView
+	/** Called when the rendered view properties changed without swapping views. */
+	onPropertiesUpdate?: (properties: Properties, context: InternalRouterContext) => void
 	/** Called when the context is updated. */
 	onContextUpdate?: (context: InternalRouterContext) => void
 	/** Called when a dialog is closed. */

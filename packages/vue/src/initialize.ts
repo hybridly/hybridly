@@ -43,6 +43,9 @@ export async function initializeHybridly(options: InitializeOptions = {}) {
 				onContextUpdate: (context) => {
 					state.setContext(context)
 				},
+				onPropertiesUpdate: (properties) => {
+					state.setProperties(properties)
+				},
 				onViewSwap: async (options) => {
 					if (options.component) {
 						onMountedCallbacks.push(() => options.onMounted?.({ isDialog: false }))

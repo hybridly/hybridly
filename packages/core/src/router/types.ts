@@ -85,11 +85,22 @@ export interface InternalNavigationOptions extends NavigationOptions {
 	 * @internal
 	 */
 	properties?: Properties
+	/**
+	 * Request whose response is being installed.
+	 * @internal
+	 */
+	optimisticRequest?: PendingHybridRequest
+	/**
+	 * Whether the response being installed failed validation.
+	 * @internal
+	 */
+	optimisticFailed?: boolean
 }
 
 export type Method = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE'
 export type RequestMode = 'navigation' | 'async'
 export type AsyncInterruptionScope = 'none' | 'all' | 'same-group'
+export type OptimisticUpdateCallback = (properties: Readonly<Properties>) => Partial<Properties> | undefined
 
 export interface HybridRequestOptions extends Omit<NavigationOptions, 'payload'> {
 	/** The URL to navigation. */
@@ -114,6 +125,12 @@ export interface HybridRequestOptions extends Omit<NavigationOptions, 'payload'>
 	method?: Method | Lowercase<Method>
 	/** Body of the request. */
 	data?: RequestData
+	/**
+	 * Defines a pure optimistic property transform that runs before the request is sent.
+	 * Return only the top-level properties that should be replaced. This callback may
+	 * run more than once while pending requests settle.
+	 */
+	updateImmediately?: OptimisticUpdateCallback
 	/** Which properties to update for this navigation. Other properties will be ignored. */
 	only?: string | string[]
 	/** Which properties not to update for this navigation. Other properties will be updated. */

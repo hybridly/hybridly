@@ -8,6 +8,7 @@ import { runHooks } from '../plugins'
 import type { HybridPayload } from '../router'
 import { saveScrollPositions } from '../scroll'
 import { makeUrl } from '../url'
+import { getCommittedViewProperties } from './optimistic'
 import { cancelNavigationRequest } from './request/request-manager'
 import { navigate } from './view'
 
@@ -168,7 +169,10 @@ export function serializeContext(context: InternalRouterContext): string {
 		url: context.url,
 		version: context.version,
 		validation: context.validation,
-		view: context.view,
+		view: {
+			...context.view,
+			properties: getCommittedViewProperties(context),
+		},
 		dialog: context.dialog,
 		scrollRegions: context.scrollRegions,
 		memo: context.memo,
