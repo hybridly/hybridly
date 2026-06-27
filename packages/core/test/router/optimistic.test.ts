@@ -5,6 +5,7 @@ import type { Adapter } from '../../src/context'
 import { HttpAbortError, HttpError, type HttpClient, type HttpHeaders, type HttpRequest, type HttpResponse } from '../../src/http'
 import type { HybridPayload } from '../../src/router'
 import { serializeContext } from '../../src/router/history'
+import { resetViewProperties } from '../../src/router/optimistic'
 import { performHybridNavigation } from '../../src/router/request/request'
 import { fakePayload, fakeRouterContext } from '../utils'
 
@@ -305,6 +306,77 @@ test('uses optimistic table values as the merge base for touched mergeable prope
 
 	await navigation
 
+	expect(getRouterContext().view.properties.notices).toEqual({
+		records: [
+			{ id: 1, name: 'Notice 1 from server' },
+			{ id: 3, name: 'Notice 3 from server' },
+		],
+		cells: [
+			{ key: 1, columns: { name: { value: 'Notice 1 from server' } } },
+			{ key: 3, columns: { name: { value: 'Notice 3 from server' } } },
+		],
+	})
+})
+
+test('uses request optimistic layer metadata when the active layer stack was reset', async ({ expect }) => {
+	const initialProperties = {
+		notices: {
+			records: [
+				{ id: 1, name: 'Notice 1' },
+				{ id: 2, name: 'Notice 2' },
+				{ id: 3, name: 'Notice 3' },
+			],
+			cells: [
+				{ key: 1, columns: { name: { value: 'Notice 1' } } },
+				{ key: 2, columns: { name: { value: 'Notice 2' } } },
+				{ key: 3, columns: { name: { value: 'Notice 3' } } },
+			],
+		},
+	}
+	const { requests } = await fakeOptimisticRouter(initialProperties)
+	const updateImmediately = vi.fn((properties) => {
+		const notices = properties.notices as Record<string, any>
+
+		return {
+			notices: {
+				...notices,
+				records: notices.records.filter((record: { id: number }) => record.id !== 2),
+				cells: notices.cells.filter((cell: { key: number }) => cell.key !== 2),
+			},
+		}
+	})
+
+	const navigation = performHybridNavigation({
+		url: 'https://bluebird.test/notices/delete',
+		method: 'POST',
+		updateImmediately,
+	})
+	await flushNavigationStart()
+
+	resetViewProperties('users.index', initialProperties)
+
+	requests[0].resolve(makeResponse(fakePayload({
+		view: {
+			component: 'users.index',
+			properties: {
+				notices: {
+					records: [
+						{ id: 1, name: 'Notice 1 from server' },
+						{ id: 3, name: 'Notice 3 from server' },
+					],
+					cells: [
+						{ key: 1, columns: { name: { value: 'Notice 1 from server' } } },
+						{ key: 3, columns: { name: { value: 'Notice 3 from server' } } },
+					],
+				},
+			},
+			deferred: {},
+			mergeable: [['notices', false, null, ['records', 'cells'], { records: 'id', cells: 'key' }]],
+		},
+	})))
+	await navigation
+
+	expect(updateImmediately).toHaveBeenCalledTimes(3)
 	expect(getRouterContext().view.properties.notices).toEqual({
 		records: [
 			{ id: 1, name: 'Notice 1 from server' },

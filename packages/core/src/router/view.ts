@@ -80,7 +80,7 @@ export async function navigate(options: InternalNavigationOptions) {
 	// We merge the new request into the current context. That will replace
 	// view, dialog, url and version, so the context is in sync with the
 	// navigation that took place.
-	setContext({ ...payload, memo: {} })
+	setContext({ ...payload, memo: {} }, { propagate: false })
 
 	// History state must be updated to preserve the expected, native browser behavior.
 	// However, in some cases, we just want to swap the views without making an
@@ -126,6 +126,8 @@ export async function navigate(options: InternalNavigationOptions) {
 		preserveState: shouldPreserveState,
 		onMounted: (hookOptions) => runHooks('mounted', {}, { ...options, ...hookOptions }, context),
 	})
+
+	context.adapter.onContextUpdate?.(context)
 
 	if (options.type === 'back-forward' || shouldPreserveScroll) {
 		restoreScrollPositions()

@@ -19,6 +19,7 @@ export interface ViewPropertyState {
 }
 
 const propertyStates = new WeakMap<InternalRouterContext, ViewPropertyState>()
+const requestLayers = new WeakMap<PendingHybridRequest, OptimisticLayer>()
 
 export function createViewPropertyState(component: string | undefined, properties: Properties): ViewPropertyState {
 	return {
@@ -55,11 +56,14 @@ export function beginOptimisticRequest(request: PendingHybridRequest): void {
 		return
 	}
 
-	state.layers.push({
+	const layer = {
 		requestId: request.id,
 		update,
 		keys,
-	})
+	}
+
+	state.layers.push(layer)
+	requestLayers.set(request, layer)
 
 	propagateRenderedProperties(renderViewProperties())
 }
@@ -104,6 +108,7 @@ export function commitResponseProperties(
 	const layer = findOptimisticLayer(request)
 
 	removeOptimisticLayer(request)
+	requestLayers.delete(request)
 
 	if (!properties) {
 		state.rendered = renderViewProperties()
@@ -121,6 +126,8 @@ export function commitResponseProperties(
 
 export function rejectOptimisticRequest(request: PendingHybridRequest): void {
 	const state = ensureViewPropertyState()
+
+	requestLayers.delete(request)
 
 	if (!removeOptimisticLayer(request)) {
 		return
@@ -165,7 +172,7 @@ function resolveTouchedKeys(currentProperties: Properties, update: Partial<Prope
 }
 
 function findOptimisticLayer(request: PendingHybridRequest): OptimisticLayer | undefined {
-	return ensureViewPropertyState().layers.find((layer) => layer.requestId === request.id)
+	return ensureViewPropertyState().layers.find((layer) => layer.requestId === request.id) ?? requestLayers.get(request)
 }
 
 function layerTouchesProperty(layer: OptimisticLayer, property: string): boolean {

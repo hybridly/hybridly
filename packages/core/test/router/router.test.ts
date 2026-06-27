@@ -33,6 +33,42 @@ test('performs hybrid navigations', async ({ expect }) => {
 	expect(getRouterContext()).toMatchSnapshot('context after navigation')
 })
 
+test('swaps the view before propagating the updated context', async ({ expect }) => {
+	const calls: string[] = []
+
+	await fakeRouterContext({
+		adapter: {
+			resolveComponent: async () => 'target-component',
+			onViewSwap: async () => {
+				calls.push('view')
+			},
+			onContextUpdate: (context) => {
+				calls.push(`context:${context.view.component}`)
+			},
+		},
+	})
+
+	server.resetHandlers(
+		mockSuccessfulUrl('https://bluebird.test/navigation-order', 'get', {
+			json: fakePayload({
+				url: 'https://bluebird.test/navigation-order',
+				view: {
+					component: 'target.view',
+					properties: {
+						foo: 'bar',
+					},
+				},
+			}),
+		}),
+	)
+
+	await performHybridNavigation({
+		url: 'https://bluebird.test/navigation-order',
+	})
+
+	expect(calls.indexOf('view')).toBeLessThan(calls.indexOf('context:target.view'))
+})
+
 test('keeps validation bags isolated when using errorBag', async ({ expect }) => {
 	await fakeRouterContext({
 		payload: {
