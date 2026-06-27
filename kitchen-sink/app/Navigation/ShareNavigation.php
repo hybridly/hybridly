@@ -8,6 +8,7 @@ use App\Http404Controller;
 use App\Http500Controller;
 use App\KitchenSink\DataLoading\Deferred\DeferredPropertiesController;
 use App\KitchenSink\DataLoading\Mergeable\MergeablePropertiesController;
+use App\KitchenSink\DataLoading\Optimistic\OptimisticResponsesController;
 use App\KitchenSink\DataLoading\WhenVisible\WhenVisibleController;
 use App\KitchenSink\Forms\FormComponent\FormComponentController;
 use App\KitchenSink\Forms\Validation\ValidationController;
@@ -18,6 +19,7 @@ use App\KitchenSink\Navigation\PreserveState\PreserveStateController;
 use App\KitchenSink\Navigation\Response\ResponsesController;
 use App\KitchenSink\Navigation\ViewTransitions\ViewTransitionsController;
 use App\KitchenSink\Tables\Mergeable\MergeableTableController;
+use App\KitchenSink\Tables\OptimisticMerge\OptimisticMergeTableController;
 use App\ShowIndexController;
 use Closure;
 use Discovery\Routing\Middleware;
@@ -68,6 +70,12 @@ final readonly class ShareNavigation
                     icon: 'lucide:git-merge',
                     href: action(MergeablePropertiesController::class, absolute: false),
                     route_patterns: ['kitchen-sink.data-loading.mergeable*'],
+                ),
+                new NavigationItem(
+                    label: 'Optimistic responses',
+                    icon: 'lucide:heart',
+                    href: action(OptimisticResponsesController::class, absolute: false),
+                    route_patterns: ['kitchen-sink.data-loading.optimistic*'],
                 ),
                 new NavigationItem(
                     label: 'When visible',
