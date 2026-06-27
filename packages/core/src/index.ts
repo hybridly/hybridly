@@ -6,6 +6,7 @@ export type {
 	HybridRequestOptions,
 	Method,
 	NavigationResponse,
+	OptimisticProperties,
 	OptimisticUpdateCallback,
 	PendingHybridRequest,
 	Progress,
