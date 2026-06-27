@@ -20,6 +20,7 @@ export async function navigate(options: InternalNavigationOptions) {
 	// Since there is no other way to know prior to the navigation actually being made,
 	// we mutate `options` here to add whether there is a dialog or not.
 	options.hasDialog ??= !!options.payload?.dialog
+	options.preserveScroll ??= options.type !== 'initial' && options.hasDialog ? true : undefined
 
 	debug.router('Making an internal navigation:', { context, options })
 	await runHooks('navigating', {}, options, context)
