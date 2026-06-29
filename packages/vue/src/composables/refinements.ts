@@ -260,6 +260,7 @@ export interface TimeSuggestion {
 	type: 'time'
 	label: string
 	date: string
+	is_current: boolean
 }
 
 /**
@@ -270,6 +271,7 @@ export interface TimeframeSuggestion {
 	label: string
 	start: string
 	end: string
+	is_current: boolean
 }
 
 /**

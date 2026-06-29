@@ -331,6 +331,33 @@ class DateFilter extends BaseFilter
         return $this->parseDate($this->filter->value)->format('M j, Y');
     }
 
+    protected function isCurrentSuggestion(TimeSuggestion|TimeframeSuggestion $suggestion): bool
+    {
+        if (! $this->filter?->value) {
+            return false;
+        }
+
+        if ($suggestion instanceof TimeSuggestion) {
+            if ($this->isTimeframe) {
+                return false;
+            }
+
+            return $suggestion->date->is($this->parseDate($this->filter->value));
+        }
+
+        if (! $this->isTimeframe) {
+            return false;
+        }
+
+        $dates = $this->getTimeframeDatesFromValue($this->filter->value);
+
+        if ($dates === null) {
+            return false;
+        }
+
+        return $suggestion->start->is($dates['start']) && $suggestion->end->is($dates['end']);
+    }
+
     protected function getValue(): mixed
     {
         if (! $this->filter?->value) {
@@ -407,6 +434,7 @@ class DateFilter extends BaseFilter
                         'type' => 'time',
                         'label' => $suggestion->label,
                         'date' => $this->formatDate($suggestion->date),
+                        'is_current' => $this->isCurrentSuggestion($suggestion),
                     ];
                 }
 
@@ -416,6 +444,7 @@ class DateFilter extends BaseFilter
                         'label' => $suggestion->label,
                         'start' => $this->formatDate($suggestion->start),
                         'end' => $this->formatDate($suggestion->end),
+                        'is_current' => $this->isCurrentSuggestion($suggestion),
                     ];
                 }
 

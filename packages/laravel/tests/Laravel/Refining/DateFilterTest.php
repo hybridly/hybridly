@@ -45,7 +45,115 @@ it('can serialize with suggestions', function () {
             new TimeSuggestion('Today', CarbonImmutable::parse('2024-01-02')),
         ]);
 
-    expect($filter->jsonSerialize()['metadata']['suggestions'])->toHaveCount(2);
+    expect($filter->jsonSerialize()['metadata']['suggestions'])
+        ->toMatchArray([
+            [
+                'type' => 'time',
+                'label' => 'Yesterday',
+                'date' => '2024-01-01T00:00:00+00:00',
+                'is_current' => false,
+            ],
+            [
+                'type' => 'time',
+                'label' => 'Today',
+                'date' => '2024-01-02T00:00:00+00:00',
+                'is_current' => false,
+            ],
+        ]);
+});
+
+test('it marks current time suggestion', function () {
+    $refiner = mock_refiner(
+        query: ['filters' => ['published_at' => ['value' => '2024-01-02', 'operator' => 'equals']]],
+        refiners: [
+            DateFilter::make('published_at')
+                ->suggest([
+                    new TimeSuggestion('Yesterday', CarbonImmutable::parse('2024-01-01')),
+                    new TimeSuggestion('Today', CarbonImmutable::parse('2024-01-02')),
+                ]),
+        ],
+        apply: true,
+    );
+
+    $suggestions = $refiner->getFilters()[0]->jsonSerialize()['metadata']['suggestions'];
+
+    expect($suggestions[0]['is_current'])->toBeFalse();
+    expect($suggestions[1]['is_current'])->toBeTrue();
+});
+
+test('it marks current timeframe suggestion', function () {
+    $refiner = mock_refiner(
+        query: ['filters' => ['period' => ['value' => ['start' => '2024-02-01', 'end' => '2024-04-30'], 'operator' => 'between']]],
+        refiners: [
+            DateFilter::make('period')
+                ->timeframe(start: 'published_at', end: 'created_at')
+                ->suggest([
+                    new TimeframeSuggestion(
+                        label: 'Previous quarter',
+                        start: CarbonImmutable::parse('2023-11-01'),
+                        end: CarbonImmutable::parse('2024-01-31'),
+                    ),
+                    new TimeframeSuggestion(
+                        label: 'Current quarter',
+                        start: CarbonImmutable::parse('2024-02-01'),
+                        end: CarbonImmutable::parse('2024-04-30'),
+                    ),
+                ]),
+        ],
+        apply: true,
+    );
+
+    $suggestions = $refiner->getFilters()[0]->jsonSerialize()['metadata']['suggestions'];
+
+    expect($suggestions[0]['is_current'])->toBeFalse();
+    expect($suggestions[1]['is_current'])->toBeTrue();
+});
+
+test('it marks current timeframe suggestion from default value', function () {
+    $refiner = mock_refiner(
+        refiners: [
+            DateFilter::make('period')
+                ->timeframe(start: 'published_at', end: 'created_at')
+                ->default([
+                    'start' => CarbonImmutable::parse('2024-02-01'),
+                    'end' => CarbonImmutable::parse('2024-04-30'),
+                ])
+                ->suggest([
+                    new TimeframeSuggestion(
+                        label: 'Current quarter',
+                        start: CarbonImmutable::parse('2024-02-01'),
+                        end: CarbonImmutable::parse('2024-04-30'),
+                    ),
+                ]),
+        ],
+        apply: true,
+    );
+
+    $suggestions = $refiner->getFilters()[0]->jsonSerialize()['metadata']['suggestions'];
+
+    expect($suggestions[0]['is_current'])->toBeTrue();
+});
+
+test('it does not mark suggestions current without a current value', function () {
+    $serializedTimeFilter = DateFilter::make('published_at')
+        ->suggest([
+            new TimeSuggestion('Today', CarbonImmutable::parse('2024-01-02')),
+        ])
+        ->jsonSerialize();
+
+    $serializedTimeframeFilter = DateFilter::make('period')
+        ->timeframe(start: 'published_at', end: 'created_at')
+        ->suggest([
+            new TimeframeSuggestion(
+                label: 'Current quarter',
+                start: CarbonImmutable::parse('2024-02-01'),
+                end: CarbonImmutable::parse('2024-04-30'),
+            ),
+        ])
+        ->jsonSerialize();
+
+    expect($serializedTimeFilter['metadata']['suggestions'][0]['is_current'])->toBeFalse();
+    expect($serializedTimeframeFilter['metadata']['suggestions'][0]['is_current'])->toBeFalse();
 });
 
 it('can serialize timeframe filter', function () {
