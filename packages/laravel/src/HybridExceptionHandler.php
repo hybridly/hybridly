@@ -11,6 +11,7 @@ use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Foundation\ViteException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 
 final class HybridExceptionHandler
@@ -126,8 +127,13 @@ final class HybridExceptionHandler
         }
 
         if ($this->shouldRenderHybridResponse($response, $request, $e)) {
-            return $this
-                ->renderHybridResponse($response, $request, $e)
+            $rendered = $this->renderHybridResponse($response, $request, $e);
+
+            if ($rendered instanceof RedirectResponse) {
+                return $rendered;
+            }
+
+            return $rendered
                 ->toResponse($request)
                 ->setStatusCode($response->getStatusCode());
         }
@@ -161,7 +167,7 @@ final class HybridExceptionHandler
         );
     }
 
-    private function renderHybridResponse(Response $response, Request $request, \Throwable $e): HybridResponse
+    private function renderHybridResponse(Response $response, Request $request, \Throwable $e): HybridResponse|RedirectResponse
     {
         if (\is_null($this->renderExceptionsUsing)) {
             throw new \Exception('The `renderHybridResponse` method is not implemented.');
