@@ -88,7 +88,12 @@ class TernaryFilter extends BaseFilter
 
     public function refine(Refine $refiner, Builder $builder): void
     {
-        $this->filter = $refiner->getQueryFilterFromRequest($this->property, $this->alias);
+        $this->filter = $refiner->getQueryFilterFromRequest(
+            property: $this->property,
+            alias: $this->alias,
+            default: $this->getDefaultValue(),
+            hasDefault: $this->hasDefaultValue(),
+        );
 
         // If value is null/blank and we have a blank query, apply it
         if ($this->filter === null && $this->blankQuery !== null) {

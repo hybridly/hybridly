@@ -1,13 +1,30 @@
 import { HttpResponse } from 'msw'
 import { beforeEach, test, vi } from 'vitest'
 import { nextTick } from 'vue'
-import { useTable, type Table } from '../src'
+import { router, useTable, type FilterRefinement, type Table } from '../src'
 import { http, server } from '../../core/test/server'
 import { fakePayload, fakeRouterContext } from '../../core/test/utils'
 
 interface User {
 	id: number
 	name: string
+}
+
+function makeFilter(overrides: Partial<FilterRefinement> = {}): FilterRefinement {
+	return {
+		name: 'status',
+		hidden: false,
+		label: 'Status',
+		type: 'text',
+		is_active: false,
+		value: null,
+		default: null,
+		has_default: false,
+		operator: 'equals',
+		default_operator: 'equals',
+		metadata: {},
+		...overrides,
+	}
 }
 
 function makeTable(overrides: Partial<Table<User>> = {}): Table<User> {
@@ -52,6 +69,7 @@ function makeTable(overrides: Partial<Table<User>> = {}): Table<User> {
 }
 
 beforeEach(async () => {
+	vi.restoreAllMocks()
 	server.resetHandlers()
 
 	await fakeRouterContext({
@@ -132,4 +150,79 @@ test('ignores keyless records for selection and actions', async ({ expect }) => 
 	expect(warn).toHaveBeenCalledWith('Cannot execute an inline action because this table record has no key.')
 
 	warn.mockRestore()
+})
+
+test('applyFilter clears explicit scalar defaults', async ({ expect }) => {
+	const reloadSpy = vi.spyOn(router, 'reload').mockResolvedValue({} as Awaited<ReturnType<typeof router.reload>>)
+	const users = useTable(makeTable({
+		refinements: {
+			keys: { filters: 'filters', sorts: 'sorts' },
+			filters: [makeFilter({ default: 'pending', has_default: true })],
+			sorts: [],
+		},
+	}))
+
+	await users.applyFilter('status', 'pending')
+
+	expect(reloadSpy).toHaveBeenCalledTimes(1)
+	expect(reloadSpy.mock.calls[0]?.[0]?.data).toEqual({
+		filters: {
+			status: {
+				value: undefined,
+				search: undefined,
+				operator: undefined,
+				options: undefined,
+			},
+		},
+	})
+})
+
+test('applyFilter clears explicit array defaults by value', async ({ expect }) => {
+	const reloadSpy = vi.spyOn(router, 'reload').mockResolvedValue({} as Awaited<ReturnType<typeof router.reload>>)
+	const users = useTable(makeTable({
+		refinements: {
+			keys: { filters: 'filters', sorts: 'sorts' },
+			filters: [makeFilter({ default: ['pending_review'], has_default: true })],
+			sorts: [],
+		},
+	}))
+
+	await users.applyFilter('status', ['pending_review'])
+
+	expect(reloadSpy).toHaveBeenCalledTimes(1)
+	expect(reloadSpy.mock.calls[0]?.[0]?.data).toEqual({
+		filters: {
+			status: {
+				value: undefined,
+				search: undefined,
+				operator: undefined,
+				options: undefined,
+			},
+		},
+	})
+})
+
+test('applyFilter does not clear ambiguous null defaults', async ({ expect }) => {
+	const reloadSpy = vi.spyOn(router, 'reload').mockResolvedValue({} as Awaited<ReturnType<typeof router.reload>>)
+	const users = useTable(makeTable({
+		refinements: {
+			keys: { filters: 'filters', sorts: 'sorts' },
+			filters: [makeFilter({ default: null, has_default: false })],
+			sorts: [],
+		},
+	}))
+
+	await users.applyFilter('status', 'paid')
+
+	expect(reloadSpy).toHaveBeenCalledTimes(1)
+	expect(reloadSpy.mock.calls[0]?.[0]?.data).toEqual({
+		filters: {
+			status: {
+				value: 'paid',
+				search: undefined,
+				operator: undefined,
+				options: undefined,
+			},
+		},
+	})
 })

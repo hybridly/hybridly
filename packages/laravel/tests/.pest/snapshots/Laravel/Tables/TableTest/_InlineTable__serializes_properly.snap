@@ -11,6 +11,7 @@
                 "is_active": false,
                 "direction": null,
                 "default": null,
+                "has_default": false,
                 "desc": "-id",
                 "asc": "id",
                 "next": "id"

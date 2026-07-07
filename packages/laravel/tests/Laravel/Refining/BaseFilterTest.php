@@ -40,6 +40,51 @@ test('filters can have a default value', function () {
         ->toBe(1);
 });
 
+test('filters serialize non-null defaults as explicitly configured', function () {
+    expect(CallbackFilter::make('name', $this->filter)->default('AirPods Pro')->jsonSerialize())
+        ->toMatchArray([
+            'default' => 'AirPods Pro',
+            'has_default' => true,
+        ]);
+});
+
+test('filters without default do not apply absent request input', function () {
+    $received = 'not-called';
+
+    mock_refiner(
+        refiners: [
+            CallbackFilter::make('name', function (Builder $builder, mixed $value) use (&$received): void {
+                $received = $value;
+            }),
+        ],
+        apply: true,
+    );
+
+    expect($received)->toBe('not-called');
+});
+
+test('filters can have an explicit null default value', function () {
+    $received = 'not-called';
+
+    $refiner = mock_refiner(
+        refiners: [
+            CallbackFilter::make('name', function (Builder $builder, mixed $value) use (&$received): void {
+                $received = $value;
+            })->default(null),
+        ],
+        apply: true,
+    );
+
+    expect($received)->toBeNull();
+    expect($refiner->getFilters()[0]->jsonSerialize())
+        ->toMatchArray([
+            'is_active' => true,
+            'value' => null,
+            'default' => null,
+            'has_default' => true,
+        ]);
+});
+
 test('filters are applied using their property', function () {
     $filters = mock_refiner(
         query: ['filters' => ['name' => ['value' => 'AirPods Pro']]],
@@ -90,6 +135,7 @@ test('filters can be serialized', function () {
             'is_active' => false,
             'value' => null,
             'default' => null,
+            'has_default' => false,
         ]);
 });
 
@@ -105,6 +151,7 @@ test('filters use their alias as name when defined', function () {
             'is_active' => false,
             'value' => null,
             'default' => null,
+            'has_default' => false,
         ]);
 });
 

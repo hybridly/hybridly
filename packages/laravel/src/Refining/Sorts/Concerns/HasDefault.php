@@ -5,6 +5,7 @@ namespace Hybridly\Refining\Sorts\Concerns;
 trait HasDefault
 {
     protected \Closure|string|null $defaultDirection = null;
+    protected bool $hasDefaultDirection = false;
     protected \Closure|bool $sole = true;
 
     /**
@@ -16,6 +17,7 @@ trait HasDefault
     public function default(\Closure|string $direction = 'asc', \Closure|bool $sole = true): static
     {
         $this->defaultDirection = $direction;
+        $this->hasDefaultDirection = true;
         $this->sole = $sole;
 
         return $this;
@@ -37,6 +39,11 @@ trait HasDefault
     public function getDefaultDirection(): ?string
     {
         return $this->evaluate($this->defaultDirection);
+    }
+
+    public function hasDefaultDirection(): bool
+    {
+        return $this->hasDefaultDirection;
     }
 
     public function isSole(): bool

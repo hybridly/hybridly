@@ -86,16 +86,16 @@ trait HasRefiners
     }
 
     /**
-     * Gets the filter value for the given property from the request. If an alias is provided, it will be used instead of the property name to look for the value in the request. Returns null if no value is found, or a QueryFilter with the default value if provided.
+     * Gets the filter value for the given property from the request. If an alias is provided, it will be used instead of the property name to look for the value in the request. Returns null if no value is found, or a QueryFilter with the default value if configured.
      */
-    public function getQueryFilterFromRequest(string $property, ?string $alias = null, mixed $default = null): ?QueryFilter
+    public function getQueryFilterFromRequest(string $property, ?string $alias, mixed $default, bool $hasDefault): ?QueryFilter
     {
-        $callback = static function (Request $request, string $scope, string $property, ?string $alias, mixed $default) {
+        $callback = static function (Request $request, string $scope, string $property, ?string $alias, mixed $default, bool $hasDefault) {
             $filters = $request->array($scope);
             $key = $alias ?? $property;
 
             if (! isset($filters[$key])) {
-                return $default !== null ? new QueryFilter(value: $default) : null;
+                return $hasDefault ? new QueryFilter(value: $default) : null;
             }
 
             $value = data_get($filters, "{$key}.value");
@@ -119,6 +119,7 @@ trait HasRefiners
             'property' => $property,
             'alias' => $alias,
             'default' => $default,
+            'hasDefault' => $hasDefault,
         ]);
     }
 

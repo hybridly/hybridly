@@ -31,9 +31,18 @@ it('can be serialized', function () {
             'is_active' => false,
             'direction' => null,
             'default' => null,
+            'has_default' => false,
             'desc' => '-created_at',
             'asc' => 'created_at',
             'next' => 'created_at',
+        ]);
+});
+
+it('serializes default directions as explicitly configured', function () {
+    expect(Sort::make('created_at')->default('desc')->jsonSerialize())
+        ->toMatchArray([
+            'default' => 'desc',
+            'has_default' => true,
         ]);
 });
 
@@ -49,6 +58,7 @@ it('uses its alias as name when serialized', function () {
             'is_active' => false,
             'direction' => null,
             'default' => null,
+            'has_default' => false,
             'desc' => '-date',
             'asc' => 'date',
             'next' => 'date',
@@ -67,6 +77,14 @@ test('sorts can ascending, descending, or unspecified', function (?string $sort,
     ['-published_at', ['AirPods Pro', 'Macbook Pro M1', 'AirPods']],
     [null, ['AirPods', 'AirPods Pro', 'Macbook Pro M1']],
 ]);
+
+test('sorts apply default directions unchanged', function () {
+    $sorts = mock_refiner(
+        refiners: [Sort::make('published_at')->default('desc')],
+    );
+
+    expect($sorts->pluck('name')->toArray())->toEqual(['AirPods Pro', 'Macbook Pro M1', 'AirPods']);
+});
 
 test('sorts use the alias when defined', function (?string $sort, array $expectedOrder) {
     $sorts = mock_refiner(
@@ -98,6 +116,7 @@ test('serialization takes current state into account', function () {
             'is_active' => true,
             'direction' => 'desc',
             'default' => null,
+            'has_default' => false,
             'desc' => '-date',
             'asc' => 'date',
             'next' => null,

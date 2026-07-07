@@ -48,6 +48,7 @@ abstract class BaseFilter extends Components\Component implements Refiner, Filte
             property: $this->property,
             alias: $this->alias,
             default: $this->getDefaultValue(),
+            hasDefault: $this->hasDefaultValue(),
         );
 
         if (\is_null($this->filter)) {
@@ -82,6 +83,7 @@ abstract class BaseFilter extends Components\Component implements Refiner, Filte
             'default_operator' => $this->getDefaultOperator(),
             'supported_operators' => $this->getSupportedOperators(),
             'default' => $this->getDefaultValue(),
+            'has_default' => $this->hasDefaultValue(),
             'options' => $this->filter?->options ?? [],
         ];
     }

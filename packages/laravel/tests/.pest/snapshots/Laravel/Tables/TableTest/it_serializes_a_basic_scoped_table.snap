@@ -11,6 +11,7 @@
                 "is_active": false,
                 "direction": null,
                 "default": null,
+                "has_default": false,
                 "desc": "-name",
                 "asc": "name",
                 "next": "name"
@@ -44,6 +45,7 @@
                     "is_not_null"
                 ],
                 "default": null,
+                "has_default": false,
                 "options": []
             }
         ],

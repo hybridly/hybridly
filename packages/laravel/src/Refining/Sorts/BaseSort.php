@@ -79,6 +79,7 @@ abstract class BaseSort extends Components\Component implements Refiner, Sort
             'is_active' => $this->isActive(),
             'direction' => $this->direction,
             'default' => $this->getDefaultDirection(),
+            'has_default' => $this->hasDefaultDirection(),
             'desc' => $this->getDescendingValue(),
             'asc' => $this->getAscendingValue(),
             'next' => $this->getNextDirection(),

@@ -2,6 +2,7 @@ import type { HybridRequestOptions, NavigationResponse } from '@hybridly/core'
 import { router } from '@hybridly/core'
 import { type FormDataConvertible } from '@hybridly/utils'
 import { debounce } from 'es-toolkit/function'
+import { isEqual } from 'es-toolkit/predicate'
 import type { ComputedRef, MaybeRefOrGetter, Ref } from 'vue'
 import { computed, nextTick, ref, toValue, watch } from 'vue'
 
@@ -115,6 +116,10 @@ export interface BaseFilterRefinement {
 	 * The default value of the filter.
 	 */
 	default: any
+	/**
+	 * Whether this filter has an explicitly configured default value.
+	 */
+	has_default: boolean
 	/**
 	 * The current operator of the filter.
 	 */
@@ -346,6 +351,10 @@ export interface SortRefinement {
 	 * The default direction of the sort.
 	 */
 	default?: SortDirection
+	/**
+	 * Whether this sort has an explicitly configured default direction.
+	 */
+	has_default: boolean
 	/**
 	 * The label of the sort.
 	 */
@@ -790,7 +799,7 @@ export function useRefinements<T extends Refinements>(
 			return
 		}
 
-		if (['', null].includes(value) || value === filter.default) {
+		if (['', null].includes(value) || (filter.has_default && isEqual(value, filter.default))) {
 			value = undefined
 		}
 

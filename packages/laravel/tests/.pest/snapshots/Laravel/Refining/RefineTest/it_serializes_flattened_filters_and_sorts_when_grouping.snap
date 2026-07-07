@@ -8,6 +8,7 @@
             "is_active": false,
             "direction": null,
             "default": null,
+            "has_default": false,
             "desc": "-date",
             "asc": "date",
             "next": "date"
@@ -41,6 +42,7 @@
                 "is_not_null"
             ],
             "default": null,
+            "has_default": false,
             "options": []
         },
         {
@@ -70,6 +72,7 @@
                 "is_not_null"
             ],
             "default": null,
+            "has_default": false,
             "options": []
         }
     ],
