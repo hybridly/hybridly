@@ -144,7 +144,7 @@ const refine = useRefinements($props, 'refinements') // [!code focus]
 				<option value="only" :selected="filter.value === 'only'">
 					Trashed
 				</option>
-				<option value="" :selected="!filter.value">
+				<option value="" :selected="!filter.is_active" @click="filter.clear()">
 					Not trashed
 				</option>
 			</select>
@@ -152,6 +152,16 @@ const refine = useRefinements($props, 'refinements') // [!code focus]
 	</div>
 </template>
 ```
+
+Filter operations are explicit:
+
+- `apply(value, options)` replaces the filter state. Values such as `null` and an empty string are applied literally.
+- `update(options)` changes only the provided parts of the current filter state. Use it for controls such as operator selectors.
+- `clear()` removes the filter. If the filter has an effective default, clearing temporarily disables that default.
+
+Nullary operators such as `is_null` and `is_empty` are represented by the operator alone; they do not require a value.
+
+Sort mutations submit the complete ordered sort list. Activating a new sort makes it primary while preserving the existing sorts as ordered tiebreakers. A sort's `direction` property always contains its effective applied direction.
 
 ## Specifying a default sort
 
@@ -167,6 +177,8 @@ This sort will not be applied if another sort is active. If you wish to always e
 Sorts\Sort::make('full_name')->default('asc', sole: false);
 Sorts\Sort::make('email');
 ```
+
+The `sole` option only controls whether an implicit default is added alongside requested sorts. Explicit ordered sort requests may include the sort normally.
 
 ## Querying nested relationships
 
@@ -232,6 +244,25 @@ Filters\DateFilter::make('period')->timeframe(
     end: 'ends_at',
 );
 ```
+
+Date suggestions may have stable semantic keys. Persist the key when a suggestion should be re-evaluated on each request, such as “today” or “last month”:
+
+```php
+use Carbon\CarbonImmutable;
+use Hybridly\Refining\Filters\TimeSuggestion;
+
+Filters\DateFilter::make('published_at')
+	->suggest([
+		new TimeSuggestion(
+			label: 'Today',
+			date: CarbonImmutable::today(),
+			key: 'today',
+		),
+	])
+	->defaultSuggestion('today');
+```
+
+The view should apply both the resolved value and `suggestionKey`. Unknown or incompatible keys deactivate the filter instead of falling back to a stale value.
 
 ### `SelectFilter`
 

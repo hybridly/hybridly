@@ -10,6 +10,7 @@ final class TimeSuggestion implements JsonSerializable
     public function __construct(
         public string $label,
         public CarbonInterface $date,
+        public ?string $key = null,
     ) {}
 
     public function jsonSerialize(): mixed
@@ -18,6 +19,7 @@ final class TimeSuggestion implements JsonSerializable
             'type' => 'time',
             'label' => $this->label,
             'date' => $this->date->toIso8601String(),
+            'key' => $this->key,
         ];
     }
 }

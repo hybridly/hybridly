@@ -229,9 +229,16 @@ Checks whether the column has a corresponding filter.
 ### `applyFilter`
 
 - Type: `Function`
-- Parameters: `value: any`, `options?: AvailableHybridRequestOptions`
+- Parameters: `value: any`, `options?: AvailableHybridRequestOptionsForFilters`
 
-Applies the filter with the same name as the column, if it exists.
+Applies the filter with the same name as the column, if it exists. Empty strings and `null` are values; use `clearFilter` to remove the filter.
+
+### `updateFilter`
+
+- Type: `Function`
+- Parameters: `options: UpdateFilterOptions`
+
+Updates only the specified parts of the filter with the same name as the column, preserving the rest of its effective state.
 
 ### `clearFilter`
 

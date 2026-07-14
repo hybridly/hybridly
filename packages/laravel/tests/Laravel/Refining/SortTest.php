@@ -1,8 +1,10 @@
 <?php
 
 use Hybridly\Configuration\Configuration;
+use Hybridly\Refining\RefinementState;
 use Hybridly\Refining\Sorts\BaseSort;
 use Hybridly\Refining\Sorts\Sort;
+use Hybridly\Refining\SortState;
 use Hybridly\Tests\Fixtures\Database\ProductFactory;
 use Illuminate\Database\Events\QueryExecuted;
 use Illuminate\Support\Facades\DB;
@@ -32,6 +34,10 @@ it('can be serialized', function () {
             'direction' => null,
             'default' => null,
             'has_default' => false,
+            'current_order' => null,
+            'default_order' => null,
+            'is_overridden' => false,
+            'is_cleared' => false,
             'desc' => '-created_at',
             'asc' => 'created_at',
             'next' => 'created_at',
@@ -44,6 +50,25 @@ it('serializes default directions as explicitly configured', function () {
             'default' => 'desc',
             'has_default' => true,
         ]);
+});
+
+it('treats conditionally null default directions as absent', function () {
+    $sort = Sort::make('published_at')->default(fn (): ?string => null);
+
+    expect($sort->jsonSerialize())->toMatchArray([
+        'default' => null,
+        'has_default' => false,
+    ]);
+
+    $sorts = mock_refiner(refiners: [$sort]);
+
+    expect($sorts->toSql())->not->toContain('order by');
+    expect($sorts->getSorts()[0]->jsonSerialize())->toMatchArray([
+        'is_active' => false,
+        'direction' => null,
+        'default' => null,
+        'has_default' => false,
+    ]);
 });
 
 it('uses its alias as name when serialized', function () {
@@ -59,6 +84,10 @@ it('uses its alias as name when serialized', function () {
             'direction' => null,
             'default' => null,
             'has_default' => false,
+            'current_order' => null,
+            'default_order' => null,
+            'is_overridden' => false,
+            'is_cleared' => false,
             'desc' => '-date',
             'asc' => 'date',
             'next' => 'date',
@@ -219,4 +248,128 @@ test('order by statements can be unqualified', function () {
         ],
         apply: true,
     )->get();
+});
+
+test('replacement baselines supersede declared sort defaults and preserve order', function () {
+    $sorts = mock_refiner(
+        refiners: [
+            Sort::make('name')->default('asc'),
+            Sort::make('published_at')->default('asc'),
+        ],
+    )->withBaseline(new RefinementState(sorts: [
+        new SortState(name: 'published_at', direction: 'desc'),
+        new SortState(name: 'name', direction: 'asc'),
+    ]));
+
+    expect($sorts->toSql())->toContain('order by "products"."published_at" desc, "products"."name" asc');
+
+    $serialized = $sorts->getSorts();
+    expect($serialized[0]->jsonSerialize())->toMatchArray([
+        'name' => 'name',
+        'direction' => 'asc',
+        'default' => 'asc',
+        'current_order' => 1,
+        'default_order' => 1,
+        'is_overridden' => false,
+    ]);
+    expect($serialized[1]->jsonSerialize())->toMatchArray([
+        'name' => 'published_at',
+        'direction' => 'desc',
+        'default' => 'desc',
+        'current_order' => 0,
+        'default_order' => 0,
+        'is_overridden' => false,
+    ]);
+});
+
+test('request sorts override replacement baselines', function () {
+    $sorts = mock_refiner(
+        query: ['sort' => 'name,-published_at'],
+        refiners: [
+            Sort::make('published_at'),
+            Sort::make('name'),
+        ],
+    )->withBaseline(new RefinementState(sorts: [
+        new SortState(name: 'published_at', direction: 'desc'),
+        new SortState(name: 'name', direction: 'asc'),
+    ]));
+
+    expect($sorts->toSql())->toContain('order by "products"."name" asc, "products"."published_at" desc');
+    expect($sorts->getSorts()[0]->jsonSerialize()['is_overridden'])->toBeTrue();
+    expect($sorts->getSorts()[1]->jsonSerialize()['is_overridden'])->toBeTrue();
+});
+
+test('explicit sort requests preserve declared sole defaults as ordered siblings', function () {
+    $sorts = mock_refiner(
+        query: ['sort' => 'name,-published_at'],
+        refiners: [
+            Sort::make('published_at')->default('desc'),
+            Sort::make('name'),
+        ],
+    );
+
+    expect($sorts->toSql())->toContain('order by "products"."name" asc, "products"."published_at" desc');
+    expect($sorts->getSorts()[0]->jsonSerialize())->toMatchArray([
+        'name' => 'published_at',
+        'direction' => 'desc',
+        'current_order' => 1,
+    ]);
+});
+
+test('request sorts equal to replacement baselines are not overridden', function () {
+    $sorts = mock_refiner(
+        query: ['sort' => '-published_at,name'],
+        refiners: [
+            Sort::make('published_at'),
+            Sort::make('name'),
+        ],
+    )->withBaseline(new RefinementState(sorts: [
+        new SortState(name: 'published_at', direction: 'desc'),
+        new SortState(name: 'name', direction: 'asc'),
+    ]));
+
+    $sorts->applyRefiners();
+
+    expect($sorts->getSorts()[0]->jsonSerialize()['is_overridden'])->toBeFalse();
+    expect($sorts->getSorts()[1]->jsonSerialize()['is_overridden'])->toBeFalse();
+});
+
+test('all effective default sorts can be explicitly cleared', function () {
+    $sorts = mock_refiner(
+        query: ['sort_cleared' => true],
+        refiners: [Sort::make('published_at')->default('asc')],
+    )->withBaseline(new RefinementState(sorts: [
+        new SortState(name: 'published_at', direction: 'desc'),
+    ]));
+
+    expect($sorts->toSql())->not->toContain('order by');
+    expect($sorts->getSorts()[0]->jsonSerialize())->toMatchArray([
+        'is_active' => false,
+        'direction' => null,
+        'default' => 'desc',
+        'has_default' => true,
+        'is_overridden' => true,
+        'is_cleared' => true,
+    ]);
+});
+
+test('empty replacement baselines suppress declared sort defaults in queries and metadata', function () {
+    $sorts = mock_refiner(
+        refiners: [Sort::make('published_at')->default('desc')],
+        apply: false,
+    )->withBaseline(new RefinementState());
+
+    $sorts->applyRefiners();
+
+    expect($sorts->toSql())->not->toContain('order by');
+    expect($sorts->getSorts()[0]->jsonSerialize())->toMatchArray([
+        'is_active' => false,
+        'direction' => null,
+        'default' => null,
+        'has_default' => false,
+        'current_order' => null,
+        'default_order' => null,
+        'is_overridden' => false,
+        'is_cleared' => false,
+    ]);
 });

@@ -2,8 +2,11 @@
 
 use Carbon\CarbonImmutable;
 use Hybridly\Refining\Filters\DateFilter;
+use Hybridly\Refining\Filters\Operator;
 use Hybridly\Refining\Filters\TimeframeSuggestion;
 use Hybridly\Refining\Filters\TimeSuggestion;
+use Hybridly\Refining\FilterState;
+use Hybridly\Refining\RefinementState;
 use Hybridly\Tests\Fixtures\Database\Product;
 use Hybridly\Tests\Fixtures\Database\ProductFactory;
 use Pest\Expectation;
@@ -227,6 +230,67 @@ test('it can filter with before operator', function () {
         );
 });
 
+test('nullary date operators do not parse an absent value as today', function (string $operator, int $expectedCount) {
+    $refiner = mock_refiner(
+        query: ['filters' => ['published_at' => ['operator' => $operator]]],
+        refiners: [DateFilter::make('published_at')],
+    );
+
+    expect($refiner->count())->toBe($expectedCount);
+})->with([
+    'is null' => ['is_null', 0],
+    'is not null' => ['is_not_null', 5],
+]);
+
+test('value-less non-nullary date requests are inactive', function (mixed $value) {
+    $refiner = mock_refiner(
+        query: ['filters' => ['published_at' => ['value' => $value, 'operator' => 'equals']]],
+        refiners: [DateFilter::make('published_at')],
+    );
+
+    expect($refiner->count())->toBe(5);
+    expect($refiner->getFilters()[0]->jsonSerialize())->toMatchArray([
+        'is_active' => false,
+        'value' => null,
+    ]);
+})->with([
+    'null' => [null],
+    'empty string' => [''],
+    'blank string' => ['   '],
+    'array' => [[]],
+]);
+
+test('malformed timeframe date requests are inactive', function (mixed $value) {
+    $refiner = mock_refiner(
+        query: ['filters' => ['period' => ['value' => $value, 'operator' => 'between']]],
+        refiners: [DateFilter::make('period')->timeframe(start: 'published_at', end: 'created_at')],
+    );
+
+    expect($refiner->count())->toBe(5);
+    expect($refiner->getFilters()[0]->jsonSerialize()['is_active'])->toBeFalse();
+})->with([
+    'null' => [null],
+    'empty array' => [[]],
+    'missing end' => [['start' => '2024-01-01']],
+    'blank start' => [['start' => '', 'end' => '2024-01-31']],
+    'blank end' => [['start' => '2024-01-01', 'end' => ' ']],
+]);
+
+test('value-less non-nullary date baselines are inactive', function () {
+    $refiner = mock_refiner(
+        refiners: [DateFilter::make('published_at')],
+    )->withBaseline(new RefinementState(filters: [
+        'published_at' => new FilterState(value: null, operator: Operator::EQUALS),
+    ]));
+
+    expect($refiner->count())->toBe(5);
+    expect($refiner->getFilters()[0]->jsonSerialize())->toMatchArray([
+        'is_active' => false,
+        'has_default' => false,
+        'value' => null,
+    ]);
+});
+
 test('it can filter with timeframe between operator', function () {
     // Clear beforeEach data and create specific data with known dates
     Product::query()->delete();
@@ -352,4 +416,195 @@ test('it uses timeframe suggestion label for current value label when dates matc
     $serialized = $filter->jsonSerialize();
 
     expect($serialized['metadata']['current_value_label'])->toBe('Current quarter');
+});
+
+test('it serializes stable suggestion keys', function () {
+    $filter = DateFilter::make('period')
+        ->timeframe(start: 'published_at', end: 'created_at')
+        ->suggest([
+            new TimeframeSuggestion(
+                label: 'Today',
+                start: CarbonImmutable::parse('2024-02-01'),
+                end: CarbonImmutable::parse('2024-02-01'),
+                key: 'today',
+            ),
+        ]);
+
+    expect($filter->jsonSerialize()['metadata']['suggestions'][0])->toMatchArray([
+        'key' => 'today',
+        'is_current' => false,
+    ]);
+});
+
+test('it resolves keyed semantic baseline suggestions on each request', function () {
+    CarbonImmutable::setTestNow('2024-02-20 12:00:00');
+
+    $makeRefiner = static fn () => mock_refiner(
+        refiners: [
+            DateFilter::make('published_at')
+                ->suggest([
+                    new TimeSuggestion(
+                        label: 'Today',
+                        date: CarbonImmutable::now(),
+                        key: 'today',
+                    ),
+                ]),
+        ],
+    )->withBaseline(new RefinementState(filters: [
+        'published_at' => new FilterState(
+            value: null,
+            suggestionKey: 'today',
+        ),
+    ]));
+
+    expect($makeRefiner()->get()->pluck('published_at')->map->format('Y-m-d')->all())->toBe(['2024-02-20']);
+
+    CarbonImmutable::setTestNow('2024-03-10 12:00:00');
+
+    expect($makeRefiner()->get()->pluck('published_at')->map->format('Y-m-d')->all())->toBe(['2024-03-10']);
+});
+
+test('it resolves keyed request suggestions and preserves exact custom ranges', function () {
+    $suggestions = [
+        new TimeframeSuggestion(
+            label: 'First quarter',
+            start: CarbonImmutable::parse('2024-01-01'),
+            end: CarbonImmutable::parse('2024-03-31'),
+            key: 'first-quarter',
+        ),
+    ];
+
+    $semantic = mock_refiner(
+        query: [
+            'filters' => [
+                'period' => [
+                    'value' => ['start' => '2000-01-01', 'end' => '2000-01-02'],
+                    'suggestion_key' => 'first-quarter',
+                    'operator' => 'between',
+                ],
+            ],
+        ],
+        refiners: [
+            DateFilter::make('period')
+                ->timeframe(start: 'published_at', end: 'published_at')
+                ->suggest($suggestions),
+        ],
+    );
+
+    expect($semantic->get())->toHaveCount(3);
+    expect($semantic->getFilters()[0]->jsonSerialize())->toMatchArray([
+        'value' => [
+            'start' => '2024-01-01T00:00:00+00:00',
+            'end' => '2024-03-31T00:00:00+00:00',
+        ],
+        'suggestion_key' => 'first-quarter',
+    ]);
+
+    $exact = mock_refiner(
+        query: [
+            'filters' => [
+                'period' => [
+                    'value' => ['start' => '2024-02-01', 'end' => '2024-04-30'],
+                    'operator' => 'between',
+                ],
+            ],
+        ],
+        refiners: [
+            DateFilter::make('period')
+                ->timeframe(start: 'published_at', end: 'published_at')
+                ->suggest($suggestions),
+        ],
+    );
+
+    expect($exact->get())->toHaveCount(3);
+    expect($exact->getFilters()[0]->jsonSerialize())->toMatchArray([
+        'value' => [
+            'start' => '2024-02-01T00:00:00+00:00',
+            'end' => '2024-04-30T00:00:00+00:00',
+        ],
+        'suggestion_key' => null,
+    ]);
+});
+
+test('it deactivates unknown semantic baseline suggestions', function () {
+    $refiner = mock_refiner(
+        refiners: [
+            DateFilter::make('published_at')
+                ->suggest([
+                    new TimeSuggestion(
+                        label: 'Today',
+                        date: CarbonImmutable::parse('2024-02-20'),
+                        key: 'today',
+                    ),
+                ]),
+        ],
+    )->withBaseline(new RefinementState(filters: [
+        'published_at' => new FilterState(
+            value: '2000-01-01',
+            suggestionKey: 'removed-suggestion',
+        ),
+    ]));
+
+    expect($refiner->get())->toHaveCount(5);
+    expect($refiner->getFilters()[0]->jsonSerialize())->toMatchArray([
+        'is_active' => false,
+        'value' => null,
+        'default' => null,
+        'has_default' => false,
+        'suggestion_key' => null,
+    ]);
+});
+
+test('it deactivates unknown semantic request suggestions', function () {
+    $refiner = mock_refiner(
+        query: [
+            'filters' => [
+                'published_at' => [
+                    'value' => '2000-01-01',
+                    'suggestion_key' => 'removed-suggestion',
+                ],
+            ],
+        ],
+        refiners: [
+            DateFilter::make('published_at')
+                ->suggest([
+                    new TimeSuggestion(
+                        label: 'Today',
+                        date: CarbonImmutable::parse('2024-02-20'),
+                        key: 'today',
+                    ),
+                ]),
+        ],
+    );
+
+    expect($refiner->get())->toHaveCount(5);
+    expect($refiner->getFilters()[0]->jsonSerialize())->toMatchArray([
+        'is_active' => false,
+        'value' => null,
+        'suggestion_key' => null,
+    ]);
+});
+
+test('it deactivates semantic suggestions with the wrong suggestion type', function () {
+    $refiner = mock_refiner(
+        refiners: [
+            DateFilter::make('published_at')
+                ->suggest([
+                    new TimeframeSuggestion(
+                        label: 'Today',
+                        start: CarbonImmutable::parse('2024-02-20'),
+                        end: CarbonImmutable::parse('2024-02-20'),
+                        key: 'today',
+                    ),
+                ]),
+        ],
+    )->withBaseline(new RefinementState(filters: [
+        'published_at' => new FilterState(
+            value: null,
+            suggestionKey: 'today',
+        ),
+    ]));
+
+    expect($refiner->get())->toHaveCount(5);
+    expect($refiner->getFilters()[0]->jsonSerialize()['has_default'])->toBeFalse();
 });

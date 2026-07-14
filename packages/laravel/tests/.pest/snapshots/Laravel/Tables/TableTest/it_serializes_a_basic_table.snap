@@ -12,6 +12,10 @@
                 "direction": null,
                 "default": null,
                 "has_default": false,
+                "current_order": null,
+                "default_order": null,
+                "is_overridden": false,
+                "is_cleared": false,
                 "desc": "-name",
                 "asc": "name",
                 "next": "name"
@@ -46,12 +50,18 @@
                 ],
                 "default": null,
                 "has_default": false,
+                "default_options": [],
+                "default_suggestion_key": null,
+                "suggestion_key": null,
+                "is_overridden": false,
+                "is_cleared": false,
                 "options": []
             }
         ],
         "scope": null,
         "keys": {
             "sorts": "sort",
+            "sorts_cleared": "sort_cleared",
             "filters": "filters"
         }
     },

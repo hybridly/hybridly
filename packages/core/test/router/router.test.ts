@@ -1,9 +1,11 @@
+import { HttpResponse } from 'msw'
 import { beforeEach, test } from 'vitest'
 import { getRouterContext, registerHook } from '../../src'
+import { HYBRIDLY_HEADER, PARTIAL_COMPONENT_HEADER, RESET_HEADER } from '../../src/constants'
 import { isNavigationCancelledError } from '../../src/errors'
 import { router } from '../../src/router'
 import { performHybridNavigation } from '../../src/router/request/request'
-import { server } from '../server'
+import { http, server } from '../server'
 import { fakePayload, fakeRouterContext, mockSuccessfulUrl } from '../utils'
 
 beforeEach(async () => {
@@ -31,6 +33,30 @@ test('performs hybrid navigations', async ({ expect }) => {
 
 	expect(response?.data).toMatchSnapshot('navigation response')
 	expect(getRouterContext()).toMatchSnapshot('context after navigation')
+})
+
+test('sends scoped reset intent as a partial request', async ({ expect }) => {
+	let partialComponent: string | undefined
+	let reset: string | undefined
+
+	server.resetHandlers(
+		http.get('https://bluebird.test/reset', ({ request }) => {
+			partialComponent = request.headers.get(PARTIAL_COMPONENT_HEADER) ?? undefined
+			reset = request.headers.get(RESET_HEADER) ?? undefined
+
+			return HttpResponse.json(fakePayload({ url: 'https://bluebird.test/reset' }), {
+				headers: { [HYBRIDLY_HEADER]: 'true' },
+			})
+		}),
+	)
+
+	await performHybridNavigation({
+		url: 'https://bluebird.test/reset',
+		reset: ['analyses'],
+	})
+
+	expect(partialComponent).toBe('default.view')
+	expect(reset).toBe('["analyses"]')
 })
 
 test('swaps the view before propagating the updated context', async ({ expect }) => {

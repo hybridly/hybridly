@@ -7,7 +7,15 @@ import type { BulkSelection } from './bulk-select'
 import { useBulkSelect } from './bulk-select'
 import { createPaginator, type PaginatorResult } from './paginator'
 import { useQueryParameters } from './query-parameters'
-import type { AvailableHybridRequestOptions, Refinements, SortDirection, ToggleSortOptions, UseRefinements } from './refinements'
+import type {
+	AvailableHybridRequestOptions,
+	AvailableHybridRequestOptionsForFilters,
+	Refinements,
+	SortDirection,
+	ToggleSortOptions,
+	UpdateFilterOptions,
+	UseRefinements,
+} from './refinements'
 import { useRefinements } from './refinements'
 
 export interface Table<
@@ -120,7 +128,9 @@ export interface UseTableColumn<RecordType extends Record<string, any>> extends 
 	/** Checks whether the column is being sorted. */
 	isSorting: (direction?: SortDirection) => boolean
 	/** Applies the filter for this column. */
-	applyFilter: (value: any, options?: AvailableHybridRequestOptions) => UseTableNavigationResponse
+	applyFilter: (value: any, options?: AvailableHybridRequestOptionsForFilters) => UseTableNavigationResponse
+	/** Updates part of the filter for this column. */
+	updateFilter: (options: UpdateFilterOptions) => UseTableNavigationResponse
 	/** Clears the filter for this column. */
 	clearFilter: (options?: AvailableHybridRequestOptions) => UseTableNavigationResponse
 	/** Checks whether the column is sortable. */
@@ -162,7 +172,7 @@ export interface UseTableReturn<
 	T extends Table<any, any>,
 	RecordType extends Record<string, any> = T extends Table<infer R, any> ? R : any,
 	PaginatorKind extends 'cursor' | 'length-aware' | 'simple' = T extends Table<any, infer P> ? P : 'length-aware',
-> extends Omit<UseRefinements, 'filters' | 'sorts' | 'filtersKey' | 'sortsKey'> {
+> extends Omit<UseRefinements, 'filters' | 'sorts' | 'filtersKey' | 'sortsKey' | 'sortsClearedKey'> {
 	/** Selects all records. */
 	selectAll: () => void
 	/** Deselects all records. */
@@ -219,6 +229,8 @@ export interface UseTableReturn<
 	filtersKey: ExtractRefValue<UseRefinements['filtersKey']>
 	/** The key for the sorts. */
 	sortsKey: ExtractRefValue<UseRefinements['sortsKey']>
+	/** The key for explicitly clearing default sorts. */
+	sortsClearedKey: ExtractRefValue<UseRefinements['sortsClearedKey']>
 }
 
 /**
@@ -472,7 +484,9 @@ export function useTable<
 				/** Checks whether the column is being sorted. */
 				isSorting: (direction?: SortDirection) => refinements.isSorting(column.name as string, direction),
 				/** Applies the filer for this column. */
-				applyFilter: (value: any, options?: AvailableHybridRequestOptions) => refinements.applyFilter(column.name as string, value, options),
+				applyFilter: (value: any, options?: AvailableHybridRequestOptionsForFilters) => refinements.applyFilter(column.name as string, value, options),
+				/** Updates part of the filter for this column. */
+				updateFilter: (options: UpdateFilterOptions) => refinements.updateFilter(column.name as string, options),
 				/** Clears the filter for this column. */
 				clearFilter: (options?: AvailableHybridRequestOptions) => refinements.clearFilter(column.name as string, options),
 				/** Checks whether the column is sortable. */

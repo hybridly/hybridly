@@ -1,9 +1,9 @@
 import { HttpResponse } from 'msw'
 import { beforeEach, test, vi } from 'vitest'
 import { nextTick } from 'vue'
-import { router, useTable, type FilterRefinement, type Table } from '../src'
 import { http, server } from '../../core/test/server'
 import { fakePayload, fakeRouterContext } from '../../core/test/utils'
+import { type FilterRefinement, router, type Table, useTable } from '../src'
 
 interface User {
 	id: number
@@ -152,7 +152,7 @@ test('ignores keyless records for selection and actions', async ({ expect }) => 
 	warn.mockRestore()
 })
 
-test('applyFilter clears explicit scalar defaults', async ({ expect }) => {
+test('applyFilter removes overrides equal to scalar defaults', async ({ expect }) => {
 	const reloadSpy = vi.spyOn(router, 'reload').mockResolvedValue({} as Awaited<ReturnType<typeof router.reload>>)
 	const users = useTable(makeTable({
 		refinements: {
@@ -167,17 +167,12 @@ test('applyFilter clears explicit scalar defaults', async ({ expect }) => {
 	expect(reloadSpy).toHaveBeenCalledTimes(1)
 	expect(reloadSpy.mock.calls[0]?.[0]?.data).toEqual({
 		filters: {
-			status: {
-				value: undefined,
-				search: undefined,
-				operator: undefined,
-				options: undefined,
-			},
+			status: undefined,
 		},
 	})
 })
 
-test('applyFilter clears explicit array defaults by value', async ({ expect }) => {
+test('applyFilter removes overrides equal to array defaults', async ({ expect }) => {
 	const reloadSpy = vi.spyOn(router, 'reload').mockResolvedValue({} as Awaited<ReturnType<typeof router.reload>>)
 	const users = useTable(makeTable({
 		refinements: {
@@ -192,12 +187,7 @@ test('applyFilter clears explicit array defaults by value', async ({ expect }) =
 	expect(reloadSpy).toHaveBeenCalledTimes(1)
 	expect(reloadSpy.mock.calls[0]?.[0]?.data).toEqual({
 		filters: {
-			status: {
-				value: undefined,
-				search: undefined,
-				operator: undefined,
-				options: undefined,
-			},
+			status: undefined,
 		},
 	})
 })
@@ -219,9 +209,11 @@ test('applyFilter does not clear ambiguous null defaults', async ({ expect }) =>
 		filters: {
 			status: {
 				value: 'paid',
+				disabled: undefined,
 				search: undefined,
-				operator: undefined,
-				options: undefined,
+				operator: 'equals',
+				options: {},
+				suggestion_key: undefined,
 			},
 		},
 	})

@@ -33,4 +33,12 @@ enum Operator: string
     case BEFORE = 'before';
     case IN_THE_LAST = 'in_the_last';
     case NOT_IN_THE_LAST = 'not_in_the_last';
+
+    public function isNullary(): bool
+    {
+        return match ($this) {
+            self::IS_EMPTY, self::IS_NOT_EMPTY, self::IS_NULL, self::IS_NOT_NULL => true,
+            default => false,
+        };
+    }
 }

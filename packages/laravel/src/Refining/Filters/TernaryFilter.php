@@ -88,12 +88,8 @@ class TernaryFilter extends BaseFilter
 
     public function refine(Refine $refiner, Builder $builder): void
     {
-        $this->filter = $refiner->getQueryFilterFromRequest(
-            property: $this->property,
-            alias: $this->alias,
-            default: $this->getDefaultValue(),
-            hasDefault: $this->hasDefaultValue(),
-        );
+        $this->setRefineInstance($refiner);
+        $this->filter = $this->resolveFilter($refiner);
 
         // If value is null/blank and we have a blank query, apply it
         if ($this->filter === null && $this->blankQuery !== null) {
@@ -113,7 +109,11 @@ class TernaryFilter extends BaseFilter
             return;
         }
 
-        parent::refine($refiner, $builder);
+        if ($this->filter === null) {
+            return;
+        }
+
+        $this->apply($builder, $this->filter, $this->property);
     }
 
     /**

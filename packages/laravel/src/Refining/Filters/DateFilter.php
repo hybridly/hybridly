@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Carbon\CarbonImmutable;
 use Carbon\CarbonInterface;
 use Hybridly\Refining\Concerns\SupportsRelationConstraints;
+use Hybridly\Refining\FilterState;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Support\Str;
 
@@ -21,6 +22,7 @@ class DateFilter extends BaseFilter
     protected string|\Closure|null $title = null;
     protected string|\Closure|null $description = null;
     protected ?\Closure $formatDateUsing = null;
+    protected ?string $defaultSuggestionKey = null;
 
     protected function setUp(): void
     {
@@ -93,6 +95,15 @@ class DateFilter extends BaseFilter
     public function suggest(array $suggestions): static
     {
         $this->suggestions = $suggestions;
+
+        return $this;
+    }
+
+    /** Uses a keyed suggestion as this filter's semantic default. */
+    public function defaultSuggestion(string $key): static
+    {
+        $this->defaultSuggestionKey = $key;
+        $this->default(null);
 
         return $this;
     }
@@ -172,7 +183,9 @@ class DateFilter extends BaseFilter
                 ],
             );
         } else {
-            $date = $this->parseDate($filter->value);
+            $date = $this->resolveOperator()->isNullary()
+                ? null
+                : $this->parseDate($filter->value);
 
             $this->evaluate(
                 value: $this->query,
@@ -198,7 +211,7 @@ class DateFilter extends BaseFilter
         }
     }
 
-    protected function applyDefaultSingleDateQuery(Builder $builder, CarbonInterface $date, string $property): void
+    protected function applyDefaultSingleDateQuery(Builder $builder, ?CarbonInterface $date, string $property): void
     {
         $this->applyRelationConstraint(
             builder: $builder,
@@ -320,7 +333,11 @@ class DateFilter extends BaseFilter
                     continue;
                 }
 
-                if ($suggestion->start->is($startDate) && $suggestion->end->is($endDate)) {
+                if ($suggestion->key !== null && $suggestion->key === $this->filter->suggestionKey) {
+                    return $suggestion->label;
+                }
+
+                if ($this->filter->suggestionKey === null && $suggestion->start->is($startDate) && $suggestion->end->is($endDate)) {
                     return $suggestion->label;
                 }
             }
@@ -335,6 +352,10 @@ class DateFilter extends BaseFilter
     {
         if (! $this->filter?->value) {
             return false;
+        }
+
+        if ($suggestion->key !== null && $this->filter->suggestionKey !== null) {
+            return $suggestion->key === $this->filter->suggestionKey;
         }
 
         if ($suggestion instanceof TimeSuggestion) {
@@ -408,6 +429,120 @@ class DateFilter extends BaseFilter
         return $this->formatDate($this->parseDate($default));
     }
 
+    protected function getDeclaredDefaultState(): ?FilterState
+    {
+        if ($this->defaultSuggestionKey !== null) {
+            return new FilterState(
+                value: null,
+                operator: $this->evaluate($this->defaultOperator),
+                suggestionKey: $this->defaultSuggestionKey,
+            );
+        }
+
+        return parent::getDeclaredDefaultState();
+    }
+
+    protected function resolveFilterState(?FilterState $state): ?FilterState
+    {
+        if ($state === null) {
+            return null;
+        }
+
+        if ($state?->suggestionKey === null) {
+            return ! $this->hasUsableValue($state->value) && ! $this->normalizeOperator($state->operator)?->isNullary()
+                ? null
+                : $state;
+        }
+
+        $value = $this->getSuggestionValue($state->suggestionKey);
+
+        if ($value === null) {
+            return null;
+        }
+
+        return new FilterState(
+            value: $value,
+            operator: $state->operator,
+            options: $state->options,
+            suggestionKey: $state->suggestionKey,
+        );
+    }
+
+    protected function resolveQueryFilter(QueryFilter $filter): ?QueryFilter
+    {
+        if ($filter->suggestionKey === null) {
+            return ! $this->hasUsableValue($filter->value) && ! $this->normalizeOperator($filter->operator)?->isNullary()
+                ? null
+                : $filter;
+        }
+
+        $value = $this->getSuggestionValue($filter->suggestionKey);
+
+        if ($value === null) {
+            return null;
+        }
+
+        return new QueryFilter(
+            value: $value,
+            search: $filter->search,
+            operator: $filter->operator,
+            options: $filter->options,
+            suggestionKey: $filter->suggestionKey,
+        );
+    }
+
+    protected function serializeStateValue(mixed $value): mixed
+    {
+        if ($value === null) {
+            return null;
+        }
+
+        if ($this->isTimeframe) {
+            $dates = $this->getTimeframeDatesFromValue($value);
+
+            if ($dates === null) {
+                return null;
+            }
+
+            return [
+                'start' => $this->formatDate($dates['start']),
+                'end' => $this->formatDate($dates['end']),
+            ];
+        }
+
+        return $this->formatDate($this->parseDate($value));
+    }
+
+    protected function getSuggestionValue(string $key): mixed
+    {
+        $suggestion = array_find(
+            $this->suggestions,
+            static fn (TimeSuggestion|TimeframeSuggestion $suggestion): bool => $suggestion->key === $key,
+        );
+
+        if ($suggestion instanceof TimeSuggestion && ! $this->isTimeframe) {
+            return $this->formatDate($suggestion->date);
+        }
+
+        if ($suggestion instanceof TimeframeSuggestion && $this->isTimeframe) {
+            return [
+                'start' => $this->formatDate($suggestion->start),
+                'end' => $this->formatDate($suggestion->end),
+            ];
+        }
+
+        return null;
+    }
+
+    private function hasUsableValue(mixed $value): bool
+    {
+        if ($this->isTimeframe) {
+            return \is_array($value) && \is_string($value['start'] ?? null) && trim($value['start']) !== '' && \is_string($value['end'] ?? null) && trim($value['end']) !== '';
+        }
+
+        return \is_string($value) && trim($value) !== '';
+    }
+
     protected function formatDate(CarbonInterface $date): string
     {
         return $this->evaluate(
@@ -430,22 +565,30 @@ class DateFilter extends BaseFilter
         return collect($this->suggestions)
             ->map(function (TimeSuggestion|TimeframeSuggestion $suggestion) {
                 if ($suggestion instanceof TimeSuggestion) {
-                    return [
-                        'type' => 'time',
-                        'label' => $suggestion->label,
-                        'date' => $this->formatDate($suggestion->date),
-                        'is_current' => $this->isCurrentSuggestion($suggestion),
-                    ];
+                    return array_filter(
+                        [
+                            'type' => 'time',
+                            'label' => $suggestion->label,
+                            'date' => $this->formatDate($suggestion->date),
+                            'key' => $suggestion->key,
+                            'is_current' => $this->isCurrentSuggestion($suggestion),
+                        ],
+                        static fn (mixed $value): bool => $value !== null,
+                    );
                 }
 
                 if ($suggestion instanceof TimeframeSuggestion) {
-                    return [
-                        'type' => 'timeframe',
-                        'label' => $suggestion->label,
-                        'start' => $this->formatDate($suggestion->start),
-                        'end' => $this->formatDate($suggestion->end),
-                        'is_current' => $this->isCurrentSuggestion($suggestion),
-                    ];
+                    return array_filter(
+                        [
+                            'type' => 'timeframe',
+                            'label' => $suggestion->label,
+                            'start' => $this->formatDate($suggestion->start),
+                            'end' => $this->formatDate($suggestion->end),
+                            'key' => $suggestion->key,
+                            'is_current' => $this->isCurrentSuggestion($suggestion),
+                        ],
+                        static fn (mixed $value): bool => $value !== null,
+                    );
                 }
 
                 return $suggestion;

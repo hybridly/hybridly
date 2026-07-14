@@ -4,12 +4,6 @@ namespace Hybridly;
 
 use Hybridly\Configuration\Configuration;
 use Hybridly\Configuration\Properties;
-use Hybridly\Deferred;
-use Hybridly\IgnoreFirstLoad;
-use Hybridly\Mergeable;
-use Hybridly\Persistent;
-use Hybridly\Property;
-use Hybridly\SerializesProperties;
 use Hybridly\Support\CaseConverter;
 use Hybridly\Support\Header;
 use Illuminate\Contracts\Support\Arrayable;
@@ -43,7 +37,7 @@ final class PropertiesResolver
         if (! $partial) {
             // If the request is not a partial hybrid request, we want to resolve deferred properties,
             // because they will be automatically loaded back with a subsequent partial request.
-            $deferred = $this->extractPropertyPaths($properties, function (mixed $value, string $path) {
+            $deferred = $this->extractPropertyPaths($properties, static function (mixed $value, string $path) {
                 if ($value instanceof Deferred) {
                     return [
                         'key' => $path,
@@ -66,14 +60,13 @@ final class PropertiesResolver
 
         // During partial requests, the client may send a reset intent to prevent mergeable
         // properties to be merged on their previous values. This will effectively reset its state.
-        // TODO: tests
         $reset = $partial && $this->request->hasHeader(Header::RESET)
             ? $this->decodeHeader(Header::RESET)
             : [];
 
         // Mergeable properties are then resolved. These are special properties
         // that will have a special merge treatment when merging on the front-end.
-        $mergeable = $this->extractPropertyPaths($properties, function (mixed $value, string $path) use ($reset) {
+        $mergeable = $this->extractPropertyPaths($properties, static function (mixed $value, string $path) use ($reset) {
             // If a mergeable property is present in the reset array, it means that the client explicitly
             // wants to reset its state instead of merging it with its previous one. In that case,
             // we don't want to treat it as a mergeable property, but rather as a regular one.
@@ -95,7 +88,7 @@ final class PropertiesResolver
         // Next up, we want to know which properties should always be present on
         // the response. These properties are either `Persistent` instances,
         // or they were mentionned in the `$persisted` array.
-        $persisted = $this->extractPropertyPaths($properties, function (mixed $value, string $path) use ($persistedByPath) {
+        $persisted = $this->extractPropertyPaths($properties, static function (mixed $value, string $path) use ($persistedByPath) {
             if (\in_array($path, $persistedByPath, strict: true)) {
                 return $path;
             }
@@ -231,8 +224,8 @@ final class PropertiesResolver
     private function convertPartialPropertiesCase(array $array): array
     {
         return match (Configuration::get()->properties->forceInputCase) {
-            Properties::CAMEL => collect($array)->map(fn ($property) => (string) str()->camel($property))->toArray(),
-            Properties::SNAKE => collect($array)->map(fn ($property) => (string) str()->snake($property))->toArray(),
+            Properties::CAMEL => collect($array)->map(static fn ($property) => (string) str()->camel($property))->toArray(),
+            Properties::SNAKE => collect($array)->map(static fn ($property) => (string) str()->snake($property))->toArray(),
             default => $array,
         };
     }

@@ -2,14 +2,13 @@
 
 namespace Hybridly\Refining\Filters;
 
-use Hybridly\Refining\Filters\Operator;
-
 final class QueryFilter
 {
     public function __construct(
-        public readonly int|string|array|null $value,
+        public readonly int|float|string|bool|array|null $value,
         public readonly ?string $search = null,
         public readonly ?Operator $operator = null,
         public readonly array $options = [],
+        public readonly ?string $suggestionKey = null,
     ) {}
 }

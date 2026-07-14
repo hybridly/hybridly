@@ -38,6 +38,14 @@ trait ConfiguresKeys
     }
 
     /**
+     * Gets the key used to explicitly clear all effective default sorts.
+     */
+    public function getSortsClearedKey(): string
+    {
+        return "{$this->getSortsKey()}_cleared";
+    }
+
+    /**
      * Gets the filters key for this refinement.
      */
     public function getFiltersKey(): string

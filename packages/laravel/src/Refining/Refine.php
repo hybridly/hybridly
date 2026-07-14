@@ -23,6 +23,8 @@ class Refine extends Components\Component
     use Concerns\HasRequest;
     use ForwardsCalls;
 
+    protected ?RefinementState $baseline = null;
+
     final public function __construct(Request $request)
     {
         $this->setRequest($request);
@@ -81,6 +83,24 @@ class Refine extends Components\Component
         return $this->addRefiners($refiners);
     }
 
+    /** Replaces defaults declared by filters and sorts with the given baseline. */
+    public function withBaseline(?RefinementState $baseline): static
+    {
+        $this->baseline = $baseline;
+
+        return $this;
+    }
+
+    public function getBaseline(): ?RefinementState
+    {
+        return $this->baseline;
+    }
+
+    public function hasReplacementBaseline(): bool
+    {
+        return $this->baseline !== null;
+    }
+
     public function getSorts(): array
     {
         return collect($this->getRefiners())
@@ -107,6 +127,7 @@ class Refine extends Components\Component
             'scope' => $this->formatScope(),
             'keys' => [
                 'sorts' => $this->formatScope($this->getSortsKey()),
+                'sorts_cleared' => $this->formatScope($this->getSortsClearedKey()),
                 'filters' => $this->formatScope($this->getFiltersKey()),
             ],
         ];

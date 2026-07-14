@@ -11,6 +11,7 @@ final class TimeframeSuggestion implements JsonSerializable
         public string $label,
         public CarbonInterface $start,
         public CarbonInterface $end,
+        public ?string $key = null,
     ) {}
 
     public function jsonSerialize(): mixed
@@ -20,6 +21,7 @@ final class TimeframeSuggestion implements JsonSerializable
             'label' => $this->label,
             'start' => $this->start->toIso8601String(),
             'end' => $this->end->toIso8601String(),
+            'key' => $this->key,
         ];
     }
 }

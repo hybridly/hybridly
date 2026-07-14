@@ -7,6 +7,7 @@ use Hybridly\Refining;
 use Hybridly\Refining\Contracts\Refiner;
 use Hybridly\Refining\Contracts\Sort;
 use Hybridly\Refining\Refine;
+use Hybridly\Refining\SortState;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 
 abstract class BaseSort extends Components\Component implements Refiner, Sort
@@ -20,7 +21,11 @@ abstract class BaseSort extends Components\Component implements Refiner, Sort
     use Refining\Concerns\QualifiesColumns;
     use Refining\Concerns\HasRefineInstance;
 
-    protected ?string $direction = null;
+    protected ?string $requestedDirection = null;
+    protected ?string $currentDirection = null;
+    protected ?SortState $effectiveDefault = null;
+    protected bool $isCleared = false;
+    protected bool $isOverridden = false;
     protected \Closure|bool $isDirectionCycleInverted = false;
 
     public function __construct(
@@ -46,17 +51,43 @@ abstract class BaseSort extends Components\Component implements Refiner, Sort
     {
         $this->setRefineInstance($refine);
 
-        $this->direction = $refine->getSortDirectionFromRequest($this);
+        $this->requestedDirection = $refine->getSortDirectionFromRequest($this);
+        $this->effectiveDefault = $refine->getEffectiveSortDefault($this);
+        $this->isCleared = $refine->areSortsCleared() && $this->effectiveDefault !== null;
+        $this->isOverridden = $this->resolveIsOverridden($refine);
 
-        if ($this->isSole() && $refine->hasOtherSorts($this)) {
+        if ($refine->areSortsCleared()) {
+            $this->currentDirection = null;
+
             return;
         }
 
-        if (\is_null($this->direction) && ! $this->getDefaultDirection()) {
+        if ($refine->hasReplacementBaseline()) {
+            $this->currentDirection = $this->resolveCurrentDirection($refine);
+
+            if ($this->currentDirection === null) {
+                return;
+            }
+
+            $this->apply($builder, $this->currentDirection, $this->property);
+
             return;
         }
 
-        $this->apply($builder, $this->direction ?? $this->getDefaultDirection(), $this->property);
+        if ($this->requestedDirection === null && $this->isSole() && $refine->hasOtherSorts($this)) {
+            $this->currentDirection = null;
+
+            return;
+        }
+
+        if (\is_null($this->requestedDirection) && ! $this->getDefaultDirection()) {
+            $this->currentDirection = null;
+
+            return;
+        }
+
+        $this->currentDirection = $this->requestedDirection ?? $this->getDefaultDirection();
+        $this->apply($builder, $this->currentDirection, $this->property);
     }
 
     public function setRefineInstance(Refine $refine): void
@@ -66,20 +97,27 @@ abstract class BaseSort extends Components\Component implements Refiner, Sort
 
     public function isActive(): bool
     {
-        return ! \is_null($this->direction);
+        return $this->currentDirection !== null;
     }
 
     public function jsonSerialize(): mixed
     {
+        $hasRefineInstance = isset($this->refine);
+        $default = $this->getSerializedDefault();
+
         return [
             'name' => $this->getName(),
             'hidden' => $this->isHidden(),
             'label' => $this->getLabel(),
             'metadata' => $this->getMetadata(),
             'is_active' => $this->isActive(),
-            'direction' => $this->direction,
-            'default' => $this->getDefaultDirection(),
-            'has_default' => $this->hasDefaultDirection(),
+            'direction' => $this->currentDirection,
+            'default' => $default?->direction,
+            'has_default' => $default !== null,
+            'current_order' => $hasRefineInstance ? $this->refine->getEffectiveCurrentSortOrder($this) : null,
+            'default_order' => $hasRefineInstance ? $this->refine->getEffectiveSortDefaultOrder($this) : null,
+            'is_overridden' => $this->isOverridden,
+            'is_cleared' => $this->isCleared,
             'desc' => $this->getDescendingValue(),
             'asc' => $this->getAscendingValue(),
             'next' => $this->getNextDirection(),
@@ -109,7 +147,7 @@ abstract class BaseSort extends Components\Component implements Refiner, Sort
     {
         return match ($parameterName) {
             'sort' => [$this->sort],
-            'direction' => [$this->direction],
+            'direction' => [$this->currentDirection],
             'property' => [$this->property],
             'alias' => [$this->alias],
             default => [],
@@ -119,18 +157,45 @@ abstract class BaseSort extends Components\Component implements Refiner, Sort
     protected function getNextDirection(): ?string
     {
         if ($this->isDirectionCycleInverted()) {
-            return match ($this->direction) {
+            return match ($this->currentDirection) {
                 'desc' => $this->getAscendingValue(),
                 'asc' => null,
                 default => $this->getDescendingValue(),
             };
         }
 
-        return match ($this->direction) {
+        return match ($this->currentDirection) {
             'desc' => null,
             'asc' => $this->getDescendingValue(),
             default => $this->getAscendingValue(),
         };
+    }
+
+    protected function resolveCurrentDirection(Refine $refine): ?string
+    {
+        if ($refine->areSortsCleared()) {
+            return null;
+        }
+
+        if ($refine->hasRequestedSorts()) {
+            return $this->requestedDirection;
+        }
+
+        return $this->effectiveDefault?->direction;
+    }
+
+    protected function resolveIsOverridden(Refine $refine): bool
+    {
+        if (! $refine->hasRequestedSorts() && ! $refine->areSortsCleared()) {
+            return false;
+        }
+
+        $current = array_find(
+            $refine->getEffectiveCurrentSorts(),
+            fn (SortState $sort): bool => $sort->name === $this->getName(),
+        );
+
+        return $current?->direction !== $this->effectiveDefault?->direction || $refine->getEffectiveCurrentSortOrder($this) !== $refine->getEffectiveSortDefaultOrder($this);
     }
 
     protected function isDirectionCycleInverted(): bool
@@ -146,5 +211,27 @@ abstract class BaseSort extends Components\Component implements Refiner, Sort
     protected function getAscendingValue(): string
     {
         return $this->getName();
+    }
+
+    private function getSerializedDefault(): ?SortState
+    {
+        if (isset($this->refine)) {
+            return $this->effectiveDefault;
+        }
+
+        if (! $this->hasDefaultDirection()) {
+            return null;
+        }
+
+        $direction = $this->getDefaultDirection();
+
+        if ($direction === null) {
+            return null;
+        }
+
+        return new SortState(
+            name: $this->getName(),
+            direction: $direction,
+        );
     }
 }

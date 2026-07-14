@@ -6,6 +6,7 @@ use Hybridly\Components;
 use Hybridly\Refining;
 use Hybridly\Refining\Contracts\Filter;
 use Hybridly\Refining\Contracts\Refiner;
+use Hybridly\Refining\FilterState;
 use Hybridly\Refining\Refine;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 
@@ -25,7 +26,10 @@ abstract class BaseFilter extends Components\Component implements Refiner, Filte
     use Refining\Concerns\HasRefineInstance;
 
     protected ?Refining\Filters\QueryFilter $filter = null;
-    protected Refine $refine;
+    protected ?FilterState $effectiveDefault = null;
+    protected bool $hasResolvedState = false;
+    protected bool $isCleared = false;
+    protected bool $isOverridden = false;
 
     public function __construct(
         protected string $property,
@@ -44,12 +48,7 @@ abstract class BaseFilter extends Components\Component implements Refiner, Filte
     {
         $this->setRefineInstance($refine);
 
-        $this->filter = $refine->getQueryFilterFromRequest(
-            property: $this->property,
-            alias: $this->alias,
-            default: $this->getDefaultValue(),
-            hasDefault: $this->hasDefaultValue(),
-        );
+        $this->filter = $this->resolveFilter($refine);
 
         if (\is_null($this->filter)) {
             return;
@@ -69,6 +68,8 @@ abstract class BaseFilter extends Components\Component implements Refiner, Filte
 
     public function jsonSerialize(): mixed
     {
+        $default = $this->getEffectiveDefaultState();
+
         return [
             'name' => $this->getName(),
             'hidden' => $this->isHidden(),
@@ -79,13 +80,139 @@ abstract class BaseFilter extends Components\Component implements Refiner, Filte
             'is_active' => $this->isActive(),
             'value' => $this->getValue(),
             'search_query' => $this->filter?->search,
-            'operator' => $this->resolveOperator(),
-            'default_operator' => $this->getDefaultOperator(),
+            'operator' => $this->resolveOperator()?->value,
+            'default_operator' => $default?->operator->value ?? $this->getDefaultOperator(),
             'supported_operators' => $this->getSupportedOperators(),
-            'default' => $this->getDefaultValue(),
-            'has_default' => $this->hasDefaultValue(),
-            'options' => $this->filter?->options ?? [],
+            'default' => $default === null ? null : $this->serializeStateValue($default->value),
+            'has_default' => $default !== null,
+            'default_options' => $default->options ?? [],
+            'default_suggestion_key' => $default?->suggestionKey,
+            'suggestion_key' => $this->filter?->suggestionKey,
+            'is_overridden' => $this->isOverridden,
+            'is_cleared' => $this->isCleared,
+            'options' => $this->filter->options ?? [],
         ];
+    }
+
+    protected function resolveFilter(Refine $refine): ?QueryFilter
+    {
+        $this->effectiveDefault = $this->normalizeFilterStateOperator(
+            $this->resolveFilterState(
+                $refine->getEffectiveFilterDefault($this->getName(), $this->getDeclaredDefaultState()),
+            ),
+        );
+        $this->hasResolvedState = true;
+        $this->isCleared = $refine->isFilterCleared($this->getName());
+
+        $filter = $refine->getQueryFilterFromRequest(
+            property: $this->property,
+            alias: $this->alias,
+            default: $this->effectiveDefault,
+        );
+        $filter = $filter === null
+            ? null
+            : $this->normalizeQueryFilterOperator($this->resolveQueryFilter($filter));
+        $this->isOverridden = $this->resolveIsOverridden($refine, $filter);
+
+        return $filter;
+    }
+
+    protected function getDeclaredDefaultState(): ?FilterState
+    {
+        if (! $this->hasDefaultValue()) {
+            return null;
+        }
+
+        return new FilterState(
+            value: $this->getDefaultValue(),
+            operator: $this->evaluate($this->defaultOperator),
+        );
+    }
+
+    protected function getEffectiveDefaultState(): ?FilterState
+    {
+        if ($this->hasResolvedState) {
+            return $this->effectiveDefault;
+        }
+
+        return $this->resolveFilterState($this->getDeclaredDefaultState());
+    }
+
+    protected function resolveFilterState(?FilterState $state): ?FilterState
+    {
+        return $state;
+    }
+
+    protected function resolveQueryFilter(QueryFilter $filter): ?QueryFilter
+    {
+        return $filter;
+    }
+
+    protected function serializeStateValue(mixed $value): mixed
+    {
+        return $value;
+    }
+
+    protected function normalizeOperator(?Operator $operator): ?Operator
+    {
+        $supported = $this->evaluate($this->supportedOperators);
+
+        if ($operator !== null && in_array($operator, $supported, strict: true)) {
+            return $operator;
+        }
+
+        return $this->evaluate($this->defaultOperator);
+    }
+
+    protected function resolveIsOverridden(Refine $refine, ?QueryFilter $filter): bool
+    {
+        if (! $refine->hasFilterRequest($this->getName())) {
+            return false;
+        }
+
+        if ($this->isCleared) {
+            return $this->effectiveDefault !== null;
+        }
+
+        if ($filter === null || $this->effectiveDefault === null) {
+            return $filter !== null || $this->effectiveDefault !== null;
+        }
+
+        return (
+            $this->serializeStateValue($filter->value) !== $this->serializeStateValue($this->effectiveDefault->value)
+            || ($filter->operator ?? $this->evaluate($this->defaultOperator)) !== ($this->effectiveDefault->operator ?? $this->evaluate($this->defaultOperator))
+            || $filter->options !== $this->effectiveDefault->options
+            || $filter->suggestionKey !== $this->effectiveDefault->suggestionKey
+        );
+    }
+
+    private function normalizeFilterStateOperator(?FilterState $state): ?FilterState
+    {
+        if ($state === null) {
+            return null;
+        }
+
+        return new FilterState(
+            value: $state->value,
+            operator: $this->normalizeOperator($state->operator),
+            options: $state->options,
+            suggestionKey: $state->suggestionKey,
+        );
+    }
+
+    private function normalizeQueryFilterOperator(?QueryFilter $filter): ?QueryFilter
+    {
+        if ($filter === null) {
+            return null;
+        }
+
+        return new QueryFilter(
+            value: $filter->value,
+            search: $filter->search,
+            operator: $this->normalizeOperator($filter->operator),
+            options: $filter->options,
+            suggestionKey: $filter->suggestionKey,
+        );
     }
 
     protected function getQueryBoolean(): string

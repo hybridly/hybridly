@@ -4,22 +4,27 @@ namespace Hybridly\Tests\Laravel\View;
 
 use Hybridly\Deferred;
 use Hybridly\IgnoreFirstLoad;
-use Hybridly\Lazy;
 use Hybridly\Merge;
 use Hybridly\OnDemand;
-use Hybridly\Optional;
 use Hybridly\Persistent;
 use Hybridly\PropertiesResolver;
 use Hybridly\Property;
 use Hybridly\SerializesProperties;
 use Hybridly\Support\CaseConverter;
+use Hybridly\Support\Header;
 
 use function Hybridly\Testing\partial_headers;
 
-function get_properties_resolver(bool $partial = false, ?array $only = [], ?array $except = [])
+function get_properties_resolver(bool $partial = false, ?array $only = [], ?array $except = [], array $reset = []): PropertiesResolver
 {
+    $headers = $partial ? partial_headers('foo', $only, $except) : [];
+
+    if ($reset !== []) {
+        $headers[Header::RESET] = json_encode($reset);
+    }
+
     return new PropertiesResolver(
-        request: mock_request(headers: $partial ? partial_headers('foo', $only, $except) : []),
+        request: mock_request(headers: $headers),
         caseConverter: new CaseConverter(),
     );
 }
@@ -318,6 +323,10 @@ it('resolves `Mergeable` properties', function (array $parameters, array $expect
 })->with([
     [['partial' => false], [['mergeable', false, null, [], []], ['nested.mergeable', true, 'id', [], []]]],
     [['partial' => true], [['mergeable', false, null, [], []], ['nested.mergeable', true, 'id', [], []]]],
+    [['partial' => true, 'reset' => ['mergeable']], [['nested.mergeable', true, 'id', [], []]]],
+    [['partial' => true, 'reset' => ['nested.mergeable']], [['mergeable', false, null, [], []]]],
+    [['partial' => true, 'reset' => ['unrelated']], [['mergeable', false, null, [], []], ['nested.mergeable', true, 'id', [], []]]],
+    [['partial' => true, 'reset' => ['*']], []],
 ]);
 
 it('resolves `Partial` properties', function (string $class, array $parameters, array $expectedProperties) {

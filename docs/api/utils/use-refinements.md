@@ -56,7 +56,7 @@ The list of available filters. They are configured by the `Refine` object in the
 
 - Type: `<T>(name: string, options?: BindOptions) => Ref<T>`
 
-Binds the given filter to a ref. The second parameter, `options`, accepts an alternative `watch` function and a `debounce` property that defaults to 250 milliseconds.
+Binds the given filter to a ref. The second parameter, `options`, accepts an alternative `watch` function, a `debounce` property that defaults to 250 milliseconds, and a `clearWhen` callback for explicit clearing.
 
 **Example**
 
@@ -78,6 +78,15 @@ Toggles the specified sort. `ToggleSortOptions` is the same as `HybridRequestOpt
 - Parameters: `filter: string`, `value: any`
 
 Applies the specified value to the specified filter.
+
+Application is literal: `null` and empty strings are values. The optional filter state includes `operator`, `options`, and `suggestionKey`. Use [`clearFilter`](#clearfilter) to clear a filter.
+
+### `updateFilter`
+
+- Type: `Function`
+- Parameters: `filter: string`, `options: UpdateFilterOptions`
+
+Updates only the specified parts of the filter's effective state. Unspecified values, options, operators, and semantic suggestion keys are preserved.
 
 ### `isFiltering`
 
@@ -125,7 +134,7 @@ Clears all active sorts.
 
 - Type: `Array<SortRefinement>`
 
-The list of currently active sorts.
+The list of currently active sorts, in order.
 
 ### `currentFilters`
 
@@ -151,21 +160,46 @@ Gets a sort object by name.
 
 Resets all filters and sorts.
 
+### `captureState`
+
+- Type: `(options?: RefinementStateOptions) => RefinementState`
+
+Captures the effective filters and ordered sorts. Semantic date filters retain their `suggestion_key`, and nullary filters are captured as operator-only states.
+
+### `isModified`
+
+- Type: `(options?: RefinementStateOptions) => boolean`
+
+Determines whether the current state differs from its defaults.
+
+### `resetToDefaults`
+
+- Type: `Function`
+
+Removes request overrides and restores the defaults.
+
 ## The `sorts` array
 
 This array contains an entry for each available sort.
 
 Each entry extends [`SortRefinement`](#interfaces) and adds the `toggle`, `isSorting` and `clear` methods.
 
-These methods are shorthands to [`toggleSort`](#togglesort), [`isSorting`](#issorting) and [`clearSort`](#clearsort) respectively, without the need for the sort name parameter.
+These methods are shorthands to [`toggleSort`](#togglesort), [`isSorting`](#issorting), and [`clearSort`](#clearsort) respectively, without the need for the sort name parameter.
+
+### `clearSort`
+
+- Type: `Function`
+- Parameters: `sort: string`
+
+Removes the specified sort while preserving the order of all other active sorts. Use [`clearSorts`](#clearsorts) to clear the complete sort state.
 
 ## The `filters` array
 
 This array contains an entry for each available filter.
 
-Each entry extends [`FilterRefinement`](#interfaces) and adds the `apply` and `clear` methods.
+Each entry extends [`FilterRefinement`](#interfaces) and adds the `apply`, `update`, and `clear` methods.
 
-These methods are shorthands to [`applyFilter`](#applyfilter) and [`clearFilter`](#clearfilter) respectively, without the need for the filter name parameter.
+These methods are shorthands to [`applyFilter`](#applyfilter), [`updateFilter`](#updatefilter), and [`clearFilter`](#clearfilter) respectively, without the need for the filter name parameter.
 
 ## Interfaces
 

@@ -3,7 +3,10 @@
 use Hybridly\Configuration\Configuration;
 use Hybridly\Refining\Filters\BaseFilter;
 use Hybridly\Refining\Filters\CallbackFilter;
+use Hybridly\Refining\Filters\Operator;
 use Hybridly\Refining\Filters\TextFilter;
+use Hybridly\Refining\FilterState;
+use Hybridly\Refining\RefinementState;
 use Hybridly\Tests\Fixtures\Database\ProductFactory;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 
@@ -224,4 +227,121 @@ test('filters key respects the scope', function () {
         ->toBe('AirPods Pro')
         ->count()
         ->toBe(1);
+});
+
+test('replacement baselines supersede declared filter defaults', function () {
+    $filters = mock_refiner(
+        refiners: [
+            CallbackFilter::make('name', $this->filter)->default('AirPods Pro'),
+        ],
+    )->withBaseline(new RefinementState(filters: [
+        'name' => new FilterState(value: 'AirPods'),
+    ]));
+
+    expect($filters->pluck('name')->all())->toBe(['AirPods']);
+});
+
+test('an empty replacement baseline suppresses declared filter defaults', function () {
+    $filters = mock_refiner(
+        refiners: [
+            CallbackFilter::make('name', $this->filter)->default('AirPods Pro'),
+        ],
+    )->withBaseline(new RefinementState());
+
+    expect($filters)->count()->toBe(3);
+});
+
+test('request filters override replacement baselines and serialize effective state', function () {
+    $filters = mock_refiner(
+        query: ['filters' => ['name' => ['value' => 'AirPods Pro']]],
+        refiners: [
+            CallbackFilter::make('name', $this->filter)->default('Macbook Pro M1'),
+        ],
+        apply: false,
+    )->withBaseline(new RefinementState(filters: [
+        'name' => new FilterState(value: 'AirPods'),
+    ]));
+
+    $filters->applyRefiners();
+
+    expect($filters->pluck('name')->all())->toBe(['AirPods Pro']);
+    expect($filters->getFilters()[0]->jsonSerialize())->toMatchArray([
+        'value' => 'AirPods Pro',
+        'default' => 'AirPods',
+        'has_default' => true,
+        'is_overridden' => true,
+        'is_cleared' => false,
+    ]);
+});
+
+test('request filters equal to replacement baselines are not overridden', function () {
+    $filters = mock_refiner(
+        query: ['filters' => ['name' => ['value' => 'AirPods']]],
+        refiners: [CallbackFilter::make('name', $this->filter)],
+        apply: false,
+    )->withBaseline(new RefinementState(filters: [
+        'name' => new FilterState(value: 'AirPods'),
+    ]));
+
+    $filters->applyRefiners();
+
+    expect($filters->getFilters()[0]->jsonSerialize())->toMatchArray([
+        'is_overridden' => false,
+        'is_cleared' => false,
+    ]);
+});
+
+test('filters can explicitly clear effective baselines', function () {
+    $filters = mock_refiner(
+        query: ['filters' => ['name' => ['disabled' => true]]],
+        refiners: [CallbackFilter::make('name', $this->filter)],
+        apply: false,
+    )->withBaseline(new RefinementState(filters: [
+        'name' => new FilterState(value: 'AirPods'),
+    ]));
+
+    expect($filters)->count()->toBe(3);
+    expect($filters->getFilters()[0]->jsonSerialize())->toMatchArray([
+        'is_active' => false,
+        'value' => null,
+        'default' => 'AirPods',
+        'has_default' => true,
+        'is_overridden' => true,
+        'is_cleared' => true,
+    ]);
+});
+
+test('request filters preserve JSON scalar values without sentinel coercion', function (mixed $value) {
+    $refiner = mock_refiner(
+        query: ['filters' => ['value' => ['value' => $value]]],
+        refiners: [TextFilter::make('value')],
+        apply: false,
+    );
+
+    $refiner->applyRefiners();
+
+    expect($refiner->getFilters()[0]->jsonSerialize()['value'])->toBe($value);
+})->with([
+    'false' => false,
+    'decimal' => 2.75,
+    'literal null string' => 'null',
+]);
+
+test('unsupported request and baseline operators normalize to the filter default', function () {
+    $filters = mock_refiner(
+        query: ['filters' => ['name' => ['value' => 'AirPods', 'operator' => Operator::GREATER_THAN->value]]],
+        refiners: [TextFilter::make('name')],
+        apply: false,
+    )->withBaseline(new RefinementState(filters: [
+        'name' => new FilterState(value: 'AirPods', operator: Operator::GREATER_THAN),
+    ]));
+
+    $filters->applyRefiners();
+
+    expect($filters->pluck('name')->all())->toBe(['AirPods']);
+    expect($filters->getFilters()[0]->jsonSerialize())->toMatchArray([
+        'operator' => Operator::EQUALS->value,
+        'default_operator' => Operator::EQUALS->value,
+        'is_overridden' => false,
+    ]);
 });
