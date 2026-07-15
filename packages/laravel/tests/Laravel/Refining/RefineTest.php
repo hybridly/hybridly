@@ -1,6 +1,7 @@
 <?php
 
 use Hybridly\Refining\Filters\Operator;
+use Hybridly\Refining\Filters\SelectFilter;
 use Hybridly\Refining\Filters\TextFilter;
 use Hybridly\Refining\FilterState;
 use Hybridly\Refining\Group;
@@ -187,4 +188,32 @@ it('rejects invalid refinement state values', function (callable $state) {
     'empty sort name' => fn () => new SortState(name: '', direction: 'asc'),
     'invalid sort direction' => fn () => new SortState(name: 'created_at', direction: 'up'),
     'non-string sort state' => fn () => SortState::fromArray(['name' => 1, 'direction' => true]),
+]);
+
+it('normalizes state through configured refiners', function () {
+    $refine = mock_refiner(refiners: [
+        SelectFilter::make('vendor')->options(\Hybridly\Tests\Fixtures\Vendor::class),
+        Sort::make('name'),
+    ]);
+
+    $state = $refine->normalizeState(new RefinementState(
+        filters: ['vendor' => new FilterState(value: 'apple')],
+        sorts: [new SortState(name: 'name', direction: 'desc')],
+    ));
+
+    expect($state->filter('vendor')?->operator)->toBe(Operator::EQUALS);
+    expect($state->sort('name')?->direction)->toBe('desc');
+});
+
+it('rejects unknown refiners and unavailable select values', function (RefinementState $state) {
+    $refine = mock_refiner(refiners: [
+        SelectFilter::make('vendor')->options(\Hybridly\Tests\Fixtures\Vendor::class),
+        Sort::make('name'),
+    ]);
+
+    expect(fn () => $refine->normalizeState($state))->toThrow(InvalidArgumentException::class);
+})->with([
+    'unknown filter' => new RefinementState(filters: ['missing' => new FilterState(value: 'value')]),
+    'unknown sort' => new RefinementState(sorts: [new SortState(name: 'missing', direction: 'asc')]),
+    'unavailable selection' => new RefinementState(filters: ['vendor' => new FilterState(value: 'missing')]),
 ]);

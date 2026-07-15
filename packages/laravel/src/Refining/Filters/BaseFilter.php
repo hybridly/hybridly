@@ -9,6 +9,7 @@ use Hybridly\Refining\Contracts\Refiner;
 use Hybridly\Refining\FilterState;
 use Hybridly\Refining\Refine;
 use Illuminate\Contracts\Database\Eloquent\Builder;
+use InvalidArgumentException;
 
 abstract class BaseFilter extends Components\Component implements Refiner, Filter
 {
@@ -64,6 +65,22 @@ abstract class BaseFilter extends Components\Component implements Refiner, Filte
     public function isActive(): bool
     {
         return ! \is_null($this->filter);
+    }
+
+    public function normalizeState(FilterState $state): FilterState
+    {
+        $supported = $this->evaluate($this->supportedOperators);
+
+        if ($state->operator !== null && ! in_array($state->operator, $supported, strict: true)) {
+            throw new InvalidArgumentException("Unsupported operator [{$state->operator->value}] for filter [{$this->getName()}].");
+        }
+
+        return new FilterState(
+            value: $state->value,
+            operator: $state->operator ?? $this->evaluate($this->defaultOperator),
+            options: $state->options,
+            suggestionKey: $state->suggestionKey,
+        );
     }
 
     public function jsonSerialize(): mixed

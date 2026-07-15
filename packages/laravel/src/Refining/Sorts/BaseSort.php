@@ -100,6 +100,11 @@ abstract class BaseSort extends Components\Component implements Refiner, Sort
         return $this->currentDirection !== null;
     }
 
+    public function normalizeState(SortState $state): SortState
+    {
+        return $state;
+    }
+
     public function jsonSerialize(): mixed
     {
         $hasRefineInstance = isset($this->refine);

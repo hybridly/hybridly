@@ -119,6 +119,45 @@ class Refine extends Components\Component
             ->toArray();
     }
 
+    /** Validates and normalizes persisted state against the configured refiners. */
+    public function normalizeState(RefinementState $state): RefinementState
+    {
+        $filters = collect($this->getFilters())
+            ->keyBy(
+                fn (BaseFilter $filter): string => $filter->getName(),
+            );
+        $sorts = collect($this->getSorts())
+            ->keyBy(
+                fn (BaseSort $sort): string => $sort->getName(),
+            );
+
+        foreach ($state->filters as $name => $filterState) {
+            $filter = $filters->get($name);
+
+            if (! $filter instanceof BaseFilter) {
+                throw new InvalidArgumentException("Unknown filter [{$name}].");
+            }
+
+            $filter->setRefineInstance($this);
+            $normalizedFilters[$name] = $filter->normalizeState($filterState);
+        }
+
+        foreach ($state->sorts as $sortState) {
+            $sort = $sorts->get($sortState->name);
+
+            if (! $sort instanceof BaseSort) {
+                throw new InvalidArgumentException("Unknown sort [{$sortState->name}].");
+            }
+
+            $normalizedSorts[] = $sort->normalizeState($sortState);
+        }
+
+        return new RefinementState(
+            filters: $normalizedFilters ?? [],
+            sorts: $normalizedSorts ?? [],
+        );
+    }
+
     public function jsonSerialize(): array
     {
         return [
