@@ -1,8 +1,6 @@
 <?php
 
-use Hybridly\Refining\Filters\BaseFilter;
 use Hybridly\Refining\Filters\TextFilter;
-use Hybridly\Tests\Fixtures\Database\Product;
 use Hybridly\Tests\Fixtures\Database\ProductFactory;
 use Hybridly\Tests\Fixtures\Vendor;
 use Illuminate\Database\Events\QueryExecuted;

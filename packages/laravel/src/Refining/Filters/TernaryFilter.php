@@ -2,7 +2,6 @@
 
 namespace Hybridly\Refining\Filters;
 
-use Hybridly\Refining\Filters\Operator;
 use Hybridly\Refining\Refine;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 

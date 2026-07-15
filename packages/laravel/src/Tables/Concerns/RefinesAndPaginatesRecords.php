@@ -167,7 +167,6 @@ trait RefinesAndPaginatesRecords
 
     protected function transformRefinements(Refine $refining): void
     {
-        //
     }
 
     protected function getRefineInstance(): Refine

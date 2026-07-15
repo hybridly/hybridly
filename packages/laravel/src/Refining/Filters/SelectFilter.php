@@ -5,11 +5,12 @@ namespace Hybridly\Refining\Filters;
 use BackedEnum;
 use Closure;
 use Hybridly\Refining\Concerns\SupportsRelationConstraints;
-use Hybridly\Refining\Filters\Operator;
+use Hybridly\Refining\FilterState;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
+use InvalidArgumentException;
 use UnitEnum;
 
 class SelectFilter extends BaseFilter
@@ -369,6 +370,41 @@ class SelectFilter extends BaseFilter
                 1 => $this->selectedOptions,
             ],
         );
+    }
+
+    public function normalizeState(FilterState $state): FilterState
+    {
+        $state = parent::normalizeState($state);
+        $hasEmptyOption = data_get($state->options, 'empty') === true;
+
+        if ($hasEmptyOption && (! $this->isRelationship() || ! $this->hasEmptyRelationshipOption)) {
+            throw new InvalidArgumentException("Filter [{$this->getName()}] does not support an empty relationship selection.");
+        }
+
+        if ($state->value === null && $hasEmptyOption) {
+            return $state;
+        }
+
+        if ($this->isMultiple() !== is_array($state->value)) {
+            throw new InvalidArgumentException("Filter [{$this->getName()}] has an invalid selection shape.");
+        }
+
+        $this->filter = new QueryFilter(
+            value: $state->value,
+            search: null,
+            operator: $state->operator,
+            options: $state->options,
+            suggestionKey: $state->suggestionKey,
+        );
+
+        $selectedOptions = $this->parseQueryValue($state->value);
+        $selectedCount = is_array($state->value) ? count($state->value) : 1;
+
+        if (count($selectedOptions) !== $selectedCount) {
+            throw new InvalidArgumentException("Filter [{$this->getName()}] contains an unavailable selection.");
+        }
+
+        return $state;
     }
 
     protected function resolveSelectedOptions(): array

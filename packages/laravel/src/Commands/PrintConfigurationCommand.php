@@ -68,9 +68,11 @@ final class PrintConfigurationCommand extends Command
 
         foreach (data_get($composer, 'autoload.psr-4', default: []) as $namespace => $paths) {
             foreach (Arr::wrap($paths) as $path) {
-                if (realpath(base_path($path)) !== false) {
-                    $directories[] = Str::chopStart(base_path($path), base_path('/'));
+                if (realpath(base_path($path)) === false) {
+                    continue;
                 }
+
+                $directories[] = Str::chopStart(base_path($path), base_path('/'));
             }
         }
 

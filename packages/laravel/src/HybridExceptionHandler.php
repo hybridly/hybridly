@@ -4,7 +4,6 @@ namespace Hybridly;
 
 use Closure;
 use Hybridly\Components\Concerns\EvaluatesClosures;
-use Hybridly\HybridResponse;
 use Illuminate\Contracts\Debug\ExceptionHandler as ExceptionHandlerContract;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
@@ -23,10 +22,10 @@ final class HybridExceptionHandler
      */
     private(set) bool $registered = false;
 
-    protected ?Closure $obtainHandledEnvironmentsUsing = null;
-    protected ?Closure $obtainHandledStatusCodesUsing = null;
-    protected ?Closure $renderExceptionsUsing = null;
-    protected ?Closure $handleSessionExpirationUsing = null;
+    private ?Closure $obtainHandledEnvironmentsUsing = null;
+    private ?Closure $obtainHandledStatusCodesUsing = null;
+    private ?Closure $renderExceptionsUsing = null;
+    private ?Closure $handleSessionExpirationUsing = null;
 
     public function __construct(
         private readonly ExceptionHandlerContract $handler,

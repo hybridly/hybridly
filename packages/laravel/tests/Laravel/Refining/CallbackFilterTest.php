@@ -5,7 +5,6 @@ use Hybridly\Refining\Filters\CallbackFilter;
 use Hybridly\Tests\Fixtures\Database\ProductFactory;
 use Hybridly\Tests\Fixtures\Filters\InvokableClassFilter;
 use Illuminate\Contracts\Database\Eloquent\Builder;
-use Illuminate\Validation\ValidationException;
 
 it('can be serialized', function () {
     $filter = CallbackFilter::make('airpods_gen', function (Builder $builder, mixed $value) {

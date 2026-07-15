@@ -65,6 +65,6 @@ trait HasOperators
             return $default;
         }
 
-        return $this->filter?->operator ?? $default;
+        return $this->filter->operator ?? $default;
     }
 }

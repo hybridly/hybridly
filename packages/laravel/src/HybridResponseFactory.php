@@ -4,8 +4,6 @@ namespace Hybridly;
 
 use Hybridly\Configuration\Configuration;
 use Hybridly\Exceptions\MissingViewComponentException;
-use Hybridly\Hybridly;
-use Hybridly\HybridResponse;
 use Hybridly\Support\Header;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\JsonResponse;
@@ -77,7 +75,7 @@ final class HybridResponseFactory implements HybridResponse
     {
         $this->view = new View(
             component: $component,
-            properties: $this->view?->properties ?? [],
+            properties: $this->view->properties ?? [],
         );
 
         return $this;

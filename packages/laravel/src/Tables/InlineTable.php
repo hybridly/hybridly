@@ -8,7 +8,7 @@ final class InlineTable extends Table
     protected array $refiners = [];
     protected ?string $data = null;
 
-    public static function create(string $model, array $columns = [], array $refiners = [], string $data = null): static
+    public static function create(string $model, array $columns = [], array $refiners = [], ?string $data = null): static
     {
         $table = resolve(static::class);
         $table->getModelClassesUsing(fn () => $model);

@@ -2,7 +2,6 @@
 
 namespace Hybridly;
 
-use Hybridly\Hybridly;
 use Hybridly\Support\Header;
 use Illuminate\Contracts\Routing\UrlGenerator;
 use Illuminate\Http\Request;
@@ -25,7 +24,7 @@ final class DialogResolver
         );
     }
 
-    protected function getRedirectUrl(Request $request): ?string
+    private function getRedirectUrl(Request $request): ?string
     {
         if ($redirect = $request->headers->get(Header::DIALOG_REDIRECT)) {
             return $redirect;

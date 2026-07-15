@@ -1,7 +1,6 @@
 <?php
 
 use Carbon\CarbonInterface;
-use Hybridly\Refining\Filters\BaseFilter;
 use Hybridly\Refining\Filters\TrashedFilter;
 use Hybridly\Tests\Fixtures\Database\ProductFactory;
 

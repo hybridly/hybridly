@@ -1,6 +1,5 @@
 <?php
 
-use Hybridly\Refining\Filters\BaseFilter;
 use Hybridly\Refining\Filters\TernaryFilter;
 use Hybridly\Tests\Fixtures\Database\ProductFactory;
 use Illuminate\Contracts\Database\Eloquent\Builder;

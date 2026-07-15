@@ -37,7 +37,7 @@ class RouteExtractor implements JsonSerializable, Arrayable
      */
     public function getRoutes(): array
     {
-        $routes = collect($this->router->getRoutes())
+        return collect($this->router->getRoutes())
             ->filter(function (Route $route) {
                 if (! $route->getName()) {
                     return false;
@@ -64,8 +64,6 @@ class RouteExtractor implements JsonSerializable, Arrayable
                 ],
             ])
             ->all();
-
-        return $routes;
     }
 
     public function jsonSerialize(): mixed

@@ -30,7 +30,7 @@ final readonly class GenerateRoutesDefinitionsAction
         throw new RuntimeException('Could not write route definitions.');
     }
 
-    protected function makeDefinitions(array $routing): string
+    private function makeDefinitions(array $routing): string
     {
         $definitions = <<<'TS'
         /* eslint-disable */
@@ -64,7 +64,7 @@ final readonly class GenerateRoutesDefinitionsAction
         );
     }
 
-    protected function makeRoutes(array $routing): array
+    private function makeRoutes(array $routing): array
     {
         $routes = [];
 

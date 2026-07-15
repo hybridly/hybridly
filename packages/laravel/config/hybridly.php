@@ -1,6 +1,5 @@
 <?php
 
-use Hybridly\Architecture\ModulesComponentLoader;
 use Hybridly\Architecture\ResourcesComponentLoader;
 use Hybridly\Configuration\Architecture;
 

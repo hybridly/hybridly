@@ -24,9 +24,7 @@ abstract class BaseAction extends Component
 
     public static function make(string $name): static
     {
-        $static = resolve(static::class, ['name' => $name]);
-
-        return $static;
+        return resolve(static::class, ['name' => $name]);
     }
 
     public function jsonSerialize(): mixed

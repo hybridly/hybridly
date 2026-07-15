@@ -15,7 +15,7 @@ class ProductFactory extends Factory
             'name' => $this->faker->words(3, true),
             'vendor' => $this->faker->randomElement(Vendor::cases()),
             'description' => $this->faker->realText(),
-            'price' => $this->faker->numberBetween(1, 10000),
+            'price' => $this->faker->numberBetween(1, 10_000),
             'stock_count' => $this->faker->numberBetween(1, 1000),
             'is_active' => $this->faker->boolean(90),
             'published_at' => $this->faker->dateTimeBetween('-1 year', 'now'),

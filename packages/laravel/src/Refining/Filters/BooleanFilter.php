@@ -3,7 +3,6 @@
 namespace Hybridly\Refining\Filters;
 
 use Hybridly\Refining\Concerns\SupportsRelationConstraints;
-use Hybridly\Refining\Filters\Operator;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 
 class BooleanFilter extends BaseFilter

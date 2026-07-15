@@ -1,7 +1,5 @@
 <?php
 
-use Hybridly\Configuration\Configuration;
-use Hybridly\Tests\Laravel\Commands\Fixtures\CustomTransformer;
 use Illuminate\Support\Facades\File;
 
 use function Pest\Laravel\artisan;

@@ -1,7 +1,6 @@
 <?php
 
 use Hybridly\Refining\Filters\NumericFilter;
-use Hybridly\Tests\Fixtures\Database\Product;
 use Hybridly\Tests\Fixtures\Database\ProductFactory;
 use Pest\Expectation;
 

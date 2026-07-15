@@ -1,7 +1,6 @@
 <?php
 
 use Hybridly\Refining\Filters\SelectFilter;
-use Hybridly\Tests\Fixtures\Database\Author;
 use Hybridly\Tests\Fixtures\Database\AuthorFactory;
 use Hybridly\Tests\Fixtures\Database\Book;
 use Hybridly\Tests\Fixtures\Database\BookFactory;
