@@ -59,7 +59,7 @@ function resolve_arrayable_properties(array $properties, bool $unpackDotProps = 
         }
 
         if ($value instanceof TransformableData) {
-            $value = $value->all();
+            $value = $value->toArray();
         }
 
         if ($value instanceof SerializesProperties) {

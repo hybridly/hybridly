@@ -1,8 +1,56 @@
 <?php
 
+use Carbon\CarbonImmutable;
+use Hybridly\Tests\Fixtures\Data\NestedTransformedDateData;
+use Hybridly\Tests\Fixtures\Data\TransformedDateData;
+use Spatie\LaravelData\DataCollection;
+
 use function Hybridly\Support\except_dot;
 use function Hybridly\Support\filter_recursive;
 use function Hybridly\Support\only_dot;
+use function Hybridly\Support\resolve_arrayable_properties;
+
+it('applies property transformers to Laravel Data properties', function () {
+    expect(resolve_arrayable_properties([
+        'data' => new TransformedDateData(
+            date: CarbonImmutable::parse('2026-07-18'),
+        ),
+    ]))->toBe([
+        'data' => [
+            'date' => '2026-07-18',
+        ],
+    ]);
+});
+
+it('applies property transformers to nested Laravel Data properties', function () {
+    expect(resolve_arrayable_properties([
+        'data' => new NestedTransformedDateData(
+            child: new TransformedDateData(
+                date: CarbonImmutable::parse('2026-07-18'),
+            ),
+        ),
+    ]))->toBe([
+        'data' => [
+            'child' => [
+                'date' => '2026-07-18',
+            ],
+        ],
+    ]);
+});
+
+it('applies property transformers to Laravel Data collections', function () {
+    expect(resolve_arrayable_properties([
+        'data' => new DataCollection(TransformedDateData::class, [
+            new TransformedDateData(
+                date: CarbonImmutable::parse('2026-07-18'),
+            ),
+        ]),
+    ]))->toBe([
+        'data' => [[
+            'date' => '2026-07-18',
+        ]],
+    ]);
+});
 
 it('filters arrays recursively', function ($array, $filter, $expected) {
     expect(filter_recursive($array, $filter))->toBe($expected);

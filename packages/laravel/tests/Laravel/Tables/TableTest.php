@@ -19,6 +19,7 @@ use Hybridly\Tests\Laravel\Tables\Fixtures\BasicProductsTableWithHiddenStuff;
 use Hybridly\Tests\Laravel\Tables\Fixtures\BasicProductsTableWithKeylessDataAndActions;
 use Hybridly\Tests\Laravel\Tables\Fixtures\BasicProductsTableWithMetadata;
 use Hybridly\Tests\Laravel\Tables\Fixtures\BasicProductsTableWithSoftDeleteAction;
+use Hybridly\Tests\Laravel\Tables\Fixtures\BasicProductsTableWithTransformedData;
 use Hybridly\Tests\Laravel\Tables\Fixtures\BasicScopedProductsTable;
 use Hybridly\Tests\Laravel\Tables\Fixtures\BasicTableWithConstructor;
 use Hybridly\Tests\Laravel\Tables\Fixtures\BasicTableWithDependencyInjection;
@@ -49,6 +50,15 @@ it('serializes a basic scoped table', function () {
 it('can transform records using Laravel Data', function () {
     ProductFactory::createImmutable();
     expect(BasicProductsTableWithData::make())->toMatchSnapshot();
+});
+
+it('applies Laravel Data property transformers to table records', function () {
+    ProductFactory::createImmutable();
+
+    expect(BasicProductsTableWithTransformedData::make()->getRecords())->toBe([[
+        'id' => 1,
+        'date' => '2021-01-01',
+    ]]);
 });
 
 it('serializes table records as plain data and cells separately', function () {

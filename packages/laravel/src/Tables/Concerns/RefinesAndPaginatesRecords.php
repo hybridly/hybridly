@@ -196,7 +196,7 @@ trait RefinesAndPaginatesRecords
                 $record->excludePermanently('authorization');
             }
 
-            return resolve_arrayable_properties($record->all());
+            return resolve_arrayable_properties($record->toArray());
         }
 
         return $model->toArray();
