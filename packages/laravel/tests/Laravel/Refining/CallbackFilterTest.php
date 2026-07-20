@@ -249,6 +249,86 @@ it('handles nullable types correctly', function () {
         ->name->toBe('Product A');
 });
 
+it('does not invoke non-nullable callbacks with null', function () {
+    $received = 'not called';
+
+    $refine = mock_refiner(
+        query: ['filters' => ['search' => ['value' => null]]],
+        refiners: [
+            CallbackFilter::make('search', function (Builder $builder, string $value) use (&$received): void {
+                $received = $value;
+            }),
+        ],
+        apply: true,
+    );
+
+    expect($received)->toBe('not called');
+    expect($refine->getFilters()[0]->jsonSerialize())->toMatchArray([
+        'is_active' => false,
+        'value' => null,
+    ]);
+});
+
+it('invokes callbacks that accept null', function (Closure $callback) {
+    $received = 'not called';
+
+    $refine = mock_refiner(
+        query: ['filters' => ['search' => ['value' => null]]],
+        refiners: [
+            CallbackFilter::make('search', $callback($received)),
+        ],
+        apply: true,
+    );
+
+    expect($received)->toBeNull();
+    expect($refine->getFilters()[0]->jsonSerialize())->toMatchArray([
+        'is_active' => true,
+        'value' => null,
+    ]);
+})->with([
+    'nullable' => fn (mixed &$received): Closure => function (Builder $builder, ?string $value) use (&$received): void {
+        $received = $value;
+    },
+    'mixed' => fn (mixed &$received): Closure => function (Builder $builder, mixed $value) use (&$received): void {
+        $received = $value;
+    },
+    'untyped' => fn (mixed &$received): Closure => function (Builder $builder, $value) use (&$received): void {
+        $received = $value;
+    },
+]);
+
+it('invokes callbacks without a value parameter for null filters', function () {
+    $called = false;
+
+    mock_refiner(
+        query: ['filters' => ['archived' => ['value' => null]]],
+        refiners: [
+            CallbackFilter::make('archived', function (Builder $builder) use (&$called): void {
+                $called = true;
+            }),
+        ],
+        apply: true,
+    );
+
+    expect($called)->toBeTrue();
+});
+
+it('passes raw empty strings to non-nullable callbacks', function () {
+    $received = null;
+
+    mock_refiner(
+        query: ['filters' => ['search' => ['value' => '']]],
+        refiners: [
+            CallbackFilter::make('search', function (Builder $builder, string $value) use (&$received): void {
+                $received = $value;
+            }),
+        ],
+        apply: true,
+    );
+
+    expect($received)->toBe('');
+});
+
 it('works with invokable classes that have typed parameters', function () {
     ProductFactory::new()->create(['name' => 'Cheap Item', 'price' => 10]);
     ProductFactory::new()->create(['name' => 'Expensive Item', 'price' => 100]);

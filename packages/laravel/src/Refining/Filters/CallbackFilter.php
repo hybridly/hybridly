@@ -5,6 +5,7 @@ namespace Hybridly\Refining\Filters;
 use Hybridly\Components\Concerns\EvaluatesClosures;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use ReflectionNamedType;
+use ReflectionParameter;
 
 class CallbackFilter extends BaseFilter
 {
@@ -50,6 +51,21 @@ class CallbackFilter extends BaseFilter
         );
     }
 
+    protected function resolveQueryFilter(QueryFilter $filter): ?QueryFilter
+    {
+        if ($filter->value !== null) {
+            return $filter;
+        }
+
+        $parameter = $this->getValueParameter();
+
+        if ($parameter === null || ! $parameter->hasType()) {
+            return $filter;
+        }
+
+        return $parameter->getType()->allowsNull() ? $filter : null;
+    }
+
     /**
      * Attempts to cast the value to the type expected by the closure's $value parameter.
      */
@@ -59,13 +75,8 @@ class CallbackFilter extends BaseFilter
             return $value;
         }
 
-        $filter = $this->getFilter();
+        $parameter = $this->getValueParameter();
 
-        $reflection = $filter instanceof \Closure
-            ? new \ReflectionFunction($filter)
-            : new \ReflectionMethod($filter, '__invoke');
-
-        $parameter = array_find($reflection->getParameters(), fn ($param) => $param->getName() === 'value');
         if ($parameter === null || ! $parameter->hasType()) {
             return $value;
         }
@@ -100,6 +111,19 @@ class CallbackFilter extends BaseFilter
             'array' => \is_array($value) ? $value : [$value],
             default => $value,
         };
+    }
+
+    private function getValueParameter(): ?ReflectionParameter
+    {
+        $filter = $this->getFilter();
+        $reflection = $filter instanceof \Closure
+            ? new \ReflectionFunction($filter)
+            : new \ReflectionMethod($filter, '__invoke');
+
+        return array_find(
+            $reflection->getParameters(),
+            fn (ReflectionParameter $parameter): bool => $parameter->getName() === 'value',
+        );
     }
 
     /**
