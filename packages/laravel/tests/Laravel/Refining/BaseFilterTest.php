@@ -327,6 +327,19 @@ test('request filters preserve JSON scalar values without sentinel coercion', fu
     'literal null string' => 'null',
 ]);
 
+test('empty request operators are treated as unspecified', function () {
+    $filters = mock_refiner(
+        query: ['filters' => ['name' => ['value' => 'AirPods', 'operator' => '']]],
+        refiners: [TextFilter::make('name')],
+        apply: false,
+    );
+
+    $filters->applyRefiners();
+
+    expect($filters->pluck('name')->all())->toBe(['AirPods']);
+    expect($filters->getFilters()[0]->jsonSerialize()['operator'])->toBe(Operator::EQUALS->value);
+});
+
 test('unsupported request and baseline operators normalize to the filter default', function () {
     $filters = mock_refiner(
         query: ['filters' => ['name' => ['value' => 'AirPods', 'operator' => Operator::GREATER_THAN->value]]],

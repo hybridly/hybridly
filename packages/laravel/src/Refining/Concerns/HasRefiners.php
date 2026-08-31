@@ -250,9 +250,9 @@ trait HasRefiners
             $value = data_get($filters, "{$key}.value");
             $operator = data_get($filters, "{$key}.operator");
 
-            if ($operator) {
-                $operator = Operator::tryFrom($operator);
-            }
+            $operator = is_string($operator)
+                ? Operator::tryFrom($operator)
+                : null;
 
             return new QueryFilter(
                 value: $value,
