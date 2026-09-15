@@ -54,16 +54,23 @@ function view(string $component, iterable $properties = []): HybridResponseFacto
 /**
  * Returns a dialog with the given properties and base view.
  *
- * Setting `redirectToBase` to `true` will always force a redirect to the base view when rendering the dialog instead of opening it in the current page.
- * Setting `preserveCurrentBase` to `true` will prevent returning an updated base view when rendering the dialog from.
+ * Setting `alwaysRedirectToBase` to `true` will always force a redirect to the base view when rendering the dialog instead of opening it in the current page.
+ * Setting `preserveBaseOnClose` to `true` will prevent returning an updated base view when rendering the dialog from.
+ * Setting `replace` to `true` will replace the current history entry instead of pushing a new one.
  *
  * @see https://hybridly.dev/api/laravel/functions.html#dialog
  */
-function dialog(string $component, iterable $properties, string $baseUrl, bool $alwaysRedirectToBase = false, bool $preserveBaseOnClose = false): HybridResponseFactory
-{
+function dialog(
+    string $component,
+    iterable $properties,
+    string $baseUrl,
+    bool $alwaysRedirectToBase = false,
+    bool $preserveBaseOnClose = false,
+    bool $replace = false,
+): HybridResponseFactory {
     return resolve(HybridResponseFactory::class)
         ->withView($component, $properties)
-        ->configureDialog($baseUrl, $alwaysRedirectToBase, $preserveBaseOnClose);
+        ->configureDialog($baseUrl, $alwaysRedirectToBase, $preserveBaseOnClose, $replace);
 }
 
 /**

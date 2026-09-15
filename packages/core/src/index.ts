@@ -38,5 +38,7 @@ export type { DynamicConfiguration } from './config'
 
 export type { GlobalHybridlyProperties } from './properties'
 
+export type { CloseDialogOptions } from './dialog'
+
 export * as constants from './constants'
 export * from './types'

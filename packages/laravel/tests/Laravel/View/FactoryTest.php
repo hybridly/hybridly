@@ -242,9 +242,37 @@ test('dialogs and their properties can be resolved', function () {
                 'baseUrl' => 'http://localhost',
                 'redirectUrl' => 'http://localhost',
                 'key' => data_get($payload, 'dialog.key'),
+                'replace' => false,
             ],
             'url' => 'http://localhost/users/makise',
             'version' => null,
+        ]);
+});
+
+test('dialog responses may replace the current history entry when opened', function () {
+    Route::get('/', fn () => view('index', ['foo' => 'bar']))->name('index');
+
+    $request = mock_request(url: '/users/makise', hybrid: true, bind: true);
+    $factory = view('users.edit', [
+        'user' => 'Makise Kurisu',
+    ])->configureDialog(route('index'), replace: true);
+
+    $response = $factory->toResponse($request);
+    $payload = $response->getOriginalContent();
+
+    expect($response)->toBeInstanceOf(JsonResponse::class);
+    expect($payload)
+        ->toMatchArray([
+            'dialog' => [
+                'component' => 'users.edit',
+                'properties' => [
+                    'user' => 'Makise Kurisu',
+                ],
+                'baseUrl' => 'http://localhost',
+                'redirectUrl' => 'http://localhost',
+                'key' => data_get($payload, 'dialog.key'),
+                'replace' => true,
+            ],
         ]);
 });
 
@@ -322,6 +350,7 @@ test('base view may be omitted on dialog responses coming from hybrid requests',
                 'baseUrl' => 'http://localhost',
                 'redirectUrl' => 'http://localhost',
                 'key' => data_get($payload, 'dialog.key'),
+                'replace' => false,
             ],
             'url' => 'http://localhost/users/makise',
             'version' => null,
@@ -361,6 +390,7 @@ test('base view may not be omitted on dialog responses coming from non-hybrid re
                 'baseUrl' => 'http://localhost',
                 'redirectUrl' => 'http://localhost',
                 'key' => data_get($payload['payload'], 'dialog.key'),
+                'replace' => false,
             ],
             'url' => 'http://localhost/users/makise',
             'version' => null,

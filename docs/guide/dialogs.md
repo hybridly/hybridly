@@ -105,6 +105,22 @@ return view('users.edit', ['user' => UserData::from($user)])
 
 This means that every time that dialog is opened, its background page will no longer be updated.
 
+## Replacing the current history entry
+
+By default, opening a dialog adds an entry to the browser history. This lets the browser's "back" button close the dialog and restore the base page natively.
+
+If you prefer opening a dialog to replace the current history entry, set the `replace` parameter to `true`:
+
+```php
+return view('users.edit', ['user' => UserData::from($user)])
+	->configureDialog(
+		baseUrl: route('user.show', $user),
+		replace: true,
+	);
+```
+
+When `replace` is enabled while opening a dialog, there is no separate dialog entry in the browser history. Pressing "back" will therefore go to the page before the base page, not close the dialog to the base page.
+
 ## Closing a dialog
 
 Navigating away from a dialog will automatically close it.
@@ -123,6 +139,20 @@ const { close } = useDialog()
 <template>
 	<hybrid-dialog title="Edit user">
 		<edit-user-form :user @success="close" />
+	</hybrid-dialog>
+</template>
+```
+
+You may also replace the current history entry while closing a dialog. This is useful when the dialog was opened normally, but closing it should not leave a history entry that would reopen it when pressing "back":
+
+```vue
+<script setup lang="ts">
+const { closeLocally } = useDialog()
+</script>
+
+<template>
+	<hybrid-dialog title="Edit user">
+		<edit-user-form @success="() => closeLocally({ replace: true })" />
 	</hybrid-dialog>
 </template>
 ```

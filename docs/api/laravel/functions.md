@@ -44,11 +44,14 @@ Returns a dialog with the given properties and base view.
 use function Hybridly\dialog;
 
 return dialog(
-	component: 'users.dit',
+  component: 'users.edit',
 	properties: ['user' => $user],
-	base: route('users.show', $user),
+  baseUrl: route('users.show', $user),
+  replace: true,
 );
 ```
+
+Set `replace` to `true` to replace the current browser history entry when the dialog opens instead of pushing a new entry.
 
 ## `on_demand`
 

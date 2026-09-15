@@ -274,6 +274,8 @@ export interface Dialog extends Required<View> {
 	redirectUrl: string
 	/** Unique identifier for this modal's lifecycle. */
 	key: string
+	/** Whether opening the dialog should replace the current history entry. */
+	replace?: boolean
 }
 
 export type MergeableProperty = [

@@ -28,13 +28,13 @@ Defines whether the dialog should be shown. Generally, it is used to control the
 
 ### `close`
 
-- **Type**: `() => void`
+- **Type**: `(options?: CloseDialogOptions) => void`
 
 Closes the dialog, effectively assigning `false` to `show`.
 
 ### `closeLocally`
 
-- **Type**: `() => void`
+- **Type**: `(options?: CloseDialogOptions) => void`
 
 Closes the dialog without making a server round-trip, effectively assigning `false` to `show`.
 

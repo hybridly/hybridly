@@ -100,10 +100,13 @@ router.matches('profile', { user: currentUserId })
 
 ## `dialog.close`
 
-This function closes the current dialog. It takes the same options as the other router functions, as well as a `local` option that indicates whether a round-trip to the server will be made to update the base view's properties.
+This function closes the current dialog. It takes the same options as the other router functions, as well as:
+
+- a `local` option that indicates whether a round-trip to the server will be made to update the base view's properties
+- a `replace` option that replaces the current history entry, so going back after closing the dialog does not reopen it.
 
 ```ts
-router.dialog.close()
+router.dialog.close({ local: true, replace: true })
 ```
 
 ## `history.get`

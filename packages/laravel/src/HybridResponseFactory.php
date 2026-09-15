@@ -25,6 +25,7 @@ final class HybridResponseFactory implements HybridResponse
     protected ?string $dialogBaseUrl = null;
     protected bool $redirectToDialogBase = false;
     protected bool $preserveBaseOnClose = false;
+    protected bool $replaceDialogHistory = false;
 
     public function __construct(
         protected Hybridly $hybridly,
@@ -40,7 +41,7 @@ final class HybridResponseFactory implements HybridResponse
      * Setting `redirectToBase` to `true` will always force a redirect to the base view when rendering the dialog instead of opening it in the current page.
      * Setting `preserveCurrentBase` to `true` will prevent returning an updated base view when rendering the dialog from.
      */
-    public function configureDialog(string $baseUrl, bool $alwaysRedirectToBase = false, bool $preserveBaseOnClose = false): static
+    public function configureDialog(string $baseUrl, bool $alwaysRedirectToBase = false, bool $preserveBaseOnClose = false, bool $replace = false): static
     {
         $this->dialogBaseUrl = $baseUrl;
 
@@ -50,6 +51,10 @@ final class HybridResponseFactory implements HybridResponse
 
         if ($preserveBaseOnClose) {
             $this->preserveBaseOnClose = true;
+        }
+
+        if ($replace) {
+            $this->replaceDialogHistory = true;
         }
 
         return $this;
@@ -178,13 +183,14 @@ final class HybridResponseFactory implements HybridResponse
             version: $payload->version,
             validation: $payload->validation,
             dialog: new Dialog(
-                component: $payload->dialog->component,
-                properties: $properties,
-                baseUrl: $payload->dialog->baseUrl,
-                redirectUrl: $this->redirectToDialogBase
+                $payload->dialog->component,
+                $properties,
+                $payload->dialog->baseUrl,
+                $this->redirectToDialogBase
                     ? $payload->dialog->baseUrl
                     : $payload->dialog->redirectUrl,
-                key: $payload->dialog->key,
+                $payload->dialog->key,
+                $payload->dialog->replace,
             ),
         );
     }
@@ -253,6 +259,7 @@ final class HybridResponseFactory implements HybridResponse
                 deferred: [],
                 mergeable: [],
             ),
+            replace: $this->replaceDialogHistory,
         );
     }
 

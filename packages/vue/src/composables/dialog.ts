@@ -1,4 +1,5 @@
 import { router } from '@hybridly/core'
+import type { CloseDialogOptions } from '@hybridly/core'
 import { computed } from 'vue'
 import { dialogStore } from '../stores/dialog'
 import { state } from '../stores/state'
@@ -9,9 +10,9 @@ import { state } from '../stores/state'
 export function useDialog() {
 	return {
 		/** Closes the dialog. */
-		close: () => router.dialog.close(),
+		close: (options?: CloseDialogOptions) => router.dialog.close(options),
 		/** Closes the dialog without a server round-trip. */
-		closeLocally: () => router.dialog.close({ local: true }),
+		closeLocally: (options?: CloseDialogOptions) => router.dialog.close({ ...options, local: true }),
 		/** Unmounts the dialog. Should be called after its closing animations. */
 		unmount: () => dialogStore.removeComponent(),
 		/** Whether the dialog is shown. */

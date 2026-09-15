@@ -13,7 +13,7 @@ final class DialogResolver
         private readonly UrlGenerator $urlGenerator,
     ) {}
 
-    public function resolve(View $view, string $baseUrl, Request $request): ?Dialog
+    public function resolve(View $view, string $baseUrl, Request $request, bool $replace = false): ?Dialog
     {
         return new Dialog(
             component: $view->component,
@@ -21,6 +21,7 @@ final class DialogResolver
             baseUrl: $baseUrl,
             redirectUrl: $this->getRedirectUrl($request) ?? $baseUrl,
             key: $request->header(Header::DIALOG_KEY, str()->uuid()->toString()),
+            replace: $replace,
         );
     }
 

@@ -85,6 +85,10 @@ export async function handleHybridRequestResponse({ request, response }: HybridR
 	const mergedValidation = mergeValidation(context.validation, payload.validation, options.errorBag)
 	const incomingErrors = resolveErrors(payload.validation, options.errorBag)
 	const hasValidationErrors = Object.keys(incomingErrors).length > 0
+	const shouldReplaceHistory = options.replace === true
+		|| payload.dialog?.replace === true
+		|| options.preserveUrl
+		|| (sameUrls(payload.url, window.location.href) && !sameHashes(payload.url, window.location.href))
 
 	// We only want to make a page navigation if the request was synchronous
 	// or if we didn't navigate during the request and the response.
@@ -126,7 +130,7 @@ export async function handleHybridRequestResponse({ request, response }: HybridR
 			preserveScroll: options.preserveScroll,
 			preserveState: options.preserveState,
 			preserveUrl: options.preserveUrl,
-			replace: options.replace === true || options.preserveUrl || (sameUrls(payload.url, window.location.href) && !sameHashes(payload.url, window.location.href)),
+			replace: shouldReplaceHistory,
 			viewTransition: options.viewTransition,
 		})
 	} else {

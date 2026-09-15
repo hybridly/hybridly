@@ -12,6 +12,7 @@ final class Dialog implements Arrayable
         public string $baseUrl,
         public string $redirectUrl,
         public string $key,
+        public bool $replace,
     ) {}
 
     public function withProperties(array $properties): self
@@ -22,6 +23,7 @@ final class Dialog implements Arrayable
             baseUrl: $this->baseUrl,
             redirectUrl: $this->redirectUrl,
             key: $this->key,
+            replace: $this->replace,
         );
     }
 
@@ -33,6 +35,7 @@ final class Dialog implements Arrayable
             'baseUrl' => $this->baseUrl,
             'redirectUrl' => $this->redirectUrl,
             'key' => $this->key,
+            'replace' => $this->replace,
         ];
     }
 }

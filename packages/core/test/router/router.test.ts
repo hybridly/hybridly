@@ -1,12 +1,12 @@
 import { HttpResponse } from 'msw'
-import { beforeEach, test } from 'vitest'
+import { beforeEach, test, vi } from 'vitest'
 import { getRouterContext, registerHook } from '../../src'
 import { HYBRIDLY_HEADER, PARTIAL_COMPONENT_HEADER, RESET_HEADER } from '../../src/constants'
 import { isNavigationCancelledError } from '../../src/errors'
 import { router } from '../../src/router'
 import { performHybridNavigation } from '../../src/router/request/request'
 import { http, server } from '../server'
-import { fakePayload, fakeRouterContext, mockSuccessfulUrl } from '../utils'
+import { fakePayload, fakeRouterContext, mockSuccessfulUrl, returnsArgs } from '../utils'
 
 beforeEach(async () => {
 	await fakeRouterContext()
@@ -33,6 +33,101 @@ test('performs hybrid navigations', async ({ expect }) => {
 
 	expect(response?.data).toMatchSnapshot('navigation response')
 	expect(getRouterContext()).toMatchSnapshot('context after navigation')
+})
+
+test('replaces the current history entry when opening a dialog that requests it', async ({ expect }) => {
+	const pushSpy = vi.spyOn(window.history, 'pushState').mockImplementation(returnsArgs)
+	const replaceSpy = vi.spyOn(window.history, 'replaceState').mockImplementation(returnsArgs)
+	await fakeRouterContext({
+		adapter: {
+			executeOnMounted: (callback) => callback(),
+		},
+	})
+	pushSpy.mockClear()
+	replaceSpy.mockClear()
+
+	server.resetHandlers(
+		mockSuccessfulUrl('https://bluebird.test/dialog', 'get', {
+			json: fakePayload({
+				url: 'https://bluebird.test/dialog',
+				dialog: {
+					component: 'target.dialog',
+					properties: {},
+					deferred: {},
+					mergeable: [],
+					baseUrl: 'https://bluebird.test',
+					redirectUrl: 'https://bluebird.test',
+					key: 'target-dialog',
+					replace: true,
+				},
+			}),
+		}),
+	)
+
+	await router.get('https://bluebird.test/dialog')
+
+	expect(pushSpy).not.toHaveBeenCalled()
+	expect(replaceSpy).toHaveBeenCalled()
+	expect(replaceSpy).toHaveBeenLastCalledWith(expect.anything(), '', 'https://bluebird.test/dialog')
+	expect(getRouterContext().dialog?.replace).toBe(true)
+})
+
+test('replaces the current history entry when closing a dialog locally with replace', async ({ expect }) => {
+	const pushSpy = vi.spyOn(window.history, 'pushState').mockImplementation(returnsArgs)
+	const replaceSpy = vi.spyOn(window.history, 'replaceState').mockImplementation(returnsArgs)
+
+	await fakeRouterContext({
+		adapter: {
+			executeOnMounted: (callback) => callback(),
+		},
+		payload: fakePayload({
+			url: 'https://bluebird.test/dialog',
+			dialog: {
+				component: 'target.dialog',
+				properties: {},
+				deferred: {},
+				mergeable: [],
+				baseUrl: 'https://bluebird.test',
+				redirectUrl: 'https://bluebird.test',
+				key: 'target-dialog',
+			},
+		}),
+	})
+
+	await router.dialog.close({ local: true, replace: true })
+
+	expect(replaceSpy).toHaveBeenCalledOnce()
+	expect(pushSpy).not.toHaveBeenCalled()
+	expect(getRouterContext().dialog).toBeUndefined()
+})
+
+test('pushes a new history entry when closing a dialog locally by default', async ({ expect }) => {
+	const pushSpy = vi.spyOn(window.history, 'pushState').mockImplementation(returnsArgs)
+	const replaceSpy = vi.spyOn(window.history, 'replaceState').mockImplementation(returnsArgs)
+
+	await fakeRouterContext({
+		adapter: {
+			executeOnMounted: (callback) => callback(),
+		},
+		payload: fakePayload({
+			url: 'https://bluebird.test/dialog',
+			dialog: {
+				component: 'target.dialog',
+				properties: {},
+				deferred: {},
+				mergeable: [],
+				baseUrl: 'https://bluebird.test',
+				redirectUrl: 'https://bluebird.test',
+				key: 'target-dialog',
+			},
+		}),
+	})
+
+	await router.dialog.close({ local: true })
+
+	expect(pushSpy).toHaveBeenCalledOnce()
+	expect(replaceSpy).not.toHaveBeenCalled()
+	expect(getRouterContext().dialog).toBeUndefined()
 })
 
 test('sends scoped reset intent as a partial request', async ({ expect }) => {
